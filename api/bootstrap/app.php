@@ -58,9 +58,10 @@ $app->singleton(
 | the default version. You may register other files below as needed.
 |
 */
-
+$app->withFacades();
+$app->withEloquent();
 $app->configure('app');
-
+$app->configure('lighthouse');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -94,6 +95,10 @@ $app->configure('app');
 // $app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(\Nuwave\Lighthouse\LighthouseServiceProvider::class);
+$app->register(
+    \Nuwave\Lighthouse\Pagination\PaginationServiceProvider::class
+);
 
 /*
 |--------------------------------------------------------------------------
