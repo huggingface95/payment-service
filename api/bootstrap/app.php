@@ -62,6 +62,7 @@ $app->withFacades();
 $app->withEloquent();
 $app->configure('app');
 $app->configure('lighthouse');
+$app->configure('swagger-lume');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -99,6 +100,7 @@ $app->register(\Nuwave\Lighthouse\LighthouseServiceProvider::class);
 $app->register(
     \Nuwave\Lighthouse\Pagination\PaginationServiceProvider::class
 );
+$app->register(\SwaggerLume\ServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
