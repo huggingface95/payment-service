@@ -63,6 +63,7 @@ $app->withEloquent();
 $app->configure('app');
 $app->configure('lighthouse');
 $app->configure('swagger-lume');
+$app->configure('graphql-playground');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -93,14 +94,16 @@ $app->configure('swagger-lume');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+ $app->register(App\Providers\AppServiceProvider::class);
+ $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\LighthouseServiceProvider::class);
-$app->register(
-    \Nuwave\Lighthouse\Pagination\PaginationServiceProvider::class
-);
+$app->register(\Nuwave\Lighthouse\Pagination\PaginationServiceProvider::class);
+$app->register(\Nuwave\Lighthouse\WhereConditions\WhereConditionsServiceProvider::class);
+$app->register(\Nuwave\Lighthouse\OrderBy\OrderByServiceProvider::class);
+$app->register(\Nuwave\Lighthouse\GlobalId\GlobalIdServiceProvider::class);
 $app->register(\SwaggerLume\ServiceProvider::class);
+$app->register(MLL\GraphQLPlayground\GraphQLPlaygroundServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
