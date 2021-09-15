@@ -1,0 +1,10 @@
+type Country {
+    id: ID!
+    name: String!
+    iso: String!
+}
+
+extend type Query {
+    country(id: ID @eq): Country @find
+    countries: [Country!]! @paginate(defaultCount: 10)
+}

@@ -1,0 +1,37 @@
+
+type CompanySettings {
+    id: ID!
+    email_url: EMAIL
+    email_jwt: EMAIL
+    email_from: EMAIL
+    logo_object_key: String
+    company: Companies @belongsTo(relation: "company")
+    show_own_logo: Boolean
+}
+
+extend type Query {
+    companySettings(id: ID @eq): CompanySettings @find
+}
+
+type Mutation {
+    createCompanySettings(
+        email_url: EMAIL
+        email_jwt: EMAIL
+        email_from: EMAIL
+        logo_object_key: String!
+        show_own_logo: Boolean
+        company_id: Int!
+    ): CompanySettings @create
+
+    updateCompany(
+        email_url: EMAIL
+        email_jwt: EMAIL
+        email_from: EMAIL
+        logo_object_key: String!
+        show_own_logo: Boolean
+        company_id: Int!
+    ): CompanySettings @update
+
+
+}
+

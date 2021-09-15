@@ -1,0 +1,26 @@
+
+type Departments {
+    id: ID!
+    company: Companies @belongsTo(relation: "company")
+}
+
+extend type Query {
+    department(id: ID @eq): Departments @find
+    departments( where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [Departments!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+type Mutation {
+    createDepartment(
+        name: String!
+        company_id: Int!
+    ): Departments @create
+
+    updateDepartment(
+        id: ID!
+        name: String
+    ): Departments @update
+
+    deleteDepartment(id: ID!): Departments @delete
+
+}
+

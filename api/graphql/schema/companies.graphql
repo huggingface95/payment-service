@@ -1,0 +1,62 @@
+enum Types {
+    Text
+    TextArea
+    CountryList
+}
+
+input CompanyFieldInput {
+    field_name: String
+    field_value: String
+    field_type: Types
+}
+
+type Companies {
+    id: ID!
+    name: String!
+    url: String
+    email: EMAIL!
+    company_number: String
+    contact_name: String
+    country: Country @belongsTo(relation: "country")
+    zip: String
+    city: String
+    address: String
+    additional_fields: JSON
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+extend type Query {
+    company(id: ID @eq): Companies @find
+    companies( where: _ @whereConditions(columns: ["name", "email","url"]), orderBy: _ @orderBy(columns: ["id","created_at"])): [Companies!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+type Mutation {
+    createCompany(
+        name: String!
+        email: EMAIL!
+        url: String
+        zip: String
+        address: String
+        city: String
+        company_number: String
+        country_id: Int!
+    ): Companies @create
+
+    updateCompany(
+        id: ID!
+        name: String
+        email: EMAIL
+        url: String
+        zip: String
+        address: String
+        city: String
+        company_number: String
+        country_id: Int
+        additional_fields: [CompanyFieldInput]
+    ): Companies @update(resolver: "CompanyMutator@update")
+
+    deleteCompany(id: ID!): Companies @delete
+
+}
+

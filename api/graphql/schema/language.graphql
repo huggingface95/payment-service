@@ -1,0 +1,10 @@
+type Languages {
+    id: ID!
+    name: String!
+    iso: String!
+}
+
+type Query {
+    language(id: ID @eq): Languages @find
+    languages: [Languages!]! @paginate(defaultCount: 10)
+}
