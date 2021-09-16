@@ -36,6 +36,8 @@ deploy-job:
     - echo "$SSH_KEY" >> ~/.ssh/id_dsa
     - chmod 600 ~/.ssh/id_dsa
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - rsync -rav --delete ./ $SSH_USER_HOST:/opt/banking
+    - rsync -rav  ./ $SSH_USER_HOST:/opt/banking
+    - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev composer update"
+    - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev php artisan migrate"
   only:
     - master
