@@ -13,7 +13,7 @@ class Country extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'iso'
+        'name', 'iso'
     ];
 
     public $timestamps = false;
