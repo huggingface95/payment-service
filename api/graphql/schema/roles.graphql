@@ -1,0 +1,31 @@
+
+type Roles {
+    id: ID!
+    name: String!
+    slug: String!
+    description: String
+}
+
+
+extend type Query {
+    role(id: ID @eq): Roles @find
+    roles: [Roles!]! @paginate(defaultCount: 10)
+}
+
+type Mutation {
+    createRole(
+        name: String!
+        slug: String!
+        description: String
+    ): Roles @create
+
+    updateRole(
+        id: ID!
+        name: String!
+        slug: String!
+        description: String
+    ): Roles @update
+
+
+}
+

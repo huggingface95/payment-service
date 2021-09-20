@@ -1,0 +1,39 @@
+enum GroupsEntities {
+    Member @enum(value: Member)
+    Company @enum(value: Company)
+    Individual @enum(value: Individual)
+}
+type Groups {
+    id: ID!
+    name: GroupsEntities!
+    description: String
+    roles: [Roles] @belongsToMany(relation: "roles")
+}
+
+type GroupRole {
+    id: ID!
+    group_id: Int!
+    role_id: Int!
+}
+
+
+extend type Query {
+    group(id: ID @eq): Groups @find
+    groups: [Groups!]! @paginate(defaultCount: 10)
+}
+
+type Mutation {
+    createGroup(
+        name: GroupsEntities!
+        description: String
+    ): Groups @create
+
+    updateGroup(
+        id: ID!
+        name: GroupsEntities!
+        description: String
+    ): Groups @update
+
+
+}
+
