@@ -35,6 +35,15 @@ extend type Mutation {
         password: String
     ): Members @field(resolver: "MembersMutator@create")
 
+    inviteMember(
+        first_name: String!
+        last_name: String!
+        email: EMAIL! @rules(apply: ["email", "unique:members"])
+        company_id: Int!
+        member_group_role_id: Int
+        two_factor_auth_setting_id: Int!
+    ): Members @field(resolver: "MembersMutator@invite")
+
     updateMember(
         id: ID!
         first_name: String!
@@ -47,6 +56,16 @@ extend type Mutation {
         member_group_role_id: Int
         is_active: Boolean
     ): Members @update
+
+    setMemberPassword(
+        id: ID!
+        password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
+        password_confirmation: String!
+    ): Members @field(resolver: "MembersMutator@setPassword")
+
+    deleteMember(
+        id: ID!
+    ): Members @delete
 
 
 }

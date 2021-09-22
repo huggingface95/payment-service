@@ -1,0 +1,28 @@
+
+type PaymentSystem {
+    id: ID!
+    name: String!
+    is_active: Boolean
+}
+
+extend type Query {
+    paymentSystem(id: ID @eq): PaymentSystem @find
+    paymentSystems(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+        columns: ["id","name","is_active"])): [PaymentSystem!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    createPaymentSystem(
+        name: String!
+        is_active: Boolean
+    ): PaymentSystem @create
+
+    updatePaymentSystem(
+        id: ID!
+        name: String
+    ): PaymentSystem @update
+
+    deletePaymentSystem(id: ID!): PaymentSystem @delete
+
+}
+
