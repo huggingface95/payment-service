@@ -26,6 +26,10 @@ type Mutation {
         description: String
     ): Roles @update
 
+    deleteRole(
+        id: ID!
+    ): Roles @delete
+
 
 }
 
