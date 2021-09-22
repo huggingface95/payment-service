@@ -6,9 +6,10 @@ type Members {
     email: EMAIL!
     sex: String
     is_active: Boolean
-    company: Companies! @hasOne
-    country: Country @hasOne
-    language: Languages @hasOne
+    company_id: Int
+    company: Companies! @belongsTo(relation: "company")
+    country: Country @belongsTo(relation: "country")
+    language: Languages @belongsTo(relation: "language")
     member_group_role_id: Int!
     two_factor_auth_setting_id: Int!
 }
@@ -19,24 +20,26 @@ extend type Query {
     members: [Members!]! @paginate(defaultCount: 10)
 }
 
-type Mutation {
+extend type Mutation {
     createMember(
         first_name: String!
         last_name: String!
-        email: EMAIL!
+        email: EMAIL! @rules(apply: ["email", "unique:members"])
         sex: String
         company_id: Int!
         country_id: Int
         language_id: Int
         member_group_role_id: Int
         is_active: Boolean
-    ): Members @create
+        two_factor_auth_setting_id: Int!
+        password: String
+    ): Members @field(resolver: "MembersMutator@create")
 
     updateMember(
         id: ID!
         first_name: String!
         last_name: String!
-        email: EMAIL!
+        email: EMAIL! @rules(apply: ["email", "unique:members"])
         sex: String
         company_id: Int!
         country_id: Int

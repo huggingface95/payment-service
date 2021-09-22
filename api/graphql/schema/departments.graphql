@@ -9,7 +9,7 @@ extend type Query {
     departments( where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [Departments!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-type Mutation {
+extend type Mutation {
     createDepartment(
         name: String!
         company_id: Int!
