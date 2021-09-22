@@ -1,12 +1,22 @@
 
 type Departments {
     id: ID!
+    name: String!
     company: Companies @belongsTo(relation: "company")
+    positions: [DepartmentPosition] @hasMany(relation: "positions")
+}
+
+type DepartmentPosition {
+    id: ID!
+    name: String !
+    department: Departments @belongsTo(relation: "department")
 }
 
 extend type Query {
     department(id: ID @eq): Departments @find
     departments( where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [Departments!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    departmentPosition(id: ID @eq): DepartmentPosition @find
+    departmentPositions( where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [DepartmentPosition!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {
@@ -20,7 +30,18 @@ extend type Mutation {
         name: String
     ): Departments @update
 
+    createDepartmentPosition(
+        name: String!
+        department_id: Int!
+    ): DepartmentPosition @create
+
+    updateDepartmentPosition(
+        id: ID!
+        name: String
+    ): DepartmentPosition @update
+
     deleteDepartment(id: ID!): Departments @delete
+    deleteDepartmentPosition(id: ID!): DepartmentPosition @delete
 
 }
 
