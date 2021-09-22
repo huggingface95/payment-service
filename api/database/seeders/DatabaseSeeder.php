@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CompanyTableSeeder::class);
         $this->call(CountryTableSeeder::class);
         $this->call(LanguagesTableSeeder::class);
+        $this->call(TwoFactorAuthTableSeeder::class);
     }
 }

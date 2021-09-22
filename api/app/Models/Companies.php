@@ -27,4 +27,14 @@ class Companies extends Model
         return $this->belongsTo('App\Models\Languages','language_id');
     }
 
+    public function members()
+    {
+        return $this->hasMany(Members::class,"company_id");
+    }
+
+    public function scopeMemberSort($query, $sort)
+    {
+        return $query->withCount('members')->orderBy('members_count',$sort);
+    }
+
 }

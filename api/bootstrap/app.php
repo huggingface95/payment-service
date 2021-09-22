@@ -102,6 +102,7 @@ $app->register(\Nuwave\Lighthouse\Pagination\PaginationServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\WhereConditions\WhereConditionsServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\OrderBy\OrderByServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\GlobalId\GlobalIdServiceProvider::class);
+$app->register(\Nuwave\Lighthouse\Validation\ValidationServiceProvider::class);
 $app->register(\SwaggerLume\ServiceProvider::class);
 $app->register(MLL\GraphQLPlayground\GraphQLPlaygroundServiceProvider::class);
 
