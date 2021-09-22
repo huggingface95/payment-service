@@ -13,7 +13,7 @@ class CreateDepartmentsPositionTable extends Migration
      */
     public function up()
     {
-        Schema::create('departments_position', function (Blueprint $table) {
+        Schema::create('department_position', function (Blueprint $table) {
             $table->id();
             $table->string('name',255);
             $table->integer('department_id');
