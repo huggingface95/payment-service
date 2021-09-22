@@ -22,7 +22,7 @@ extend type Query {
     groups: [Groups!]! @paginate(defaultCount: 10)
 }
 
-type Mutation {
+extend type Mutation {
     createGroup(
         name: GroupsEntities!
         description: String
