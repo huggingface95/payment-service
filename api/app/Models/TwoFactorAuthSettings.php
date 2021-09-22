@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class TwoFactorAuthSettings extends Model
 {
     public $timestamps = false;
+
+    protected $fillable = [
+        'name'
+    ];
 }

@@ -13,7 +13,7 @@ extend type Query {
     companySettings(id: ID @eq): CompanySettings @find
 }
 
-type Mutation {
+extend type Mutation {
     createCompanySettings(
         email_url: EMAIL
         email_jwt: EMAIL
@@ -23,7 +23,7 @@ type Mutation {
         company_id: Int!
     ): CompanySettings @create
 
-    updateCompany(
+    updateCompanySettings(
         email_url: EMAIL
         email_jwt: EMAIL
         email_from: EMAIL

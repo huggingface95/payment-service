@@ -4,6 +4,11 @@ enum Types {
     CountryList
 }
 
+enum Sort {
+    ASC
+    DESC
+}
+
 input CompanyFieldInput {
     field_name: String
     field_value: String
@@ -21,6 +26,8 @@ type Companies {
     zip: String
     city: String
     address: String
+    members: [Members] @hasMany(relation: "members")
+    membersCount: Int @count(relation: "members")
     additional_fields: JSON
     created_at: DateTime!
     updated_at: DateTime!
@@ -28,10 +35,13 @@ type Companies {
 
 extend type Query {
     company(id: ID @eq): Companies @find
-    companies( where: _ @whereConditions(columns: ["name", "email","url"]), orderBy: _ @orderBy(columns: ["id","created_at"])): [Companies!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    companies(sort: String @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url"]), orderBy: _ @orderBy(
+        columns: ["id","created_at"],
+    )): [Companies!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    companiesMembersSort(sort: Sort @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url"])): [Companies!]! @paginate(defaultCount: 10)
 }
 
-type Mutation {
+extend type Mutation {
     createCompany(
         name: String!
         email: EMAIL!

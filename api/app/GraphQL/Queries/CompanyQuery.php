@@ -2,9 +2,8 @@
 
 namespace App\GraphQL\Queries;
 
-use Faker\Factory;
 
-class Company
+class CompanyQuery
 {
     /**
      * @param  null  $_
@@ -14,6 +13,5 @@ class Company
     {
 
     }
-
 
 }
