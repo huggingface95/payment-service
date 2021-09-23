@@ -35,10 +35,9 @@ type Companies {
 
 extend type Query {
     company(id: ID @eq): Companies @find
-    companies(sort: String @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url"]), orderBy: _ @orderBy(
+    companies(memberCount: Sort @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url"]), orderBy: _ @orderBy(
         columns: ["id","created_at"],
     )): [Companies!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
-    companiesMembersSort(sort: Sort @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url"])): [Companies!]! @paginate(defaultCount: 10)
 }
 
 extend type Mutation {

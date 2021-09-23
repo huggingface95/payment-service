@@ -31,4 +31,9 @@ class Members extends Model
     {
         return $this->belongsTo(Languages::class,'language_id');
     }
+
+    public function role()
+    {
+        return $this->belongsTo(Roles::class,'member_group_role_id');
+    }
 }

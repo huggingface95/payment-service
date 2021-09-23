@@ -18,7 +18,7 @@ class CreateGroupRoleTable extends Migration
             $table->integer('group_id');
             $table->integer('role_id');
             $table->foreign('group_id')->references('id')->on('groups');
-            $table->foreign('role_id')->references('id')->on('groups');
+            $table->foreign('role_id')->references('id')->on('roles');
         });
     }
 

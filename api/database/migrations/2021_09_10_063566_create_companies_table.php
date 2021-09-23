@@ -26,6 +26,7 @@ class CreateCompaniesTable extends Migration
             $table->string('city',100)->nullable();
             $table->jsonb('additional_fields')->nullable();
             $table->timestamps();
+            $table->foreign('country_id')->references('id')->on('countries');
         });
     }
 

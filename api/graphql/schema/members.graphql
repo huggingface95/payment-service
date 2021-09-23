@@ -10,7 +10,7 @@ type Members {
     company: Companies! @belongsTo(relation: "company")
     country: Country @belongsTo(relation: "country")
     language: Languages @belongsTo(relation: "language")
-    member_group_role_id: Int!
+    role: Roles @belongsTo(ralation: "role")
     two_factor_auth_setting_id: Int!
 }
 
@@ -29,7 +29,7 @@ extend type Mutation {
         company_id: Int!
         country_id: Int
         language_id: Int
-        member_group_role_id: Int
+        role_id: Int
         is_active: Boolean
         two_factor_auth_setting_id: Int!
         password: String
@@ -40,7 +40,7 @@ extend type Mutation {
         last_name: String!
         email: EMAIL! @rules(apply: ["email", "unique:members"])
         company_id: Int!
-        member_group_role_id: Int
+        role_id: Int
         two_factor_auth_setting_id: Int!
     ): Members @field(resolver: "MembersMutator@invite")
 
@@ -48,14 +48,14 @@ extend type Mutation {
         id: ID!
         first_name: String!
         last_name: String!
-        email: EMAIL! @rules(apply: ["email", "unique:members"])
+        email: EMAIL!
         sex: String
         company_id: Int!
         country_id: Int
         language_id: Int
-        member_group_role_id: Int
+        role_id: Int
         is_active: Boolean
-    ): Members @update
+    ): Members @field(resolver: "MembersMutator@update")
 
     setMemberPassword(
         id: ID!
