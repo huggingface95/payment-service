@@ -17,6 +17,7 @@ class CreateMemberDepartmentPositionTable extends Migration
             $table->id();
             $table->integer('member_id');
             $table->integer('department_position_id');
+            $table->foreign('department_position_id')->references('id')->on('department_position');
         });
     }
 
