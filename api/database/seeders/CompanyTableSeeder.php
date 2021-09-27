@@ -25,7 +25,7 @@ class CompanyTableSeeder extends Seeder
                 'zip' => $faker->postcode,
                 'address' => $faker->address,
                 'city' => $faker->city,
-                'country_id' => $faker->randomDigit()
+                'country_id' => $i
             ]);
         }
     }

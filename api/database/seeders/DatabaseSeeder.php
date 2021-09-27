@@ -12,10 +12,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(CompanyTableSeeder::class);
         $this->call(CountryTableSeeder::class);
         $this->call(LanguagesTableSeeder::class);
-        $this->call(TwoFactorAuthTableSeeder::class);
+        $this->call(CompanyTableSeeder::class);
         $this->call(GroupTableSeeder::class);
+        $this->call(TwoFactorAuthTableSeeder::class);
     }
 }
