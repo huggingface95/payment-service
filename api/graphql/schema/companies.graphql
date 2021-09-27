@@ -27,7 +27,7 @@ type Companies {
     city: String
     address: String
     members: [Members] @hasMany(relation: "members")
-    membersCount: Int @count(relation: "members")
+    members_count: Int @count(relation: "members")
     additional_fields: JSON
     created_at: DateTime!
     updated_at: DateTime!
@@ -35,7 +35,7 @@ type Companies {
 
 extend type Query {
     company(id: ID @eq): Companies @find
-    companies(memberCount: Sort @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url"]), orderBy: _ @orderBy(
+    companies(member_count: Sort @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url"]), orderBy: _ @orderBy(
         columns: ["id","created_at"],
     )): [Companies!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
