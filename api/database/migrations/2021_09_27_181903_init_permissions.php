@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Enums\GuardEnum;
 use App\Models\Permissions;
-use App\Models\Roles;
+
 
 class InitPermissions extends Migration
 {
@@ -621,7 +621,7 @@ class InitPermissions extends Migration
 
         ];
         Permissions::insert($arrayOfPermissions);
-        
+
     }
 
     /**
