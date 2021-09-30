@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Enums\GuardEnum;
+use Spatie\Permission\Models\Role as SpatieRole;
 
-class Roles extends Model
+class Roles extends SpatieRole
 {
     protected $fillable = [
-        'name', 'slug','description'
+        'name', 'guard_name', 'description'
     ];
+
+    protected $guard_name = GuardEnum::GUARD_NAME;
 
     public function groups()
     {

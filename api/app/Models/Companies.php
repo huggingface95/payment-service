@@ -14,7 +14,7 @@ class Companies extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'url','email','company_number','contact_name','country_id','zip','address','city'
+        'name', 'url','email','company_number','contact_name','country_id','zip','address','city', 'additional_fields'
     ];
 
     public function country(): \Illuminate\Database\Eloquent\Relations\BelongsTo

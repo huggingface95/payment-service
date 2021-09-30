@@ -61,6 +61,7 @@ $app->singleton(
 $app->withFacades();
 $app->withEloquent();
 $app->configure('app');
+$app->configure('permission');
 $app->configure('lighthouse');
 $app->configure('swagger-lume');
 $app->configure('graphql-playground');
@@ -75,9 +76,6 @@ $app->configure('graphql-playground');
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
 
 // $app->routeMiddleware([
 //     'auth' => App\Http\Middleware\Authenticate::class,
@@ -96,6 +94,7 @@ $app->configure('graphql-playground');
 
  $app->register(App\Providers\AppServiceProvider::class);
  $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(Spatie\Permission\PermissionServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\LighthouseServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\Pagination\PaginationServiceProvider::class);
@@ -116,7 +115,7 @@ $app->register(MLL\GraphQLPlayground\GraphQLPlaygroundServiceProvider::class);
 | can respond to, as well as the controllers that may handle them.
 |
 */
-
+$app->alias('cache', \Illuminate\Cache\CacheManager::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

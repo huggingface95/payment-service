@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Models\Companies;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use GraphQL\Exception\InvalidArgument;
 
 class CompanyMutator
 {
@@ -18,12 +19,29 @@ class CompanyMutator
      * @return mixed
      */
 
-    public function update($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    public function update($root, array $args, GraphQLContext $context)
     {
-        if ($args['additional_fields']) {
-            Companies::where(['id'=>$args['id']])->update(['additional_fields'=>$args['additional_fields']]);
+        $maxLength = env('MAX_LENGTH_STRING',200);
+        $company = Companies::find($args['id']);
+        if (isset($args['additional_fields'])) {
+
+            $fields = [];
+            foreach ($args['additional_fields']  as $additionalField) {
+                if (strlen($additionalField['field_value']) > $maxLength) {
+                    throw new InvalidArgument("Max length field is ". $maxLength);
+                }
+                if ($additionalField['field_type'] === "Text" ) {
+                    $additionalField['field_value'] = filter_var($additionalField['field_value'],FILTER_SANITIZE_STRING,FILTER_FLAG_STRIP_LOW);
+                }
+                if ($additionalField['field_type'] === "TextArea"){
+                    $additionalField['field_value'] = filter_var($additionalField['field_value'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                }
+                $fields[] = $additionalField;
+            }
+            $args['additional_fields'] = $fields;
         }
-        return $args;
+        $company->update($args);
+        return $company;
     }
 
 }

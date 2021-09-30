@@ -1,0 +1,16 @@
+
+type Permissions {
+    id: ID
+    name: String
+    display_name: String
+    guard_name: String
+    all: JSON
+}
+
+
+extend type Query {
+    permission(id: ID @eq): Permissions @find
+    permissions: Permissions @field(resolver:"PermissionQuery@tree")
+}
+
+
