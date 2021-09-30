@@ -14,12 +14,14 @@ type GroupRole {
     id: ID!
     group_id: Int!
     role_id: Int!
+    group: Groups @belongsTo(relation: "group")
 }
 
 
 extend type Query {
     group(id: ID @eq): Groups @find
     groups: [Groups!]! @paginate(defaultCount: 10)
+    groups_list: [GroupRole!]! @paginate(defaultCount: 10)
 }
 
 extend type Mutation {
