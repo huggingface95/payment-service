@@ -13,14 +13,34 @@ class Roles extends SpatieRole
 
     protected $guard_name = GuardEnum::GUARD_NAME;
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function groups()
     {
         return $this->belongsToMany(Groups::class,'group_role','group_id','role_id');
     }
 
+    /**
+     * @param $query
+     * @param $sort
+     * @return mixed
+     */
     public function scopeGroupsSort($query, $sort)
     {
         return $query->with('groups')->orderBy('id',$sort);
+    }
+
+    /**
+     * @param $groupId
+     * @return GroupRole
+     */
+    public function addGroup($groupId) :GroupRole
+    {
+        return GroupRole::create([
+           'role_id' => $this->id,
+            'group_id' => $groupId
+        ]);
     }
 
 }

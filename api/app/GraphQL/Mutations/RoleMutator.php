@@ -3,8 +3,6 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\Roles;
-use Illuminate\Support\Facades\Hash;
-
 
 class RoleMutator
 {
@@ -22,6 +20,12 @@ class RoleMutator
             $this->syncPermissions($role, $args['permissions']);
         }
 
+        if(isset($args['groups'])) {
+            foreach ($args['groups'] as $group) {
+                $role->addGroup($group);
+            }
+        }
+
         return $role;
     }
 
@@ -36,14 +40,23 @@ class RoleMutator
         if (isset($args['permissions'])) {
             $this->syncPermissions($role, $args['permissions']);
         }
+        if(isset($args['groups'])) {
+            foreach ($args['groups'] as $group) {
+                $role->addGroup($group);
+            }
+        }
 
         $role->update($args);
         return $role;
     }
 
+    /**
+     * @param Roles $role
+     * @param $permissions
+     * @return Roles
+     */
     private function syncPermissions(Roles $role, $permissions)
     {
-        $permissions = json_decode($permissions,true);
         $assing = [];
         foreach ($permissions ?? [] as $item) {
             foreach ($item['rules'] ?? [] as $permission)
