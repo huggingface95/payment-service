@@ -15,7 +15,7 @@ class Xss
     {
         $input = $request->all();
         array_walk_recursive($input, function(&$input) {
-            $input = strip_tags($input);
+            $input = filter_var($input,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         });
 
         $request->merge($input);
