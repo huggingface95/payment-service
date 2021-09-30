@@ -63,7 +63,7 @@ extend type Mutation {
         company_number: String
         country_id: Int
         additional_fields: [CompanyFieldInput]
-    ): Companies @update(resolver: "CompanyMutator@update")
+    ): Companies @field(resolver:"CompanyMutator@update")
 
     deleteCompany(id: ID!): Companies @delete
 
