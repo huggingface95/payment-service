@@ -15,6 +15,12 @@ class Roles extends SpatieRole
 
     public function groups()
     {
-        return $this->belongsToMany(Groups::class);
+        return $this->belongsToMany(Groups::class,'group_role','group_id','role_id');
     }
+
+    public function scopeGroupsSort($query, $sort)
+    {
+        return $query->with('groups')->orderBy('id',$sort);
+    }
+
 }

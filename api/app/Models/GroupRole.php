@@ -9,8 +9,9 @@ class GroupRole extends Model
     public $timestamps = false;
     protected $table = 'group_role';
 
-//    public function role()
-//    {
-//        return $this->belongsTo(Roles::class,"role_id");
-//    }
+    public function group()
+    {
+        return $this->belongsTo(Groups::class,"group_id");
+    }
+
 }

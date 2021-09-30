@@ -5,25 +5,30 @@ type Roles {
     description: String
     permissions: [Permissions] @belongsToMany(relation: "permissions")
     permisssions_tree: JSON
+    groups: [Groups] @belongsToMany(relation: "groups")
+    groups_count: Int @count(relation: "groups")
 }
 
 
 extend type Query {
     role(id: ID @eq): Roles @field(resolver:"RoleQuery@permissions")
-    roles: [Roles!]! @paginate(defaultCount: 10)
+    roles(groups_sort: Sort @scope(name:"GroupsSort"), orderBy: _ @orderBy(
+        columns: ["id","name"],
+    )): [Roles!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 type Mutation {
     createRole(
         name: String!
         description: String
-    ): Roles @create
+        permissions: JSON
+    ): Roles @field(resolver:"RoleMutator@create")
 
     updateRole(
         id: ID!
         name: String!
         permissions: JSON
-    ): Roles @update
+    ): Roles @field(resolver:"RoleMutator@update")
 
     deleteRole(
         id: ID!

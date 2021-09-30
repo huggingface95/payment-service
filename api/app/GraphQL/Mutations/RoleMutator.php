@@ -22,7 +22,7 @@ class RoleMutator
             $this->syncPermissions($role, $args['permissions']);
         }
 
-        return $args;
+        return $role;
     }
 
     /**
@@ -38,7 +38,7 @@ class RoleMutator
         }
 
         $role->update($args);
-        return $args;
+        return $role;
     }
 
     private function syncPermissions(Roles $role, $permissions)
