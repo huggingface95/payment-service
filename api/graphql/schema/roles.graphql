@@ -2,28 +2,27 @@
 type Roles {
     id: ID!
     name: String!
-    slug: String!
     description: String
+    permissions: [Permissions] @belongsToMany(relation: "permissions")
+    permisssions_tree: JSON
 }
 
 
 extend type Query {
-    role(id: ID @eq): Roles @find
+    role(id: ID @eq): Roles @field(resolver:"RoleQuery@permissions")
     roles: [Roles!]! @paginate(defaultCount: 10)
 }
 
 type Mutation {
     createRole(
         name: String!
-        slug: String!
         description: String
     ): Roles @create
 
     updateRole(
         id: ID!
         name: String!
-        slug: String!
-        description: String
+        permissions: JSON
     ): Roles @update
 
     deleteRole(
