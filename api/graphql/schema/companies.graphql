@@ -1,18 +1,7 @@
-enum Types {
-    Text
-    TextArea
-    CountryList
-}
 
 enum Sort {
     ASC
     DESC
-}
-
-input CompanyFieldInput {
-    field_name: String
-    field_value: String
-    field_type: Types
 }
 
 type Companies {
@@ -62,7 +51,7 @@ extend type Mutation {
         city: String
         company_number: String
         country_id: Int
-        additional_fields: [CompanyFieldInput]
+        additional_fields: [AdditionalFieldInput]
     ): Companies @field(resolver:"CompanyMutator@update")
 
     deleteCompany(id: ID!): Companies @delete

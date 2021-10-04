@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\GroupRole;
 use App\Models\Members;
+use GraphQL\Exception\InvalidArgument;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -52,6 +53,24 @@ class MembersMutator
             $args['member_group_role_id'] = $groupRole->id;
         }
 
+        if (isset($args['additional_fields'])) {
+
+            $fields = [];
+            foreach ($args['additional_fields']  as $additionalField) {
+                if (strlen($additionalField['field_value']) > config('app.max_length_string')) {
+                    throw new InvalidArgument("Max length field is ". config('app.max_length_string'));
+                }
+                if ($additionalField['field_type'] === "Text" ) {
+                    $additionalField['field_value'] = filter_var($additionalField['field_value'],FILTER_SANITIZE_STRING,FILTER_FLAG_STRIP_LOW);
+                }
+                if ($additionalField['field_type'] === "TextArea"){
+                    $additionalField['field_value'] = filter_var($additionalField['field_value'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+                }
+                $fields[] = $additionalField;
+            }
+            $args['additional_fields'] = $fields;
+        }
+
         $member->update($args);
 
         return $member;
@@ -85,6 +104,16 @@ class MembersMutator
         return $args;
     }
 
+    public function setMemberPosition($_, array $args)
+    {
+        if(isset($args['member_id']) && isset($args['department_position']))
+        {
+            $member = Members::where(['id'=>$args['member_id']])->first();
+            $member->department_position_id = $args['department_position'];
+            $member->update();
+            return $member;
+        }
+    }
 
     /**
      * @param int $roleId

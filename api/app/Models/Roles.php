@@ -39,7 +39,7 @@ class Roles extends SpatieRole
     {
         return GroupRole::create([
            'role_id' => $this->id,
-            'group_id' => $groupId
+           'group_id' => $groupId
         ]);
     }
 

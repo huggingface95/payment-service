@@ -24,6 +24,7 @@ class CreateMembersTable extends Migration
             $table->integer('language_id')->nullable();
             $table->integer('member_group_role_id');
             $table->integer('two_factor_auth_setting_id');
+            $table->integer('department_position_id')->nullable();
             $table->integer('is_active')->default(false);
             $table->string('password_hash',255);
             $table->string('password_salt',255);
@@ -32,6 +33,7 @@ class CreateMembersTable extends Migration
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('member_group_role_id')->references('id')->on('group_role');
             $table->foreign('two_factor_auth_setting_id')->references('id')->on('two_factor_auth_settings');
+            $table->foreign('department_position_id')->references('id')->on('department_position');
             $table->foreign('country_id')->references('id')->on('countries');
         });
     }

@@ -108,4 +108,6 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'max_length_string' => env('MAX_LENGTH_STRING',200),
+
 ];
