@@ -1,4 +1,6 @@
-
+"""
+Участники
+"""
 type Members {
     id: ID!
     first_name: String!
@@ -7,21 +9,48 @@ type Members {
     sex: String
     is_active: Boolean
     company_id: Int
+    """
+    получить компанию участника
+    """
     company: Companies! @belongsTo(relation: "company")
+    """
+    получить страну участника
+    """
     country: Country @belongsTo(relation: "country")
+    """
+    Получить язык участника
+    """
     language: Languages @belongsTo(relation: "language")
+    """
+    Получить роль участника
+    """
     role: Roles @belongsTo(ralation: "role")
+    """
+    Получить должность участника
+    """
     position: DepartmentPosition @belongsTo(relation: "position")
+    """
+    ID настройки двухфактороной авторизации
+    """
     two_factor_auth_setting_id: Int!
 }
 
 
 extend type Query {
+    """
+    Получить участника по ID
+    """
     member(id: ID @eq): Members @find
+    """
+    Получить список участников
+    """
     members: [Members!]! @paginate(defaultCount: 10)
 }
 
 extend type Mutation {
+    """
+    Создать участника
+    """
     createMember(
         first_name: String!
         last_name: String!
@@ -36,6 +65,9 @@ extend type Mutation {
         password: String
     ): Members @field(resolver: "MembersMutator@create")
 
+    """
+    Пригласить участника
+    """
     inviteMember(
         first_name: String!
         last_name: String!
@@ -45,6 +77,9 @@ extend type Mutation {
         two_factor_auth_setting_id: Int!
     ): Members @field(resolver: "MembersMutator@invite")
 
+    """
+    Обновить поля участника
+    """
     updateMember(
         id: ID!
         first_name: String!
@@ -59,18 +94,33 @@ extend type Mutation {
         additional_fields: [AdditionalFieldInput]
     ): Members @field(resolver: "MembersMutator@update")
 
+    """
+    Установить пароль участника
+    """
     setMemberPassword(
         id: ID!
         password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         password_confirmation: String!
     ): Members @field(resolver: "MembersMutator@setPassword")
 
+    """
+    Удалить участника
+    """
     deleteMember(
         id: ID!
     ): Members @delete
 
+    """
+    Установить/обновить должность участника
+    """
     setMemberPosition(
+        """
+        ID участника
+        """
         member_id: ID!
+        """
+        ID должности из списка department_position
+        """
         department_position: Int
     ): Members @field(resolver: "MembersMutator@setMemberPosition")
 
