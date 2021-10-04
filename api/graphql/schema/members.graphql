@@ -11,6 +11,7 @@ type Members {
     country: Country @belongsTo(relation: "country")
     language: Languages @belongsTo(relation: "language")
     role: Roles @belongsTo(ralation: "role")
+    position: DepartmentPosition @belongsTo(relation: "position")
     two_factor_auth_setting_id: Int!
 }
 
@@ -66,6 +67,11 @@ extend type Mutation {
     deleteMember(
         id: ID!
     ): Members @delete
+
+    setMemberPosition(
+        member_id: ID!
+        department_position: Int
+    ): Members @field(resolver: "MembersMutator@setMemberPosition")
 
 
 }

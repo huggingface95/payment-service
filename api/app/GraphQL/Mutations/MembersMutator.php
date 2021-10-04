@@ -85,6 +85,16 @@ class MembersMutator
         return $args;
     }
 
+    public function setMemberPosition($_, array $args)
+    {
+        if(isset($args['member_id']) && isset($args['department_position']))
+        {
+            $member = Members::where(['id'=>$args['member_id']])->first();
+            $member->department_position_id = $args['department_position'];
+            $member->update();
+            return $member;
+        }
+    }
 
     /**
      * @param int $roleId

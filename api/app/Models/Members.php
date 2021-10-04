@@ -36,4 +36,9 @@ class Members extends Model
     {
         return $this->belongsTo(Roles::class,'member_group_role_id');
     }
+
+    public function position()
+    {
+        return $this->belongsTo(DepartmentPosition::class,'department_position_id');
+    }
 }

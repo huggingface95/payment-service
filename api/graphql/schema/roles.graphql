@@ -22,14 +22,14 @@ type Mutation {
         name: String!
         description: String
         permissions: JSON
-        groups: JSON
+        groups: [Int]
     ): Roles @field(resolver:"RoleMutator@create")
 
     updateRole(
         id: ID!
         name: String!
         permissions: JSON
-        groups: JSON
+        groups: [Int]
     ): Roles @field(resolver:"RoleMutator@update")
 
     deleteRole(
