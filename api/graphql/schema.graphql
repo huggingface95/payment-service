@@ -3,6 +3,19 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
 scalar EMAIL @scalar(class: "MLL\\GraphQLScalars\\Email")
 
+
+enum FieldTypes {
+    Text
+    TextArea
+    CountryList
+}
+
+input AdditionalFieldInput {
+    field_name: String
+    field_value: String
+    field_type: FieldTypes
+}
+
 #import schema/*.graphql
 
 

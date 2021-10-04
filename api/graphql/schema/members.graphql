@@ -56,6 +56,7 @@ extend type Mutation {
         language_id: Int
         role_id: Int
         is_active: Boolean
+        additional_fields: [AdditionalFieldInput]
     ): Members @field(resolver: "MembersMutator@update")
 
     setMemberPassword(

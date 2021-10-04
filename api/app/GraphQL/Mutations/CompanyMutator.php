@@ -21,14 +21,13 @@ class CompanyMutator
 
     public function update($root, array $args, GraphQLContext $context)
     {
-        $maxLength = env('MAX_LENGTH_STRING',200);
         $company = Companies::find($args['id']);
         if (isset($args['additional_fields'])) {
 
             $fields = [];
             foreach ($args['additional_fields']  as $additionalField) {
-                if (strlen($additionalField['field_value']) > $maxLength) {
-                    throw new InvalidArgument("Max length field is ". $maxLength);
+                if (strlen($additionalField['field_value']) > config('app.max_length_string')) {
+                    throw new InvalidArgument("Max length field is ". config('app.max_length_string'));
                 }
                 if ($additionalField['field_type'] === "Text" ) {
                     $additionalField['field_value'] = filter_var($additionalField['field_value'],FILTER_SANITIZE_STRING,FILTER_FLAG_STRIP_LOW);
