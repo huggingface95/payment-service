@@ -20,7 +20,7 @@ class CreateCompaniesTable extends Migration
             $table->string('email',255);
             $table->string('company_number',100)->nullable();
             $table->string('contact_name',100)->nullable();
-            $table->integer('country_id');
+            $table->unsignedBigInteger('country_id');
             $table->string('zip',20)->nullable();
             $table->string('address',255)->nullable();
             $table->string('city',100)->nullable();

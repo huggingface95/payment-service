@@ -16,7 +16,7 @@ class CreateDepartmentsPositionTable extends Migration
         Schema::create('department_position', function (Blueprint $table) {
             $table->id();
             $table->string('name',255);
-            $table->integer('department_id');
+            $table->unsignedBigInteger('department_id');
             $table->foreign('department_id')->references('id')->on('departments');
         });
     }
