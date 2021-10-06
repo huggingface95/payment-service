@@ -1,46 +1,78 @@
-
+"""
+Департаменты
+Administration->Company Info->Full Profile->Departments
+"""
 type Departments {
     id: ID!
+    "Название департамента"
     name: String!
+    "Получить компанию"
     company: Companies @belongsTo(relation: "company")
+    "Получить должность"
     positions: [DepartmentPosition] @hasMany(relation: "positions")
 }
-
+"Должности"
 type DepartmentPosition {
     id: ID!
+    "Назварие должности"
     name: String !
+    "Получить департамент"
     department: Departments @belongsTo(relation: "department")
 }
 
 extend type Query {
+    "Получить департамент по его ID"
     department(id: ID @eq): Departments @find
+    """
+    Получить список департаментов
+    orderBy: [{ column: ID, order: DESC }] сортировка по названию или по ID
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    """
     departments( where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [Departments!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    "Получить должность по ID"
     departmentPosition(id: ID @eq): DepartmentPosition @find
+    """
+    Получить список должностей
+    orderBy: [{ column: ID, order: DESC }] сортировка по названию или по ID
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    """
     departmentPositions( where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [DepartmentPosition!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {
+    "Создать департамент"
     createDepartment(
+        "Название департамента"
         name: String!
+        "ID компанию"
         company_id: Int!
     ): Departments @create
 
+    "Изменить название департамента"
     updateDepartment(
+        "ID департамента"
         id: ID!
+        "Название департамента"
         name: String
     ): Departments @update
 
+    "Создание должности"
     createDepartmentPosition(
+        "Назвние должности"
         name: String!
+        "ID департамента"
         department_id: Int!
     ): DepartmentPosition @create
 
+    "Изменить название должности"
     updateDepartmentPosition(
         id: ID!
         name: String
     ): DepartmentPosition @update
 
+    "Удалить департамент"
     deleteDepartment(id: ID!): Departments @delete
+    "Удалить должность"
     deleteDepartmentPosition(id: ID!): DepartmentPosition @delete
 
 }

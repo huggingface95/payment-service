@@ -1,19 +1,30 @@
-
+"""
+Настройки компании
+Administration->Company Info->Full Profile->Branding
+"""
 type CompanySettings {
     id: ID!
+    "URL в тексте письма"
     email_url: EMAIL
+    "Email для jwt"
     email_jwt: EMAIL
+    "Email отправителя"
     email_from: EMAIL
+    "ID файла логотипа из хранилища"
     logo_object_key: String
+    "Данные о компании"
     company: Companies @belongsTo(relation: "company")
+    "Показывать или нет лого"
     show_own_logo: Boolean
 }
 
 extend type Query {
+    "Получить настройки компании по ID компании"
     companySettings(company_id: Int @eq): CompanySettings @find
 }
 
 extend type Mutation {
+    "Добавить настройки к компании"
     createCompanySettings(
         email_url: EMAIL
         email_jwt: EMAIL
@@ -23,13 +34,14 @@ extend type Mutation {
         company_id: Int!
     ): CompanySettings @create
 
+    "Обновление настроек компании"
     updateCompanySettings(
+        company_id: Int!
         email_url: EMAIL
         email_jwt: EMAIL
         email_from: EMAIL
         logo_object_key: String!
         show_own_logo: Boolean
-        company_id: Int!
     ): CompanySettings @update
 
 

@@ -1,10 +1,15 @@
+"Языки"
 type Languages {
     id: ID!
+    "Язык"
     name: String!
+    "ISO код языка"
     iso: String!
 }
 
 type Query {
+    "Получить язык по ID"
     language(id: ID @eq): Languages @find
+    "Получить список языков"
     languages: [Languages!]! @paginate(defaultCount: 10)
 }

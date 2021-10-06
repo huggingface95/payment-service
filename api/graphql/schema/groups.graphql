@@ -1,38 +1,59 @@
+"""
+Список групп
+Settings->Manager Groups->Groups List
+"""
 enum GroupsEntities {
     Member @enum(value: Member)
     Company @enum(value: Company)
     Individual @enum(value: Individual)
 }
+
+"Группы"
 type Groups {
     id: ID!
+    "Название группы"
     name: GroupsEntities!
+    "Описание группы"
     description: String
+    "Связанные роли"
     roles: [Roles] @belongsToMany(relation: "roles")
 }
 
 type GroupRole {
     id: ID!
+    "ID группы"
     group_id: Int!
+    "ID роли"
     role_id: Int!
     group: Groups @belongsTo(relation: "group")
 }
 
 
 extend type Query {
+    "Получить группу по ID"
     group(id: ID @eq): Groups @find
+    "Получить список групп"
     groups: [Groups!]! @paginate(defaultCount: 10)
+    "Получить список групп с ролями"
     groups_list: [GroupRole!]! @paginate(defaultCount: 10)
 }
 
 extend type Mutation {
+    "Создать группу"
     createGroup(
+        "Название группы"
         name: GroupsEntities!
+        "Описание группы"
         description: String
     ): Groups @create
 
+    "Обновить поля группы"
     updateGroup(
+        "ID группы"
         id: ID!
+        "Название группы"
         name: GroupsEntities!
+        "Описание группы"
         description: String
     ): Groups @update
 
