@@ -3,13 +3,23 @@ scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date
 scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
 scalar EMAIL @scalar(class: "MLL\\GraphQLScalars\\Email")
 
+enum Sort {
+    ASC
+    DESC
+}
 
+"""
+Типы полей
+"""
 enum FieldTypes {
     Text
     TextArea
     CountryList
 }
 
+"""
+Дополнительные поля
+"""
 input AdditionalFieldInput {
     field_name: String
     field_value: String

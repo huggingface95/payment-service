@@ -1,4 +1,7 @@
-
+"""
+Список разрешений
+Settings->Manager Roles->Rol
+"""
 type Permissions {
     id: ID
     name: String
@@ -9,7 +12,9 @@ type Permissions {
 
 
 extend type Query {
+    "Получить разрешение по ID"
     permission(id: ID @eq): Permissions @find
+    "Получить список разрешений"
     permissions: Permissions @field(resolver:"PermissionQuery@tree")
 }
 

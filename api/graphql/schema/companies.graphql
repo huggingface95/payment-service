@@ -1,59 +1,98 @@
-
-enum Sort {
-    ASC
-    DESC
-}
-
+"""
+Компания
+Administration->Company Info
+"""
 type Companies {
     id: ID!
+    "Название компании"
     name: String!
+    "URL компании"
     url: String
+    "E-mail компании"
     email: EMAIL!
+    "Регистрационный номер компании"
     company_number: String
+    "Контактное лицо"
     contact_name: String
+    "Страна"
     country: Country @belongsTo(relation: "country")
+    "Индекс"
     zip: String
+    "Город"
     city: String
+    "Адресс"
     address: String
+    "Участники компании"
     members: [Members] @hasMany(relation: "members")
+    "Количество участников в компании"
     members_count: Int @count(relation: "members")
+    "Дополнительные поля"
     additional_fields: JSON
     created_at: DateTime!
     updated_at: DateTime!
 }
 
 extend type Query {
+    """
+    Получить компанию по ID
+    """
     company(id: ID @eq): Companies @find
+    """
+    Получить список компаний
+    member_count: сортировка по количеству участников компании
+    orderBy: [{ column: CREATED_AT, order: DESC }] сортировка по дате создания или по ID
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию, по email , url
+    """
     companies(member_count: Sort @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url"]), orderBy: _ @orderBy(
         columns: ["id","created_at"],
     )): [Companies!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {
+    "Создать компанию"
     createCompany(
+        "Название компании"
         name: String!
+        "Email компании"
         email: EMAIL!
+        "Сайт компании"
         url: String
+        "Почтовый индекс компании"
         zip: String
+        "Адрес компании"
         address: String
+        "Город компании"
         city: String
+        "Регистрационный номер компании"
         company_number: String
+        "ID страны"
         country_id: Int!
     ): Companies @create
 
+    "Обновить данные компании"
     updateCompany(
+        "ID компании"
         id: ID!
+        "Название компании"
         name: String
+        "Email компании"
         email: EMAIL
+        "Сайт компании"
         url: String
+        "Почтовый индекс компании"
         zip: String
+        "Адрес компании"
         address: String
+        "Город компании"
         city: String
+        "Регистрационный номер компании"
         company_number: String
+        "ID страны"
         country_id: Int
         additional_fields: [AdditionalFieldInput]
     ): Companies @field(resolver:"CompanyMutator@update")
 
+    "Удалит компанию"
     deleteCompany(id: ID!): Companies @delete
 
 }

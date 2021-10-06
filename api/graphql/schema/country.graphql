@@ -1,10 +1,16 @@
+"Страна"
 type Country {
     id: ID!
+    "Название страны"
     name: String!
+    "3х значный ISO код"
     iso: String!
 }
 
 extend type Query {
     country(id: ID @eq): Country @find
+    """
+    Получить список стран
+    """
     countries: [Country!]! @paginate(defaultCount: 10)
 }

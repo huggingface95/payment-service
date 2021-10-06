@@ -1,5 +1,6 @@
 """
 Участники
+Administration->Members
 """
 type Members {
     id: ID!
@@ -36,8 +37,12 @@ extend type Query {
     member(id: ID @eq): Members @find
     """
     Получить список участников
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по имени, email, комании, ролт, департаменту, должности
     """
-    members: [Members!]! @paginate(defaultCount: 10)
+    members(where: _ @whereConditions(columns: ["name","company" ,"email","role", "department","position"]), orderBy: _ @orderBy(
+        columns: ["id","email"],
+    )): [Members!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {
@@ -85,6 +90,8 @@ extend type Mutation {
         role_id: Int
         "ID настройки двухфактороной авторизации"
         two_factor_auth_setting_id: Int!
+        "Дополнительны поля"
+        additional_fields: JSON
     ): Members @field(resolver: "MembersMutator@invite")
 
     """
