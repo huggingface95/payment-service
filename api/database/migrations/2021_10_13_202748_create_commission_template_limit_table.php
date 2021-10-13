@@ -26,6 +26,7 @@ class CreateCommissionTemplateLimitTable extends Migration
             $table->foreign('commission_template_limit_transfer_direction_id')->references('id')->on('commission_template_limit_transfer_direction');
             $table->foreign('commission_template_limit_period_id')->references('id')->on('commission_template_limit_period');
             $table->foreign('commission_template_limit_action_type_id')->references('id')->on('commission_template_limit_action_type');
+            $table->foreign('currency_id')->references('id')->on('currencies');
         });
     }
 
