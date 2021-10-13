@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 
-use App\Models\Currency;
+use App\Models\Currencies;
 use Illuminate\Database\Seeder;
 
 class CurrencyTableSeeder extends Seeder
@@ -18,7 +18,7 @@ class CurrencyTableSeeder extends Seeder
         $path = base_path().'/data/currency_codes.csv';
         $dataCsv = array_map('str_getcsv', file($path));
         foreach ($dataCsv as $item) {
-            Currency::create(
+            Currencies::create(
                 [
                     'name'=> $item[0],
                     'code' => $item[1],

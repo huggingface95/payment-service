@@ -34,20 +34,31 @@ extend type Query {
 
 type Mutation {
     createRole(
+        "Название роли"
         name: String!
+        "Описание"
         description: String
-        permissions: JSON
+        "Массив разрешений"
+        permissions: [Int]
+        "Массив груп поумолчанию"
         groups: [Int]
     ): Roles @field(resolver:"RoleMutator@create")
 
     updateRole(
+        "ID роли"
         id: ID!
+        "Название роли"
         name: String!
-        permissions: JSON
+        "Описание роли"
+        description: String
+        "Массив разрешений"
+        permissions: [Int]
+        "Массив групп поумолчанию"
         groups: [Int]
     ): Roles @field(resolver:"RoleMutator@update")
 
     deleteRole(
+        "ID роли"
         id: ID!
     ): Roles @delete
 

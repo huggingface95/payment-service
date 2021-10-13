@@ -1,0 +1,19 @@
+"Валюты"
+type Currencies{
+    id: ID!
+    "Название валюты"
+    name: String!
+    "ISO код валюты"
+    code: String!
+    "Количество знаков после запятой"
+    minor_unit: Int
+}
+
+extend type Query {
+    "Получить валюту по ID"
+    currency(id: ID @eq): Currencies @find
+    """
+    Получить список валют
+    """
+    currencies: [Currencies!]! @paginate(defaultCount: 10)
+}

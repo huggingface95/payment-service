@@ -139,6 +139,7 @@ extend type Mutation {
     Удалить участника
     """
     deleteMember(
+        "ID участника"
         id: ID!
     ): Members @delete
 

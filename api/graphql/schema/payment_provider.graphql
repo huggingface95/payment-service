@@ -1,0 +1,86 @@
+"""
+Платежные провайдеры
+Banking -> Payment Providers
+"""
+type PaymentProvider {
+    id: ID!
+    "Название провайдера"
+    name: String!
+    "Описание провайдера"
+    description: String
+    "ключ для получения изображения в Object Storage"
+    logo_key: String
+    "Активен или нет"
+    is_active: Boolean
+    "Получить связанные платежные системы"
+    payment_systems: [PaymentSystem] @belongsToMany(relation:"paymentSystems")
+    "массив ID стран"
+    country_id: [Int]
+    "Получить связанные страны"
+    countries: [Country]
+    "массив ID валют"
+    currency_id: [Int]
+    "Получить связанные валюты"
+    currencies: [Currencies]
+}
+
+extend type Query {
+    "Получить провайдер по ID"
+    paymentProvider(id: ID @eq): PaymentProvider @find
+    """
+    Получить список провайдеров
+    paymentProviderCountry: country_id - получить все провайдеры по стране
+    paymentProviderCurrency: currency_id - получить все провайдеры по валюте
+    orderBy: [{ column: ID, order: DESC }] сортировка ID, NAME, IS_ACTIVE
+    where:{column: NAME, operator: EQ, value: ""} фильтр по name
+    hasPaymentSystems: {column:NAME,operator:GTE,value:PaymentSystemName} фильтр по платежным системам
+    """
+    paymentProviders(
+        paymentProviderCountry: [Int] @scope(name:"PaymentProviderCountry"),
+        paymentProviderCurrency: [Int] @scope(name:"PaymentProviderCurrency"),
+        hasPaymentSystems: _ @whereHasConditions(columns: ["name", "id"]),
+        where: _ @whereConditions(columns: ["name","country_id"]),
+        orderBy: _ @orderBy(columns: ["id","name","is_active"])
+    ): [PaymentProvider!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    createPaymentProvider(
+        "Название провайдера"
+        name: String!
+        "Описание провайдера"
+        description: String
+        "ключ для получения изображения в Object Storage"
+        logo_key: String
+        "Активен или нет"
+        is_active: Boolean
+        "массив ID платежных систем"
+        payment_systems: [Int]
+        "массив ID стран"
+        country_id: [Int]
+        "массив ID валют"
+        currency_id: [Int]
+    ):PaymentProvider @field(resolver: "PaymentProviderMutator@create")
+
+    updatePaymentProvider(
+        id: ID!
+        "Название провайдера"
+        name: String
+        "Описание провайдера"
+        description: String
+        "ключ для получения изображения в Object Storage"
+        logo_key: String
+        "Активен или нет"
+        is_active: Boolean
+        "массив ID платежных систем"
+        payment_systems: [Int]
+        "массив ID стран"
+        country_id: [Int]
+        "массив ID валют"
+        currency_id: [Int]
+    ):PaymentProvider @field(resolver: "PaymentProviderMutator@update")
+
+    "Удалить платежный провайдер"
+    deletePaymentProvider(id: ID!): PaymentProvider @delete
+
+}
