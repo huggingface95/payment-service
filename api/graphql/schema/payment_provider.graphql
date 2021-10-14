@@ -39,7 +39,7 @@ extend type Query {
         paymentProviderCountry: [Int] @scope(name:"PaymentProviderCountry"),
         paymentProviderCurrency: [Int] @scope(name:"PaymentProviderCurrency"),
         hasPaymentSystems: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["name","country_id"]),
+        where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
     ): [PaymentProvider!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
