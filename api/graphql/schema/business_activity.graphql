@@ -1,0 +1,19 @@
+"""
+Платежные системы
+Banking -> Commission Templates -> Template Settings
+"""
+type BusinessActivity {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    "Получить по ID"
+    businessActivity(id: ID @eq): BusinessActivity @find
+    "Получить список всех бизнесов"
+    businessActivities(where: _ @whereConditions(columns: ["name","is_active"]), orderBy: _ @orderBy(
+        columns: ["id","name"])): [BusinessActivity!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+
