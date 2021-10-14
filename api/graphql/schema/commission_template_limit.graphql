@@ -34,7 +34,7 @@ extend type Query {
     """
     Получить список лимитов
     """
-    commissionTemplateLimits(): [CommissionTemplateLimit!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    commissionTemplateLimits: [CommissionTemplateLimit!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {
