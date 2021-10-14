@@ -27,4 +27,24 @@ class CommissionTemplateLimit extends Model
     ];
 
 
+    public function commissionTemplateLimitType()
+    {
+        $this->belongsTo(CommissionTemplateLimit::class,'commission_template_limit_type_id','id');
+    }
+
+    public function commissionTemplateLimitTransferDirection()
+    {
+        $this->belongsTo(CommissionTemplateLimitTransferDirection::class,'commission_template_limit_transfer_direction_id','id');
+    }
+
+    public function commissionTemplateLimitPeriod()
+    {
+        $this->belongsTo(CommissionTemplateLimitPeriod::class,'commission_template_limit_period_id','id');
+    }
+
+    public function commissionTemplateLimitActionType()
+    {
+        $this->belongsTo(CommissionTemplateLimitActionType::class,'commission_template_limit_action_type_id','id');
+    }
+
 }
