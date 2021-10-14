@@ -1,0 +1,73 @@
+"""
+Шаблоны комиссий
+Banking -> Commission Templates -> Template List
+"""
+type CommissionTemplate {
+    id: ID!
+    "Название шаблона"
+    name: String!
+    "Описание шаблона"
+    description: String
+    "Активен или нет"
+    is_active: Boolean
+    "массив ID стран"
+    country_id: [Int]
+    "массив ID валют"
+    currency_id: [Int]
+    "Получить связанный платежный провайдер"
+    payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
+    "Получить список бизнесов"
+    business_activity: [BusinessActivity] @belongsToMany(relation: "businessActivity")
+}
+
+extend type Query {
+    "Получить шаблон по ID"
+    commissionTemplate(id: ID @eq): CommissionTemplate @find
+    """
+    Получить список шаблонов
+    orderBy: [{ column: ID, order: DESC }] сортировка ID, NAME, IS_ACTIVE
+    where:{column: NAME, operator: EQ, value: ""} фильтр по name
+    hasPaymentProvider: {column:NAME,operator:GTE,value:PaymentProviderName} фильтр по провайдеру системам
+    hasBusinessActivity: {column:NAME,operator:GTE,value:BusinessActivityName} фильтр по бизнесу
+    """
+    commissionTemplates(
+        hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
+        hasBusinessActivity: _ @whereHasConditions(columns: ["name", "id"]),
+        where: _ @whereConditions(columns: ["name","is_active"]),
+        orderBy: _ @orderBy(columns: ["id","name","is_active"])
+    ): [CommissionTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создание шаблона комиссий"
+    createCommissionTemplate(
+        "Название шаблона"
+        name: String!
+        "ID платежного провайдера"
+        provider_id: Int!
+    ):CommissionTemplate @create
+
+    "Обновление полей шаблона комиссий"
+    updateCommissionTemplate(
+        "ID шаблона"
+        id: ID!
+        "Название шаблона"
+        name: String
+        "Описание шаблона"
+        description: String
+        "Активен или нет"
+        is_active: Boolean
+        "массив ID бизнесов"
+        business_activity: [Int]
+        "массив ID стран"
+        country_id: [Int]
+        "массив ID валют"
+        currency_id: [Int]
+        "массив ID лимитов"
+        commission_template_limit_id: [Int]
+    ):CommissionTemplate @field(resolver: "CommissionTemplateMutator@update")
+
+    "Удалить шаблон"
+    deleteCommissionTemplate(id: ID!): CommissionTemplate @delete
+
+}

@@ -1,0 +1,19 @@
+"""
+Типы лимитов шаблонов
+Banking -> Commission Templates -> Template Settings
+"""
+type CommissionTemplateLimitType {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    "Получить по ID"
+    commissionTemplateLimitType(id: ID @eq): CommissionTemplateLimitType @find
+    "Получить список типов лимитов"
+    commissionTemplateLimitTypes(where: _ @whereConditions(columns: ["name"]),
+        orderBy: _ @orderBy(columns: ["id","name"])): [CommissionTemplateLimitType!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+

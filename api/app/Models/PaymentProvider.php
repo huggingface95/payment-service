@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-class PaymentProvider extends Model
+class PaymentProvider extends BaseModel
 {
 
     public $timestamps = false;
@@ -23,20 +22,20 @@ class PaymentProvider extends Model
 
     public function getCountryIdAttribute($value)
     {
-        return json_decode(str_replace(['{', '}'], ['[', ']'], $value));
+        return $this->getArrayAttribute($value);
     }
 
     public function setCountryIdAttribute($value) {
-        $this->attributes['country_id'] = str_replace(['[', ']'], ['{', '}'], json_encode($value));
+        $this->attributes['country_id'] = $this->setArrayAttribute($value);
     }
 
     public function getCurrencyIdAttribute($value)
     {
-        return json_decode(str_replace(['{', '}'], ['[', ']'], $value));
+        return $this->getArrayAttribute($value);
     }
 
     public function setCurrencyIdAttribute($value) {
-        $this->attributes['currency_id'] = str_replace(['[', ']'], ['{', '}'], json_encode($value));
+        $this->attributes['currency_id'] = $this->setArrayAttribute($value);
     }
 
 
