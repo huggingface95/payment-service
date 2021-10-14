@@ -1,5 +1,5 @@
 """
-Платежные системы
+Business Activity
 Banking -> Commission Templates -> Template Settings
 """
 type BusinessActivity {
@@ -12,8 +12,7 @@ extend type Query {
     "Получить по ID"
     businessActivity(id: ID @eq): BusinessActivity @find
     "Получить список всех бизнесов"
-    businessActivities(where: _ @whereConditions(columns: ["name","is_active"]), orderBy: _ @orderBy(
-        columns: ["id","name"])): [BusinessActivity!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    businessActivities(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [BusinessActivity!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 
