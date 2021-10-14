@@ -1,0 +1,19 @@
+"""
+Периоды шаблонов комиссий
+Banking -> Commission Templates -> Template Settings
+"""
+type CommissionTemplateLimitPeriod {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    "Получить по ID"
+    commissionTemplateLimitPeriod(id: ID @eq): CommissionTemplateLimitPeriod @find
+    "Получить список типов лимитов"
+    commissionTemplateLimitPeriods(where: _ @whereConditions(columns: ["name"]),
+        orderBy: _ @orderBy(columns: ["id","name"])): [CommissionTemplateLimitPeriod!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+

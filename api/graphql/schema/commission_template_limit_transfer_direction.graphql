@@ -1,0 +1,19 @@
+"""
+Направления переводов лимитов шаблонов комиссий
+Banking -> Commission Templates -> Template Settings
+"""
+type CommissionTemplateLimitTransferDirection {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    "Получить по ID"
+    commissionTemplateLimitTransferDirection(id: ID @eq): CommissionTemplateLimitTransferDirection @find
+    "Получить список направлений"
+    commissionTemplateLimitTransferDirections(where: _ @whereConditions(columns: ["name"]),
+        orderBy: _ @orderBy(columns: ["id","name"])): [CommissionTemplateLimitTransferDirection!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+

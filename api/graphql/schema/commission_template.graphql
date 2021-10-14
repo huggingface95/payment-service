@@ -1,5 +1,5 @@
 """
-Платежные провайдеры
+Шаблоны комиссий
 Banking -> Commission Templates -> Template List
 """
 type CommissionTemplate {
@@ -39,6 +39,7 @@ extend type Query {
 }
 
 extend type Mutation {
+    "Создание шаблона комиссий"
     createCommissionTemplate(
         "Название шаблона"
         name: String!
@@ -46,6 +47,7 @@ extend type Mutation {
         provider_id: Int!
     ):CommissionTemplate @create
 
+    "Обновление полей шаблона комиссий"
     updateCommissionTemplate(
         "ID шаблона"
         id: ID!
