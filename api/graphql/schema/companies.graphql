@@ -40,11 +40,12 @@ extend type Query {
     """
     Получить список компаний
     member_count: сортировка по количеству участников компании
-    county: сортировка по  компании
+    county: сортировка по  стране
     orderBy: [{ column: CREATED_AT, order: DESC }] сортировка по дате создания, по ID, по названию, email, url
+    created_at: {from:"2021-10-11", to: "2021-10-12"} фильтр по дате
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию, по email , url
     """
-    companies(country: Sort @scope(name:"CountrySort"), member_count: Sort @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url"]), orderBy: _ @orderBy(
+    companies(created_at: DateRange @whereBetween, country: Sort @scope(name:"CountrySort"), member_count: Sort @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url","created_at"]), orderBy: _ @orderBy(
         columns: ["id","created_at","name","email","url"],
     )): [Companies!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }

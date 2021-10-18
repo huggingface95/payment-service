@@ -8,6 +8,11 @@ enum Sort {
     DESC
 }
 
+input DateRange {
+    from: Date!
+    to: Date!
+}
+
 """
 Типы полей
 """
