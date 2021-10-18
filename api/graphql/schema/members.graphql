@@ -40,7 +40,7 @@ extend type Query {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     where:{column: NAME, operator: LIKE, value: ""} фильтр по имени, email, комании, ролт, департаменту, должности
     """
-    members(where: _ @whereConditions(columns: ["name","company" ,"email","role", "department","position"]), orderBy: _ @orderBy(
+    members(where: _ @whereConditions(columns: ["name","company_id" ,"email","role", "department","position"]), orderBy: _ @orderBy(
         columns: ["id","email"],
     )): [Members!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -69,7 +69,7 @@ extend type Mutation {
         "Активен не активен"
         is_active: Boolean
         "ID настройки двухфактороной авторизации"
-        two_factor_auth_setting_id: Int!
+        two_factor_auth_setting_id: Int
         "Пароль участника, если не передан то сгенерируется случайный"
         password: String
     ): Members @field(resolver: "MembersMutator@create")
