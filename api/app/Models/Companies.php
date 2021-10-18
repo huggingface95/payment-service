@@ -37,4 +37,9 @@ class Companies extends Model
         return $query->withCount('members')->orderBy('members_count',$sort);
     }
 
+    public function scopeCountrySort($query, $sort)
+    {
+        return $query->join('countries','companies.country_id','=','countries.id')->orderBy('countries.id',$sort)->select('companies.*');
+    }
+
 }
