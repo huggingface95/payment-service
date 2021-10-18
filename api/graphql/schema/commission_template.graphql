@@ -44,7 +44,7 @@ extend type Mutation {
         "Название шаблона"
         name: String!
         "ID платежного провайдера"
-        provider_id: Int!
+        payment_provider_id: Int!
     ):CommissionTemplate @create
 
     "Обновление полей шаблона комиссий"
@@ -57,6 +57,8 @@ extend type Mutation {
         description: String
         "Активен или нет"
         is_active: Boolean
+        "ID платежного провайдера"
+        payment_provider_id: Int!
         "массив ID бизнесов"
         business_activity: [Int]
         "массив ID стран"
