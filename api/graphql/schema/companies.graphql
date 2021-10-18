@@ -40,7 +40,7 @@ extend type Query {
     """
     Получить список компаний
     member_count: сортировка по количеству участников компании
-    county: сортировка по  компании
+    county: сортировка по  стране
     orderBy: [{ column: CREATED_AT, order: DESC }] сортировка по дате создания, по ID, по названию, email, url
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию, по email , url
     """
