@@ -65,9 +65,11 @@ extend type Mutation {
         "ID группы"
         id: ID!
         "Название группы"
-        name: GroupsEntities!
+        name: GroupsEntities
         "Описание группы"
         description: String
+        "Активная или нет группа (true/false)"
+        is_active: Boolean
         "ID роли"
         role_id: Int!
         "ID группы из списка групп поумолчанию"
@@ -77,6 +79,7 @@ extend type Mutation {
         "ID шаблона комиссий"
         commission_template_id: Int
     ): GroupRole @update
+
 
     "Удаление группы"
     deleteGroup(id:ID!): GroupRole @delete
