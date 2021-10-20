@@ -17,8 +17,14 @@ class CreateGroupRoleTable extends Migration
             $table->id();
             $table->unsignedBigInteger('group_id');
             $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('payment_provider_id');
+            $table->unsignedBigInteger('commission_template_id');
+            $table->boolean('is_active')->default(false);
+            $table->string('description',512)->nullable();
             $table->foreign('group_id')->references('id')->on('groups');
             $table->foreign('role_id')->references('id')->on('roles');
+            $table->foreign('payment_provider_id')->references('id')->on('payment_provider');
+            $table->foreign('commission_template_id')->references('id')->on('commission_template');
         });
     }
 

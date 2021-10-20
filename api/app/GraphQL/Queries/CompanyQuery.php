@@ -11,7 +11,6 @@ class CompanyQuery
      */
     public function __invoke($_, array $args)
     {
-
     }
 
 }

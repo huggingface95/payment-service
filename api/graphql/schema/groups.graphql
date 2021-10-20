@@ -13,8 +13,6 @@ type Groups {
     id: ID!
     "Название группы"
     name: GroupsEntities!
-    "Описание группы"
-    description: String
     "Связанные роли"
     roles: [Roles] @belongsToMany(relation: "roles")
 }
@@ -25,7 +23,14 @@ type GroupRole {
     group_id: Int!
     "ID роли"
     role_id: Int!
+    "Описание группы"
+    description: String
+    "Получить название связанной группы"
     group: Groups @belongsTo(relation: "group")
+    "Получить связанный платежный провайдер"
+    payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
+    "Получит свящанный шаблон комиссий"
+    commission_template: CommissionTemplate @belongsTo(relation: "commissionTemplate")
 }
 
 
@@ -45,7 +50,15 @@ extend type Mutation {
         name: GroupsEntities!
         "Описание группы"
         description: String
-    ): Groups @create
+        "ID роли"
+        role_id: Int!
+        "ID группы из списка групп поумолчанию"
+        group_id: Int!
+        "ID платежного провайдера"
+        payment_provider_id: Int
+        "ID шаблона комиссий"
+        commission_template_id: Int
+    ): GroupRole @create
 
     "Обновить поля группы"
     updateGroup(
@@ -55,7 +68,15 @@ extend type Mutation {
         name: GroupsEntities!
         "Описание группы"
         description: String
-    ): Groups @update
+        "ID роли"
+        role_id: Int!
+        "ID группы из списка групп поумолчанию"
+        group_id: Int!
+        "ID платежного провайдера"
+        payment_provider_id: Int
+        "ID шаблона комиссий"
+        commission_template_id: Int
+    ): GroupRole @update
 
 
 }
