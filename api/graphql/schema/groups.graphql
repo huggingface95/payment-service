@@ -13,8 +13,6 @@ type Groups {
     id: ID!
     "Название группы"
     name: GroupsEntities!
-    "Описание группы"
-    description: String
     "Связанные роли"
     roles: [Roles] @belongsToMany(relation: "roles")
 }
@@ -25,17 +23,30 @@ type GroupRole {
     group_id: Int!
     "ID роли"
     role_id: Int!
+    "Описание группы"
+    description: String
+    "Получить название связанной группы"
     group: Groups @belongsTo(relation: "group")
+    "Получить связанный платежный провайдер"
+    payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
+    "Получит свящанный шаблон комиссий"
+    commission_template: CommissionTemplate @belongsTo(relation: "commissionTemplate")
 }
 
 
 extend type Query {
     "Получить группу по ID"
     group(id: ID @eq): Groups @find
-    "Получить список групп"
+    "Получить список групп по умолчанию"
     groups: [Groups!]! @paginate(defaultCount: 10)
-    "Получить список групп с ролями"
-    groups_list: [GroupRole!]! @paginate(defaultCount: 10)
+    """
+    Получить список групп с ролями
+    orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
+    where:{column: ID, operator: EQ, value: ""} фильтр по ID, ID группы, ID роли, ID платежного провайдера, ID шаблона комиссий, по статусу
+    """
+    groups_list(where: _ @whereConditions(columns: ["id","group_id", "role_id", "payment_provider_id", "commission_template_id", "is_active"]), orderBy: _ @orderBy(
+        columns: ["id","is_active","description"],
+    )): [GroupRole!]! @paginate(defaultCount: 10)
 }
 
 extend type Mutation {
@@ -45,17 +56,39 @@ extend type Mutation {
         name: GroupsEntities!
         "Описание группы"
         description: String
-    ): Groups @create
+        "ID роли"
+        role_id: Int!
+        "ID группы из списка групп поумолчанию"
+        group_id: Int!
+        "ID платежного провайдера"
+        payment_provider_id: Int
+        "ID шаблона комиссий"
+        commission_template_id: Int
+    ): GroupRole @create
 
     "Обновить поля группы"
     updateGroup(
         "ID группы"
         id: ID!
         "Название группы"
-        name: GroupsEntities!
+        name: GroupsEntities
         "Описание группы"
         description: String
-    ): Groups @update
+        "Активная или нет группа (true/false)"
+        is_active: Boolean
+        "ID роли"
+        role_id: Int!
+        "ID группы из списка групп поумолчанию"
+        group_id: Int!
+        "ID платежного провайдера"
+        payment_provider_id: Int
+        "ID шаблона комиссий"
+        commission_template_id: Int
+    ): GroupRole @update
+
+
+    "Удаление группы"
+    deleteGroup(id:ID!): GroupRole @delete
 
 
 }
