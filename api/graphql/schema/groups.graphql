@@ -78,6 +78,9 @@ extend type Mutation {
         commission_template_id: Int
     ): GroupRole @update
 
+    "Удаление группы"
+    deleteGroup(id:ID!): GroupRole @delete
+
 
 }
 
