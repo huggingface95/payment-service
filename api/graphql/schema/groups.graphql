@@ -37,10 +37,16 @@ type GroupRole {
 extend type Query {
     "Получить группу по ID"
     group(id: ID @eq): Groups @find
-    "Получить список групп"
+    "Получить список групп по умолчанию"
     groups: [Groups!]! @paginate(defaultCount: 10)
-    "Получить список групп с ролями"
-    groups_list: [GroupRole!]! @paginate(defaultCount: 10)
+    """
+    Получить список групп с ролями
+    orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
+    where:{column: ID, operator: EQ, value: ""} фильтр по ID, ID группы, ID роли, ID платежного провайдера, ID шаблона комиссий, по статусу
+    """
+    groups_list(where: _ @whereConditions(columns: ["id","group_id", "role_id", "payment_provider_id", "commission_template_id", "is_active"]), orderBy: _ @orderBy(
+        columns: ["id","is_active","description"],
+    )): [GroupRole!]! @paginate(defaultCount: 10)
 }
 
 extend type Mutation {
