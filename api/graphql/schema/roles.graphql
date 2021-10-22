@@ -28,7 +28,7 @@ extend type Query {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID или по названию
     """
     roles(groups_sort: Sort @scope(name:"GroupsSort"), orderBy: _ @orderBy(
-        columns: ["id","name"],
+        columns: ["id","name","description"],
     )): [Roles!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
