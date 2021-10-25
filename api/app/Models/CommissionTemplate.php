@@ -21,29 +21,46 @@ class CommissionTemplate extends BaseModel
     ];
 
 
-    public function getCountryIdAttribute($value)
+    /**
+     * Get relation currencies
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function currencies()
     {
-        return $this->getArrayAttribute($value);
+        return $this->belongsToMany(Currencies::class,'commission_template_currency','commission_template_id','currency_id');
     }
 
-    public function setCountryIdAttribute($value) {
-        $this->attributes['country_id'] = $this->setArrayAttribute($value);
-    }
-
-    public function getCurrencyIdAttribute($value)
+    /**
+     * Get relation countries
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function countries()
     {
-        return $this->getArrayAttribute($value);
+        return $this->belongsToMany(Country::class,'payment_provider_country','commission_template_id','country_id');
     }
 
-    public function setCurrencyIdAttribute($value) {
-        $this->attributes['currency_id'] = $this->setArrayAttribute($value);
-    }
-
+    /**
+     * Get relation bussiness activities
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function businessActivity()
     {
         return $this->belongsToMany(BusinessActivity::class,'commission_template_business_activity','commission_template_id','business_activity_id');
     }
 
+    /**
+     * Get relation commission template limits
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function commissionTemplateLimits()
+    {
+        return $this->belongsToMany(CommissionTemplateLimit::class,'commission_template_commission_template_limit','commission_template_id','currency_id');
+    }
+
+    /**
+     * Get relation payment provider
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function paymentProvider()
     {
         return $this->belongsTo(PaymentProvider::class,'payment_provider_id','id');
