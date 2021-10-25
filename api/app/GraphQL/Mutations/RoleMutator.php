@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\Permissions;
 use App\Models\Roles;
 
 class RoleMutator
@@ -15,15 +16,14 @@ class RoleMutator
      */
     public function create($_, array $args)
     {
+
         $role = Roles::create($args);
         if (isset($args['permissions'])) {
             $this->syncPermissions($role, $args['permissions']);
         }
 
         if(isset($args['groups'])) {
-            foreach ($args['groups'] as $group) {
-                $role->addGroup($group);
-            }
+            $role->groups()->attach($args['groups']);
         }
 
         return $role;
@@ -41,9 +41,7 @@ class RoleMutator
             $this->syncPermissions($role, $args['permissions']);
         }
         if(isset($args['groups'])) {
-            foreach ($args['groups'] as $group) {
-                $role->addGroup($group);
-            }
+            $role->groups()->attach($args['groups']);
         }
 
         $role->update($args);
@@ -57,12 +55,9 @@ class RoleMutator
      */
     private function syncPermissions(Roles $role, $permissions)
     {
-        $assing = [];
-        foreach ($permissions ?? [] as $item) {
-            foreach ($item['rules'] ?? [] as $permission)
-                $assing[] = $item['entity'] . '.' . $permission;
-        }
-        return $role->syncPermissions($assing);
+        $permissionsName = Permissions::getPermissionArrayNamesById($permissions);
+
+        return $role->syncPermissions($permissionsName);
     }
 
 

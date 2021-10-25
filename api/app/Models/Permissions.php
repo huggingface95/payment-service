@@ -41,4 +41,10 @@ class Permissions extends SpatiePermission
         return $permData;
     }
 
+
+    public static function getPermissionArrayNamesById(array $permissionId)
+    {
+        return array_column(self::select('name')->whereIn('id',$permissionId)->get()->toArray(),'name');
+    }
+
 }
