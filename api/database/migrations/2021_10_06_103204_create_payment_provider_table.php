@@ -22,8 +22,6 @@ class CreatePaymentProviderTable extends Migration
             $table->boolean('is_active')->default('false');
         });
 
-        DB::statement('ALTER TABLE payment_provider ADD COLUMN country_id integer[]  DEFAULT ARRAY[]::integer[] NOT NULL');
-        DB::statement('ALTER TABLE payment_provider ADD COLUMN currency_id integer[]  DEFAULT ARRAY[]::integer[] NOT NULL');
     }
 
     /**

@@ -31,16 +31,4 @@ class Roles extends SpatieRole
         return $query->with('groups')->orderBy('id',$sort);
     }
 
-    /**
-     * @param $groupId
-     * @return GroupRole
-     */
-    public function addGroup($groupId) :GroupRole
-    {
-        return GroupRole::create([
-           'role_id' => $this->id,
-           'group_id' => $groupId
-        ]);
-    }
-
 }

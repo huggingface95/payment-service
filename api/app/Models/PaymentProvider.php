@@ -16,35 +16,38 @@ class PaymentProvider extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'is_active','description','logo_key','country_id','currency_id'
+        'name', 'is_active','description','logo_key'
     ];
 
 
-    public function getCountryIdAttribute($value)
+    /**
+     * Get relation currencies
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function currencies()
     {
-        return $this->getArrayAttribute($value);
+        return $this->belongsToMany(Currencies::class,'payment_provider_currency','payment_provider_id','currency_id');
     }
 
-    public function setCountryIdAttribute($value) {
-        $this->attributes['country_id'] = $this->setArrayAttribute($value);
-    }
-
-    public function getCurrencyIdAttribute($value)
+    /**
+     * Get relation countries
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function countries()
     {
-        return $this->getArrayAttribute($value);
+        return $this->belongsToMany(Country::class,'payment_provider_country','payment_provider_id','country_id');
     }
 
-    public function setCurrencyIdAttribute($value) {
-        $this->attributes['currency_id'] = $this->setArrayAttribute($value);
-    }
-
-
+    /**
+     * Get relation payment systems
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function paymentSystems()
     {
         return $this->belongsToMany(PaymentSystem::class,'payment_provider_payment_system','payment_provider_id','payment_system_id');
     }
 
-    public function scopePaymentProviderCountry($query, $countryId)
+    public function scopePaymentProviderCountry($query, int $countryId)
     {
         $countries = implode(',', $countryId);
         return $query->where('country_id', '&&', DB::raw('ARRAY[' . $countries . ']::integer[]'));

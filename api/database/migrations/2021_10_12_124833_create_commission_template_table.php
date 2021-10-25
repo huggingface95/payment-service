@@ -23,9 +23,6 @@ class CreateCommissionTemplateTable extends Migration
             $table->foreign('payment_provider_id')->references('id')->on('payment_provider');
         });
 
-        DB::statement('ALTER TABLE commission_template ADD COLUMN country_id integer[]  DEFAULT ARRAY[]::integer[] NOT NULL');
-        DB::statement('ALTER TABLE commission_template ADD COLUMN currency_id integer[]  DEFAULT ARRAY[]::integer[] NOT NULL');
-        DB::statement('ALTER TABLE commission_template ADD COLUMN commission_template_limit_id integer[]  DEFAULT ARRAY[]::integer[] NOT NULL');
     }
 
     /**
