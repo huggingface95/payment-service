@@ -29,7 +29,6 @@ extend type Mutation {
         email_url: EMAIL
         email_jwt: EMAIL
         email_from: EMAIL
-        logo_object_key: String!
         show_own_logo: Boolean
         company_id: Int!
     ): CompanySettings @create
