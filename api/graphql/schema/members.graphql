@@ -71,7 +71,7 @@ extend type Mutation {
         "ID настройки двухфактороной авторизации"
         two_factor_auth_setting_id: Int
         "Пароль участника, если не передан то сгенерируется случайный"
-        password: String
+        password: String @rules(apply: ["min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
     ): Members @field(resolver: "MembersMutator@create")
 
     """
