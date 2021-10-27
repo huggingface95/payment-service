@@ -29,6 +29,11 @@ class CompanyMutator
                 if (strlen($additionalField['field_value']) > config('app.max_length_string')) {
                     throw new InvalidArgument("Max length field is ". config('app.max_length_string'));
                 }
+                if ($additionalField['field_type'] === "CountryList" ) {
+                    if(!is_int($additionalField['field_value'])) {
+                        throw new InvalidArgument("Country list value mast be country_id int type");
+                    }
+                }
                 if ($additionalField['field_type'] === "Text" ) {
                     $additionalField['field_value'] = filter_var($additionalField['field_value'],FILTER_SANITIZE_STRING,FILTER_FLAG_STRIP_LOW);
                 }
