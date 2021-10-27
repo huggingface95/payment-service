@@ -59,7 +59,7 @@ extend type Mutation {
         email: EMAIL!
         "Сайт компании"
         url: String
-        "Почтовый индекс компании"
+        "Индекс компании"
         zip: String
         "Адрес компании"
         address: String
@@ -81,7 +81,7 @@ extend type Mutation {
         email: EMAIL
         "Сайт компании"
         url: String
-        "Почтовый индекс компании"
+        "Индекс компании"
         zip: String
         "Адрес компании"
         address: String
