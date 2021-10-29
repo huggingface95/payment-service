@@ -1,0 +1,54 @@
+"""
+Метки пользователя
+Management -> New Applicant -> Create Individual -> General
+"""
+type ApplicantIndividualLabel {
+    id: ID!
+    "Название метки"
+    name: String!
+    "HEX код метки"
+    hex_color_code: String!
+}
+
+extend type Query {
+    """
+    Получить метку по ID
+    """
+    applicantIndividualLabel(id: ID @eq): ApplicantIndividualLabel @find
+    """
+    Получить все метки
+    orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    """
+    applicantIndividualLabels(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+        columns: ["id","name"],
+    )): [ApplicantIndividualLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать метку"
+    createApplicantIndividualLabel(
+        "Название метки"
+        name: String!
+        "HEX код метки"
+        hex_color_code: String! @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
+    ): ApplicantIndividualLabel @create
+
+    "Редактирование метки"
+    updateApplicantIndividualLabel(
+        "ID метки"
+        id: ID!
+        "Название метки"
+        name: String!
+        "HEX код метки"
+        hex_color_code: String @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
+    ): ApplicantIndividualLabel @update
+
+    "Удалит метку"
+    deleteApplicantIndividualLabel(
+        id: ID!
+        deleteAnyway: Boolean
+    ): ApplicantIndividualLabel @field(resolver: "ApplicantLabelMutator@delete")
+
+}
+

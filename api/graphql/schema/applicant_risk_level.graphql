@@ -1,0 +1,26 @@
+"""
+Уровни риска
+Management -> New Applicant -> Create Individual -> General
+"""
+type ApplicantRiskLevel {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    """
+    Получить уровень риска по  ID
+    """
+    applicantRiskLevel(id: ID @eq): ApplicantRiskLevel @find
+    """
+    Получить список уровней риска
+    orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    """
+    applicantRiskLevels(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+        columns: ["id","name"],
+    )): [ApplicantRiskLevel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+

@@ -2,10 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePaymentProviderTable extends Migration
+class CreateApplicantLabelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,14 +13,11 @@ class CreatePaymentProviderTable extends Migration
      */
     public function up()
     {
-        Schema::create('payment_provider', function (Blueprint $table) {
+        Schema::create('applicant_individual_labels', function (Blueprint $table) {
             $table->id();
             $table->string('name',255)->unique();
-            $table->string('description',512)->nullable();
-            $table->string('logo_key',255)->nullable();
-            $table->boolean('is_active')->default('false');
+            $table->string('hex_color_code',10);
         });
-
     }
 
     /**
@@ -31,6 +27,6 @@ class CreatePaymentProviderTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_provider');
+        Schema::dropIfExists('applicant_individual_labels');
     }
 }

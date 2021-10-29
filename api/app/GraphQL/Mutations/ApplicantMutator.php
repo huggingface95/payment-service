@@ -2,11 +2,12 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\Companies;
+use App\Models\ApplicantIndividual;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
-class CompanyMutator extends BaseMutator
+
+class ApplicantMutator extends BaseMutator
 {
     /**
      * Return a value for the field.
@@ -20,12 +21,17 @@ class CompanyMutator extends BaseMutator
 
     public function update($root, array $args, GraphQLContext $context)
     {
-        $company = Companies::find($args['id']);
+        $applicant = ApplicantIndividual::find($args['id']);
         if (isset($args['additional_fields'])) {
-        $args['additional_fields']  = $this->setAdditionalField($args);
+            $additionalFields = $args['additional_fields'];
+            $args['additional_fields']  = $this->setAdditionalField($additionalFields);
         }
-        $company->update($args);
-        return $company;
+        if (isset($args['contacts_additional_fields'])) {
+            $contactAdditionalFields = $args['contacts_additional_fields'];
+            $args['contacts_additional_fields']  = $this->setAdditionalField($contactAdditionalFields);
+        }
+        $applicant->update($args);
+        return $applicant;
     }
 
 }

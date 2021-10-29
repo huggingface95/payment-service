@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 /**
  *
  */
-class MembersMutator
+class MembersMutator extends BaseMutator
 {
 
 
@@ -54,21 +54,7 @@ class MembersMutator
         }
 
         if (isset($args['additional_fields'])) {
-
-            $fields = [];
-            foreach ($args['additional_fields']  as $additionalField) {
-                if (strlen($additionalField['field_value']) > config('app.max_length_string')) {
-                    throw new InvalidArgument("Max length field is ". config('app.max_length_string'));
-                }
-                if ($additionalField['field_type'] === "Text" ) {
-                    $additionalField['field_value'] = filter_var($additionalField['field_value'],FILTER_SANITIZE_STRING,FILTER_FLAG_STRIP_LOW);
-                }
-                if ($additionalField['field_type'] === "TextArea"){
-                    $additionalField['field_value'] = filter_var($additionalField['field_value'],FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-                }
-                $fields[] = $additionalField;
-            }
-            $args['additional_fields'] = $fields;
+            $args['additional_fields']  = $this->setAdditionalField($args);
         }
 
         $member->update($args);

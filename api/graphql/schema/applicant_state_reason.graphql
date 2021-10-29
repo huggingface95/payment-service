@@ -1,0 +1,47 @@
+"""
+State reason
+Management -> New Applicant -> Create Individual -> General
+"""
+type ApplicantStateReason {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    """
+    Получить причину по ID
+    """
+    applicantStateReason(id: ID @eq): ApplicantStateReason @find
+    """
+    Получить все причины
+    orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    """
+    applicantStateReasons(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+        columns: ["id","name"],
+    )): [ApplicantStateReason!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать причину"
+    createApplicantStateReason(
+        "Название"
+        name: String!
+    ): ApplicantStateReason @create
+
+    "Редактирование причины"
+    updateApplicantStateReason(
+        "ID метки"
+        id: ID!
+        "Название"
+        name: String!
+    ): ApplicantStateReason @update
+
+    "Удалит метку"
+    deleteApplicantStateReason(
+        id: ID!
+    ):ApplicantStateReason @delete
+
+}
+

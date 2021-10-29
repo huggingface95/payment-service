@@ -26,6 +26,11 @@ enum FieldTypes {
     CountryList
 }
 
+enum Sex {
+    Male
+    Female
+}
+
 """
 Дополнительные поля
 """
