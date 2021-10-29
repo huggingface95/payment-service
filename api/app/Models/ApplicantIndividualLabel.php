@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class ApplicantIndividualLabel extends Model
 {
 
-    //protected $table="applicant_labels";
-
     /**
      * The attributes that are mass assignable.
      *
@@ -19,5 +17,10 @@ class ApplicantIndividualLabel extends Model
     ];
 
     public $timestamps = false;
+
+    public function applicants()
+    {
+        return $this->belongsToMany(ApplicantIndividual::class,'applicant_individual_label_relation','applicant_individual_label_id','applicant_individual_id');
+    }
 
 }

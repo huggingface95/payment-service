@@ -2,7 +2,7 @@
 Метки пользователя
 Management -> New Applicant -> Create Individual -> General
 """
-type ApplicantLabel {
+type ApplicantIndividualLabel {
     id: ID!
     "Название метки"
     name: String!
@@ -14,38 +14,41 @@ extend type Query {
     """
     Получить метку по ID
     """
-    applicantLabel(id: ID @eq): ApplicantLabel @find
+    applicantIndividualLabel(id: ID @eq): ApplicantIndividualLabel @find
     """
     Получить все метки
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
     """
-    applicantLabels(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+    applicantIndividualLabels(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantIndividualLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {
     "Создать метку"
-    createApplicantLabel(
+    createApplicantIndividualLabel(
         "Название метки"
         name: String!
         "HEX код метки"
         hex_color_code: String! @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
-    ): ApplicantLabel @create
+    ): ApplicantIndividualLabel @create
 
     "Редактирование метки"
-    updateApplicantLabel(
+    updateApplicantIndividualLabel(
         "ID метки"
         id: ID!
         "Название метки"
         name: String!
         "HEX код метки"
         hex_color_code: String @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
-    ): ApplicantLabel @update
+    ): ApplicantIndividualLabel @update
 
     "Удалит метку"
-    deleteApplicantLabel(id: ID!, deleteAnyway: Boolean): ApplicantLabel @field(resolver: "ApplicantLabelMutator@delete")
+    deleteApplicantIndividualLabel(
+        id: ID!
+        deleteAnyway: Boolean
+    ): ApplicantIndividualLabel @field(resolver: "ApplicantLabelMutator@delete")
 
 }
 

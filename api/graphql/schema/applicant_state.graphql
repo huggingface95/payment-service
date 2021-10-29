@@ -1,0 +1,26 @@
+"""
+Состояния
+Management -> New Applicant -> Create Individual -> General
+"""
+type ApplicantState {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    """
+    Получить состояние по ID
+    """
+    applicantState(id: ID @eq): ApplicantStatus @find
+    """
+    Получить все состояния
+    orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    """
+    applicantStates(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+        columns: ["id","name"],
+    )): [ApplicantStateReason!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+

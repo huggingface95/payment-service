@@ -40,11 +40,13 @@ class CreateApplicantTable extends Migration
             $table->unsignedBigInteger('applicant_status_id')->nullable();
             $table->unsignedBigInteger('applicant_state_id')->nullable();
             $table->unsignedBigInteger('applicant_state_reason_id')->nullable();
+            $table->unsignedBigInteger('applicant_risk_level_id')->nullable();
             $table->unsignedBigInteger('account_manager_member_id')->nullable();
             $table->timestamps();
             $table->foreign('applicant_status_id')->references('id')->on('applicant_status');
             $table->foreign('applicant_state_id')->references('id')->on('applicant_state');
             $table->foreign('applicant_state_reason_id')->references('id')->on('applicant_state_reason');
+            $table->foreign('applicant_risk_level_id')->references('id')->on('applicant_risk_level');
             $table->foreign('account_manager_member_id')->references('id')->on('members');
             $table->foreign('country_id')->references('id')->on('countries');
             $table->foreign('citizenship_country_id')->references('id')->on('countries');

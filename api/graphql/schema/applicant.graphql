@@ -1,0 +1,191 @@
+"""
+Частный пользователь
+Management -> New Applicant -> Create Individual -> General
+"""
+type ApplicantIndividual {
+    id: ID!
+    "Имя"
+    first_name: String!
+    "Фамилия"
+    last_name: String!
+    "Отчество"
+    middle_name: String
+    "email"
+    email: EMAIL!
+    "Адрес сайта"
+    url: String
+    "Телефон"
+    phone: String
+    "Получить связанную страну"
+    country: Country @belongsTo(relation: "country")
+    "Получить связанную страну гражданства"
+    citizenship_country: Country @belongsTo(relation: "citizenshipCountry")
+    "Штат / область"
+    state: String
+    "Город"
+    city: String
+    "Адрес"
+    address: String
+    "Индекс"
+    zip: String
+    "Национальность"
+    nationality: String
+    "Получить связанную страну рождения"
+    birth_country: Country @belongsTo(relation: "birthCountry")
+    "Штат/область рождения"
+    birth_state: String
+    "Город рождения"
+    birth_city: String
+    "Дата рождения"
+    birth_at: Date
+    "Пол"
+    sex: String
+    "Дополнительные поля"
+    additional_fields: JSON
+    "Дополнительные поля блока контакты"
+    contacts_additional_fields: JSON
+    "Получить статусы"
+    status: ApplicantStatus @belongsTo(relation: "status")
+    "Получить состояния"
+    state: ApplicantState @belongsTo(relation: "state")
+    "Получить причины"
+    state_reson: ApplicantStateReason @belongsTo(relation: "stateReason")
+    "Получить уровни рисков"
+    risk_level: ApplicantRiskLevel @belongsTo(relation: "riskLevel")
+    "Получить менеджера"
+    manager: Members @belongsTo(relation: "manager")
+    "Получить метки"
+    labels: [ApplicantIndividualLabel] @belongsToMany(relation: "labels")
+}
+
+extend type Query {
+    """
+    Получить пользователя  по ID
+    """
+    applicantIndividual(id: ID @eq): ApplicantIndividual @find
+    """
+    Получить список частных пользователей
+    orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email
+    where:{column: EMAIL, operator: LIKE, value: ""} фильтр по имени, фамилии, Email
+    """
+    applicantIndividuals(where: _ @whereConditions(columns: ["first_name","last_name", "email"]), orderBy: _ @orderBy(
+        columns: ["id","first_name","last_name", "email"],
+    )): [ApplicantIndividual!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать частного пользователя"
+    createApplicantIndividual(
+        "Имя"
+        first_name: String!
+        "Фамилия"
+        last_name: String!
+        "Отчество"
+        middle_name: String
+        "email"
+        email: EMAIL!
+        "Адрес сайта"
+        url: String
+        "Телефон"
+        phone: String
+        "ID Страны"
+        country_id: Int
+        "ID страны гражданства"
+        citizenship_country_id: Int
+        "Штат / область"
+        state: String
+        "Город"
+        city: String
+        "Адрес"
+        address: String
+        "Индекс"
+        zip: String
+        "Национальность"
+        nationality: String
+        "ID страны рождения"
+        birth_country_id: Int
+        "Штат/область рождения"
+        birth_state: String
+        "Город рождения"
+        birth_city: String
+        "Дата рождения"
+        birth_at: Date
+        "Пол"
+        sex: String
+        "ID статуса"
+        applicant_status_id: Int
+        "ID состояния"
+        applicant_state_id: Int
+        "ID причины"
+        applicant_state_reason_id: Int
+        "ID уровня рисков"
+        applicant_risk_level_id: Int
+        "ID менеджера"
+        account_manager_member_id: Int
+        "Массив ID меток"
+        labels: [Int]
+    ): ApplicantIndividual @create
+
+    "Редактирование частного пользователя"
+    updateApplicantIndividual(
+        "Имя"
+        first_name: String!
+        "Фамилия"
+        last_name: String!
+        "Отчество"
+        middle_name: String
+        "email"
+        email: EMAIL!
+        "Адрес сайта"
+        url: String
+        "Телефон"
+        phone: String
+        "ID Страны"
+        country_id: Int
+        "ID страны гражданства"
+        citizenship_country_id: Int
+        "Штат / область"
+        state: String
+        "Город"
+        city: String
+        "Адрес"
+        address: String
+        "Индекс"
+        zip: String
+        "Национальность"
+        nationality: String
+        "ID страны рождения"
+        birth_country_id: Int
+        "Штат/область рождения"
+        birth_state: String
+        "Город рождения"
+        birth_city: String
+        "Дата рождения"
+        birth_at: Date
+        "Пол"
+        sex: String
+        "Дополнительные поля"
+        additional_fields: JSON
+        "Дополнительные поля блока контакты"
+        contacts_additional_fields: JSON
+        "ID статуса"
+        applicant_status_id: Int
+        "ID состояния"
+        applicant_state_id: Int
+        "ID причины"
+        applicant_state_reason_id: Int
+        "ID уровня рисков"
+        applicant_risk_level_id: Int
+        "ID менеджера"
+        account_manager_member_id: Int
+        "Массив ID меток"
+        labels: [Int]
+    ): ApplicantIndividual @field(resolver:"ApplicantMutator@update")
+
+    "Удалит пользователя"
+    deleteApplicantIndividual(
+        id: ID!
+    ): ApplicantIndividual @delete
+
+}
+
