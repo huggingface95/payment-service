@@ -5,9 +5,9 @@ Administration->Company Info->Full Profile->Branding
 type CompanySettings {
     id: ID!
     "URL в тексте письма"
-    email_url: EMAIL
+    email_url: String
     "Email для jwt"
-    email_jwt: EMAIL
+    email_jwt: String
     "Email отправителя"
     email_from: EMAIL
     "ID файла логотипа из хранилища"
@@ -26,21 +26,29 @@ extend type Query {
 extend type Mutation {
     "Добавить настройки к компании"
     createCompanySettings(
-        email_url: EMAIL
-        email_jwt: EMAIL
+        "Client applicant URL в формате http://example.com"
+        email_url: String  @rules(apply: ["regex:!https?:\/\/!","regex:/[a-z0-9]/"])
+        "JWT token"
+        email_jwt: String
+        "Email отправителя клиента"
         email_from: EMAIL
-        logo_object_key: String!
+        "Показывать лого компании или нет"
         show_own_logo: Boolean
+        "ID компании"
         company_id: Int!
     ): CompanySettings @create
 
     "Обновление настроек компании"
     updateCompanySettings(
+        "ID компании"
         company_id: Int!
-        email_url: EMAIL
-        email_jwt: EMAIL
+        "Client applicant URL в формате http://example.com"
+        email_url: String @rules(apply: ["regex:!https?:\/\/!","regex:/[a-z0-9]/"])
+        "JWT token"
+        email_jwt: String
+        "Email отправителя клиента"
         email_from: EMAIL
-        logo_object_key: String!
+        "Показывать лого компании или нет"
         show_own_logo: Boolean
     ): CompanySettings @update
 

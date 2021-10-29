@@ -2,6 +2,7 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
 scalar EMAIL @scalar(class: "MLL\\GraphQLScalars\\Email")
+scalar StringInteger @scalar(class: "App\\GraphQL\\Types\\StringIntegerType")
 
 enum Sort {
     ASC
@@ -17,8 +18,11 @@ input DateRange {
 Типы полей
 """
 enum FieldTypes {
+    "Тип поля строка"
     Text
+    "Тип поля текстовое поле"
     TextArea
+    "ID страны"
     CountryList
 }
 
@@ -32,7 +36,7 @@ enum Sex {
 """
 input AdditionalFieldInput {
     field_name: String
-    field_value: String
+    field_value: StringInteger
     field_type: FieldTypes
 }
 
