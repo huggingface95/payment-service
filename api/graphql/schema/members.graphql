@@ -27,6 +27,8 @@ type Members {
     position: DepartmentPosition @belongsTo(relation: "position")
     "ID настройки двухфактороной авторизации"
     two_factor_auth_setting_id: Int!
+    "Дополнительны поля"
+    additional_fields: JSON
 }
 
 
@@ -57,7 +59,7 @@ extend type Mutation {
         "Email участника"
         email: EMAIL! @rules(apply: ["email", "unique:members"])
         "Пол участника"
-        sex: String
+        sex: Sex
         "ID компании"
         company_id: Int!
         "ID страны"
@@ -107,7 +109,7 @@ extend type Mutation {
         "Email участника"
         email: EMAIL!
         "Пол участника"
-        sex: String
+        sex: Sex
         "ID компании"
         company_id: Int!
         "ID страны"
