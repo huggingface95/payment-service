@@ -20,5 +20,10 @@ class DatabaseSeeder extends Seeder
         $this->call(TwoFactorAuthTableSeeder::class);
         $this->call(PaymentSystemTableSeeder::class);
         $this->call(PaymentProviderTableSeeder::class);
+        $this->call(ApplicantRiskTableSeeder::class);
+        $this->call(ApplicantStateReasonTableSeeder::class);
+        $this->call(ApplicantStateTableSeeder::class);
+        $this->call(ApplicantStatusTableSeeder::class);
+        $this->call( ApplicantLabelsTableSeeder::class);
     }
 }
