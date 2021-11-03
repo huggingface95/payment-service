@@ -67,6 +67,8 @@ extend type Mutation {
         city: String
         "Регистрационный номер компании"
         company_number: String
+        "Контактное имя"
+        contact_name: String
         "ID страны"
         country_id: Int!
     ): Companies @create
@@ -91,6 +93,9 @@ extend type Mutation {
         company_number: String
         "ID страны"
         country_id: Int
+        "Контактное имя"
+        contact_name: String
+        "Дополнительные поля"
         additional_fields: [AdditionalFieldInput]
     ): Companies @field(resolver:"CompanyMutator@update")
 
