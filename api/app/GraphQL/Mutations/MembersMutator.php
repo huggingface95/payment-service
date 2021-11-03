@@ -54,7 +54,7 @@ class MembersMutator extends BaseMutator
         }
 
         if (isset($args['additional_fields'])) {
-            $args['additional_fields']  = $this->setAdditionalField($args);
+            $args['additional_fields']  = $this->setAdditionalField($args['additional_fields']);
         }
 
         $member->update($args);

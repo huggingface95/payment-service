@@ -22,7 +22,7 @@ class CompanyMutator extends BaseMutator
     {
         $company = Companies::find($args['id']);
         if (isset($args['additional_fields'])) {
-        $args['additional_fields']  = $this->setAdditionalField($args);
+        $args['additional_fields']  = $this->setAdditionalField($args['additional_fields']);
         }
         $company->update($args);
         return $company;
