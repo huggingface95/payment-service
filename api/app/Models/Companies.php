@@ -32,6 +32,11 @@ class Companies extends Model
         return $this->hasMany(Members::class,"company_id");
     }
 
+    public function departments()
+    {
+        return $this->hasMany(Departments::class,"company_id");
+    }
+
     public function scopeMemberSort($query, $sort)
     {
         return $query->withCount('members')->orderBy('members_count',$sort);

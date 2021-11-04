@@ -27,16 +27,18 @@ extend type Query {
     Получить список департаментов
     orderBy: [{ column: ID, order: DESC }] сортировка по названию или по ID
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    hasCompany: {column:ID,operator:EQ,value:1} фильтр по id компании
     """
-    departments( where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [Departments!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    departments( hasCompany: _ @whereHasConditions(columns: ["id"]), where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [Departments!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
     "Получить должность по ID"
     departmentPosition(id: ID @eq): DepartmentPosition @find
     """
     Получить список должностей
     orderBy: [{ column: ID, order: DESC }] сортировка по названию или по ID
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    hasDepartment: {column:ID,operator:EQ,value:1} фильтр по id департамента
     """
-    departmentPositions( where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [DepartmentPosition!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    departmentPositions(hasDepartment: _ @whereHasConditions(columns: ["id"]), where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [DepartmentPosition!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {

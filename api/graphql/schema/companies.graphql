@@ -26,6 +26,8 @@ type Companies {
     members: [Members] @hasMany(relation: "members")
     "Количество участников в компании"
     members_count: Int @count(relation: "members")
+    "Департаменты компании"
+    departments: [Departments] @hasMany(relation: "departments")
     "Дополнительные поля"
     additional_fields: JSON
     created_at: DateTime!
