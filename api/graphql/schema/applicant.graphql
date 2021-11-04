@@ -128,6 +128,7 @@ extend type Mutation {
 
     "Редактирование частного пользователя"
     updateApplicantIndividual(
+        id: ID!
         "Имя"
         first_name: String!
         "Фамилия"
