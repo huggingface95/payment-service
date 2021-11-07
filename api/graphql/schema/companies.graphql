@@ -28,6 +28,8 @@ type Companies {
     members_count: Int @count(relation: "members")
     "Департаменты компании"
     departments: [Departments] @hasMany(relation: "departments")
+    "Получить настройки компании"
+    company_settings: CompanySettings  @hasOne(relation: "companySettings")
     "Дополнительные поля"
     additional_fields: JSON
     created_at: DateTime!
