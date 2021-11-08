@@ -1,0 +1,43 @@
+"""
+Должности компании
+Management -> New Applicant -> Create Company
+"""
+type ApplicantIndividualCompanyPosition {
+    id: ID!
+    "Название должности"
+    name: String!
+}
+
+extend type Query {
+    """
+    Получить должность по ID
+    """
+    applicantIndividualCompanyPosition(id: ID @eq): ApplicantIndividualCompanyPosition @find
+    """
+    Получить все  должности
+    orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    """
+    applicantIndividualCompanyPositions(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+        columns: ["id","name"],
+    )): [ApplicantIndividualCompanyPosition!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать должность"
+    createApplicantIndividualCompanyPosition(
+        "Название"
+        name: String!
+    ): ApplicantIndividualCompanyPosition @create
+
+    "Редактирование должности"
+    updateApplicantIndividualCompanyPosition(
+        "ID должности"
+        id: ID!
+        "Название"
+        name: String!
+    ): ApplicantIndividualCompanyPosition @update
+
+
+}
+

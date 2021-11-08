@@ -1,0 +1,205 @@
+"""
+Компания пользователя
+Management -> New Applicant -> Create Company
+"""
+type ApplicantCompany {
+    id: ID!
+    "Название"
+    name: String!
+    "email"
+    email: EMAIL!
+    "Адрес сайта"
+    url: String
+    "Телефон"
+    phone: String
+    "Получить связанную страну"
+    country: Country @belongsTo(relation: "country")
+    "Штат / область"
+    state: String
+    "Город"
+    city: String
+    "Адрес"
+    address: String
+    "Адрес2"
+    address2: String
+    "Адрес офиса"
+    office_address: String
+    "Индекс"
+    zip: String
+    "Дата регистрации"
+    reg_at: Date
+    "Дата окончания регистрации"
+    expires_at: Date
+    "Налоговый номер"
+    tax: String
+    "Регистрационный номер"
+    reg_number: String
+    "Номер лицензии"
+    license_number: String
+    "Тип компании"
+    company_type:String
+    "Дополнительные поля"
+    info_additional_fields: JSON
+    "Дополнительные поля блока контакты"
+    contacts_additional_fields: JSON
+    "Получить тип бизнеса"
+    business_type: ApplicantCompanyBusinessType @belongsTo(relation: "businessType")
+    "Получить статусы"
+    status: ApplicantStatus @belongsTo(relation: "status")
+    "Получить состояния"
+    state: ApplicantState @belongsTo(relation: "state")
+    "Получить причины"
+    state_reson: ApplicantStateReason @belongsTo(relation: "stateReason")
+    "Получить уровни рисков"
+    risk_level: ApplicantRiskLevel @belongsTo(relation: "riskLevel")
+    "Получить менеджера"
+    manager: Members @belongsTo(relation: "manager")
+    "Получить метки"
+    labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
+}
+
+extend type Query {
+    """
+    Получить пользователя  по ID
+    """
+    applicantCompany(id: ID @eq): ApplicantCompany @find
+    """
+    Получить список частных пользователей
+    orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email
+    where:{column: EMAIL, operator: LIKE, value: ""} фильтр по имени, фамилии, Email
+    """
+    applicantCompanies(where: _ @whereConditions(columns: ["first_name","last_name", "email"]), orderBy: _ @orderBy(
+        columns: ["id","first_name","last_name", "email"],
+    )): [ApplicantCompany!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать частного пользователя"
+    createApplicantCompany (
+        "Название"
+        name: String!
+        "email"
+        email: EMAIL!
+        "Адрес сайта"
+        url: String
+        "Телефон"
+        phone: String
+        "Получить связанную страну"
+        country: Country @belongsTo(relation: "country")
+        "Штат / область"
+        state: String
+        "Город"
+        city: String
+        "Адрес"
+        address: String
+        "Адрес2"
+        address2: String
+        "Адрес офиса"
+        office_address: String
+        "Индекс"
+        zip: String
+        "Дата регистрации"
+        reg_at: Date
+        "Дата окончания регистрации"
+        expires_at: Date
+        "Налоговый номер"
+        tax: String
+        "Регистрационный номер"
+        reg_number: String
+        "Номер лицензии"
+        license_number: String
+        "Тип компании"
+        company_type:String
+        "Дополнительные поля"
+        info_additional_fields: JSON
+        "Дополнительные поля блока контакты"
+        contacts_additional_fields: JSON
+        "Получить тип бизнеса"
+        business_type: ApplicantCompanyBusinessType @belongsTo(relation: "businessType")
+        "Получить статусы"
+        status: ApplicantStatus @belongsTo(relation: "status")
+        "Получить состояния"
+        state: ApplicantState @belongsTo(relation: "state")
+        "Получить причины"
+        state_reson: ApplicantStateReason @belongsTo(relation: "stateReason")
+        "Получить уровни рисков"
+        risk_level: ApplicantRiskLevel @belongsTo(relation: "riskLevel")
+        "Получить менеджера"
+        manager: Members @belongsTo(relation: "manager")
+        "Получить метки"
+        labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
+    ): ApplicantCompany @create
+
+    "Редактирование частного пользователя"
+    updateApplicantCompany (
+        id: ID!
+        "Название"
+        name: String!
+        "email"
+        email: EMAIL!
+        "Адрес сайта"
+        url: String
+        "Телефон"
+        phone: String
+        "страна"
+        country_id: Int
+        "Штат / область"
+        state: String
+        "Город"
+        city: String
+        "Адрес"
+        address: String
+        "Адрес2"
+        address2: String
+        "Адрес офиса"
+        office_address: String
+        "Индекс"
+        zip: String
+        "Дата регистрации"
+        reg_at: Date
+        "Дата окончания регистрации"
+        expires_at: Date
+        "Налоговый номер"
+        tax: String
+        "Регистрационный номер"
+        reg_number: String
+        "Номер лицензии"
+        license_number: String
+        "Тип компании"
+        company_type:String
+        "Дополнительные поля"
+        info_additional_fields: JSON
+        "Дополнительные поля блока контакты"
+        contacts_additional_fields: JSON
+        "Получить тип бизнеса"
+        applicant_company_business_type_id: Int
+        "ID статуса"
+        applicant_status_id: Int
+        "ID состояния"
+        applicant_state_id: Int
+        "ID причины"
+        applicant_state_reason_id: Int
+        "ID уровня рисков"
+        applicant_risk_level_id: Int
+        "ID менеджера"
+        account_manager_member_id: Int
+        "Массив ID меток"
+        labels: [Int]
+    ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@update")
+
+    """
+    Установить пароль
+    """
+    setApplicantCompanyPassword(
+        id: ID!
+        password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
+        password_confirmation: String!
+    ): ApplicantCompany @field(resolver: "ApplicantCompanyMutator@setPassword")
+
+    "Удалит пользователя"
+    deleteApplicantCompany (
+        id: ID!
+    ): ApplicantCompany @delete
+
+}
+

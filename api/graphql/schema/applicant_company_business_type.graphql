@@ -1,0 +1,43 @@
+"""
+Типы бизнеса для компании
+Management -> New Applicant -> Create Company
+"""
+type ApplicantCompanyBusinessType {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    """
+    Получить по ID
+    """
+    applicantCompanyBusinessType(id: ID @eq): ApplicantCompanyBusinessType @find
+    """
+    Получить все типы бизнеса
+    orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    """
+    applicantCompanyBusinessType(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+        columns: ["id","name"],
+    )): [ApplicantCompanyBusinessType!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать бизнес тип"
+    createApplicantCompanyBusinessType(
+        "Название"
+        name: String!
+    ): ApplicantCompanyBusinessType @create
+
+    "Редактирование отнощения"
+    updateApplicantCompanyBusinessType (
+        "ID бизнес типа"
+        id: ID!
+        "Название"
+        name: String!
+    ): ApplicantCompanyBusinessType @update
+
+
+}
+

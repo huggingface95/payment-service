@@ -1,0 +1,43 @@
+"""
+Отношения компании
+Management -> New Applicant -> Create Company
+"""
+type ApplicantIndividualCompanyRelation {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    """
+    Получить по ID
+    """
+    applicantIndividualCompanyRelation(id: ID @eq): ApplicantIndividualCompanyRelation @find
+    """
+    Получить все  отношения
+    orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    """
+    applicantIndividualCompanyRelation(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+        columns: ["id","name"],
+    )): [ApplicantIndividualCompanyRelation!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать отношение"
+    createApplicantIndividualCompanyRelation(
+        "Название"
+        name: String!
+    ): ApplicantIndividualCompanyRelation @create
+
+    "Редактирование отнощения"
+    updateApplicantIndividualCompanyRelation (
+        "ID отношения"
+        id: ID!
+        "Название"
+        name: String!
+    ): ApplicantIndividualCompanyRelation @update
+
+
+}
+

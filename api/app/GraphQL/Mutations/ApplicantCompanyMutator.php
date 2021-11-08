@@ -2,10 +2,10 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\ApplicantIndividual;
+use App\Models\ApplicantCompany;
 
 
-class ApplicantMutator extends BaseMutator
+class ApplicantCompanyMutator extends BaseMutator
 {
     /**
      * Return a value for the field.
@@ -17,7 +17,7 @@ class ApplicantMutator extends BaseMutator
 
     public function update($root, array $args)
     {
-        $applicant = ApplicantIndividual::find($args['id']);
+        $applicant = ApplicantCompany::find($args['id']);
         if (isset($args['additional_fields'])) {
             $additionalFields = $args['additional_fields'];
             $args['additional_fields']  = $this->setAdditionalField($additionalFields);
@@ -26,10 +26,12 @@ class ApplicantMutator extends BaseMutator
             $contactAdditionalFields = $args['contacts_additional_fields'];
             $args['contacts_additional_fields']  = $this->setAdditionalField($contactAdditionalFields);
         }
+
         if (isset($args['labels'])) {
             $applicant->labels()->detach($args['labels']);
             $applicant->labels()->attach($args['labels']);
         }
+
         $applicant->update($args);
         return $applicant;
     }
