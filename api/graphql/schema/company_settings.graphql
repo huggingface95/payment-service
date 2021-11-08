@@ -20,7 +20,7 @@ type CompanySettings {
 
 extend type Query {
     "Получить настройки компании по ID компании"
-    companySettings(company_id: Int @eq): CompanySettings @find
+    companySettings(company_id: ID @eq): CompanySettings @find
 }
 
 extend type Mutation {
