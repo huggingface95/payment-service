@@ -77,18 +77,6 @@ class MembersMutator extends BaseMutator
         return Members::create($args);
     }
 
-    /**
-     * @param $_
-     * @param array $args
-     * @return array
-     */
-    public function setPassword($_, array $args)
-    {
-
-        $args['password_hash'] = Hash::make($args['password']);
-        $args['password_salt'] = Hash::make($args['password']);
-        return $args;
-    }
 
     public function setMemberPosition($_, array $args)
     {
