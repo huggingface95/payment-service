@@ -5,18 +5,18 @@ Banking -> Commission Templates -> Template List
 type CommissionTemplateLimit {
     id: ID!
     "ID типа лимита"
-    commission_template_limit_type_id: Int
+    commission_template_limit_type_id: ID
     "ID направления платежа"
-    commission_template_limit_transfer_direction_id: Int
+    commission_template_limit_transfer_direction_id: ID
     "Сумма лимита"
     amount: Float
     "ID валюты лимита"
-    currency_id: Int
+    currency_id: ID
     "ID периода лимита"
-    commission_template_limit_period_id: Int
+    commission_template_limit_period_id: ID
     "ID события лимита"
-    commission_template_limit_action_type_id: Int
-    "ID количество срабатываний лимита"
+    commission_template_limit_action_type_id: ID
+    "количество срабатываний лимита"
     period_count: Int
     "Получить типы лимита"
     commission_template_limit_type: CommissionTemplateLimitType @belongsTo(relation:"commissionTemplateLimitType")
@@ -41,19 +41,19 @@ extend type Mutation {
     "Создать лимит"
     createCommissionTemplateLimit(
         "ID типа лимита"
-        commission_template_limit_type_id: Int
+        commission_template_limit_type_id: ID
         "ID направления платежа"
-        commission_template_limit_transfer_direction_id: Int
+        commission_template_limit_transfer_direction_id: ID
         "Сумма лимита"
         amount: Float
         "ID валюты лимита"
-        currency_id: Int
+        currency_id: ID
         "ID периода лимита"
-        commission_template_limit_period_id: Int
+        commission_template_limit_period_id: ID
         "ID события лимита"
-        commission_template_limit_action_type_id: Int
+        commission_template_limit_action_type_id: ID
         "ID количество срабатываний лимита"
-        period_count: Int
+        period_count: ID
     ):CommissionTemplateLimit @create
 
     "Обновить лимит"
@@ -61,18 +61,18 @@ extend type Mutation {
         "ID шаблона"
         id: ID!
         "ID типа лимита"
-        commission_template_limit_type_id: Int
+        commission_template_limit_type_id: ID
         "ID направления платежа"
-        commission_template_limit_transfer_direction_id: Int
+        commission_template_limit_transfer_direction_id: ID
         "Сумма лимита"
         amount: Float
         "ID валюты лимита"
-        currency_id: Int
+        currency_id: ID
         "ID периода лимита"
-        commission_template_limit_period_id: Int
+        commission_template_limit_period_id: ID
         "ID события лимита"
-        commission_template_limit_action_type_id: Int
-        "ID количество срабатываний лимита"
+        commission_template_limit_action_type_id: ID
+        "количество срабатываний лимита"
         period_count: Int
     ):CommissionTemplateLimit @update
 

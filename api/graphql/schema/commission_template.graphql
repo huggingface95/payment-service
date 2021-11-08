@@ -11,9 +11,9 @@ type CommissionTemplate {
     "Активен или нет"
     is_active: Boolean
     "массив ID стран"
-    country_id: [Int]
+    country_id: [ID]
     "массив ID валют"
-    currency_id: [Int]
+    currency_id: [ID]
     "Получить связанный платежный провайдер"
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Получить список бизнесов"
@@ -44,7 +44,7 @@ extend type Mutation {
         "Название шаблона"
         name: String!
         "ID платежного провайдера"
-        payment_provider_id: Int!
+        payment_provider_id: ID!
     ):CommissionTemplate @create
 
     "Обновление полей шаблона комиссий"
@@ -58,15 +58,15 @@ extend type Mutation {
         "Активен или нет"
         is_active: Boolean
         "ID платежного провайдера"
-        payment_provider_id: Int!
+        payment_provider_id: ID!
         "массив ID бизнесов"
-        business_activity: [Int]
+        business_activity: [ID]
         "массив ID стран"
-        country_id: [Int]
+        country_id: [ID]
         "массив ID валют"
-        currency_id: [Int]
+        currency_id: [ID]
         "массив ID лимитов"
-        commission_template_limit_id: [Int]
+        commission_template_limit_id: [ID]
     ):CommissionTemplate @field(resolver: "CommissionTemplateMutator@update")
 
     "Удалить шаблон"

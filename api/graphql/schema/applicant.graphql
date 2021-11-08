@@ -89,9 +89,9 @@ extend type Mutation {
         "Телефон"
         phone: String
         "ID Страны"
-        country_id: Int
+        country_id: ID
         "ID страны гражданства"
-        citizenship_country_id: Int
+        citizenship_country_id: ID
         "Штат / область"
         state: String
         "Город"
@@ -103,7 +103,7 @@ extend type Mutation {
         "Национальность"
         nationality: String
         "ID страны рождения"
-        birth_country_id: Int
+        birth_country_id: ID
         "Штат/область рождения"
         birth_state: String
         "Город рождения"
@@ -113,17 +113,17 @@ extend type Mutation {
         "Пол"
         sex: String
         "ID статуса"
-        applicant_status_id: Int
+        applicant_status_id: ID
         "ID состояния"
-        applicant_state_id: Int
+        applicant_state_id: ID
         "ID причины"
-        applicant_state_reason_id: Int
+        applicant_state_reason_id: ID
         "ID уровня рисков"
-        applicant_risk_level_id: Int
+        applicant_risk_level_id: ID
         "ID менеджера"
-        account_manager_member_id: Int
+        account_manager_member_id: ID
         "Массив ID меток"
-        labels: [Int]
+        labels: [ID]
     ): ApplicantIndividual @create
 
     "Редактирование частного пользователя"
@@ -142,9 +142,9 @@ extend type Mutation {
         "Телефон"
         phone: String
         "ID Страны"
-        country_id: Int
+        country_id: ID
         "ID страны гражданства"
-        citizenship_country_id: Int
+        citizenship_country_id: ID
         "Штат / область"
         state: String
         "Город"
@@ -156,7 +156,7 @@ extend type Mutation {
         "Национальность"
         nationality: String
         "ID страны рождения"
-        birth_country_id: Int
+        birth_country_id: ID
         "Штат/область рождения"
         birth_state: String
         "Город рождения"
@@ -170,17 +170,17 @@ extend type Mutation {
         "Дополнительные поля блока контакты"
         contacts_additional_fields: JSON
         "ID статуса"
-        applicant_status_id: Int
+        applicant_status_id: ID
         "ID состояния"
-        applicant_state_id: Int
+        applicant_state_id: ID
         "ID причины"
-        applicant_state_reason_id: Int
+        applicant_state_reason_id: ID
         "ID уровня рисков"
-        applicant_risk_level_id: Int
+        applicant_risk_level_id: ID
         "ID менеджера"
-        account_manager_member_id: Int
+        account_manager_member_id: ID
         "Массив ID меток"
-        labels: [Int]
+        labels: [ID]
     ): ApplicantIndividual @field(resolver:"ApplicantMutator@update")
 
     """

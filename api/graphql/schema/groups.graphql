@@ -20,9 +20,9 @@ type Groups {
 type GroupRole {
     id: ID!
     "ID группы"
-    group_id: Int!
+    group_id: ID!
     "ID роли"
-    role_id: Int!
+    role_id: ID!
     "Описание группы"
     description: String
     "Получить название связанной группы"
@@ -57,13 +57,13 @@ extend type Mutation {
         "Описание группы"
         description: String
         "ID роли"
-        role_id: Int!
+        role_id: ID!
         "ID группы из списка групп поумолчанию"
-        group_id: Int!
+        group_id: ID!
         "ID платежного провайдера"
-        payment_provider_id: Int
+        payment_provider_id: ID
         "ID шаблона комиссий"
-        commission_template_id: Int
+        commission_template_id: ID
     ): GroupRole @create
 
     "Обновить поля группы"
@@ -77,13 +77,13 @@ extend type Mutation {
         "Активная или нет группа (true/false)"
         is_active: Boolean
         "ID роли"
-        role_id: Int!
+        role_id: ID!
         "ID группы из списка групп поумолчанию"
-        group_id: Int!
+        group_id: ID!
         "ID платежного провайдера"
-        payment_provider_id: Int
+        payment_provider_id: ID
         "ID шаблона комиссий"
-        commission_template_id: Int
+        commission_template_id: ID
     ): GroupRole @update
 
 

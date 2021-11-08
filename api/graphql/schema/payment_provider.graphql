@@ -15,11 +15,11 @@ type PaymentProvider {
     "Получить связанные платежные системы"
     payment_systems: [PaymentSystem] @belongsToMany(relation:"paymentSystems")
     "массив ID стран"
-    country_id: [Int]
+    country_id: [ID]
     "Получить связанные страны"
     countries: [Country]
     "массив ID валют"
-    currency_id: [Int]
+    currency_id: [ID]
     "Получить связанные валюты"
     currencies: [Currencies]
 }
@@ -36,8 +36,8 @@ extend type Query {
     hasPaymentSystems: {column:NAME,operator:GTE,value:PaymentSystemName} фильтр по платежным системам
     """
     paymentProviders(
-        paymentProviderCountry: [Int] @scope(name:"PaymentProviderCountry"),
-        paymentProviderCurrency: [Int] @scope(name:"PaymentProviderCurrency"),
+        paymentProviderCountry: [ID] @scope(name:"PaymentProviderCountry"),
+        paymentProviderCurrency: [ID] @scope(name:"PaymentProviderCurrency"),
         hasPaymentSystems: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
@@ -56,11 +56,11 @@ extend type Mutation {
         "Активен или нет"
         is_active: Boolean
         "массив ID платежных систем"
-        payment_systems: [Int]
+        payment_systems: [ID]
         "массив ID стран"
-        country_id: [Int]
+        country_id: [ID]
         "массив ID валют"
-        currency_id: [Int]
+        currency_id: [ID]
     ):PaymentProvider @field(resolver: "PaymentProviderMutator@create")
 
     "Обновить поля платежного провайдера"
@@ -75,11 +75,11 @@ extend type Mutation {
         "Активен или нет"
         is_active: Boolean
         "массив ID платежных систем"
-        payment_systems: [Int]
+        payment_systems: [ID]
         "массив ID стран"
-        country_id: [Int]
+        country_id: [ID]
         "массив ID валют"
-        currency_id: [Int]
+        currency_id: [ID]
     ):PaymentProvider @field(resolver: "PaymentProviderMutator@update")
 
     "Удалить платежный провайдер"

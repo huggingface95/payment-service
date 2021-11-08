@@ -39,9 +39,9 @@ type Mutation {
         "Описание"
         description: String
         "Массив разрешений"
-        permissions: [Int]
+        permissions: [ID]
         "Массив груп поумолчанию"
-        groups: [Int]
+        groups: [ID]
     ): Roles @field(resolver:"RoleMutator@create")
 
     updateRole(
@@ -52,9 +52,9 @@ type Mutation {
         "Описание роли"
         description: String
         "Массив разрешений"
-        permissions: [Int]
+        permissions: [ID]
         "Массив групп поумолчанию"
-        groups: [Int]
+        groups: [ID]
     ): Roles @field(resolver:"RoleMutator@update")
 
     deleteRole(

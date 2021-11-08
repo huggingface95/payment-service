@@ -14,7 +14,7 @@ type Members {
     sex: String
     "Активен = true или не активный = false участник"
     is_active: Boolean
-    company_id: Int
+    company_id: ID
     "получить компанию участника"
     company: Companies! @belongsTo(relation: "company")
     "получить страну участника"
@@ -26,7 +26,7 @@ type Members {
     "Получить должность участника"
     position: DepartmentPosition @belongsTo(relation: "position")
     "ID настройки двухфактороной авторизации"
-    two_factor_auth_setting_id: Int!
+    two_factor_auth_setting_id: ID!
     "Дополнительны поля"
     additional_fields: JSON
 }
@@ -61,17 +61,17 @@ extend type Mutation {
         "Пол участника"
         sex: Sex
         "ID компании"
-        company_id: Int!
+        company_id: ID!
         "ID страны"
-        country_id: Int
+        country_id: ID
         "ID языка"
-        language_id: Int
+        language_id: ID
         "ID роли участника"
-        role_id: Int
+        role_id: ID
         "Активен не активен"
         is_active: Boolean
         "ID настройки двухфактороной авторизации"
-        two_factor_auth_setting_id: Int
+        two_factor_auth_setting_id: ID
         "Пароль участника, если не передан то сгенерируется случайный"
         password: String @rules(apply: ["min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
     ): Members @field(resolver: "MembersMutator@create")
@@ -87,11 +87,11 @@ extend type Mutation {
         "Email участника"
         email: EMAIL! @rules(apply: ["email", "unique:members"])
         "ID компании"
-        company_id: Int!
+        company_id: ID!
         "ID роли участника"
-        role_id: Int
+        role_id: ID
         "ID настройки двухфактороной авторизации"
-        two_factor_auth_setting_id: Int!
+        two_factor_auth_setting_id: ID!
         "Дополнительны поля"
         additional_fields: JSON
     ): Members @field(resolver: "MembersMutator@invite")
@@ -111,13 +111,13 @@ extend type Mutation {
         "Пол участника"
         sex: Sex
         "ID компании"
-        company_id: Int!
+        company_id: ID!
         "ID страны"
-        country_id: Int
+        country_id: ID
         "ID языка"
-        language_id: Int
+        language_id: ID
         "ID роли участника"
-        role_id: Int
+        role_id: ID
         "Активен не активен"
         is_active: Boolean
         """
@@ -152,7 +152,7 @@ extend type Mutation {
         "ID участника"
         member_id: ID!
         "ID должности из списка department_position"
-        department_position: Int
+        department_position: ID
     ): Members @field(resolver: "MembersMutator@setMemberPosition")
 
 

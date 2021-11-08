@@ -74,7 +74,7 @@ extend type Mutation {
         "Контактное имя"
         contact_name: String
         "ID страны"
-        country_id: Int!
+        country_id: ID!
     ): Companies @create
 
     "Обновить данные компании"
@@ -96,7 +96,7 @@ extend type Mutation {
         "Регистрационный номер компании"
         company_number: String
         "ID страны"
-        country_id: Int
+        country_id: ID
         "Контактное имя"
         contact_name: String
         "Дополнительные поля"
