@@ -41,7 +41,7 @@ extend type Mutation {
     "Обновление настроек компании"
     updateCompanySettings(
         "ID компании"
-        company_id: Int!
+        company_id: ID!
         "Client applicant URL в формате http://example.com"
         email_url: String @rules(apply: ["regex:!https?:\/\/!","regex:/[a-z0-9]/"])
         "JWT token"
