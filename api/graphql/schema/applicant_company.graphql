@@ -58,6 +58,13 @@ type ApplicantCompany {
     labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
 }
 
+type ApplicantIndividualCompany {
+    applicant_individual_id: Int!
+    applicant_company_id: Int!
+    applicant_individual_company_relation_id: Int!
+    applicant_individual_company_position_id: Int!
+}
+
 extend type Query {
     """
     Получить пользователя  по ID
@@ -192,14 +199,38 @@ extend type Mutation {
     """
     setApplicantCompanyPassword(
         id: ID!
+        "пароль"
         password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
+        "подтверждения пароля"
         password_confirmation: String!
     ): ApplicantCompany @field(resolver: "ApplicantCompanyMutator@setPassword")
 
-    "Удалит пользователя"
+    "Удалить пользователя"
     deleteApplicantCompany (
         id: ID!
     ): ApplicantCompany @delete
+
+    "Добавить связь Individual с Company"
+    createApplicantIndividualCompany(
+        applicant_individual_id: Int!
+        applicant_company_id: Int!
+        applicant_individual_company_relation_id: Int!
+        applicant_individual_company_position_id: Int!
+    ): ApplicantIndividualCompany @create
+
+    "Редактировать связь Individual с Company"
+    updateApplicantIndividualCompany(
+        applicant_individual_id: Int!
+        applicant_company_id: Int!
+        applicant_individual_company_relation_id: Int
+        applicant_individual_company_position_id: Int
+    ): ApplicantIndividualCompany @update
+
+    "Удалить связь Individual с Company"
+    deleteApplicantIndividualCompany(
+        applicant_individual_id: Int!
+        applicant_company_id: Int!
+    ): ApplicantIndividualCompany @field(resolver: "ApplicantIndividualCompanyMutator@delete")
 
 }
 
