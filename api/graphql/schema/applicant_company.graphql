@@ -92,7 +92,7 @@ extend type Mutation {
         "Телефон"
         phone: String
         "Получить связанную страну"
-        country: Country @belongsTo(relation: "country")
+        country_id: ID
         "Штат / область"
         state: String
         "Город"
@@ -121,20 +121,20 @@ extend type Mutation {
         info_additional_fields: JSON
         "Дополнительные поля блока контакты"
         contacts_additional_fields: JSON
-        "Получить тип бизнеса"
-        business_type: ApplicantCompanyBusinessType @belongsTo(relation: "businessType")
-        "Получить статусы"
-        status: ApplicantStatus @belongsTo(relation: "status")
-        "Получить состояния"
-        state: ApplicantState @belongsTo(relation: "state")
-        "Получить причины"
-        state_reson: ApplicantStateReason @belongsTo(relation: "stateReason")
-        "Получить уровни рисков"
-        risk_level: ApplicantRiskLevel @belongsTo(relation: "riskLevel")
-        "Получить менеджера"
-        manager: Members @belongsTo(relation: "manager")
-        "Получить метки"
-        labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
+        "ID типов бизнеса"
+        applicant_company_business_type_id: ID
+        "ID статуса"
+        applicant_status_id: ID
+        "ID состояния"
+        applicant_state_id: ID
+        "ID причины"
+        applicant_state_reason_id: ID
+        "ID уровня рисков"
+        applicant_risk_level_id: ID
+        "ID менеджера"
+        account_manager_member_id: ID
+        "Массив ID меток"
+        labels: [ID]
     ): ApplicantCompany @create
 
     "Редактирование частного пользователя"
