@@ -233,6 +233,7 @@ return [
         \Nuwave\Lighthouse\Execution\ValidationErrorHandler::class,
         \Nuwave\Lighthouse\Execution\ExtensionErrorHandler::class,
         \Nuwave\Lighthouse\Execution\ReportingErrorHandler::class,
+        \App\GraphQL\ExtensionErrorHandler::class,
     ],
 
     /*

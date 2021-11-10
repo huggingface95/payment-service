@@ -1,6 +1,7 @@
 """
 Компания
 Administration->Company Info
+error codes: 500, 400
 """
 type Companies {
     id: ID!

@@ -25,5 +25,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ApplicantStateTableSeeder::class);
         $this->call(ApplicantStatusTableSeeder::class);
         $this->call( ApplicantLabelsTableSeeder::class);
+        $this->call( ApplicantCompanyLabelsTableSeeder::class);
     }
 }
