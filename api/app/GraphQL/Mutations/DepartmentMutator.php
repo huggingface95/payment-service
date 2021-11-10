@@ -2,11 +2,12 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\Companies;
+use App\Models\DepartmentPosition;
+use App\Models\Departments;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
-class CompanyMutator extends BaseMutator
+class DepartmentMutator extends BaseMutator
 {
     /**
      * Return a value for the field.
@@ -20,12 +21,12 @@ class CompanyMutator extends BaseMutator
 
     public function update($root, array $args, GraphQLContext $context)
     {
-            $company = Companies::find($args['id']);
-            if (isset($args['additional_fields'])) {
-                $args['additional_fields']  = $this->setAdditionalField($args['additional_fields']);
+            $department = Departments::find($args['id']);
+            if (isset($args['department_positions_id'])) {
+                DepartmentPosition::whereIn('id',$args['department_positions_id'])->update(['department_id' => $args['id']]);
             }
-            $company->update($args);
-            return $company;
+
+            return $department;
     }
 
 }

@@ -54,9 +54,9 @@ extend type Mutation {
     updateDepartment(
         "ID департамента"
         id: ID!
-        "Название департамента"
-        name: String
-    ): Departments @update
+        "ID должностей"
+        department_positions_id: [ID]
+    ): Departments @field(resolver:"DepartmentMutator@update")
 
     "Создание должности"
     createDepartmentPosition(
