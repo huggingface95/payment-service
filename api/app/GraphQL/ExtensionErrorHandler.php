@@ -15,9 +15,9 @@ class ExtensionErrorHandler implements ErrorHandler
             return $next(null);
         }
         //$underlyingException = $error->getPrevious();
-        if ($error->getCategory() == 'internal' && env('APP_ENV')!=='local') {
+        if ($error->getCategory() == 'internal') {
             return $next(new Error(
-                'Server internal error',
+                (env('APP_ENV')!=='local') ? 'Server internal error' : $error->getMessage(),
                 // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
                 $error->getNodes(),
                 $error->getSource(),
@@ -30,10 +30,10 @@ class ExtensionErrorHandler implements ErrorHandler
             ));
         }
 
-        if ($error->getCategory() == 'graphql' && env('APP_ENV')!=='local') {
+        if ($error->getCategory() == 'graphql') {
             Log::error($error);
             return $next(new Error(
-                'Bad request',
+                (env('APP_ENV')!=='local') ? 'Bad request' : $error->getMessage(),
                 // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
                 $error->getNodes(),
                 $error->getSource(),
