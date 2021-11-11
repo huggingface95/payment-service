@@ -35,7 +35,7 @@ class Permissions extends SpatiePermission
                     $current[$level] = array();
                 $current = &$current[$level];
             }
-            $current['permissions'][] = $permission;
+            $current['permissions'][] = ['permission_id'=>$item->id,'permission_name'=>$permission];
             $permData[$name]['rules'] = $out;
         }
         return $permData;
