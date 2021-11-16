@@ -15,7 +15,7 @@ class Departments extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name','company_id'
     ];
 
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
