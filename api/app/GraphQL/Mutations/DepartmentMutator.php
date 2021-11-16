@@ -2,28 +2,58 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphqlException;
 use App\Models\DepartmentPosition;
 use App\Models\Departments;
-use GraphQL\Type\Definition\ResolveInfo;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+
 
 class DepartmentMutator extends BaseMutator
 {
+
     /**
-     * Return a value for the field.
-     *
-     * @param  @param  null  $root Always null, since this field has no parent.
-     * @param  array<string, mixed>  $args The field arguments passed by the client.
-     * @param  \Nuwave\Lighthouse\Support\Contracts\GraphQLContext  $context Shared between all fields.
-     * @param  \GraphQL\Type\Definition\ResolveInfo  $resolveInfo Metadata for advanced query resolution.
+     * Create department
+     * @param $root
+     * @param array $args
      * @return mixed
      */
+    public function create($root, array $args)
+    {
+        $department = Departments::create($args);
 
-    public function update($root, array $args, GraphQLContext $context)
+        if (isset($args['department_positions_name'])) {
+            foreach ($args['department_positions_name'] as $position) {
+                DepartmentPosition::create([
+                    'name'=> $position,
+                    'department_id' => $department->id
+                ]);
+            }
+
+        }
+
+        return $department;
+    }
+
+    /**
+     * Update department
+     * @param $root
+     * @param array $args
+     * @return mixed
+     */
+    public function update($root, array $args)
     {
             $department = Departments::find($args['id']);
-            if (isset($args['department_positions_id'])) {
-                DepartmentPosition::whereIn('id',$args['department_positions_id'])->update(['department_id' => $args['id']]);
+            if (isset($args['active_department_positions_id'])) {
+                $positions = DepartmentPosition::whereIn('id',$args['active_department_positions_id'])->get();
+                $activePositionIds = [];
+                foreach ($positions as $position) {
+                    if (!$position->is_active  && !$position->members->isEmpty()) {
+                        throw new GraphqlException('Department positions are already in use',"used");
+                    }
+
+                    $activePositionIds[] = $position->id;
+                }
+                DepartmentPosition::whereIn('id',$activePositionIds)->update(['department_id' => $args['id']]);
+
             }
 
             return $department;

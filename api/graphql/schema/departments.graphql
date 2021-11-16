@@ -16,6 +16,8 @@ type DepartmentPosition {
     id: ID!
     "Назварие должности"
     name: String !
+    "Активен = true или не активный = false"
+    is_active: Boolean
     "Получить департамент"
     department: Departments @belongsTo(relation: "department")
 }
@@ -34,11 +36,11 @@ extend type Query {
     departmentPosition(id: ID @eq): DepartmentPosition @find
     """
     Получить список должностей
-    orderBy: [{ column: ID, order: DESC }] сортировка по названию или по ID
-    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    orderBy: [{ column: ID, order: DESC }] сортировка по названию, по ID, по is_active
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию, по полю is_active
     hasDepartment: {column:ID,operator:EQ,value:1} фильтр по id департамента
     """
-    departmentPositions(hasDepartment: _ @whereHasConditions(columns: ["id"]), where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [DepartmentPosition!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    departmentPositions(hasDepartment: _ @whereHasConditions(columns: ["id"]), where: _ @whereConditions(columns: ["name","is_active"]), orderBy: _ @orderBy(columns: ["id","name","is_active"])): [DepartmentPosition!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {
@@ -46,16 +48,18 @@ extend type Mutation {
     createDepartment(
         "Название департамента"
         name: String!
-        "ID компанию"
+        "ID компании"
         company_id: ID!
-    ): Departments @create
+        "Массив названий должностей"
+        department_positions_name: [String]
+    ): Departments @field(resolver:"DepartmentMutator@create")
 
     "Изменить название департамента"
     updateDepartment(
         "ID департамента"
         id: ID!
-        "ID должностей"
-        department_positions_id: [ID]
+        "ID активных должностей"
+        active_department_positions_id: [ID]
     ): Departments @field(resolver:"DepartmentMutator@update")
 
     "Создание должности"
@@ -69,7 +73,8 @@ extend type Mutation {
     "Изменить название должности"
     updateDepartmentPosition(
         id: ID!
-        name: String
+        "Активен = true или не активный = false"
+        is_active: Boolean
     ): DepartmentPosition @update
 
     "Удалить департамент"

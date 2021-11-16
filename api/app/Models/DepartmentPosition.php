@@ -16,13 +16,18 @@ class DepartmentPosition extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name','department_id'
     ];
 
 
     public function department()
     {
         return $this->belongsTo(Departments::class,'department_id');
+    }
+
+    public function members()
+    {
+        return$this->hasMany(Members::class);
     }
 
 }
