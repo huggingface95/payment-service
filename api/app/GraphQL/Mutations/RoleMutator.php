@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Models\GroupRole;
 use App\Models\Permissions;
 use App\Models\Roles;
 
@@ -23,7 +24,7 @@ class RoleMutator
         }
 
         if(isset($args['groups'])) {
-            $role->groups()->attach($args['groups']);
+            $this->syncGroups($role, $args['groups']);
         }
 
         return $role;
@@ -41,7 +42,7 @@ class RoleMutator
             $this->syncPermissions($role, $args['permissions']);
         }
         if(isset($args['groups'])) {
-            $role->groups()->attach($args['groups']);
+            $this->syncGroups($role, $args['groups']);
         }
 
         $role->update($args);
@@ -58,6 +59,17 @@ class RoleMutator
         $permissionsName = Permissions::getPermissionArrayNamesById($permissions);
 
         return $role->syncPermissions($permissionsName);
+    }
+
+    private function syncGroups(Roles $role, array $groups)
+    {
+        GroupRole::where('role_id',$role->id)->delete();
+        foreach ($groups as $group) {
+            GroupRole::create([
+                'group_id'=> $group,
+                'role_id' => $role->id
+            ]);
+        }
     }
 
 
