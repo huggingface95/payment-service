@@ -29,6 +29,7 @@ type Members {
     two_factor_auth_setting_id: ID!
     "Дополнительны поля"
     additional_fields: JSON
+    fullname: String
 }
 
 
@@ -40,11 +41,24 @@ extend type Query {
     """
     Получить список участников
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
-    where:{column: NAME, operator: LIKE, value: ""} фильтр по имени, email, комании, ролт, департаменту, должности
+    where:{column: FIRST_NAME, operator: LIKE, value: ""} фильтр по фамилии, имени, email, компании, роли, департаменту, должности
+    hasPosition: {column: DEPARTMENT_ID, operator:EQ, value: 8} поиск по id департамента
     """
-    members(where: _ @whereConditions(columns: ["name","company_id" ,"email","role", "department","position"]), orderBy: _ @orderBy(
-        columns: ["id","email"],
+    members(
+        hasPosition: _ @whereHasConditions(columns: ["department_id"]),
+        where: _ @whereConditions(columnsEnum: "MembersColumn"), orderBy: _ @orderBy(
+        columns: ["id","email","last_login_at"],
     )): [Members!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+enum MembersColumn {
+    FULLNAME @enum(value: "fullname")
+    COMPANY_ID @enum(value: "company_id")
+    EMAIL @enum(value: "EMAIL")
+    ROLE_ID @enum(value: "member_group_role_id")
+    COMPANY_ID @enum(value: "company_id")
+    POSITION_ID @enum(value: "department_position_id")
+    DEPARTMENT_ID @enum(value: "department_position_id")
 }
 
 extend type Mutation {
