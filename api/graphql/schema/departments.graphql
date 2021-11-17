@@ -78,7 +78,7 @@ extend type Mutation {
     ): DepartmentPosition @update
 
     "Удалить департамент"
-    deleteDepartment(id: ID!): Departments @delete
+    deleteDepartment(id: ID!): Departments @field(resolver:"DepartmentMutator@delete")
     "Удалить должность"
     deleteDepartmentPosition(id: ID!): DepartmentPosition @delete
 

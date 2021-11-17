@@ -11,7 +11,7 @@ class DepartmentPositionMutator extends BaseMutator
 
 
     /**
-     * Update department
+     * Update position
      * @param $root
      * @param array $args
      * @return mixed
@@ -26,5 +26,6 @@ class DepartmentPositionMutator extends BaseMutator
 
             return $position;
     }
+
 
 }

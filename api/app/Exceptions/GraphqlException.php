@@ -10,11 +10,13 @@ class GraphqlException extends Exception implements RendersErrorsExtensions
      * @var @string
      */
     protected $category;
+    protected $code;
 
-    public function __construct(string $message, string $category = 'internal')
+    public function __construct(string $message, string $category = 'internal', $code = 500)
     {
         parent::__construct($message);
         $this->category = $category;
+        $this->code = $code;
     }
 
     /**

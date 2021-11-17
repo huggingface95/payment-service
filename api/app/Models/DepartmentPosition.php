@@ -27,7 +27,13 @@ class DepartmentPosition extends Model
 
     public function members()
     {
-        return$this->hasMany(Members::class);
+        return $this->hasMany(Members::class);
+    }
+
+    public static function getPositionsIdByDepartment(int $departementId)
+    {
+        $positions = collect(self::where('department_id',$departementId)->get(['id']));
+        return $positions->pluck('id')->all();
     }
 
 }

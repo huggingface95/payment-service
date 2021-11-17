@@ -29,6 +29,20 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
+        if (strpos($error->getMessage(),'non-nullable')) {
+            return $next(new Error(
+                'Entity not found',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 404
+                ]
+            ));
+        }
         if ($error->getCategory() == 'internal') {
             return $next(new Error(
                 (env('APP_ENV')!=='local') ? 'Server internal error' : $error->getMessage(),
