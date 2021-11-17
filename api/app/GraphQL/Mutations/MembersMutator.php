@@ -25,7 +25,7 @@ class MembersMutator extends BaseMutator
         if (!isset($args['password'])) {
             $password = Str::random(8);
         } else {
-            $password =$args['password_hash'];
+            $password =$args['password'];
         }
 
         $args['password_hash'] = Hash::make($password);
