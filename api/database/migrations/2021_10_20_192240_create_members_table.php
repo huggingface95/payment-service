@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateMembersTable extends Migration
@@ -30,6 +31,7 @@ class CreateMembersTable extends Migration
             $table->string('password_salt',255);
             $table->jsonb('additional_fields')->nullable();
             $table->timestamp('deleted_at')->nullable();
+            $table->timestamp('last_login_at')->nullable();
             $table->timestamps();
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('member_group_role_id')->references('id')->on('group_role');
@@ -37,6 +39,8 @@ class CreateMembersTable extends Migration
             $table->foreign('department_position_id')->references('id')->on('department_position');
             $table->foreign('country_id')->references('id')->on('countries');
         });
+
+        DB::raw("alter table members add column fullname varchar(255) GENERATED ALWAYS AS (first_name || ' '|| last_name) STORED");
     }
 
     /**

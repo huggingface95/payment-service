@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Members extends Model
 {
@@ -12,7 +13,7 @@ class Members extends Model
     public $password_confirmation;
 
     protected $fillable = [
-        'first_name', 'last_name','email','sex','is_active','company_id','country_id','language_id','member_group_role_id','two_factor_auth_setting_id','password_hash','password_salt'
+        'first_name', 'last_name','email','sex','is_active','company_id','country_id','language_id','member_group_role_id','two_factor_auth_setting_id','password_hash','password_salt','last_login_at'
     ];
 
     protected $dates = ['deleted_at'];
@@ -41,4 +42,5 @@ class Members extends Model
     {
         return $this->belongsTo(DepartmentPosition::class,'department_position_id');
     }
+
 }
