@@ -43,19 +43,22 @@ class DepartmentMutator extends BaseMutator
     {
             $department = Departments::find($args['id']);
             if (isset($args['active_department_positions_id'])) {
-                $positions = DepartmentPosition::whereIn('id',$args['active_department_positions_id'])->get();
-                $departmentPositionIds = DepartmentPosition::getPositionsIdByDepartment($args['id']);
-                $activePositionIds = [];
-                foreach ($positions as $position) {
+                $checkPositions = DepartmentPosition::whereIn('id',$args['active_department_positions_id'])->where('department_id',$department->id)->get();
+                if ($checkPositions->isEmpty()) {
+                    throw new GraphqlException('Position is not be use this department',"internal");
+                }
+                foreach ($department->positions as $position) {
                     if (!$position->is_active  && !$position->members->isEmpty()) {
                         throw new GraphqlException('Department positions are already in use',"used");
                     }
+                    if (in_array($position->id,$args['active_department_positions_id'])) {
+                        $position->is_active = true;
+                    } else {
+                        $position->is_active = false;
+                    }
+                    $position->update();
 
-                    $activePositionIds[] = $position->id;
                 }
-                DepartmentPosition::whereIn('id',$departmentPositionIds)->update(['department_id' => $args['id'], 'is_active'=>false]);
-                DepartmentPosition::whereIn('id',$activePositionIds)->update(['department_id' => $args['id'], 'is_active'=>true]);
-
             }
 
             return $department;
