@@ -75,7 +75,7 @@ class DepartmentMutator extends BaseMutator
         try {
             $department = Departments::find($args['id']);
             if (!$department) {
-                throw new GraphqlException('Entity not found',"use",404);
+                throw new GraphqlException('An entry with this id does not exist',"internal",404);
             }
             $department->delete();
             return $department;

@@ -52,7 +52,8 @@ class GraphqlException extends Exception implements RendersErrorsExtensions
     public function extensionsContent(): array
     {
         return [
-            'code' => $this->getCode()
+            'code' => $this->getCode(),
+            'systemMessage'=> $this->getMessage()
         ];
     }
 
