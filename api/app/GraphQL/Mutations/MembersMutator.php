@@ -71,6 +71,10 @@ class MembersMutator extends BaseMutator
     {
         $password = Str::random(8);
         $args['is_active'] = false;
+        if ($args['role_id']) {
+            $groupRole = $this->getMemberGroupRole($args['role_id']);
+            $args['member_group_role_id'] = $groupRole->id;
+        }
 
         $args['password_hash'] = Hash::make($password);
         $args['password_salt'] = Hash::make($password);
