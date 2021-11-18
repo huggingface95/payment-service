@@ -42,6 +42,9 @@ class DepartmentMutator extends BaseMutator
     public function update($root, array $args)
     {
             $department = Departments::find($args['id']);
+            if (!$department) {
+                throw new GraphqlException('An entry with this id does not exist',"not found",404);
+            }
             if (isset($args['active_department_positions_id'])) {
                 $checkPositions = DepartmentPosition::whereIn('id',$args['active_department_positions_id'])->where('department_id',$department->id)->get();
                 if ($checkPositions->isEmpty()) {
@@ -75,7 +78,7 @@ class DepartmentMutator extends BaseMutator
         try {
             $department = Departments::find($args['id']);
             if (!$department) {
-                throw new GraphqlException('An entry with this id does not exist',"internal",404);
+                throw new GraphqlException('An entry with this id does not exist',"not found",404);
             }
             $department->delete();
             return $department;

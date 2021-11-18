@@ -9,6 +9,7 @@ use Nuwave\Lighthouse\Execution\ErrorHandler;
 
 class ExtensionErrorHandler implements ErrorHandler
 {
+
     public function __invoke(?Error $error, Closure $next): ?array
     {
         if ($error === null) {
@@ -46,6 +47,21 @@ class ExtensionErrorHandler implements ErrorHandler
             ));
         }
         if (strpos($error->getMessage(),'null')) {
+            return $next(new Error(
+                'An entry with this id does not exist',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 404,
+                    'systemMessage' => $error->getMessage()
+                ]
+            ));
+        }
+        if ($error->getCategory() == 'not found') {
             return $next(new Error(
                 'An entry with this id does not exist',
                 // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
