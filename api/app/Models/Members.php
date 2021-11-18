@@ -13,7 +13,7 @@ class Members extends Model
     public $password_confirmation;
 
     protected $fillable = [
-        'first_name', 'last_name','email','sex','is_active','company_id','country_id','language_id','member_group_role_id','two_factor_auth_setting_id','password_hash','password_salt','last_login_at'
+        'first_name', 'last_name','email','sex','is_active','company_id','country_id','language_id','member_group_role_id','two_factor_auth_setting_id','password_hash','password_salt','last_login_at','additional_fields'
     ];
 
     protected $dates = ['deleted_at'];
@@ -41,6 +41,12 @@ class Members extends Model
     public function position()
     {
         return $this->belongsTo(DepartmentPosition::class,'department_position_id');
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(DepartmentPosition::class, 'department_position_id')
+            ->join('departments', 'departments.id', '=', 'department_position.department_id');
     }
 
 }

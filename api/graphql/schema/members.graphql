@@ -14,6 +14,9 @@ type Members {
     sex: String
     "Активен = true или не активный = false участник"
     is_active: Boolean
+    "Последняя авторизация"
+    last_login_at: DateTime
+    "ID компании"
     company_id: ID
     "получить компанию участника"
     company: Companies! @belongsTo(relation: "company")
@@ -29,6 +32,7 @@ type Members {
     two_factor_auth_setting_id: ID!
     "Дополнительны поля"
     additional_fields: JSON
+    "Полное имя"
     fullname: String
 }
 
@@ -45,7 +49,7 @@ extend type Query {
     hasPosition: {column: DEPARTMENT_ID, operator:EQ, value: 8} поиск по id департамента
     """
     members(
-        hasPosition: _ @whereHasConditions(columns: ["department_id"]),
+        hasDepartment: _ @whereHasConditions(columns: ["department_id"]),
         where: _ @whereConditions(columnsEnum: "MembersColumn"), orderBy: _ @orderBy(
         columns: ["id","email","last_login_at"],
     )): [Members!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
@@ -58,7 +62,8 @@ enum MembersColumn {
     ROLE_ID @enum(value: "member_group_role_id")
     COMPANY_ID @enum(value: "company_id")
     POSITION_ID @enum(value: "department_position_id")
-    DEPARTMENT_ID @enum(value: "department_position_id")
+    IS_ACTIVE @enum(value: "is_active")
+    LAST_LOGIN_AT @enum(value: "last_login_at")
 }
 
 extend type Mutation {
