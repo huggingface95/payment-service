@@ -56,6 +56,7 @@ extend type Query {
 }
 
 enum MembersColumn {
+    ID @enum(value: "id")
     FULLNAME @enum(value: "fullname")
     COMPANY_ID @enum(value: "company_id")
     EMAIL @enum(value: "EMAIL")
