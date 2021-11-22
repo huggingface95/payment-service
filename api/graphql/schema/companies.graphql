@@ -26,7 +26,7 @@ type Companies {
     "Участники компании"
     members: [Members] @hasMany(relation: "members")
     "Количество участников в компании"
-    members_count: Int @count(relation: "members")
+    members_count: Int
     "Департаменты компании"
     departments: [Departments] @hasMany(relation: "departments")
     "Получить настройки компании"

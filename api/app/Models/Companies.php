@@ -52,4 +52,10 @@ class Companies extends Model
         return $query->join('countries','companies.country_id','=','countries.id')->orderBy('countries.id',$sort)->select('companies.*');
     }
 
+    public function getMembersCountAttribute()
+    {
+        return $this->members()->count();
+    }
+
+
 }
