@@ -105,7 +105,7 @@ extend type Mutation {
     ): Companies @field(resolver:"CompanyMutator@update")
 
     "Удалит компанию"
-    deleteCompany(id: ID!): Companies @delete
+    deleteCompany(id: ID!): Companies @field(resolver:"CompanyMutator@delete")
 
 }
 
