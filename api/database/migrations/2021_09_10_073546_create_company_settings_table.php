@@ -14,8 +14,7 @@ class CreateCompanySettingsTable extends Migration
     public function up()
     {
         Schema::create('company_settings', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('company_id');
+            $table->unsignedBigInteger('company_id')->primary();
             $table->string('email_url',255)->nullable();
             $table->string('email_jwt',255)->nullable();
             $table->string('email_from',255)->nullable();

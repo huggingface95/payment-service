@@ -3,7 +3,7 @@
 Administration->Company Info->Full Profile->Branding
 """
 type CompanySettings {
-    id: ID!
+    company_id: ID
     "URL в тексте письма"
     email_url: String
     "Email для jwt"
