@@ -33,8 +33,9 @@ extend type Query {
     commissionTemplates(
         hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
         hasBusinessActivity: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["name","is_active"]),
-        orderBy: _ @orderBy(columns: ["id","name","is_active"])
+        paymentProviderName: Sort @scope(name:"PaymentProviderName"),
+        where: _ @whereConditions(columns: ["id","name","is_active"]),
+        orderBy: _ @orderBy(columns: ["id","name","is_active","description"])
     ): [CommissionTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 

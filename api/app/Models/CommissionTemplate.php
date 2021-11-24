@@ -66,5 +66,10 @@ class CommissionTemplate extends BaseModel
         return $this->belongsTo(PaymentProvider::class,'payment_provider_id','id');
     }
 
+    public function scopePaymentProviderName($query, $sort)
+    {
+        return $query->join('payment_provider','commission_template.payment_provider_id','=','payment_provider.id')->orderBy('payment_provider.name',$sort)->select('commission_template.*');
+    }
+
 
 }
