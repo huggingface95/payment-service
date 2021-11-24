@@ -9,7 +9,7 @@ class CommissionTemplateLimitActionType extends Model
 
     public $timestamps = false;
 
-    protected $table="commission_template_limit_action_typee";
+    protected $table="commission_template_limit_action_type";
     /**
      * The attributes that are mass assignable.
      *
