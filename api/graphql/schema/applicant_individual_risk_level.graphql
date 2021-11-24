@@ -1,0 +1,48 @@
+"""
+Уровни риска пользователя
+Dashboard -> Applicants -> Individual
+"""
+type ApplicantIndividualRiskLevel {
+    id: ID!
+    "Описание"
+    description: String!
+    "Дата и время создания"
+    created_at: DateTime
+    "Получить автора"
+    author: Members @belongsTo(relation: "author")
+    "Получить пользователя"
+    applicant: ApplicantIndividual @belongsTo(relation: "applicant")
+}
+
+extend type Query {
+    """
+    Получить уровень риска по ID
+    """
+    applicantIndividualRiskLevel(id: ID @eq): ApplicantIndividualRiskLevel @find
+    """
+    Получить список всех уровней рисков
+    orderBy: [{ column: CREATED_AT, order: DESC }] сортировка по ID, по времени создания
+    """
+    applicantIndividualRiskLevels( orderBy: _ @orderBy(
+        columns: ["id","created_at"],
+    )): [ApplicantIndividualRiskLevel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать уровень риска"
+    createApplicantIndividualRiskLevel(
+        "Описание"
+        description: String!
+        "ID пользователя"
+        applicant_individual_id: ID!
+        "ID автора"
+        member_id: ID!
+    ): ApplicantIndividualRiskLevel @create
+
+    "Удалит заметку"
+    deleteApplicantIndividualRiskLevel(
+        id: ID!
+    ): ApplicantCompanyRiskLevel @delete
+
+}
+
