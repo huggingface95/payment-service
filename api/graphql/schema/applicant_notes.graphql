@@ -1,0 +1,48 @@
+"""
+Заметки частный пользователь
+Dashboard -> Applicants -> Individual
+"""
+type ApplicantIndividualNotes {
+    id: ID!
+    "Заметка"
+    note: String!
+    "Дата и время создания"
+    created_at: DateTime
+    "Получить автора"
+    author: Members @belongsTo(relation: "author")
+    "Получить пользователя"
+    applicant: ApplicantIndividual @belongsTo(relation: "applicant")
+}
+
+extend type Query {
+    """
+    Получить заметку  по ID
+    """
+    applicantIndividualNote(id: ID @eq): ApplicantIndividualNotes @find
+    """
+    Получить список всех заметок
+    orderBy: [{ column: CREATED_AT, order: DESC }] сортировка по ID, по времени создания
+    """
+    applicantIndividualNotes( orderBy: _ @orderBy(
+        columns: ["id","created_at"],
+    )): [ApplicantIndividualNotes!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать заметку"
+    createApplicantIndividualNote(
+        "Текст заметки"
+        note: String!
+        "ID пользователя"
+        applicant_individual_id: ID!
+        "ID автора заметки"
+        member_id: ID!
+    ): ApplicantIndividualNotes @create
+
+    "Удалит заметку"
+    deleteApplicantIndividualNote(
+        id: ID!
+    ): ApplicantIndividualNotes @delete
+
+}
+

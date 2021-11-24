@@ -1,0 +1,48 @@
+"""
+Заметки компания
+Dashboard -> Applicants -> Company
+"""
+type ApplicantCompanyNotes {
+    id: ID!
+    "Заметка"
+    note: String!
+    "Дата и время создания"
+    created_at: DateTime
+    "Получить автора"
+    author: Members @belongsTo(relation: "author")
+    "Получить пользователя"
+    applicant: ApplicantCompany @belongsTo(relation: "applicant")
+}
+
+extend type Query {
+    """
+    Получить заметку  по ID
+    """
+    applicantCompanyNote(id: ID @eq): ApplicantCompanyNotes @find
+    """
+    Получить список всех заметок
+    orderBy: [{ column: CREATED_AT, order: DESC }] сортировка по ID, по времени создания
+    """
+    applicantCompanyNotes( orderBy: _ @orderBy(
+        columns: ["id","created_at"],
+    )): [ApplicantCompanyNotes!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать заметку"
+    createApplicantCompanyNote(
+        "Текст заметки"
+        note: String!
+        "ID пользователя"
+        applicant_company_id: ID!
+        "ID автора заметки"
+        member_id: ID!
+    ): ApplicantCompanyNotes @create
+
+    "Удалит заметку"
+    deleteApplicantCompanyNote(
+        id: ID!
+    ): ApplicantCompanyNotes @delete
+
+}
+
