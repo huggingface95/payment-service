@@ -36,7 +36,7 @@ class CommissionTemplate extends BaseModel
      */
     public function countries()
     {
-        return $this->belongsToMany(Country::class,'payment_provider_country','commission_template_id','country_id');
+        return $this->belongsToMany(Country::class,'commission_template_country','commission_template_id','country_id');
     }
 
     /**
@@ -54,7 +54,7 @@ class CommissionTemplate extends BaseModel
      */
     public function commissionTemplateLimits()
     {
-        return $this->belongsToMany(CommissionTemplateLimit::class,'commission_template_commission_template_limit','commission_template_id','currency_id');
+        return $this->belongsToMany(CommissionTemplateLimit::class,'commission_template_limit_relation','commission_template_id','commission_template_limit_id');
     }
 
     /**
