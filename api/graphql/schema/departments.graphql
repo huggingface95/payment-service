@@ -70,13 +70,6 @@ extend type Mutation {
         department_id: ID!
     ): DepartmentPosition @create
 
-    "Изменить название должности"
-    updateDepartmentPosition(
-        id: ID!
-        "Активен = true или не активный = false"
-        is_active: Boolean
-    ): DepartmentPosition @update
-
     "Удалить департамент"
     deleteDepartment(id: ID!): Departments @field(resolver:"DepartmentMutator@delete")
     "Удалить должность"

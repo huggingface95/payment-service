@@ -28,4 +28,9 @@ class Departments extends Model
         return $this->hasMany(DepartmentPosition::class, 'department_id');
     }
 
+    public function setActive($active = true)
+    {
+        $this->positions()->update(['is_active'=>$active]);
+    }
+
 }
