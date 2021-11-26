@@ -47,7 +47,7 @@ class DepartmentMutator extends BaseMutator
             }
             if (isset($args['active_department_positions_id'])) {
                 $checkPositions = DepartmentPosition::whereIn('id',$args['active_department_positions_id'])->where('department_id',$department->id)->get();
-                if ($checkPositions->isEmpty()) {
+                if ($checkPositions->isEmpty() && count($args['active_department_positions_id']) !== 0) {
                     throw new GraphqlException('Position is not be use this department',"internal");
                 }
                 foreach ($department->positions as $position) {
