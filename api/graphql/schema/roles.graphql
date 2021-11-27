@@ -15,7 +15,7 @@ type Roles {
     "Получить список групп"
     groups: [Groups] @belongsToMany(relation: "groups")
     "Получить количество групп с данной ролью"
-    groups_count: Int @count(relation: "groups")
+    groups_count: Int
 }
 
 

@@ -31,4 +31,12 @@ class Roles extends SpatieRole
         return $query->with('groups')->orderBy('id',$sort);
     }
 
+    /**
+     * @return int
+     */
+    public function getGroupsCountAttribute()
+    {
+        return $this->groups()->count();
+    }
+
 }
