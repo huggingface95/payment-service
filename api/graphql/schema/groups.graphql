@@ -51,7 +51,7 @@ extend type Query {
 
 extend type Mutation {
     "Создать группу"
-    createGroup(
+    createGroupSettings(
         "Описание группы"
         description: String
         "ID роли"
@@ -67,7 +67,7 @@ extend type Mutation {
     ): GroupRole @field(resolver:"GroupMutator@create")
 
     "Обновить поля группы"
-    updateGroup(
+    updateGroupSettings (
         "ID группы"
         id: ID!
         "Описание группы"
