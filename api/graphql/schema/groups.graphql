@@ -52,8 +52,6 @@ extend type Query {
 extend type Mutation {
     "Создать группу"
     createGroup(
-        "Название группы"
-        name: GroupsEntities!
         "Описание группы"
         description: String
         "ID роли"
@@ -64,14 +62,12 @@ extend type Mutation {
         payment_provider_id: ID
         "ID шаблона комиссий"
         commission_template_id: ID
-    ): GroupRole @create
+    ): GroupRole @field(resolver:"GroupMutator@create")
 
     "Обновить поля группы"
     updateGroup(
         "ID группы"
         id: ID!
-        "Название группы"
-        name: GroupsEntities
         "Описание группы"
         description: String
         "Активная или нет группа (true/false)"
@@ -84,7 +80,7 @@ extend type Mutation {
         payment_provider_id: ID
         "ID шаблона комиссий"
         commission_template_id: ID
-    ): GroupRole @update
+    ): GroupRole @field(resolver:"GroupMutator@create")
 
 
     "Удаление группы"
