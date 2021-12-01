@@ -62,7 +62,7 @@ extend type Mutation {
         payment_provider_id: ID
         "ID шаблона комиссий"
         commission_template_id: ID
-        "Активна не активна группа"
+        "Активная или нет группа (true/false)"
         is_active: Boolean
     ): GroupRole @field(resolver:"GroupMutator@create")
 
@@ -72,8 +72,6 @@ extend type Mutation {
         id: ID!
         "Описание группы"
         description: String
-        "Активная или нет группа (true/false)"
-        is_active: Boolean
         "ID роли"
         role_id: ID!
         "ID группы из списка групп поумолчанию"
@@ -82,7 +80,7 @@ extend type Mutation {
         payment_provider_id: ID
         "ID шаблона комиссий"
         commission_template_id: ID
-        "Активна не активна группа"
+        "Активная или нет группа (true/false)"
         is_active: Boolean
     ): GroupRole @field(resolver:"GroupMutator@create")
 
