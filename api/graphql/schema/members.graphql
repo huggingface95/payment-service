@@ -113,7 +113,7 @@ extend type Mutation {
         "ID настройки двухфактороной авторизации"
         two_factor_auth_setting_id: ID!
         "Дополнительны поля"
-        additional_fields: JSON
+        additional_fields: [AdditionalFieldInput]
     ): Members @field(resolver: "MembersMutator@invite")
 
     """

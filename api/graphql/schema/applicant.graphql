@@ -113,9 +113,9 @@ extend type Mutation {
         "Пол"
         sex: Sex
         "Дополнительные поля"
-        additional_fields: JSON
+        additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
-        contacts_additional_fields: JSON
+        contacts_additional_fields: [AdditionalFieldInput]
         "ID статуса"
         applicant_status_id: ID
         "ID состояния"
@@ -170,9 +170,9 @@ extend type Mutation {
         "Пол"
         sex: Sex
         "Дополнительные поля"
-        additional_fields: JSON
+        additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
-        contacts_additional_fields: JSON
+        contacts_additional_fields: [AdditionalFieldInput]
         "ID статуса"
         applicant_status_id: ID
         "ID состояния"
