@@ -9,7 +9,7 @@ build-job:
     - echo "Compiling the code..."
     - echo "Compile complete."
   only:
-    - master
+    - dev
 unit-test-job:
   stage: test
   script:
