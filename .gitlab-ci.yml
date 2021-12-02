@@ -17,7 +17,7 @@ unit-test-job:
     - sleep 60
     - echo "Code coverage is 90%"
   only:
-    - master
+    - dev
 lint-test-job:
   stage: test
   script:
@@ -25,7 +25,7 @@ lint-test-job:
     - sleep 10
     - echo "No lint issues found."
   only:
-    - master
+    - dev
 deploy-job:
   stage: deploy
   image: alpine
@@ -40,4 +40,4 @@ deploy-job:
     - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev composer update"
     - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev php artisan migrate"
   only:
-    - master
+    - dev
