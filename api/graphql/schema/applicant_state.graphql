@@ -12,7 +12,7 @@ extend type Query {
     """
     Получить состояние по ID
     """
-    applicantState(id: ID @eq): ApplicantStatus @find
+    applicantState(id: ID @eq): ApplicantState @find
     """
     Получить все состояния
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -20,7 +20,7 @@ extend type Query {
     """
     applicantStates(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantStateReason!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantState!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 
