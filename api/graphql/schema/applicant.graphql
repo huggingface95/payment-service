@@ -112,6 +112,10 @@ extend type Mutation {
         birth_at: Date
         "Пол"
         sex: String
+        "Дополнительные поля"
+        additional_fields: JSON
+        "Дополнительные поля блока контакты"
+        contacts_additional_fields: JSON
         "ID статуса"
         applicant_status_id: ID
         "ID состояния"
@@ -124,7 +128,7 @@ extend type Mutation {
         account_manager_member_id: ID
         "Массив ID меток"
         labels: [ID]
-    ): ApplicantIndividual @create
+    ): ApplicantIndividual @field(resolver:"ApplicantMutator@create")
 
     "Редактирование частного пользователя"
     updateApplicantIndividual(

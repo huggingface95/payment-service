@@ -19,7 +19,7 @@ class CreateMembersTable extends Migration
             $table->string('first_name',100);
             $table->string('last_name',100);
             $table->string('email',255);
-            $table->enum('sex',['male','female'])->nullable();
+            $table->unsignedSmallInteger('sex')->nullable();
             $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('country_id')->nullable();
             $table->unsignedBigInteger('language_id')->nullable();

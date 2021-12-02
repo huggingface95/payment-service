@@ -32,7 +32,7 @@ class CreateApplicantTable extends Migration
             $table->string('birth_state',255)->nullable();
             $table->string('birth_city',100)->nullable();
             $table->timestamp('birth_at')->nullable();
-            $table->enum('sex',['male','female'])->nullable();
+            $table->unsignedSmallInteger('sex')->nullable();
             $table->string('password_hash',255);
             $table->string('password_salt',255);
             $table->jsonb('additional_fields')->nullable();

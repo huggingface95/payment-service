@@ -27,8 +27,8 @@ enum FieldTypes {
 }
 
 enum Sex {
-    Male @enum(value: "male")
-    Female @enum(value: "female")
+    Male @enum(value: 1)
+    Female @enum(value: 0)
 }
 
 """
