@@ -39,7 +39,7 @@ type ApplicantIndividual {
     "Дата рождения"
     birth_at: Date
     "Пол"
-    sex: String
+    sex: Sex
     "Дополнительные поля"
     additional_fields: JSON
     "Дополнительные поля блока контакты"
@@ -85,11 +85,11 @@ extend type Mutation {
         "email"
         email: EMAIL!
         "Адрес сайта"
-        url: String
+        url: String!
         "Телефон"
-        phone: String
+        phone: String!
         "ID Страны"
-        country_id: ID
+        country_id: ID!
         "ID страны гражданства"
         citizenship_country_id: ID
         "Штат / область"
@@ -111,7 +111,7 @@ extend type Mutation {
         "Дата рождения"
         birth_at: Date
         "Пол"
-        sex: String
+        sex: Sex
         "Дополнительные поля"
         additional_fields: JSON
         "Дополнительные поля блока контакты"
@@ -168,7 +168,7 @@ extend type Mutation {
         "Дата рождения"
         birth_at: Date
         "Пол"
-        sex: String
+        sex: Sex
         "Дополнительные поля"
         additional_fields: JSON
         "Дополнительные поля блока контакты"

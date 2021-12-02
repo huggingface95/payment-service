@@ -11,7 +11,7 @@ type Members {
     "Email участника"
     email: EMAIL!
     "Пол участника"
-    sex: String
+    sex: Sex
     "Активен = true или не активный = false участник"
     is_active: Boolean
     "Последняя авторизация"
