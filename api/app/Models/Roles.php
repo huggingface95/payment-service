@@ -50,4 +50,14 @@ class Roles extends SpatieRole
         return Permissions::getTreePermissions();
     }
 
+    public function getGroupsIdByRole()
+    {
+        $ids = [];
+        foreach ($this->groups as $group)
+        {
+            $ids[] = $group->id;
+        }
+        return $ids;
+    }
+
 }

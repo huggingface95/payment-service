@@ -63,12 +63,13 @@ class RoleMutator
 
     private function syncGroups(Roles $role, array $groups)
     {
-        GroupRole::where('role_id',$role->id)->delete();
+        $currentGroups = $role->getGroupsIdByRole();
+        $groupsDelete = array_diff($currentGroups,$groups);
+        if ($groupsDelete) {
+            GroupRole::where('role_id',$role->id)->whereIn(['group_id',$groupsDelete])->delete();
+        }
         foreach ($groups as $group) {
-            GroupRole::create([
-                'group_id'=> $group,
-                'role_id' => $role->id
-            ]);
+            GroupRole::updateOrCreate(['role_id'=>$role->id, 'group_id'=>$group],['group_id'=> $group]);
         }
     }
 
