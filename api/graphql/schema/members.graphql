@@ -11,7 +11,7 @@ type Members {
     "Email участника"
     email: EMAIL!
     "Пол участника"
-    sex: String
+    sex: Sex
     "Активен = true или не активный = false участник"
     is_active: Boolean
     "Последняя авторизация"
@@ -51,7 +51,7 @@ extend type Query {
     members(
         hasDepartment: _ @whereHasConditions(columns: ["department_id"]),
         where: _ @whereConditions(columnsEnum: "MembersColumn"), orderBy: _ @orderBy(
-        columns: ["id","email","last_login_at"],
+        columns: ["id","email","last_login_at","is_active"],
     )): [Members!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
@@ -113,7 +113,7 @@ extend type Mutation {
         "ID настройки двухфактороной авторизации"
         two_factor_auth_setting_id: ID!
         "Дополнительны поля"
-        additional_fields: JSON
+        additional_fields: [AdditionalFieldInput]
     ): Members @field(resolver: "MembersMutator@invite")
 
     """

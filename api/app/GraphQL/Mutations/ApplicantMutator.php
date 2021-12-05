@@ -3,6 +3,8 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\ApplicantIndividual;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 
 class ApplicantMutator extends BaseMutator
@@ -17,6 +19,13 @@ class ApplicantMutator extends BaseMutator
 
     public function create($root, array $args)
     {
+        if (!isset($args['password'])) {
+            $password = Str::random(8);
+        } else {
+            $password =$args['password'];
+        }
+        $args['password_hash'] = Hash::make($password);
+        $args['password_salt'] = Hash::make($password);
 
         if (isset($args['additional_fields'])) {
             $additionalFields = $args['additional_fields'];

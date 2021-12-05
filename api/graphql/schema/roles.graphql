@@ -11,7 +11,7 @@ type Roles {
     "Получить список разрешений"
     permissions: [Permissions] @belongsToMany(relation: "permissions")
     "Получить дерево разрешений"
-    permisssions_tree: JSON
+    permissions_tree: JSON
     "Получить список групп"
     groups: [Groups] @belongsToMany(relation: "groups")
     "Получить количество групп с данной ролью"

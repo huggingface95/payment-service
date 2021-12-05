@@ -15,7 +15,7 @@ class ApplicantIndividual extends Model
      * @var array
      */
     protected $fillable = [
-        'first_name','last_name','middle_name','email','url','phone','state','city','address','zip','nationality','birth_state','birth_city','birth_at','sex'
+        'first_name','last_name','middle_name','email','url','phone','country_id','state','city','address','zip','nationality','birth_state','birth_city','birth_at','sex','password_hash','password_salt'
     ];
 
 
