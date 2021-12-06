@@ -49,4 +49,9 @@ class Members extends Model
             ->join('departments', 'departments.id', '=', 'department_position.department_id');
     }
 
+    public function groupRole()
+    {
+        return $this->belongsTo(GroupRole::class,'member_group_role_id');
+    }
+
 }
