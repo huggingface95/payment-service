@@ -59,7 +59,7 @@ enum MembersColumn {
     ID @enum(value: "id")
     FULLNAME @enum(value: "fullname")
     COMPANY_ID @enum(value: "company_id")
-    EMAIL @enum(value: "EMAIL")
+    EMAIL @enum(value: "email")
     ROLE_ID @enum(value: "member_group_role_id")
     COMPANY_ID @enum(value: "company_id")
     POSITION_ID @enum(value: "department_position_id")
