@@ -1,5 +1,5 @@
 "Методы двухфакторной авторизации"
-type TwoFactorAuth {
+type TwoFactorAuthSettings {
     id: ID!
     "Название второго фактора"
     name: String!
@@ -7,7 +7,7 @@ type TwoFactorAuth {
 
 extend type Query {
     "Получить второй фактор по ID"
-    twoFactorAuth(id: ID @eq): TwoFactorAuth @find
+    twoFactorAuth(id: ID @eq): TwoFactorAuthSettings @find
     "Получить список"
-    twoFactorsAuth: [TwoFactorAuth!]! @paginate(defaultCount: 10)
+    twoFactorsAuth: [TwoFactorAuthSettings!]! @paginate(defaultCount: 10)
 }
