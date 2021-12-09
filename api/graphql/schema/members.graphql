@@ -25,7 +25,7 @@ type Members {
     "Получить язык участника"
     language: Languages @belongsTo(relation: "language")
     "Получить роль участника"
-    role: Roles @belongsTo(ralation: "role")
+    role: Roles
     "Получить группу участника"
     group: Groups
     "Получить должность участника"

@@ -33,11 +33,6 @@ class Members extends Model
         return $this->belongsTo(Languages::class,'language_id');
     }
 
-    public function role()
-    {
-        return $this->belongsTo(Roles::class,'member_group_role_id');
-    }
-
     public function position()
     {
         return $this->belongsTo(DepartmentPosition::class,'department_position_id');
@@ -57,6 +52,11 @@ class Members extends Model
     public function getGroupAttribute()
     {
         return $this->groupRole()->join('groups', 'groups.id', '=', 'group_role.group_id')->select('groups.*')->first();
+    }
+
+    public function getRoleAttribute()
+    {
+        return $this->groupRole()->join('roles', 'roles.id', '=', 'group_role.role_id')->select('roles.*')->first();
     }
 
 }
