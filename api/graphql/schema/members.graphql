@@ -34,6 +34,8 @@ type Members {
     two_factor_auth_setting_id: ID!
     "Дополнительны поля"
     additional_fields: JSON
+    "Дополнительны поля для member info"
+    additional_info_fields: JSON
     "Полное имя"
     fullname: String
 }
@@ -116,6 +118,8 @@ extend type Mutation {
         two_factor_auth_setting_id: ID!
         "Дополнительны поля"
         additional_fields: [AdditionalFieldInput]
+        "Дополнительны поля для member info"
+        additional_info_fields: [AdditionalFieldInput]
     ): Members @field(resolver: "MembersMutator@invite")
 
     """

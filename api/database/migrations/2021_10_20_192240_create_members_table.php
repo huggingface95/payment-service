@@ -30,6 +30,7 @@ class CreateMembersTable extends Migration
             $table->string('password_hash',255);
             $table->string('password_salt',255);
             $table->jsonb('additional_fields')->nullable();
+            $table->jsonb('additional_info_fields')->nullable();
             $table->timestamp('deleted_at')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->timestamps();
