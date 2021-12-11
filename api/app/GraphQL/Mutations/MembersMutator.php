@@ -79,6 +79,13 @@ class MembersMutator extends BaseMutator
             $args['member_group_role_id'] = $groupRole->id;
         }
 
+        if (isset($args['additional_fields'])) {
+            $args['additional_fields']  = $this->setAdditionalField($args['additional_fields']);
+        }
+        if (isset($args['additional_info_fields'])) {
+            $args['additional_info_fields']  = $this->setAdditionalField($args['additional_info_fields']);
+        }
+
         $args['password_hash'] = Hash::make($password);
         $args['password_salt'] = Hash::make($password);
         return Members::create($args);

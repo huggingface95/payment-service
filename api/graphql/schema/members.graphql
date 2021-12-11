@@ -152,6 +152,8 @@ extend type Mutation {
         {field_type:Тип поля, field_name: Название дополнительного поля, field_value: Значение поля}
         """
         additional_fields: [AdditionalFieldInput]
+        "Дополнительны поля для member info"
+        additional_info_fields: [AdditionalFieldInput]
     ): Members @field(resolver: "MembersMutator@update")
 
     """
