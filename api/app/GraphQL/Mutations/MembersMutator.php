@@ -2,6 +2,8 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphqlException;
+use App\Models\DepartmentPosition;
 use App\Models\GroupRole;
 use App\Models\Members;
 use GraphQL\Exception\InvalidArgument;
@@ -89,7 +91,17 @@ class MembersMutator extends BaseMutator
     {
         if(isset($args['member_id']) && isset($args['department_position']))
         {
-            $member = Members::where(['id'=>$args['member_id']])->first();
+
+            $departamentPosition = DepartmentPosition::find($args['department_position']);
+
+            if (!isset($departamentPosition)) {
+                throw new GraphqlException('An entry with this id does not exist',"not found",404);
+            }
+            $member = Members::find($args['member_id']);
+            if ($departamentPosition->department->company->id !== $member->company_id) {
+                throw new GraphqlException('Position is not this company',"internal",500);
+            }
+
             $member->department_position_id = $args['department_position'];
             $member->update();
             return $member;

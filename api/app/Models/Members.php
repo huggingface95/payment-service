@@ -38,12 +38,6 @@ class Members extends Model
         return $this->belongsTo(DepartmentPosition::class,'department_position_id');
     }
 
-    public function department()
-    {
-        return $this->belongsTo(DepartmentPosition::class, 'department_position_id')
-            ->join('departments', 'departments.id', '=', 'department_position.department_id');
-    }
-
     public function groupRole()
     {
         return $this->belongsTo(GroupRole::class,'member_group_role_id');
@@ -57,6 +51,12 @@ class Members extends Model
     public function getRoleAttribute()
     {
         return $this->groupRole()->join('roles', 'roles.id', '=', 'group_role.role_id')->select('roles.*')->first();
+    }
+
+    public function getDepartmentAttribute()
+    {
+        return $this->position()
+            ->join('departments', 'departments.id', '=', 'department_position.department_id')->select('departments.*')->first();
     }
 
 }

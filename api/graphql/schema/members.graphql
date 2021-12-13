@@ -30,6 +30,8 @@ type Members {
     group: Groups
     "Получить должность участника"
     position: DepartmentPosition @belongsTo(relation: "position")
+    "Получить должность участника"
+    department: Departments
     "ID настройки двухфактороной авторизации"
     two_factor_auth_setting_id: ID!
     "Дополнительны поля"
@@ -176,7 +178,7 @@ extend type Mutation {
         "ID участника"
         member_id: ID!
         "ID должности из списка department_position"
-        department_position: ID
+        department_position: ID!
     ): Members @field(resolver: "MembersMutator@setMemberPosition")
 
 
