@@ -62,6 +62,21 @@ class MembersMutator extends BaseMutator
             $args['additional_info_fields']  = $this->setAdditionalField($args['additional_info_fields']);
         }
 
+        if(isset($args['department_position']))
+        {
+            $departamentPosition = DepartmentPosition::find($args['department_position']);
+
+            if (!isset($departamentPosition)) {
+                throw new GraphqlException('An entry with this id does not exist',"not found",404);
+            }
+            $member = Members::find($args['member_id']);
+            if ($departamentPosition->department->company->id !== $member->company_id) {
+                throw new GraphqlException('Position is not this company',"internal",500);
+            }
+
+            $member->department_position_id = $args['department_position'];
+        }
+
         $member->update($args);
 
         return $member;
@@ -87,26 +102,6 @@ class MembersMutator extends BaseMutator
     }
 
 
-    public function setMemberPosition($_, array $args)
-    {
-        if(isset($args['member_id']) && isset($args['department_position']))
-        {
-
-            $departamentPosition = DepartmentPosition::find($args['department_position']);
-
-            if (!isset($departamentPosition)) {
-                throw new GraphqlException('An entry with this id does not exist',"not found",404);
-            }
-            $member = Members::find($args['member_id']);
-            if ($departamentPosition->department->company->id !== $member->company_id) {
-                throw new GraphqlException('Position is not this company',"internal",500);
-            }
-
-            $member->department_position_id = $args['department_position'];
-            $member->update();
-            return $member;
-        }
-    }
 
     /**
      * @param int $roleId

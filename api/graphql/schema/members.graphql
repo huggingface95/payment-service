@@ -144,6 +144,8 @@ extend type Mutation {
         role_id: ID
         "Активен не активен"
         is_active: Boolean
+        "ID должности"
+        department_position: ID
         """
         Блок дополнительных полей
         в формате:
@@ -171,15 +173,6 @@ extend type Mutation {
         id: ID!
     ): Members @delete
 
-    """
-    Установить/обновить должность участника
-    """
-    setMemberPosition(
-        "ID участника"
-        member_id: ID!
-        "ID должности из списка department_position"
-        department_position: ID!
-    ): Members @field(resolver: "MembersMutator@setMemberPosition")
 
 
 }
