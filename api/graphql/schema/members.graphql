@@ -93,11 +93,11 @@ extend type Mutation {
         "ID языка"
         language_id: ID
         "ID роли участника"
-        role_id: ID
+        role_id: ID!
         "Активен не активен"
         is_active: Boolean
         "ID настройки двухфактороной авторизации"
-        two_factor_auth_setting_id: ID
+        two_factor_auth_setting_id: ID!
         "Пароль участника, если не передан то сгенерируется случайный"
         password: String @rules(apply: ["min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
     ): Members @field(resolver: "MembersMutator@create")
@@ -115,7 +115,7 @@ extend type Mutation {
         "ID компании"
         company_id: ID!
         "ID роли участника"
-        role_id: ID
+        role_id: ID!
         "ID настройки двухфактороной авторизации"
         two_factor_auth_setting_id: ID!
     ): Members @field(resolver: "MembersMutator@invite")
