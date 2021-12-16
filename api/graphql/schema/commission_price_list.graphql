@@ -7,7 +7,7 @@ type CommissionPriceList {
     "Название шаблона"
     name: String!
     "Получить связанный платежный провайдер"
-    payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
+    provider_id: PaymentProvider @belongsTo(relation:"paymentProvider")
 	"Получить связанную платежную систему"
     payment_system: PaymentSystem @belongsTo(relation:"PaymentSystem")
 	"Получить связанный платежный шаблон"
@@ -41,7 +41,11 @@ extend type Mutation {
 		"Название шаблона"
 		name: String!
         "ID платежного провайдера"
-        payment_provider_id: ID!
+        provider_id: ID!
+        "ID платежной системы"
+        payment_system_id: ID!
+        "ID платежного шаблона"
+        commission_template_id: ID!
     ):CommissionPriceList @create
 
     "Редактирование частного пользователя"
@@ -50,7 +54,7 @@ extend type Mutation {
        "Название шаблона"
 		name: String!
         "ID платежного провайдера"
-        payment_provider_id: ID!
+        provider_id: ID!
 		"ID платежной системы"
         payment_system_id: ID!
 		"ID платежного шаблона"
