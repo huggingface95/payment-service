@@ -19,20 +19,12 @@ extend type Query {
     CommissionPriceList(id: ID @eq): CommissionPriceList @find
     """
     Получить список прайсов
-    orderBy: [{ column: ID, order: DESC }] сортировка ID, NAME
-    where:{column: NAME, operator: EQ, value: ""} фильтр по name
-    hasPaymentProvider: {column:NAME,operator:GTE,value:PaymentProviderName} фильтр по провайдеру системам
-    hasPaymentSystem: {column:NAME,operator:GTE,value:PaymentSystemName} фильтр по бизнесу
-    hasCommissionTemplate: {column:NAME,operator:GTE,value:CommissionTemplateName} фильтр по бизнесу
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     commissionPriceLists(
-        hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
-        hasPaymentSystem: _ @whereHasConditions(columns: ["name", "id"]),
-        hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
-        paymentProviderName: Sort @scope(name:"PaymentProviderName"),
-        where: _ @whereConditions(columns: ["id","name"]),
-        orderBy: _ @orderBy(columns: ["name","payment_system_id","commission_template_id"])
-    ): [CommissionPriceList!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+            where: _ @whereConditions(columns: ["name","payment_system_id","commission_template_id"]),
+            orderBy: _ @orderBy(columns: ["id", "name"])
+        ): [CommissionPriceList!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {
@@ -59,7 +51,7 @@ extend type Mutation {
         payment_system_id: ID!
 		"ID платежного шаблона"
         commission_template_id: ID!
-    ): CommissionPriceList @field(resolver:"CommissionPriceListMutator@update")
+    ): CommissionPriceList @update
 
 
     "Удалить прайс лист"
