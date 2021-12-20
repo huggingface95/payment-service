@@ -6,6 +6,18 @@ require_once __DIR__.'/../vendor/autoload.php';
     dirname(__DIR__)
 ))->bootstrap();
 
+if (!function_exists('config_path')) {
+    /**
+     * Get the configuration path.
+     *
+     * @param  string $path
+     * @return string
+     */
+    function config_path($path = '') {
+        return app()->basePath().DIRECTORY_SEPARATOR.'config' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+    }
+}
+
 date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 
 /*
@@ -63,6 +75,7 @@ $app->withEloquent();
 $app->configure('app');
 $app->configure('permission');
 $app->configure('lighthouse');
+$app->configure('lighthouse-graphql-jwt');
 $app->configure('swagger-lume');
 $app->configure('graphql-playground');
 /*
@@ -77,9 +90,9 @@ $app->configure('graphql-playground');
 */
 
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+ $app->routeMiddleware([
+     'auth' => App\Http\Middleware\Authenticate::class,
+ ]);
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +107,8 @@ $app->configure('graphql-playground');
 
  $app->register(App\Providers\AppServiceProvider::class);
  $app->register(App\Providers\AuthServiceProvider::class);
+ $app->register(Wimil\LighthouseGraphqlJwtAuth\LighthouseGraphqlJwtAuthServiceProvider::class);
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Spatie\Permission\PermissionServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\LighthouseServiceProvider::class);

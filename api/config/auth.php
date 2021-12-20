@@ -56,7 +56,9 @@ return [
     */
 
     'providers' => [
-        //
+        'members',
+        'applicant_individual',
+        'applicant_companies'
     ],
 
     /*
@@ -79,7 +81,9 @@ return [
     */
 
     'passwords' => [
-        //
+        'members',
+        'applicant_individual',
+        'applicant_companies'
     ],
 
 ];

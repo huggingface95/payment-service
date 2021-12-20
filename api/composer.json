@@ -11,7 +11,9 @@
         "mll-lab/graphql-php-scalars": "^4.1",
         "mll-lab/laravel-graphql-playground": "^2.5",
         "nuwave/lighthouse": "^5.23",
-        "spatie/laravel-permission": "^5.1"
+        "spatie/laravel-permission": "^5.1",
+        "tymon/jwt-auth": "^1.0",
+        "wimil/lighthouse-graphql-jwt-auth": "^1.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

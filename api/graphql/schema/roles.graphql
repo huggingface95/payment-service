@@ -32,7 +32,7 @@ extend type Query {
     )): [Roles!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-type Mutation {
+extend type Mutation {
     createRole(
         "Название роли"
         name: String!
