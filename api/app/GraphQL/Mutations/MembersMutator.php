@@ -69,7 +69,7 @@ class MembersMutator extends BaseMutator
             if (!isset($departamentPosition)) {
                 throw new GraphqlException('An entry with this id does not exist',"not found",404);
             }
-            $member = Members::find($args['member_id']);
+
             if ($departamentPosition->department->company->id !== $member->company_id) {
                 throw new GraphqlException('Position is not this company',"internal",500);
             }
