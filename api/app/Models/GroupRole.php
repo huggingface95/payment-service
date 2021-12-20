@@ -18,6 +18,11 @@ class GroupRole extends Model
         return $this->belongsTo(Groups::class,"group_id");
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Roles::class,"role_id");
+    }
+
     public function paymentProvider()
     {
         return $this->belongsTo(PaymentProvider::class,"payment_provider_id");
