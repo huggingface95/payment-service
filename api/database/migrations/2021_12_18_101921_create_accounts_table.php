@@ -18,8 +18,7 @@ class CreateAccountsTable extends Migration
             $table->unsignedBigInteger('currency_id');
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('owner_id');
-            $table->unsignedBigInteger('account_id');
-			$table->unique('account_id');
+            $table->string('account_id',255);
             $table->enum('account_type', ['Business', 'Private']);
             $table->unsignedBigInteger('payment_provider_id');
             $table->unsignedBigInteger('commission_template_id');

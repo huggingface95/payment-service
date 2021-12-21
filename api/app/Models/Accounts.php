@@ -20,6 +20,7 @@ class Accounts extends BaseModel
         'currency_id', 'client_id', 'owner_id', 'account_id', 'account_type', 'payment_provider_id', 'commission_template_id', 'account_state', 'account_name', 'is_primary', 'current_balance', 'reserved_balance', 'available_balance'
     ];
 
+
     /**
      * Get relation currencies
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -65,6 +66,10 @@ class Accounts extends BaseModel
         return $this->belongsTo(CommissionTemplate::class,'commission_template_id','id');
     }
 
+    public function setAccountIdAttribute()
+    {
+        $this->attributes['account_id']=uniqid();
+    }
 
 
 }

@@ -11,7 +11,7 @@ type Accounts {
 	"Получить связанного владельца"
     owner_id: Members @belongsTo(relation:"Members")
     "ID аккаунта"
-    account_id: ID!
+    account_id: String!
     "Тип аккаунта"
     account_type: String!
     "Получить связанного платежного провайдера"
@@ -57,6 +57,8 @@ extend type Mutation {
         client_id: ID!
         "ID владельца"
         owner_id: ID!
+        "ID аккаунта"
+        account_id: String!
         "Тип аккаунта"
         account_type: String!
         "ID провайдера"
@@ -89,8 +91,6 @@ extend type Mutation {
             client_id: ID!
             "ID владельца"
             owner_id: ID!
-            "ID аккаунта"
-            account_id: ID!
             "Тип аккаунта"
             account_type: String!
             "ID провайдера"
