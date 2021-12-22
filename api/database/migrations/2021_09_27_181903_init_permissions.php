@@ -398,6 +398,16 @@ class InitPermissions extends Migration
                 'display_name'=>'Member Company Info'
             ],
             [
+                'name'=>  'Administration.Member Company Info.Company Full Profile.Departments.Read',
+                'guard_name'=> GuardEnum::GUARD_NAME,
+                'display_name'=>'Member Company Info'
+            ],
+            [
+                'name'=>  'Administration.Member Company Info.Company Full Profile.Departments.Full',
+                'guard_name'=> GuardEnum::GUARD_NAME,
+                'display_name'=>'Member Company Info'
+            ],
+            [
                 'name'=>  'Administration.Members Info.Member List.Read',
                 'guard_name'=> GuardEnum::GUARD_NAME,
                 'display_name'=>'Members Info'
@@ -464,6 +474,11 @@ class InitPermissions extends Migration
             ],
             [
                 'name'=>  'Administration.Logs.Active Sessions.Read',
+                'guard_name'=> GuardEnum::GUARD_NAME,
+                'display_name'=>'Logs'
+            ],
+            [
+                'name'=>  'Administration.Logs.Authentication Log.Read',
                 'guard_name'=> GuardEnum::GUARD_NAME,
                 'display_name'=>'Logs'
             ],
@@ -555,6 +570,11 @@ class InitPermissions extends Migration
             ],
             [
                 'name'=>  'Banking.Payment Provider.Providers List.Read',
+                'guard_name'=> GuardEnum::GUARD_NAME,
+                'display_name'=>'Payment Provider'
+            ],
+            [
+                'name'=>  'Banking.Payment Provider.Providers List.Full',
                 'guard_name'=> GuardEnum::GUARD_NAME,
                 'display_name'=>'Payment Provider'
             ],
