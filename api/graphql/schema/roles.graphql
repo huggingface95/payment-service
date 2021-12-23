@@ -26,8 +26,9 @@ extend type Query {
     Получить список ролей
     groups_sort: сортировка по количеству групп
     orderBy: [{ column: ID, order: DESC }] сортировка по ID или по названию
+    where: {column: name, operator: LIKE, value: "Name"}
     """
-    roles(groups_sort: Sort @scope(name:"GroupsSort"), orderBy: _ @orderBy(
+    roles(groups_sort: Sort @scope(name:"GroupsSort"), where: _ @whereConditions(columns: ["name"])б orderBy: _ @orderBy(
         columns: ["id","name","description"],
     )): [Roles!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
