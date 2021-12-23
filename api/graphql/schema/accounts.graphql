@@ -37,12 +37,12 @@ type Accounts {
 
 extend type Query {
     "Получить аккаунт по ID"
-    Accounts(id: ID @eq): Accounts @find
+    account(id: ID @eq): Accounts @find
     """
     Получить список аккаунтов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    account(
+    accounts(
             where: _ @whereConditions(columns: ["account_id","client_id","owner_id","account_name","currency_id","payment_provider_id"]),
             orderBy: _ @orderBy(columns: ["id", "client_id"])
         ): [Accounts!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
@@ -50,7 +50,7 @@ extend type Query {
 
 extend type Mutation {
     "Создать аккаунт"
-    createAccounts(
+    createAccount(
 		"ID валюты"
         currency_id: ID!
         "ID аппликанта"
@@ -83,7 +83,7 @@ extend type Mutation {
     ):Accounts @create
 
     "Редактирование аккаунта"
-        updateAccounts(
+        updateAccount(
             id: ID!
             "ID валюты"
             currency_id: ID!
@@ -115,7 +115,7 @@ extend type Mutation {
         ): Accounts @update
 
         "Удалить аккаунт"
-            deleteAccounts(
+            deleteAccount(
                 id: ID!
             ): Accounts @delete
 

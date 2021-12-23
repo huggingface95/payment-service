@@ -1,5 +1,5 @@
 """
-Прайс лист комиссий 
+Прайс лист комиссий
 Banking -> Commission Price List
 """
 type CommissionPriceList {
@@ -16,7 +16,7 @@ type CommissionPriceList {
 
 extend type Query {
     "Получить прайс по ID"
-    CommissionPriceList(id: ID @eq): CommissionPriceList @find
+    commissionPriceList(id: ID @eq): CommissionPriceList @find
     """
     Получить список прайсов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
