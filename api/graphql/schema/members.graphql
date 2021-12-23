@@ -42,11 +42,8 @@ type Members {
     fullname: String
 }
 
-
 extend type Query {
-    """
-    Получить участника по ID
-    """
+    "Получить участника по ID"
     member(id: ID @eq): Members @find
     """
     Получить список участников

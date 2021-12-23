@@ -118,5 +118,4 @@ extend type Mutation {
             deleteAccount(
                 id: ID!
             ): Accounts @delete
-
 }
