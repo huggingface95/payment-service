@@ -28,9 +28,9 @@ type Members {
     role: Roles
     "Получить группу участника"
     group: Groups
-    "Получить должность участника"
+    "Получить должность"
     position: DepartmentPosition @belongsTo(relation: "position")
-    "Получить департамент участника"
+    "Получить департамент"
     department: Departments
     "ID настройки двухфактороной авторизации"
     two_factor_auth_setting_id: ID!
