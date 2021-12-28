@@ -194,17 +194,6 @@ extend type Mutation {
         labels: [ID]
     ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@update")
 
-    """
-    Установить пароль
-    """
-    setApplicantCompanyPassword(
-        id: ID!
-        "пароль"
-        password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
-        "подтверждения пароля"
-        password_confirmation: String!
-    ): ApplicantCompany @field(resolver: "ApplicantCompanyMutator@setPassword")
-
     "Удалить пользователя"
     deleteApplicantCompany (
         id: ID!
