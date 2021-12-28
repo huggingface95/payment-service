@@ -25,6 +25,8 @@ type GroupRole {
     role_id: ID!
     "Описание группы"
     description: String
+    "Активная и не активная группа"
+    is_active: Boolean
     "Получить связанную группу"
     group: Groups @belongsTo(relation: "group")
     "Получить связанную роль"
