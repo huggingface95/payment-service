@@ -88,11 +88,11 @@ extend type Mutation {
         "email"
         email: EMAIL!
         "Адрес сайта"
-        url: String
+        url: String!
         "Телефон"
-        phone: String
+        phone: String!
         "Получить связанную страну"
-        country_id: ID
+        country_id: ID!
         "Штат / область"
         state: String
         "Город"
