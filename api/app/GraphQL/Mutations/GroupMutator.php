@@ -42,6 +42,24 @@ class GroupMutator extends BaseMutator
         return $groupRole;
     }
 
+    /**
+     * Delete department
+     * @param $root
+     * @param array $args
+     * @return mixed
+     */
+    public function delete($root, array $args)
+    {
+        try {
+            return GroupRole::where('id',$args['id'])->delete();
+
+        } catch (\Exception $exception)
+        {
+            throw new GraphqlException('Group are already in use by member',"use");
+        }
+
+    }
+
 
 
 }
