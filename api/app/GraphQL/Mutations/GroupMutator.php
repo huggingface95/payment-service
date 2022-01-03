@@ -15,6 +15,13 @@ class GroupMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
+
+        if ($args['group_id'][0] == 1 && isset($args['payment_provider_id'])) {
+            throw new GraphqlException('Payment Provider is not be used for this group',"internal", 500);
+        }
+        if ($args['group_id'][0] == 1 && isset($args['commission_template_id'])) {
+            throw new GraphqlException('Commission Template is not be used for this group',"internal", 500);
+        }
         $group = Groups::find($args['group_id']);
         if (!$group) {
             throw new GraphqlException('An entry with this group does not exist',"not found",404);
@@ -29,6 +36,12 @@ class GroupMutator extends BaseMutator
      */
     public function update($root, array $args)
     {
+        if ($args['group_id'][0] == 1 && isset($args['payment_provider_id'])) {
+            throw new GraphqlException('Payment Provider is not be used for this group',"internal", 500);
+        }
+        if ($args['group_id'][0] == 1 && isset($args['commission_template_id'])) {
+            throw new GraphqlException('Commission Template is not be used for this group',"internal", 500);
+        }
         $group = Groups::find($args['group_id']);
         if (!$group) {
             throw new GraphqlException('An entry with this group does not exist',"not found",404);
