@@ -35,7 +35,7 @@ return [
     */
 
     'guards' => [
-        'api' => ['driver' => 'api'],
+        'api' => ['driver' => 'jwt'],
     ],
 
     /*
@@ -57,8 +57,7 @@ return [
 
     'providers' => [
         'members',
-        'applicant_individual',
-        'applicant_companies'
+        'applicant_individual'
     ],
 
     /*
@@ -82,8 +81,7 @@ return [
 
     'passwords' => [
         'members',
-        'applicant_individual',
-        'applicant_companies'
+        'applicant_individual'
     ],
 
 ];
