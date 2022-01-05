@@ -65,6 +65,7 @@ $app->configure('permission');
 $app->configure('lighthouse');
 $app->configure('swagger-lume');
 $app->configure('graphql-playground');
+$app->configure('filesystems');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
