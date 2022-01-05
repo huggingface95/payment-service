@@ -59,7 +59,7 @@ extend type Mutation {
         "Описание группы"
         description: String
         "ID роли"
-        role_id: ID!
+        role_id: ID
         "ID группы из списка групп поумолчанию"
         group_id: ID!
         "ID платежного провайдера"
@@ -77,7 +77,7 @@ extend type Mutation {
         "Описание группы"
         description: String
         "ID роли"
-        role_id: ID!
+        role_id: ID
         "ID группы из списка групп поумолчанию"
         group_id: ID!
         "ID платежного провайдера"
