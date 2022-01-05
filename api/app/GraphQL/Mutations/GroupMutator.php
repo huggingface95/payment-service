@@ -51,7 +51,9 @@ class GroupMutator extends BaseMutator
     public function delete($root, array $args)
     {
         try {
-            return GroupRole::where('id',$args['id'])->delete();
+            $group = GroupRole::find($args['id']);
+            $group->delete();
+            return $group;
 
         } catch (\Exception $exception)
         {
