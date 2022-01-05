@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ApplicantCompany extends Model
 {
 
-    protected $table="applicant_individual";
+    protected $table="applicant_companies";
 
     /**
      * The attributes that are mass assignable.

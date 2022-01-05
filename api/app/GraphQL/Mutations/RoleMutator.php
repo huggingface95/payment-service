@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Models\GroupRole;
 use App\Models\Permissions;
 use App\Models\Roles;
+use App\Exceptions\GraphqlException;
 
 class RoleMutator
 {
@@ -17,13 +18,16 @@ class RoleMutator
      */
     public function create($_, array $args)
     {
+        if ($args['groups'][0] == '2') {
+            throw new GraphqlException('Role is not be used for this group',"internal", 500);
+        }
 
         $role = Roles::create($args);
+
         if (isset($args['permissions'])) {
             $this->syncPermissions($role, $args['permissions']);
         }
-
-        if(isset($args['groups'])) {
+        if (isset($args['permissions'])) {
             $this->syncGroups($role, $args['groups']);
         }
 
@@ -37,15 +41,20 @@ class RoleMutator
      */
     public function update($_, array $args)
     {
+        if ($args['groups'][0] == '2') {
+            throw new GraphqlException('Role is not be used for this group',"internal", 500);
+        }
+
         $role = Roles::find($args['id']);
         if (isset($args['permissions'])) {
             $this->syncPermissions($role, $args['permissions']);
         }
-        if(isset($args['groups'])) {
+        if (isset($args['groups'])) {
             $this->syncGroups($role, $args['groups']);
         }
 
         $role->update($args);
+
         return $role;
     }
 
@@ -72,6 +81,5 @@ class RoleMutator
             GroupRole::updateOrCreate(['role_id'=>$role->id, 'group_id'=>$group],['group_id'=> $group]);
         }
     }
-
 
 }

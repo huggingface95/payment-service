@@ -25,22 +25,25 @@ type Members {
     "Получить язык участника"
     language: Languages @belongsTo(relation: "language")
     "Получить роль участника"
-    role: Roles @belongsTo(ralation: "role")
-    "Получить должность участника"
+    role: Roles
+    "Получить группу участника"
+    group: Groups
+    "Получить должность"
     position: DepartmentPosition @belongsTo(relation: "position")
+    "Получить департамент"
+    department: Departments
     "ID настройки двухфактороной авторизации"
     two_factor_auth_setting_id: ID!
     "Дополнительны поля"
     additional_fields: JSON
+    "Дополнительны поля для member info"
+    additional_info_fields: JSON
     "Полное имя"
     fullname: String
 }
 
-
 extend type Query {
-    """
-    Получить участника по ID
-    """
+    "Получить участника по ID"
     member(id: ID @eq): Members @find
     """
     Получить список участников
@@ -50,8 +53,8 @@ extend type Query {
     """
     members(
         hasDepartment: _ @whereHasConditions(columns: ["department_id"]),
-        where: _ @whereConditions(columnsEnum: "MembersColumn"), orderBy: _ @orderBy(
-        columns: ["id","email","last_login_at","is_active"],
+        where: _ @whereConditions(columnsEnum: "MembersColumn"),
+        orderBy: _ @orderBy(columns: ["id","email","last_login_at","is_active"],
     )): [Members!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
@@ -59,7 +62,7 @@ enum MembersColumn {
     ID @enum(value: "id")
     FULLNAME @enum(value: "fullname")
     COMPANY_ID @enum(value: "company_id")
-    EMAIL @enum(value: "EMAIL")
+    EMAIL @enum(value: "email")
     ROLE_ID @enum(value: "member_group_role_id")
     COMPANY_ID @enum(value: "company_id")
     POSITION_ID @enum(value: "department_position_id")
@@ -87,11 +90,11 @@ extend type Mutation {
         "ID языка"
         language_id: ID
         "ID роли участника"
-        role_id: ID
+        role_id: ID!
         "Активен не активен"
         is_active: Boolean
         "ID настройки двухфактороной авторизации"
-        two_factor_auth_setting_id: ID
+        two_factor_auth_setting_id: ID!
         "Пароль участника, если не передан то сгенерируется случайный"
         password: String @rules(apply: ["min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
     ): Members @field(resolver: "MembersMutator@create")
@@ -109,11 +112,9 @@ extend type Mutation {
         "ID компании"
         company_id: ID!
         "ID роли участника"
-        role_id: ID
+        role_id: ID!
         "ID настройки двухфактороной авторизации"
         two_factor_auth_setting_id: ID!
-        "Дополнительны поля"
-        additional_fields: [AdditionalFieldInput]
     ): Members @field(resolver: "MembersMutator@invite")
 
     """
@@ -140,12 +141,16 @@ extend type Mutation {
         role_id: ID
         "Активен не активен"
         is_active: Boolean
+        "ID должности"
+        department_position: ID
         """
         Блок дополнительных полей
         в формате:
         {field_type:Тип поля, field_name: Название дополнительного поля, field_value: Значение поля}
         """
         additional_fields: [AdditionalFieldInput]
+        "Дополнительны поля для member info"
+        additional_info_fields: [AdditionalFieldInput]
     ): Members @field(resolver: "MembersMutator@update")
 
     """
@@ -165,15 +170,6 @@ extend type Mutation {
         id: ID!
     ): Members @delete
 
-    """
-    Установить/обновить должность участника
-    """
-    setMemberPosition(
-        "ID участника"
-        member_id: ID!
-        "ID должности из списка department_position"
-        department_position: ID
-    ): Members @field(resolver: "MembersMutator@setMemberPosition")
 
 
 }

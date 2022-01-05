@@ -1,0 +1,63 @@
+"""
+Прайс лист комиссий
+Banking -> Commission Price List
+"""
+type CommissionPriceList {
+    id: ID!
+    "Название шаблона"
+    name: String!
+    "Получить связанный платежный провайдер"
+    provider_id: PaymentProvider @belongsTo(relation:"paymentProvider")
+	"Получить связанную платежную систему"
+    payment_system: PaymentSystem @belongsTo(relation:"PaymentSystem")
+	"Получить связанный платежный шаблон"
+    commission_template: CommissionTemplate @belongsTo(relation:"CommissionTemplate")
+}
+
+extend type Query {
+    "Получить прайс по ID"
+    commissionPriceList(id: ID @eq): CommissionPriceList @find
+    """
+    Получить список прайсов
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    """
+    commissionPriceLists(
+            where: _ @whereConditions(columns: ["name","payment_system_id","commission_template_id"]),
+            orderBy: _ @orderBy(columns: ["id", "name"])
+        ): [CommissionPriceList!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать прай лист"
+    createCommissionPriceList(
+		"Название шаблона"
+		name: String!
+        "ID платежного провайдера"
+        provider_id: ID!
+        "ID платежной системы"
+        payment_system_id: ID!
+        "ID платежного шаблона"
+        commission_template_id: ID!
+    ):CommissionPriceList @create
+
+    "Редактирование частного пользователя"
+    updateCommissionPriceList(
+        id: ID!
+       "Название шаблона"
+		name: String!
+        "ID платежного провайдера"
+        provider_id: ID!
+		"ID платежной системы"
+        payment_system_id: ID!
+		"ID платежного шаблона"
+        commission_template_id: ID!
+    ): CommissionPriceList @update
+
+
+    "Удалить прайс лист"
+    deleteCommissionPriceList(
+        id: ID!
+    ): CommissionPriceList @delete
+
+}
+

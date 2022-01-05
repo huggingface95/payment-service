@@ -2,6 +2,8 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphqlException;
+use App\Models\DepartmentPosition;
 use App\Models\GroupRole;
 use App\Models\Members;
 use GraphQL\Exception\InvalidArgument;
@@ -56,6 +58,24 @@ class MembersMutator extends BaseMutator
         if (isset($args['additional_fields'])) {
             $args['additional_fields']  = $this->setAdditionalField($args['additional_fields']);
         }
+        if (isset($args['additional_info_fields'])) {
+            $args['additional_info_fields']  = $this->setAdditionalField($args['additional_info_fields']);
+        }
+
+        if(isset($args['department_position']))
+        {
+            $departamentPosition = DepartmentPosition::find($args['department_position']);
+
+            if (!isset($departamentPosition)) {
+                throw new GraphqlException('An entry with this id does not exist',"not found",404);
+            }
+
+            if ($departamentPosition->department->company->id !== $member->company_id) {
+                throw new GraphqlException('Position is not this company',"internal",500);
+            }
+
+            $member->department_position_id = $args['department_position'];
+        }
 
         $member->update($args);
 
@@ -82,16 +102,6 @@ class MembersMutator extends BaseMutator
     }
 
 
-    public function setMemberPosition($_, array $args)
-    {
-        if(isset($args['member_id']) && isset($args['department_position']))
-        {
-            $member = Members::where(['id'=>$args['member_id']])->first();
-            $member->department_position_id = $args['department_position'];
-            $member->update();
-            return $member;
-        }
-    }
 
     /**
      * @param int $roleId

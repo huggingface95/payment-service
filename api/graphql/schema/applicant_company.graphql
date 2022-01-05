@@ -88,11 +88,11 @@ extend type Mutation {
         "email"
         email: EMAIL!
         "Адрес сайта"
-        url: String
+        url: String!
         "Телефон"
-        phone: String
+        phone: String!
         "Получить связанную страну"
-        country_id: ID
+        country_id: ID!
         "Штат / область"
         state: String
         "Город"
@@ -193,17 +193,6 @@ extend type Mutation {
         "Массив ID меток"
         labels: [ID]
     ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@update")
-
-    """
-    Установить пароль
-    """
-    setApplicantCompanyPassword(
-        id: ID!
-        "пароль"
-        password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
-        "подтверждения пароля"
-        password_confirmation: String!
-    ): ApplicantCompany @field(resolver: "ApplicantCompanyMutator@setPassword")
 
     "Удалить пользователя"
     deleteApplicantCompany (

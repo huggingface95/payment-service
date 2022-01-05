@@ -13,7 +13,7 @@ class Members extends Model
     public $password_confirmation;
 
     protected $fillable = [
-        'first_name', 'last_name','email','sex','is_active','company_id','country_id','language_id','member_group_role_id','two_factor_auth_setting_id','password_hash','password_salt','last_login_at','additional_fields'
+        'first_name', 'last_name','email','sex','is_active','company_id','country_id','language_id','member_group_role_id','two_factor_auth_setting_id','password_hash','password_salt','last_login_at','additional_fields','additional_info_fields'
     ];
 
     protected $dates = ['deleted_at'];
@@ -33,20 +33,30 @@ class Members extends Model
         return $this->belongsTo(Languages::class,'language_id');
     }
 
-    public function role()
-    {
-        return $this->belongsTo(Roles::class,'member_group_role_id');
-    }
-
     public function position()
     {
         return $this->belongsTo(DepartmentPosition::class,'department_position_id');
     }
 
-    public function department()
+    public function groupRole()
     {
-        return $this->belongsTo(DepartmentPosition::class, 'department_position_id')
-            ->join('departments', 'departments.id', '=', 'department_position.department_id');
+        return $this->belongsTo(GroupRole::class,'member_group_role_id');
+    }
+
+    public function getGroupAttribute()
+    {
+        return $this->groupRole()->join('groups', 'groups.id', '=', 'group_role.group_id')->select('groups.*')->first();
+    }
+
+    public function getRoleAttribute()
+    {
+        return $this->groupRole()->join('roles', 'roles.id', '=', 'group_role.role_id')->select('roles.*')->first();
+    }
+
+    public function getDepartmentAttribute()
+    {
+        return $this->position()
+            ->join('departments', 'departments.id', '=', 'department_position.department_id')->select('departments.*')->first();
     }
 
 }
