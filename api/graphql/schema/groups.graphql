@@ -20,9 +20,9 @@ type Groups {
 type GroupRole {
     id: ID!
     "ID группы"
-    group_id: ID!
+    group_id: ID
     "ID роли"
-    role_id: ID!
+    role_id: ID
     "Описание группы"
     description: String
     "Активная и не активная группа"
