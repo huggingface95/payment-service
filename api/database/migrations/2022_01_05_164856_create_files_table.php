@@ -22,6 +22,7 @@ class CreateFilesTable extends Migration
             $table->integer('author_id'); //who upload file
             $table->string('storage_path',255); // path to file in ovh
             $table->string('storage_name',255); // name of file in ovh
+            $table->timestamps();
         });
     }
 
