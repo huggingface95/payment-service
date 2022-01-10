@@ -57,12 +57,12 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
-            'endpoint' => env('AWS_ENDPOINT'),
+            'key' => env('OVH_ACCESS_KEY_ID'),
+            'secret' => env('OVH_SECRET_ACCESS_KEY'),
+            'region' => env('OVH_DEFAULT_REGION'),
+            'bucket' => env('OVH_BUCKET'),
+            //'url' => env('OVH_URL'),
+            'endpoint' => env('OVH_ENDPOINT'),
         ],
 
     ],
