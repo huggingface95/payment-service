@@ -20,10 +20,10 @@ class FilesController extends Controller
         if($request->hasfile('file')) {
             $file = $request->file('file');
             $original_name = $file->getClientOriginalName();
-            $entity_type = 'applicant';
-            $author_id = '21';
+            $entity_type = $request->post('entity_type');
+            $author_id = $request->post('author_id');
             $filename = $author_id.'_'.$entity_type.'_'.$original_name;
-            $filepath = 'test';
+            $filepath = $author_id.'/'.$entity_type;
             $store = $file->storeAs($filepath, $filename, 's3');
             $fileDb = Files::create([
                 'file_name' => $original_name,
@@ -35,9 +35,9 @@ class FilesController extends Controller
                 'storage_name' => $filename
             ]);
             $exists = Storage::disk('s3')->exists($filepath.'/'.$filename);
-            $exists ? $link = 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename.'' : $link = '';
+            ($exists and $fileDb) ? $link = 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename.'' : Storage::disk('s3')->delete($filepath.'/'.$filename);
 
-            return response()->json(['status' => true, 'link' => $link, 'db_info' => $fileDb, 'store' => $store], 201);
+            return response()->json(['status' => true, 'link' => $link], 201);
         }
     }
 
