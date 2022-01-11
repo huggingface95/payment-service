@@ -29,6 +29,7 @@ class CreateRequisitesTable extends Migration
             $table->string('swift', 255);
             $table->json('bank_correspondent');
             $table->foreign('country_id')->references('id')->on('countries');
+            $table->foreign('bank_country_id')->references('id')->on('countries');
             $table->foreign('account_id')->references('id')->on('accounts');
         });
     }

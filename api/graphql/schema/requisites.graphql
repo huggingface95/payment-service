@@ -16,101 +16,106 @@ type Requisites {
     address: String!
     "Получить связанную страну"
     country_id: Country @belongsTo(relation:"Country")
-    
-    "Имя аккаунта"
-    account_name: String!
-    "Основной или нет"
-    is_primary: Boolean
-    "Текущий баланс"
-    current_balance: Int!
-    "Текущий баланс"
-    reserved_balance: Int!
-    "Текущий баланс"
-    available_balance: Int!
-    activated_at : DateTime
+    "Название банка"
+    bank_name: String!
+    "Адрес банка"
+    bank_address: String!
+    "Получить связанную страну банка"
+    bank_country_id: Country @belongsTo(relation:"Country")
+    "IBAN"
+    iban: String!
+    "Номер аккаунта"
+    account_no: String!
+    "SWIFT"
+    swift: String!
+    "Банк корреспондент"
+    bank_correspondent: BankCorrespondent
+}
+
+type BankCorrespondent {
+    bank_correspondent_name: String
+    bank_correspondent_account: String
+    bank_correspondent_swift: String
+    bank_correspondent_purpose: String
 }
 
 extend type Query {
-    "Получить аккаунт по ID"
-    account(id: ID @eq): Accounts @find
+    "Получить реквизиты по ID"
+    requisite(id: ID @eq): Requisites @find
     """
-    Получить список аккаунтов
+    Получить список реквизитов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    accounts(
-            where: _ @whereConditions(columns: ["account_id","client_id","owner_id","account_name","currency_id","payment_provider_id"]),
-            orderBy: _ @orderBy(columns: ["id", "client_id"])
-        ): [Accounts!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    requisites(
+            where: _ @whereConditions(columns: ["account_id","bank_name","account_no"]),
+            orderBy: _ @orderBy(columns: ["id"])
+        ): [Requisites!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {
-    "Создать аккаунт"
-    createAccount(
-		"ID валюты"
-        currency_id: ID!
-        "ID аппликанта"
-        client_id: ID!
-        "ID владельца"
-        owner_id: ID!
-        "ID аккаунта"
-        account_id: String!
-        "Тип аккаунта"
-        account_type: String!
-        "ID провайдера"
-        payment_provider_id: ID!
-        "ID шаблона комиссии"
-        commission_template_id: ID!
-        "Состояние аккаунта"
-        account_state: String!
-        "Имя аккаунта"
-        account_name: String!
-        "Основной или нет"
-        is_primary: Boolean!
-        "Текущий баланс"
-        current_balance: Int
-        "Текущий баланс"
-        reserved_balance: Int
-        "Текущий баланс"
-        available_balance: Int
+    "Создать реквизиты"
+    createRequisites(
+        "Получить связанный аккаунт"
+        account_id: ID!
+        "Получатель"
+        recipient: String!
+        "Registration Number"
+        registration_number: Int!
+        "Адрес"
+        address: String!
+        "Получить связанную страну"
+        country_id: ID!
+        "Название банка"
+        bank_name: String!
+        "Адрес банка"
+        bank_address: String!
+        "Получить связанную страну банка"
+        bank_country_id: ID!
+        "IBAN"
+        iban: String!
+        "Номер аккаунта"
+        account_no: String!
+        "SWIFT"
+        swift: String!
+        "Банк корреспондент"
+        bank_correspondent: String
         created_at: DateTime
         updated_at: DateTime
-        activated_at : DateTime
-    ):Accounts @create
+    ): Requisites @create
 
-    "Редактирование аккаунта"
-        updateAccount(
+    "Редактировать реквизиты"
+        updateRequisites(
             id: ID!
-            "ID валюты"
-            currency_id: ID!
-            "ID аппликанта"
-            client_id: ID!
-            "ID владельца"
-            owner_id: ID!
-            "Тип аккаунта"
-            account_type: String!
-            "ID провайдера"
-            payment_provider_id: ID!
-            "ID шаблона комиссии"
-            commission_template_id: ID!
-            "Состояние аккаунта"
-            account_state: String!
-            "Имя аккаунта"
-            account_name: String!
-            "Основной или нет"
-            is_primary: Boolean!
-            "Текущий баланс"
-            current_balance: Int
-            "Текущий баланс"
-            reserved_balance: Int
-            "Текущий баланс"
-            available_balance: Int
+            "Получить связанный аккаунт"
+            account_id: ID!
+            "Получатель"
+            recipient: String!
+            "Registration Number"
+            registration_number: Int!
+            "Адрес"
+            address: String!
+            "Получить связанную страну"
+            country_id: ID!
+            "Название банка"
+            bank_name: String!
+            "Адрес банка"
+            bank_address: String!
+            "Получить связанную страну банка"
+            bank_country_id: ID!
+            "IBAN"
+            iban: String!
+            "Номер аккаунта"
+            account_no: String!
+            "SWIFT"
+            swift: String!
+            "Банк корреспондент"
+            bank_correspondent: String
             created_at: DateTime
             updated_at: DateTime
-            activated_at : DateTime
-        ): Accounts @update
+        ): Requisites @update
 
-        "Удалить аккаунт"
-            deleteAccount(
+        "Удалить реквизиты"
+            deleteRequisites(
                 id: ID!
-            ): Accounts @delete
+            ): Requisites @delete
 }
