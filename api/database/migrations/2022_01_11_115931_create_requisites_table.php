@@ -16,7 +16,7 @@ class CreateRequisitesTable extends Migration
         Schema::create('requisites', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('account_id', 255);
+            $table->bigInteger('account_id');
             $table->string('recipient', 255);
             $table->bigInteger('registration_number');
             $table->string('address', 255);
@@ -29,7 +29,7 @@ class CreateRequisitesTable extends Migration
             $table->string('swift', 255);
             $table->json('bank_correspondent');
             $table->foreign('country_id')->references('id')->on('countries');
-            $table->foreign('account_id')->references('account_id')->on('accounts');
+            $table->foreign('account_id')->references('id')->on('accounts');
         });
     }
 
