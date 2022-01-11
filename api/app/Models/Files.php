@@ -16,7 +16,7 @@ class Files extends Model
     protected $guarded = [];
 
     protected $fillable = [
-        'file_name', 'mime_type', 'size', 'entity_type', 'author_id', 'storage_path', 'storage_name'
+        'file_name', 'mime_type', 'size', 'entity_type', 'author_id', 'storage_path', 'storage_name', 'link'
     ];
 
 

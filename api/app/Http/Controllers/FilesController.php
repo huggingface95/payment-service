@@ -22,22 +22,24 @@ class FilesController extends Controller
             $original_name = $file->getClientOriginalName();
             $entity_type = $request->post('entity_type');
             $author_id = $request->post('author_id');
-            $filename = $author_id.'_'.$entity_type.'_'.$original_name;
             $filepath = $author_id.'/'.$entity_type;
-            $store = $file->storeAs($filepath, $filename, 's3');
+            $store = $file->store($filepath, 's3');
+            $filename = explode('/', $store);
             $fileDb = Files::create([
                 'file_name' => $original_name,
                 'mime_type' => $file->getClientMimeType(),
                 'size' => $file->getSize(),
                 'entity_type' => $entity_type,
                 'author_id' => $author_id,
-                'storage_path' => Storage::disk('s3')->url($store),
-                'storage_name' => $filename
+                'storage_path' => '/'.$filepath.'/',
+                'storage_name' => $filename[2],
+                'link' => 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename[2],
             ]);
-            $exists = Storage::disk('s3')->exists($filepath.'/'.$filename);
-            ($exists and $fileDb) ? $link = 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename.'' : Storage::disk('s3')->delete($filepath.'/'.$filename);
+            $exists = Storage::disk('s3')->exists($filepath.'/'.$filename[2]);
+            ($exists and $fileDb) ? $link = 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename[2].'' : Storage::disk('s3')->delete($filepath.'/'.$filename[2]);
+            //$fileDb[] = ['link' => 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename];
 
-            return response()->json(['status' => true, 'link' => $link], 201);
+            return response()->json([$fileDb], 201, [],  JSON_UNESCAPED_SLASHES);
         }
     }
 
