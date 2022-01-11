@@ -1,0 +1,116 @@
+"""
+Реквизиты
+Banking -> Accounts -> Requisites
+"""
+type Requisites {
+    id: ID!
+    created_at: DateTime
+    updated_at: DateTime
+    "Получить связанный аккаунт"
+    account_id: Accounts @belongsTo(relation:"Accounts")
+    "Получатель"
+    recipient: String!
+    "Registration Number"
+    registration_number: Int!
+    "Адрес"
+    address: String!
+    "Получить связанную страну"
+    country_id: Country @belongsTo(relation:"Country")
+    
+    "Имя аккаунта"
+    account_name: String!
+    "Основной или нет"
+    is_primary: Boolean
+    "Текущий баланс"
+    current_balance: Int!
+    "Текущий баланс"
+    reserved_balance: Int!
+    "Текущий баланс"
+    available_balance: Int!
+    activated_at : DateTime
+}
+
+extend type Query {
+    "Получить аккаунт по ID"
+    account(id: ID @eq): Accounts @find
+    """
+    Получить список аккаунтов
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    """
+    accounts(
+            where: _ @whereConditions(columns: ["account_id","client_id","owner_id","account_name","currency_id","payment_provider_id"]),
+            orderBy: _ @orderBy(columns: ["id", "client_id"])
+        ): [Accounts!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать аккаунт"
+    createAccount(
+		"ID валюты"
+        currency_id: ID!
+        "ID аппликанта"
+        client_id: ID!
+        "ID владельца"
+        owner_id: ID!
+        "ID аккаунта"
+        account_id: String!
+        "Тип аккаунта"
+        account_type: String!
+        "ID провайдера"
+        payment_provider_id: ID!
+        "ID шаблона комиссии"
+        commission_template_id: ID!
+        "Состояние аккаунта"
+        account_state: String!
+        "Имя аккаунта"
+        account_name: String!
+        "Основной или нет"
+        is_primary: Boolean!
+        "Текущий баланс"
+        current_balance: Int
+        "Текущий баланс"
+        reserved_balance: Int
+        "Текущий баланс"
+        available_balance: Int
+        created_at: DateTime
+        updated_at: DateTime
+        activated_at : DateTime
+    ):Accounts @create
+
+    "Редактирование аккаунта"
+        updateAccount(
+            id: ID!
+            "ID валюты"
+            currency_id: ID!
+            "ID аппликанта"
+            client_id: ID!
+            "ID владельца"
+            owner_id: ID!
+            "Тип аккаунта"
+            account_type: String!
+            "ID провайдера"
+            payment_provider_id: ID!
+            "ID шаблона комиссии"
+            commission_template_id: ID!
+            "Состояние аккаунта"
+            account_state: String!
+            "Имя аккаунта"
+            account_name: String!
+            "Основной или нет"
+            is_primary: Boolean!
+            "Текущий баланс"
+            current_balance: Int
+            "Текущий баланс"
+            reserved_balance: Int
+            "Текущий баланс"
+            available_balance: Int
+            created_at: DateTime
+            updated_at: DateTime
+            activated_at : DateTime
+        ): Accounts @update
+
+        "Удалить аккаунт"
+            deleteAccount(
+                id: ID!
+            ): Accounts @delete
+}

@@ -1,4 +1,7 @@
 <?php
+use Aws\S3\S3Client;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\Filesystem;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -65,6 +68,7 @@ $app->configure('permission');
 $app->configure('lighthouse');
 $app->configure('swagger-lume');
 $app->configure('graphql-playground');
+$app->configure('filesystems');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
