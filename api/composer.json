@@ -8,6 +8,7 @@
         "php": "^7.3|^8.0",
         "barryvdh/laravel-dompdf": "^0.9.0",
         "darkaonline/swagger-lume": "8.*",
+        "illuminate/mail": "^8.79",
         "laravel/lumen-framework": "^8.0",
         "league/flysystem": "^1.0",
         "league/flysystem-aws-s3-v3": "~1.0",

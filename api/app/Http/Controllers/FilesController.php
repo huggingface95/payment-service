@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Files;
+use App\Models\Requisites;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\Mail;
 
 class FilesController extends Controller
 {
@@ -38,45 +40,31 @@ class FilesController extends Controller
             ]);
             $exists = Storage::disk('s3')->exists($filepath.'/'.$filename[2]);
             ($exists and $fileDb) ? $link = 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename[2].'' : Storage::disk('s3')->delete($filepath.'/'.$filename[2]);
-            //$fileDb[] = ['link' => 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename];
 
             return response()->json([$fileDb], 201, [],  JSON_UNESCAPED_SLASHES);
         }
     }
 
-    public function createPDF() {
-        $data = Files::all();
-
-        $html ='';
-        foreach ($data as $post) {
-            $html .= '<div class="table-scrollable">
-                    <table border=1 id="posts" class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Name</th>
-                                <th>Type</th>
-                            </tr>
-                        </thead>
-                        <tbody id="body"><tr>
-                            <td>'
-                . $post->id . ' 
-                            </td>
-                            <td>' .
-                $post->file_name .
-                '</td>
-                            <td>'
-                . $post->mime_type .
-                '</td> 
-                </tr>
-               </tbody>
-            </table>
-        </div>';
-        }
-
+    public function createPDF()
+    {
+        $html = Requisites::PDFTable('18');
         $pdf = PDF::loadHTML($html);
 
-        return $pdf->download('test.pdf');
+        return $pdf->download('requisites.pdf');
+    }
+
+    public function sendreq(Request $request)
+    {
+        $html = Requisites::PDFTable('18');
+        $email = $request->get('email');
+        $pdf = PDF::loadHTML($html);
+
+        Mail::send('mail', [], function ($message) use ($email, $pdf) {
+            $message->to($email)->subject('Requisites for Bank from docudots');
+            $message->attach($pdf->download('requisites.pdf'));
+        });
+
+        return response()->json(['message' => 'Requisites has been send to '], 220);
     }
 
 }

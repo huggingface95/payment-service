@@ -70,6 +70,7 @@ $app->configure('swagger-lume');
 $app->configure('graphql-playground');
 $app->configure('filesystems');
 $app->configure('dompdf');
+$app->configure('mail');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -110,6 +111,7 @@ $app->register(\Nuwave\Lighthouse\Validation\ValidationServiceProvider::class);
 $app->register(\SwaggerLume\ServiceProvider::class);
 $app->register(MLL\GraphQLPlayground\GraphQLPlaygroundServiceProvider::class);
 $app->register(Barryvdh\DomPDF\ServiceProvider::class);
+$app->register(\Illuminate\Mail\MailServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
