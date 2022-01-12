@@ -18,4 +18,5 @@ $router->get('/', function () use ($router) {
 });
 
 $router->post('api/files', ['uses' => 'FilesController@upload']);
+$router->get('api/pdf', ['uses' => 'FilesController@createpdf']);
 

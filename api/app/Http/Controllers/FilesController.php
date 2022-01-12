@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Files;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class FilesController extends Controller
 {
@@ -41,6 +42,41 @@ class FilesController extends Controller
 
             return response()->json([$fileDb], 201, [],  JSON_UNESCAPED_SLASHES);
         }
+    }
+
+    public function createPDF() {
+        $data = Files::all();
+
+        $html ='';
+        foreach ($data as $post) {
+            $html .= '<div class="table-scrollable">
+                    <table border=1 id="posts" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody id="body"><tr>
+                            <td>'
+                . $post->id . ' 
+                            </td>
+                            <td>' .
+                $post->file_name .
+                '</td>
+                            <td>'
+                . $post->mime_type .
+                '</td> 
+                </tr>
+               </tbody>
+            </table>
+        </div>';
+        }
+
+        $pdf = PDF::loadHTML($html);
+
+        return $pdf->download('test.pdf');
     }
 
 }
