@@ -27,7 +27,7 @@ class CreateRequisitesTable extends Migration
             $table->string('iban', 255);
             $table->string('account_no', 255);
             $table->string('swift', 255);
-            $table->json('bank_correspondent');
+            $table->jsonb('bank_correspondent')->nullable();
             $table->foreign('country_id')->references('id')->on('countries');
             $table->foreign('bank_country_id')->references('id')->on('countries');
             $table->foreign('account_id')->references('id')->on('accounts');

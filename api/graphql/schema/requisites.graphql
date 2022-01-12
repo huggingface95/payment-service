@@ -29,15 +29,9 @@ type Requisites {
     "SWIFT"
     swift: String!
     "Банк корреспондент"
-    bank_correspondent: BankCorrespondent
+    bank_correspondent: JSON
 }
 
-type BankCorrespondent {
-    bank_correspondent_name: String
-    bank_correspondent_account: String
-    bank_correspondent_swift: String
-    bank_correspondent_purpose: String
-}
 
 extend type Query {
     "Получить реквизиты по ID"
@@ -78,7 +72,7 @@ extend type Mutation {
         "SWIFT"
         swift: String!
         "Банк корреспондент"
-        bank_correspondent: String
+        bank_correspondent: JSON
         created_at: DateTime
         updated_at: DateTime
     ): Requisites @create
@@ -87,29 +81,29 @@ extend type Mutation {
         updateRequisites(
             id: ID!
             "Получить связанный аккаунт"
-            account_id: ID!
+            account_id: ID
             "Получатель"
-            recipient: String!
+            recipient: String
             "Registration Number"
-            registration_number: Int!
+            registration_number: Int
             "Адрес"
-            address: String!
+            address: String
             "Получить связанную страну"
-            country_id: ID!
+            country_id: ID
             "Название банка"
-            bank_name: String!
+            bank_name: String
             "Адрес банка"
-            bank_address: String!
+            bank_address: String
             "Получить связанную страну банка"
-            bank_country_id: ID!
+            bank_country_id: ID
             "IBAN"
-            iban: String!
+            iban: String
             "Номер аккаунта"
-            account_no: String!
+            account_no: String
             "SWIFT"
-            swift: String!
+            swift: String
             "Банк корреспондент"
-            bank_correspondent: String
+            bank_correspondent: JSON
             created_at: DateTime
             updated_at: DateTime
         ): Requisites @update
