@@ -45,9 +45,10 @@ class FilesController extends Controller
         }
     }
 
-    public function createPDF()
+    public function createPDF(Request $request)
     {
-        $html = Requisites::PDFTable('18');
+        $account_id = $request->get('account_id');
+        $html = Requisites::PDFTable('15');
         $pdf = PDF::loadHTML($html);
 
         return $pdf->download('requisites.pdf');
@@ -55,16 +56,18 @@ class FilesController extends Controller
 
     public function sendreq(Request $request)
     {
-        $html = Requisites::PDFTable('18');
         $email = $request->get('email');
+        $account_id = $request->get('account_id');
+        $html = Requisites::PDFTable('15');
         $pdf = PDF::loadHTML($html);
 
         Mail::send('mail', [], function ($message) use ($email, $pdf) {
             $message->to($email)->subject('Requisites for Bank from docudots');
-            $message->attach($pdf->download('requisites.pdf'));
+            $message->from('acdteam3@gmail.com','Docudots');
+            $message->attachData($pdf->output(), 'requisites.pdf');
         });
 
-        return response()->json(['message' => 'Requisites has been send to '], 220);
+        return response()->json(['message' => 'Requisites has been send to '.$email], 200);
     }
 
 }
