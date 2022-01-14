@@ -72,7 +72,7 @@ extend type Query {
         hasRiskLevel: _ @whereHasConditions(columns: ["name", "id"]),
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
-        created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["first_name","last_name", "email"]), orderBy: _ @orderBy(
+        created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","first_name","last_name", "email"]), orderBy: _ @orderBy(
         columns: ["id","first_name","last_name", "email","created_at"],
     )): [ApplicantIndividual!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
