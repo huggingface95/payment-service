@@ -31,7 +31,7 @@ class CreateApplicantTable extends Migration
             $table->unsignedBigInteger('birth_country_id')->nullable();
             $table->string('birth_state',255)->nullable();
             $table->string('birth_city',100)->nullable();
-            $table->timestamp('birth_at')->nullable();
+            $table->date('birth_at')->nullable();
             $table->unsignedSmallInteger('sex')->nullable();
             $table->string('password_hash',255);
             $table->string('password_salt',255);
