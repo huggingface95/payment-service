@@ -1,0 +1,44 @@
+"""
+Файлы
+"""
+type Files {
+    id: ID!
+    "Исходное имя файла"
+    file_name: String!
+	"Тип файла"
+    mime_type: String!
+	"Размер загружаемого файла"
+    size: Int!
+    "Тип сущности для которой загружается файл"
+    entity_type: String!
+    "Кто загружал файл"
+    author_id: Int!
+    "Путь к загруженному файлу на ovh"
+    storage_path: String!
+    "Название файла на ovh"
+    storage_name: String!
+    "Ссылка на файл"
+    link: String!
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Query {
+    "Получить файл по ID"
+    file(id: ID @eq): Files @find
+    """
+    Получить список файлов
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    """
+    files(
+            where: _ @whereConditions(columns: ["author_id","entity_type"]),
+            orderBy: _ @orderBy(columns: ["id", "author_id"])
+        ): [Files!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+        "Удалить файл"
+            deleteFile(
+                id: ID!
+            ): Files @delete
+}
