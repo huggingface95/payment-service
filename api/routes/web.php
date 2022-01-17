@@ -19,3 +19,4 @@ $router->get('/', function () use ($router) {
 
 $router->post('api/files', ['uses' => 'FilesController@upload']);
 
+$router->get('/test', ['uses' => 'ExampleController@index']);

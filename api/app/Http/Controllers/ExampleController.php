@@ -23,14 +23,6 @@ class ExampleController extends Controller
     }
     public function index()
     {
-        $departamentPosition = DepartmentPosition::find(3);
-        if (!isset($departamentPosition)) {
-            echo "error";
-        }
-        if ($departamentPosition->department->company->id !== 1) {
-            echo "error" . $departamentPosition->department->company->id;
-        }
-        dd($departamentPosition->department->company->id);
 
     }
 
