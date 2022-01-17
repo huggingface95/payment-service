@@ -5,9 +5,9 @@ Management -> New Applicant -> Create Company
 type ApplicantCompany {
     id: ID!
     "Название"
-    name: String!
+    name: String
     "email"
-    email: EMAIL!
+    email: EMAIL
     "Адрес сайта"
     url: String
     "Телефон"
@@ -141,9 +141,9 @@ extend type Mutation {
     updateApplicantCompany (
         id: ID!
         "Название"
-        name: String!
+        name: String
         "email"
-        email: EMAIL!
+        email: EMAIL
         "Адрес сайта"
         url: String
         "Телефон"

@@ -5,13 +5,13 @@ Management -> New Applicant -> Create Individual -> General
 type ApplicantIndividual {
     id: ID!
     "Имя"
-    first_name: String!
+    first_name: String
     "Фамилия"
-    last_name: String!
+    last_name: String
     "Отчество"
     middle_name: String
     "email"
-    email: EMAIL!
+    email: EMAIL
     "Адрес сайта"
     url: String
     "Телефон"
