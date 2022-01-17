@@ -1,0 +1,115 @@
+"""
+Реквизиты
+Banking -> Accounts -> Requisites
+"""
+type Requisites {
+    id: ID!
+    created_at: DateTime
+    updated_at: DateTime
+    "Получить связанный аккаунт"
+    account_id: Accounts @belongsTo(relation:"Accounts")
+    "Получатель"
+    recipient: String!
+    "Registration Number"
+    registration_number: Int!
+    "Адрес"
+    address: String!
+    "Получить связанную страну"
+    country_id: Country @belongsTo(relation:"Country")
+    "Название банка"
+    bank_name: String!
+    "Адрес банка"
+    bank_address: String!
+    "Получить связанную страну банка"
+    bank_country_id: Country @belongsTo(relation:"Country")
+    "IBAN"
+    iban: String!
+    "Номер аккаунта"
+    account_no: String!
+    "SWIFT"
+    swift: String!
+    "Банк корреспондент"
+    bank_correspondent: JSON
+}
+
+
+extend type Query {
+    "Получить реквизиты по ID"
+    requisite(id: ID @eq): Requisites @find
+    """
+    Получить список реквизитов
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    """
+    requisites(
+            where: _ @whereConditions(columns: ["account_id","bank_name","account_no"]),
+            orderBy: _ @orderBy(columns: ["id"])
+        ): [Requisites!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать реквизиты"
+    createRequisites(
+        "Получить связанный аккаунт"
+        account_id: ID!
+        "Получатель"
+        recipient: String!
+        "Registration Number"
+        registration_number: Int!
+        "Адрес"
+        address: String!
+        "Получить связанную страну"
+        country_id: ID!
+        "Название банка"
+        bank_name: String!
+        "Адрес банка"
+        bank_address: String!
+        "Получить связанную страну банка"
+        bank_country_id: ID!
+        "IBAN"
+        iban: String!
+        "Номер аккаунта"
+        account_no: String!
+        "SWIFT"
+        swift: String!
+        "Банк корреспондент"
+        bank_correspondent: JSON
+        created_at: DateTime
+        updated_at: DateTime
+    ): Requisites @create
+
+    "Редактировать реквизиты"
+        updateRequisites(
+            id: ID!
+            "Получить связанный аккаунт"
+            account_id: ID
+            "Получатель"
+            recipient: String
+            "Registration Number"
+            registration_number: Int
+            "Адрес"
+            address: String
+            "Получить связанную страну"
+            country_id: ID
+            "Название банка"
+            bank_name: String
+            "Адрес банка"
+            bank_address: String
+            "Получить связанную страну банка"
+            bank_country_id: ID
+            "IBAN"
+            iban: String
+            "Номер аккаунта"
+            account_no: String
+            "SWIFT"
+            swift: String
+            "Банк корреспондент"
+            bank_correspondent: JSON
+            created_at: DateTime
+            updated_at: DateTime
+        ): Requisites @update
+
+        "Удалить реквизиты"
+            deleteRequisites(
+                id: ID!
+            ): Requisites @delete
+}
