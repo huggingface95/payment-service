@@ -40,8 +40,10 @@ type ApplicantIndividual {
     birth_at: Date
     "Пол"
     sex: Sex
-    "Дополнительные поля"
-    additional_fields: JSON
+    "Дополнительные поля Profile data"
+    profile_additional_fields: JSON
+    "Дополнительные поля для Personal info"
+    personal_additional_fields: JSON
     "Дополнительные поля блока контакты"
     contacts_additional_fields: JSON
     "Получить статусы"
@@ -116,8 +118,8 @@ extend type Mutation {
         birth_at: Date
         "Пол"
         sex: Sex
-        "Дополнительные поля"
-        additional_fields: [AdditionalFieldInput]
+        "Дополнительные поля для Personal info"
+        personal_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
         contacts_additional_fields: [AdditionalFieldInput]
         "ID статуса"
@@ -173,8 +175,10 @@ extend type Mutation {
         birth_at: Date
         "Пол"
         sex: Sex
-        "Дополнительные поля"
-        additional_fields: [AdditionalFieldInput]
+        "Дополнительные поля Profile data"
+        profile_additional_fields: [AdditionalFieldInput]
+        "Дополнительные поля для Personal info"
+        personal_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
         contacts_additional_fields: [AdditionalFieldInput]
         "ID статуса"
