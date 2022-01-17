@@ -25,7 +25,7 @@ class Departments extends Model
 
     public function positions()
     {
-        return $this->hasMany(DepartmentPosition::class, 'department_id');
+        return $this->belongsToMany(DepartmentPosition::class,'department_position_relation','department_id','position_id');
     }
 
     public function setActive($active = true)

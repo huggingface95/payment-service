@@ -67,7 +67,9 @@ extend type Mutation {
         "Назвние должности"
         name: String!
         "ID департамента"
-        department_id: ID!
+        department_id: ID
+        "ID компании"
+        company_id: ID!
     ): DepartmentPosition @create
 
     "Удалить департамент"

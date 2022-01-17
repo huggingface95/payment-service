@@ -16,7 +16,7 @@ class DepartmentPosition extends Model
      * @var array
      */
     protected $fillable = [
-        'name','department_id'
+        'name','department_id','company_id'
     ];
 
 

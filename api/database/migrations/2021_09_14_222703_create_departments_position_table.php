@@ -17,7 +17,7 @@ class CreateDepartmentsPositionTable extends Migration
             $table->id();
             $table->string('name',255);
             $table->unsignedBigInteger('department_id');
-            $table->unique(['name','department_id'],'department_id_name_unique_index');
+            $table->unique(['name','company_id'],'company_id_name_unique_index');
             $table->boolean('is_active')->default(true);
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
         });
