@@ -49,7 +49,7 @@ type ApplicantIndividual {
     "Получить состояния"
     state: ApplicantState @belongsTo(relation: "state")
     "Получить причины"
-    state_reson: ApplicantStateReason @belongsTo(relation: "stateReason")
+    state_reason: ApplicantStateReason @belongsTo(relation: "stateReason")
     "Получить уровни рисков"
     risk_level: ApplicantRiskLevel @belongsTo(relation: "riskLevel")
     "Получить менеджера"

@@ -15,7 +15,31 @@ class ApplicantIndividual extends Model
      * @var array
      */
     protected $fillable = [
-        'first_name','last_name','middle_name','email','url','phone','country_id','state','city','address','zip','nationality','birth_state','birth_city','birth_at','sex','password_hash','password_salt'
+        'first_name',
+        'last_name',
+        'middle_name',
+        'email',
+        'url',
+        'phone',
+        'country_id',
+        'state',
+        'city',
+        'address',
+        'zip',
+        'nationality',
+        'birth_country_id',
+        'birth_state',
+        'birth_city',
+        'birth_at',
+        'sex',
+        'citizenship_country_id',
+        'applicant_status_id',
+        'applicant_state_id',
+        'applicant_state_reason_id',
+        'applicant_risk_level_id',
+        'account_manager_member_id',
+        'password_hash',
+        'password_salt'
     ];
 
 
@@ -89,6 +113,11 @@ class ApplicantIndividual extends Model
     public function birthCountry()
     {
         return $this->belongsTo(Country::class,'birth_country_id');
+    }
+
+    public function notes()
+    {
+        return$this->hasMany(ApplicantIndividualNotes::class,'applicant_individual_id');
     }
 
 }
