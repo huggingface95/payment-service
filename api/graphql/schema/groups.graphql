@@ -48,8 +48,13 @@ extend type Query {
     orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
     where:{column: ID, operator: EQ, value: ""} фильтр по ID, ID группы, ID роли, ID платежного провайдера, ID шаблона комиссий, по статусу
     """
-    groups_list(where: _ @whereConditions(columns: ["id","group_id", "role_id", "payment_provider_id", "commission_template_id", "is_active"]), orderBy: _ @orderBy(
-        columns: ["id","is_active","description"],
+    groups_list(
+        hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
+        hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
+        hasGroup: _ @whereHasConditions(columns: ["name", "id"]),
+        hasRole: _ @whereHasConditions(columns: ["name", "id"]),
+        where: _ @whereConditions(columns: ["id","group_id", "role_id", "payment_provider_id", "commission_template_id", "is_active"]),
+        orderBy: _ @orderBy(columns: ["id","is_active","description"],
     )): [GroupRole!]! @paginate(defaultCount: 10)
 }
 
