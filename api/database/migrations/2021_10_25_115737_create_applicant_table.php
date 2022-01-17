@@ -35,7 +35,8 @@ class CreateApplicantTable extends Migration
             $table->unsignedSmallInteger('sex')->nullable();
             $table->string('password_hash',255);
             $table->string('password_salt',255);
-            $table->jsonb('additional_fields')->nullable();
+            $table->jsonb('profile_additional_fields')->nullable();
+            $table->jsonb('personal_additional_fields')->nullable();
             $table->jsonb('contacts_additional_fields')->nullable();
             $table->unsignedBigInteger('applicant_status_id')->nullable();
             $table->unsignedBigInteger('applicant_state_id')->nullable();

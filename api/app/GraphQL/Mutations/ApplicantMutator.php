@@ -27,9 +27,9 @@ class ApplicantMutator extends BaseMutator
         $args['password_hash'] = Hash::make($password);
         $args['password_salt'] = Hash::make($password);
 
-        if (isset($args['additional_fields'])) {
-            $additionalFields = $args['additional_fields'];
-            $args['additional_fields']  = $this->setAdditionalField($additionalFields);
+        if (isset($args['personal_additional_fields'])) {
+            $additionalFields = $args['personal_additional_fields'];
+            $args['personal_additional_fields']  = $this->setAdditionalField($additionalFields);
         }
         if (isset($args['contacts_additional_fields'])) {
             $contactAdditionalFields = $args['contacts_additional_fields'];
@@ -55,9 +55,13 @@ class ApplicantMutator extends BaseMutator
     public function update($root, array $args)
     {
         $applicant = ApplicantIndividual::find($args['id']);
-        if (isset($args['additional_fields'])) {
-            $additionalFields = $args['additional_fields'];
-            $args['additional_fields']  = $this->setAdditionalField($additionalFields);
+        if (isset($args['personal_additional_fields'])) {
+            $additionalFields = $args['personal_additional_fields'];
+            $args['personal_additional_fields']  = $this->setAdditionalField($additionalFields);
+        }
+        if (isset($args['profile_additional_fields'])) {
+            $additionalFields = $args['profile_additional_fields'];
+            $args['profile_additional_fields']  = $this->setAdditionalField($additionalFields);
         }
         if (isset($args['contacts_additional_fields'])) {
             $contactAdditionalFields = $args['contacts_additional_fields'];
