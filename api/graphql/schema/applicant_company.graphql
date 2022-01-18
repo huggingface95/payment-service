@@ -178,6 +178,8 @@ extend type Mutation {
         info_additional_fields: JSON
         "Дополнительные поля блока контакты"
         contacts_additional_fields: JSON
+        "Дата и время создания"
+        created_at: DateTime
         "Получить тип бизнеса"
         applicant_company_business_type_id: ID
         "ID статуса"
