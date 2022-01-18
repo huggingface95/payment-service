@@ -1,0 +1,42 @@
+"""
+Модули компании
+Dashboard -> Applicants -> Company -> Full Profile -> Settings
+"""
+type ApplicantCompanyModules {
+    id: ID!
+    "Получить компанию"
+    applicant_company_id: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
+    "Получить модуль"
+    applicant_module_id: ApplicantModules @belongsTo(relation: "ApplicantModules")
+}
+
+extend type Query {
+    """
+    Получить модули  по ID
+    """
+    applicantCompanyModule(id: ID @eq): ApplicantCompanyModules @find
+    """
+    Получить список всех модулей компании
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    """
+    applicantCompanyModules( orderBy: _ @orderBy(
+        columns: ["id"],
+    )): [ApplicantCompanyModules!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать модуль компании"
+    createApplicantCompanyModule(
+        "Компания"
+        applicant_company_id: ID!
+        "Модуль"
+        applicant_module_id: ID!
+    ): ApplicantCompanyModules @create
+
+    "Удалит модуль"
+    deleteApplicantCompanyModule(
+        id: ID!
+    ): ApplicantCompanyModules @delete
+
+}
+
