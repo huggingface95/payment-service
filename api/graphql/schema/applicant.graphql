@@ -40,6 +40,8 @@ type ApplicantIndividual {
     birth_at: Date
     "Пол"
     sex: Sex
+    "Время создания"
+    created_at: DateTime
     "Дополнительные поля Profile data"
     profile_additional_fields: JSON
     "Дополнительные поля для Personal info"
