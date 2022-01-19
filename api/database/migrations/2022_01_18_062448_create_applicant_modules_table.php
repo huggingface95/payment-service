@@ -14,7 +14,7 @@ class CreateApplicantModulesTable extends Migration
     public function up()
     {
         Schema::create('applicant_modules', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->string('name', 255);
         });
     }
