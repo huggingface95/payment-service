@@ -19,7 +19,7 @@ class CreateApplicantTable extends Migration
             $table->string('last_name',255);
             $table->string('middle_name',255)->nullable();
             $table->string('email',255)->unique();
-            $table->string('url',255);
+            $table->string('url',255)->nullable();
             $table->string('phone',255);
             $table->unsignedBigInteger('country_id');
             $table->unsignedBigInteger('citizenship_country_id')->nullable();
