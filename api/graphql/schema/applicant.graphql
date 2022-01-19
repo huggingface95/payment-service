@@ -93,7 +93,7 @@ extend type Mutation {
         "email"
         email: EMAIL!
         "Адрес сайта"
-        url: String!
+        url: String
         "Телефон"
         phone: String!
         "ID Страны"
