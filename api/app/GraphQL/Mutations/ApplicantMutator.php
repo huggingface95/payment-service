@@ -54,6 +54,11 @@ class ApplicantMutator extends BaseMutator
 
     public function update($root, array $args)
     {
+        if (isset($args['password'])) {
+            $args['password_hash'] = Hash::make($args['password']);
+            $args['password_salt'] = Hash::make($args['password']);
+        }
+
         $applicant = ApplicantIndividual::find($args['id']);
         if (isset($args['personal_additional_fields'])) {
             $additionalFields = $args['personal_additional_fields'];
