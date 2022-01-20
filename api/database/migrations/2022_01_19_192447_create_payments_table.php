@@ -42,8 +42,6 @@ class CreatePaymentsTable extends Migration
             $table->foreign('sender_country')->references('id')->on('countries');
             $table->foreign('account_id')->references('id')->on('accounts');
             $table->foreign('company_id')->references('id')->on('companies');
-            $table->foreign('sender_bank_account')->references('account_id')->on('accounts');
-            $table->foreign('sender_bank_name')->references('account_name')->on('accounts');
         });
     }
 

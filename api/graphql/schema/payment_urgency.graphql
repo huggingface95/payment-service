@@ -1,0 +1,15 @@
+"""
+Срочность
+"""
+type PaymentUrgency {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    """
+    Получить список
+    """
+   getPaymentUrgencys: [PaymentUrgency!]! @all
+}
