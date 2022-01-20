@@ -55,9 +55,10 @@ extend type Query {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     payments(
-            where: _ @whereConditions(columns: ["account_id","bank_name","account_no"]),
-            orderBy: _ @orderBy(columns: ["id"])
-        ): [Payments!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        created_at: DateRange @whereBetween,
+        where: _ @whereConditions(columns: ["sender_bank_account","type_id","urgency_id", "status", "payment_provider_id", "company_id", "account_id"]),
+        orderBy: _ @orderBy(columns: ["id", "created_at", "amount"])
+    ): [Payments!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {
@@ -106,7 +107,7 @@ extend type Mutation {
     ): Payments @create
 
     "Редактировать платеж"
-        updatePayments(
+        updatePayment(
             id: ID!
             "Сумма"
             amount: Float!

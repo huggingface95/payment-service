@@ -75,7 +75,7 @@ class Payments extends Model
     }
 
     /**
-     * Get relation Cirrencies
+     * Get relation Currencies
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function Currencies()

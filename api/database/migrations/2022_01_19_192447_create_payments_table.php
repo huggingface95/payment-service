@@ -17,8 +17,8 @@ class CreatePaymentsTable extends Migration
             $table->id();
             $table->decimal('amount', 8, 2);
             $table->decimal('fee', 8, 2);
-            $table->string('currency', 255);
-            $table->tinyInteger('status ');
+            $table->unsignedBigInteger('currency');
+            $table->tinyInteger('status');
             $table->string('sender_name', 255);
             $table->text('payment_details');
             $table->string('sender_bank_account', 255);
