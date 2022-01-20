@@ -1,0 +1,155 @@
+"""
+Платежи
+Banking -> Payments List
+"""
+type Payments {
+    id: ID!
+    "Сумма"
+    amount: Float!
+    "Комиссия"
+    fee: Float!
+    "Получить связанную валюту"
+    currency: Currencies @belongsTo(relation:"Currencies")
+    "Статус"
+    status: Int!
+    "Имя отправителя"
+    sender_name: String!
+    "Детали платежа"
+    payment_details: String!
+    "Аккаунт банка отправителя"
+    sender_bank_account: String!
+    "SWIFT отправителя"
+    sender_swift: String
+    "Имя банка отправителя"
+    sender_bank_name: String!
+    "Страна банка отправителя"
+    sender_bank_country: Country @belongsTo(relation:"Country")
+    "Адрес банка отправителя"
+    sender_bank_address: String
+    "Страна отправителя"
+    sender_country: Country @belongsTo(relation:"Country")
+    "Адрес отправителя"
+    sender_address: String
+    "Получить связанныую срочность"
+    urgency_id: PaymentUrgency @belongsTo(relation:"PaymentUrgency")
+    "Получить связанный тип"
+    type_id: PaymentTypes @belongsTo(relation:"PaymentTypes")
+    "Получить связанный провайдер"
+    payment_provider_id: PaymentProvider @belongsTo(relation:"PaymentProvider")
+    "Получить связанный аккаунт"
+    account_id: Accounts @belongsTo(relation:"Accounts")
+    "Получить связанную компанию"
+    company_id: Companies @belongsTo(relation:"Companies")
+    "Номер платежа"
+    payment_number: String!
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+
+extend type Query {
+    "Получить платеж по ID"
+    payment(id: ID @eq): Payments @find
+    """
+    Получить список платежей
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    """
+    payments(
+            where: _ @whereConditions(columns: ["account_id","bank_name","account_no"]),
+            orderBy: _ @orderBy(columns: ["id"])
+        ): [Payments!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать платеж"
+    createPayment(
+        "Сумма"
+        amount: Float!
+        "Комиссия"
+        fee: Float!
+        "Валюта"
+        currency: ID!
+        "Статус"
+        status: Int!
+        "Имя отправителя"
+        sender_name: String!
+        "Детали платежа"
+        payment_details: String!
+        "Аккаунт банка отправителя"
+        sender_bank_account: String!
+        "SWIFT отправителя"
+        sender_swift: String
+        "Имя банка отправителя"
+        sender_bank_name: String!
+        "Страна банка отправителя"
+        sender_bank_country: ID
+        "Адрес банка отправителя"
+        sender_bank_address: String
+        "Страна отправителя"
+        sender_country: ID
+        "Адрес отправителя"
+        sender_address: String
+        "Срочность"
+        urgency_id: ID!
+        "Тип"
+        type_id: ID!
+        "Платежный ровайдер"
+        payment_provider_id: ID!
+        "Аккаунт"
+        account_id: ID!
+        "Компания"
+        company_id: ID!
+        "Номер платежа"
+        payment_number: String!
+        created_at: DateTime
+        updated_at: DateTime
+    ): Payments @create
+
+    "Редактировать платеж"
+        updatePayments(
+            id: ID!
+            "Сумма"
+            amount: Float!
+            "Комиссия"
+            fee: Float!
+            "Валюта"
+            currency: ID!
+            "Статус"
+            status: Int!
+            "Имя отправителя"
+            sender_name: String!
+            "Детали платежа"
+            payment_details: String!
+            "Аккаунт банка отправителя"
+            sender_bank_account: String!
+            "SWIFT отправителя"
+            sender_swift: String
+            "Имя банка отправителя"
+            sender_bank_name: String!
+            "Страна банка отправителя"
+            sender_bank_country: ID
+            "Адрес банка отправителя"
+            sender_bank_address: String
+            "Страна отправителя"
+            sender_country: ID
+            "Адрес отправителя"
+            sender_address: String
+            "Срочность"
+            urgency_id: ID!
+            "Тип"
+            type_id: ID!
+            "Платежный ровайдер"
+            payment_provider_id: ID!
+            "Аккаунт"
+            account_id: ID!
+            "Компания"
+            company_id: ID!
+            "Номер платежа"
+            payment_number: String!
+        ): Payments @update
+
+        "Удалить платеж"
+            deletePayment(
+                id: ID!
+            ): Payments @delete
+}
