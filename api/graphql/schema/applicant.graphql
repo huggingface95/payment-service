@@ -18,6 +18,8 @@ type ApplicantIndividual {
     phone: String
     "Получить связанную страну"
     country: Country @belongsTo(relation: "country")
+    "Получить язык"
+    language: Languages @belongsTo(relation: "language")
     "Получить связанную страну гражданства"
     citizenship_country: Country @belongsTo(relation: "citizenshipCountry")
     "Штат / область"
@@ -60,6 +62,8 @@ type ApplicantIndividual {
     manager: Members @belongsTo(relation: "manager")
     "Получить метки"
     labels: [ApplicantIndividualLabel] @belongsToMany(relation: "labels")
+    "Название компании держателя applicant"
+    created_for: Companies
 }
 
 extend type Query {
@@ -98,6 +102,8 @@ extend type Mutation {
         phone: String!
         "ID Страны"
         country_id: ID!
+        "ID языка"
+        language_id: ID
         "ID страны гражданства"
         citizenship_country_id: ID
         "Штат / область"
@@ -159,6 +165,8 @@ extend type Mutation {
         phone: String
         "ID Страны"
         country_id: ID
+        "ID языка"
+        language_id: ID
         "ID страны гражданства"
         citizenship_country_id: ID
         "Штат / область"

@@ -22,6 +22,7 @@ class ApplicantIndividual extends Model
         'url',
         'phone',
         'country_id',
+        'language_id',
         'state',
         'city',
         'address',
@@ -102,6 +103,14 @@ class ApplicantIndividual extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function language()
+    {
+        return $this->belongsTo(Languages::class,'language_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function citizenshipCountry()
     {
         return $this->belongsTo(Country::class,'citizenship_country_id');
@@ -118,6 +127,12 @@ class ApplicantIndividual extends Model
     public function notes()
     {
         return$this->hasMany(ApplicantIndividualNotes::class,'applicant_individual_id');
+    }
+
+    public function getCompanyAttribute()
+    {
+        return $this->manager()
+            ->join('companies', 'company.id', '=', 'members.company_id')->select('companies.*')->first();
     }
 
 }
