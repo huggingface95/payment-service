@@ -64,6 +64,8 @@ type ApplicantIndividual {
     labels: [ApplicantIndividualLabel] @belongsToMany(relation: "labels")
     "Название компании держателя applicant"
     created_for: Companies
+    "Получить заметки"
+    notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
 }
 
 extend type Query {
