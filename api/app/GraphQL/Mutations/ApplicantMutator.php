@@ -28,14 +28,15 @@ class ApplicantMutator extends BaseMutator
         $args['password_salt'] = Hash::make($password);
 
         if (isset($args['personal_additional_fields'])) {
-            $additionalFields = $args['personal_additional_fields'];
-            $args['personal_additional_fields']  = $this->setAdditionalField($additionalFields);
+            $personalFields = $args['personal_additional_fields'];
+            $args['personal_additional_fields']  = $this->setAdditionalField($personalFields);
         }
         if (isset($args['contacts_additional_fields'])) {
-            $contactAdditionalFields = $args['contacts_additional_fields'];
-            $args['contacts_additional_fields']  = $this->setAdditionalField($contactAdditionalFields);
+            $contactFields = $args['contacts_additional_fields'];
+            $args['contacts_additional_fields']  = $this->setAdditionalField($contactFields);
         }
         $applicant = ApplicantIndividual::create($args);
+
         if (isset($args['labels'])) {
             $applicant->labels()->detach($args['labels']);
             $applicant->labels()->attach($args['labels']);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class ApplicantIndividual extends Model
 {
 
@@ -44,6 +45,11 @@ class ApplicantIndividual extends Model
         'account_manager_member_id',
         'password_hash',
         'password_salt'
+    ];
+
+    protected $casts = [
+        'personal_additional_fields'=>'array',
+        'contacts_additional_fields'=>'array'
     ];
 
 
@@ -137,5 +143,6 @@ class ApplicantIndividual extends Model
         return $this->manager()
             ->join('companies', 'company.id', '=', 'members.company_id')->select('companies.*')->first();
     }
+
 
 }
