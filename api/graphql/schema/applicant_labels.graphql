@@ -9,7 +9,7 @@ type ApplicantIndividualLabel {
     "HEX код метки"
     hex_color_code: String!
     "Кто создал метку"
-    author_id: Members @belongsTo(relation:"Members")
+    member_id: Members! @belongsTo(relation:"Members")
 }
 
 extend type Query {
@@ -19,10 +19,12 @@ extend type Query {
     applicantIndividualLabel(id: ID @eq): ApplicantIndividualLabel @find
     """
     Получить все метки
+    memberCompany: member_id - получить labels по company
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
     """
-    applicantIndividualLabels(author_id: @scope, where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+    applicantIndividualLabels(memberCompany: ID @scope(name:"memberCompany"),
+    where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
     )): [ApplicantIndividualLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -35,7 +37,7 @@ extend type Mutation {
         "HEX код метки"
         hex_color_code: String! @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
         "Кто создал метку"
-        author_id: ID!
+        member_id: ID!
     ): ApplicantIndividualLabel @create
 
     "Редактирование метки"
@@ -46,8 +48,6 @@ extend type Mutation {
         name: String!
         "HEX код метки"
         hex_color_code: String @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
-        "Кто создал метку"
-        author_id: ID!
     ): ApplicantIndividualLabel @update
 
     "Удалит метку"
