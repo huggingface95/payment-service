@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ApplicantIndividualLabel extends Model
 {
@@ -28,11 +29,17 @@ class ApplicantIndividualLabel extends Model
         return $this->belongsTo(Members::class,'member_id','id');
     }
 
+    public function companyMembers()
+    {
+        return $this->hasMany(Members::class, 'company_id');
+    }
+
     public function scopeMemberCompany($query, int $memberId)
     {
-        $companyId2 = Members::where('id', $memberId);
-        $companyId = $query->join('members', 'applicant_individual_labels.member_id1', '=', 'members.id')->where('applicant_individual_labels.member_id', $companyId2->company_id)->first();
-        return $companyId;
+        $companyId = Members::where('id', $memberId)->value('company_id');
+        $companyMembers = DB::select("SELECT id FROM members WHERE company_id = ".$companyId);
+        $result = collect($companyMembers)->pluck('id')->toArray();
+        return $query->whereIn('member_id', $result);
     }
 
 }
