@@ -28,9 +28,11 @@ class ApplicantIndividualLabel extends Model
         return $this->belongsTo(Members::class,'member_id','id');
     }
 
-    public function scopeMemberCompany($query, int $companyId)
+    public function scopeMemberCompany($query, int $memberId)
     {
-        return $query->join('members', 'members.company_id', '=', 'members.id')->where('member_id', $companyId)->first();
+        $companyId2 = Members::where('id', $memberId);
+        $companyId = $query->join('members', 'applicant_individual_labels.member_id1', '=', 'members.id')->where('applicant_individual_labels.member_id', $companyId2->company_id)->first();
+        return $companyId;
     }
 
 }

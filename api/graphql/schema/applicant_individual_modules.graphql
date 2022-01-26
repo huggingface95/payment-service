@@ -19,7 +19,7 @@ extend type Query {
     Получить список всех модулей аппликанта
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    applicantIndividualModules( orderBy: _ @orderBy(
+    applicantIndividualModules(where: _ @whereConditions(columns: ["applicant_individual_id"]), orderBy: _ @orderBy(
         columns: ["id"],
     )): [ApplicantIndividualModules!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }

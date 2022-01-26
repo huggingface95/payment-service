@@ -83,5 +83,10 @@ class ApplicantCompany extends Model
         return $this->belongsTo(ApplicantCompanyBusinessType::class,'applicant_company_business_type_id');
     }
 
+    public function modules()
+    {
+        return $this->belongsToMany(ApplicantModules::class,'applicant_company_modules','applicant_company_id','applicant_module_id');
+    }
+
 
 }
