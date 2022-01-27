@@ -30,11 +30,11 @@ class ApplicantIndividualModules extends Model
 
     /**
      * Get relation applicant_modules
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\belongsToMany
      */
-    public function ApplicantModules()
+    public function modules()
     {
-        return $this->belongsTo(ApplicantModules::class,'applicant_module_id','id');
+        return $this->belongsToMany(ApplicantModules::class,'applicant_individual_modules','applicant_individual_id', 'applicant_module_id');
     }
 
 }

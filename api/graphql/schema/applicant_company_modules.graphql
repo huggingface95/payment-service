@@ -7,7 +7,7 @@ type ApplicantCompanyModules {
     "Получить компанию"
     applicant_company_id: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
     "Получить модуль"
-    applicant_module_id: ApplicantModules @belongsTo(relation: "ApplicantModules")
+    applicant_module_id: [ApplicantModules] @belongsTo(relation: "ApplicantModules")
 }
 
 extend type Query {
@@ -30,7 +30,7 @@ extend type Mutation {
         "Компания"
         applicant_company_id: ID!
         "Модуль"
-        applicant_module_id: ID!
+        applicant_module_id: [ID]!
     ): ApplicantCompanyModules @create
 
     "Удалит модуль"

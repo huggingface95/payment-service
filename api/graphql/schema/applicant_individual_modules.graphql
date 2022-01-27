@@ -7,7 +7,7 @@ type ApplicantIndividualModules {
     "Получить аппликанта"
     applicant_individual_id: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
     "Получить модуль"
-    applicant_module_id: ApplicantModules @belongsTo(relation: "ApplicantModules")
+    applicant_module_id: [ApplicantIndividualModules] @belongsToMany(relation: "modules")
 }
 
 extend type Query {
@@ -30,8 +30,8 @@ extend type Mutation {
         "Аппликант"
         applicant_individual_id: ID!
         "Модуль"
-        applicant_module_id: ID!
-    ): ApplicantIndividualModules @create
+        applicant_module_id: [ID]!
+    ): ApplicantIndividualModules @field(resolver:"ApplicantModulesMutator@create")
 
     "Удалит модуль"
     deleteApplicantIndividualModule(
