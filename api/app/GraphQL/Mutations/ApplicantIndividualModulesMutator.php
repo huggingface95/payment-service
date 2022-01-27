@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Models\ApplicantIndividualModules;
+use App\Models\ApplicantIndividual;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -17,13 +17,12 @@ class ApplicantIndividualModulesMutator extends BaseMutator
      * @return mixed
      */
 
-    public function create($root, array $args)
+    public function attach($root, array $args)
     {
-        $args['applicant_module_id'] = 1;
-        $applicantModule = ApplicantIndividualModules::create($args);
+        $applicantModule = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
 
         if (isset($args['applicant_module_id'])) {
-            //$applicantModule->modules()->detach($args['applicant_module_id']);
+            $applicantModule->modules()->detach();
             $applicantModule->modules()->attach($args['applicant_module_id']);
         }
 

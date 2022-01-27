@@ -14,9 +14,9 @@ class CreateApplicantIndividualModulesTable extends Migration
     public function up()
     {
         Schema::create('applicant_individual_modules', function (Blueprint $table) {
-            $table->bigIncrements('id');
             $table->unsignedBigInteger('applicant_individual_id');
             $table->unsignedBigInteger('applicant_module_id');
+            $table->unique(['applicant_individual_id','applicant_module_id']);
             $table->foreign('applicant_individual_id')->references('id')->on('applicant_individual')->onDelete('cascade');
             $table->foreign('applicant_module_id')->references('id')->on('applicant_modules')->onDelete('cascade');
         });

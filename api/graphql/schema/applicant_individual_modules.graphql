@@ -3,7 +3,6 @@
 Dashboard -> Applicants -> Individual -> Full Profile -> Settings
 """
 type ApplicantIndividualModules {
-    id: ID!
     "Получить аппликанта"
     applicant_individual_id: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
     "Получить модуль"
@@ -11,10 +10,6 @@ type ApplicantIndividualModules {
 }
 
 extend type Query {
-    """
-    Получить модули по ID
-    """
-    applicantIndividualModule(id: ID @eq): ApplicantIndividualModules @find
     """
     Получить список всех модулей аппликанта
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -31,12 +26,8 @@ extend type Mutation {
         applicant_individual_id: ID!
         "Модуль"
         applicant_module_id: [ID]
-    ): ApplicantIndividualModules @field(resolver:"ApplicantIndividualModulesMutator@create")
+    ): ApplicantIndividualModules @field(resolver:"ApplicantIndividualModulesMutator@attach")
 
-    "Удалит модуль"
-    deleteApplicantIndividualModule(
-        id: ID!
-    ): ApplicantIndividualModules @delete
 
 }
 
