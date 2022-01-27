@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 
-class ApplicantModulesMutator extends BaseMutator
+class ApplicantIndividualModulesMutator extends BaseMutator
 {
     /**
      * Return a value for the field.
@@ -19,10 +19,11 @@ class ApplicantModulesMutator extends BaseMutator
 
     public function create($root, array $args)
     {
+        $args['applicant_module_id'] = 1;
         $applicantModule = ApplicantIndividualModules::create($args);
 
         if (isset($args['applicant_module_id'])) {
-            $applicantModule->modules()->detach($args['applicant_module_id']);
+            //$applicantModule->modules()->detach($args['applicant_module_id']);
             $applicantModule->modules()->attach($args['applicant_module_id']);
         }
 
