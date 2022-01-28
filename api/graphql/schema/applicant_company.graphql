@@ -54,6 +54,8 @@ type ApplicantCompany {
     state_reason: ApplicantStateReason @belongsTo(relation: "stateReason")
     "Получить уровни рисков"
     risk_level: ApplicantRiskLevel @belongsTo(relation: "riskLevel")
+    "Получить KYC level"
+    kyc_level: ApplicantRiskLevel @belongsTo(relation: "kycLevel")
     "Получить менеджера"
     manager: Members @belongsTo(relation: "manager")
     "Получить создателя"
@@ -84,6 +86,7 @@ extend type Query {
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
         hasBusinessType: _ @whereHasConditions(columns: ["name", "id"]),
+        hasKycLevel: _ @whereHasConditions(columns: ["name", "id"]),
         created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","account_manager_member_id","name","url" ,"email","created_at"]), orderBy: _ @orderBy(
         columns: ["id","name", "email","created_at","url","owner_id"],
     )): [ApplicantCompany!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
@@ -140,6 +143,8 @@ extend type Mutation {
         applicant_state_reason_id: ID
         "ID уровня рисков"
         applicant_risk_level_id: ID
+        "ID KYC level"
+        applicant_kyc_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID
         "Массив ID меток"
@@ -197,6 +202,8 @@ extend type Mutation {
         applicant_state_reason_id: ID
         "ID уровня рисков"
         applicant_risk_level_id: ID
+        "ID KYC level"
+        applicant_kyc_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID
         "Массив ID меток"
