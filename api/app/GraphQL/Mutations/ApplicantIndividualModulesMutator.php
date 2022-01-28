@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\ApplicantIndividual;
+use App\Models\ApplicantIndividualModules;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -26,6 +27,13 @@ class ApplicantIndividualModulesMutator extends BaseMutator
             $applicantModule->modules()->attach($args['applicant_module_id']);
         }
 
+        return $applicantModule;
+    }
+
+    public function detach($root, array $args)
+    {
+        $applicantModule = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
+        $applicantModule->modules()->detach($args['applicant_module_id']);
         return $applicantModule;
     }
 

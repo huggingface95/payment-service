@@ -15,8 +15,8 @@ extend type Query {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     applicantIndividualModules(where: _ @whereConditions(columns: ["applicant_individual_id"]), orderBy: _ @orderBy(
-        columns: ["id"],
-    )): [ApplicantIndividualModules!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        columns: ["applicant_individual_id"],
+    )): [ApplicantIndividualModules!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }
 
 extend type Mutation {
@@ -27,6 +27,12 @@ extend type Mutation {
         "Модуль"
         applicant_module_id: [ID]
     ): ApplicantIndividualModules @field(resolver:"ApplicantIndividualModulesMutator@attach")
+
+    "Удалить модуль"
+    deleteApplicantIndividualModule(
+        applicant_individual_id: ID!
+        applicant_module_id: [ID]
+    ): ApplicantIndividualModules @field(resolver: "ApplicantIndividualModulesMutator@detach")
 
 
 }
