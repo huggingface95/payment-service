@@ -77,8 +77,13 @@ extend type Query {
     orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email
     where:{column: EMAIL, operator: LIKE, value: ""} фильтр по имени, фамилии, Email
     """
-    applicantCompanies(where: _ @whereConditions(columns: ["first_name","last_name", "email"]), orderBy: _ @orderBy(
-        columns: ["id","first_name","last_name", "email"],
+    applicantCompanies(
+        hasRiskLevel: _ @whereHasConditions(columns: ["name", "id"]),
+        hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
+        hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
+        hasBusinessTypes: _ @whereHasConditions(columns: ["name", "id"]),
+        DateRange @whereBetween, where: _ @whereConditions(columns: ["id","account_manager_member_id","name", "email","created_at"]), orderBy: _ @orderBy(
+        columns: ["id","first_name","last_name", "email","created_at"],
     )): [ApplicantCompany!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
