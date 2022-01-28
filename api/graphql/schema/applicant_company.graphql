@@ -147,6 +147,8 @@ extend type Mutation {
         applicant_kyc_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID
+        "ID owner"
+        owner_id: ID
         "Массив ID меток"
         labels: [ID]
     ): ApplicantCompany @create
@@ -206,6 +208,8 @@ extend type Mutation {
         applicant_kyc_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID
+        "ID owner"
+        owner_id: ID
         "Массив ID меток"
         labels: [ID]
     ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@update")
