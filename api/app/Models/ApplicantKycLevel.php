@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
 
-use Illuminate\Support\Facades\DB;
-
-class ApplicantModules extends BaseModel
+class ApplicantKycLevel extends Model
 {
-    public $timestamps = false;
 
-    protected $table="applicant_modules";
+    protected $table="applicant_kyc_level";
+
     /**
      * The attributes that are mass assignable.
      *
@@ -18,4 +17,8 @@ class ApplicantModules extends BaseModel
     protected $fillable = [
         'name'
     ];
+
+    public $timestamps = false;
+
+
 }

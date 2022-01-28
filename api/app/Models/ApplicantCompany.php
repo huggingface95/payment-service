@@ -62,9 +62,25 @@ class ApplicantCompany extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function kycLevel()
+    {
+        return $this->belongsTo(ApplicantKycLevel::class,'applicant_kyc_level_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function manager()
     {
         return $this->belongsTo(Members::class, 'account_manager_member_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner()
+    {
+        return $this->belongsTo(Members::class, 'owner_id');
     }
 
     /**

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePaymentUrgencyTable extends Migration
+class AddKycLevelFieldApplicantCompany extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreatePaymentUrgencyTable extends Migration
      */
     public function up()
     {
-        Schema::create('payment_urgency', function (Blueprint $table) {
-            $table->id();
-            $table->enum('name', ['Standart', 'Urgent']);
+        Schema::table('applicant_company', function (Blueprint $table) {
+            $table->unsignedBigInteger('applicant_kyc_level_id')->nullable();
+            $table->foreign('applicant_kyc_level_id')->references('id')->on('applicant_kyc_level');
         });
     }
 
@@ -26,6 +26,6 @@ class CreatePaymentUrgencyTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_urgency');
+        //
     }
 }

@@ -49,13 +49,15 @@ type ApplicantCompany {
     "Получить статусы"
     status: ApplicantStatus @belongsTo(relation: "status")
     "Получить состояния"
-    state: ApplicantState @belongsTo(relation: "state")
+    applicant_state: ApplicantState @belongsTo(relation: "state")
     "Получить причины"
     state_reason: ApplicantStateReason @belongsTo(relation: "stateReason")
     "Получить уровни рисков"
     risk_level: ApplicantRiskLevel @belongsTo(relation: "riskLevel")
     "Получить менеджера"
     manager: Members @belongsTo(relation: "manager")
+    "Получить создателя"
+    owner: Members @belongsTo(relation: "owner")
     "Получить метки"
     labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
 }
@@ -83,7 +85,7 @@ extend type Query {
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
         hasBusinessTypes: _ @whereHasConditions(columns: ["name", "id"]),
         created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","account_manager_member_id","name","url" ,"email","created_at"]), orderBy: _ @orderBy(
-        columns: ["id","name", "email","created_at","url"],
+        columns: ["id","name", "email","created_at","url","owner_id"],
     )): [ApplicantCompany!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 

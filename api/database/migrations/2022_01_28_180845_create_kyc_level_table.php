@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePaymentUrgencyTable extends Migration
+class CreateKycLevelTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreatePaymentUrgencyTable extends Migration
      */
     public function up()
     {
-        Schema::create('payment_urgency', function (Blueprint $table) {
+        Schema::create('applicant_kyc_level', function (Blueprint $table) {
             $table->id();
-            $table->enum('name', ['Standart', 'Urgent']);
+            $table->string('name',255)->unique();
         });
     }
 
@@ -26,6 +26,6 @@ class CreatePaymentUrgencyTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_urgency');
+        Schema::dropIfExists('kyc_level');
     }
 }
