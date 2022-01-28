@@ -13,6 +13,8 @@ class ApplicantIndividualLabel extends Model
      *
      * @var array
      */
+    const DEFAULT_MEMBER_ID = 2;
+
     protected $fillable = [
         'name', 'hex_color_code', 'member_id'
     ];
@@ -34,12 +36,16 @@ class ApplicantIndividualLabel extends Model
         return $this->hasMany(Members::class, 'company_id');
     }
 
-    public function scopeMemberCompany($query, int $memberId)
+    public function scopeMemberCompany($query)
     {
+        //$memberId = ($token->user_id) ? $token->user_id : DEFAULT_MEMBER_ID;
+        $memberId = self::DEFAULT_MEMBER_ID;
         $companyId = Members::where('id', $memberId)->value('company_id');
-        $companyMembers = DB::select("SELECT id FROM members WHERE company_id = ".$companyId);
+        $companyMembers = DB::select("SELECT id FROM members WHERE company_id = " . $companyId);
         $result = collect($companyMembers)->pluck('id')->toArray();
         return $query->whereIn('member_id', $result);
     }
+
+
 
 }

@@ -23,8 +23,8 @@ extend type Query {
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
     """
-    applicantIndividualLabels(memberCompany: ID! @scope(name:"memberCompany"),
-    where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+    applicantIndividualLabels(memberCompany: ID @scope(name:"memberCompany"),
+    where: _ @whereConditions(columns: ["name", "member_id"]), orderBy: _ @orderBy(
         columns: ["id","name"],
     )): [ApplicantIndividualLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
