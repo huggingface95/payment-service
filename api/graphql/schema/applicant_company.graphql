@@ -82,7 +82,7 @@ extend type Query {
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
         hasBusinessTypes: _ @whereHasConditions(columns: ["name", "id"]),
-        DateRange @whereBetween, where: _ @whereConditions(columns: ["id","account_manager_member_id","name","url" ,"email","created_at"]), orderBy: _ @orderBy(
+        created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","account_manager_member_id","name","url" ,"email","created_at"]), orderBy: _ @orderBy(
         columns: ["id","name", "email","created_at","url"],
     )): [ApplicantCompany!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
