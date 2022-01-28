@@ -13,7 +13,7 @@ class AddKycLevelFieldApplicantCompany extends Migration
      */
     public function up()
     {
-        Schema::table('applicant_company', function (Blueprint $table) {
+        Schema::table('applicant_companies', function (Blueprint $table) {
             $table->unsignedBigInteger('applicant_kyc_level_id')->nullable();
             $table->foreign('applicant_kyc_level_id')->references('id')->on('applicant_kyc_level');
         });
