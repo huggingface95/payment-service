@@ -28,12 +28,10 @@ class ApplicantMutator extends BaseMutator
         $args['password_salt'] = Hash::make($password);
 
         if (isset($args['personal_additional_fields'])) {
-            $personalFields = $args['personal_additional_fields'];
-            $args['personal_additional_fields']  = $this->setAdditionalField($personalFields);
+            $args['personal_additional_fields']  = $this->setAdditionalField($args['personal_additional_fields']);
         }
         if (isset($args['contacts_additional_fields'])) {
-            $contactFields = $args['contacts_additional_fields'];
-            $args['contacts_additional_fields']  = $this->setAdditionalField($contactFields);
+            $args['contacts_additional_fields']  = $this->setAdditionalField($args['contacts_additional_fields']);
         }
         $applicant = ApplicantIndividual::create($args);
 
@@ -62,16 +60,13 @@ class ApplicantMutator extends BaseMutator
 
         $applicant = ApplicantIndividual::find($args['id']);
         if (isset($args['personal_additional_fields'])) {
-            $additionalFields = $args['personal_additional_fields'];
-            $args['personal_additional_fields']  = $this->setAdditionalField($additionalFields);
+            $args['personal_additional_fields']  = $this->setAdditionalField($args['personal_additional_fields']);
         }
         if (isset($args['profile_additional_fields'])) {
-            $additionalFields = $args['profile_additional_fields'];
-            $args['profile_additional_fields']  = $this->setAdditionalField($additionalFields);
+            $args['profile_additional_fields']  = $this->setAdditionalField($args['profile_additional_fields']);
         }
         if (isset($args['contacts_additional_fields'])) {
-            $contactAdditionalFields = $args['contacts_additional_fields'];
-            $args['contacts_additional_fields']  = $this->setAdditionalField($contactAdditionalFields);
+            $args['contacts_additional_fields']  = $this->setAdditionalField($args['contacts_additional_fields']);
         }
         if (isset($args['labels'])) {
             $applicant->labels()->detach($args['labels']);
