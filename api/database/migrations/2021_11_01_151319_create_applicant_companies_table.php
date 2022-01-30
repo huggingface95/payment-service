@@ -26,8 +26,8 @@ class CreateApplicantCompaniesTable extends Migration
             $table->string('address2',255)->nullable();
             $table->string('office_address',255)->nullable();
             $table->string('zip',20)->nullable();
-            $table->timestamp('reg_at')->nullable();
-            $table->timestamp('expires_at')->nullable();
+            $table->date('reg_at')->nullable();
+            $table->date('expires_at')->nullable();
             $table->string('tax',100)->nullable();
             $table->string('reg_number',100)->nullable();
             $table->string('license_number',100)->nullable();

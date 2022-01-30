@@ -80,7 +80,7 @@ class ApplicantCompany extends Model
      */
     public function owner()
     {
-        return $this->belongsTo(Members::class, 'owner_id');
+        return $this->belongsTo(ApplicantIndividual::class, 'owner_id');
     }
 
     /**

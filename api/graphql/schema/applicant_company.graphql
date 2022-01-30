@@ -59,7 +59,7 @@ type ApplicantCompany {
     "Получить менеджера"
     manager: Members @belongsTo(relation: "manager")
     "Получить создателя"
-    owner: Members @belongsTo(relation: "owner")
+    owner: ApplicantIndividual @belongsTo(relation: "owner")
     "Получить метки"
     labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
 }
