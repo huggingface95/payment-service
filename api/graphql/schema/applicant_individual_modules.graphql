@@ -6,8 +6,18 @@ type ApplicantIndividualModules {
     "Получить аппликанта"
     applicant_individual_id: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
     "Получить модуль"
-    applicant_module_id: [ApplicantModules] @belongsToMany(relation: "modules")
+    applicant_module_id: [ApplicantModules] @belongsTo(relation: "ApplicantModules")
+    "Получить модули"
+    modules: [ApplicantIndividualModules] @belongsToMany (relation: "modules_all")
 }
+
+"Модули"
+type ApplicantModules {
+    id: ID!
+    "Название модуля"
+    name: String !
+}
+
 
 extend type Query {
     """

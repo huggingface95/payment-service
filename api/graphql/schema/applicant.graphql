@@ -67,7 +67,7 @@ type ApplicantIndividual {
     "Получить заметки"
     notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
     "Получить модули"
-    modules: [ApplicantModules] @hasMany (relation: "modules")
+    modules: [ApplicantModules] @belongsToMany (relation: "modules")
 }
 
 "Модули"

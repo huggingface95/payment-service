@@ -1,0 +1,40 @@
+"""
+Доступные метки аппликанта
+"""
+type ApplicantLabels {
+    "Получить аппликанта"
+    applicant_individual_id: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
+    "Получить связанные метки"
+    applicant_individual_label_id: ID
+    "Получить метки аппликанта"
+    labels: [ApplicantIndividualLabel] @belongsToMany(relation: "labels")
+}
+
+extend type Query {
+    """
+    Получить список меток доступных аппликанту
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    """
+    applicantIndividualLabelsAvailable(applicant_id: ID @scope(name:"ApplicantId"), where: _ @whereConditions(columns: ["applicant_individual_id"]),
+    orderBy: _ @orderBy(columns: ["applicant_individual_id"],
+    )): [ApplicantLabels!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать метку аппликанту"
+    createApplicantLabel(
+        "Аппликант"
+        applicant_individual_id: ID!
+        "Метка"
+        applicant_individual_label_id: [ID]
+    ): ApplicantLabels @field(resolver:"ApplicantIndividualLabelsMutator@attach")
+
+    "Удалить метку"
+    deleteApplicantLabel(
+        applicant_individual_id: ID!
+        applicant_individual_label_id: [ID]
+    ): ApplicantLabels @field(resolver: "ApplicantIndividualLabelsMutator@detach")
+
+
+}
+
