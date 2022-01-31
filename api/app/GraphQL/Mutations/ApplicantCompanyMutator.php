@@ -19,8 +19,8 @@ class ApplicantCompanyMutator extends BaseMutator
     public function create($root, array $args)
     {
 
-        if (isset($args['info_additional_fields'])) {
-            $args['info_additional_fields']  = $this->setAdditionalField($args['info_additional_fields']);
+        if (isset($args['company_info_additional_fields'])) {
+            $args['company_info_additional_fields']  = $this->setAdditionalField($args['company_info_additional_fields']);
         }
         if (isset($args['contacts_additional_fields'])) {
             $args['contacts_additional_fields']  = $this->setAdditionalField($args['contacts_additional_fields']);
@@ -51,6 +51,10 @@ class ApplicantCompanyMutator extends BaseMutator
         }
         if (isset($args['contacts_additional_fields'])) {
             $args['contacts_additional_fields']  = $this->setAdditionalField($args['contacts_additional_fields']);
+        }
+
+        if (isset($args['profile_additional_fields'])) {
+            $args['profile_additional_fields']  = $this->setAdditionalField($args['profile_additional_fields']);
         }
 
         if (isset($args['labels'])) {

@@ -20,6 +20,7 @@ class CreateApplicantCompaniesTable extends Migration
             $table->string('url',255);
             $table->string('phone',255);
             $table->unsignedBigInteger('country_id');
+            $table->unsignedBigInteger('language_id');
             $table->string('state',255)->nullable();
             $table->string('city',100)->nullable();
             $table->string('address',255)->nullable();
@@ -34,8 +35,9 @@ class CreateApplicantCompaniesTable extends Migration
             $table->string('company_type',100)->nullable();
             $table->string('password_hash',255);
             $table->string('password_salt',255);
-            $table->jsonb('info_additional_fields')->nullable();
+            $table->jsonb('company_info_additional_fields')->nullable();
             $table->jsonb('contacts_additional_fields')->nullable();
+            $table->jsonb('profile_additional_fields')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('applicant_company_business_type_id')->nullable();
             $table->unsignedBigInteger('applicant_status_id')->nullable();
@@ -52,6 +54,8 @@ class CreateApplicantCompaniesTable extends Migration
             $table->foreign('account_manager_member_id')->references('id')->on('members');
             $table->foreign('owner_id')->references('id')->on('members');
             $table->foreign('applicant_risk_level_id')->references('id')->on('applicant_risk_level');
+            $table->foreign('country_id')->references('id')->on('countries');
+            $table->foreign('language_id')->references('id')->on('languages');
         });
     }
 

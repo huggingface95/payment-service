@@ -15,7 +15,7 @@ class ApplicantCompany extends Model
      * @var array
      */
     protected $fillable = [
-        'name','email','url','phone','state','city','address','address2','office_address','zip','reg_at','expires_at','tax','reg_number','license_number','company_type','info_additional_fields','contacts_additional_fields'
+        'name','email','url','phone','country_id','language_id','state','city','address','address2','office_address','zip','reg_at','expires_at','tax','reg_number','license_number','company_type','info_additional_fields','contacts_additional_fields','profile_additional_fields'
     ];
 
 
@@ -98,6 +98,20 @@ class ApplicantCompany extends Model
     {
         return $this->belongsTo(ApplicantCompanyBusinessType::class,'applicant_company_business_type_id');
     }
+
+    public function notes()
+    {
+        return$this->hasMany(ApplicantCompanyNotes::class,'applicant_company_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function language()
+    {
+        return $this->belongsTo(Languages::class,'language_id');
+    }
+
 
 
 }
