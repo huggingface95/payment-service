@@ -138,9 +138,9 @@ extend type Mutation {
         "Тип компании"
         company_type:String
         "Дополнительные поля"
-        company_info_additional_fields: JSON
+        company_info_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
-        contacts_additional_fields: JSON
+        contacts_additional_fields: [AdditionalFieldInput]
         "ID типов бизнеса"
         applicant_company_business_type_id: ID
         "ID статуса"
@@ -201,11 +201,11 @@ extend type Mutation {
         "Тип компании"
         company_type:String
         "Дополнительные поля Company Info"
-        company_info_additional_fields: JSON
+        company_info_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
-        contacts_additional_fields: JSON
+        contacts_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля Profile data"
-        profile_additional_fields: JSON
+        profile_additional_fields: [AdditionalFieldInput]
         "ID типа бизнеса"
         applicant_company_business_type_id: ID
         "ID статуса"
