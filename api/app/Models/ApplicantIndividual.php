@@ -141,7 +141,7 @@ class ApplicantIndividual extends Model
     public function getCreatedForAttribute()
     {
         return $this->manager()
-            ->join('companies', 'company.id', '=', 'members.company_id')->select('companies.*')->first();
+            ->join('companies', 'companies.id', '=', 'members.company_id')->select('companies.*')->first();
     }
 
 
