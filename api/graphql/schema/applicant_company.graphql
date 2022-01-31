@@ -109,6 +109,8 @@ extend type Mutation {
         phone: String!
         "Получить связанную страну"
         country_id: ID!
+        "ID языка"
+        language_id: ID
         "Штат / область"
         state: String
         "Город"
@@ -170,6 +172,8 @@ extend type Mutation {
         phone: String
         "страна"
         country_id: ID
+        "ID языка"
+        language_id: ID
         "Штат / область"
         state: String
         "Город"
