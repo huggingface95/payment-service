@@ -83,7 +83,7 @@ extend type Query {
     """
     applicantCompany(id: ID @eq): ApplicantCompany @find
     """
-    Получить список частных пользователей
+    Получить список applicant companies
     orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email
     where:{column: EMAIL, operator: LIKE, value: ""} фильтр по имени, фамилии, Email
     """
@@ -99,7 +99,7 @@ extend type Query {
 }
 
 extend type Mutation {
-    "Создать частного пользователя"
+    "Создать applicant company"
     createApplicantCompany (
         "Название"
         name: String!
@@ -161,7 +161,7 @@ extend type Mutation {
         labels: [ID]
     ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@create")
 
-    "Редактирование частного пользователя"
+    "Редактирование applicant company"
     updateApplicantCompany (
         id: ID!
         "Название"
