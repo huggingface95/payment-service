@@ -15,7 +15,7 @@ extend type Query {
     Получить список меток доступных аппликанту
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    applicantIndividualLabelsAvailable(applicant_id: ID @scope(name:"ApplicantId"), where: _ @whereConditions(columns: ["applicant_individual_id"]),
+    applicantIndividualLabelsAvailable2(where: _ @whereConditions(columns: ["applicant_individual_id"]),
     orderBy: _ @orderBy(columns: ["applicant_individual_id"],
     )): [ApplicantLabels!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }

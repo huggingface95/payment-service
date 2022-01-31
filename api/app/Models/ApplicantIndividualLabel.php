@@ -65,4 +65,11 @@ class ApplicantIndividualLabel extends Model
         return $this->belongsToMany(ApplicantIndividualLabel::class,'applicant_individual_label_relation','applicant_individual_id', 'applicant_individual_label_id');
     }
 
+    public function scopeIndividualId($query, $id)
+    {
+        $labels = DB::select("SELECT applicant_individual_label_id FROM applicant_individual_label_relation WHERE applicant_individual_id != " . $id);
+        $labelResult = collect($labels)->pluck('applicant_individual_label_id')->toArray();
+        return $query->whereIn('id', $labelResult);
+    }
+
 }

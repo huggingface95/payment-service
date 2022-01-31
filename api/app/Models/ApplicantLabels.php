@@ -9,6 +9,7 @@ class ApplicantLabels extends Model
 {
 
     const DEFAULT_COMPANY_ID = 7;
+    const DEFAULT_APPLICANT_ID = 10;
 
     protected $table="applicant_individual_label_relation";
 
@@ -30,9 +31,18 @@ class ApplicantLabels extends Model
             $companyMembers = DB::select("SELECT id FROM members WHERE company_id = " . $companyId);
             $res = collect($companyMembers)->pluck('id')->toArray();
             $applicantMembers = DB::select("SELECT id FROM applicant_individual WHERE account_manager_member_id IN (" . implode(',', $res) . ")");
+            foreach ($applicantMembers as $key => $value) {
+                if ($value->id == self::DEFAULT_APPLICANT_ID) {
+                    unset($applicantMembers[$key]);
+                }
+            }
             $result = collect($applicantMembers)->pluck('id')->toArray();
-            $labelsId = DB::select("SELECT applicant_individual_label_id FROM applicant_individual_label_relation WHERE applicant_individual_id NOT IN (" . implode(',', $result) . ")");
+            $labelsId = DB::select("SELECT applicant_individual_label_id FROM applicant_individual_label_relation WHERE applicant_individual_id IN (" . implode(',', $result) . ")");
             $labelResult = collect($labelsId)->pluck('applicant_individual_label_id')->toArray();
+            $f = fopen('data.txt', 'w+');
+            $json = json_encode($labelResult);
+            fwrite($f, $json);
+            fclose($f);
             return $builder->whereIn('applicant_individual_label_id', $labelResult);
         });
     }
@@ -59,11 +69,6 @@ class ApplicantLabels extends Model
     public function labels()
     {
         return $this->belongsToMany(ApplicantIndividualLabel::class, 'applicant_individual_label_relation', 'applicant_individual_id', 'applicant_individual_label_id');
-    }
-
-    public function scopeApplicantId($query, $id)
-    {
-        return $query->where('applicant_individual_id','=',$id)->select('applicant_individual_label_relation.*');
     }
 
 }
