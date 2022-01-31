@@ -15,7 +15,7 @@ class ApplicantCompany extends Model
      * @var array
      */
     protected $fillable = [
-        'name','email','url','phone','country_id','language_id','state','city','address','address2','office_address','zip','reg_at','expires_at','tax','reg_number','license_number','company_type','info_additional_fields','contacts_additional_fields','profile_additional_fields'
+        'name','email','url','phone','country_id','language_id','state','city','address','address2','office_address','zip','reg_at','expires_at','tax','reg_number','license_number','company_type','company_info_additional_fields','contacts_additional_fields','profile_additional_fields'
     ];
 
 

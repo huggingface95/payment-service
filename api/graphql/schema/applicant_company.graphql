@@ -40,10 +40,12 @@ type ApplicantCompany {
     license_number: String
     "Тип компании"
     company_type:String
-    "Дополнительные поля"
-    info_additional_fields: JSON
+    "Дополнительные поля Company Info"
+    company_info_additional_fields: JSON
     "Дополнительные поля блока контакты"
     contacts_additional_fields: JSON
+    "Дополнительные поля Profile data"
+    profile_additional_fields: JSON
     "Дата создания"
     created_at: DateTime
     "Получить тип бизнеса"
@@ -136,7 +138,7 @@ extend type Mutation {
         "Тип компании"
         company_type:String
         "Дополнительные поля"
-        info_additional_fields: JSON
+        company_info_additional_fields: JSON
         "Дополнительные поля блока контакты"
         contacts_additional_fields: JSON
         "ID типов бизнеса"
@@ -198,11 +200,13 @@ extend type Mutation {
         license_number: String
         "Тип компании"
         company_type:String
-        "Дополнительные поля"
-        info_additional_fields: JSON
+        "Дополнительные поля Company Info"
+        company_info_additional_fields: JSON
         "Дополнительные поля блока контакты"
         contacts_additional_fields: JSON
-        "Получить тип бизнеса"
+        "Дополнительные поля Profile data"
+        profile_additional_fields: JSON
+        "ID типа бизнеса"
         applicant_company_business_type_id: ID
         "ID статуса"
         applicant_status_id: ID
