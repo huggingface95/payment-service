@@ -14,6 +14,8 @@ type ApplicantCompany {
     phone: String
     "Получить связанную страну"
     country: Country @belongsTo(relation: "country")
+    "Получить язык"
+    language: Languages @belongsTo(relation: "language")
     "Штат / область"
     state: String
     "Город"
@@ -62,6 +64,8 @@ type ApplicantCompany {
     owner: ApplicantIndividual @belongsTo(relation: "owner")
     "Получить метки"
     labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
+    "Получить заметки"
+    notes: [ApplicantCompanyNotes] @hasMany(relation: "notes")
 }
 
 type ApplicantIndividualCompany {
