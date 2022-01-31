@@ -138,7 +138,7 @@ class ApplicantIndividual extends Model
         return$this->hasMany(ApplicantIndividualNotes::class,'applicant_individual_id');
     }
 
-    public function getCompanyAttribute()
+    public function getCreatedForAttribute()
     {
         return $this->manager()
             ->join('companies', 'company.id', '=', 'members.company_id')->select('companies.*')->first();
