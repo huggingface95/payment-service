@@ -29,7 +29,7 @@ class ApplicantIndividualLabel extends Model
         static::addGlobalScope('member_id', function ($builder) {
             $memberId = self::DEFAULT_MEMBER_ID;
             $companyId = Members::where('id', '=', $memberId)->value('company_id');
-            $companyMembers = DB::select("SELECT id FROM members WHERE company_id = " . $companyId);
+            $companyMembers = Members::where('company_id', '=', $companyId)->get('id');
             $result = collect($companyMembers)->pluck('id')->toArray();
             return $builder->whereIn('member_id', $result);
         });
@@ -67,9 +67,9 @@ class ApplicantIndividualLabel extends Model
 
     public function scopeIndividualId($query, $id)
     {
-        $labels = DB::select("SELECT applicant_individual_label_id FROM applicant_individual_label_relation WHERE applicant_individual_id != " . $id);
-        $labelResult = collect($labels)->pluck('applicant_individual_label_id')->toArray();
-        return $query->whereIn('id', $labelResult);
+        $applicant = ApplicantIndividual::where('id', '=', $id)->first();
+        $labels = collect($applicant->labels()->get())->pluck('id')->toArray();
+        return $query->whereNotIn('id', $labels);
     }
 
 }

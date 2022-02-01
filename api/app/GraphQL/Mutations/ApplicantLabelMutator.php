@@ -15,6 +15,34 @@ class ApplicantLabelMutator
      * @param array $args
      * @return mixed
      */
+    public function create($root, array $args)
+    {
+        $memberId = ApplicantIndividualLabel::DEFAULT_MEMBER_ID;
+        $args['member_id'] = $memberId;
+        $label = ApplicantIndividualLabel::create($args);
+
+        return $label;
+    }
+
+    /**
+     * @param $root
+     * @param array $args
+     * @return mixed
+     */
+    public function update($root, array $args)
+    {
+        $label = ApplicantIndividualLabel::find($args['id']);
+        $memberId = ApplicantIndividualLabel::DEFAULT_MEMBER_ID;
+        $args['member_id'] = $memberId;
+        $label->update($args);
+        return $label;
+    }
+
+    /**
+     * @param $root
+     * @param array $args
+     * @return mixed
+     */
     public function delete($root, array $args)
     {
         try {
