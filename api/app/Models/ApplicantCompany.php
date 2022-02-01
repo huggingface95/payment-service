@@ -34,6 +34,7 @@ class ApplicantCompany extends Model
         'license_number',
         'company_type',
         'owner_id',
+        'account_manager_member_id',
         'company_info_additional_fields',
         'contacts_additional_fields',
         'profile_additional_fields'
