@@ -20,34 +20,42 @@ class CreateApplicantCompaniesTable extends Migration
             $table->string('url',255);
             $table->string('phone',255);
             $table->unsignedBigInteger('country_id');
+            $table->unsignedBigInteger('language_id');
             $table->string('state',255)->nullable();
             $table->string('city',100)->nullable();
             $table->string('address',255)->nullable();
             $table->string('address2',255)->nullable();
             $table->string('office_address',255)->nullable();
             $table->string('zip',20)->nullable();
-            $table->timestamp('reg_at')->nullable();
-            $table->timestamp('expires_at')->nullable();
+            $table->date('reg_at')->nullable();
+            $table->date('expires_at')->nullable();
             $table->string('tax',100)->nullable();
             $table->string('reg_number',100)->nullable();
             $table->string('license_number',100)->nullable();
             $table->string('company_type',100)->nullable();
             $table->string('password_hash',255);
             $table->string('password_salt',255);
-            $table->jsonb('info_additional_fields')->nullable();
+            $table->jsonb('company_info_additional_fields')->nullable();
             $table->jsonb('contacts_additional_fields')->nullable();
+            $table->jsonb('profile_additional_fields')->nullable();
             $table->timestamps();
             $table->unsignedBigInteger('applicant_company_business_type_id')->nullable();
             $table->unsignedBigInteger('applicant_status_id')->nullable();
             $table->unsignedBigInteger('applicant_state_id')->nullable();
             $table->unsignedBigInteger('applicant_state_reason_id')->nullable();
             $table->unsignedBigInteger('account_manager_member_id')->nullable();
+            $table->unsignedBigInteger('owner_id')->nullable();
+            $table->unsignedBigInteger('applicant_risk_level_id')->nullable();
 
             $table->foreign('applicant_company_business_type_id')->references('id')->on('applicant_company_business_type');
             $table->foreign('applicant_status_id')->references('id')->on('applicant_status');
             $table->foreign('applicant_state_id')->references('id')->on('applicant_state');
             $table->foreign('applicant_state_reason_id')->references('id')->on('applicant_state_reason');
             $table->foreign('account_manager_member_id')->references('id')->on('members');
+            $table->foreign('owner_id')->references('id')->on('members');
+            $table->foreign('applicant_risk_level_id')->references('id')->on('applicant_risk_level');
+            $table->foreign('country_id')->references('id')->on('countries');
+            $table->foreign('language_id')->references('id')->on('languages');
         });
     }
 

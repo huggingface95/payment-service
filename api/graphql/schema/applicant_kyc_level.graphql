@@ -1,0 +1,26 @@
+"""
+Уровни KYC
+Management -> New Applicant
+"""
+type ApplicantKycLevel {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    """
+    Получить уровень KYC по  ID
+    """
+    applicantKycLevel(id: ID @eq): ApplicantKycLevel @find
+    """
+    Получить список уровней KYC
+    orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
+    """
+    applicantKycLevels(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+        columns: ["id","name"],
+    )): [ApplicantKycLevel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+
