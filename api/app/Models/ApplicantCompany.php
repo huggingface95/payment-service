@@ -40,6 +40,12 @@ class ApplicantCompany extends Model
         'profile_additional_fields'
     ];
 
+    protected $casts = [
+        'company_info_additional_fields'=>'array',
+        'contacts_additional_fields'=>'array',
+        'profile_additional_field'=>'array'
+    ];
+
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
