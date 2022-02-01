@@ -68,6 +68,14 @@ type ApplicantCompany {
     labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
     "Получить заметки"
     notes: [ApplicantCompanyNotes] @hasMany(relation: "notes")
+    modules: [ApplicantModules] @hasMany (relation: "modules")
+}
+
+"Модули"
+type ApplicantModules {
+    id: ID!
+    "Имя модуля"
+    name: String !
 }
 
 type ApplicantIndividualCompany {

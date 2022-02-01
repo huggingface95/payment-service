@@ -8,6 +8,8 @@ type ApplicantCompanyLabel {
     name: String!
     "HEX код метки"
     hex_color_code: String!
+    "Кто создал метку"
+    member_id: Members! @belongsTo(relation:"Members")
 }
 
 extend type Query {
@@ -32,6 +34,8 @@ extend type Mutation {
         name: String!
         "HEX код метки"
         hex_color_code: String! @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
+        "Кто создал метку"
+        member_id: ID!
     ): ApplicantCompanyLabel @create
 
     "Редактирование метки"

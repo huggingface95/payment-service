@@ -18,4 +18,20 @@ class ApplicantModules extends BaseModel
     protected $fillable = [
         'name'
     ];
+
+    public function modules()
+    {
+        return $this->belongsToMany(ApplicantModules::class,'applicant_individual_modules','applicant_individual_id','applicant_module_id');
+    }
+
+    public function ApplicantModules()
+    {
+        return $this->belongsTo(ApplicantModules::class,'applicant_module_id','id');
+    }
+
+    public function modules_all()
+    {
+        return $this->belongsToMany(ApplicantModules::class,'applicant_individual_modules','applicant_individual_id','applicant_module_id');
+    }
+
 }

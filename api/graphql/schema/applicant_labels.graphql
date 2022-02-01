@@ -8,6 +8,15 @@ type ApplicantIndividualLabel {
     name: String!
     "HEX код метки"
     hex_color_code: String!
+    "Кто создал метку"
+    member_id: Members @belongsTo(relation:"Members")
+}
+
+type ApplicantLabels {
+    "Получить аппликанта"
+    applicant_individual_id: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
+    "Получить связанные метки"
+    applicant_individual_label_id: [ID]
 }
 
 extend type Query {
@@ -20,9 +29,13 @@ extend type Query {
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
     """
-    applicantIndividualLabels(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+    applicantIndividualLabels(where: _ @whereConditions(columns: ["name", "member_id"]), orderBy: _ @orderBy(
         columns: ["id","name"],
     )): [ApplicantIndividualLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    applicantIndividualLabelsAvailable(applicant: ID @scope(name:"IndividualId"), orderBy: _ @orderBy(
+        columns: ["id","name"],
+    )): [ApplicantIndividualLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+
 }
 
 extend type Mutation {
@@ -32,6 +45,8 @@ extend type Mutation {
         name: String!
         "HEX код метки"
         hex_color_code: String! @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
+        "Кто создал метку"
+        member_id: ID!
     ): ApplicantIndividualLabel @create
 
     "Редактирование метки"
@@ -44,11 +59,25 @@ extend type Mutation {
         hex_color_code: String @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
     ): ApplicantIndividualLabel @update
 
-    "Удалит метку"
+    "Удалить метку"
     deleteApplicantIndividualLabel(
         id: ID!
         deleteAnyway: Boolean
     ): ApplicantIndividualLabel @field(resolver: "ApplicantLabelMutator@delete")
+
+    "Создать метку аппликанту"
+    createApplicantLabel(
+        "Аппликант"
+        applicant_individual_id: ID!
+        "Метка"
+        applicant_individual_label_id: [ID]
+    ): ApplicantLabels @field(resolver:"ApplicantIndividualLabelsMutator@attach")
+
+    "Удалить метку"
+    deleteApplicantLabel(
+        applicant_individual_id: ID!
+        applicant_individual_label_id: [ID]
+    ): ApplicantLabels @field(resolver: "ApplicantIndividualLabelsMutator@detach")
 
 }
 

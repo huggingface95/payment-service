@@ -144,5 +144,10 @@ class ApplicantIndividual extends Model
             ->join('companies', 'companies.id', '=', 'members.company_id')->select('companies.*')->first();
     }
 
+    public function modules()
+    {
+        return $this->belongsToMany(ApplicantModules::class,'applicant_individual_modules','applicant_individual_id','applicant_module_id');
+    }
+
 
 }

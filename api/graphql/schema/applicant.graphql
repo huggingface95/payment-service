@@ -66,6 +66,15 @@ type ApplicantIndividual {
     created_for: Companies
     "Получить заметки"
     notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
+    "Получить модули"
+    modules: [ApplicantModules] @belongsToMany (relation: "modules")
+}
+
+"Модули"
+type ApplicantModules {
+    id: ID!
+    "Название модуля"
+    name: String !
 }
 
 extend type Query {

@@ -3,25 +3,30 @@
 Dashboard -> Applicants -> Individual -> Full Profile -> Settings
 """
 type ApplicantIndividualModules {
-    id: ID!
     "Получить аппликанта"
     applicant_individual_id: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
     "Получить модуль"
-    applicant_module_id: ApplicantModules @belongsTo(relation: "ApplicantModules")
+    applicant_module_id: [ApplicantModules] @belongsTo(relation: "ApplicantModules")
+    "Получить модули"
+    modules: [ApplicantIndividualModules] @belongsToMany (relation: "modules_all")
 }
 
+"Модули"
+type ApplicantModules {
+    id: ID!
+    "Название модуля"
+    name: String !
+}
+
+
 extend type Query {
-    """
-    Получить модули по ID
-    """
-    applicantIndividualModule(id: ID @eq): ApplicantIndividualModules @find
     """
     Получить список всех модулей аппликанта
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    applicantIndividualModules( orderBy: _ @orderBy(
-        columns: ["id"],
-    )): [ApplicantIndividualModules!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    applicantIndividualModules(where: _ @whereConditions(columns: ["applicant_individual_id"]), orderBy: _ @orderBy(
+        columns: ["applicant_individual_id"],
+    )): [ApplicantIndividualModules!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }
 
 extend type Mutation {
@@ -30,13 +35,15 @@ extend type Mutation {
         "Аппликант"
         applicant_individual_id: ID!
         "Модуль"
-        applicant_module_id: ID!
-    ): ApplicantIndividualModules @create
+        applicant_module_id: [ID]
+    ): ApplicantIndividualModules @field(resolver:"ApplicantIndividualModulesMutator@attach")
 
-    "Удалит модуль"
+    "Удалить модуль"
     deleteApplicantIndividualModule(
-        id: ID!
-    ): ApplicantIndividualModules @delete
+        applicant_individual_id: ID!
+        applicant_module_id: [ID]
+    ): ApplicantIndividualModules @field(resolver: "ApplicantIndividualModulesMutator@detach")
+
 
 }
 

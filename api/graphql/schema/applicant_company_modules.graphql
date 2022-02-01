@@ -3,25 +3,20 @@
 Dashboard -> Applicants -> Company -> Full Profile -> Settings
 """
 type ApplicantCompanyModules {
-    id: ID!
     "Получить компанию"
     applicant_company_id: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
     "Получить модуль"
-    applicant_module_id: ApplicantModules @belongsTo(relation: "ApplicantModules")
+    applicant_module_id: [ApplicantModules] @belongsTo(relation: "modules")
 }
 
 extend type Query {
     """
-    Получить модули  по ID
-    """
-    applicantCompanyModule(id: ID @eq): ApplicantCompanyModules @find
-    """
     Получить список всех модулей компании
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    applicantCompanyModules( orderBy: _ @orderBy(
-        columns: ["id"],
-    )): [ApplicantCompanyModules!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    applicantCompanyModules(where: _ @whereConditions(columns: ["applicant_company_id"]), orderBy: _ @orderBy(
+        columns: ["applicant_company_id"],
+    )): [ApplicantCompanyModules!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_company_id", direction: ASC)
 }
 
 extend type Mutation {
@@ -30,13 +25,14 @@ extend type Mutation {
         "Компания"
         applicant_company_id: ID!
         "Модуль"
-        applicant_module_id: ID!
-    ): ApplicantCompanyModules @create
+        applicant_module_id: [ID]
+    ): ApplicantCompanyModules @field(resolver:"ApplicantCompanyModulesMutator@attach")
 
-    "Удалит модуль"
+    "Удалить модуль"
     deleteApplicantCompanyModule(
-        id: ID!
-    ): ApplicantCompanyModules @delete
+        applicant_company_id: ID!
+        applicant_module_id: [ID]
+    ): ApplicantCompanyModules @field(resolver: "ApplicantCompanyModulesMutator@detach")
 
 }
 
