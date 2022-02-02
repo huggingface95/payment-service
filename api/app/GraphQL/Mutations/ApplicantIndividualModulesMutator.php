@@ -20,21 +20,21 @@ class ApplicantIndividualModulesMutator extends BaseMutator
 
     public function attach($root, array $args)
     {
-        $applicantModule = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
+        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
 
         if (isset($args['applicant_module_id'])) {
-            $applicantModule->modules()->detach();
-            $applicantModule->modules()->attach($args['applicant_module_id']);
+            $applicant->modules()->detach();
+            $applicant->modules()->attach($args['applicant_module_id']);
         }
 
-        return $applicantModule;
+        return $applicant;
     }
 
     public function detach($root, array $args)
     {
-        $applicantModule = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
-        $applicantModule->modules()->detach($args['applicant_module_id']);
-        return $applicantModule;
+        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
+        $applicant->modules()->detach($args['applicant_module_id']);
+        return $applicant;
     }
 
 }
