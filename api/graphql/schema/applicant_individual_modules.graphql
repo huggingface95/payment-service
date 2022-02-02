@@ -7,6 +7,8 @@ type ApplicantIndividualModules {
     applicant_individual_id: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
     "Получить модуль"
     applicant_module_id: [ApplicantModules] @belongsToMany(relation: "ApplicantModules")
+    "Активен = true или не активный = false"
+    is_active: Boolean
 }
 
 "Модули"
@@ -34,7 +36,19 @@ extend type Mutation {
         applicant_individual_id: ID!
         "Модуль"
         applicant_module_id: [ID]
+        "Активный или неактивный"
+        is_active: Boolean
     ): ApplicantIndividual @field(resolver:"ApplicantIndividualModulesMutator@attach")
+
+    "Активировать модуль аппликанту"
+    updateApplicantIndividualModule(
+        "Аппликант"
+        applicant_individual_id: ID!
+        "Модуль"
+        applicant_module_id: [ID]
+        "Активный или неактивный"
+        is_active: Boolean
+    ): ApplicantIndividualModules @field(resolver:"ApplicantIndividualModulesMutator@update")
 
     "Удалить модуль"
     deleteApplicantIndividualModule(

@@ -15,7 +15,7 @@ class ApplicantIndividualModules extends Model
      * @var array
      */
     protected $fillable = [
-        'applicant_individual_id','applicant_module_id'
+        'applicant_individual_id','applicant_module_id', 'is_active'
     ];
     public $timestamps = false;
 
@@ -41,6 +41,5 @@ class ApplicantIndividualModules extends Model
     {
         return $this->belongsToMany(ApplicantModules::class,'applicant_individual_modules','applicant_individual_id', 'applicant_module_id');
     }
-
 
 }
