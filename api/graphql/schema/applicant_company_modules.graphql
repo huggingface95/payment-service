@@ -7,6 +7,8 @@ type ApplicantCompanyModules {
     applicant_company_id: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
     "Получить модуль"
     applicant_module_id: [ApplicantModules] @belongsTo(relation: "modules")
+    "Активен = true или не активный = false"
+    is_active: Boolean
 }
 
 extend type Query {
@@ -26,13 +28,25 @@ extend type Mutation {
         applicant_company_id: ID!
         "Модуль"
         applicant_module_id: [ID]
-    ): ApplicantCompanyModules @field(resolver:"ApplicantCompanyModulesMutator@attach")
+        "Активный или неактивный"
+        is_active: Boolean
+    ): ApplicantCompany @field(resolver:"ApplicantCompanyModulesMutator@attach")
+
+    "Активировать модуль applicant company"
+    updateApplicantCompanyModule(
+        "Аппликант"
+        applicant_company_id: ID!
+        "Модуль"
+        applicant_module_id: [ID]
+        "Активный или неактивный"
+        is_active: Boolean
+    ): ApplicantCompanyModules @field(resolver:"ApplicantCompanyModulesMutator@update")
 
     "Удалить модуль"
     deleteApplicantCompanyModule(
         applicant_company_id: ID!
         applicant_module_id: [ID]
-    ): ApplicantCompanyModules @field(resolver: "ApplicantCompanyModulesMutator@detach")
+    ): ApplicantCompany @field(resolver: "ApplicantCompanyModulesMutator@detach")
 
 }
 

@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\ApplicantCompany;
+use App\Models\ApplicantCompanyModules;
 use App\Models\ApplicantIndividual;
 use App\Models\ApplicantIndividualCompany;
 use Illuminate\Support\Facades\Hash;
@@ -36,6 +37,17 @@ class ApplicantCompanyModulesMutator extends BaseMutator
         $applicantModule = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
         $applicantModule->modules()->detach($args['applicant_module_id']);
         return $applicantModule;
+    }
+
+    public function update($root, array $args)
+    {
+        $companyModule = ApplicantCompanyModules::where([
+            'applicant_company_id' => $args['applicant_company_id'],
+            'applicant_module_id' => $args['applicant_module_id']
+        ])->first();
+        $companyModule->is_active = $args['is_active'];
+        $companyModule->update();
+        return $companyModule;
     }
 
 }

@@ -15,7 +15,7 @@ class ApplicantCompanyModules extends Model
      * @var array
      */
     protected $fillable = [
-        'applicant_company_id','applicant_module_id'
+        'applicant_company_id','applicant_module_id', 'is_active'
     ];
     public $timestamps = false;
 
