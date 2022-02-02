@@ -37,7 +37,14 @@ class ApplicantCompany extends Model
         'account_manager_member_id',
         'company_info_additional_fields',
         'contacts_additional_fields',
-        'profile_additional_fields'
+        'profile_additional_fields',
+        'applicant_company_business_type_id',
+        'applicant_status_id',
+        'applicant_state_id',
+        'applicant_state_reason_id',
+        'account_manager_member_id',
+        'applicant_risk_level_id',
+        'applicant_kyc_level_id',
     ];
 
     protected $casts = [
