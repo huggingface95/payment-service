@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class ApplicantCompanyRiskLevelHistory extends Model
 {
 
-    const DEFAULT_MEMBER_ID = 2;
-
     protected $table="applicant_company_risk_level_history";
 
     /**
@@ -24,7 +22,7 @@ class ApplicantCompanyRiskLevelHistory extends Model
     {
         parent::boot();
         static::addGlobalScope('member_id', function ($builder) {
-            $memberId = self::DEFAULT_MEMBER_ID;
+            $memberId = BaseModel::DEFAULT_MEMBER_ID;
             $companyId = Members::where('id', '=', $memberId)->value('company_id');
             $companyMembers = Members::where('company_id', '=', $companyId)->get('id');
             $result = collect($companyMembers)->pluck('id')->toArray();
