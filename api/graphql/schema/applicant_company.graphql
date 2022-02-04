@@ -83,6 +83,9 @@ type ApplicantIndividualCompany {
     applicant_company_id: ID!
     applicant_individual_company_relation_id: ID!
     applicant_individual_company_position_id: ID!
+    applicant_individual: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
+    relation_to_company: ApplicantIndividualCompanyRelation @belongsTo(relation: "ApplicantIndividualCompanyRelation")
+    position_in_company: ApplicantIndividualCompanyPosition @belongsTo(relation: "ApplicantIndividualCompanyPosition")
 }
 
 extend type Query {
@@ -104,6 +107,14 @@ extend type Query {
         created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","account_manager_member_id","name","url" ,"email","created_at"]), orderBy: _ @orderBy(
         columns: ["id","name", "email","created_at","url","owner_id"],
     )): [ApplicantCompany!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    """
+    Получить список applicant individuals по applicant company
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    where:{column: applicant_company_id, operator: LIKE, value: ""} фильтр по applicant_company_id
+    """
+    getMatchedUsers(where: _ @whereConditions(columns: ["applicant_company_id"]), orderBy: _ @orderBy(
+        columns: ["id"],
+    )): [ApplicantIndividualCompany!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }
 
 extend type Mutation {
