@@ -37,4 +37,15 @@ class ApplicantIndividualModulesMutator extends BaseMutator
         return $applicant;
     }
 
+    public function update($root, array $args)
+    {
+        $applicantModule = ApplicantIndividualModules::where([
+            'applicant_individual_id' => $args['applicant_individual_id'],
+            'applicant_module_id' => $args['applicant_module_id']
+        ])->first();
+        $applicantModule->is_active = $args['is_active'];
+        $applicantModule->update();
+        return $applicantModule;
+    }
+
 }
