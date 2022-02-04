@@ -22,8 +22,8 @@ class ApplicantHistoryRiskLevelMutator extends BaseMutator
     {
         $applicantRiskLevelHistory = ApplicantRiskLevelHistory::create($args);
         if (isset($args['risk_level_id'])) {
-            $applicant = ApplicantIndividual::where('id', '=', $args['applicant_id'])->first();
-            $applicant->update(['applicant_risk_level_id' => $args['risk_level_id']]);
+            ApplicantIndividual::where('id', '=', $args['applicant_id'])
+                ->update(['applicant_risk_level_id' => $args['risk_level_id']]);
         }
 
         return $applicantRiskLevelHistory;
