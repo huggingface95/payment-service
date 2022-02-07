@@ -1,4 +1,5 @@
 scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+scalar DateEnd @scalar(class: "App\\GraphQL\\Types\\DateEnd")
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
 scalar EMAIL @scalar(class: "MLL\\GraphQLScalars\\Email")
@@ -11,7 +12,7 @@ enum Sort {
 
 input DateRange {
     from: Date!
-    to: Date!
+    to: DateEnd!
 }
 
 """
