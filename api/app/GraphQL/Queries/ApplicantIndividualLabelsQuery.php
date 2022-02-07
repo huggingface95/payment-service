@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Queries;
 
-use App\Models\ApplicantIndividualLabel;
 use GraphQL\Exception\InvalidArgument;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +17,7 @@ class ApplicantIndividualLabelsQuery
                 ELSE false
                 END AS is_active'))
             ->leftJoin('applicant_individual_label_relation as ailr','ail.id','=','ailr.applicant_individual_label_id')
-            ->where('ailr.applicant_individual_id','=',$args['where']['value'])
+            ->where('ailr.applicant_individual_id','=',$args['applicant_id'])
             ->orWhereNull('ailr.applicant_individual_id')->orderBy('ail.id')
             ->get();
         return $args;
