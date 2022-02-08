@@ -33,7 +33,7 @@ extend type Query {
     """
     applicantCompanyLabels(applicant_id: ID @eq, where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantCompanyLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantCompanyLabel!]! @field(resolver: "ApplicantCompanyLabelsQuery@enabled")
     applicantCompanyLabelsAvailable(company: ID @scope(name:"CompanyId"), orderBy: _ @orderBy(
         columns: ["id","name"],
     )): [ApplicantCompanyLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
@@ -46,9 +46,8 @@ extend type Mutation {
         name: String!
         "HEX код метки"
         hex_color_code: String! @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
-        "Кто создал метку"
-        member_id: ID!
     ): ApplicantCompanyLabel @field(resolver: "ApplicantCompanyLabelMutator@create")
+
 
     "Редактирование метки"
     updateApplicantCompanyLabel(
