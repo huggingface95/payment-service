@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class ApplicantCompanyLabel extends Model
+class ApplicantCompanyLabel extends BaseModel
 {
 
     /**
@@ -17,6 +16,18 @@ class ApplicantCompanyLabel extends Model
     ];
 
     public $timestamps = false;
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope('member_id', function ($builder) {
+            $memberId = self::DEFAULT_MEMBER_ID;
+            $companyId = Members::where('id', '=', $memberId)->value('company_id');
+            $companyMembers = Members::where('company_id', '=', $companyId)->get('id');
+            $result = collect($companyMembers)->pluck('id')->toArray();
+            return $builder->whereIn('member_id', $result);
+        });
+    }
 
     public function applicants()
     {
