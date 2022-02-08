@@ -39,4 +39,11 @@ class ApplicantCompanyLabel extends BaseModel
         return $this->belongsTo(Members::class,'member_id','id');
     }
 
+    public function scopeCompanyId($query, $id)
+    {
+        $company = ApplicantCompany::where('id', '=', $id)->first();
+        $labels = collect($company->labels()->get())->pluck('id')->toArray();
+        return $query->whereNotIn('id', $labels);
+    }
+
 }
