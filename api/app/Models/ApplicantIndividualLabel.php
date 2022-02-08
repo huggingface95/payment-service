@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ApplicantIndividualLabel extends Model
+class ApplicantIndividualLabel extends BaseModel
 {
 
     /**
@@ -24,7 +24,7 @@ class ApplicantIndividualLabel extends Model
     {
         parent::boot();
         static::addGlobalScope('member_id', function ($builder) {
-            $memberId = BaseModel::DEFAULT_MEMBER_ID;
+            $memberId = self::DEFAULT_MEMBER_ID;
             $companyId = Members::where('id', '=', $memberId)->value('company_id');
             $companyMembers = Members::where('company_id', '=', $companyId)->get('id');
             $result = collect($companyMembers)->pluck('id')->toArray();
