@@ -8,8 +8,7 @@ type ApplicantCompanyLabel {
     name: String!
     "HEX код метки"
     hex_color_code: String!
-    "Кто создал метку"
-    member_id: Members! @belongsTo(relation:"Members")
+    is_active: Boolean
 }
 
 type CompanyLabels {
