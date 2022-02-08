@@ -152,4 +152,11 @@ class ApplicantCompany extends Model
         return $this->belongsTo(Languages::class,'language_id');
     }
 
+    public function  ApplicantCompany()
+    {
+        return $this->belongsTo(ApplicantCompany::class,'applicant_company_id','id');
+    }
+
+
+
 }

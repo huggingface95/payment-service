@@ -149,5 +149,10 @@ class ApplicantIndividual extends Model
         return $this->belongsToMany(ApplicantModules::class,'applicant_individual_modules','applicant_individual_id','applicant_module_id');
     }
 
+    public function  ApplicantIndividual()
+    {
+        return $this->belongsTo(ApplicantIndividual::class,'applicant_individual_id','id');
+    }
+
 
 }

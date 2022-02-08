@@ -16,6 +16,8 @@ type ApplicantLabels {
     applicant_individual_id: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
     "Получить связанные метки"
     applicant_individual_label_id: [ID]
+    "Получить метки"
+    labels: [ApplicantIndividualLabel] @belongsToMany(relation: "labels")
 }
 
 extend type Query {
@@ -63,7 +65,7 @@ extend type Mutation {
     ): ApplicantIndividualLabel @field(resolver: "ApplicantLabelMutator@delete")
 
     "Создать метку аппликанту"
-    createApplicantLabel(
+    attachApplicantIndividualLabel(
         "Аппликант"
         applicant_individual_id: ID!
         "Метка"
@@ -71,7 +73,7 @@ extend type Mutation {
     ): ApplicantLabels @field(resolver:"ApplicantIndividualLabelsMutator@attach")
 
     "Удалить метку"
-    deleteApplicantLabel(
+    detachApplicantIndividualLabel(
         applicant_individual_id: ID!
         applicant_individual_label_id: [ID]
     ): ApplicantLabels @field(resolver: "ApplicantIndividualLabelsMutator@detach")

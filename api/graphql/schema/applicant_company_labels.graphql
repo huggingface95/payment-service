@@ -12,6 +12,15 @@ type ApplicantCompanyLabel {
     member_id: Members! @belongsTo(relation:"Members")
 }
 
+type CompanyLabels {
+    "Получить компанию"
+    applicant_company_id: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
+    "Получить связанные метки"
+    applicant_company_label_id: [ID]
+    "Получить метки"
+    labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
+}
+
 extend type Query {
     """
     Получить метку по ID
@@ -39,7 +48,7 @@ extend type Mutation {
         hex_color_code: String! @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
         "Кто создал метку"
         member_id: ID!
-    ): ApplicantCompanyLabel @create
+    ): ApplicantCompanyLabel @field(resolver: "ApplicantCompanyLabelMutator@create")
 
     "Редактирование метки"
     updateApplicantCompanyLabel(
@@ -49,13 +58,27 @@ extend type Mutation {
         name: String!
         "HEX код метки"
         hex_color_code: String @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
-    ): ApplicantCompanyLabel @update
+    ): ApplicantCompanyLabel @field(resolver: "ApplicantCompanyLabelMutator@update")
 
     "Удалит метку"
     deleteApplicantCompanyLabel(
         id: ID!
         deleteAnyway: Boolean
     ): ApplicantCompanyLabel @field(resolver: "ApplicantCompanyLabelMutator@delete")
+
+    "Создать метку компании"
+    attachApplicantCompanyLabel(
+        "Аппликант"
+        applicant_company_id: ID!
+        "Метка"
+        applicant_company_label_id: [ID]
+    ): CompanyLabels @field(resolver:"ApplicantCompanyLabelMutator@attach")
+
+    "Удалить метку"
+    detachApplicantCompanyLabel(
+        applicant_company_id: ID!
+        applicant_company_label_id: [ID]
+    ): CompanyLabels @field(resolver: "ApplicantCompanyLabelMutator@detach")
 
 }
 
