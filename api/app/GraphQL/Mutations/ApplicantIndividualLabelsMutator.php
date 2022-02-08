@@ -20,21 +20,21 @@ class ApplicantIndividualLabelsMutator extends BaseMutator
 
     public function attach($root, array $args)
     {
-        $applicantLable = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
+        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
 
         if (isset($args['applicant_individual_label_id'])) {
-            $applicantLable->labels()->detach();
-            $applicantLable->labels()->attach($args['applicant_individual_label_id']);
+            $applicant->labels()->detach();
+            $applicant->labels()->attach($args['applicant_individual_label_id']);
         }
 
-        return $applicantLable;
+        return $applicant;
     }
 
     public function detach($root, array $args)
     {
-        $applicantLable = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
-        $applicantLable->labels()->detach($args['applicant_individual_label_id']);
-        return $applicantLable;
+        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
+        $applicant->labels()->detach($args['applicant_individual_label_id']);
+        return $applicant;
     }
 
 }

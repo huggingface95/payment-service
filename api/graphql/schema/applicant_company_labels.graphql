@@ -11,14 +11,6 @@ type ApplicantCompanyLabel {
     is_active: Boolean
 }
 
-type CompanyLabels {
-    "Получить компанию"
-    applicant_company_id: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
-    "Получить связанные метки"
-    applicant_company_label_id: [ID]
-    "Получить метки"
-    labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
-}
 
 extend type Query {
     """
@@ -70,13 +62,13 @@ extend type Mutation {
         applicant_company_id: ID!
         "Метка"
         applicant_company_label_id: [ID]
-    ): CompanyLabels @field(resolver:"ApplicantCompanyLabelMutator@attach")
+    ): ApplicantCompany @field(resolver:"ApplicantCompanyLabelMutator@attach")
 
     "Удалить метку"
     detachApplicantCompanyLabel(
         applicant_company_id: ID!
         applicant_company_label_id: [ID]
-    ): CompanyLabels @field(resolver: "ApplicantCompanyLabelMutator@detach")
+    ): ApplicantCompany @field(resolver: "ApplicantCompanyLabelMutator@detach")
 
 }
 

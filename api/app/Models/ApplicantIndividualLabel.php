@@ -46,10 +46,6 @@ class ApplicantIndividualLabel extends BaseModel
         return $this->hasMany(Members::class, 'company_id');
     }
 
-    public function labels()
-    {
-        return $this->belongsToMany(ApplicantIndividual::class,'applicant_individual_label_relation','applicant_individual_label_id','applicant_individual_id');
-    }
 
     public function ApplicantIndividualLabel()
     {
