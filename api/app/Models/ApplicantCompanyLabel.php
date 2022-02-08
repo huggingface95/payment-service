@@ -39,6 +39,11 @@ class ApplicantCompanyLabel extends BaseModel
         return $this->belongsTo(Members::class,'member_id','id');
     }
 
+    public function labels()
+    {
+        return $this->belongsToMany(ApplicantCompany::class,'applicant_company_label_relation','applicant_company_label_id','applicant_company_id');
+    }
+
     public function scopeCompanyId($query, $id)
     {
         $company = ApplicantCompany::where('id', '=', $id)->first();
