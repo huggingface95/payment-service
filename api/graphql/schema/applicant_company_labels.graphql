@@ -24,7 +24,7 @@ extend type Query {
     """
     applicantCompanyLabels(applicant_id: ID @eq, where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantCompanyLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantCompanyLabel!]! @field(resolver: "ApplicantCompanyLabelsQuery@enabled")
     applicantCompanyLabelsAvailable(company: ID @scope(name:"CompanyId"), orderBy: _ @orderBy(
         columns: ["id","name"],
     )): [ApplicantCompanyLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
