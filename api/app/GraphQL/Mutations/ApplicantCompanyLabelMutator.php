@@ -76,21 +76,21 @@ class ApplicantCompanyLabelMutator
 
     public function attach($root, array $args)
     {
-        $applicantCompanyLable = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
+        $applicantCompanyLabel = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
 
         if (isset($args['applicant_company_label_id'])) {
-            $applicantCompanyLable->labels()->detach();
-            $applicantCompanyLable->labels()->attach($args['applicant_company_label_id']);
+            $applicantCompanyLabel->labels()->detach();
+            $applicantCompanyLabel->labels()->attach($args['applicant_company_label_id']);
         }
 
-        return $applicantCompanyLable;
+        return $applicantCompanyLabel;
     }
 
     public function detach($root, array $args)
     {
-        $applicantCompanyLable = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
-        $applicantCompanyLable->labels()->detach($args['applicant_company_label_id']);
-        return $applicantCompanyLable;
+        $applicantCompanyLabel = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
+        $applicantCompanyLabel->labels()->detach($args['applicant_company_label_id']);
+        return $applicantCompanyLabel;
     }
 
 }
