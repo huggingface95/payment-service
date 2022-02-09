@@ -24,7 +24,7 @@ extend type Query {
     applicantIndividualLabels(applicant_id: ID @eq, where: _ @whereConditions(columns: ["name", "applicant_id"]), orderBy: _ @orderBy(
         columns: ["applicant_id","name"],
     )): [ApplicantIndividualLabel!]! @field(resolver: "ApplicantIndividualLabelsQuery@enabled")
-    applicantIndividualLabelsAvailable(applicant: ID @scope(name:"IndividualId"), orderBy: _ @orderBy(
+    applicantIndividualLabelsAvailable(applicant_id: ID @scope(name:"IndividualId"), orderBy: _ @orderBy(
         columns: ["id","name"],
     )): [ApplicantIndividualLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 
