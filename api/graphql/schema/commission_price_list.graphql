@@ -7,7 +7,7 @@ type CommissionPriceList {
     "Название шаблона"
     name: String!
     "Получить связанный платежный провайдер"
-    provider_id: PaymentProvider @belongsTo(relation:"paymentProvider")
+    provider: PaymentProvider @belongsTo(relation:"paymentProvider")
 	"Получить связанную платежную систему"
     payment_system: PaymentSystem @belongsTo(relation:"PaymentSystem")
 	"Получить связанный платежный шаблон"
