@@ -40,7 +40,7 @@ extend type Mutation {
         is_active: Boolean
     ): ApplicantIndividual @field(resolver:"ApplicantIndividualModulesMutator@attach")
 
-    "Активировать модуль аппликанту"
+    "Активировать или деактивировать модуль аппликанту"
     updateApplicantIndividualModule(
         "Аппликант"
         applicant_individual_id: ID!
