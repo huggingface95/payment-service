@@ -4,10 +4,12 @@ namespace App\Models;
 
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CommissionPriceList extends BaseModel
 {
 
+    use HasFactory;
     public $timestamps = false;
 
     protected $table="commission_price_list";
