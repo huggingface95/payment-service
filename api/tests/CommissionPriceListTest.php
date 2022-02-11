@@ -22,7 +22,7 @@ class CommissionPriceListTest extends TestCase
                         'data' => [[
                             'id' => strval($getRecord[0]->id),
                             'name' => $getRecord[0]->name,
-                            'provider_id' => [
+                            'provider' => [
                                 'id' => strval($getRecord[0]->provider_id)
                             ],
                             'payment_system' => [
@@ -36,14 +36,13 @@ class CommissionPriceListTest extends TestCase
                 ],
             ];
 
-
         $this->graphQL('
         {
             commissionPriceLists(first: 1) {
                 data {
                     id
                     name
-                    provider_id {
+                    provider {
                       id
                     }
                     payment_system {
@@ -69,7 +68,7 @@ class CommissionPriceListTest extends TestCase
                 {
                     id
                     name
-                    provider_id {
+                    provider {
                         id 
                     }
                     payment_system {
@@ -87,7 +86,7 @@ class CommissionPriceListTest extends TestCase
                 'commissionPriceList' => [
                     'id' => strval($commissionPriceList->id),
                     'name' => $commissionPriceList->name,
-                    'provider_id' => [
+                    'provider' => [
                         'id' => strval($commissionPriceList->provider_id)
                     ],
                     'payment_system' => [
@@ -99,6 +98,48 @@ class CommissionPriceListTest extends TestCase
                 ],
             ],
         ]);
+    }
+
+    public function testQueryWithWhereCommissionPriceLists()
+    {
+        $getRecord = CommissionPriceList::where(['payment_system_id' => 1])->get();
+
+        $data =
+            [
+                [
+                    'id' => strval($getRecord[0]->id),
+                    'name' => $getRecord[0]->name,
+                    'provider' => [
+                        'id' => strval($getRecord[0]->provider_id)
+                    ],
+                    'payment_system' => [
+                        'id' => strval($getRecord[0]->payment_system_id)
+                    ],
+                    'commission_template' => [
+                        'id' => strval($getRecord[0]->commission_template_id)
+                    ],
+                ]
+            ];
+
+        $this->graphQL('
+        {
+             commissionPriceLists(where: { column: PAYMENT_SYSTEM_ID, value: 1 }) {
+                data {
+                    id
+                    name
+                    provider {
+                        id
+                    }
+                    payment_system {
+                        id
+                    }
+                    commission_template {
+                        id
+                    } 
+                }
+             }    
+        }
+        ')->seeJsonContains($data);
     }
 
     public function testCreateCommissionPriceList()
@@ -135,40 +176,72 @@ class CommissionPriceListTest extends TestCase
         ]);
     }
 
-    public function testQueryWithWhereCommissionPriceLists()
+    public function testUpdateCommissionPriceList()
     {
-        $getRecord = CommissionPriceList::where(['payment_system_id' => 1])->get();
-        $data =
-            [
-                'data' => [
-                    'commissionPriceLists' => [
-                        'data' => [[
-                            'id' => strval($getRecord[0]->id),
-                            'name' => $getRecord[0]->name,
-                            'provider_id' => [
-                                'id' => strval($getRecord[0]->provider_id)
-                            ],
-                            'payment_system' => [
-                                'id' => strval($getRecord[0]->payment_system_id)
-                            ],
-                            'commission_template' => [
-                                'id' => strval($getRecord[0]->commission_template_id)
-                            ],
-                        ]],
-                    ],
-                ],
-            ];
+        $commissionPriceList = CommissionPriceList::factory()->create();
 
         $this->graphQL('
-        {
-             commissionPriceLists(where: { column: PAYMENT_SYSTEM_ID, value: 1 }) {
-                data {
-                    id
-                    name
-                }
-             }    
-        }
-        ')->seeJson($data);
+            mutation (
+                $id: ID!
+                $name: String!
+                $provider_id: ID!
+                $payment_system_id: ID!
+                $commission_template_id: ID!
+            ) {
+            updateCommissionPriceList(
+                id: $id
+                name: $name
+                provider_id: $provider_id
+                payment_system_id: $payment_system_id
+                commission_template_id: $commission_template_id
+            ) {
+                id
+                name
+            }
+            }
+        ', [
+            'id' => strval($commissionPriceList->id),
+            'name' => 'Updated Commission Price List',
+            'provider_id' => 1,
+            'payment_system_id' => 1,
+            'commission_template_id' => 1
+        ]);
+        $id = json_decode($this->response->getContent(), true);
+        $this->seeJson([
+            'data' => [
+                'updateCommissionPriceList' => [
+                    'id' => $id['data']['updateCommissionPriceList']['id'],
+                    'name' => $id['data']['updateCommissionPriceList']['name'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testDeleteCommissionPriceList()
+    {
+        $commissionPriceList = CommissionPriceList::factory()->create();
+
+        $this->graphQL('
+            mutation (
+                $id: ID!
+            ) {
+            deleteCommissionPriceList(
+                id: $id
+            ) {
+                id
+            }
+            }
+        ', [
+            'id' => strval($commissionPriceList->id)
+        ]);
+        $id = json_decode($this->response->getContent(), true);
+        $this->seeJson([
+            'data' => [
+                'deleteCommissionPriceList' => [
+                    'id' => $id['data']['deleteCommissionPriceList']['id'],
+                ],
+            ],
+        ]);
     }
 
 }
