@@ -12,6 +12,8 @@ type ApplicantCompany {
     url: String
     "Телефон"
     phone: String
+    "Верецифиорован телефон true/false"
+    is_verification_phone: Boolean
     "Получить связанную страну"
     country: Country @belongsTo(relation: "country")
     "Получить язык"
@@ -191,6 +193,8 @@ extend type Mutation {
         url: String
         "Телефон"
         phone: String
+        "Верецифиорован телефон true/false"
+        is_verification_phone: Boolean
         "страна"
         country_id: ID
         "ID языка"
