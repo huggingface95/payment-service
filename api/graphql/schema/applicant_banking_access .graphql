@@ -4,11 +4,11 @@ Access for Online Banking
 type ApplicantBankingAccess {
     id: ID!
     "Получить связанного applicant individual"
-    applicant_individual_id: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
+    applicant_individual: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
     "Получить связанного applicant company"
-    applicant_company_id: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
+    applicant_company: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
     "Получить связанного Member"
-    member_id: Members @belongsTo(relation: "Members")
+    member: Members @belongsTo(relation: "Members")
     "Может создать платеж"
     can_create_payment: Boolean!
     "Может подписать платеж"
