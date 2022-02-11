@@ -1,0 +1,92 @@
+"""
+Access for Online Banking
+"""
+type ApplicantBankingAccess {
+    id: ID!
+    "Получить связанного applicant individual"
+    applicant_individual: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
+    "Получить связанного applicant company"
+    applicant_company: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
+    "Получить связанного Member"
+    member: Members @belongsTo(relation: "Members")
+    "Может создать платеж"
+    can_create_payment: Boolean!
+    "Может подписать платеж"
+    can_sign_payment: Boolean!
+    "Contact administrator"
+    contact_administrator: Boolean!
+    "Ежедневный лимит"
+    daily_limit: Float!
+    "Ежемесячный лимит"
+    monthly_limit: Float!
+    "Лимит операций"
+    operation_limit: Float!
+}
+
+extend type Query {
+    """
+    Получить список пользователей
+    orderBy: [{ column: APPLICANT_INDIVIDUAL_ID, order: DESC }] сортировка по ID, по имени, фамилии, email
+    where:{column: APPLICANT_INDIVIDUAL_ID, value: ""} фильтр по имени, фамилии, Email
+    """
+    applicantBankingAccess(
+        where: _ @whereConditions(
+        columns: ["applicant_individual_id","applicant_company_id","member_id"]),
+        orderBy: _ @orderBy(
+        columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
+    )): [ApplicantBankingAccess!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать applicant company"
+    createApplicantBankingAccess (
+        "Applicant individual"
+        applicant_individual_id: ID!
+        "Applicant company"
+        applicant_company_id: ID!
+        "Member"
+        member_id: ID!
+        "Может создать платеж"
+        can_create_payment: Boolean!
+        "Может подписать платеж"
+        can_sign_payment: Boolean!
+        "Contact administrator"
+        contact_administrator: Boolean!
+        "Ежедневный лимит"
+        daily_limit: Float!
+        "Ежемесячный лимит"
+        monthly_limit: Float!
+        "Лимит операций"
+        operation_limit: Float!
+    ): ApplicantBankingAccess @create
+
+    "Редактирование applicant company"
+    updateApplicantBankingAccess (
+        id: ID!
+        "Applicant individual"
+        applicant_individual_id: ID!
+        "Applicant company"
+        applicant_company_id: ID!
+        "Member"
+        member_id: ID!
+        "Может создать платеж"
+        can_create_payment: Boolean!
+        "Может подписать платеж"
+        can_sign_payment: Boolean!
+        "Contact administrator"
+        contact_administrator: Boolean!
+        "Ежедневный лимит"
+        daily_limit: Float!
+        "Ежемесячный лимит"
+        monthly_limit: Float!
+        "Лимит операций"
+        operation_limit: Float!
+    ): ApplicantBankingAccess @update
+
+    "Удалить пользователя"
+    deleteApplicantBankingAccess (
+        id: ID!
+    ): ApplicantBankingAccess @delete
+
+}
+
