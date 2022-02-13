@@ -45,6 +45,7 @@ class ApplicantCompany extends Model
         'account_manager_member_id',
         'applicant_risk_level_id',
         'applicant_kyc_level_id',
+        'is_verification_phone'
     ];
 
     protected $casts = [
