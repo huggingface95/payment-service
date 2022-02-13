@@ -20,5 +20,6 @@ $router->get('/', function () use ($router) {
 $router->post('api/files', ['uses' => 'FilesController@upload']);
 $router->get('api/pdf', ['uses' => 'FilesController@createpdf']);
 $router->post('api/email', ['uses' => 'FilesController@sendreq']);
+$router->post('api/sms', ['uses' => 'SmsController@send']);
 
 $router->get('/test', ['uses' => 'ExampleController@index']);
