@@ -18,6 +18,8 @@ type DepartmentPosition {
     name: String !
     "Активен = true или не активный = false"
     is_active: Boolean
+    "Получить компанию"
+    company: Companies @belongsTo(relation: "company")
     "Получить департамент"
     department: Departments @belongsTo(relation: "department")
 }

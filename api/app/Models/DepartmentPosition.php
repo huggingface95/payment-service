@@ -30,6 +30,11 @@ class DepartmentPosition extends Model
         return $this->hasMany(Members::class);
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Companies::class,'company_id');
+    }
+
     public static function getPositionsIdByDepartment(int $departementId)
     {
         $positions = collect(self::where('department_id',$departementId)->get(['id']));
