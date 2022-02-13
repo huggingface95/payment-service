@@ -6,6 +6,8 @@ type ApplicantRiskLevelHistory {
     id: ID!
     "Комментарий"
     comment: String!
+    "Дата создания сообщения"
+    created_at: DateTime
     "Получить аппликанта"
     applicant_id: ApplicantIndividual @belongsTo(relation:"ApplicantIndividual")
     "Получить владельца"
