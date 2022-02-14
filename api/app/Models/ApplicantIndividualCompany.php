@@ -18,6 +18,8 @@ class ApplicantIndividualCompany extends Model
 
     ];
 
+    public $timestamps = false;
+
     public function ApplicantIndividual()
     {
         return $this->belongsTo(ApplicantIndividual::class,'applicant_individual_id','id');
