@@ -19,8 +19,7 @@ class DepartmentPositionMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
-
-        if ($args['department_id']) {
+        if (isset($args['department_id'])) {
             $department = Departments::find($args[$args['department_id']]);
             unset($args['department_id']);
             if (!$department) {
