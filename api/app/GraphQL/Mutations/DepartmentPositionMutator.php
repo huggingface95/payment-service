@@ -26,7 +26,7 @@ class DepartmentPositionMutator extends BaseMutator
                 throw new GraphqlException('Department not found',"not found", 404);
             }
             $position = DepartmentPosition::create($args);
-            $department->attach($position->id);
+            $department->positions()->attach($position->id);
         } else {
             $position = DepartmentPosition::create($args);
         }
