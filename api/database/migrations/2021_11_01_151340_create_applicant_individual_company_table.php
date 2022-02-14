@@ -14,6 +14,7 @@ class CreateApplicantIndividualCompanyTable extends Migration
     public function up()
     {
         Schema::create('applicant_individual_company', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('applicant_individual_id');
             $table->unsignedBigInteger('applicant_company_id');
             $table->unsignedBigInteger('applicant_individual_company_relation_id');
