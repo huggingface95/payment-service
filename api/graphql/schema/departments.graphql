@@ -72,7 +72,7 @@ extend type Mutation {
         department_id: ID
         "ID компании"
         company_id: ID!
-    ): DepartmentPosition @create
+    ): DepartmentPosition @field(resolver:"DepartmentPositionMutator@create")
 
     "Удалить департамент"
     deleteDepartment(id: ID!): Departments @field(resolver:"DepartmentMutator@delete")
