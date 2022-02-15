@@ -33,8 +33,6 @@ class CreateApplicantCompaniesTable extends Migration
             $table->string('reg_number',100)->nullable();
             $table->string('license_number',100)->nullable();
             $table->string('company_type',100)->nullable();
-            $table->string('password_hash',255);
-            $table->string('password_salt',255);
             $table->jsonb('company_info_additional_fields')->nullable();
             $table->jsonb('contacts_additional_fields')->nullable();
             $table->jsonb('profile_additional_fields')->nullable();
