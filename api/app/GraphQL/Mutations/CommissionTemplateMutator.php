@@ -11,9 +11,21 @@ class CommissionTemplateMutator
      * @param  null  $_
      * @param  array<string, mixed>  $args
      */
+
+    public function create($root, array $args)
+    {
+        $memberId = CommissionTemplate::DEFAULT_MEMBER_ID;
+        $args['member_id'] = $memberId;
+        $commissionTemplate = CommissionTemplate::create($args);
+
+        return $commissionTemplate;
+    }
+
     public function update($_, array $args)
     {
         $commissionTemplate = CommissionTemplate::find($args['id']);
+        $memberId = CommissionTemplate::DEFAULT_MEMBER_ID;
+        $args['member_id'] = $memberId;
         if (isset($args['business_activity'])) {
             $commissionTemplate->businessActivity()->detach();
             $commissionTemplate->businessActivity()->attach($args['business_activity']);

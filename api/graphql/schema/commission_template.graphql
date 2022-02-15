@@ -44,9 +44,11 @@ extend type Mutation {
     createCommissionTemplate(
         "Название шаблона"
         name: String!
+        "Описание шаблона"
+        description: String
         "ID платежного провайдера"
         payment_provider_id: ID!
-    ):CommissionTemplate @create
+    ):CommissionTemplate @field(resolver: "CommissionTemplateMutator@create")
 
     "Обновление полей шаблона комиссий"
     updateCommissionTemplate(
