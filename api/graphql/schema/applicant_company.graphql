@@ -71,7 +71,6 @@ type ApplicantCompany {
     "Получить заметки"
     notes: [ApplicantCompanyNotes] @hasMany(relation: "notes")
     modules: [ApplicantModules] @hasMany (relation: "modules")
-    company_position: ApplicantIndividualCompanyPosition @belongsTo(relation: "ApplicantIndividualCompanyPosition")
 }
 
 "Модули"
@@ -269,7 +268,7 @@ extend type Mutation {
         applicant_company_id: ID!
         applicant_individual_company_relation_id: ID
         applicant_individual_company_position_id: ID
-    ): ApplicantIndividualCompany @update
+    ): ApplicantIndividualCompany @field(resolver: "ApplicantIndividualCompanyMutator@update")
 
     "Удалить связь Individual с Company"
     deleteApplicantIndividualCompany(

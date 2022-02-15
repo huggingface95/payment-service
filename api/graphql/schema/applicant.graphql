@@ -107,14 +107,6 @@ extend type Query {
         created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at"]), orderBy: _ @orderBy(
         columns: ["id","first_name","last_name", "email","created_at"],
     )): [ApplicantIndividual!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
-    """
-    Получить список applicant companies по applicant individual
-    orderBy: [{ column: ID, order: DESC }] сортировка по ID
-    where:{column: applicant_company_id, operator: LIKE, value: ""} фильтр по applicant_company_id
-    """
-    getMatchedCompanies(applicant_individual_id: ID! @eq, orderBy: _ @orderBy(
-        columns: ["id"],
-    )): [ApplicantIndividualCompany!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }
 
 extend type Mutation {
