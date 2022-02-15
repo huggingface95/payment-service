@@ -15,14 +15,14 @@ class ApplicantIndividualCompany extends Model
      * @var array
      */
     protected $fillable = [
-
+        'applicant_individual_id', 'applicant_company_id', 'applicant_individual_company_relation_id', 'applicant_individual_company_position_id'
     ];
 
     public $timestamps = false;
 
     public function ApplicantIndividual()
     {
-        return $this->belongsTo(ApplicantIndividual::class,'applicant_individual_id','id');
+        return $this->belongsTo(ApplicantIndividual::class,'applicant_individual_id', 'id');
     }
 
     public function ApplicantIndividualCompanyRelation()

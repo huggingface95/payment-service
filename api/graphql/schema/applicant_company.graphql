@@ -114,7 +114,7 @@ extend type Query {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     where:{column: applicant_company_id, operator: LIKE, value: ""} фильтр по applicant_company_id
     """
-    getMatchedUsers(where: _ @whereConditions(columns: ["applicant_company_id"]), orderBy: _ @orderBy(
+    getMatchedUsers(applicant_company_id: ID! @eq, orderBy: _ @orderBy(
         columns: ["id"],
     )): [ApplicantIndividualCompany!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }
