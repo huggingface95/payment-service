@@ -155,5 +155,10 @@ class ApplicantIndividual extends Model
         return $this->belongsTo(ApplicantIndividual::class,'applicant_individual_id','id');
     }
 
+    public function companies()
+    {
+        return $this->belongsToMany(ApplicantCompany::class, 'applicant_individual_company', 'applicant_individual_id', 'applicant_company_id');
+    }
+
 
 }

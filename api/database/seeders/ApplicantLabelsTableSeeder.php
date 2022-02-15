@@ -14,7 +14,7 @@ class ApplicantLabelsTableSeeder extends Seeder
      */
     public function run()
     {
-        ApplicantIndividualLabel::create(['name'=>'Address Not Complied', 'hex_color_code'=>'#cccccc']);
-        ApplicantIndividualLabel::create(['name'=>'Personal Info Verified', 'hex_color_code'=>'#0e6548']);
+        ApplicantIndividualLabel::create(['name'=>'Address Not Complied', 'hex_color_code'=>'#cccccc', 'member_id'=>2]);
+        ApplicantIndividualLabel::create(['name'=>'Personal Info Verified', 'hex_color_code'=>'#0e6548', 'member_id'=>2]);
     }
 }

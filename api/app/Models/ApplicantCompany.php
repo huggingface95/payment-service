@@ -158,6 +158,9 @@ class ApplicantCompany extends Model
         return $this->belongsTo(ApplicantCompany::class,'applicant_company_id','id');
     }
 
-
+    public function ApplicantIndividualCompanyPosition()
+    {
+        return $this->belongsTo(ApplicantIndividualCompanyPosition::class,'applicant_company_id','id');
+    }
 
 }
