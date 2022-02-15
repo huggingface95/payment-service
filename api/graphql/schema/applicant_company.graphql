@@ -71,6 +71,7 @@ type ApplicantCompany {
     "Получить заметки"
     notes: [ApplicantCompanyNotes] @hasMany(relation: "notes")
     modules: [ApplicantModules] @hasMany (relation: "modules")
+    company_position: ApplicantIndividualCompany @belongsTo(relation: "applicantIndividualCompany")
 }
 
 "Модули"
