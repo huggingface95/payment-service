@@ -18,6 +18,12 @@ type CommissionTemplate {
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Получить список бизнесов"
     business_activity: [BusinessActivity] @belongsToMany(relation: "businessActivity")
+    "Получить связанного мембера"
+    owner: Members @belongsTo(relation: "owner")
+    "Получить связанный аккаунт"
+    account: Accounts @belongsTo(relation: "account")
+    "Получить компанию"
+    company: [Companies] @belongsToMany(relation: "company")
 }
 
 extend type Query {
@@ -29,10 +35,16 @@ extend type Query {
     where:{column: NAME, operator: EQ, value: ""} фильтр по name
     hasPaymentProvider: {column:NAME,operator:GTE,value:PaymentProviderName} фильтр по провайдеру системам
     hasBusinessActivity: {column:NAME,operator:GTE,value:BusinessActivityName} фильтр по бизнесу
+    hasOwner: {column:NAME,operator:GTE,value:MemberName} фильтр по владельцу
+    hasAccount: {column:NAME,operator:GTE,value:AccountName} фильтр по имени аккаунта
+    hasCompany: {column:NAME,operator:GTE,value:CompanyName} фильтр по имени компании
     """
     commissionTemplates(
         hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
         hasBusinessActivity: _ @whereHasConditions(columns: ["name", "id"]),
+        hasOwner: _ @whereHasConditions(columns: ["fullname"]),
+        hasAccount: _ @whereHasConditions(columns: ["account_name"]),
+        hasCompany: _ @whereHasConditions(columns: ["name"]),
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
         where: _ @whereConditions(columns: ["id","name","is_active"]),
         orderBy: _ @orderBy(columns: ["id","name","is_active","description"])

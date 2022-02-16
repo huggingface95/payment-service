@@ -83,10 +83,23 @@ class CommissionTemplate extends BaseModel
         return $query->join('payment_provider','commission_template.payment_provider_id','=','payment_provider.id')->orderBy('payment_provider.name',$sort)->select('commission_template.*');
     }
 
-    public function members()
+    public function owner()
     {
         return $this->belongsTo(Members::class,'member_id','id');
     }
+
+    public function account()
+    {
+        return $this->belongsTo(Accounts::class,'member_id','owner_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsToMany(Companies::class,'members','id','company_id');
+    }
+
+
+
 
 
 }
