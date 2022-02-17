@@ -33,9 +33,9 @@ class ApplicantBankingTest extends TestCase
                             'can_create_payment' => $getRecord[0]->can_create_payment,
                             'can_sign_payment' => $getRecord[0]->can_sign_payment,
                             'contact_administrator' => $getRecord[0]->contact_administrator,
-                            'daily_limit' => strval($getRecord[0]->daily_limit),
-                            'monthly_limit' => strval($getRecord[0]->monthly_limit),
-                            'operation_limit' => strval($getRecord[0]->operation_limit)
+                            'daily_limit' => intval($getRecord[0]->daily_limit),
+                            'monthly_limit' => intval($getRecord[0]->monthly_limit),
+                            'operation_limit' => intval($getRecord[0]->operation_limit)
                         ]],
                     ],
                 ],
@@ -66,50 +66,65 @@ class ApplicantBankingTest extends TestCase
         }
         ')->seeJson($data);
     }
-    /*
-    public function testQueryCommissionPriceList()
+
+    public function testQueryWhereApplicantBankingAccess()
     {
-        $commissionPriceList = CommissionPriceList::factory()->create();
+        $applicantBankingAccess = ApplicantBankingAccess::factory()->create();
+        $data =
+            [
+                [
+                'id' => strval($applicantBankingAccess->id),
+                'applicant_individual' => [
+                    'id' => strval($applicantBankingAccess->applicant_individual_id)
+                ],
+                'applicant_company' => [
+                    'id' => strval($applicantBankingAccess->applicant_company_id)
+                ],
+                'member' => [
+                    'id' => strval($applicantBankingAccess->member_id)
+                ],
+                'can_create_payment' => $applicantBankingAccess->can_create_payment,
+                'can_sign_payment' => $applicantBankingAccess->can_sign_payment,
+                'contact_administrator' => $applicantBankingAccess->contact_administrator,
+                'daily_limit' => intval($applicantBankingAccess->daily_limit),
+                'monthly_limit' => intval($applicantBankingAccess->monthly_limit),
+                'operation_limit' => intval($applicantBankingAccess->operation_limit)
+                ]
+            ];
 
         $this->graphQL('
-            query CommissionPriceList($id:ID!)
+            query ApplicantBankingAccess($applicant_individual_id:Mixed)
             {
-                commissionPriceList(id: $id)
-                {
-                    id
-                    name
-                    provider {
-                        id
+                 applicantBankingAccess(
+                    where: { column: APPLICANT_INDIVIDUAL_ID, operator: EQ, value: $applicant_individual_id }
+                    orderBy: { column: ID, order: DESC }
+                    ) 
+                    {
+                        data {
+                            id
+                            applicant_individual {
+                              id
+                            }
+                            applicant_company {
+                              id
+                            }
+                            member {
+                              id
+                            }
+                            can_create_payment
+                            can_sign_payment
+                            contact_administrator
+                            daily_limit
+                            monthly_limit
+                            operation_limit
+                        }
                     }
-                    payment_system {
-                        id
-                    }
-                    commission_template {
-                        id
-                    }
-                }
             }
         ',[
-            'id' => strval($commissionPriceList->id)
-        ])->seeJson([
-            'data' => [
-                'commissionPriceList' => [
-                    'id' => strval($commissionPriceList->id),
-                    'name' => $commissionPriceList->name,
-                    'provider' => [
-                        'id' => strval($commissionPriceList->provider_id)
-                    ],
-                    'payment_system' => [
-                        'id' => strval($commissionPriceList->payment_system_id)
-                    ],
-                    'commission_template' => [
-                        'id' => strval($commissionPriceList->commission_template_id)
-                    ],
-                ],
-            ],
-        ]);
+            'applicant_individual_id' => strval($applicantBankingAccess->applicant_individual_id)
+        ])->seeJsonContains($data);
     }
-
+    /*
     public function testQueryWithWhereCommissionPriceLists()
     {
         $getRecord = CommissionPriceList::where(['payment_system_id' => 1])->get();

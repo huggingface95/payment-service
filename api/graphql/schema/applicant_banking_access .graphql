@@ -27,7 +27,7 @@ extend type Query {
     """
     Получить список пользователей
     orderBy: [{ column: APPLICANT_INDIVIDUAL_ID, order: DESC }] сортировка по ID, по имени, фамилии, email
-    where:{column: APPLICANT_INDIVIDUAL_ID, value: ""} фильтр по имени, фамилии, Email
+    where:{column: APPLICANT_INDIVIDUAL_ID, value: ""} фильтр по applicant_individual_id
     """
     applicantBankingAccess(
         where: _ @whereConditions(
