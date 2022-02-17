@@ -163,4 +163,14 @@ class ApplicantCompany extends Model
         return $this->belongsTo(ApplicantIndividualCompany::class,'id', 'applicant_company_id');
     }
 
+    public function ownerRelation()
+    {
+        return $this->belongsTo(ApplicantIndividualCompany::class,'owner_id', 'applicant_individual_id', 'applicant_individual_company_relation_id');
+    }
+
+    public function ownerPosition()
+    {
+        return $this->belongsTo(ApplicantIndividualCompany::class,'owner_id', 'applicant_individual_id', 'applicant_individual_company_position_id');
+    }
+
 }
