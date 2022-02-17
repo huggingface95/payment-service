@@ -124,6 +124,64 @@ class ApplicantBankingTest extends TestCase
             'applicant_individual_id' => strval($applicantBankingAccess->applicant_individual_id)
         ])->seeJsonContains($data);
     }
+
+    public function testCreateApplicantBankingAccess()
+    {
+        $this->graphQL('
+            mutation (
+                $applicant_individual_id: ID!
+                $applicant_company_id: ID!
+                $member_id: ID!
+                $can_create_payment: Boolean!
+                $can_sign_payment: Boolean!
+                $contact_administrator: Boolean!
+                $daily_limit: Int!
+                $monthly_limit: Int!
+                $operation_limit: Int!
+            ) {
+             createApplicantBankingAccess(
+                applicant_individual_id: 1
+                applicant_company_id: 1
+                member_id: 2
+                can_create_payment: true
+                can_sign_payment: false
+                contact_administrator: false
+                daily_limit: 3000
+                monthly_limit: 30000
+                operation_limit: 1000
+              ) {
+                id
+                applicant_individual {
+                  id
+                }
+                applicant_company {
+                  id
+                }
+                member {
+                  id
+                }
+                can_create_payment
+                can_sign_payment
+                contact_administrator
+                daily_limit
+                monthly_limit
+                monthly_limit
+              }
+        ', [
+            'name' => 'Test Commission Price List',
+            'provider_id' => 1,
+            'payment_system_id' => 1,
+            'commission_template_id' => 1
+        ]);
+        $id = json_decode($this->response->getContent(), true);
+        $this->seeJson([
+            'data' => [
+                'createCommissionPriceList' => [
+                    'id' => $id['data']['createCommissionPriceList']['id'],
+                ],
+            ],
+        ]);
+    }
     /*
     public function testQueryWithWhereCommissionPriceLists()
     {
