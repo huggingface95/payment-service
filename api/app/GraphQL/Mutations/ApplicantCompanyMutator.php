@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividualCompany;
 
 
 class ApplicantCompanyMutator extends BaseMutator
@@ -27,6 +29,10 @@ class ApplicantCompanyMutator extends BaseMutator
         }
 
         $applicant = ApplicantCompany::create($args);
+
+        if (isset($args['owner_id'])) {
+            $this->setOwner($applicant, $args);
+        }
 
         if (isset($args['labels'])) {
             $applicant->labels()->detach($args['labels']);
@@ -57,6 +63,10 @@ class ApplicantCompanyMutator extends BaseMutator
             $args['profile_additional_fields']  = $this->setAdditionalField($args['profile_additional_fields']);
         }
 
+        if (isset($args['owner_id'])) {
+            $this->setOwner($applicant, $args);
+        }
+
         if (isset($args['labels'])) {
             $applicant->labels()->detach($args['labels']);
             $applicant->labels()->attach($args['labels']);
@@ -64,6 +74,28 @@ class ApplicantCompanyMutator extends BaseMutator
 
         $applicant->update($args);
         return $applicant;
+    }
+
+    /**
+     * @param ApplicantCompany $applicant
+     * @param array $args
+     * @return ApplicantIndividualCompany
+     * @throws GraphqlException
+     */
+    private function setOwner(ApplicantCompany $applicant, array $args):ApplicantIndividualCompany
+    {
+        try {
+            return ApplicantIndividualCompany::create([
+                'applicant_individual_id'=> $args['owner_id'],
+                'applicant_company_id' => $applicant->id,
+                'applicant_individual_company_relation_id' => ($args['owner_relation_id']) ?? $args['owner_relation_id'],
+                'applicant_individual_company_position_id' => ($args['owner_position_id']) ?? $args['owner_position_id']
+            ]);
+        }
+        catch (\Exception $exception) {
+            throw new GraphqlException($exception->getMessage());
+        }
+
     }
 
 }

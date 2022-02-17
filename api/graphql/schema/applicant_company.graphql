@@ -181,6 +181,10 @@ extend type Mutation {
         account_manager_member_id: ID
         "ID owner"
         owner_id: ID
+        "ID relation владельца"
+        owner_relation_id: ID
+        "ID position владельца"
+        owner_position_id: ID
         "Массив ID меток"
         labels: [ID]
     ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@create")
@@ -248,6 +252,10 @@ extend type Mutation {
         account_manager_member_id: ID
         "ID owner"
         owner_id: ID
+        "ID relation владельца"
+        owner_relation_id: ID
+        "ID position владельца"
+        owner_position_id: ID
         "Массив ID меток"
         labels: [ID]
     ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@update")
