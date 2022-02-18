@@ -19,11 +19,11 @@ type CommissionTemplate {
     "Получить список бизнесов"
     business_activity: [BusinessActivity] @belongsToMany(relation: "businessActivity")
     "Получить связанного мембера"
-    owner: Members @belongsTo(relation: "owner")
+    owner: [ApplicantIndividual] @belongsToMany(relation: "owner")
     "Получить связанный аккаунт"
     account: Accounts @belongsTo(relation: "account")
     "Получить компанию"
-    company: [Companies] @belongsToMany(relation: "company")
+    company: [ApplicantCompany] @belongsToMany(relation: "company")
 }
 
 extend type Query {
