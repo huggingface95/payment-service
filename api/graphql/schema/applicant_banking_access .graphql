@@ -21,6 +21,8 @@ type ApplicantBankingAccess {
     monthly_limit: Float!
     "Лимит операций"
     operation_limit: Float!
+    "Использованный лимит"
+    used_limit: Float
 }
 
 extend type Query {
@@ -58,6 +60,8 @@ extend type Mutation {
         monthly_limit: Float!
         "Лимит операций"
         operation_limit: Float!
+        "Использованный лимит"
+        used_limit: Float
     ): ApplicantBankingAccess @create
 
     "Редактирование applicant company"
@@ -81,6 +85,8 @@ extend type Mutation {
         monthly_limit: Float!
         "Лимит операций"
         operation_limit: Float!
+        "Использованный лимит"
+        used_limit: Float
     ): ApplicantBankingAccess @update
 
     "Удалить пользователя"
