@@ -55,6 +55,7 @@ class CreateApplicantTable extends Migration
             $table->foreign('citizenship_country_id')->references('id')->on('countries');
             $table->foreign('birth_country_id')->references('id')->on('countries');
         });
+        DB::raw("alter table applicant_table add column fullname varchar(255) GENERATED ALWAYS AS (first_name || ' '|| last_name) STORED");
     }
 
     /**

@@ -52,6 +52,8 @@ type ApplicantIndividual {
     personal_additional_fields: JSON
     "Дополнительные поля блока контакты"
     contacts_additional_fields: JSON
+    "Полное имя"
+    fullname: String
     "Получить статусы"
     status: ApplicantStatus @belongsTo(relation: "status")
     "Получить состояния"
