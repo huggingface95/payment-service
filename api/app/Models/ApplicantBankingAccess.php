@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 
 class ApplicantBankingAccess extends Model
 {
 
+    use HasFactory;
     protected $table="applicant_banking_access";
 
     /**
@@ -16,7 +19,7 @@ class ApplicantBankingAccess extends Model
      * @var array
      */
     protected $fillable = [
-        'applicant_individual_id','applicant_company_id','member_id','can_create_payment','can_sign_payment','contact_administrator','daily_limit','monthly_limit','operation_limit'
+        'applicant_individual_id','applicant_company_id','member_id','can_create_payment','can_sign_payment','contact_administrator','daily_limit','monthly_limit','operation_limit', 'used_limit'
     ];
     public $timestamps = false;
 

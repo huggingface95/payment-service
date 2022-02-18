@@ -21,13 +21,15 @@ type ApplicantBankingAccess {
     monthly_limit: Float!
     "Лимит операций"
     operation_limit: Float!
+    "Использованный лимит"
+    used_limit: Float
 }
 
 extend type Query {
     """
     Получить список пользователей
     orderBy: [{ column: APPLICANT_INDIVIDUAL_ID, order: DESC }] сортировка по ID, по имени, фамилии, email
-    where:{column: APPLICANT_INDIVIDUAL_ID, value: ""} фильтр по имени, фамилии, Email
+    where:{column: APPLICANT_INDIVIDUAL_ID, value: ""} фильтр по applicant_individual_id
     """
     applicantBankingAccess(
         where: _ @whereConditions(
@@ -58,6 +60,8 @@ extend type Mutation {
         monthly_limit: Float!
         "Лимит операций"
         operation_limit: Float!
+        "Использованный лимит"
+        used_limit: Float
     ): ApplicantBankingAccess @create
 
     "Редактирование applicant company"
@@ -81,6 +85,8 @@ extend type Mutation {
         monthly_limit: Float!
         "Лимит операций"
         operation_limit: Float!
+        "Использованный лимит"
+        used_limit: Float
     ): ApplicantBankingAccess @update
 
     "Удалить пользователя"

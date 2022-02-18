@@ -44,6 +44,8 @@ type Payments {
     payment_number: String!
     created_at: DateTime
     updated_at: DateTime
+    "Получить связанного мембера"
+    owner: Members @belongsTo(relation: "owner")
 }
 
 
@@ -53,8 +55,15 @@ extend type Query {
     """
     Получить список платежей
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    Фильтры по
+    hasCompanies: {column:NAME,operator:GTE,value:CompanyName} фильтр по имени компании
+    hasAccounts: {column:ACCOUNT_ID,operator:GTE,value:AccountNumber} фильтр по account number
+    hasOwner: {column:NAME,operator:GTE,value:MemberName} фильтр по владельцу
     """
     payments(
+        hasCompanies: _ @whereHasConditions(columns: ["name"]),
+        hasAccounts: _ @whereHasConditions(columns: ["account_id"]),
+        hasOwner: _ @whereHasConditions(columns: ["fullname"]),
         created_at: DateRange @whereBetween,
         where: _ @whereConditions(columns: ["sender_bank_account","type_id","urgency_id", "status", "payment_provider_id", "company_id", "account_id"]),
         orderBy: _ @orderBy(columns: ["id", "created_at", "amount"])
@@ -104,7 +113,7 @@ extend type Mutation {
         payment_number: String!
         created_at: DateTime
         updated_at: DateTime
-    ): Payments @create
+    ):Payments @field(resolver: "PaymentsMutator@create")
 
     "Редактировать платеж"
         updatePayment(
@@ -147,7 +156,7 @@ extend type Mutation {
             company_id: ID!
             "Номер платежа"
             payment_number: String!
-        ): Payments @update
+        ):Payments @field(resolver: "PaymentsMutator@update")
 
         "Удалить платеж"
             deletePayment(
