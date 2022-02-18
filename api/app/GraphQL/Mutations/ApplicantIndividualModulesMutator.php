@@ -4,8 +4,6 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\ApplicantIndividual;
 use App\Models\ApplicantIndividualModules;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 
 class ApplicantIndividualModulesMutator extends BaseMutator
@@ -20,11 +18,13 @@ class ApplicantIndividualModulesMutator extends BaseMutator
 
     public function attach($root, array $args)
     {
-        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
+        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_company_id'])->first();
 
         if (isset($args['applicant_module_id'])) {
-            $applicant->modules()->detach();
-            $applicant->modules()->attach($args['applicant_module_id']);
+            $applicant->modules()->delete();
+            foreach ($args['applicant_module_id'] as $module) {
+                ApplicantIndividualModules::insert(['applicant_module_id'=> $module, 'applicant_company_id' => $args['applicant_company_id']]);
+            }
         }
 
         return $applicant;
@@ -32,20 +32,26 @@ class ApplicantIndividualModulesMutator extends BaseMutator
 
     public function detach($root, array $args)
     {
-        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
-        $applicant->modules()->detach($args['applicant_module_id']);
+        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_company_id'])->first();
+        $applicant->modules()->delete();
         return $applicant;
     }
 
     public function update($root, array $args)
     {
-        $applicantModule = ApplicantIndividualModules::where([
-            'applicant_individual_id' => $args['applicant_individual_id'],
-            'applicant_module_id' => $args['applicant_module_id']
-        ])->first();
-        $applicantModule->is_active = $args['is_active'];
-        $applicantModule->update();
-        return $applicantModule;
+        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_company_id'])->first();
+
+        if (isset($args['applicant_module_id'])) {
+            foreach ($args['applicant_module_id'] as $module) {
+                ApplicantIndividualModules::where([
+                    'applicant_company_id' => $args['applicant_company_id'],
+                    'applicant_module_id' => $module
+                ])->update(['is_active'=>$args['is_active']]);
+            }
+
+        }
+
+        return $applicant;
     }
 
 }

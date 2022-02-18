@@ -4,10 +4,6 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantCompanyModules;
-use App\Models\ApplicantIndividual;
-use App\Models\ApplicantIndividualCompany;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 
 class ApplicantCompanyModulesMutator extends BaseMutator
@@ -22,28 +18,28 @@ class ApplicantCompanyModulesMutator extends BaseMutator
 
     public function attach($root, array $args)
     {
-        $applicantModule = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
+        $applicant = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
 
         if (isset($args['applicant_module_id'])) {
-            $applicantModule->modules()->delete();
+            $applicant->modules()->delete();
             foreach ($args['applicant_module_id'] as $module) {
                 ApplicantCompanyModules::insert(['applicant_module_id'=> $module, 'applicant_company_id' => $args['applicant_company_id']]);
             }
         }
 
-        return $applicantModule;
+        return $applicant;
     }
 
     public function detach($root, array $args)
     {
-        $applicantModule = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
-        $applicantModule->modules()->delete();
-        return $applicantModule;
+        $applicant = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
+        $applicant->modules()->delete();
+        return $applicant;
     }
 
     public function update($root, array $args)
     {
-        $applicantModule = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
+        $applicant = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
 
         if (isset($args['applicant_module_id'])) {
             foreach ($args['applicant_module_id'] as $module) {
@@ -55,7 +51,7 @@ class ApplicantCompanyModulesMutator extends BaseMutator
 
         }
 
-        return $applicantModule;
+        return $applicant;
     }
 
 }
