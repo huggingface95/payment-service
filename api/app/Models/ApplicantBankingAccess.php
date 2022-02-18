@@ -11,6 +11,10 @@ class ApplicantBankingAccess extends Model
 {
 
     use HasFactory;
+
+    public $day_used_limit = 0;
+    public $month_used_limit =0;
+
     protected $table="applicant_banking_access";
 
     /**
