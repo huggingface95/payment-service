@@ -41,7 +41,7 @@ extend type Mutation {
         applicant_module_id: [ID]
         "Активный или неактивный"
         is_active: Boolean
-    ): ApplicantCompanyModules @field(resolver:"ApplicantCompanyModulesMutator@update")
+    ): ApplicantCompany @field(resolver:"ApplicantCompanyModulesMutator@update")
 
     "Удалить модуль"
     deleteApplicantCompanyModule(
