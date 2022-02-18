@@ -70,18 +70,12 @@ type ApplicantCompany {
     labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
     "Получить заметки"
     notes: [ApplicantCompanyNotes] @hasMany(relation: "notes")
-    modules: [ApplicantModules] @hasMany (relation: "modules")
+    modules: [ApplicantCompanyModules] @hasMany (relation: "modules")
     company_position: ApplicantIndividualCompany @belongsTo(relation: "applicantIndividualCompany")
     owner_relation: ApplicantIndividualCompany @belongsTo(relation: "ownerRelation")
     owner_position: ApplicantIndividualCompany @belongsTo(relation: "ownerPosition")
 }
 
-"Модули"
-type ApplicantModules {
-    id: ID!
-    "Имя модуля"
-    name: String !
-}
 
 type ApplicantIndividualCompany {
     applicant_individual_id: ID!

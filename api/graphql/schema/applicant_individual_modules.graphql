@@ -3,19 +3,13 @@
 Dashboard -> Applicants -> Individual -> Full Profile -> Settings
 """
 type ApplicantIndividualModules {
-    "Получить аппликанта"
-    applicant_individual_id: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
+    "Получить индивидуала"
+    applicant_individual: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
     "Получить модуль"
-    applicant_module_id: [ApplicantModules] @belongsToMany(relation: "ApplicantModules")
+    applicant_module: ApplicantModules @belongsTo(relation: "module")
+    applicant_module_id: ID
     "Активен = true или не активный = false"
     is_active: Boolean
-}
-
-"Модули"
-type ApplicantModules {
-    id: ID!
-    "Название модуля"
-    name: String !
 }
 
 

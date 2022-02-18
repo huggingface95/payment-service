@@ -71,17 +71,11 @@ type ApplicantIndividual {
     "Получить заметки"
     notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
     "Получить модули"
-    modules: [ApplicantModules] @belongsToMany (relation: "modules")
+    modules: [ApplicantIndividualModules] @hasMany (relation: "modules")
     "Получить компании"
     companies: [ApplicantCompany] @belongsToMany (relation: "companies")
 }
 
-"Модули"
-type ApplicantModules {
-    id: ID!
-    "Название модуля"
-    name: String !
-}
 
 type ApplicantIndividualCompany {
     applicant_individual_id: ID!

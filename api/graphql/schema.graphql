@@ -10,6 +10,13 @@ enum Sort {
     DESC
 }
 
+"Модули"
+type ApplicantModules {
+    id: ID!
+    "Имя модуля"
+    name: String !
+}
+
 input DateRange {
     from: Date!
     to: DateEnd!
