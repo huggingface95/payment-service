@@ -21,9 +21,9 @@ class CreateApplicantBankingAccessTable extends Migration
             $table->boolean('can_create_payment')->default('false');
             $table->boolean('can_sign_payment')->default('false');
             $table->boolean('contact_administrator')->default('false');
-            $table->decimal('daily_limit', 8, 2);
-            $table->decimal('monthly_limit', 8, 2);
-            $table->decimal('operation_limit', 8, 2);
+            $table->decimal('daily_limit', 15, 5);
+            $table->decimal('monthly_limit', 15, 5);
+            $table->decimal('operation_limit', 15, 5);
             $table->foreign('applicant_individual_id')->references('id')->on('applicant_individual');
             $table->foreign('applicant_company_id')->references('id')->on('applicant_companies');
             $table->foreign('member_id')->references('id')->on('members');
