@@ -76,12 +76,6 @@ type ApplicantCompany {
     owner_position: ApplicantIndividualCompany @belongsTo(relation: "ownerPosition")
 }
 
-"Модули"
-type ApplicantModules {
-    id: ID!
-    "Имя модуля"
-    name: String !
-}
 
 type ApplicantIndividualCompany {
     applicant_individual_id: ID!

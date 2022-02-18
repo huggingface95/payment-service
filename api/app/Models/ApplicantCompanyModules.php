@@ -30,11 +30,11 @@ class ApplicantCompanyModules extends Model
 
     /**
      * Get relation applicant_modules
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function modules()
+    public function module()
     {
-        return $this->belongsToMany(ApplicantModules::class,'applicant_company_modules','applicant_company_id', 'applicant_module_id');
+        return $this->belongsTo(ApplicantModules::class,'applicant_module_id', 'id');
     }
 
 }
