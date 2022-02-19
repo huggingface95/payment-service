@@ -95,7 +95,7 @@ class CommissionTemplate extends BaseModel
 
     public function company()
     {
-        return $this->belongsToMany(ApplicantCompany::class,'accounts','commission_template_id','client_id', 'id');
+        return $this->belongsToMany(ApplicantCompany::class,'accounts','commission_template_id','client_id', 'id', 'owner_id');
     }
 
 

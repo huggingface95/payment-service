@@ -37,10 +37,10 @@ class CreatePaymentsTable extends Migration
             $table->timestamps();
             $table->foreign('urgency_id')->references('id')->on('payment_urgency');
             $table->foreign('type_id')->references('id')->on('payment_types');
+            $table->foreign('account_id')->references('id')->on('accounts');
             $table->foreign('payment_provider_id')->references('id')->on('payment_provider');
             $table->foreign('sender_bank_country')->references('id')->on('countries');
             $table->foreign('sender_country')->references('id')->on('countries');
-            $table->foreign('account_id')->references('id')->on('accounts');
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('currency')->references('id')->on('currencies');
         });
