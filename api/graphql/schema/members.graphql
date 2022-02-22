@@ -40,6 +40,8 @@ type Members {
     additional_info_fields: JSON
     "Полное имя"
     fullname: String
+    "Access limitation groups"
+    access_groups: [GroupRole] @belongsToMany(relation: "groupRoles")
 }
 
 extend type Query {
