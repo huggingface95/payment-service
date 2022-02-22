@@ -73,7 +73,7 @@ extend type Mutation {
         "Активен или нет"
         is_active: Boolean
         "ID платежного провайдера"
-        payment_provider_id: ID!
+        payment_provider_id: ID
         "массив ID бизнесов"
         business_activity: [ID]
         "массив ID стран"
