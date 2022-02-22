@@ -102,6 +102,7 @@ extend type Query {
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
         hasBusinessType: _ @whereHasConditions(columns: ["name", "id"]),
+        hasOwner: _ @whereHasConditions(columns: ["fullname", "id"]),
         hasKycLevel: _ @whereHasConditions(columns: ["name", "id"]),
         created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","account_manager_member_id","applicant_state_id","applicant_state_reason_id","name","url" ,"email","created_at"]), orderBy: _ @orderBy(
         columns: ["id","name", "email","created_at","url","owner_id"],
