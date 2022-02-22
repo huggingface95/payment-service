@@ -45,7 +45,11 @@ type Payments {
     created_at: DateTime
     updated_at: DateTime
     "Получить связанного мембера"
-    owner: Members @belongsTo(relation: "owner")
+    member: Members @belongsTo(relation: "member")
+    "Получить владельца"
+    owner: [ApplicantIndividual] @belongsToMany(relation: "owner")
+    "Получить компанию ownera"
+    company: [ApplicantCompany] @belongsToMany(relation: "company")
 }
 
 
@@ -56,12 +60,12 @@ extend type Query {
     Получить список платежей
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     Фильтры по
-    hasCompanies: {column:NAME,operator:GTE,value:CompanyName} фильтр по имени компании
+    hasCompany: {column:NAME,operator:GTE,value:CompanyName} фильтр по имени компании
     hasAccounts: {column:ACCOUNT_ID,operator:GTE,value:AccountNumber} фильтр по account number
     hasOwner: {column:NAME,operator:GTE,value:MemberName} фильтр по владельцу
     """
     payments(
-        hasCompanies: _ @whereHasConditions(columns: ["name"]),
+        hasCompany: _ @whereHasConditions(columns: ["name"]),
         hasAccounts: _ @whereHasConditions(columns: ["account_id"]),
         hasOwner: _ @whereHasConditions(columns: ["fullname"]),
         created_at: DateRange @whereBetween,

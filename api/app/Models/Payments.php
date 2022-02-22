@@ -95,9 +95,19 @@ class Payments extends BaseModel
         return $this->belongsTo(Currencies::class,'currency','id');
     }
 
-    public function owner()
+    public function member()
     {
         return $this->belongsTo(Members::class,'member_id','id');
+    }
+
+    public function owner()
+    {
+        return $this->belongsToMany(ApplicantIndividual::class,'accounts','id', 'client_id', 'account_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsToMany(ApplicantCompany::class,'accounts','id','client_id', 'account_id', 'owner_id');
     }
 
 
