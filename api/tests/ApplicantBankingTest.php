@@ -177,83 +177,9 @@ class ApplicantBankingTest extends TestCase
             ],
         ]);
     }
+
+
     /*
-    public function testQueryWithWhereCommissionPriceLists()
-    {
-        $getRecord = CommissionPriceList::where(['payment_system_id' => 1])->get();
-
-        $data =
-            [
-                [
-                    'id' => strval($getRecord[0]->id),
-                    'name' => $getRecord[0]->name,
-                    'provider' => [
-                        'id' => strval($getRecord[0]->provider_id)
-                    ],
-                    'payment_system' => [
-                        'id' => strval($getRecord[0]->payment_system_id)
-                    ],
-                    'commission_template' => [
-                        'id' => strval($getRecord[0]->commission_template_id)
-                    ],
-                ]
-            ];
-
-        $this->graphQL('
-        {
-             commissionPriceLists(where: { column: PAYMENT_SYSTEM_ID, value: 1 }) {
-                data {
-                    id
-                    name
-                    provider {
-                        id
-                    }
-                    payment_system {
-                        id
-                    }
-                    commission_template {
-                        id
-                    }
-                }
-             }
-        }
-        ')->seeJsonContains($data);
-    }
-
-    public function testCreateCommissionPriceList()
-    {
-        $this->graphQL('
-            mutation (
-                $name: String!
-                $provider_id: ID!
-                $payment_system_id: ID!
-                $commission_template_id: ID!
-            ) {
-            createCommissionPriceList(
-                name: $name
-                provider_id: $provider_id
-                payment_system_id: $payment_system_id
-                commission_template_id: $commission_template_id
-            ) {
-                id
-            }
-            }
-        ', [
-            'name' => 'Test Commission Price List',
-            'provider_id' => 1,
-            'payment_system_id' => 1,
-            'commission_template_id' => 1
-        ]);
-        $id = json_decode($this->response->getContent(), true);
-        $this->seeJson([
-            'data' => [
-                'createCommissionPriceList' => [
-                    'id' => $id['data']['createCommissionPriceList']['id'],
-                ],
-            ],
-        ]);
-    }
-
     public function testUpdateCommissionPriceList()
     {
         $commissionPriceList = CommissionPriceList::factory()->create();
