@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
-class Members extends Model
+class Members extends BaseModel
 {
     use SoftDeletes;
 
@@ -57,6 +57,11 @@ class Members extends Model
     {
         return $this->position()
             ->join('departments', 'departments.id', '=', 'department_position.department_id')->select('departments.*')->first();
+    }
+
+    public function groupRoles()
+    {
+        return $this->belongsToMany(GroupRole::class,'group_role_member', 'member_id', 'group_role_id');
     }
 
 }

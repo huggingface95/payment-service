@@ -97,6 +97,22 @@ extend type Mutation {
     "Удаление группы"
     deleteGroup(id:ID!): GroupRole @field(resolver:"GroupMutator@delete")
 
+     "Добавить группу мемберу"
+        setMemberGroup(
+            "Group"
+            group_id: [ID]!
+            "Payment Provider"
+            payment_provider_id: [ID]!
+            "Commission Template"
+            commission_template_id: [ID]!
+        ): Members @field(resolver:"GroupMutator@setMemberGroup")
+
+        "Убрать группу у мембера"
+        detachApplicantIndividualLabel(
+            applicant_individual_id: ID!
+            applicant_individual_label_id: [ID]
+        ): ApplicantIndividual @field(resolver: "ApplicantIndividualLabelsMutator@detach")
+
 
 }
 
