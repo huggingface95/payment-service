@@ -78,14 +78,16 @@ class GroupMutator extends BaseMutator
 
     public function setMemberGroup($root, array $args)
     {
-        $member = Members::where('id', '=', Members::DEFAULT_MEMBER_ID)->first();
 
+        GroupRole::create($args);
+        $member = Members::where('id', '=', Members::DEFAULT_MEMBER_ID)->first();
+        $role_id = $args['group_role_id'];
         if (isset($args['group_id'])) {
-            $member->labels()->detach();
-            $member->labels()->attach($args['applicant_individual_label_id']);
+            $member->groupRoles()->detach();
+            $member->groupRoles()->attach($role_id);
         }
 
-        return $applicant;
+        return $member;
     }
 
 
