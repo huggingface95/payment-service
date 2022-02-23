@@ -15,4 +15,19 @@ extend type Query {
     businessActivities(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [BusinessActivity!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
+extend type Mutation {
+    "Создание Business Activity"
+    createBusinessActivity(
+        "Название"
+        name: String!
+    ):BusinessActivity @create
+}
 
+extend type Mutation {
+    "Изменение Business Activity"
+    updateBusinessActivity(
+        id: ID!
+        "Название"
+        name: String!
+    ):BusinessActivity @update
+}
