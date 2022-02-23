@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CommissionTemplateLimit extends Model
+class CommissionTemplateLimit extends BaseModel
 {
 
     public $timestamps = false;
@@ -29,7 +29,7 @@ class CommissionTemplateLimit extends Model
 
     public function commissionTemplateLimitType()
     {
-        $this->belongsTo(CommissionTemplateLimit::class,'commission_template_limit_type_id','id');
+        $this->belongsTo(CommissionTemplateLimitType::class,'commission_template_limit_type_id','id');
     }
 
     public function commissionTemplateLimitTransferDirection()
