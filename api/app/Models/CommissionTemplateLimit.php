@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
 class CommissionTemplateLimit extends BaseModel
 {
@@ -23,7 +22,6 @@ class CommissionTemplateLimit extends BaseModel
         'commission_template_limit_transfer_direction_id',
         'commission_template_limit_period_id',
         'commission_template_limit_action_type_id',
-
     ];
 
 

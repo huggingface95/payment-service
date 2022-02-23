@@ -12,6 +12,8 @@ type CommissionTemplateLimit {
     amount: Float
     "ID валюты лимита"
     currency_id: ID
+    "Валюта"
+    currency: Currencies @belongsTo(relation: "currency")
     "ID периода лимита"
     commission_template_limit_period_id: ID
     "ID события лимита"
@@ -26,7 +28,6 @@ type CommissionTemplateLimit {
     commission_template_limit_period: CommissionTemplateLimitPeriod @belongsTo(relation:"commissionTemplateLimitPeriod")
     "Получить события лимита"
     commission_template_limit_action_type: CommissionTemplateLimitActionType @belongsTo(relation:"commissionTemplateLimitActionType")
-    currency: Currencies @belongsTo(relation:"currency")
 }
 
 extend type Query {
