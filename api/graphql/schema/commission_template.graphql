@@ -48,10 +48,9 @@ extend type Query {
         hasOwner: _ @whereHasConditions(columns: ["fullname"]),
         hasAccount: _ @whereHasConditions(columns: ["account_name"]),
         hasCompany: _ @whereHasConditions(columns: ["name"]),
-        #paymentProviderName: Sort @scope(name:"PaymentProviderName"),
+        paymentProviderName: Sort @scope(name:"PaymentProviderName"),
         where: _ @whereConditions(columns: ["id","name","is_active"]),
         orderBy: _ @orderBy(columns: ["id","name","is_active","description"]),
-        paymentProviderName: Sort @builder(method: "App\\Models\\CommissionTemplate@sortPaymentProviderName")
     ): [CommissionTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 

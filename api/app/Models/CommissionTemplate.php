@@ -84,11 +84,6 @@ class CommissionTemplate extends BaseModel
         return $query->join('payment_provider as pp','commission_template.payment_provider_id','=','pp.id')->orderBy('pp.name',$sort)->select('commission_template.*');
     }
 
-    public function sortPaymentProviderName(Builder $builder, $sort)
-    {
-        return $builder->join('payment_provider as pp','commission_template.payment_provider_id','=','pp.id')->orderBy('pp.name',$sort)->select('commission_template.*');
-    }
-
     public function owner()
     {
         return $this->belongsToMany(ApplicantIndividual::class,'accounts','commission_template_id', 'client_id', 'id');
