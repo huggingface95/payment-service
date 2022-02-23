@@ -80,7 +80,7 @@ class CommissionTemplate extends BaseModel
 
     public function scopePaymentProviderName($query, $sort)
     {
-        return $query->join('payment_provider','commission_template.payment_provider_id','=','payment_provider.id')->orderBy('payment_provider.name',$sort)->select('commission_template.*');
+        return $query->join('payment_provider as pp','commission_template.payment_provider_id','=','pp.id')->orderBy('pp.name',$sort)->select('commission_template.*, pp.name as provider_name');
     }
 
     public function owner()
