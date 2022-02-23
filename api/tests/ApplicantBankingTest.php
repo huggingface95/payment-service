@@ -225,40 +225,62 @@ class ApplicantBankingTest extends TestCase
         ')->seeJsonContains($data);
     }
 
-    public function testCreateCommissionPriceList()
+
+    public function testCreateApplicantBankingAccess()
     {
         $this->graphQL('
-            mutation (
-                $name: String!
-                $provider_id: ID!
-                $payment_system_id: ID!
-                $commission_template_id: ID!
-            ) {
-            createCommissionPriceList(
-                name: $name
-                provider_id: $provider_id
-                payment_system_id: $payment_system_id
-                commission_template_id: $commission_template_id
-            ) {
+            mutation {
+              createApplicantBankingAccess(
+                applicant_individual_id: 1
+                applicant_company_id: 1
+                member_id: 2
+                can_create_payment: true
+                can_sign_payment: true
+                contact_administrator: true
+                daily_limit: 20000
+                monthly_limit: 150000
+                operation_limit: 1000
+              ) {
                 id
+                applicant_individual {
+                  id
+                }
+                applicant_company {
+                  id
+                }
+                member {
+                  id
+                }
+                can_create_payment
+                can_sign_payment
+                contact_administrator
+                daily_limit
+                monthly_limit
+                operation_limit
+              }
             }
-            }
-        ', [
-            'name' => 'Test Commission Price List',
-            'provider_id' => 1,
-            'payment_system_id' => 1,
-            'commission_template_id' => 1
-        ]);
-        $id = json_decode($this->response->getContent(), true);
+        ');
+        $data = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
-                'createCommissionPriceList' => [
-                    'id' => $id['data']['createCommissionPriceList']['id'],
+                'createApplicantBankingAccess' => [
+                    'id' => $data['data']['createApplicantBankingAccess']['id'],
+                    'applicant_individual_id' => $data['data']['createApplicantBankingAccess']['applicant_individual_id'],
+                    'applicant_company_id' => $data['data']['createApplicantBankingAccess']['applicant_company_id'],
+                    'member_id' => $data['data']['createApplicantBankingAccess']['member_id'],
+                    'can_sign_payment' => $data['data']['createApplicantBankingAccess']['can_sign_payment'],
+                    'can_create_payment' => $data['data']['createApplicantBankingAccess']['can_create_payment'],
+                    'contact_administrator' => $data['data']['createApplicantBankingAccess']['contact_administrator'],
+                    'daily_limit' => $data['data']['createApplicantBankingAccess']['daily_limit'],
+                    'monthly_limit' => $data['data']['createApplicantBankingAccess']['monthly_limit'],
+                    'operation_limit' => $data['data']['createApplicantBankingAccess']['operation_limit']
                 ],
             ],
         ]);
     }
 
+
+    /*
     public function testUpdateCommissionPriceList()
     {
         $commissionPriceList = CommissionPriceList::factory()->create();
