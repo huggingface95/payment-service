@@ -24,6 +24,9 @@ type CommissionTemplate {
     account: Accounts @belongsTo(relation: "account")
     "Получить компанию"
     company: [ApplicantCompany] @belongsToMany(relation: "company")
+    countries: [Country] @belongsToMany(relation: "countries")
+    currencies: [Currencies] @belongsToMany(relation: "currencies")
+    commission_template_limits: [CommissionTemplateLimit] @belongsToMany(relation: "commissionTemplateLimit")
 }
 
 extend type Query {

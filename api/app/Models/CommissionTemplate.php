@@ -98,7 +98,10 @@ class CommissionTemplate extends BaseModel
         return $this->belongsToMany(ApplicantCompany::class,'accounts','commission_template_id','client_id', 'id', 'owner_id');
     }
 
-
+    public function commissionTemplateLimit()
+    {
+        return $this->belongsToMany(CommissionTemplateLimit::class,'commission_template_limit_relation','commission_template_id','commission_template_limit_id');
+    }
 
 
 
