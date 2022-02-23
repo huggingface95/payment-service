@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphqlException;
 use App\Models\GroupRole;
 use App\Models\Groups;
+use App\Models\Members;
 
 class GroupMutator extends BaseMutator
 {
@@ -73,6 +74,18 @@ class GroupMutator extends BaseMutator
             throw new GraphqlException('Group are already in use by member',"use");
         }
 
+    }
+
+    public function setMemberGroup($root, array $args)
+    {
+        $groupRole = GroupRole::create($args);
+        $member = Members::where('id', '=', Members::DEFAULT_MEMBER_ID)->first();
+        $role_id = $groupRole->id;
+        if ($role_id) {
+            $member->groupRoles()->attach($role_id);
+        }
+
+        return $groupRole;
     }
 
 
