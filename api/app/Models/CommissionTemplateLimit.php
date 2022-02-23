@@ -47,4 +47,9 @@ class CommissionTemplateLimit extends Model
         $this->belongsTo(CommissionTemplateLimitActionType::class,'commission_template_limit_action_type_id','id');
     }
 
+    public function currency()
+    {
+        $this->belongsTo(Currencies::class,'currency_id','id');
+    }
+
 }

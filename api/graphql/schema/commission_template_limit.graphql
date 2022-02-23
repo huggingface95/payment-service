@@ -26,6 +26,7 @@ type CommissionTemplateLimit {
     commission_template_limit_period: CommissionTemplateLimitPeriod @belongsTo(relation:"commissionTemplateLimitPeriod")
     "Получить события лимита"
     commission_template_limit_action_type: CommissionTemplateLimitActionType @belongsTo(relation:"commissionTemplateLimitActionType")
+    currency: Currencies @belongsTo(relation:"currency")
 }
 
 extend type Query {
