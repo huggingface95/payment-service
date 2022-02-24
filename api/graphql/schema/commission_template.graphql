@@ -50,7 +50,7 @@ extend type Query {
         hasCompany: _ @whereHasConditions(columns: ["name"]),
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
         where: _ @whereConditions(columns: ["id","name","is_active"]),
-        orderBy: _ @orderBy(columns: ["id","name","is_active","description"])
+        orderBy: _ @orderBy(columns: ["id","name","is_active","description"]),
     ): [CommissionTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 

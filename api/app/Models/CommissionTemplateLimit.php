@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class CommissionTemplateLimit extends Model
+class CommissionTemplateLimit extends BaseModel
 {
 
     public $timestamps = false;
@@ -23,13 +22,12 @@ class CommissionTemplateLimit extends Model
         'commission_template_limit_transfer_direction_id',
         'commission_template_limit_period_id',
         'commission_template_limit_action_type_id',
-
     ];
 
 
     public function commissionTemplateLimitType()
     {
-        $this->belongsTo(CommissionTemplateLimit::class,'commission_template_limit_type_id','id');
+        $this->belongsTo(CommissionTemplateLimitType::class,'commission_template_limit_type_id','id');
     }
 
     public function commissionTemplateLimitTransferDirection()
@@ -45,6 +43,11 @@ class CommissionTemplateLimit extends Model
     public function commissionTemplateLimitActionType()
     {
         $this->belongsTo(CommissionTemplateLimitActionType::class,'commission_template_limit_action_type_id','id');
+    }
+
+    public function currency()
+    {
+        $this->belongsTo(Currencies::class,'currency_id','id');
     }
 
 }
