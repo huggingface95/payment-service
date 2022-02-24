@@ -14,7 +14,8 @@ class ApplicantCompanyLabelsTableSeeder extends Seeder
      */
     public function run()
     {
-        ApplicantCompanyLabel::create(['name'=>'Address Not Complied', 'hex_color_code'=>'#cccccc']);
-        ApplicantCompanyLabel::create(['name'=>'Personal Info Verified', 'hex_color_code'=>'#0e6548']);
+        // Todo Need to create records in the Members table, after which you can open a comments
+//        ApplicantCompanyLabel::create(['name'=>'Address Not Complied', 'hex_color_code'=>'#cccccc']);
+//        ApplicantCompanyLabel::create(['name'=>'Personal Info Verified', 'hex_color_code'=>'#0e6548']);
     }
 }

@@ -1,0 +1,35 @@
+"""
+Комментарии билетов
+"""
+type TicketComments {
+    id: ID!
+    "Сообщение"
+    message: String!
+    "Получить билет"
+    ticket: Ticket @belongsTo(relation: "ticket")
+    "Получить Клиента"
+    client: ApplicantIndividual @belongsTo(relation: "client")
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Query {
+    "Получить по билет ID"
+    ticketComment(id: ID @eq): TicketComments @find
+    """
+    Получить список
+    """
+    getTicketComments: [TicketComments!]! @all
+}
+
+extend type Mutation {
+    "Создать комментарии"
+    createTicketComment(
+        "Сообщение"
+        message: String!
+        "ID билета"
+        ticket_id: ID!
+        "ID клиента"
+        client_id: ID!
+    ): TicketComments @create
+}
