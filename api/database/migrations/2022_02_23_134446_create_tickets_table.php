@@ -20,7 +20,7 @@ class CreateTicketsTable extends Migration
             $table->string('title');
             $table->text('message')->nullable();
             $table->tinyInteger('status');
-            $table->string('file_object')->nullable();
+//            $table->string('file_object')->nullable();
             $table->timestamps();
 
             $table->foreign('member_id')->references('id')->on('members');

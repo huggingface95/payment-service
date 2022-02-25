@@ -18,7 +18,6 @@ use Illuminate\Support\Carbon;
  * @property string title
  * @property string message
  * @property int status
- * @property object file_object
  * @property Carbon created_at
  * @property Carbon updated_at
  *
@@ -38,7 +37,7 @@ class Ticket extends Model
      * @var array
      */
     protected $fillable = [
-        'member_id', 'client_id', 'title', 'message', 'status', 'file_object'
+        'member_id', 'client_id', 'title', 'message', 'status'
     ];
 
 

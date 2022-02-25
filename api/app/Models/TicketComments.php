@@ -13,7 +13,6 @@ use Illuminate\Support\Carbon;
  * @property int ticket_id
  * @property int client_id
  * @property string message
- * @property object file_object
  * @property Carbon created_at
  * @property Carbon updated_at
  *
@@ -29,7 +28,7 @@ class TicketComments extends Model
      * @var array
      */
     protected $fillable = [
-        'ticket_id', 'client_id', 'message', 'file_object'
+        'ticket_id', 'client_id', 'message'
     ];
 
     public function ticket(): BelongsTo
