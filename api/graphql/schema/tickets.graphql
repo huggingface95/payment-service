@@ -10,6 +10,8 @@ type Ticket {
     message: String!
     "Статус"
     status: Int!
+    "Получить файл"
+    file_object: Files  @hasOne(relation: "file")
     "Получить компанию"
     company: Companies @hasOne(relation: "company")
     "Получить позицию"

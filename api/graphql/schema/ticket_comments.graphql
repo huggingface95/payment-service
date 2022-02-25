@@ -5,6 +5,8 @@ type TicketComments {
     id: ID!
     "Сообщение"
     message: String!
+    "Получить файл"
+    file_object: Files  @hasOne(relation: "file")
     "Получить билет"
     ticket: Ticket @belongsTo(relation: "ticket")
     "Получить Клиента"

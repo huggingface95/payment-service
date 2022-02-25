@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Carbon;
 
@@ -79,6 +80,11 @@ class Ticket extends Model
             'member_id',
             'department_position_id',
         );
+    }
+
+    public function file(): HasOne
+    {
+        return $this->hasOne(Files::class, 'author_id')->where('entity_type', self::class);
     }
 
     public function getDepartmentAttribute()

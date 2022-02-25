@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -39,5 +40,10 @@ class TicketComments extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(ApplicantIndividual::class, 'client_id');
+    }
+
+    public function file(): HasOne
+    {
+        return $this->hasOne(Files::class, 'author_id')->where('entity_type', self::class);
     }
 }
