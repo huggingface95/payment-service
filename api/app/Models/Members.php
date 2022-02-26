@@ -59,11 +59,6 @@ class Members extends BaseModel
             ->join('departments', 'departments.id', '=', 'department_position.department_id')->select('departments.*')->first();
     }
 
-    public function getFullNameAttribute(): string
-    {
-        return $this->first_name . ' ' .$this->last_name;
-    }
-
     public function groupRoles()
     {
         return $this->belongsToMany(GroupRole::class,'group_role_member', 'member_id', 'group_role_id');
