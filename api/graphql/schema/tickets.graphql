@@ -1,0 +1,89 @@
+"""
+Билеты
+Banking -> Tickets
+"""
+type Ticket {
+    id: ID!
+    "Название"
+    title: String!
+    "Сообщение"
+    message: String!
+    "Статус"
+    status: Int!
+    "Получить файл"
+    file_object: Files  @hasOne(relation: "file")
+    "Получить компанию"
+    company: Companies @hasOne(relation: "company")
+    "Получить позицию"
+    position: DepartmentPosition @hasOne(relation: "position")
+    "Получить Департаменты"
+    department: Departments
+    "Получить мембера"
+    member: Members @belongsTo(relation: "member")
+    "Получить Клиента"
+    client: ApplicantIndividual @belongsTo(relation: "client")
+    "Получить комментарии"
+    comments: [TicketComments] @hasMany(relation: "comments")
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+
+extend type Query {
+    "Получить по билет ID"
+    ticket(id: ID @eq): Ticket @find
+    """
+    Получить список билетов
+    orderBy: [
+    {column: ID, order: DESC},
+    {relation: "company", column: "name"},
+    {relation: "department", column: "name"}
+    ] сортировка по ID, компании, позиционный отдел
+    hasCompany: {column: COMPANY_ID, operator:EQ, value: 1} поиск по id компании
+    hasDepartment: {column: DEPARTMENT_ID, operator:EQ, value: 1} поиск по id Департамента
+    hasPosition: {column: DEPARTMENT_POSITION_ID, operator:EQ, value: 1} поиск по id позици
+    hasMember: {column: MEMBER_ID, operator:EQ, value: 1} поиск по id мембера
+    hasClient: {column: CLIENT_ID, operator:EQ, value: 1} поиск по id Клиента
+    where:{column: TITLE, operator: LIKE, value: ""} фильтр по имени, статуса
+    """
+    tickets(
+        hasCompany: _ @whereHasConditions(columns: ["name"]),
+        hasDepartment: _ @whereHasConditions(columns: ["name"]),
+        hasPosition: _ @whereHasConditions(columns: ["name"]),
+        hasMember: _ @whereHasConditions(columns: ["fullname"]),
+        hasClient: _ @whereHasConditions(columns: ["fullname"]),
+        created_at: DateRange @whereBetween,
+        where: _ @whereConditions(columns: ["title", "status"]),
+        orderBy: _ @orderBy(
+            columns: ["id"]
+            relations: [
+                { relation: "company", column: "name" },
+                { relation: "department", column: "name" },
+            ]
+        )
+    ): [Ticket!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать компанию"
+    createTicket(
+        "Название билета"
+        title: String!
+        "Message билета"
+        message: String!
+        "Статус билета"
+        status: Int!
+        "ID мембера"
+        member_id: ID!
+        "ID клиента"
+        client_id: ID!
+    ): Ticket @create
+
+    "Обновить данные компании"
+    updateTicket(
+        "Статус билета"
+        status: Int!
+    ): Ticket @update
+}
+
+
