@@ -3,12 +3,14 @@
 namespace App\Models;
 
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class CommissionTemplateLimit extends BaseModel
 {
 
     public $timestamps = false;
 
-    protected $table="commission_template_limit";
+    protected $table = "commission_template_limit";
     /**
      * The attributes that are mass assignable.
      *
@@ -25,29 +27,29 @@ class CommissionTemplateLimit extends BaseModel
     ];
 
 
-    public function commissionTemplateLimitType()
+    public function commissionTemplateLimitType(): BelongsTo
     {
-        $this->belongsTo(CommissionTemplateLimitType::class,'commission_template_limit_type_id','id');
+        return $this->belongsTo(CommissionTemplateLimitType::class, 'commission_template_limit_type_id', 'id');
     }
 
-    public function commissionTemplateLimitTransferDirection()
+    public function commissionTemplateLimitTransferDirection(): BelongsTo
     {
-        $this->belongsTo(CommissionTemplateLimitTransferDirection::class,'commission_template_limit_transfer_direction_id','id');
+        return $this->belongsTo(CommissionTemplateLimitTransferDirection::class, 'commission_template_limit_transfer_direction_id', 'id');
     }
 
-    public function commissionTemplateLimitPeriod()
+    public function commissionTemplateLimitPeriod(): BelongsTo
     {
-        $this->belongsTo(CommissionTemplateLimitPeriod::class,'commission_template_limit_period_id','id');
+        return $this->belongsTo(CommissionTemplateLimitPeriod::class, 'commission_template_limit_period_id', 'id');
     }
 
-    public function commissionTemplateLimitActionType()
+    public function commissionTemplateLimitActionType(): BelongsTo
     {
-        $this->belongsTo(CommissionTemplateLimitActionType::class,'commission_template_limit_action_type_id','id');
+        return $this->belongsTo(CommissionTemplateLimitActionType::class, 'commission_template_limit_action_type_id', 'id');
     }
 
-    public function currency()
+    public function currency(): BelongsTo
     {
-        $this->belongsTo(Currencies::class,'currency_id','id');
+        return $this->belongsTo(Currencies::class, 'currency_id', 'id');
     }
 
 }
