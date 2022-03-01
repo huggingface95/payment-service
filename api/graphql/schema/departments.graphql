@@ -18,6 +18,8 @@ type DepartmentPosition {
     name: String !
     "Активен = true или не активный = false"
     is_active: Boolean
+    "Получить компанию"
+    company: Companies @belongsTo(relation: "company")
     "Получить департамент"
     department: Departments @belongsTo(relation: "department")
 }
@@ -67,8 +69,10 @@ extend type Mutation {
         "Назвние должности"
         name: String!
         "ID департамента"
-        department_id: ID!
-    ): DepartmentPosition @create
+        department_id: ID
+        "ID компании"
+        company_id: ID!
+    ): DepartmentPosition @field(resolver:"DepartmentPositionMutator@create")
 
     "Удалить департамент"
     deleteDepartment(id: ID!): Departments @field(resolver:"DepartmentMutator@delete")

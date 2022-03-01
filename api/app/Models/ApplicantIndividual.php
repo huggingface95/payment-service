@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+
 class ApplicantIndividual extends Model
 {
 
@@ -15,7 +16,41 @@ class ApplicantIndividual extends Model
      * @var array
      */
     protected $fillable = [
-        'first_name','last_name','middle_name','email','url','phone','country_id','state','city','address','zip','nationality','birth_state','birth_city','birth_at','sex','password_hash','password_salt'
+        'first_name',
+        'last_name',
+        'middle_name',
+        'email',
+        'url',
+        'phone',
+        'country_id',
+        'language_id',
+        'state',
+        'city',
+        'address',
+        'zip',
+        'nationality',
+        'birth_country_id',
+        'birth_state',
+        'birth_city',
+        'birth_at',
+        'sex',
+        'citizenship_country_id',
+        'personal_additional_fields',
+        'contacts_additional_fields',
+        'profile_additional_fields',
+        'applicant_status_id',
+        'applicant_state_id',
+        'applicant_state_reason_id',
+        'applicant_risk_level_id',
+        'account_manager_member_id',
+        'password_hash',
+        'password_salt',
+        'is_verification_phone'
+    ];
+
+    protected $casts = [
+        'personal_additional_fields'=>'array',
+        'contacts_additional_fields'=>'array'
     ];
 
 
@@ -78,6 +113,14 @@ class ApplicantIndividual extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function language()
+    {
+        return $this->belongsTo(Languages::class,'language_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function citizenshipCountry()
     {
         return $this->belongsTo(Country::class,'citizenship_country_id');
@@ -90,5 +133,37 @@ class ApplicantIndividual extends Model
     {
         return $this->belongsTo(Country::class,'birth_country_id');
     }
+
+    public function notes()
+    {
+        return$this->hasMany(ApplicantIndividualNotes::class,'applicant_individual_id');
+    }
+
+    public function getCreatedForAttribute()
+    {
+        return $this->manager()
+            ->join('companies', 'companies.id', '=', 'members.company_id')->select('companies.*')->first();
+    }
+
+    public function modules()
+    {
+        return $this->hasMany(ApplicantIndividualModules::class,'applicant_individual_id','id');
+    }
+
+    public function  ApplicantIndividual()
+    {
+        return $this->belongsTo(ApplicantIndividual::class,'applicant_individual_id','id');
+    }
+
+    public function companies()
+    {
+        return $this->belongsToMany(ApplicantCompany::class, 'applicant_individual_company', 'applicant_individual_id', 'applicant_company_id');
+    }
+
+    public function account()
+    {
+        return $this->belongsTo(Accounts::class, 'id', 'client_id');
+    }
+
 
 }

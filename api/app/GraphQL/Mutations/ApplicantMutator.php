@@ -27,15 +27,14 @@ class ApplicantMutator extends BaseMutator
         $args['password_hash'] = Hash::make($password);
         $args['password_salt'] = Hash::make($password);
 
-        if (isset($args['additional_fields'])) {
-            $additionalFields = $args['additional_fields'];
-            $args['additional_fields']  = $this->setAdditionalField($additionalFields);
+        if (isset($args['personal_additional_fields'])) {
+            $args['personal_additional_fields']  = $this->setAdditionalField($args['personal_additional_fields']);
         }
         if (isset($args['contacts_additional_fields'])) {
-            $contactAdditionalFields = $args['contacts_additional_fields'];
-            $args['contacts_additional_fields']  = $this->setAdditionalField($contactAdditionalFields);
+            $args['contacts_additional_fields']  = $this->setAdditionalField($args['contacts_additional_fields']);
         }
         $applicant = ApplicantIndividual::create($args);
+
         if (isset($args['labels'])) {
             $applicant->labels()->detach($args['labels']);
             $applicant->labels()->attach($args['labels']);
@@ -54,14 +53,20 @@ class ApplicantMutator extends BaseMutator
 
     public function update($root, array $args)
     {
+        if (isset($args['password'])) {
+            $args['password_hash'] = Hash::make($args['password']);
+            $args['password_salt'] = Hash::make($args['password']);
+        }
+
         $applicant = ApplicantIndividual::find($args['id']);
-        if (isset($args['additional_fields'])) {
-            $additionalFields = $args['additional_fields'];
-            $args['additional_fields']  = $this->setAdditionalField($additionalFields);
+        if (isset($args['personal_additional_fields'])) {
+            $args['personal_additional_fields']  = $this->setAdditionalField($args['personal_additional_fields']);
+        }
+        if (isset($args['profile_additional_fields'])) {
+            $args['profile_additional_fields']  = $this->setAdditionalField($args['profile_additional_fields']);
         }
         if (isset($args['contacts_additional_fields'])) {
-            $contactAdditionalFields = $args['contacts_additional_fields'];
-            $args['contacts_additional_fields']  = $this->setAdditionalField($contactAdditionalFields);
+            $args['contacts_additional_fields']  = $this->setAdditionalField($args['contacts_additional_fields']);
         }
         if (isset($args['labels'])) {
             $applicant->labels()->detach($args['labels']);

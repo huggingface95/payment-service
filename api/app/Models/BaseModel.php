@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model
 {
+    const DEFAULT_MEMBER_ID = 2;
 
     protected function setArrayAttribute($value)
     {

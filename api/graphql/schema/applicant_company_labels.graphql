@@ -8,7 +8,9 @@ type ApplicantCompanyLabel {
     name: String!
     "HEX код метки"
     hex_color_code: String!
+    is_active: Boolean
 }
+
 
 extend type Query {
     """
@@ -20,7 +22,10 @@ extend type Query {
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
     """
-    applicantCompanyLabels(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+    applicantCompanyLabels(company_id: ID @eq, where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+        columns: ["id","name"],
+    )): [ApplicantCompanyLabel!]! @field(resolver: "ApplicantCompanyLabelsQuery@enabled")
+    applicantCompanyLabelsAvailable(company_id: ID @scope(name:"CompanyId"), orderBy: _ @orderBy(
         columns: ["id","name"],
     )): [ApplicantCompanyLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -32,7 +37,8 @@ extend type Mutation {
         name: String!
         "HEX код метки"
         hex_color_code: String! @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
-    ): ApplicantCompanyLabel @create
+    ): ApplicantCompanyLabel @field(resolver: "ApplicantCompanyLabelMutator@create")
+
 
     "Редактирование метки"
     updateApplicantCompanyLabel(
@@ -42,13 +48,27 @@ extend type Mutation {
         name: String!
         "HEX код метки"
         hex_color_code: String @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
-    ): ApplicantCompanyLabel @update
+    ): ApplicantCompanyLabel @field(resolver: "ApplicantCompanyLabelMutator@update")
 
     "Удалит метку"
     deleteApplicantCompanyLabel(
         id: ID!
         deleteAnyway: Boolean
     ): ApplicantCompanyLabel @field(resolver: "ApplicantCompanyLabelMutator@delete")
+
+    "Создать метку компании"
+    attachApplicantCompanyLabel(
+        "Аппликант"
+        applicant_company_id: ID!
+        "Метка"
+        applicant_company_label_id: [ID]
+    ): ApplicantCompany @field(resolver:"ApplicantCompanyLabelMutator@attach")
+
+    "Удалить метку"
+    detachApplicantCompanyLabel(
+        applicant_company_id: ID!
+        applicant_company_label_id: [ID]
+    ): ApplicantCompany @field(resolver: "ApplicantCompanyLabelMutator@detach")
 
 }
 

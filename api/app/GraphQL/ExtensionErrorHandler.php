@@ -94,8 +94,9 @@ class ExtensionErrorHandler implements ErrorHandler
 
         if ($error->getCategory() == 'graphql') {
             Log::error($error);
+            preg_match('/argument (.*?) of type/', $error->getMessage(), $match);
             return $next(new Error(
-                (env('APP_ENV')!=='local') ? 'Bad request' : $error->getMessage(),
+                (env('APP_ENV')!=='local') ? 'Field '.$match[1].' is required but not provided.' : $error->getMessage(),
                 // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
                 $error->getNodes(),
                 $error->getSource(),
@@ -104,7 +105,7 @@ class ExtensionErrorHandler implements ErrorHandler
                 new GraphqlException($error->getMessage(),'request'),
                 [
                     'code' => 400,
-                    'systemMessage' => $error->getMessage()
+                    //'systemMessage' => $error->getMessage()
                 ]
             ));
         }

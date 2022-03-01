@@ -18,6 +18,15 @@ type CommissionTemplate {
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Получить список бизнесов"
     business_activity: [BusinessActivity] @belongsToMany(relation: "businessActivity")
+    "Получить связанного мембера"
+    owner: [ApplicantIndividual] @belongsToMany(relation: "owner")
+    "Получить связанный аккаунт"
+    account: Accounts @belongsTo(relation: "account")
+    "Получить компанию"
+    company: [ApplicantCompany] @belongsToMany(relation: "company")
+    countries: [Country] @belongsToMany(relation: "countries")
+    currencies: [Currencies] @belongsToMany(relation: "currencies")
+    commission_template_limits: [CommissionTemplateLimit] @belongsToMany(relation: "commissionTemplateLimit")
 }
 
 extend type Query {
@@ -29,13 +38,19 @@ extend type Query {
     where:{column: NAME, operator: EQ, value: ""} фильтр по name
     hasPaymentProvider: {column:NAME,operator:GTE,value:PaymentProviderName} фильтр по провайдеру системам
     hasBusinessActivity: {column:NAME,operator:GTE,value:BusinessActivityName} фильтр по бизнесу
+    hasOwner: {column:NAME,operator:GTE,value:MemberName} фильтр по владельцу
+    hasAccount: {column:NAME,operator:GTE,value:AccountName} фильтр по имени аккаунта
+    hasCompany: {column:NAME,operator:GTE,value:CompanyName} фильтр по имени компании
     """
     commissionTemplates(
         hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
         hasBusinessActivity: _ @whereHasConditions(columns: ["name", "id"]),
+        hasOwner: _ @whereHasConditions(columns: ["fullname"]),
+        hasAccount: _ @whereHasConditions(columns: ["account_name"]),
+        hasCompany: _ @whereHasConditions(columns: ["name"]),
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
         where: _ @whereConditions(columns: ["id","name","is_active"]),
-        orderBy: _ @orderBy(columns: ["id","name","is_active","description"])
+        orderBy: _ @orderBy(columns: ["id","name","is_active","description"]),
     ): [CommissionTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
@@ -44,9 +59,11 @@ extend type Mutation {
     createCommissionTemplate(
         "Название шаблона"
         name: String!
+        "Описание шаблона"
+        description: String
         "ID платежного провайдера"
         payment_provider_id: ID!
-    ):CommissionTemplate @create
+    ):CommissionTemplate @field(resolver: "CommissionTemplateMutator@create")
 
     "Обновление полей шаблона комиссий"
     updateCommissionTemplate(
@@ -59,7 +76,7 @@ extend type Mutation {
         "Активен или нет"
         is_active: Boolean
         "ID платежного провайдера"
-        payment_provider_id: ID!
+        payment_provider_id: ID
         "массив ID бизнесов"
         business_activity: [ID]
         "массив ID стран"

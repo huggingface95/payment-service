@@ -1,0 +1,53 @@
+"""
+Модули компании
+Dashboard -> Applicants -> Company -> Full Profile -> Settings
+"""
+type ApplicantCompanyModules {
+    "Получить компанию"
+    applicant_company: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
+    "Получить модуль"
+    applicant_module: ApplicantModules @belongsTo(relation: "module")
+    applicant_module_id: ID
+    "Активен = true или не активный = false"
+    is_active: Boolean
+}
+
+extend type Query {
+    """
+    Получить список всех модулей компании
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    """
+    applicantCompanyModules(where: _ @whereConditions(columns: ["applicant_company_id"]), orderBy: _ @orderBy(
+        columns: ["applicant_company_id"],
+    )): [ApplicantCompanyModules!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_company_id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать модуль компании"
+    createApplicantCompanyModule(
+        "Компания"
+        applicant_company_id: ID!
+        "Модуль"
+        applicant_module_id: [ID]
+        "Активный или неактивный"
+        is_active: Boolean
+    ): ApplicantCompany @field(resolver:"ApplicantCompanyModulesMutator@attach")
+
+    "Активировать модуль applicant company"
+    updateApplicantCompanyModule(
+        "Аппликант"
+        applicant_company_id: ID!
+        "Модуль"
+        applicant_module_id: [ID]
+        "Активный или неактивный"
+        is_active: Boolean
+    ): ApplicantCompany @field(resolver:"ApplicantCompanyModulesMutator@update")
+
+    "Удалить модуль"
+    deleteApplicantCompanyModule(
+        applicant_company_id: ID!
+        applicant_module_id: [ID]
+    ): ApplicantCompany @field(resolver: "ApplicantCompanyModulesMutator@detach")
+
+}
+

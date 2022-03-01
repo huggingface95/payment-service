@@ -1,0 +1,55 @@
+"""
+Модули аппликанта
+Dashboard -> Applicants -> Individual -> Full Profile -> Settings
+"""
+type ApplicantIndividualModules {
+    "Получить индивидуала"
+    applicant_individual: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
+    "Получить модуль"
+    applicant_module: ApplicantModules @belongsTo(relation: "module")
+    applicant_module_id: ID
+    "Активен = true или не активный = false"
+    is_active: Boolean
+}
+
+
+extend type Query {
+    """
+    Получить список всех модулей аппликанта
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    """
+    applicantIndividualModules(where: _ @whereConditions(columns: ["applicant_individual_id"]), orderBy: _ @orderBy(
+        columns: ["applicant_individual_id"],
+    )): [ApplicantIndividualModules!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать модуль аппликанта"
+    createApplicantIndividualModule(
+        "Аппликант"
+        applicant_individual_id: ID!
+        "Модуль"
+        applicant_module_id: [ID]
+        "Активный или неактивный"
+        is_active: Boolean
+    ): ApplicantIndividual @field(resolver:"ApplicantIndividualModulesMutator@attach")
+
+    "Активировать или деактивировать модуль аппликанту"
+    updateApplicantIndividualModule(
+        "Аппликант"
+        applicant_individual_id: ID!
+        "Модуль"
+        applicant_module_id: [ID]
+        "Активный или неактивный"
+        is_active: Boolean
+    ): ApplicantIndividualModules @field(resolver:"ApplicantIndividualModulesMutator@update")
+
+    "Удалить модуль"
+    deleteApplicantIndividualModule(
+        applicant_individual_id: ID!
+        applicant_module_id: [ID]
+    ): ApplicantIndividual @field(resolver: "ApplicantIndividualModulesMutator@detach")
+
+
+}
+

@@ -14,7 +14,7 @@ unit-test-job:
   stage: test
   script:
     - echo "Running unit tests..."
-    - sleep 60
+    - sleep 1
     - echo "Code coverage is 90%"
   only:
     - dev
@@ -22,7 +22,7 @@ lint-test-job:
   stage: test
   script:
     - echo "Linting code... This will take about 10 seconds."
-    - sleep 10
+    - sleep 1
     - echo "No lint issues found."
   only:
     - dev

@@ -5,19 +5,23 @@ Management -> New Applicant -> Create Individual -> General
 type ApplicantIndividual {
     id: ID!
     "Имя"
-    first_name: String!
+    first_name: String
     "Фамилия"
-    last_name: String!
+    last_name: String
     "Отчество"
     middle_name: String
     "email"
-    email: EMAIL!
+    email: EMAIL
     "Адрес сайта"
     url: String
     "Телефон"
     phone: String
+    "Верецифиорован телефон true/false"
+    is_verification_phone: Boolean
     "Получить связанную страну"
     country: Country @belongsTo(relation: "country")
+    "Получить язык"
+    language: Languages @belongsTo(relation: "language")
     "Получить связанную страну гражданства"
     citizenship_country: Country @belongsTo(relation: "citizenshipCountry")
     "Штат / область"
@@ -40,22 +44,46 @@ type ApplicantIndividual {
     birth_at: Date
     "Пол"
     sex: Sex
-    "Дополнительные поля"
-    additional_fields: JSON
+    "Время создания"
+    created_at: DateTime
+    "Дополнительные поля Profile data"
+    profile_additional_fields: JSON
+    "Дополнительные поля для Personal info"
+    personal_additional_fields: JSON
     "Дополнительные поля блока контакты"
     contacts_additional_fields: JSON
+    "Полное имя"
+    fullname: String
     "Получить статусы"
     status: ApplicantStatus @belongsTo(relation: "status")
     "Получить состояния"
-    state: ApplicantState @belongsTo(relation: "state")
+    applicant_state: ApplicantState @belongsTo(relation: "state")
     "Получить причины"
-    state_reson: ApplicantStateReason @belongsTo(relation: "stateReason")
+    state_reason: ApplicantStateReason @belongsTo(relation: "stateReason")
     "Получить уровни рисков"
     risk_level: ApplicantRiskLevel @belongsTo(relation: "riskLevel")
     "Получить менеджера"
     manager: Members @belongsTo(relation: "manager")
     "Получить метки"
     labels: [ApplicantIndividualLabel] @belongsToMany(relation: "labels")
+    "Название компании держателя applicant"
+    created_for: Companies
+    "Получить заметки"
+    notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
+    "Получить модули"
+    modules: [ApplicantIndividualModules] @hasMany (relation: "modules")
+    "Получить компании"
+    companies: [ApplicantCompany] @belongsToMany (relation: "companies")
+}
+
+
+type ApplicantIndividualCompany {
+    applicant_individual_id: ID!
+    applicant_company_id: ID!
+    applicant_individual_company_relation_id: ID!
+    applicant_individual_company_position_id: ID!
+    applicant_individual: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
+    position_in_company: ApplicantIndividualCompanyPosition @belongsTo(relation: "ApplicantIndividualCompanyPosition")
 }
 
 extend type Query {
@@ -68,8 +96,12 @@ extend type Query {
     orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email
     where:{column: EMAIL, operator: LIKE, value: ""} фильтр по имени, фамилии, Email
     """
-    applicantIndividuals(where: _ @whereConditions(columns: ["first_name","last_name", "email"]), orderBy: _ @orderBy(
-        columns: ["id","first_name","last_name", "email"],
+    applicantIndividuals(
+        hasRiskLevel: _ @whereHasConditions(columns: ["name", "id"]),
+        hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
+        hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
+        created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at"]), orderBy: _ @orderBy(
+        columns: ["id","first_name","last_name", "email","created_at"],
     )): [ApplicantIndividual!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
@@ -85,11 +117,13 @@ extend type Mutation {
         "email"
         email: EMAIL!
         "Адрес сайта"
-        url: String!
+        url: String
         "Телефон"
         phone: String!
         "ID Страны"
         country_id: ID!
+        "ID языка"
+        language_id: ID
         "ID страны гражданства"
         citizenship_country_id: ID
         "Штат / область"
@@ -112,8 +146,8 @@ extend type Mutation {
         birth_at: Date
         "Пол"
         sex: Sex
-        "Дополнительные поля"
-        additional_fields: [AdditionalFieldInput]
+        "Дополнительные поля для Personal info"
+        personal_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
         contacts_additional_fields: [AdditionalFieldInput]
         "ID статуса"
@@ -128,6 +162,10 @@ extend type Mutation {
         account_manager_member_id: ID
         "Массив ID меток"
         labels: [ID]
+        "Пароль"
+        password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
+        "подтверждение пароля"
+        password_confirmation: String
     ): ApplicantIndividual @field(resolver:"ApplicantMutator@create")
 
     "Редактирование частного пользователя"
@@ -145,8 +183,12 @@ extend type Mutation {
         url: String
         "Телефон"
         phone: String
+        "Верецифиорован телефон true/false"
+        is_verification_phone: Boolean
         "ID Страны"
         country_id: ID
+        "ID языка"
+        language_id: ID
         "ID страны гражданства"
         citizenship_country_id: ID
         "Штат / область"
@@ -169,8 +211,10 @@ extend type Mutation {
         birth_at: Date
         "Пол"
         sex: Sex
-        "Дополнительные поля"
-        additional_fields: [AdditionalFieldInput]
+        "Дополнительные поля Profile data"
+        profile_additional_fields: [AdditionalFieldInput]
+        "Дополнительные поля для Personal info"
+        personal_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
         contacts_additional_fields: [AdditionalFieldInput]
         "ID статуса"
@@ -185,6 +229,10 @@ extend type Mutation {
         account_manager_member_id: ID
         "Массив ID меток"
         labels: [ID]
+        "Пароль"
+        password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
+        "подтверждение пароля"
+        password_confirmation: String
     ): ApplicantIndividual @field(resolver:"ApplicantMutator@update")
 
     """

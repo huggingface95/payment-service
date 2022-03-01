@@ -37,6 +37,11 @@ class Companies extends Model
         return $this->hasMany(Departments::class,"company_id");
     }
 
+    public function positions()
+    {
+        return $this->hasMany(DepartmentPosition::class,"company_id");
+    }
+
     public function companySettings()
     {
         return $this->hasOne(CompanySettings::class,'company_id','id');

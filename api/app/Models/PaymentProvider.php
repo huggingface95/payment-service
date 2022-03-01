@@ -47,9 +47,9 @@ class PaymentProvider extends BaseModel
         return $this->belongsToMany(PaymentSystem::class,'payment_provider_payment_system','payment_provider_id','payment_system_id');
     }
 
-    public function scopePaymentProviderCountry($query, int $countryId)
-    {
-        $countries = implode(',', $countryId);
+    public function scopePaymentProviderCountry($query, $countryId)
+    {        
+		$countries = implode(',', $countryId);
         return $query->where('country_id', '&&', DB::raw('ARRAY[' . $countries . ']::integer[]'));
     }
 

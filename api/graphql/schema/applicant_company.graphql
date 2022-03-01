@@ -5,15 +5,19 @@ Management -> New Applicant -> Create Company
 type ApplicantCompany {
     id: ID!
     "Название"
-    name: String!
+    name: String
     "email"
-    email: EMAIL!
+    email: EMAIL
     "Адрес сайта"
     url: String
     "Телефон"
     phone: String
+    "Верецифиорован телефон true/false"
+    is_verification_phone: Boolean
     "Получить связанную страну"
     country: Country @belongsTo(relation: "country")
+    "Получить язык"
+    language: Languages @belongsTo(relation: "language")
     "Штат / область"
     state: String
     "Город"
@@ -38,31 +42,49 @@ type ApplicantCompany {
     license_number: String
     "Тип компании"
     company_type:String
-    "Дополнительные поля"
-    info_additional_fields: JSON
+    "Дополнительные поля Company Info"
+    company_info_additional_fields: JSON
     "Дополнительные поля блока контакты"
     contacts_additional_fields: JSON
+    "Дополнительные поля Profile data"
+    profile_additional_fields: JSON
+    "Дата создания"
+    created_at: DateTime
     "Получить тип бизнеса"
     business_type: ApplicantCompanyBusinessType @belongsTo(relation: "businessType")
     "Получить статусы"
     status: ApplicantStatus @belongsTo(relation: "status")
     "Получить состояния"
-    state: ApplicantState @belongsTo(relation: "state")
+    applicant_state: ApplicantState @belongsTo(relation: "state")
     "Получить причины"
-    state_reson: ApplicantStateReason @belongsTo(relation: "stateReason")
+    state_reason: ApplicantStateReason @belongsTo(relation: "stateReason")
     "Получить уровни рисков"
     risk_level: ApplicantRiskLevel @belongsTo(relation: "riskLevel")
+    "Получить KYC level"
+    kyc_level: ApplicantRiskLevel @belongsTo(relation: "kycLevel")
     "Получить менеджера"
     manager: Members @belongsTo(relation: "manager")
+    "Получить создателя"
+    owner: ApplicantIndividual @belongsTo(relation: "owner")
     "Получить метки"
     labels: [ApplicantCompanyLabel] @belongsToMany(relation: "labels")
+    "Получить заметки"
+    notes: [ApplicantCompanyNotes] @hasMany(relation: "notes")
+    modules: [ApplicantCompanyModules] @hasMany (relation: "modules")
+    company_position: ApplicantIndividualCompany @belongsTo(relation: "applicantIndividualCompany")
+    owner_relation: ApplicantIndividualCompany @belongsTo(relation: "ownerRelation")
+    owner_position: ApplicantIndividualCompany @belongsTo(relation: "ownerPosition")
 }
+
 
 type ApplicantIndividualCompany {
     applicant_individual_id: ID!
     applicant_company_id: ID!
     applicant_individual_company_relation_id: ID!
     applicant_individual_company_position_id: ID!
+    applicant_individual: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
+    relation_to_company: ApplicantIndividualCompanyRelation @belongsTo(relation: "ApplicantIndividualCompanyRelation")
+    position_in_company: ApplicantIndividualCompanyPosition @belongsTo(relation: "ApplicantIndividualCompanyPosition")
 }
 
 extend type Query {
@@ -71,17 +93,32 @@ extend type Query {
     """
     applicantCompany(id: ID @eq): ApplicantCompany @find
     """
-    Получить список частных пользователей
+    Получить список applicant companies
     orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email
     where:{column: EMAIL, operator: LIKE, value: ""} фильтр по имени, фамилии, Email
     """
-    applicantCompanies(where: _ @whereConditions(columns: ["first_name","last_name", "email"]), orderBy: _ @orderBy(
-        columns: ["id","first_name","last_name", "email"],
+    applicantCompanies(
+        hasRiskLevel: _ @whereHasConditions(columns: ["name", "id"]),
+        hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
+        hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
+        hasBusinessType: _ @whereHasConditions(columns: ["name", "id"]),
+        hasOwner: _ @whereHasConditions(columns: ["fullname", "id"]),
+        hasKycLevel: _ @whereHasConditions(columns: ["name", "id"]),
+        created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","account_manager_member_id","applicant_state_id","applicant_state_reason_id","name","url" ,"email","created_at"]), orderBy: _ @orderBy(
+        columns: ["id","name", "email","created_at","url","owner_id"],
     )): [ApplicantCompany!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    """
+    Получить список applicant individuals по applicant company
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    where:{column: applicant_company_id, operator: LIKE, value: ""} фильтр по applicant_company_id
+    """
+    getMatchedUsers(applicant_company_id: ID! @eq, orderBy: _ @orderBy(
+        columns: ["id"],
+    )): [ApplicantIndividualCompany!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }
 
 extend type Mutation {
-    "Создать частного пользователя"
+    "Создать applicant company"
     createApplicantCompany (
         "Название"
         name: String!
@@ -93,6 +130,8 @@ extend type Mutation {
         phone: String!
         "Получить связанную страну"
         country_id: ID!
+        "ID языка"
+        language_id: ID
         "Штат / область"
         state: String
         "Город"
@@ -118,9 +157,9 @@ extend type Mutation {
         "Тип компании"
         company_type:String
         "Дополнительные поля"
-        info_additional_fields: JSON
+        company_info_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
-        contacts_additional_fields: JSON
+        contacts_additional_fields: [AdditionalFieldInput]
         "ID типов бизнеса"
         applicant_company_business_type_id: ID
         "ID статуса"
@@ -131,25 +170,37 @@ extend type Mutation {
         applicant_state_reason_id: ID
         "ID уровня рисков"
         applicant_risk_level_id: ID
+        "ID KYC level"
+        applicant_kyc_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID
+        "ID owner"
+        owner_id: ID
+        "ID relation владельца"
+        owner_relation_id: ID
+        "ID position владельца"
+        owner_position_id: ID
         "Массив ID меток"
         labels: [ID]
-    ): ApplicantCompany @create
+    ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@create")
 
-    "Редактирование частного пользователя"
+    "Редактирование applicant company"
     updateApplicantCompany (
         id: ID!
         "Название"
-        name: String!
+        name: String
         "email"
-        email: EMAIL!
+        email: EMAIL
         "Адрес сайта"
         url: String
         "Телефон"
         phone: String
+        "Верецифиорован телефон true/false"
+        is_verification_phone: Boolean
         "страна"
         country_id: ID
+        "ID языка"
+        language_id: ID
         "Штат / область"
         state: String
         "Город"
@@ -174,11 +225,13 @@ extend type Mutation {
         license_number: String
         "Тип компании"
         company_type:String
-        "Дополнительные поля"
-        info_additional_fields: JSON
+        "Дополнительные поля Company Info"
+        company_info_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
-        contacts_additional_fields: JSON
-        "Получить тип бизнеса"
+        contacts_additional_fields: [AdditionalFieldInput]
+        "Дополнительные поля Profile data"
+        profile_additional_fields: [AdditionalFieldInput]
+        "ID типа бизнеса"
         applicant_company_business_type_id: ID
         "ID статуса"
         applicant_status_id: ID
@@ -188,8 +241,16 @@ extend type Mutation {
         applicant_state_reason_id: ID
         "ID уровня рисков"
         applicant_risk_level_id: ID
+        "ID KYC level"
+        applicant_kyc_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID
+        "ID owner"
+        owner_id: ID
+        "ID relation владельца"
+        owner_relation_id: ID
+        "ID position владельца"
+        owner_position_id: ID
         "Массив ID меток"
         labels: [ID]
     ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@update")
@@ -213,7 +274,7 @@ extend type Mutation {
         applicant_company_id: ID!
         applicant_individual_company_relation_id: ID
         applicant_individual_company_position_id: ID
-    ): ApplicantIndividualCompany @update
+    ): ApplicantIndividualCompany @field(resolver: "ApplicantIndividualCompanyMutator@update")
 
     "Удалить связь Individual с Company"
     deleteApplicantIndividualCompany(

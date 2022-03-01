@@ -1,4 +1,7 @@
 <?php
+use Aws\S3\S3Client;
+use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\Filesystem;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -78,6 +81,9 @@ $app->configure('lighthouse');
 $app->configure('lighthouse-graphql-jwt');
 $app->configure('swagger-lume');
 $app->configure('graphql-playground');
+$app->configure('filesystems');
+$app->configure('dompdf');
+$app->configure('mail');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -119,6 +125,8 @@ $app->register(\Nuwave\Lighthouse\GlobalId\GlobalIdServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\Validation\ValidationServiceProvider::class);
 $app->register(\SwaggerLume\ServiceProvider::class);
 $app->register(MLL\GraphQLPlayground\GraphQLPlaygroundServiceProvider::class);
+$app->register(Barryvdh\DomPDF\ServiceProvider::class);
+$app->register(\Illuminate\Mail\MailServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -131,6 +139,7 @@ $app->register(MLL\GraphQLPlayground\GraphQLPlaygroundServiceProvider::class);
 |
 */
 $app->alias('cache', \Illuminate\Cache\CacheManager::class);
+$app->alias('PDF', Barryvdh\DomPDF\Facade::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

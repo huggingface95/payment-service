@@ -17,6 +17,8 @@ class CreateApplicantLabelsTable extends Migration
             $table->id();
             $table->string('name',255)->unique();
             $table->string('hex_color_code',10);
+            $table->unsignedBigInteger('member_id');
+            $table->foreign('member_id')->references('id')->on('members');
         });
     }
 

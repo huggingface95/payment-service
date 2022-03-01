@@ -10,8 +10,8 @@ type Accounts {
     client_id: ApplicantIndividual @belongsTo(relation:"ApplicantIndividual")
 	"Получить связанного владельца"
     owner_id: Members @belongsTo(relation:"Members")
-    "ID аккаунта"
-    account_id: String!
+    "Номер аккаунта"
+    account_number: String!
     "Тип аккаунта"
     account_type: String!
     "Получить связанного платежного провайдера"
@@ -43,7 +43,7 @@ extend type Query {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     accounts(
-            where: _ @whereConditions(columns: ["account_id","client_id","owner_id","account_name","currency_id","payment_provider_id"]),
+            where: _ @whereConditions(columns: ["account_number","client_id","owner_id","account_name","currency_id","payment_provider_id"]),
             orderBy: _ @orderBy(columns: ["id", "client_id"])
         ): [Accounts!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -57,8 +57,8 @@ extend type Mutation {
         client_id: ID!
         "ID владельца"
         owner_id: ID!
-        "ID аккаунта"
-        account_id: String!
+        "Номер аккаунта"
+        account_number: String!
         "Тип аккаунта"
         account_type: String!
         "ID провайдера"

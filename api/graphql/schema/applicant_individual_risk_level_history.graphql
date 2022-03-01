@@ -1,0 +1,48 @@
+"""
+История уровней риска Applicant Individual
+Applicants -> Individual -> Individual Full Profile -> General
+"""
+type ApplicantRiskLevelHistory {
+    id: ID!
+    "Комментарий"
+    comment: String!
+    "Дата создания сообщения"
+    created_at: DateTime
+    "Получить аппликанта"
+    applicant_id: ApplicantIndividual @belongsTo(relation:"ApplicantIndividual")
+    "Получить владельца"
+    manager_id: Members @belongsTo(relation:"Members")
+    "Получить уровень риска"
+    risk_level_id: ApplicantRiskLevel @belongsTo(relation:"ApplicantRiskLevel")
+}
+
+extend type Query {
+    """
+    Получить историю списка уровней риска по аппликанту
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    where:{column: applicant_id, operator: LIKE, value: ""} фильтр по аппликанту
+    """
+    applicantRiskLevelHistory(where: _ @whereConditions(columns: ["applicant_id"]), orderBy: _ @orderBy(
+        columns: ["id"],
+    )): [ApplicantRiskLevelHistory!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Добавить запись"
+    createApplicantRiskLevelHistory(
+        "Комментарий"
+        comment: String!
+        "Аппликант"
+        applicant_id: ID!
+        "Менеджер"
+        manager_id: ID
+        "Уровень риска"
+        risk_level_id: ID!
+    ):ApplicantRiskLevelHistory @field(resolver: "ApplicantHistoryRiskLevelMutator@create")
+
+    "Удалить запись"
+    deleteApplicantRiskLevelHistory(
+        id: ID!
+    ): ApplicantRiskLevelHistory @delete
+}
+

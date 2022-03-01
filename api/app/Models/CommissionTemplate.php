@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class CommissionTemplate extends BaseModel
@@ -17,8 +18,20 @@ class CommissionTemplate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'is_active','description','payment_provider_id','country_id','currency_id','commission_template_limit_id'
+        'name', 'is_active','description','payment_provider_id','country_id','currency_id','commission_template_limit_id', 'member_id'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope('member_id', function ($builder) {
+            $memberId = self::DEFAULT_MEMBER_ID;
+            $companyId = Members::where('id', '=', $memberId)->value('company_id');
+            $companyMembers = Members::where('company_id', '=', $companyId)->get('id');
+            $result = collect($companyMembers)->pluck('id')->toArray();
+            return $builder->whereIn('member_id', $result);
+        });
+    }
 
 
     /**
@@ -70,6 +83,27 @@ class CommissionTemplate extends BaseModel
     {
         return $query->join('payment_provider','commission_template.payment_provider_id','=','payment_provider.id')->orderBy('payment_provider.name',$sort)->select('commission_template.*');
     }
+
+    public function owner()
+    {
+        return $this->belongsToMany(ApplicantIndividual::class,'accounts','commission_template_id', 'client_id', 'id');
+    }
+
+    public function account()
+    {
+        return $this->belongsTo(Accounts::class,'id','commission_template_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsToMany(ApplicantCompany::class,'accounts','commission_template_id','client_id', 'id', 'owner_id');
+    }
+
+    public function commissionTemplateLimit()
+    {
+        return $this->belongsToMany(CommissionTemplateLimit::class,'commission_template_limit_relation','commission_template_id','commission_template_limit_id');
+    }
+
 
 
 }

@@ -16,7 +16,7 @@ class DepartmentPosition extends Model
      * @var array
      */
     protected $fillable = [
-        'name','department_id'
+        'name','department_id','company_id'
     ];
 
 
@@ -28,6 +28,11 @@ class DepartmentPosition extends Model
     public function members()
     {
         return $this->hasMany(Members::class);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Companies::class,'company_id');
     }
 
     public static function getPositionsIdByDepartment(int $departementId)
