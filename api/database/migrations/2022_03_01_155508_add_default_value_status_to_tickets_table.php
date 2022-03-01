@@ -14,7 +14,7 @@ class AddDefaultValueStatusToTicketsTable extends Migration
     public function up()
     {
         Schema::table('tickets', function (Blueprint $table) {
-            $table->tinyInteger('status')->default(0);
+            $table->smallInteger('status')->default(0)->change();
         });
     }
 
