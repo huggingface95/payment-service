@@ -18,7 +18,6 @@ class CreateTicketCommentsTable extends Migration
             $table->unsignedBigInteger('ticket_id');
             $table->unsignedBigInteger('client_id');
             $table->text('message');
-//            $table->string('file_object')->nullable();
             $table->timestamps();
 
             $table->foreign('ticket_id')->references('id')->on('tickets');
