@@ -82,9 +82,9 @@ class CommissionTemplate extends BaseModel
     }
 
 
-    public function scopePaymentProviderName(Builder $query, $sort)
+    public function scopePaymentProviderName(Builder $query, $sort): Builder
     {
-        return $query->join(
+        return $query->leftJoin(
             DB::raw('(SELECT id, name as payment_provider_name FROM "payment_provider") p'),
             function($join)
             {
