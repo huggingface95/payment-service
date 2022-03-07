@@ -44,7 +44,7 @@ input Fee {
 
 
 extend type Mutation {
-    "Создать компанию"
+    "Создать Цен"
     createPriceListFees(
         "Название"
         name: String
@@ -60,7 +60,7 @@ extend type Mutation {
         price_list_id: Int!
     ): PriceListFee @create
 
-    "Обновить данные компании"
+    "Обновить данные Цен"
     updatePriceListFee(
         "Название"
         name: String
@@ -75,4 +75,12 @@ extend type Mutation {
         "ID Прайс лист"
         price_list_id: Int
     ): PriceListFee @update
+
+    """
+    Удалить Цен
+    """
+    deletePriceListFee(
+        "ID участника"
+        id: ID!
+    ): PriceListFee @delete
 }
