@@ -12,6 +12,8 @@ type CommissionPriceList {
     payment_system: PaymentSystem @belongsTo(relation:"PaymentSystem")
 	"Получить связанный платежный шаблон"
     commission_template: CommissionTemplate @belongsTo(relation:"CommissionTemplate")
+    "Получить связанные цены"
+    fees: [PriceListFee] @hasMany(relation:"fees")
 }
 
 extend type Query {

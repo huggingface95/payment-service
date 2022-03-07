@@ -1,0 +1,78 @@
+"""
+Цены прайс листа
+Banking -> Цены прайс листа
+"""
+type PriceListFee {
+    id: ID!
+    "Название"
+    name: String!
+    "Тип"
+    type: String!
+    "Тип операции"
+    operation_type: Int!
+    "Период"
+    period: Int!
+    "Цены"
+    fee: JSON
+    "Получить Прайс лист комиссий"
+    list: CommissionPriceList @belongsTo(relation: "priceList")
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+
+extend type Query {
+    """
+    Получить список Цен
+    where:{column: NAME, operator: LIKE, value: ""} фильтр по имени, тип, тип операции, период
+    """
+    priceListFees(
+        hasList: _ @whereHasConditions(columns: ["name"]),
+        price_list_id: ID @eq,
+        where: _ @whereConditions(columns: ["name", "type", "operation_type", "period"])
+    ): [PriceListFee!]! @orderBy(column: "id", direction: ASC) @all
+}
+
+
+input Fee {
+    amount_from: StringInteger
+    amount_to: StringInteger
+    mode: String
+    fee: StringInteger
+    currency: String
+}
+
+
+extend type Mutation {
+    "Создать компанию"
+    createPriceListFees(
+        "Название"
+        name: String
+        "Тип"
+        type: Int
+        "Тип операции"
+        operation_type: Int
+        "Период"
+        period: Int
+        "Цены"
+        fee: [Fee]
+        "ID Прайс лист"
+        price_list_id: Int!
+    ): PriceListFee @create
+
+    "Обновить данные компании"
+    updatePriceListFee(
+        "Название"
+        name: String
+        "Тип"
+        type: Int
+        "Тип операции"
+        operation_type: Int
+        "Период"
+        period: Int
+        "Цены"
+        fee: [Fee]
+        "ID Прайс лист"
+        price_list_id: Int
+    ): PriceListFee @update
+}
