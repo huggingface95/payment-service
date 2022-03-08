@@ -9,7 +9,6 @@ type ApplicantCompanyLabel {
     "HEX код метки"
     hex_color_code: String!
     is_active: Boolean
-    company_id: Int!
 }
 
 
