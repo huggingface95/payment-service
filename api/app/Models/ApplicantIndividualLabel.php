@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use App\Models\Scopes\MemberScope;
+
 class ApplicantIndividualLabel extends BaseModel
 {
 
@@ -19,16 +21,9 @@ class ApplicantIndividualLabel extends BaseModel
 
     public $timestamps = false;
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
-        static::addGlobalScope('member_id', function ($builder) {
-            $memberId = self::DEFAULT_MEMBER_ID;
-            $companyId = Members::where('id', '=', $memberId)->value('company_id');
-            $companyMembers = Members::where('company_id', '=', $companyId)->get('id');
-            $result = collect($companyMembers)->pluck('id')->toArray();
-            return $builder->whereIn('member_id', $result);
-        });
+        static::addGlobalScope(new MemberScope);
     }
 
     public function applicants()

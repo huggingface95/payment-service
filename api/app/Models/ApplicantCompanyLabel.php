@@ -3,6 +3,10 @@
 namespace App\Models;
 
 
+use App\Models\Scopes\MemberScope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
+
 class ApplicantCompanyLabel extends BaseModel
 {
 
@@ -17,16 +21,10 @@ class ApplicantCompanyLabel extends BaseModel
 
     public $timestamps = false;
 
-    protected static function boot()
+
+    protected static function booted()
     {
-        parent::boot();
-        static::addGlobalScope('member_id', function ($builder) {
-            $memberId = self::DEFAULT_MEMBER_ID;
-            $companyId = Members::where('id', '=', $memberId)->value('company_id');
-            $companyMembers = Members::where('company_id', '=', $companyId)->get('id');
-            $result = collect($companyMembers)->pluck('id')->toArray();
-            return $builder->whereIn('member_id', $result);
-        });
+        static::addGlobalScope(new MemberScope);
     }
 
     public function applicants()
@@ -37,6 +35,16 @@ class ApplicantCompanyLabel extends BaseModel
     public function members()
     {
         return $this->belongsTo(Members::class,'member_id','id');
+    }
+
+
+    public function scopeIsActive(Builder $query, int $company_id = null): Builder
+    {
+        $query->select('applicant_company_labels.*',
+            DB::raw('applicant_company_label_relation.applicant_company_id = '. $company_id .'  AS is_active'))
+        ->leftJoin('applicant_company_label_relation','applicant_company_labels.id','=','applicant_company_label_relation.applicant_company_label_id');
+
+        return $query;
     }
 
     public function scopeCompanyId($query, $id)

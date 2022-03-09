@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\MemberScope;
 use Illuminate\Database\Eloquent\Model;
 
 class ApplicantCompanyRiskLevelHistory extends Model
@@ -18,16 +19,9 @@ class ApplicantCompanyRiskLevelHistory extends Model
         'risk_level_id', 'comment', 'applicant_company_id', 'manager_id'
     ];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
-        static::addGlobalScope('member_id', function ($builder) {
-            $memberId = BaseModel::DEFAULT_MEMBER_ID;
-            $companyId = Members::where('id', '=', $memberId)->value('company_id');
-            $companyMembers = Members::where('company_id', '=', $companyId)->get('id');
-            $result = collect($companyMembers)->pluck('id')->toArray();
-            return $builder->whereIn('manager_id', $result);
-        });
+        static::addGlobalScope(new MemberScope);
     }
 
     public function ApplicantCompany()
