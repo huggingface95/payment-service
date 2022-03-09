@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Models\Scopes\MemberScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -23,16 +24,9 @@ class CommissionTemplate extends BaseModel
         'name', 'is_active', 'description', 'payment_provider_id', 'country_id', 'currency_id', 'commission_template_limit_id', 'member_id'
     ];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
-        static::addGlobalScope('member_id', function (Builder $builder) {
-            $memberId = self::DEFAULT_MEMBER_ID;
-            $companyId = Members::where('id', '=', $memberId)->value('company_id');
-            $companyMembers = Members::where('company_id', '=', $companyId)->get('id');
-            $result = collect($companyMembers)->pluck('id')->toArray();
-            $builder->whereIn('member_id', $result);
-        });
+        static::addGlobalScope(new MemberScope);
     }
 
 

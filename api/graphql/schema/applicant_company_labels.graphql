@@ -9,7 +9,6 @@ type ApplicantCompanyLabel {
     "HEX код метки"
     hex_color_code: String!
     is_active: Boolean
-    company_id: Int!
 }
 
 
@@ -23,9 +22,9 @@ extend type Query {
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
     """
-    applicantCompanyLabels(company_id: ID @eq, where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+    applicantCompanyLabels(company_id: ID @scope(name:"IsActive"), where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantCompanyLabel!]! @field(resolver: "ApplicantCompanyLabelsQuery@enabled")
+    )): [ApplicantCompanyLabel!]! @all
     applicantCompanyLabelsAvailable(company_id: ID @scope(name:"CompanyId"), orderBy: _ @orderBy(
         columns: ["id","name"],
     )): [ApplicantCompanyLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)

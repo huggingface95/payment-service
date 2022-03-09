@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Country;
-use Illuminate\Database\Eloquent\Model;
+
+use App\Models\Scopes\MemberScope;
+
 
 class Payments extends BaseModel
 {
@@ -18,18 +19,10 @@ class Payments extends BaseModel
             'amount', 'fee', 'currency', 'status', 'sender_name', 'payment_details', 'sender_bank_account', 'sender_swift', 'sender_bank_name', 'sender_bank_country', 'sender_bank_address', 'sender_country', 'sender_address', 'urgency_id', 'type_id', 'payment_provider_id', 'account_id', 'company_id', 'payment_number', 'member_id'
     ];
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
-        static::addGlobalScope('member_id', function ($builder) {
-            $memberId = self::DEFAULT_MEMBER_ID;
-            $companyId = Members::where('id', '=', $memberId)->value('company_id');
-            $companyMembers = Members::where('company_id', '=', $companyId)->get('id');
-            $result = collect($companyMembers)->pluck('id')->toArray();
-            return $builder->whereIn('member_id', $result);
-        });
+        static::addGlobalScope(new MemberScope);
     }
-
 
     /**
      * Get relation Country
