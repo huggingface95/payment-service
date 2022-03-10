@@ -16,7 +16,7 @@ class ApplicantCompanyRiskLevelHistory extends Model
      * @var array
      */
     protected $fillable = [
-        'risk_level_id', 'comment', 'applicant_company_id', 'manager_id'
+        'risk_level_id', 'comment', 'applicant_company_id', 'member_id'
     ];
 
     protected static function booted()
