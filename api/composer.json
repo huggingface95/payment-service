@@ -6,8 +6,10 @@
     "type": "project",
     "require": {
         "php": "^7.3|^8.0",
+        "ext-json": "*",
         "barryvdh/laravel-dompdf": "^0.9.0",
         "darkaonline/swagger-lume": "8.*",
+        "doctrine/dbal": "^3.3",
         "illuminate/mail": "^8.79",
         "laravel/lumen-framework": "^8.0",
         "league/flysystem": "^1.0",
@@ -15,7 +17,6 @@
         "mll-lab/graphql-php-scalars": "^4.1",
         "mll-lab/laravel-graphql-playground": "^2.5",
         "nuwave/lighthouse": "^5.23",
-        "ext-json": "*"
         "spatie/laravel-permission": "^5.1",
         "tymon/jwt-auth": "^1.0",
         "wimil/lighthouse-graphql-jwt-auth": "^1.0"

@@ -113,6 +113,7 @@ $app->configure('mail');
 
  $app->register(App\Providers\AppServiceProvider::class);
  $app->register(App\Providers\AuthServiceProvider::class);
+//$app->register(Spatie\Permission\PermissionServiceProvider::class);
  //$app->register(Wimil\LighthouseGraphqlJwtAuth\LighthouseGraphqlJwtAuthServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Spatie\Permission\PermissionServiceProvider::class);
