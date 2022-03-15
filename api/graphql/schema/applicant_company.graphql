@@ -173,7 +173,7 @@ extend type Mutation {
         "ID KYC level"
         applicant_kyc_level_id: ID
         "ID менеджера"
-        account_manager_member_id: ID
+        account_manager_member_id: ID!
         "ID owner"
         owner_id: ID
         "ID relation владельца"
