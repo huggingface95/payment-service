@@ -112,6 +112,7 @@ $app->register(\SwaggerLume\ServiceProvider::class);
 $app->register(MLL\GraphQLPlayground\GraphQLPlaygroundServiceProvider::class);
 $app->register(Barryvdh\DomPDF\ServiceProvider::class);
 $app->register(\Illuminate\Mail\MailServiceProvider::class);
+$app->register(\PhpClickHouseLaravel\ClickhouseServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
