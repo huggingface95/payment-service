@@ -7,7 +7,7 @@ use App\Models\ApplicantIndividualLabel;
 use App\Models\DepartmentPosition;
 use App\Models\Departments;
 use App\Models\Members;
-use App\Models\Roles;
+use App\Models\Role;
 use function PHPUnit\Framework\isEmpty;
 
 class ExampleController extends Controller

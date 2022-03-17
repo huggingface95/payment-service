@@ -3,7 +3,7 @@
 namespace App\GraphQL\Queries;
 
 use App\Models\Permissions;
-use App\Models\Roles;
+use App\Models\Role;
 use GraphQL\Exception\InvalidArgument;
 
 class RoleQuery
@@ -15,7 +15,7 @@ class RoleQuery
     public function permissions($_, array $args)
     {
         try {
-            $args = Roles::findById($args['id']);
+            $args = Role::findById($args['id']);
             $args['permisssions_tree'] = Permissions::getTreePermissions($args['id']);
             return $args;
         }

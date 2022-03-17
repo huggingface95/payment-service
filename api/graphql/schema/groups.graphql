@@ -14,7 +14,7 @@ type Groups {
     "Название группы"
     name: GroupsEntities!
     "Связанные роли"
-    roles: [Roles] @belongsToMany(relation: "roles")
+    roles: [Role] @belongsToMany(relation: "roles")
 }
 
 type GroupRole {
@@ -30,7 +30,7 @@ type GroupRole {
     "Получить связанную группу"
     group: Groups @belongsTo(relation: "group")
     "Получить связанную роль"
-    role: Roles @belongsTo(relation: "role")
+    role: Role @belongsTo(relation: "role")
     "Получить связанный платежный провайдер"
     payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
     "Получит свящанный шаблон комиссий"

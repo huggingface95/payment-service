@@ -20,7 +20,7 @@ class GroupRole extends Model
 
     public function role()
     {
-        return $this->belongsTo(Roles::class,"role_id");
+        return $this->belongsTo(Role::class,"role_id");
     }
 
     public function paymentProvider()
