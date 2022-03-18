@@ -167,7 +167,7 @@ extend type Mutation {
         "ID состояния"
         applicant_state_id: ID!
         "ID причины"
-        applicant_state_reason_id: ID!
+        applicant_state_reason_id: ID
         "ID уровня рисков"
         applicant_risk_level_id: ID
         "ID KYC level"
