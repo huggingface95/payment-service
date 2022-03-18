@@ -2,7 +2,7 @@
 Роли
 Settings->Manager Roles->Roles List
 """
-type Roles {
+type Role {
     id: ID!
     "Название роли"
     name: String!
@@ -21,7 +21,7 @@ type Roles {
 
 extend type Query {
     "Получить роль по ID"
-    role(id: ID @eq): Roles @field(resolver:"RoleQuery@permissions")
+    role(id: ID @eq): Role @field(resolver:"RoleQuery@permissions")
     """
     Получить список ролей
     groups_sort: сортировка по количеству групп
@@ -30,7 +30,7 @@ extend type Query {
     """
     roles(groups_sort: Sort @scope(name:"GroupsSort"), where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name","description"],
-    )): [Roles!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [Role!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 type Mutation {
@@ -43,7 +43,7 @@ type Mutation {
         permissions: [ID]
         "Массив груп поумолчанию"
         groups: [ID]
-    ): Roles @field(resolver:"RoleMutator@create")
+    ): Role @field(resolver:"RoleMutator@create")
 
     updateRole(
         "ID роли"
@@ -56,12 +56,12 @@ type Mutation {
         permissions: [ID]
         "Массив групп поумолчанию"
         groups: [ID]
-    ): Roles @field(resolver:"RoleMutator@update")
+    ): Role @field(resolver:"RoleMutator@update")
 
     deleteRole(
         "ID роли"
         id: ID!
-    ): Roles @delete
+    ): Role @delete
 
 
 }
