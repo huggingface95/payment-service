@@ -135,9 +135,9 @@ extend type Mutation {
         "Штат / область"
         state: String
         "Город"
-        city: String
+        city: String!
         "Адрес"
-        address: String
+        address: String!
         "Адрес2"
         address2: String
         "Адрес офиса"
@@ -147,7 +147,7 @@ extend type Mutation {
         "Дата регистрации"
         reg_at: Date
         "Дата окончания регистрации"
-        expires_at: Date
+        expires_at: Date!
         "Налоговый номер"
         tax: String
         "Регистрационный номер"
@@ -165,9 +165,9 @@ extend type Mutation {
         "ID статуса"
         applicant_status_id: ID
         "ID состояния"
-        applicant_state_id: ID
+        applicant_state_id: ID!
         "ID причины"
-        applicant_state_reason_id: ID
+        applicant_state_reason_id: ID!
         "ID уровня рисков"
         applicant_risk_level_id: ID
         "ID KYC level"
