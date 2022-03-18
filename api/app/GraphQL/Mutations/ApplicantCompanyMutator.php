@@ -30,7 +30,7 @@ class ApplicantCompanyMutator extends BaseMutator
 
         $applicant = ApplicantCompany::create($args);
 
-        if (isset($args['owner_id'])) {
+        if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {
             $this->setOwner($applicant, $args);
         }
 
@@ -63,7 +63,7 @@ class ApplicantCompanyMutator extends BaseMutator
             $args['profile_additional_fields']  = $this->setAdditionalField($args['profile_additional_fields']);
         }
 
-        if (isset($args['owner_id'])) {
+        if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {
             $this->setOwner($applicant, $args);
         }
 
