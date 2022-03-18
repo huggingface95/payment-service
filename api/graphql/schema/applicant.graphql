@@ -145,7 +145,7 @@ extend type Mutation {
         "Дата рождения"
         birth_at: Date!
         "Пол"
-        sex: Sex
+        sex: Sex!
         "Дополнительные поля для Personal info"
         personal_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
