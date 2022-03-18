@@ -128,7 +128,7 @@ extend type Mutation {
         url: String!
         "Телефон"
         phone: String!
-        "Получить связанную страну"
+        "ID страны"
         country_id: ID!
         "ID языка"
         language_id: ID
