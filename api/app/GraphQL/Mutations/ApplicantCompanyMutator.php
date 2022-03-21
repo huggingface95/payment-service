@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividualCompany;
+use App\Models\Role;
 
 
 class ApplicantCompanyMutator extends BaseMutator
@@ -37,6 +38,11 @@ class ApplicantCompanyMutator extends BaseMutator
         if (isset($args['labels'])) {
             $applicant->labels()->detach($args['labels']);
             $applicant->labels()->attach($args['labels']);
+        }
+
+        if (isset($args['role_id'])) {
+            $role = Role::find($args['role_id']);
+            $applicant->assignRole($role);
         }
 
         return $applicant;
@@ -73,6 +79,12 @@ class ApplicantCompanyMutator extends BaseMutator
         }
 
         $applicant->update($args);
+
+        if (isset($args['role_id'])) {
+            $role = Role::find($args['role_id']);
+            $applicant->assignRole($role);
+        }
+
         return $applicant;
     }
 

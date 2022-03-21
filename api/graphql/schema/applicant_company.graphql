@@ -74,6 +74,7 @@ type ApplicantCompany {
     company_position: ApplicantIndividualCompany @belongsTo(relation: "applicantIndividualCompany")
     owner_relation: ApplicantIndividualCompany @belongsTo(relation: "ownerRelation")
     owner_position: ApplicantIndividualCompany @belongsTo(relation: "ownerPosition")
+    roles: [Role] @belongsToMany (relation: "roles")
 }
 
 
@@ -180,6 +181,8 @@ extend type Mutation {
         owner_relation_id: ID!
         "ID position владельца"
         owner_position_id: ID!
+        "Role id"
+        role_id: ID
         "Массив ID меток"
         labels: [ID]
     ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@create")
@@ -251,6 +254,8 @@ extend type Mutation {
         owner_relation_id: ID
         "ID position владельца"
         owner_position_id: ID
+        "Role id"
+        role_id: ID
         "Массив ID меток"
         labels: [ID]
     ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@update")
