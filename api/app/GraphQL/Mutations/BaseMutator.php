@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 
+use App\Models\Role;
 use GraphQL\Exception\InvalidArgument;
 use Illuminate\Support\Facades\Hash;
 

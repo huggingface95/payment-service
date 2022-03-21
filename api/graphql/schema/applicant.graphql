@@ -74,6 +74,8 @@ type ApplicantIndividual {
     modules: [ApplicantIndividualModules] @hasMany (relation: "modules")
     "Получить компании"
     companies: [ApplicantCompany] @belongsToMany (relation: "companies")
+    "Получить роль"
+    roles: [Role] @belongsToMany (relation: "roles")
 }
 
 
@@ -160,6 +162,8 @@ extend type Mutation {
         applicant_risk_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID!
+        "Role id"
+        role_id: ID
         "Массив ID меток"
         labels: [ID]
         "Пароль"
@@ -227,6 +231,8 @@ extend type Mutation {
         applicant_risk_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID
+        "Role id"
+        role_id: ID
         "Массив ID меток"
         labels: [ID]
         "Пароль"
