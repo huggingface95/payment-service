@@ -15,9 +15,11 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->decimal('amount', 8, 2);
-            $table->decimal('fee', 8, 2);
-            $table->unsignedBigInteger('currency');
+            $table->decimal('amount', 15, 5);
+            $table->decimal('amount_real', 15, 5);
+            $table->decimal('fee', 15, 5);
+            $table->unsignedBigInteger('fee_type_id');
+            $table->unsignedBigInteger('currency_id');
             $table->tinyInteger('status');
             $table->string('sender_name', 255);
             $table->text('payment_details');
@@ -34,6 +36,7 @@ class CreatePaymentsTable extends Migration
             $table->unsignedBigInteger('account_id');
             $table->unsignedBigInteger('company_id');
             $table->string('payment_number', 255);
+            $table->timestamp('received_at');
             $table->timestamps();
             $table->foreign('urgency_id')->references('id')->on('payment_urgency');
             $table->foreign('type_id')->references('id')->on('payment_types');
@@ -42,7 +45,8 @@ class CreatePaymentsTable extends Migration
             $table->foreign('sender_bank_country')->references('id')->on('countries');
             $table->foreign('sender_country')->references('id')->on('countries');
             $table->foreign('company_id')->references('id')->on('companies');
-            $table->foreign('currency')->references('id')->on('currencies');
+            $table->foreign('currency_id')->references('id')->on('currencies');
+            $table->foreign('fee_type_id')->references('id')->on('fee_types');
         });
     }
 

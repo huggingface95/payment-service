@@ -16,7 +16,28 @@ class Payments extends BaseModel
      * @var array
      */
     protected $fillable = [
-            'amount', 'fee', 'currency', 'status', 'sender_name', 'payment_details', 'sender_bank_account', 'sender_swift', 'sender_bank_name', 'sender_bank_country', 'sender_bank_address', 'sender_country', 'sender_address', 'urgency_id', 'type_id', 'payment_provider_id', 'account_id', 'company_id', 'payment_number', 'member_id'
+        'amount',
+        'fee',
+        'fee_type_id',
+        'currency_id',
+        'status',
+        'sender_name',
+        'payment_details',
+        'sender_bank_account',
+        'sender_swift',
+        'sender_bank_name',
+        'sender_bank_country',
+        'sender_bank_address',
+        'sender_country',
+        'sender_address',
+        'urgency_id',
+        'type_id',
+        'payment_provider_id',
+        'account_id',
+        'company_id',
+        'payment_number',
+        'member_id',
+        'received_at'
     ];
 
     protected static function booted()
