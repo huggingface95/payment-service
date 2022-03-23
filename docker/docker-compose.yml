@@ -80,7 +80,6 @@ services:
 
   clickhouse_server:
     build: ./clickhouse
-    image: yandex/clickhouse-server
     environment:
       - CLICKHOUSE_USER=${CLICKHOUSE_USER}
       - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
