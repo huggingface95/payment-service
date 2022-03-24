@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 
 class CommissionPriceList extends BaseModel
 {
@@ -54,9 +55,16 @@ class CommissionPriceList extends BaseModel
         return $this->belongsTo(CommissionTemplate::class, 'commission_template_id', 'id');
     }
 
-    public function scopePaymentProviderName($query, $sort)
+    public function scopePaymentProviderName(Builder $query, $sort): Builder
     {
-        return $query->join('payment_provider', 'commission_price_list.provider_id', '=', 'payment_provider.id')->orderBy('payment_provider.name', $sort)->select('commission_price_list.*');
+        return $query->leftJoin(
+            DB::raw('(SELECT id, name as payment_provider_name FROM "payment_provider") p'),
+            function($join)
+            {
+                $join->on('p.id', '=','commission_price_list.provider_id');
+            })
+            ->orderBy('p.payment_provider_name', $sort)
+            ->selectRaw('commission_price_list.*');
     }
 
     public function fees(): HasMany
