@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\ApplicantIndividual;
 use App\Models\ApplicantRiskLevelHistory;
+use App\Models\BaseModel;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -20,6 +21,7 @@ class ApplicantHistoryRiskLevelMutator extends BaseMutator
 
     public function create($root, array $args)
     {
+        $args['member_id'] = BaseModel::DEFAULT_MEMBER_ID;
         $applicantRiskLevelHistory = ApplicantRiskLevelHistory::create($args);
         if (isset($args['risk_level_id'])) {
             ApplicantIndividual::where('id', '=', $args['applicant_id'])
