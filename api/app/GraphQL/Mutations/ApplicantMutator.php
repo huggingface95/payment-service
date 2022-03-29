@@ -36,10 +36,8 @@ class ApplicantMutator extends BaseMutator
         }
         $applicant = ApplicantIndividual::create($args);
         if (isset($args['role_id'])) {
-            foreach ($args['role_id'] as $role_id) {
-                $role = Role::find($role_id);
-                $applicant->assignRole($role);
-            }
+            $roles = Role::whereIn('id',$args['role_id'])->get();
+            $applicant->syncRoles($roles);
         }
 
         if (isset($args['labels'])) {
@@ -82,10 +80,8 @@ class ApplicantMutator extends BaseMutator
         $applicant->update($args);
 
         if (isset($args['role_id'])) {
-            foreach ($args['role_id'] as $role_id) {
-                $role = Role::find($role_id);
-                $applicant->assignRole($role);
-            }
+            $roles = Role::whereIn('id',$args['role_id'])->get();
+            $applicant->syncRoles($roles);
         }
 
         return $applicant;
