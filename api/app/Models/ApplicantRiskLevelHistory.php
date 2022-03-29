@@ -31,7 +31,7 @@ class ApplicantRiskLevelHistory extends Model
 
     public function Members()
     {
-        return $this->belongsTo(Members::class,'manager_id','id');
+        return $this->belongsTo(Members::class,'member_id','id');
     }
 
     public function ApplicantRiskLevel()
