@@ -106,7 +106,7 @@ extend type Mutation {
      "Добавить группу мемберу"
         setMemberGroup(
             "Group"
-            group_id: ID!
+            group_type_id: ID!
             "Payment Provider"
             payment_provider_id: ID!
             "Commission Template"

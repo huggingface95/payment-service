@@ -45,7 +45,7 @@ class Members extends BaseModel
 
     public function getGroupAttribute()
     {
-        return $this->groupRole()->join('groups', 'groups.id', '=', 'group_role.group_id')->select('groups.*')->first();
+        return $this->groupRole()->join('groups', 'groups.id', '=', 'group_role.group_type_id')->select('groups.*')->first();
     }
 
     public function getRoleAttribute()
