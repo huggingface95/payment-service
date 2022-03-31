@@ -30,7 +30,7 @@ type GroupRole {
     "Активная и не активная группа"
     is_active: Boolean
     "Получить тип группы"
-    group_type: Groups @belongsTo(relation: "group")
+    group_type: Groups @belongsTo(relation: "groupType")
     "Получить связанную роль"
     role: Role @belongsTo(relation: "role")
     "Получить связанный платежный провайдер"
@@ -55,7 +55,7 @@ extend type Query {
         hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
         hasGroupType: _ @whereHasConditions(columns: ["name", "id"]),
         hasRole: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["id","group_id", "role_id", "payment_provider_id", "commission_template_id", "is_active"]),
+        where: _ @whereConditions(columns: ["id","group_type_id", "role_id", "payment_provider_id", "commission_template_id", "is_active"]),
         orderBy: _ @orderBy(columns: ["id","is_active","description"],
     )): [GroupRole!]! @paginate(defaultCount: 10)
 }
