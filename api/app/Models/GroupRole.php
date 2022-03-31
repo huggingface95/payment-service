@@ -10,12 +10,12 @@ class GroupRole extends Model
     protected $table = 'group_role';
 
     protected $fillable = [
-        'name','group_id', 'role_id','payment_provider_id','commission_template_id','is_active','description'
+        'name','group_type_id', 'role_id','payment_provider_id','commission_template_id','is_active','description'
     ];
 
     public function groupType()
     {
-        return $this->belongsTo(Groups::class,"group_id");
+        return $this->belongsTo(Groups::class,"group_type_id");
     }
 
     public function role()
