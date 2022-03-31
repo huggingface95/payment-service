@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"time"
 )
 
@@ -14,14 +13,19 @@ func UnmarshalJson(c *gin.Context, logKey string, model models.PaymentCommon) er
 	body, err := c.GetRawData()
 
 	if err == nil {
-
 		logData := fmt.Sprintf("[ %v ] %s", time.Now(), string(body))
-		log.Println(logData)
+
+		app.Get.Log.Info().Msgf("UnmarshalJson data: %s", logData)
+
 		app.Get.LogRedis(logKey, logData)
 
 		err = json.Unmarshal(body, model)
+
+		app.Get.Log.Info().Msgf("UnmarshalJson model: %#v", model)
 	} else {
-		log.Println("json parse", err)
+
+		app.Get.Log.Error().Err(err).Msg("json parse err")
+
 		app.Get.LogRedis(logKey, err)
 	}
 

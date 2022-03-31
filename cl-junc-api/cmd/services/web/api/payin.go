@@ -37,19 +37,25 @@ func PayinCreateInvoice(c *gin.Context) {
 		app.Get.LogRedis(LogKeyPayinInvoice, logData)
 		response, err := app.Get.Wire.CreateInvoice(request)
 
-		fmt.Println(response)
+		app.Get.Log.Info().Msgf("CreateInvoice response: %#v", response)
+
 		if err == nil {
 			payment := &dbt.Payment{
 				Id:            uint64(request.PaymentId),
 				PaymentNumber: response.OrderReference,
 			}
 			err = app.Get.Sql.Update(payment, "payment_number")
+
+			app.Get.Log.Error().Err(err).Msg("Payment table")
+
 		} else {
 			payment := &dbt.Payment{
 				Id:     uint64(request.PaymentId),
 				Status: response.Status,
 			}
 			err = app.Get.Sql.Update(payment, "status")
+
+			app.Get.Log.Error().Err(err).Msg("Payment table")
 		}
 	}
 

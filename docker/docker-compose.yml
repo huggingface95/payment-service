@@ -38,7 +38,10 @@ services:
       - ../cl-junc-api/internal:/app/internal
       - ../cl-junc-api/pkg:/app/pkg
       - ../cl-junc-api/vendor:/app/vendor
+      - ../cl-junc-api/storage:/app/storage
       - ../cl-junc-api/config.json:/app/config.json
+      - ../cl-junc-api/go.mod:/app/go.mod
+      - ../cl-junc-api/go.sum:/app/go.sum
     command:
       - go
       - run
