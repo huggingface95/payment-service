@@ -17,6 +17,7 @@ class Payments extends BaseModel
      */
     protected $fillable = [
         'amount',
+        'amount_real',
         'fee',
         'fee_type_id',
         'currency_id',
@@ -106,7 +107,7 @@ class Payments extends BaseModel
      */
     public function Currencies()
     {
-        return $this->belongsTo(Currencies::class,'currency','id');
+        return $this->belongsTo(Currencies::class,'currency_id','id');
     }
 
     public function member()
