@@ -71,6 +71,7 @@ $app->configure('graphql-playground');
 $app->configure('filesystems');
 $app->configure('dompdf');
 $app->configure('mail');
+$app->configure('queue');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
