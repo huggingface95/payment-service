@@ -19,24 +19,27 @@ func PayoutExecution(c *gin.Context) {
 	}
 	err := UnmarshalJson(c, LogKeyPayoutRequest, request)
 
-	if err == nil {
-		logData := fmt.Sprintf("[ %v ] %d %s %s", time.Now(), request.PaymentId, request.Amount, request.Currency)
-		app.Get.LogRedis(LogKeyPayoutExecution, logData)
+	if err != nil {
+		app.Get.Log.Error().Err(err)
+	    return
+	}
 
-		response, err := app.Get.Wire.CreateExecution(request)
-		if err == nil {
-			payment := &dbt.Payment{
-				Id:            uint64(request.PaymentId),
-				PaymentNumber: response.OrderReference,
-			}
-			err = app.Get.Sql.Update(payment, "payment_number")
-		} else {
-			payment := &dbt.Payment{
-				Id:     uint64(request.PaymentId),
-				Status: response.Status,
-			}
-			err = app.Get.Sql.Update(payment, "status")
+	logData := fmt.Sprintf("[ %v ] %d %s %s", time.Now(), request.PaymentId, request.Amount, request.Currency)
+	app.Get.LogRedis(LogKeyPayoutExecution, logData)
+
+	response, err := app.Get.Wire.CreateExecution(request)
+	if err == nil {
+		payment := &dbt.Payment{
+			Id:            uint64(request.PaymentId),
+			PaymentNumber: response.OrderReference,
 		}
+		err = app.Get.Sql.Update(payment, "payment_number")
+	} else {
+		payment := &dbt.Payment{
+			Id:     uint64(request.PaymentId),
+			Status: response.Status,
+		}
+		err = app.Get.Sql.Update(payment, "status")
 	}
 
 }

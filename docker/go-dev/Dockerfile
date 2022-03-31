@@ -3,11 +3,9 @@ ENV GO111MODULE=on
 
 WORKDIR /app
 
-ADD go.mod go.mod
-ADD go.sum go.sum
-RUN go mod download
-
 ADD . .
+
+RUN go mod download
 
 EXPOSE 2490
 
