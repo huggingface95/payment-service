@@ -28,6 +28,24 @@ services:
     networks:
       - backend
 
+  cl-junc-apicore:
+    build:
+      context: ./go-dev
+      dockerfile: Dockerfile
+    container_name: cl-junc-apicore
+    volumes:
+      - ../cl-junc-api/cmd:/app/cmd
+      - ../cl-junc-api/internal:/app/internal
+      - ../cl-junc-api/pkg:/app/pkg
+      - ../cl-junc-api/vendor:/app/vendor
+      - ../cl-junc-api/config.json:/app/config.json
+    command:
+      - go
+      - run
+      - cmd/main.go
+    networks:
+      - backend
+
   nginx:
     build:
       context: ./nginx
