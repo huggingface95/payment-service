@@ -30,7 +30,7 @@ type GroupRole {
     "Активная и не активная группа"
     is_active: Boolean
     "Получить тип группы"
-    group: Groups @belongsTo(relation: "group")
+    group_type: Groups @belongsTo(relation: "groupType")
     "Получить связанную роль"
     role: Role @belongsTo(relation: "role")
     "Получить связанный платежный провайдер"
@@ -50,12 +50,12 @@ extend type Query {
     orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
     where:{column: ID, operator: EQ, value: ""} фильтр по ID, ID группы, ID роли, ID платежного провайдера, ID шаблона комиссий, по статусу
     """
-    groups_list(
+    groups(
         hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
         hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
         hasGroupType: _ @whereHasConditions(columns: ["name", "id"]),
         hasRole: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["id","group_id", "role_id", "payment_provider_id", "commission_template_id", "is_active"]),
+        where: _ @whereConditions(columns: ["id","group_type_id", "role_id", "payment_provider_id", "commission_template_id", "is_active"]),
         orderBy: _ @orderBy(columns: ["id","is_active","description"],
     )): [GroupRole!]! @paginate(defaultCount: 10)
 }
@@ -106,7 +106,7 @@ extend type Mutation {
      "Добавить группу мемберу"
         setMemberGroup(
             "Group"
-            group_id: ID!
+            group_type_id: ID!
             "Payment Provider"
             payment_provider_id: ID!
             "Commission Template"

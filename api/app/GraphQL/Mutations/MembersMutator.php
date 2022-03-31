@@ -109,7 +109,7 @@ class MembersMutator extends BaseMutator
      */
     private function getMemberGroupRole(int $roleId)
     {
-        return GroupRole::where(['group_id'=>1, 'role_id' => $roleId])->first();
+        return GroupRole::where(['group_type_id'=>1, 'role_id' => $roleId])->first();
     }
 
 }

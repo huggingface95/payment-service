@@ -178,7 +178,7 @@ class ApplicantCompany extends Model
 
     public function company()
     {
-        return $this->hasOneThrough(Companies::class,Members::class,'account_manager_member_id', 'company_id');
+        return $this->hasOneThrough(Companies::class,Members::class,'id', 'id','account_manager_member_id','company_id');
     }
 
 }

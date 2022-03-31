@@ -167,5 +167,9 @@ class ApplicantIndividual extends Model
         return $this->belongsTo(Accounts::class, 'id', 'client_id');
     }
 
+    public function company()
+    {
+        return $this->hasOneThrough(Companies::class,Members::class,'id', 'id','account_manager_member_id','company_id');
+    }
 
 }
