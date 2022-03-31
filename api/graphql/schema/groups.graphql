@@ -42,9 +42,9 @@ type GroupRole {
 
 extend type Query {
     "Получить группу по ID"
-    group_type(id: ID @eq): GroupType @find
+    group_type(id: ID @eq): Groups @find
     "Получить список групп по умолчанию"
-    group_types: [GroupType!]! @paginate(defaultCount: 10)
+    group_types: [Groups!]! @paginate(defaultCount: 10)
     """
     Получить список групп с ролями
     orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
