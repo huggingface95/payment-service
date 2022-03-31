@@ -14,7 +14,7 @@ class AddNameGroupRoleTable extends Migration
     public function up()
     {
         Schema::table('group_role', function (Blueprint $table) {
-            $table->string('name',255);
+            $table->string('name',255)->default('TestGroup');
         });
     }
 
