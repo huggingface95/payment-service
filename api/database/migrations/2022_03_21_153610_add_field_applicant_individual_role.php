@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddMemberIdToPaymentsTable extends Migration
+class AddFieldApplicantIndividualRole extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddMemberIdToPaymentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->unsignedBigInteger('member_id')->nullable();
-            $table->foreign('member_id')->references('id')->on('members');
+        Schema::table('group_role', function (Blueprint $table) {
+            $table->string('name',255);
         });
     }
 
@@ -26,8 +25,8 @@ class AddMemberIdToPaymentsTable extends Migration
      */
     public function down()
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->dropColumn('member_id');
+        Schema::table('group_role', function (Blueprint $table) {
+            $table->dropColumn('name');
         });
     }
 }

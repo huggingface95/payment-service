@@ -19,6 +19,8 @@ type Groups {
 
 type GroupRole {
     id: ID!
+    "Название группы"
+    name: String
     "ID группы"
     group_id: ID
     "ID роли"
@@ -27,7 +29,7 @@ type GroupRole {
     description: String
     "Активная и не активная группа"
     is_active: Boolean
-    "Получить связанную группу"
+    "Получить тип группы"
     group: Groups @belongsTo(relation: "group")
     "Получить связанную роль"
     role: Role @belongsTo(relation: "role")
@@ -40,9 +42,9 @@ type GroupRole {
 
 extend type Query {
     "Получить группу по ID"
-    group(id: ID @eq): Groups @find
+    group_type(id: ID @eq): GroupType @find
     "Получить список групп по умолчанию"
-    groups: [Groups!]! @paginate(defaultCount: 10)
+    group_types: [GroupType!]! @paginate(defaultCount: 10)
     """
     Получить список групп с ролями
     orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
@@ -51,7 +53,7 @@ extend type Query {
     groups_list(
         hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
         hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
-        hasGroup: _ @whereHasConditions(columns: ["name", "id"]),
+        hasGroupType: _ @whereHasConditions(columns: ["name", "id"]),
         hasRole: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["id","group_id", "role_id", "payment_provider_id", "commission_template_id", "is_active"]),
         orderBy: _ @orderBy(columns: ["id","is_active","description"],
@@ -61,6 +63,8 @@ extend type Query {
 extend type Mutation {
     "Создать группу"
     createGroupSettings(
+        "Название группы"
+        name: String!
         "Описание группы"
         description: String
         "ID роли"
@@ -79,6 +83,8 @@ extend type Mutation {
     updateGroupSettings (
         "ID группы"
         id: ID!
+        "Название группы"
+        name: String
         "Описание группы"
         description: String
         "ID роли"
