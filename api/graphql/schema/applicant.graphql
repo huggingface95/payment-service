@@ -76,6 +76,8 @@ type ApplicantIndividual {
     companies: [ApplicantCompany] @belongsToMany (relation: "companies")
     "Получить роль"
     roles: [Role] @belongsToMany (relation: "roles")
+    "Получить группу"
+    group: GroupRole @belongsTo (relation: "group")
 }
 
 
@@ -103,7 +105,7 @@ extend type Query {
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
         hasCompany: _ @whereHasConditions(columns: ["id"]),
-        created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname"]), orderBy: _ @orderBy(
+        created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","member_group_role_id"]), orderBy: _ @orderBy(
         columns: ["id","first_name","last_name", "email","created_at"],
     )): [ApplicantIndividual!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -167,6 +169,8 @@ extend type Mutation {
         role_id: [ID]!
         "Массив ID меток"
         labels: [ID]
+        "ID группа"
+        member_group_role_id: ID
         "Пароль"
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
@@ -236,6 +240,8 @@ extend type Mutation {
         role_id: [ID]
         "Массив ID меток"
         labels: [ID]
+        "ID группы"
+        member_group_role_id: ID
         "Пароль"
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"

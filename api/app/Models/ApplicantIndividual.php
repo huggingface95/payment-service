@@ -172,4 +172,12 @@ class ApplicantIndividual extends Model
         return $this->hasOneThrough(Companies::class,Members::class,'id', 'id','account_manager_member_id','company_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function group()
+    {
+        return $this->belongsTo(GroupRole::class,'member_group_role_id');
+    }
+
 }
