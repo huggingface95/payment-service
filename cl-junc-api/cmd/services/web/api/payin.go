@@ -46,7 +46,19 @@ func PayinCreateInvoice(c *gin.Context) {
 			}
 			err = app.Get.Sql.Update(payment, "payment_number")
 
-			app.Get.Log.Error().Err(err).Msg("Payment table")
+			if err != nil {
+				app.Get.Log.Error().Err(err).Msg("Payment table")
+				return
+			} else {
+				app.Mail(
+					fmt.Sprintf("%s", "PAYIN"),
+					fmt.Sprintf("%s", "Success"),
+					map[string]string{
+						"record_id": string(payment.Id),
+					},
+					response,
+				)
+			}
 
 		} else {
 			payment := &dbt.Payment{

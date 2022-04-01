@@ -2,12 +2,19 @@
   "app": {
     "title": "Tranzbase",
     "url": "cl-junc-apicore:8080",
-    "is_production": false
+    "is_production": false,
+    "tech_email" : "test@test.com",
+    "mail": {
+      "server": "test.test.com",
+      "port": 587,
+      "username": "test@test.com",
+      "password": ""
+    }
   },
 
   "api": {
     "clearjunction": {
-      "url": "http://private-36c6a-clearjunctionrestapi.apiary-mock.com/",
+      "url": "https://sandbox.clearjunction.com/",
       "wallet": "94ab8a20-650c-486f-955b-3a68258a589e",
       "key": "94ab8bc4-4ed9-4468-9b28-c1979f418f3f",
       "password": "56pr6hwgqdss"

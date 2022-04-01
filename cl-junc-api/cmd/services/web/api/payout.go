@@ -21,7 +21,7 @@ func PayoutExecution(c *gin.Context) {
 
 	if err != nil {
 		app.Get.Log.Error().Err(err)
-	    return
+		return
 	}
 
 	logData := fmt.Sprintf("[ %v ] %d %s %s", time.Now(), request.PaymentId, request.Amount, request.Currency)
@@ -34,12 +34,30 @@ func PayoutExecution(c *gin.Context) {
 			PaymentNumber: response.OrderReference,
 		}
 		err = app.Get.Sql.Update(payment, "payment_number")
+
+		if err != nil {
+			app.Get.Log.Error().Err(err)
+			return
+		}
+
 	} else {
 		payment := &dbt.Payment{
 			Id:     uint64(request.PaymentId),
 			Status: response.Status,
 		}
 		err = app.Get.Sql.Update(payment, "status")
+
+		if err == nil {
+			app.Mail(
+				fmt.Sprintf("%s", "PAYOUT"),
+				fmt.Sprintf("%s", "SEND PAYOUT REQUEST"),
+				map[string]string{"number": response.OrderReference},
+				response,
+			)
+		} else {
+			app.Get.Log.Error().Err(err)
+			return
+		}
 	}
 
 }

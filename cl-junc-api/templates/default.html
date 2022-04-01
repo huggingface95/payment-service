@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+    <title>Cl-junc-api</title>
+    <style>
+        @media screen and (max-width: 325px) {
+            .right-reserved {
+                display: block;
+                margin-bottom: 8px;
+            }
+        }
+        @media screen and (min-width: 326px) {
+            .social-icons {
+                float: right;
+            }
+        }
+    </style>
+</head>
+<body style="padding: 0; margin: 0; -webkit-text-size-adjust: none;">
+<div style="max-width: 677px; width: 100%; margin: auto;">
+    <div style="background-image: url('https://clearjunction.com/wp-content/uploads/2021/02/bg.jpg'); background-repeat: no-repeat; background-position: center center; background-size: cover; padding: 67px 10vw 67px 10vw; box-sizing: border-box;">
+        <a href="https://dev.admin.docudots.com" target="_blank">
+            <img src="https://clearjunction.com/wp-content/themes/framework/images/logo.svg" alt="Logotype Dev" width="163px" height="40px" style="display: inline-block; border: 0;"/>
+        </a>
+
+
+
+        <h1 style="font-size: 36px; line-height: 24px; color: #192839; font-weight: bold; font-family: Arial, Helvetica, sans-serif; margin-top: 89px; margin-bottom: 48px;">
+            {{.title}}
+        </h1>
+        <p style="margin-bottom: 15px; font-size: 18px; line-height: 26px; font-weight: 400; font-family: Arial, Helvetica, sans-serif; color: #192839;">
+            {{ range $key, $value := .details }}
+            <strong>{{ $key }}</strong>: {{ $value }}<br />
+            {{ end }}
+        </p>
+
+        <p style="margin-bottom: 10px;">
+            <strong>data</strong>: <pre>{{.data}}</pre>
+        </p>
+
+        <p style="margin-bottom: 21px; margin-top: 48px; font-size: 18px; line-height: 26px; font-weight: 400; font-family: Arial, Helvetica, sans-serif; color: #192839;">
+            Regards, Dev Banking Team
+        </p>
+    </div>
+    <div style="background-color: #f0f0f0; padding: 48px 10vw; box-sizing: border-box;">
+        <div>
+            <div style="margin-bottom: 22px;">
+                <img src="https://tranzbase.com/wp-content/uploads/2021/06/united-kingdom.png" alt="United Kingdom flag" width="26px" height="26px" style="display: inline-block; vertical-align: top; border: 0; margin-right: 25px;" />
+                <div style="display: inline-block;">
+            <span style="display: block; font-size: 12px; line-height: 18px; font-weight: 400; font-family: Arial, Helvetica, sans-serif; color: #192839;">
+              +44 2039 121-825
+            </span>
+                    <span style="display: block; font-size: 12px; line-height: 18px; font-weight: 400; font-family: Arial, Helvetica, sans-serif; color: #9b9b9b;">
+              Mon - Fri: <br/> GMT 8AM - 8PM
+            </span>
+                </div>
+            </div>
+            <div>
+          <span class="right-reserved" style="font-size: 12px; line-height: 18px; font-weight: 400; font-family: Arial, Helvetica, sans-serif; color: #192839; margin-right: 20px;">
+            2022 © All Rights Reserved
+          </span>
+                <div class="social-icons">
+                    <a href="/" target="_blank" rel="nofollow noreferrer" style="text-decoration: none; margin-right: 12px; display: inline-block;">
+                        <img src="https://tranzbase.com/wp-content/uploads/2021/06/instagram.png" alt="instagram icon" width="12px" height="12px" style="border: 0; display: block;"/>
+                    </a>
+                    <a href="/" target="_blank" rel="nofollow noreferrer" style="text-decoration: none; margin-right: 12px; display: inline-block;">
+                        <img src="https://tranzbase.com/wp-content/uploads/2021/06/linkedin.png" alt="linkedin icon" width="12px" height="12px" style="border: 0; display: block;"/>
+                    </a>
+                    <a href="/" target="_blank" rel="nofollow noreferrer" style="text-decoration: none; margin-right: 12px; display: inline-block;">
+                        <img src="https://tranzbase.com/wp-content/uploads/2021/06/facebook.png" alt="facebook icon" width="7px" height="12px" style="border: 0; display: block;"/>
+                    </a>
+                    <a href="/" target="_blank" rel="nofollow noreferrer" style="text-decoration: none; display: inline-block;">
+                        <img src="https://tranzbase.com/wp-content/uploads/2021/06/twitter.png" alt="twitter icon" width="16px" height="12px" style="border: 0; display: block;"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
