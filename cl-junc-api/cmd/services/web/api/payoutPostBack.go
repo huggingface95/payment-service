@@ -4,6 +4,7 @@ import (
 	"cl-junc-api/cmd/app"
 	"cl-junc-api/internal/clearjunction/models"
 	dbt "cl-junc-api/internal/db"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -39,6 +40,13 @@ func PayoutPostBack(c *gin.Context) {
 			err := app.Get.Sql.Update(payment, "amount_real", "status")
 			if err != nil {
 				return
+			} else {
+				app.Mail(
+					fmt.Sprintf("%s", "PAYOUT POST BACK"),
+					fmt.Sprintf("%s", "SUCESS"),
+					map[string]string{"number": payment.PaymentNumber},
+					request,
+				)
 			}
 		}
 

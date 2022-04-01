@@ -4,6 +4,7 @@ import (
 	"cl-junc-api/cmd/app"
 	"cl-junc-api/internal/clearjunction/models"
 	dbt "cl-junc-api/internal/db"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,6 +17,10 @@ func PayinPostBack(c *gin.Context) {
 	request := &models.PayInPostBack{}
 	err := UnmarshalJson(c, LogKeyPayinPostBack, request)
 
+	if err != nil {
+		app.Get.Log.Error().Err(err)
+		return
+	}
 	app.Get.Log.Info().Msgf("UnmarshalJson data: %s", request)
 
 	if err == nil {
@@ -39,6 +44,13 @@ func PayinPostBack(c *gin.Context) {
 				if err != nil {
 					app.Get.Log.Error().Err(err)
 					return
+				} else {
+					app.Mail(
+						fmt.Sprintf("%s", "PAYIN POST BACK"),
+						fmt.Sprintf("%s", "SUCESS"),
+						map[string]string{"number": payment.PaymentNumber},
+						request,
+					)
 				}
 			}
 
