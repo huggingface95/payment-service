@@ -47,7 +47,8 @@ class ApplicantIndividual extends Model
         'account_manager_member_id',
         'password_hash',
         'password_salt',
-        'is_verification_phone'
+        'is_verification_phone',
+        'member_group_role_id'
     ];
 
     protected $casts = [

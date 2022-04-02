@@ -48,7 +48,8 @@ class ApplicantCompany extends Model
         'applicant_kyc_level_id',
         'is_verification_phone',
         'owner_relation_id',
-        'owner_position_id'
+        'owner_position_id',
+        'member_group_role_id'
     ];
 
     protected $casts = [
@@ -179,6 +180,14 @@ class ApplicantCompany extends Model
     public function company()
     {
         return $this->hasOneThrough(Companies::class,Members::class,'id', 'id','account_manager_member_id','company_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function group()
+    {
+        return $this->belongsTo(GroupRole::class,'member_group_role_id');
     }
 
 }
