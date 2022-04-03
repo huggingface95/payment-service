@@ -17,7 +17,7 @@ class Role extends SpatieRole
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function groups(): BelongsToMany
+    public function groupTypes(): BelongsToMany
     {
         return $this->belongsToMany(Groups::class,'group_role','role_id','group_type_id');
     }

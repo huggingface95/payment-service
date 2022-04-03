@@ -13,7 +13,7 @@ type Role {
     "Получить дерево разрешений"
     permissions_tree: JSON
     "Получить список групп"
-    groups: [Groups] @belongsToMany(relation: "groups")
+    group_types: [Groups] @belongsToMany(relation: "groupTypes")
     "Получить количество групп с данной ролью"
     groups_count: Int
 }
@@ -28,7 +28,9 @@ extend type Query {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID или по названию
     where: {column: name, operator: LIKE, value: "Name"}
     """
-    roles(groups_sort: Sort @scope(name:"GroupsSort"), where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+    roles(groups_sort: Sort @scope(name:"GroupsSort"),
+        hasGroupTypes: _ @whereHasConditions(columns: ["name", "id"]),
+        where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name","description"],
     )): [Role!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }

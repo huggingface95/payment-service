@@ -13,8 +13,8 @@ type Groups {
     id: ID!
     "Название группы"
     name: GroupsEntities!
-    "Связанные роли"
-    roles: [Role] @belongsToMany(relation: "roles")
+    "Связанные группы"
+    groups: [GroupRole] @hasMany(relation: "groups")
 }
 
 type GroupRole {
