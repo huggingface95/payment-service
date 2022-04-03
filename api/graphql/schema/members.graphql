@@ -27,7 +27,7 @@ type Members {
     "Получить роль участника"
     role: Role
     "Получить группу участника"
-    group: Groups
+    group: GroupRole @belongsTo(relation: "groupRole")
     "Получить должность"
     position: DepartmentPosition @belongsTo(relation: "position")
     "Получить департамент"
