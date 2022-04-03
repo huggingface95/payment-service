@@ -48,10 +48,10 @@ class Members extends BaseModel
 //        return $this->groupRole()->join('groups', 'groups.id', '=', 'group_role.group_type_id')->select('groups.*')->first();
 //    }
 
-    public function getRoleAttribute()
-    {
-        return $this->groupRole()->join('roles', 'roles.id', '=', 'group_role.role_id')->select('roles.*')->first();
-    }
+//    public function getRoleAttribute()
+//    {
+//        return $this->groupRole()->join('roles', 'roles.id', '=', 'group_role.role_id')->select('roles.*')->first();
+//    }
 
     public function getDepartmentAttribute()
     {
@@ -59,9 +59,9 @@ class Members extends BaseModel
             ->join('departments', 'departments.id', '=', 'department_position.department_id')->select('departments.*')->first();
     }
 
-    public function groupRoles()
+    public function roles()
     {
-        return $this->belongsToMany(GroupRole::class,'group_role_member', 'member_id', 'group_role_id');
+        return $this->belongsToMany(Role::class,'group_role_member', 'member_id', 'group_role_id');
     }
 
 }
