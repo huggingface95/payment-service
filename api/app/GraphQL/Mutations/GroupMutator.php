@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
+use App\Models\BaseModel;
 use App\Models\GroupRole;
 use App\Models\Groups;
 use App\Models\Members;
@@ -23,6 +24,10 @@ class GroupMutator extends BaseMutator
         if ($args['group_type_id'][0] == 1 && isset($args['commission_template_id'])) {
             throw new GraphqlException('Commission Template is not be used for this group',"internal", 500);
         }
+        if(!isset($args['company_id'])) {
+            $member = Members::find(BaseModel::DEFAULT_MEMBER_ID);
+            $args['company_id'] = $member->company_id;
+        }
         $group = Groups::find($args['group_type_id']);
         if (!$group) {
             throw new GraphqlException('An entry with this group does not exist',"not found",404);
@@ -42,6 +47,10 @@ class GroupMutator extends BaseMutator
         }
         if ($args['group_type_id'][0] == 1 && isset($args['commission_template_id'])) {
             throw new GraphqlException('Commission Template is not be used for this group',"internal", 500);
+        }
+        if(!isset($args['company_id'])) {
+            $member = Members::find(BaseModel::DEFAULT_MEMBER_ID);
+            $args['company_id'] = $member->company_id;
         }
         $group = Groups::find($args['group_type_id']);
         if (!$group) {
