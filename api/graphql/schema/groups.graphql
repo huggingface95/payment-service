@@ -78,6 +78,8 @@ extend type Mutation {
         commission_template_id: ID
         "Активная или нет группа (true/false)"
         is_active: Boolean
+        "ID компании"
+        company_id: ID
     ): GroupRole @field(resolver:"GroupMutator@create")
 
     "Обновить поля группы"
@@ -98,6 +100,8 @@ extend type Mutation {
         commission_template_id: ID
         "Активная или нет группа (true/false)"
         is_active: Boolean
+        "ID компании"
+        company_id: ID
     ): GroupRole @field(resolver:"GroupMutator@update")
 
 
