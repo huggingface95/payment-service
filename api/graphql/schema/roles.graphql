@@ -31,6 +31,7 @@ extend type Query {
     """
     roles(groups_sort: Sort @scope(name:"GroupsSort"),
         hasGroupTypes: _ @whereHasConditions(columns: ["name", "id"]),
+        hasGroup: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name","description"],
     )): [Role!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
