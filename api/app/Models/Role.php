@@ -22,6 +22,11 @@ class Role extends SpatieRole
         return $this->belongsToMany(Groups::class,'group_role','role_id','group_type_id');
     }
 
+    public function groups()
+    {
+        return $this->hasMany(GroupRole::class, 'role_id');
+    }
+
     /**
      * @param $query
      * @param $sort
