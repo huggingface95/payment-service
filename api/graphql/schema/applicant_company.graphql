@@ -109,7 +109,7 @@ extend type Query {
         hasKycLevel: _ @whereHasConditions(columns: ["name", "id"]),
         hasCompany: _ @whereHasConditions(columns: ["id"]),
         created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","account_manager_member_id","applicant_state_id","applicant_state_reason_id","name","url" ,"email","created_at","member_group_role_id"]), orderBy: _ @orderBy(
-        columns: ["id","name", "email","created_at","url","owner_id", "member_group_role_id"],
+        columns: ["id","name", "email","created_at","url","owner_id"],
     )): [ApplicantCompany!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
     """
     Получить список applicant individuals по applicant company

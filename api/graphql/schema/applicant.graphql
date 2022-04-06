@@ -105,8 +105,8 @@ extend type Query {
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
         hasCompany: _ @whereHasConditions(columns: ["id"]),
-        created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","member_group_role_id"]), orderBy: _ @orderBy(
-        columns: ["id","first_name","last_name", "email","created_at","member_group_role_id"],
+        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","member_group_role_id"]), orderBy: _ @orderBy(
+        columns: ["id","first_name","last_name", "email","created_at"],
     )): [ApplicantIndividual!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 

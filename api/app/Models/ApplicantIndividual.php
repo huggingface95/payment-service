@@ -181,4 +181,9 @@ class ApplicantIndividual extends Model
         return $this->belongsTo(GroupRole::class,'member_group_role_id');
     }
 
+    public function scopeGroupSort($query, $sort)
+    {
+        return $query->join('group_role','group_role.id','=','applicant_individual.member_group_role_id')->orderBy('group_role.name',$sort)->select('applicant_individual.*');
+    }
+
 }
