@@ -195,4 +195,9 @@ class ApplicantCompany extends Model
         return $query->join('group_role','group_role.id','=','applicant_companies.member_group_role_id')->orderBy('group_role.name',$sort)->select('applicant_companies.*');
     }
 
+    public function scopeCompanySort($query, $sort)
+    {
+        return $query->join('members','members.id','=','applicant_companies.account_manager_member_id')->join('companies','companies.id','=','members.company_id')->orderBy('companies.name',$sort)->select('applicant_companies.*');
+    }
+
 }
