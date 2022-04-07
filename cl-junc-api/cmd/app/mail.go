@@ -3,16 +3,10 @@ package app
 import (
 	"encoding/json"
 	"github.com/aaapi-net/liam"
-	"io/ioutil"
 )
 
-func Mail(subject string, title string, details map[string]string, data interface{}) error {
-	content, err := ioutil.ReadFile("templates/default.html")
+func Mail(subject string, title string, details map[string]string, data interface{}, content string) error {
 	msg := map[string]interface{}{"title": title, "details": details}
-
-	if err != nil {
-		return err
-	}
 
 	if data != nil {
 		dataJson, err := json.MarshalIndent(data, "", "  ")

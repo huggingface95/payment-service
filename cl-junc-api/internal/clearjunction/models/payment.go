@@ -4,5 +4,4 @@ type Payment struct {
 	ClientOrder string `json:"clientOrder"`
 }
 
-type PaymentCommon interface {
-}
+type PaymentCommon interface{}

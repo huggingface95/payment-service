@@ -4,7 +4,8 @@ import (
 	"cl-junc-api/cmd/app"
 	"cl-junc-api/internal/clearjunction/models"
 	dbt "cl-junc-api/internal/db"
-	"fmt"
+	"cl-junc-api/internal/redis/constants"
+	models2 "cl-junc-api/internal/redis/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -41,14 +42,19 @@ func PayoutPostBack(c *gin.Context) {
 			if err != nil {
 				return
 			} else {
-				app.Mail(
-					fmt.Sprintf("%s", "PAYOUT POST BACK"),
-					fmt.Sprintf("%s", "SUCESS"),
-					map[string]string{"number": payment.PaymentNumber},
-					request,
-				)
 			}
 		}
+
+		email := &models2.Email{
+			Type:    "payout-post-back",
+			Status:  request.Status,
+			Message: "Payout Post Back Success",
+			Data:    request,
+			Details: map[string]string{"test": "", "info": ""},
+			Error:   request.Messages,
+		}
+
+		app.Get.Redis.AddList(constants.QueuePayoutPostBackLog, email)
 
 		c.Data(200, "text/plain", []byte(request.OrderReference))
 		return
