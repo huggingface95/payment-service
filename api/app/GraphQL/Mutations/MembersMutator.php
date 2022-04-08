@@ -32,14 +32,8 @@ class MembersMutator extends BaseMutator
 
         $args['password_hash'] = Hash::make($password);
         $args['password_salt'] = Hash::make($password);
-        $groupRole = $this->getMemberGroupRole($args['role_id']);
 
-        if ($groupRole) {
-            $args['member_group_role_id'] = $groupRole->id;
-            return Members::create($args);
-        }
-
-        return  false;
+        return Members::create($args);
     }
 
     /**
@@ -50,10 +44,7 @@ class MembersMutator extends BaseMutator
     public function update($_, array $args)
     {
         $member = Members::find($args['id']);
-        if ($args['role_id']) {
-            $groupRole = $this->getMemberGroupRole($args['role_id']);
-            $args['member_group_role_id'] = $groupRole->id;
-        }
+
 
         if (isset($args['additional_fields'])) {
             $args['additional_fields']  = $this->setAdditionalField($args['additional_fields']);

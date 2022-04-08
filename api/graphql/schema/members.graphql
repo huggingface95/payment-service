@@ -92,7 +92,7 @@ extend type Mutation {
         "ID языка"
         language_id: ID
         "ID роли участника"
-        role_id: ID!
+        group_id: ID!
         "Активен не активен"
         is_active: Boolean
         "ID настройки двухфактороной авторизации"
@@ -113,8 +113,8 @@ extend type Mutation {
         email: EMAIL! @rules(apply: ["email", "unique:members"])
         "ID компании"
         company_id: ID!
-        "ID роли участника"
-        role_id: ID!
+        "ID группы участника"
+        group_id: ID!
         "ID настройки двухфактороной авторизации"
         two_factor_auth_setting_id: ID!
     ): Members @field(resolver: "MembersMutator@invite")
@@ -140,7 +140,7 @@ extend type Mutation {
         "ID языка"
         language_id: ID
         "ID роли участника"
-        role_id: ID
+        group_id: ID
         "Активен не активен"
         is_active: Boolean
         "ID должности"
