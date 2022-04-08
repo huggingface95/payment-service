@@ -3,6 +3,7 @@ package log
 import (
 	"github.com/rs/zerolog"
 	"os"
+	"path/filepath"
 )
 
 var (
@@ -10,8 +11,9 @@ var (
 )
 
 func NewLogger() *zerolog.Logger {
+	wd, _ := os.Getwd()
 
-	f, err := os.OpenFile("storage/", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
+	f, err := os.OpenFile(filepath.Join(wd, "/storage/error.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0777)
 
 	if err != nil {
 		panic(err)
