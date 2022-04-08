@@ -104,9 +104,8 @@ extend type Query {
         hasRiskLevel: _ @whereHasConditions(columns: ["name", "id"]),
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
-        hasCompany: _ @whereHasConditions(columns: ["id"]),
         created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","group_id"]), orderBy: _ @orderBy(
-        columns: ["id","first_name","last_name", "email","created_at","fullname"],
+        columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"],
     )): [ApplicantIndividual!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
