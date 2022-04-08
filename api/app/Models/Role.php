@@ -14,12 +14,10 @@ class Role extends SpatieRole
 
     protected $guard_name = GuardEnum::GUARD_NAME;
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function groupTypes(): BelongsToMany
+
+    public function groupType()
     {
-        return $this->belongsToMany(Groups::class,'group_role','role_id','group_type_id');
+        return $this->hasOneThrough(Groups::class,GroupRole::class,'role_id','id');
     }
 
     public function groups()
