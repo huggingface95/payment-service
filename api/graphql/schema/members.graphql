@@ -24,8 +24,6 @@ type Members {
     country: Country @belongsTo(relation: "country")
     "Получить язык участника"
     language: Languages @belongsTo(relation: "language")
-    "Получить роль участника"
-    roles: [Role] @belongsToMany(relation: "roles")
     "Получить группу участника"
     group: GroupRole @belongsTo(relation: "groupRole")
     "Получить должность"
@@ -66,7 +64,7 @@ enum MembersColumn {
     FULLNAME @enum(value: "fullname")
     COMPANY_ID @enum(value: "company_id")
     EMAIL @enum(value: "email")
-    GROUP_ID @enum(value: "member_group_role_id")
+    GROUP_ID @enum(value: "group_id")
     POSITION_ID @enum(value: "department_position_id")
     IS_ACTIVE @enum(value: "is_active")
     LAST_LOGIN_AT @enum(value: "last_login_at")

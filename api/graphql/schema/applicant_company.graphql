@@ -74,9 +74,9 @@ type ApplicantCompany {
     company_position: ApplicantIndividualCompany @belongsTo(relation: "applicantIndividualCompany")
     owner_relation: ApplicantIndividualCompany @belongsTo(relation: "ownerRelation")
     owner_position: ApplicantIndividualCompany @belongsTo(relation: "ownerPosition")
-    company: Companies @hasOne(relation: "company")
+    company: Companies @belongsTo(relation: "company")
     "Получить группу"
-    group: GroupRole @belongsTo (relation: "group")
+    group: GroupRole @belongsTo(relation: "group")
 }
 
 
@@ -107,9 +107,8 @@ extend type Query {
         hasBusinessType: _ @whereHasConditions(columns: ["name", "id"]),
         hasOwner: _ @whereHasConditions(columns: ["fullname", "id"]),
         hasKycLevel: _ @whereHasConditions(columns: ["name", "id"]),
-        hasCompany: _ @whereHasConditions(columns: ["id"]),
-        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","account_manager_member_id","applicant_state_id","applicant_state_reason_id","name","url" ,"email","created_at","group_id"]), orderBy: _ @orderBy(
-        columns: ["id","name", "email","created_at","url","owner_id"],
+        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","account_manager_member_id","applicant_state_id","applicant_state_reason_id","name","url" ,"email","created_at","group_id","company_id"]), orderBy: _ @orderBy(
+        columns: ["id","name", "email","created_at","url","owner_id","company_id"],
     )): [ApplicantCompany!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
     """
     Получить список applicant individuals по applicant company

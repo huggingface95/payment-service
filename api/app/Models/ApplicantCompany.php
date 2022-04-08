@@ -179,7 +179,7 @@ class ApplicantCompany extends Model
 
     public function company()
     {
-        return $this->hasOneThrough(Companies::class,Members::class,'id', 'id','account_manager_member_id','company_id');
+        return $this->belongsTo(Companies::class);
     }
 
     /**
@@ -197,7 +197,7 @@ class ApplicantCompany extends Model
 
     public function scopeCompanySort($query, $sort)
     {
-        return $query->join('members','members.id','=','applicant_companies.account_manager_member_id')->join('companies','companies.id','=','members.company_id')->orderBy('companies.name',$sort)->select('applicant_companies.*');
+        return $query->join('companies','companies.id','=','applicant_companies.company_id')->orderBy('companies.name',$sort)->select('applicant_companies.*');
     }
 
 }
