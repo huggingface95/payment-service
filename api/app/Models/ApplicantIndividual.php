@@ -48,7 +48,8 @@ class ApplicantIndividual extends Model
         'password_hash',
         'password_salt',
         'is_verification_phone',
-        'group_id'
+        'group_id',
+        'company_id'
     ];
 
     protected $casts = [
@@ -170,7 +171,7 @@ class ApplicantIndividual extends Model
 
     public function company()
     {
-        return $this->hasOneThrough(Companies::class,Members::class,'id', 'id','account_manager_member_id','company_id');
+        return $this->belongsTo(Companies::class);
     }
 
     /**
@@ -188,7 +189,7 @@ class ApplicantIndividual extends Model
 
     public function scopeCompanySort($query, $sort)
     {
-        return $query->join('members','members.id','=','applicant_individual.account_manager_member_id')->join('companies','companies.id','=','members.company_id')->orderBy('companies.name',$sort)->select('applicant_individual.*');
+        return $query->join('companies','companies.id','=','applicant_individual.company_id')->orderBy('companies.name',$sort)->select('applicant_individual.*');
     }
 
 }
