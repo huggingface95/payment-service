@@ -34,6 +34,10 @@ func (r *RedisDb) Get(key string) string {
 	return r.client.Get(context.Background(), key).Val()
 }
 
+func (r *RedisDb) LRange(key string, start, end int64) []string {
+	return r.client.LRange(context.Background(), key, start, end).Val()
+}
+
 func (r *RedisDb) GetCmd(key string) *redis.StringCmd {
 	return r.client.Get(context.Background(), key)
 }
@@ -79,6 +83,7 @@ func (r *RedisDb) GetRedisHashField(key string, field string) string {
 
 func (r *RedisDb) GetRedisSet(key string) []string {
 	cmd := r.client.SMembers(context.Background(), key)
+	fmt.Println(cmd.Err())
 	return cmd.Val()
 }
 
@@ -103,8 +108,6 @@ func (r *RedisDb) AddRedisSet(key string, val interface{}) bool {
 
 func (r *RedisDb) AddList(key string, val ...interface{}) bool {
 	cmd := r.client.LPush(context.Background(), key, val)
-	//fmt.Println(cmd.Err())
-	//fmt.Println("errrorrrrrrr")
 	return cmd.Err() == nil
 }
 
