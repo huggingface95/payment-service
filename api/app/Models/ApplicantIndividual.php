@@ -178,7 +178,7 @@ class ApplicantIndividual extends Model
      */
     public function group()
     {
-        return $this->belongsTo(GroupRole::class,'member_group_role_id');
+        return $this->belongsTo(GroupRole::class,'group_id');
     }
 
     public function scopeGroupSort($query, $sort)

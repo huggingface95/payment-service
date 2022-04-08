@@ -49,7 +49,7 @@ class ApplicantCompany extends Model
         'is_verification_phone',
         'owner_relation_id',
         'owner_position_id',
-        'member_group_role_id'
+        'group_id'
     ];
 
     protected $casts = [
@@ -187,12 +187,12 @@ class ApplicantCompany extends Model
      */
     public function group()
     {
-        return $this->belongsTo(GroupRole::class,'member_group_role_id');
+        return $this->belongsTo(GroupRole::class,'group_id');
     }
 
     public function scopeGroupSort($query, $sort)
     {
-        return $query->join('group_role','group_role.id','=','applicant_companies.member_group_role_id')->orderBy('group_role.name',$sort)->select('applicant_companies.*');
+        return $query->join('group_role','group_role.id','=','applicant_companies.group_id')->orderBy('group_role.name',$sort)->select('applicant_companies.*');
     }
 
     public function scopeCompanySort($query, $sort)
