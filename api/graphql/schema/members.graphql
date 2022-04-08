@@ -5,11 +5,11 @@ Administration->Members
 type Members {
     id: ID!
     "Имя участника"
-    first_name: String!
+    first_name: String
     "Фамилия участника"
-    last_name: String!
+    last_name: String
     "Email участника"
-    email: EMAIL!
+    email: EMAIL
     "Пол участника"
     sex: Sex
     "Активен = true или не активный = false участник"
@@ -128,7 +128,7 @@ extend type Mutation {
         "Фамилия участника"
         last_name: String
         "Email участника"
-        email: EMAIL!
+        email: EMAIL
         "Пол участника"
         sex: Sex
         "ID компании"
