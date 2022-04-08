@@ -132,7 +132,7 @@ extend type Mutation {
         "Пол участника"
         sex: Sex
         "ID компании"
-        company_id: ID!
+        company_id: ID
         "ID страны"
         country_id: ID
         "ID языка"
