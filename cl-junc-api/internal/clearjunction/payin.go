@@ -2,6 +2,7 @@ package clearjunction
 
 import (
 	"cl-junc-api/internal/clearjunction/models"
+	dbt "cl-junc-api/internal/db"
 )
 
 const (
@@ -10,7 +11,7 @@ const (
 	YANDEX string = "yandexMoney"
 )
 
-func (cj *ClearJunction) CreateInvoice(request *models.PayInInvoiceRequest) (result models.PayInInvoiceResponse, err error) {
+func (cj *ClearJunction) CreateInvoice(request *dbt.Payin) (result models.PayInInvoiceResponse, err error) {
 	err = cj.post(request, &result, "gate", "invoice/"+getPaymentType(request.PaymentType))
 	return
 }

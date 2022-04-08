@@ -21,4 +21,6 @@ type Payin struct {
 	TransferType string `bun:"TransferType"`
 
 	Fee float64 `bun:"Fee"`
+
+	PaymentType string `bun:"payment_type"`
 }

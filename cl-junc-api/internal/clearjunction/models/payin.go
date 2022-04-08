@@ -4,10 +4,6 @@ import (
 	"time"
 )
 
-const (
-	Captured = "captured"
-)
-
 type PayInInvoiceRequest struct {
 	Payment
 	PaymentType string  `json:"payment_type"`

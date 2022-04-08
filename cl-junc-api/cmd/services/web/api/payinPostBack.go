@@ -3,14 +3,13 @@ package api
 import (
 	"cl-junc-api/cmd/app"
 	"cl-junc-api/internal/clearjunction/models"
-	dbt "cl-junc-api/internal/db"
-	"fmt"
+	"cl-junc-api/internal/db"
+	"cl-junc-api/internal/redis/constants"
+	models2 "cl-junc-api/internal/redis/models"
 	"github.com/gin-gonic/gin"
 )
 
 const LogKeyPayinPostBack = "payin-post-back:request:log"
-
-//const LogKeyPayinInvoice = "payin:invoice:log"
 
 func PayinPostBack(c *gin.Context) {
 
@@ -25,7 +24,7 @@ func PayinPostBack(c *gin.Context) {
 
 	if err == nil {
 		if request.Type == models.PayinNotification {
-			payment := &dbt.Payment{
+			payment := &db.Payment{
 				PaymentNumber: request.OrderReference,
 			}
 			err = app.Get.Sql.SelectWhereResult(&payment, "payment_number")
@@ -35,24 +34,30 @@ func PayinPostBack(c *gin.Context) {
 			}
 
 			if request.Status != payment.PaymentNumber {
-				payment := &dbt.Payment{
+				payment := &db.Payment{
 					PaymentNumber: request.OrderReference,
 					Amount:        request.Amount,
 					Status:        request.Status,
 				}
 				err := app.Get.Sql.Update(payment, "amount_real", "status")
 				if err != nil {
-					app.Get.Log.Error().Err(err)
+
 					return
 				} else {
-					app.Mail(
-						fmt.Sprintf("%s", "PAYIN POST BACK"),
-						fmt.Sprintf("%s", "SUCESS"),
-						map[string]string{"number": payment.PaymentNumber},
-						request,
-					)
+
 				}
 			}
+
+			email := &models2.Email{
+				Type:    "payIn-post-back",
+				Status:  request.Status,
+				Message: "Payin Post Back Success",
+				Data:    request,
+				Details: map[string]string{"test": "", "info": ""},
+				Error:   request.Messages,
+			}
+
+			app.Get.Redis.AddList(constants.QueuePayInPostBackLog, email)
 
 			c.Data(200, "text/plain", []byte(request.OrderReference))
 			return
