@@ -4,6 +4,7 @@ import (
 	"cl-junc-api/cmd/app"
 	"cl-junc-api/internal/clearjunction/models"
 	"cl-junc-api/internal/redis/constants"
+	"cl-junc-api/pkg/utils/log"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,9 +15,11 @@ func PayoutExecution(c *gin.Context) {
 
 	err := UnmarshalJson(c, LogKeyPayoutRequest, payoutRequest)
 
-	if err == nil {
-		app.Get.Redis.AddList(constants.QueuePayoutLog, payoutRequest)
+	if err != nil {
+		log.Error().Err(err)
 		return
 	}
+	app.Get.Redis.AddList(constants.QueuePayoutLog, payoutRequest)
+	return
 
 }
