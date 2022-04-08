@@ -18,7 +18,8 @@ class ExtensionErrorHandler implements ErrorHandler
         //$underlyingException = $error->getPrevious();
         if (strpos($error->getMessage(),'duplicate')) {
             return $next(new Error(
-                'An entry with this name already exists.',
+                //'An entry with this name already exists.',
+                strpos($error->getMessage(),'Key ('),
                 // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
                 $error->getNodes(),
                 $error->getSource(),

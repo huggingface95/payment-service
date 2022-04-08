@@ -3,6 +3,9 @@ version: '3'
 networks:
   backend:
     driver: ${NETWORKS_DRIVER}
+    ipam:
+      config:
+        - subnet: ${NETWORKS_SUBNET}
 
 volumes:
   pgdata:
