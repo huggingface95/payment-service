@@ -48,7 +48,7 @@ class ApplicantIndividual extends Model
         'password_hash',
         'password_salt',
         'is_verification_phone',
-        'member_group_role_id'
+        'group_id'
     ];
 
     protected $casts = [
@@ -183,7 +183,7 @@ class ApplicantIndividual extends Model
 
     public function scopeGroupSort($query, $sort)
     {
-        return $query->join('group_role','group_role.id','=','applicant_individual.member_group_role_id')->orderBy('group_role.name',$sort)->select('applicant_individual.*');
+        return $query->join('group_role','group_role.id','=','applicant_individual.group_id')->orderBy('group_role.name',$sort)->select('applicant_individual.*');
     }
 
     public function scopeCompanySort($query, $sort)

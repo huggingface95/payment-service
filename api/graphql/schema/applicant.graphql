@@ -105,7 +105,7 @@ extend type Query {
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
         hasCompany: _ @whereHasConditions(columns: ["id"]),
-        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","member_group_role_id"]), orderBy: _ @orderBy(
+        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","group_id"]), orderBy: _ @orderBy(
         columns: ["id","first_name","last_name", "email","created_at","fullname"],
     )): [ApplicantIndividual!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -170,7 +170,7 @@ extend type Mutation {
         "Массив ID меток"
         labels: [ID]
         "ID группа"
-        member_group_role_id: ID
+        group_id: ID
         "Пароль"
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
@@ -241,7 +241,7 @@ extend type Mutation {
         "Массив ID меток"
         labels: [ID]
         "ID группы"
-        member_group_role_id: ID
+        group_id: ID
         "Пароль"
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
