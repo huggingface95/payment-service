@@ -40,7 +40,7 @@ class Members extends BaseModel
 
     public function groupRole()
     {
-        return $this->belongsTo(GroupRole::class,'member_group_role_id');
+        return $this->belongsTo(GroupRole::class,'group_id');
     }
 
 //    public function getGroupAttribute()
