@@ -3,12 +3,10 @@ package app
 import (
 	"cl-junc-api/internal/clearjunction"
 	"cl-junc-api/internal/config"
-	"cl-junc-api/internal/logger"
 	"cl-junc-api/pkg/db"
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
-	"github.com/rs/zerolog"
 	"net/http"
 )
 
@@ -19,12 +17,10 @@ type App struct {
 	Redis  db.RedisDb
 	Sql    db.Postgresql
 	config config.Config
-	Log    zerolog.Logger
 }
 
 func (a *App) Init() *App {
 	a.config.Load()
-	a.Log = logger.NewLog()
 	a.Redis = db.NewRedisDb(a.config.Db.Redis)
 	a.Sql = db.NewPostgresql(true, a.config.Db.Sql)
 	a.Wire = clearjunction.New(a.config.Api.Clearjunction)

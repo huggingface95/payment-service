@@ -6,6 +6,7 @@ import (
 	"cl-junc-api/internal/db"
 	"cl-junc-api/internal/redis/constants"
 	models2 "cl-junc-api/internal/redis/models"
+	"cl-junc-api/pkg/utils/log"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,10 +18,9 @@ func PayinPostBack(c *gin.Context) {
 	err := UnmarshalJson(c, LogKeyPayinPostBack, request)
 
 	if err != nil {
-		app.Get.Log.Error().Err(err)
+		log.Error().Err(err)
 		return
 	}
-	app.Get.Log.Info().Msgf("UnmarshalJson data: %s", request)
 
 	if err == nil {
 		if request.Type == models.PayinNotification {
@@ -29,7 +29,7 @@ func PayinPostBack(c *gin.Context) {
 			}
 			err = app.Get.Sql.SelectWhereResult(&payment, "payment_number")
 			if err != nil {
-				app.Get.Log.Error().Err(err)
+				log.Error().Err(err)
 				return
 			}
 
@@ -41,10 +41,8 @@ func PayinPostBack(c *gin.Context) {
 				}
 				err := app.Get.Sql.Update(payment, "amount_real", "status")
 				if err != nil {
-
+					log.Error().Err(err)
 					return
-				} else {
-
 				}
 			}
 
@@ -64,7 +62,7 @@ func PayinPostBack(c *gin.Context) {
 		}
 
 	} else {
-		app.Get.Log.Error().Err(err)
+		log.Error().Err(err)
 	}
 
 	if !c.IsAborted() {

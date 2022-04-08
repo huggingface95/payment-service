@@ -3,6 +3,7 @@ package api
 import (
 	"cl-junc-api/cmd/app"
 	"cl-junc-api/internal/clearjunction/models"
+	"cl-junc-api/pkg/utils/log"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -15,16 +16,16 @@ func UnmarshalJson(c *gin.Context, logKey string, model models.PaymentCommon) er
 	if err == nil {
 		logData := fmt.Sprintf("[ %v ] %s", time.Now(), string(body))
 
-		app.Get.Log.Info().Msgf("UnmarshalJson data: %s", logData)
+		log.Info().Msgf("UnmarshalJson data: %s", logData)
 
 		app.Get.LogRedis(logKey, logData)
 
 		err = json.Unmarshal(body, model)
 
-		app.Get.Log.Info().Msgf("UnmarshalJson model: %#v", model)
+		log.Info().Msgf("UnmarshalJson model: %#v", model)
 	} else {
 
-		app.Get.Log.Error().Err(err).Msg("json parse err")
+		log.Error().Err(err).Msg("json parse err")
 
 		app.Get.LogRedis(logKey, err)
 	}

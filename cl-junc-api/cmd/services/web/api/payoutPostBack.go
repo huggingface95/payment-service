@@ -7,6 +7,7 @@ import (
 	"cl-junc-api/internal/redis/constants"
 	models2 "cl-junc-api/internal/redis/models"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 const LogKeyPayoutPostBack = "payout-post-back:request:log"
@@ -16,7 +17,7 @@ func PayoutPostBack(c *gin.Context) {
 	err := UnmarshalJson(c, LogKeyPayoutPostBack, request)
 
 	if err != nil {
-		app.Get.Log.Error().Err(err)
+		log.Error().Err(err)
 		return
 	}
 
@@ -25,12 +26,12 @@ func PayoutPostBack(c *gin.Context) {
 		payment := &dbt.Payment{
 			PaymentNumber: request.OrderReference,
 		}
-		//var m map[string]interface{}
+
 		err = app.Get.Sql.SelectWhereResult(&payment, "payment_number")
 		if err != nil {
+			log.Error().Err(err)
 			return
 		}
-		//status := fmt.Sprintln("%s", m)
 
 		if request.Status != payment.PaymentNumber {
 			payment := &dbt.Payment{
@@ -40,6 +41,7 @@ func PayoutPostBack(c *gin.Context) {
 			}
 			err := app.Get.Sql.Update(payment, "amount_real", "status")
 			if err != nil {
+				log.Error().Err(err)
 				return
 			} else {
 			}
