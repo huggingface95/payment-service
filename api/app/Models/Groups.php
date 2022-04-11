@@ -12,9 +12,10 @@ class Groups extends Model
 
     public $timestamps = false;
 
-    public function roles()
+
+    public function groups()
     {
-        return $this->belongsToMany(Roles::class,'group_role','group_id','role_id');
+        return $this->hasMany(GroupRole::class,'group_type_id','id');
     }
 
 }

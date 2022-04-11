@@ -4,7 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\GroupRole;
 use App\Models\Permissions;
-use App\Models\Roles;
+use App\Models\Role;
 use App\Exceptions\GraphqlException;
 
 class RoleMutator
@@ -22,12 +22,11 @@ class RoleMutator
             throw new GraphqlException('Role is not be used for this group',"internal", 500);
         }
 
-        $role = Roles::create($args);
-
+        $role = Role::create($args);
         if (isset($args['permissions'])) {
             $this->syncPermissions($role, $args['permissions']);
         }
-        if (isset($args['permissions'])) {
+        if (isset($args['groups'])) {
             $this->syncGroups($role, $args['groups']);
         }
 
@@ -45,7 +44,7 @@ class RoleMutator
             throw new GraphqlException('Role is not be used for this group',"internal", 500);
         }
 
-        $role = Roles::find($args['id']);
+        $role = Role::find($args['id']);
         if (isset($args['permissions'])) {
             $this->syncPermissions($role, $args['permissions']);
         }
@@ -59,26 +58,26 @@ class RoleMutator
     }
 
     /**
-     * @param Roles $role
+     * @param Role $role
      * @param $permissions
-     * @return Roles
+     * @return Role
      */
-    private function syncPermissions(Roles $role, $permissions)
+    private function syncPermissions(Role $role, $permissions)
     {
         $permissionsName = Permissions::getPermissionArrayNamesById($permissions);
 
         return $role->syncPermissions($permissionsName);
     }
 
-    private function syncGroups(Roles $role, array $groups)
+    private function syncGroups(Role $role, array $groups)
     {
         $currentGroups = $role->getGroupsIdByRole();
         $groupsDelete = array_diff($currentGroups,$groups);
         if ($groupsDelete) {
-            GroupRole::where('role_id',$role->id)->whereIn('group_id',$groupsDelete)->delete();
+            GroupRole::whereIn('id',$groupsDelete)->delete();
         }
         foreach ($groups as $group) {
-            GroupRole::updateOrCreate(['role_id'=>$role->id, 'group_id'=>$group],['group_id'=> $group]);
+            GroupRole::where('id',$group)->update(['role_id'=>$role->id]);
         }
     }
 

@@ -34,8 +34,6 @@ extend type Mutation {
         comment: String!
         "Аппликант"
         applicant_company_id: ID!
-        "Менеджер"
-        manager_id: ID!
         "Уровень риска"
         risk_level_id: ID!
     ):ApplicantCompanyRiskLevelHistory @field(resolver: "ApplicantCompanyRiskLevelHistoryMutator@create")

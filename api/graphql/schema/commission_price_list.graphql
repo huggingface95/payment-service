@@ -8,7 +8,13 @@ type CommissionPriceList {
     name: String!
     "Получить связанный платежный провайдер"
     provider: PaymentProvider @belongsTo(relation:"paymentProvider")
-	"Получить связанную платежную систему"
+    "Получить связанного мембера"
+    owner: [ApplicantIndividual] @belongsToMany(relation: "owner")
+    "Получить компанию"
+    company: [ApplicantCompany] @belongsToMany(relation: "company")
+    "Получить связанный аккаунт"
+    account: Accounts @hasOne(relation: "account")
+    "Получить связанную платежную систему"
     payment_system: PaymentSystem @belongsTo(relation:"PaymentSystem")
 	"Получить связанный платежный шаблон"
     commission_template: CommissionTemplate @belongsTo(relation:"CommissionTemplate")
@@ -24,6 +30,11 @@ extend type Query {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     commissionPriceLists(
+        hasOwner: _ @whereHasConditions(columns: ["name", "id"]),
+        hasCompany: _ @whereHasConditions(columns: ["name", "id"]),
+        hasAccount: _ @whereHasConditions(columns: ["account_number"]),
+        hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
+        paymentProviderName: Sort @scope(name:"PaymentProviderName"),
             where: _ @whereConditions(columns: ["name","payment_system_id","commission_template_id"]),
             orderBy: _ @orderBy(columns: ["id", "name"])
         ): [CommissionPriceList!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)

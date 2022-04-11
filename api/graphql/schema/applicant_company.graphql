@@ -74,6 +74,9 @@ type ApplicantCompany {
     company_position: ApplicantIndividualCompany @belongsTo(relation: "applicantIndividualCompany")
     owner_relation: ApplicantIndividualCompany @belongsTo(relation: "ownerRelation")
     owner_position: ApplicantIndividualCompany @belongsTo(relation: "ownerPosition")
+    company: Companies @belongsTo(relation: "company")
+    "Получить группу"
+    group: GroupRole @belongsTo(relation: "group")
 }
 
 
@@ -104,8 +107,8 @@ extend type Query {
         hasBusinessType: _ @whereHasConditions(columns: ["name", "id"]),
         hasOwner: _ @whereHasConditions(columns: ["fullname", "id"]),
         hasKycLevel: _ @whereHasConditions(columns: ["name", "id"]),
-        created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","account_manager_member_id","applicant_state_id","applicant_state_reason_id","name","url" ,"email","created_at"]), orderBy: _ @orderBy(
-        columns: ["id","name", "email","created_at","url","owner_id"],
+        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","account_manager_member_id","applicant_state_id","applicant_state_reason_id","name","url" ,"email","created_at","group_id","company_id"]), orderBy: _ @orderBy(
+        columns: ["id","name", "email","created_at","url","owner_id","company_id"],
     )): [ApplicantCompany!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
     """
     Получить список applicant individuals по applicant company
@@ -128,16 +131,16 @@ extend type Mutation {
         url: String!
         "Телефон"
         phone: String!
-        "Получить связанную страну"
+        "ID страны"
         country_id: ID!
         "ID языка"
         language_id: ID
         "Штат / область"
         state: String
         "Город"
-        city: String
+        city: String!
         "Адрес"
-        address: String
+        address: String!
         "Адрес2"
         address2: String
         "Адрес офиса"
@@ -147,7 +150,7 @@ extend type Mutation {
         "Дата регистрации"
         reg_at: Date
         "Дата окончания регистрации"
-        expires_at: Date
+        expires_at: Date!
         "Налоговый номер"
         tax: String
         "Регистрационный номер"
@@ -165,7 +168,7 @@ extend type Mutation {
         "ID статуса"
         applicant_status_id: ID
         "ID состояния"
-        applicant_state_id: ID
+        applicant_state_id: ID!
         "ID причины"
         applicant_state_reason_id: ID
         "ID уровня рисков"
@@ -173,15 +176,17 @@ extend type Mutation {
         "ID KYC level"
         applicant_kyc_level_id: ID
         "ID менеджера"
-        account_manager_member_id: ID
+        account_manager_member_id: ID!
         "ID owner"
         owner_id: ID
         "ID relation владельца"
-        owner_relation_id: ID
+        owner_relation_id: ID!
         "ID position владельца"
-        owner_position_id: ID
+        owner_position_id: ID!
         "Массив ID меток"
         labels: [ID]
+        "ID группы"
+        group_id: ID
     ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@create")
 
     "Редактирование applicant company"
@@ -253,6 +258,8 @@ extend type Mutation {
         owner_position_id: ID
         "Массив ID меток"
         labels: [ID]
+        "ID группы"
+        group_id: ID
     ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@update")
 
     "Удалить пользователя"

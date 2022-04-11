@@ -13,47 +13,50 @@ type Groups {
     id: ID!
     "Название группы"
     name: GroupsEntities!
-    "Связанные роли"
-    roles: [Roles] @belongsToMany(relation: "roles")
+    "Связанные группы"
+    groups: [GroupRole] @hasMany(relation: "groups")
 }
 
 type GroupRole {
     id: ID!
-    "ID группы"
-    group_id: ID
+    "Название группы"
+    name: String
+    "ID типа группы"
+    group_type_id: ID
     "ID роли"
     role_id: ID
     "Описание группы"
     description: String
     "Активная и не активная группа"
     is_active: Boolean
-    "Получить связанную группу"
-    group: Groups @belongsTo(relation: "group")
+    "Получить тип группы"
+    group_type: Groups @belongsTo(relation: "groupType")
     "Получить связанную роль"
-    role: Roles @belongsTo(relation: "role")
+    role: Role @belongsTo(relation: "role")
     "Получить связанный платежный провайдер"
     payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
     "Получит свящанный шаблон комиссий"
     commission_template: CommissionTemplate @belongsTo(relation: "commissionTemplate")
+    company: Companies @belongsTo(relation: "company")
 }
 
 
 extend type Query {
     "Получить группу по ID"
-    group(id: ID @eq): Groups @find
+    group_type(id: ID @eq): Groups @find
     "Получить список групп по умолчанию"
-    groups: [Groups!]! @paginate(defaultCount: 10)
+    group_types: [Groups!]! @paginate(defaultCount: 10)
     """
     Получить список групп с ролями
     orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
     where:{column: ID, operator: EQ, value: ""} фильтр по ID, ID группы, ID роли, ID платежного провайдера, ID шаблона комиссий, по статусу
     """
-    groups_list(
+    groups(
         hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
         hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
-        hasGroup: _ @whereHasConditions(columns: ["name", "id"]),
+        hasGroupType: _ @whereHasConditions(columns: ["name", "id"]),
         hasRole: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["id","group_id", "role_id", "payment_provider_id", "commission_template_id", "is_active"]),
+        where: _ @whereConditions(columns: ["id","group_type_id", "role_id", "payment_provider_id", "commission_template_id", "is_active","company_id"]),
         orderBy: _ @orderBy(columns: ["id","is_active","description"],
     )): [GroupRole!]! @paginate(defaultCount: 10)
 }
@@ -61,36 +64,44 @@ extend type Query {
 extend type Mutation {
     "Создать группу"
     createGroupSettings(
+        "Название группы"
+        name: String!
         "Описание группы"
         description: String
         "ID роли"
         role_id: ID
-        "ID группы из списка групп поумолчанию"
-        group_id: ID!
+        "ID типа группы из списка групп поумолчанию"
+        group_type_id: ID!
         "ID платежного провайдера"
         payment_provider_id: ID
         "ID шаблона комиссий"
         commission_template_id: ID
         "Активная или нет группа (true/false)"
         is_active: Boolean
+        "ID компании"
+        company_id: ID
     ): GroupRole @field(resolver:"GroupMutator@create")
 
     "Обновить поля группы"
     updateGroupSettings (
         "ID группы"
         id: ID!
+        "Название группы"
+        name: String
         "Описание группы"
         description: String
         "ID роли"
         role_id: ID
-        "ID группы из списка групп поумолчанию"
-        group_id: ID!
+        "ID типа группы из списка групп поумолчанию"
+        group_type_id: ID!
         "ID платежного провайдера"
         payment_provider_id: ID
         "ID шаблона комиссий"
         commission_template_id: ID
         "Активная или нет группа (true/false)"
         is_active: Boolean
+        "ID компании"
+        company_id: ID
     ): GroupRole @field(resolver:"GroupMutator@update")
 
 
@@ -100,7 +111,7 @@ extend type Mutation {
      "Добавить группу мемберу"
         setMemberGroup(
             "Group"
-            group_id: ID!
+            group_type_id: ID!
             "Payment Provider"
             payment_provider_id: ID!
             "Commission Template"

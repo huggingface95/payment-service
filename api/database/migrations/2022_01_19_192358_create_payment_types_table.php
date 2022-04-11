@@ -15,7 +15,7 @@ class CreatePaymentTypesTable extends Migration
     {
         Schema::create('payment_types', function (Blueprint $table) {
             $table->id();
-            $table->enum('name', ['Incoming', 'Outgoing', 'Between Account', 'Fee']);
+            $table->string('name',255);
         });
     }
 

@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividualCompany;
+use App\Models\Role;
 
 
 class ApplicantCompanyMutator extends BaseMutator
@@ -30,7 +31,7 @@ class ApplicantCompanyMutator extends BaseMutator
 
         $applicant = ApplicantCompany::create($args);
 
-        if (isset($args['owner_id'])) {
+        if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {
             $this->setOwner($applicant, $args);
         }
 
@@ -63,7 +64,7 @@ class ApplicantCompanyMutator extends BaseMutator
             $args['profile_additional_fields']  = $this->setAdditionalField($args['profile_additional_fields']);
         }
 
-        if (isset($args['owner_id'])) {
+        if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {
             $this->setOwner($applicant, $args);
         }
 
@@ -73,6 +74,7 @@ class ApplicantCompanyMutator extends BaseMutator
         }
 
         $applicant->update($args);
+
         return $applicant;
     }
 

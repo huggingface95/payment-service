@@ -2,7 +2,7 @@
 Роли
 Settings->Manager Roles->Roles List
 """
-type Roles {
+type Role {
     id: ID!
     "Название роли"
     name: String!
@@ -13,7 +13,8 @@ type Roles {
     "Получить дерево разрешений"
     permissions_tree: JSON
     "Получить список групп"
-    groups: [Groups] @belongsToMany(relation: "groups")
+    group_type: Groups @hasOne(relation: "groupType")
+    groups: [GroupRole] @hasMany(relation: "groups")
     "Получить количество групп с данной ролью"
     groups_count: Int
 }
@@ -21,16 +22,19 @@ type Roles {
 
 extend type Query {
     "Получить роль по ID"
-    role(id: ID @eq): Roles @field(resolver:"RoleQuery@permissions")
+    role(id: ID @eq): Role @field(resolver:"RoleQuery@permissions")
     """
     Получить список ролей
     groups_sort: сортировка по количеству групп
     orderBy: [{ column: ID, order: DESC }] сортировка по ID или по названию
     where: {column: name, operator: LIKE, value: "Name"}
     """
-    roles(groups_sort: Sort @scope(name:"GroupsSort"), where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+    roles(groups_sort: Sort @scope(name:"GroupsSort"),
+        hasGroupTypes: _ @whereHasConditions(columns: ["name", "id"]),
+        hasGroups: _ @whereHasConditions(columns: ["name", "id"]),
+        where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name","description"],
-    )): [Roles!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [Role!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation {
@@ -43,7 +47,7 @@ extend type Mutation {
         permissions: [ID]
         "Массив груп поумолчанию"
         groups: [ID]
-    ): Roles @field(resolver:"RoleMutator@create")
+    ): Role @field(resolver:"RoleMutator@create")
 
     updateRole(
         "ID роли"
@@ -56,12 +60,12 @@ extend type Mutation {
         permissions: [ID]
         "Массив групп поумолчанию"
         groups: [ID]
-    ): Roles @field(resolver:"RoleMutator@update")
+    ): Role @field(resolver:"RoleMutator@update")
 
     deleteRole(
         "ID роли"
         id: ID!
-    ): Roles @delete
+    ): Role @delete
 
 
 }

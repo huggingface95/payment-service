@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\ApplicantIndividual;
+use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -34,6 +35,10 @@ class ApplicantMutator extends BaseMutator
             $args['contacts_additional_fields']  = $this->setAdditionalField($args['contacts_additional_fields']);
         }
         $applicant = ApplicantIndividual::create($args);
+        if (isset($args['role_id'])) {
+            $roles = Role::whereIn('id',$args['role_id'])->get();
+            $applicant->syncRoles($roles);
+        }
 
         if (isset($args['labels'])) {
             $applicant->labels()->detach($args['labels']);
@@ -73,6 +78,12 @@ class ApplicantMutator extends BaseMutator
             $applicant->labels()->attach($args['labels']);
         }
         $applicant->update($args);
+
+        if (isset($args['role_id'])) {
+            $roles = Role::whereIn('id',$args['role_id'])->get();
+            $applicant->syncRoles($roles);
+        }
+
         return $applicant;
     }
 

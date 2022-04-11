@@ -18,7 +18,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public $password_confirmation;
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'sex', 'is_active', 'company_id', 'country_id', 'language_id', 'member_group_role_id', 'two_factor_auth_setting_id', 'password_hash', 'password_salt', 'last_login_at', 'additional_fields', 'additional_info_fields'
+        'first_name', 'last_name','email','sex','is_active','company_id','country_id','language_id','group_id','two_factor_auth_setting_id','password_hash','password_salt','last_login_at','additional_fields','additional_info_fields'
     ];
 
     protected $hidden = [
@@ -45,38 +45,38 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class, 'company_id');
+        return $this->belongsTo(Companies::class,'company_id');
     }
 
-    public function country(): BelongsTo
+    public function country()
     {
-        return $this->belongsTo(Country::class, 'country_id');
+        return $this->belongsTo(Country::class,'country_id');
     }
 
-    public function language(): BelongsTo
+    public function language()
     {
-        return $this->belongsTo(Languages::class, 'language_id');
+        return $this->belongsTo(Languages::class,'language_id');
     }
 
-    public function position(): BelongsTo
+    public function position()
     {
-        return $this->belongsTo(DepartmentPosition::class, 'department_position_id');
+        return $this->belongsTo(DepartmentPosition::class,'department_position_id');
     }
 
-    public function groupRole(): BelongsTo
+    public function groupRole()
     {
-        return $this->belongsTo(GroupRole::class, 'member_group_role_id');
+        return $this->belongsTo(GroupRole::class,'group_id');
     }
 
-    public function getGroupAttribute()
-    {
-        return $this->groupRole()->join('groups', 'groups.id', '=', 'group_role.group_id')->select('groups.*')->first();
-    }
+//    public function getGroupAttribute()
+//    {
+//        return $this->groupRole()->join('groups', 'groups.id', '=', 'group_role.group_type_id')->select('groups.*')->first();
+//    }
 
-    public function getRoleAttribute()
-    {
-        return $this->groupRole()->join('roles', 'roles.id', '=', 'group_role.role_id')->select('roles.*')->first();
-    }
+//    public function getRoleAttribute()
+//    {
+//        return $this->groupRole()->join('roles', 'roles.id', '=', 'group_role.role_id')->select('roles.*')->first();
+//    }
 
     public function getDepartmentAttribute()
     {
@@ -84,9 +84,9 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
             ->join('departments', 'departments.id', '=', 'department_position.department_id')->select('departments.*')->first();
     }
 
-    public function groupRoles(): BelongsToMany
+    public function roles()
     {
-        return $this->belongsToMany(GroupRole::class, 'group_role_member', 'member_id', 'group_role_id');
+        return $this->belongsToMany(Role::class,'group_role_member', 'member_id', 'group_role_id');
     }
 
 }

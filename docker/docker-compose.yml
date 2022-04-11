@@ -3,6 +3,9 @@ version: '3'
 networks:
   backend:
     driver: ${NETWORKS_DRIVER}
+    ipam:
+      config:
+        - subnet: ${NETWORKS_SUBNET}
 
 volumes:
   pgdata:
@@ -12,68 +15,114 @@ volumes:
     driver: ${VOLUMES_DRIVER}
 
 services:
-    php-dev:
-      build:
-        context: ./php-dev
-      volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
-      expose:
-        - "9000"
-      extra_hosts:
-        - "dockerhost:${DOCKER_HOST_IP}"
-      environment:
-        - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
-        - DOCKER_HOST=tcp://docker-in-docker:2375
-        - FAKETIME=${PHP_FPM_FAKETIME}
-      networks:
-        - backend
+  php-dev:
+    build:
+      context: ./php-dev
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+    expose:
+      - "9000"
+    extra_hosts:
+      - "dockerhost:${DOCKER_HOST_IP}"
+    environment:
+      - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
+      - DOCKER_HOST=tcp://docker-in-docker:2375
+      - FAKETIME=${PHP_FPM_FAKETIME}
+    networks:
+      - backend
 
-    nginx:
-      build:
-        context: ./nginx
-        args:
-          - PHP_UPSTREAM_CONTAINER=${NGINX_PHP_UPSTREAM_CONTAINER}
-          - PHP_UPSTREAM_PORT=${NGINX_PHP_UPSTREAM_PORT}
-          - http_proxy
-          - https_proxy
-          - no_proxy
-      volumes:
-        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
-        - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
-        - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
-        - ${NGINX_SSL_PATH}:/etc/nginx/ssl
-        - "~/etc/timezone:/etc/timezone:ro"
-        - "~/etc/localtime:/etc/localtime:ro"
-      ports:
-        - "${NGINX_HOST_HTTP_PORT}:80"
-        - "${NGINX_HOST_HTTPS_PORT}:443"
-      depends_on:
-        - php-dev
-      networks:
-        - backend
+  cl-junc-apicore:
+    build:
+      context: ../cl-junc-api
+      dockerfile: ./go-dev/Dockerfile
+    container_name: cl-junc-apicore
+    volumes:
+      - ../cl-junc-api/cmd:/app/cmd
+      - ../cl-junc-api/internal:/app/internal
+      - ../cl-junc-api/pkg:/app/pkg
+      - ../cl-junc-api/vendor:/app/vendor
+      - ../cl-junc-api/storage:/app/storage
+      - ../cl-junc-api/config.json:/app/config.json
+      - ../cl-junc-api/go.mod:/app/go.mod
+      - ../cl-junc-api/go.sum:/app/go.sum
+    command:
+      - go
+      - run
+      - cmd/main.go
+    networks:
+      - backend
 
-    postgres:
-      build: ./postgres
-      volumes:
-        - pgdata:/var/lib/postgresql/data
-        - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
-      ports:
-        - "${POSTGRES_PORT}:5432"
-      environment:
-        - POSTGRES_DB=${POSTGRES_DB}
-        - POSTGRES_USER=${POSTGRES_USER}
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      networks:
-        - backend
+  nginx:
+    build:
+      context: ./nginx
+      args:
+        - PHP_UPSTREAM_CONTAINER=${NGINX_PHP_UPSTREAM_CONTAINER}
+        - PHP_UPSTREAM_PORT=${NGINX_PHP_UPSTREAM_PORT}
+        - http_proxy
+        - https_proxy
+        - no_proxy
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+      - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
+      - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
+      - ${NGINX_SSL_PATH}:/etc/nginx/ssl
+      - "~/etc/timezone:/etc/timezone:ro"
+      - "~/etc/localtime:/etc/localtime:ro"
+    ports:
+      - "${NGINX_HOST_HTTP_PORT}:80"
+      - "${NGINX_HOST_HTTPS_PORT}:443"
+    depends_on:
+      - php-dev
+    networks:
+      - backend
 
-    redis:
-      build: ./redis
-      volumes:
-        - ${DATA_PATH_HOST}/redis:/data
-      ports:
-        - "${REDIS_PORT}:6379"
-      command: >
-        --requirepass ${REDIS_PASS}
-      networks:
-        - backend
-      user: "${REDIS_UID}:${REDIS_GID}"
+  postgres:
+    build: ./postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ${POSTGRES_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    networks:
+      - backend
+
+  redis:
+    build: ./redis
+    volumes:
+      - ${DATA_PATH_HOST}/redis:/data
+    ports:
+      - "${REDIS_PORT}:6379"
+    command: >
+      --requirepass ${REDIS_PASS}
+    networks:
+      - backend
+    user: "${REDIS_UID}:${REDIS_GID}"
+
+  clickhouse_server:
+    image: yandex/clickhouse-server
+    environment:
+      - CLICKHOUSE_USER=${CLICKHOUSE_USER}
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+    ports:
+      - "${CLICKHOUSE_PORT}:8123"
+      - "${CLICKHOUSE_PORT_NATIVE}:9000"
+    volumes:
+      - ./clickhouse/database:/var/lib/clickhouse
+      - ./clickhouse/server/config.d/docker_related_config.xml:/etc/clickhouse-server/config.d/docker_related_config.xml
+      - ./clickhouse/server/users.xml:/etc/clickhouse-server/users.xml
+    networks:
+      - backend
+
+  clickhouse_client:
+    image: yandex/clickhouse-client
+    entrypoint:
+      - /bin/sleep
+    command:
+      - infinity
+    networks:
+      - backend
+

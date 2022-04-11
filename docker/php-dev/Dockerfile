@@ -1,5 +1,13 @@
 FROM php:7.4.9-fpm-alpine
 
+RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev && \
+  docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg \
+  NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) && \
+  docker-php-ext-install -j$(nproc) gd && \
+  apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev
+
 RUN apk add --no-cache --update \
         libzip-dev curl-dev libxml2-dev icu-dev oniguruma-dev autoconf \
     && \
@@ -54,7 +62,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
-RUN install-php-extensions gd ldap soap intl zip pdo_pgsql sockets xsl
+RUN install-php-extensions ldap soap intl zip pdo_pgsql sockets xsl
 
 RUN chown www-data:www-data /var/www
 

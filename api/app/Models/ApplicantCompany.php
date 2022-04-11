@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ApplicantCompany extends Model
 {
 
+
     protected $table="applicant_companies";
 
     /**
@@ -45,7 +46,10 @@ class ApplicantCompany extends Model
         'account_manager_member_id',
         'applicant_risk_level_id',
         'applicant_kyc_level_id',
-        'is_verification_phone'
+        'is_verification_phone',
+        'owner_relation_id',
+        'owner_position_id',
+        'group_id'
     ];
 
     protected $casts = [
@@ -171,6 +175,29 @@ class ApplicantCompany extends Model
     public function ownerPosition()
     {
         return $this->belongsTo(ApplicantIndividualCompany::class,'owner_id', 'applicant_individual_id', 'applicant_individual_company_position_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Companies::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function group()
+    {
+        return $this->belongsTo(GroupRole::class,'group_id');
+    }
+
+    public function scopeGroupSort($query, $sort)
+    {
+        return $query->join('group_role','group_role.id','=','applicant_companies.group_id')->orderBy('group_role.name',$sort)->select('applicant_companies.*');
+    }
+
+    public function scopeCompanySort($query, $sort)
+    {
+        return $query->join('companies','companies.id','=','applicant_companies.company_id')->orderBy('companies.name',$sort)->select('applicant_companies.*');
     }
 
 }

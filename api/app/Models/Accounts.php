@@ -25,7 +25,7 @@ class Accounts extends BaseModel
      * Get relation currencies
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function Currencies()
+    public function currencies()
     {
         return $this->belongsTo(Currencies::class,'currency_id','id');
     }
@@ -34,7 +34,7 @@ class Accounts extends BaseModel
      * Get relation applicant individual
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function ApplicantIndividual()
+    public function applicantIndividual()
     {
         return $this->belongsTo(ApplicantIndividual::class,'client_id','id');
     }
@@ -43,7 +43,7 @@ class Accounts extends BaseModel
      * Get relation Member
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function Members()
+    public function members()
     {
         return $this->belongsTo(Members::class,'owner_id','id');
     }
@@ -52,7 +52,7 @@ class Accounts extends BaseModel
      * Get relation Payment Provider
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function PaymentProvider()
+    public function paymentProvider()
     {
         return $this->belongsTo(PaymentProvider::class,'payment_provider_id','id');
     }
@@ -61,9 +61,14 @@ class Accounts extends BaseModel
      * Get relation Payment Provider
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function CommissionTemplate()
+    public function commissionTemplate()
     {
         return $this->belongsTo(CommissionTemplate::class,'commission_template_id','id');
+    }
+
+    public function group()
+    {
+        return $this->hasOneThrough(GroupRole::class, ApplicantIndividual::class,'member_group_role_id','id','client_id','id');
     }
 
     public function setAccountIdAttribute()

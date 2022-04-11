@@ -67,13 +67,17 @@ type ApplicantIndividual {
     "Получить метки"
     labels: [ApplicantIndividualLabel] @belongsToMany(relation: "labels")
     "Название компании держателя applicant"
-    created_for: Companies
+    created_for: Companies @belongsTo(relation: "company")
     "Получить заметки"
     notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
     "Получить модули"
     modules: [ApplicantIndividualModules] @hasMany (relation: "modules")
     "Получить компании"
     companies: [ApplicantCompany] @belongsToMany (relation: "companies")
+    "Получить роль"
+    roles: [Role] @belongsToMany (relation: "roles")
+    "Получить группу"
+    group: GroupRole @belongsTo (relation: "group")
 }
 
 
@@ -100,8 +104,8 @@ extend type Query {
         hasRiskLevel: _ @whereHasConditions(columns: ["name", "id"]),
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
-        created_at: DateRange @whereBetween, where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at"]), orderBy: _ @orderBy(
-        columns: ["id","first_name","last_name", "email","created_at"],
+        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","group_id","company_id"]), orderBy: _ @orderBy(
+        columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"],
     )): [ApplicantIndividual!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
@@ -129,23 +133,23 @@ extend type Mutation {
         "Штат / область"
         state: String
         "Город"
-        city: String
+        city: String!
         "Адрес"
-        address: String
+        address: String!
         "Индекс"
         zip: String
         "Национальность"
         nationality: String
         "ID страны рождения"
-        birth_country_id: ID
+        birth_country_id: ID!
         "Штат/область рождения"
         birth_state: String
         "Город рождения"
         birth_city: String
         "Дата рождения"
-        birth_at: Date
+        birth_at: Date!
         "Пол"
-        sex: Sex
+        sex: Sex!
         "Дополнительные поля для Personal info"
         personal_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
@@ -153,15 +157,19 @@ extend type Mutation {
         "ID статуса"
         applicant_status_id: ID
         "ID состояния"
-        applicant_state_id: ID
+        applicant_state_id: ID!
         "ID причины"
         applicant_state_reason_id: ID
         "ID уровня рисков"
         applicant_risk_level_id: ID
         "ID менеджера"
-        account_manager_member_id: ID
+        account_manager_member_id: ID!
+        "Role id"
+        role_id: [ID]!
         "Массив ID меток"
         labels: [ID]
+        "ID группа"
+        group_id: ID
         "Пароль"
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
@@ -227,8 +235,12 @@ extend type Mutation {
         applicant_risk_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID
+        "Role id"
+        role_id: [ID]
         "Массив ID меток"
         labels: [ID]
+        "ID группы"
+        group_id: ID
         "Пароль"
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"

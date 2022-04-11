@@ -43,6 +43,8 @@ class CreateApplicantCompaniesTable extends Migration
             $table->unsignedBigInteger('applicant_state_reason_id')->nullable();
             $table->unsignedBigInteger('account_manager_member_id')->nullable();
             $table->unsignedBigInteger('owner_id')->nullable();
+            $table->unsignedBigInteger('owner_relation_id')->nullable();
+            $table->unsignedBigInteger('owner_position_id')->nullable();
             $table->unsignedBigInteger('applicant_risk_level_id')->nullable();
 
             $table->foreign('applicant_company_business_type_id')->references('id')->on('applicant_company_business_type');
@@ -54,6 +56,8 @@ class CreateApplicantCompaniesTable extends Migration
             $table->foreign('applicant_risk_level_id')->references('id')->on('applicant_risk_level');
             $table->foreign('country_id')->references('id')->on('countries');
             $table->foreign('language_id')->references('id')->on('languages');
+            $table->foreign('owner_relation_id')->references('id')->on('applicant_individual_company_relation');
+            $table->foreign('owner_position_id')->references('id')->on('applicant_individual_company_position');
         });
     }
 

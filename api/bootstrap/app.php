@@ -84,6 +84,7 @@ $app->configure('graphql-playground');
 $app->configure('filesystems');
 $app->configure('dompdf');
 $app->configure('mail');
+$app->configure('queue');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -128,6 +129,7 @@ $app->register(\SwaggerLume\ServiceProvider::class);
 $app->register(MLL\GraphQLPlayground\GraphQLPlaygroundServiceProvider::class);
 $app->register(Barryvdh\DomPDF\ServiceProvider::class);
 $app->register(\Illuminate\Mail\MailServiceProvider::class);
+$app->register(\PhpClickHouseLaravel\ClickhouseServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Spatie\Permission\Traits\HasRoles;
 
 class ApplicantIndividual extends Model
 {
+    use HasRoles;
 
     protected $table="applicant_individual";
+    protected $guard_name = 'api';
 
     /**
      * The attributes that are mass assignable.
@@ -45,7 +47,9 @@ class ApplicantIndividual extends Model
         'account_manager_member_id',
         'password_hash',
         'password_salt',
-        'is_verification_phone'
+        'is_verification_phone',
+        'group_id',
+        'company_id'
     ];
 
     protected $casts = [
@@ -165,5 +169,27 @@ class ApplicantIndividual extends Model
         return $this->belongsTo(Accounts::class, 'id', 'client_id');
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Companies::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function group()
+    {
+        return $this->belongsTo(GroupRole::class,'group_id');
+    }
+
+    public function scopeGroupSort($query, $sort)
+    {
+        return $query->join('group_role','group_role.id','=','applicant_individual.group_id')->orderBy('group_role.name',$sort)->select('applicant_individual.*');
+    }
+
+    public function scopeCompanySort($query, $sort)
+    {
+        return $query->join('companies','companies.id','=','applicant_individual.company_id')->orderBy('companies.name',$sort)->select('applicant_individual.*');
+    }
 
 }
