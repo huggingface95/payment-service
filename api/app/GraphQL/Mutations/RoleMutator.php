@@ -77,7 +77,7 @@ class RoleMutator
             GroupRole::whereIn('id',$groupsDelete)->delete();
         }
         foreach ($groups as $group) {
-            GroupRole::updateOrCreate(['role_id'=>$role->id, 'id'=>$group],['id'=> $group]);
+            GroupRole::where('id',$group)->update(['role_id'=>$role->id]);
         }
     }
 
