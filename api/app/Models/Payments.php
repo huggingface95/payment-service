@@ -21,7 +21,7 @@ class Payments extends BaseModel
         'fee',
         'fee_type_id',
         'currency_id',
-        'status',
+        'status_id',
         'sender_name',
         'payment_details',
         'sender_bank_account',
@@ -29,7 +29,7 @@ class Payments extends BaseModel
         'sender_bank_name',
         'sender_bank_country',
         'sender_bank_address',
-        'sender_country',
+        'sender_country_id',
         'sender_address',
         'urgency_id',
         'type_id',
@@ -37,8 +37,10 @@ class Payments extends BaseModel
         'account_id',
         'company_id',
         'payment_number',
+        'error',
         'member_id',
-        'received_at'
+        'received_at',
+        'sender_additional_fields'
     ];
 
     protected static function booted()
@@ -123,6 +125,16 @@ class Payments extends BaseModel
     public function company()
     {
         return $this->belongsToMany(ApplicantCompany::class,'accounts','id','client_id', 'account_id', 'owner_id');
+    }
+
+    public function feeType()
+    {
+        return $this->belongsTo(FeeType::class,'fee_type_id','id');
+    }
+
+    public function paymentStatus()
+    {
+        return $this->belongsTo(PaymentStatus::class,'status_id','id');
     }
 
 

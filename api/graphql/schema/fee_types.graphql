@@ -1,0 +1,15 @@
+"""
+Типы платежей
+"""
+type FeeType {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    """
+    Получить список статусов
+    """
+   feeTypes: [FeeType!]! @all
+}

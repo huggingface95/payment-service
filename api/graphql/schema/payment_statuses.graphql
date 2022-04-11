@@ -1,0 +1,15 @@
+"""
+Типы платежей
+"""
+type PaymentStatus {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query {
+    """
+    Получить список статусов
+    """
+   paymentStatuses: [PaymentStatus!]! @all
+}
