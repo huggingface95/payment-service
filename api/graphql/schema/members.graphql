@@ -5,11 +5,11 @@ Administration->Members
 type Members {
     id: ID!
     "Имя участника"
-    first_name: String!
+    first_name: String
     "Фамилия участника"
-    last_name: String!
+    last_name: String
     "Email участника"
-    email: EMAIL!
+    email: EMAIL
     "Пол участника"
     sex: Sex
     "Активен = true или не активный = false участник"
@@ -31,7 +31,7 @@ type Members {
     "Получить департамент"
     department: Departments
     "ID настройки двухфактороной авторизации"
-    two_factor_auth_setting_id: ID!
+    two_factor_auth_setting_id: ID
     "Дополнительны поля"
     additional_fields: JSON
     "Дополнительны поля для member info"
@@ -124,15 +124,15 @@ extend type Mutation {
         "ID участника"
         id: ID!
         "Имя участника"
-        first_name: String!
+        first_name: String
         "Фамилия участника"
-        last_name: String!
+        last_name: String
         "Email участника"
-        email: EMAIL!
+        email: EMAIL
         "Пол участника"
         sex: Sex
         "ID компании"
-        company_id: ID!
+        company_id: ID
         "ID страны"
         country_id: ID
         "ID языка"
@@ -143,6 +143,8 @@ extend type Mutation {
         is_active: Boolean
         "ID должности"
         department_position: ID
+        "ID настройки двухфактороной авторизации"
+        two_factor_auth_setting_id: ID
         """
         Блок дополнительных полей
         в формате:

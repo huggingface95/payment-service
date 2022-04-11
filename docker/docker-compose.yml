@@ -3,6 +3,9 @@ version: '3'
 networks:
   backend:
     driver: ${NETWORKS_DRIVER}
+    ipam:
+      config:
+        - subnet: ${NETWORKS_SUBNET}
 
 volumes:
   pgdata:
@@ -31,7 +34,7 @@ services:
   cl-junc-apicore:
     build:
       context: ../cl-junc-api
-      dockerfile: ../docker/go-dev/Dockerfile
+      dockerfile: ./go-dev/Dockerfile
     container_name: cl-junc-apicore
     volumes:
       - ../cl-junc-api/cmd:/app/cmd
