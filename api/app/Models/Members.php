@@ -23,6 +23,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $hidden = [
         'password_hash',
+        'password_salt'
     ];
 
     protected $dates = ['deleted_at'];
