@@ -92,7 +92,16 @@ class MembersMutator extends BaseMutator
         return Members::create($args);
     }
 
-
+    /**
+     * @param $_
+     * @param array $args
+     * @return array
+     */
+    public function setPassword($_, array $args)
+    {
+        Members::where('id',$args['id'])->update(['password_hash'=>Hash::make($args['password']),'password_salt'=>Hash::make($args['password_confirmation'])]);
+        return $args;
+    }
 
     /**
      * @param int $roleId

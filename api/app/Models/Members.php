@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Laravel\Lumen\Auth\Authorizable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Members extends BaseModel
+class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
-    use SoftDeletes;
+    use SoftDeletes, Authorizable, Authenticatable;
 
     public $password_confirmation;
 
@@ -16,9 +21,30 @@ class Members extends BaseModel
         'first_name', 'last_name','email','sex','is_active','company_id','country_id','language_id','group_id','two_factor_auth_setting_id','password_hash','password_salt','last_login_at','additional_fields','additional_info_fields'
     ];
 
+    protected $hidden = [
+        'password_hash',
+        'password_salt'
+    ];
+
     protected $dates = ['deleted_at'];
 
-    public function company()
+
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        return [];
+    }
+
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Companies::class,'company_id');
     }

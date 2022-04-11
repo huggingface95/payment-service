@@ -35,7 +35,10 @@ return [
     */
 
     'guards' => [
-        'api' => ['driver' => 'api'],
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'members',
+            ],
     ],
 
     /*
@@ -56,7 +59,17 @@ return [
     */
 
     'providers' => [
-        //
+        'members' => [
+            'driver' => 'eloquent',
+            'model'  =>  App\Models\Members::class,
+        ]
+//        ,
+//        'applicant_individual' => [
+//            [
+//                'driver' => 'eloquent',
+//                'model'  =>  App\Models\ApplicantIndividual::class,
+//            ]
+//        ]
     ],
 
     /*
@@ -79,7 +92,8 @@ return [
     */
 
     'passwords' => [
-        //
+        'members',
+        'applicant_individual'
     ],
 
 ];

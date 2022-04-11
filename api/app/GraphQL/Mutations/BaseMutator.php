@@ -42,7 +42,7 @@ class BaseMutator
     {
 
         $args['password_hash'] = Hash::make($args['password']);
-        $args['password_salt'] = Hash::make($args['password']);
+        $args['password_salt'] = Hash::make($args['password_confirmation']);
         return $args;
     }
 
