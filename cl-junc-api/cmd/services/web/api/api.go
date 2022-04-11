@@ -22,6 +22,10 @@ func UnmarshalJson(c *gin.Context, logKey string, model models.PaymentCommon) er
 
 		err = json.Unmarshal(body, model)
 
+		if err == nil {
+			log.Error().Err(err)
+		}
+
 		log.Info().Msgf("UnmarshalJson model: %#v", model)
 	} else {
 

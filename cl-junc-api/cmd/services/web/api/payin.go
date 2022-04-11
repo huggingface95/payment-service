@@ -11,8 +11,9 @@ import (
 const LogKeyPayInRequest = "payin:request:log"
 
 func PayInCreateInvoice(c *gin.Context) {
-
 	payInRequest := &models.Payment{}
+
+	log.Debug().Msgf("payment: PayInCreateInvoice: request: %#v", payInRequest)
 
 	err := UnmarshalJson(c, LogKeyPayInRequest, payInRequest)
 

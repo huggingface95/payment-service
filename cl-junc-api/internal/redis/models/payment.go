@@ -1,6 +1,8 @@
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type Payment struct {
 	Amount    float64 `json:"amount"`
