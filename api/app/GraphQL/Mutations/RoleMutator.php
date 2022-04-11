@@ -74,10 +74,10 @@ class RoleMutator
         $currentGroups = $role->getGroupsIdByRole();
         $groupsDelete = array_diff($currentGroups,$groups);
         if ($groupsDelete) {
-            GroupRole::where('role_id',$role->id)->whereIn('group_type_id',$groupsDelete)->delete();
+            GroupRole::where('role_id',$role->id)->whereIn('id',$groupsDelete)->delete();
         }
         foreach ($groups as $group) {
-            GroupRole::updateOrCreate(['role_id'=>$role->id, 'group_type_id'=>$group],['group_type_id'=> $group]);
+            GroupRole::updateOrCreate(['role_id'=>$role->id, 'id'=>$group],['id'=> $group]);
         }
     }
 
