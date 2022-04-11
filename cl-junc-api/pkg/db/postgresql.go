@@ -2,6 +2,7 @@ package db
 
 import (
 	"cl-junc-api/pkg/db/config"
+	"cl-junc-api/pkg/utils/log"
 	"context"
 	"database/sql"
 	"fmt"
@@ -68,7 +69,7 @@ func (p *Postgresql) Update(model interface{}, updateFields ...string) (err erro
 }
 
 func (p *Postgresql) UpdateAndSelect(model interface{}, updateFields ...string) (err error) {
-	_, err = p.client.NewUpdate().Model(model).WherePK("Id").Column(updateFields...).Returning("*").Exec(context.Background())
+	_, err = p.client.NewUpdate().Model(model).WherePK("id").Column(updateFields...).Returning("*").Exec(context.Background())
 	return
 }
 
@@ -87,26 +88,30 @@ func (p *Postgresql) SelectWhereExistsResult(model interface{}, column string) (
 }
 
 func (p *Postgresql) SelectResult(model interface{}) error {
-	return p.SelectWhereResult(model, "Id")
+	return p.SelectWhereResult(model, "id")
+}
+
+func (p *Postgresql) SelectOneResult(model interface{}) error {
+	return p.SelectWhereResult(model, "id")
 }
 
 func (p *Postgresql) SelectExistsResult(model interface{}) (exists bool, err error) {
-	return p.SelectWhereExistsResult(model, "Id")
+	return p.SelectWhereExistsResult(model, "id")
 }
 
 func (p *Postgresql) SelectColumnValuesResult(model interface{}, columnName string) (result []string) {
-	p.Select(model).ColumnExpr(columnName).
-		Scan(context.Background(), &result)
+	if err := p.Select(model).ColumnExpr(columnName).Scan(context.Background(), &result); err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
 	return
 }
 
-func (p *Postgresql) SelectMapResult(model interface{}) (result map[string]interface{}) {
-	if err := p.Select(model).
-		Scan(context.Background(), &result); err != nil {
+func (p *Postgresql) SelectMapResult(model interface{}) {
+	if err := p.Select(model).Scan(context.Background()); err != nil {
+		log.Error().Err(err)
 		panic(err)
 	}
-
-	return
 }
 
 func (p *Postgresql) DeleteResult(model interface{}, whereColumn string, whereValue interface{}) (sql.Result, error) {

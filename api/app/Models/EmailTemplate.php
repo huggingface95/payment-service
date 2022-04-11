@@ -30,7 +30,7 @@ class EmailTemplate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'subject', 'content', 'type'
+        'subject', 'content', 'type', 'header', 'footer'
     ];
 
 

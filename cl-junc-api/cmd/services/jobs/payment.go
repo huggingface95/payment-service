@@ -5,6 +5,7 @@ import (
 	"cl-junc-api/internal/db"
 	"cl-junc-api/internal/redis/constants"
 	"cl-junc-api/internal/redis/models"
+	"cl-junc-api/pkg/utils/log"
 )
 
 func ProcessPayQueue() {
@@ -13,6 +14,7 @@ func ProcessPayQueue() {
 	payoutList := getPayments(constants.QueuePayoutLog)
 
 	for _, p := range payInList {
+		log.Debug().Msgf("jobs: ProcessPayQueue: p: %#v", p)
 		payIn(p)
 	}
 
@@ -25,11 +27,16 @@ func getPayments(logType string) []*models.Payment {
 	redisList := app.Get.GetRedisList(logType, func() interface{} {
 		return new(models.Payment)
 	})
-	newList := make([]*models.Payment, len(redisList))
+
+	log.Debug().Msgf("jobs: getPayments: redisList: %#v", redisList)
+
+	var newList []*models.Payment
 
 	for _, c := range redisList {
 		newList = append(newList, c.(*models.Payment))
 	}
+
+	log.Debug().Msgf("jobs: getPayments: newList: %#v", newList)
 
 	return newList
 }
@@ -42,21 +49,20 @@ func payIn(p *models.Payment) {
 	//	FailUrl:     app.Get.Config().App.Url + "/payin/postback",
 	//}
 
-	payment := &db.Payment{
+	dbPayment := &db.Payment{
 		Id: p.PaymentId,
 	}
-	payIn := &db.Payin{}
 
-	err := app.Get.Sql.SelectOne(payment, payIn, "id")
+	err := app.Get.Sql.SelectResult(dbPayment)
+
+	payInRequest := dbPayment.ToPayInRequest()
 
 	if err == nil {
-		response, err := app.Get.Wire.CreateInvoice(payIn)
+		response, err := app.Get.Wire.CreateInvoice(payInRequest)
 		if err == nil {
-			payment := &db.Payment{
-				Id:            payment.Id,
-				PaymentNumber: response.OrderReference,
-			}
-			err = app.Get.Sql.Update(payment, "payment_number")
+			dbPayment.PaymentNumber = response.OrderReference
+
+			err = app.Get.Sql.Update(dbPayment, "payment_number")
 
 			if err == nil {
 				email := &models.Email{
@@ -72,6 +78,8 @@ func payIn(p *models.Payment) {
 
 			}
 		}
+	} else {
+		log.Error().Err(err)
 	}
 }
 

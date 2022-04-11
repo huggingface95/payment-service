@@ -4,10 +4,9 @@ import (
 	"cl-junc-api/internal/clearjunction"
 	"cl-junc-api/internal/config"
 	"cl-junc-api/pkg/db"
+	"cl-junc-api/pkg/utils/log"
 	"encoding/json"
 	"fmt"
-	"github.com/julienschmidt/httprouter"
-	"net/http"
 )
 
 var Get = App{}
@@ -28,9 +27,9 @@ func (a *App) Init() *App {
 	return a
 }
 
-func (a *App) Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprint(w, "Welcome!\n")
-}
+//func (a *App) Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+//	fmt.Fprint(w, "Welcome!\n")
+//}
 
 func (a *App) Config() *config.Config {
 	return &a.config
@@ -42,14 +41,18 @@ func (a *App) LogRedis(key string, data ...interface{}) bool {
 
 func (a *App) GetRedisList(key string, mc func() interface{}) []interface{} {
 	list := a.Redis.LRange(key, 0, -1)
-	newList := make([]interface{}, len(list))
+	log.Debug().Msgf("jobs: GetRedisList: list: %#v", list)
+	var newList []interface{}
+	log.Debug().Msgf("jobs: GetRedisList: newList: %#v", newList)
 	for _, v := range list {
 		model := mc()
+		log.Debug().Msgf("jobs: GetRedisList: model: %#v", model)
 		err := json.Unmarshal([]byte(v), model)
 		if err == nil {
 			newList = append(newList, model)
 		}
 	}
+	log.Debug().Msgf("jobs: GetRedisList: newList: %#v", newList)
 
 	return newList
 }

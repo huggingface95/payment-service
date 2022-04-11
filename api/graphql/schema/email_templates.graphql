@@ -10,6 +10,10 @@ type EmailTemplate {
     type: String!
     "Контент"
     content: String!
+    "Header"
+    header: String!
+    "Footer"
+    Footer: String!
     created_at: DateTime
     updated_at: DateTime
 }
@@ -25,7 +29,7 @@ extend type Query {
     ] сортировка по ID
     where:{column: SUBJECT, operator: LIKE, value: ""} фильтр по имени
     """
-    emailTemplate(
+    emailTemplates(
         created_at: DateRange @whereBetween,
         where: _ @whereConditions(columns: ["subject"]),
         orderBy: _ @orderBy(
@@ -43,6 +47,10 @@ extend type Mutation {
         type: String!
         "Контент электронной почты"
         content: String!
+        "Header электронной почты"
+        header: String!
+        "Footer электронной почты"
+        Footer: String!
     ): EmailTemplate @create
 
     "Обновить данные компании"
@@ -53,6 +61,10 @@ extend type Mutation {
         type: String!
         "Контент электронной почты"
         content: String!
+        "Header электронной почты"
+        header: String!
+        "Footer электронной почты"
+        Footer: String!
     ): EmailTemplate @update
 
     "Удалить запись"

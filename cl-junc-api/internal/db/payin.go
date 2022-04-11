@@ -6,9 +6,9 @@ import (
 )
 
 type Payin struct {
-	Id         uint64     `bun:"Id,pk,autoincrement"`
-	Amount     float64    `bun:"Amount,notnull"`
-	CurrencyId CurrencyDb `bun:"CurrencyId,notnull,type:smallint"`
+	Id         uint64     `bun:"id,pk,autoincrement"`
+	Amount     float64    `bun:"amount,notnull"`
+	CurrencyId CurrencyDb `bun:"currency_Id,notnull,type:smallint"`
 	Currency   *Currency  `bun:"rel:belongs-to,join=CurrencyId=Id"`
 
 	AccountId uint64   `bun:"AccountId,notnull"`
@@ -23,4 +23,8 @@ type Payin struct {
 	Fee float64 `bun:"Fee"`
 
 	PaymentType string `bun:"payment_type"`
+
+	PostbackUrl string
+	SuccessUrl  string
+	FailUrl     string
 }

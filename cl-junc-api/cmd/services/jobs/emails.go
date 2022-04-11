@@ -5,39 +5,38 @@ import (
 	"cl-junc-api/internal/db"
 	"cl-junc-api/internal/redis/constants"
 	"cl-junc-api/internal/redis/models"
+	"cl-junc-api/pkg/utils/log"
 )
-
-const emailPayInType = "payin"
-const emailPayoutType = "payout"
 
 func ProcessEmailQueue() {
 	emailList := getEmails()
 	templates := getTemplates()
 
 	for _, e := range emailList {
-		if sendEmail(e, templates) != nil {
-			//TODO if error add to redis log
+		template, err := getTemplate(templates, e.Type)
+		if err == nil {
+			if sendEmail(e, template) != nil {
+				//TODO if error add to redis log
+			}
+		} else {
+			log.Error().Err(err)
 		}
 	}
 }
 
-func getTemplates() []*db.EmailTemplate {
-	template := &db.EmailTemplate{}
-	emailList := app.Get.Sql.SelectMapResult(template)
+func getTemplates() []*db.EmailTemplates {
+	var emailList []*db.EmailTemplates
+	app.Get.Sql.SelectMapResult(&emailList)
+	log.Debug().Msgf("jobs: getTemplates: emailList: %#v", emailList)
 
-	newList := make([]*db.EmailTemplate, len(emailList))
-	for _, t := range emailList {
-		newList = append(newList, t.(*db.EmailTemplate))
-	}
-
-	return newList
+	return emailList
 }
 
 func getEmails() []*models.Email {
 	redisList := app.Get.GetRedisList(constants.QueueEmailLog, func() interface{} {
 		return new(models.Email)
 	})
-	newList := make([]*models.Email, len(redisList))
+	var newList []*models.Email
 
 	for _, c := range redisList {
 		newList = append(newList, c.(*models.Email))
@@ -46,20 +45,17 @@ func getEmails() []*models.Email {
 	return newList
 }
 
-func getContentByType(templates []*db.EmailTemplate, t string) (string, error) {
+func getTemplate(templates []*db.EmailTemplates, t string) (*db.EmailTemplates, error) {
 	for _, tp := range templates {
 		if tp.Type == t {
-			return tp.Content, nil
+			return tp, nil
 		}
 	}
 
-	return "", nil
+	return nil, nil
 }
 
-func sendEmail(e *models.Email, templates []*db.EmailTemplate) error {
-	content, err := getContentByType(templates, e.Type)
-	if err == nil {
-		return app.Mail(e.Message, e.Status, e.Details, e.Data, content)
-	}
-	return err
+func sendEmail(e *models.Email, template *db.EmailTemplates) error {
+	log.Debug().Msgf("jobs: sendEmail: data", e.Message, e.Status, e.Details, e.Data, template.Content)
+	return app.Mail(e.Message, e.Status, e.Details, e.Data, template.Content)
 }
