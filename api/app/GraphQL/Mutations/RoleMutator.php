@@ -23,11 +23,10 @@ class RoleMutator
         }
 
         $role = Role::create($args);
-
         if (isset($args['permissions'])) {
             $this->syncPermissions($role, $args['permissions']);
         }
-        if (isset($args['permissions'])) {
+        if (isset($args['groups'])) {
             $this->syncGroups($role, $args['groups']);
         }
 
