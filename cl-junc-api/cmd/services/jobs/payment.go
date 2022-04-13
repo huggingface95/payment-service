@@ -66,6 +66,7 @@ func payIn(p *models.Payment) {
 
 			if err == nil {
 				email := &models.Email{
+					Id:      p.PaymentId,
 					Type:    "payin",
 					Status:  response.Status,
 					Message: "Payin Success",

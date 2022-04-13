@@ -17,7 +17,7 @@ func payments() {
 
 func Jobs() {
 	for range time.Tick(JobPeriod) {
-		emails()
+		//emails()
 		payments()
 	}
 }

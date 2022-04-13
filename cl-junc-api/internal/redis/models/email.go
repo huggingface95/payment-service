@@ -3,6 +3,7 @@ package models
 import "encoding/json"
 
 type Email struct {
+	Id      uint64 `json:"id"`
 	Type    string `json:"type"`
 	Status  string `json:"status"`
 	Message string `json:"message"`
@@ -11,8 +12,8 @@ type Email struct {
 		Message string `json:"message"`
 		Details string `json:"details"`
 	} `json:"messages"`
-	Data    interface{}
-	Details map[string]string
+	Data    interface{}       `json:"data"`
+	Details map[string]string `json:"details"`
 }
 
 // MarshalBinary -

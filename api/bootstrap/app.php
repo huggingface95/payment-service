@@ -1,9 +1,10 @@
 <?php
+
 use Aws\S3\S3Client;
 use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use League\Flysystem\Filesystem;
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
@@ -112,8 +113,8 @@ $app->configure('queue');
 |
 */
 
- $app->register(App\Providers\AppServiceProvider::class);
- $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 //$app->register(Spatie\Permission\PermissionServiceProvider::class);
  //$app->register(Wimil\LighthouseGraphqlJwtAuth\LighthouseGraphqlJwtAuthServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
@@ -130,6 +131,8 @@ $app->register(MLL\GraphQLPlayground\GraphQLPlaygroundServiceProvider::class);
 $app->register(Barryvdh\DomPDF\ServiceProvider::class);
 $app->register(\Illuminate\Mail\MailServiceProvider::class);
 $app->register(\PhpClickHouseLaravel\ClickhouseServiceProvider::class);
+$app->register(Illuminate\Mail\MailServiceProvider::class);
+$app->register(Illuminate\Redis\RedisServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -143,11 +146,13 @@ $app->register(\PhpClickHouseLaravel\ClickhouseServiceProvider::class);
 */
 $app->alias('cache', \Illuminate\Cache\CacheManager::class);
 $app->alias('PDF', Barryvdh\DomPDF\Facade::class);
+$app->alias('mail.manager', Illuminate\Mail\MailManager::class);
+$app->alias('mailer', Illuminate\Mail\Mailer::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+    require __DIR__ . '/../routes/web.php';
 });
 
 return $app;
