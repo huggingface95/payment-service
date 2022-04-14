@@ -22,7 +22,7 @@ class CreateAccountsTable extends Migration
             $table->enum('account_type', ['Business', 'Private']);
             $table->unsignedBigInteger('payment_provider_id');
             $table->unsignedBigInteger('commission_template_id');
-            $table->unsignedBigInteger('account_state', 255);
+            $table->unsignedBigInteger('account_state');
             $table->string('account_name', 255)->unique();
             $table->boolean('is_primary');
             $table->decimal('current_balance',15,5)->default(0);
