@@ -34,8 +34,7 @@ services:
   cl-junc-apicore:
     build:
       context: ../cl-junc-api
-      dockerfile: ./go-dev/Dockerfile
-    container_name: cl-junc-apicore
+      dockerfile: ../docker/go-dev/Dockerfile
     volumes:
       - ../cl-junc-api/cmd:/app/cmd
       - ../cl-junc-api/internal:/app/internal
