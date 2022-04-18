@@ -1,0 +1,79 @@
+"""
+Шаблоны электронной почты
+Banking-> Email Notifications
+"""
+type EmailNotification {
+    id: ID!
+    "Тип"
+    type: String!
+    "Получить templates"
+    templates: [EmailTemplate] @belongsToMany(relation: "templates")
+    "Получить компанию"
+    company: Companies @hasOne(relation: "company")
+    "Получить мембера"
+    member: Members @belongsTo(relation: "member")
+    "Группа"
+    group: Group
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+input Group {
+    id: ID!
+    name: String!
+}
+
+extend type Query {
+    "Получить по ID"
+    emailNotification(id: ID @eq): EmailNotification @find
+    """
+    Получить список билетов
+    orderBy: [
+    {column: ID, order: DESC},
+    ] сортировка по ID
+    where:{column: SUBJECT, operator: LIKE, value: ""} фильтр по имени
+    """
+    emailNotifications(
+        hasCompany: _ @whereHasConditions(columns: ["name"]),
+        hasMember: _ @whereHasConditions(columns: ["fullname"]),
+        hasTemplates: _ @whereHasConditions(columns: ["subject"]),
+        created_at: DateRange @whereBetween,
+        where: _ @whereConditions(columns: ["type"]),
+        orderBy: _ @orderBy(
+            columns: ["id"]
+        )
+    ): [EmailTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation {
+    "Создать электронную почту"
+    createEmailNotification(
+        "Тип"
+        type: String!
+        "ID Мембера"
+        member_id: ID!
+        "ID Группы"
+        group_id: ID!
+        "ID email templates"
+        templates: [ID!]
+    ): EmailNotification @create
+
+    "Обновить данные компании"
+    updateEmailNotification(
+        "Тип"
+        type: String!
+        "ID Мембера"
+        member_id: ID!
+        "ID Группы"
+        group_id: ID!
+        "ID email templates"
+        templates: [ID!]
+    ): EmailNotification @update
+
+    "Удалить запись"
+    deleteEmailNotification(
+        id: ID!
+    ): EmailNotification @delete
+}
+
+

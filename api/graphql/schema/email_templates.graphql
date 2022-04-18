@@ -1,6 +1,6 @@
 """
 Шаблоны электронной почты
-Banking-> Email Templates
+Banking-> Email Templates Settings
 """
 type EmailTemplate {
     id: ID!
@@ -8,6 +8,8 @@ type EmailTemplate {
     subject: String!
     "Тип"
     type: String!
+    "Тип сервиса"
+    service_type: String!
     "Контент"
     content: String!
     "Header"
@@ -45,6 +47,8 @@ extend type Mutation {
         subject: String!
         "Тип электронной почты"
         type: String!
+        "Тип сервиса"
+        service_type: String!
         "Контент электронной почты"
         content: String!
         "Header электронной почты"
@@ -59,6 +63,8 @@ extend type Mutation {
         subject: String!
         "Тип электронной почты"
         type: String!
+        "Тип сервиса"
+        service_type: String!
         "Контент электронной почты"
         content: String!
         "Header электронной почты"
