@@ -12,8 +12,11 @@ type Role {
     permissions: [Permissions] @belongsToMany(relation: "permissions")
     "Получить дерево разрешений"
     permissions_tree: JSON
+    "Получить тип группы"
+    group_type: Groups @belongsTo(relation: "groupType")
+    "Получить компанию"
+    company: Companies @belongsTo(relation: "company")
     "Получить список групп"
-    group_type: Groups @hasOne(relation: "groupType")
     groups: [GroupRole] @hasMany(relation: "groups")
     "Получить количество групп с данной ролью"
     groups_count: Int
@@ -32,7 +35,7 @@ extend type Query {
     roles(groups_sort: Sort @scope(name:"GroupsSort"),
         hasGroupTypes: _ @whereHasConditions(columns: ["name", "id"]),
         hasGroups: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+        where: _ @whereConditions(columns: ["name","group_type_id","company_id"]), orderBy: _ @orderBy(
         columns: ["id","name","description"],
     )): [Role!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -45,8 +48,10 @@ extend type Mutation {
         description: String
         "Массив разрешений"
         permissions: [ID]
-        "Массив груп поумолчанию"
-        groups: [ID]
+        "Тип группы"
+        group_type_id: Int
+        "ID компании"
+        company_id: Int
     ): Role @field(resolver:"RoleMutator@create")
 
     updateRole(
@@ -58,8 +63,10 @@ extend type Mutation {
         description: String
         "Массив разрешений"
         permissions: [ID]
-        "Массив групп поумолчанию"
-        groups: [ID]
+        "Тип группы"
+        group_type_id: Int
+        "ID компании"
+        company_id: Int
     ): Role @field(resolver:"RoleMutator@update")
 
     deleteRole(

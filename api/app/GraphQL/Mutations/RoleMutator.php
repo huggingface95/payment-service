@@ -71,11 +71,6 @@ class RoleMutator
 
     private function syncGroups(Role $role, array $groups)
     {
-//        $currentGroups = $role->getGroupsIdByRole();
-//        $groupsDelete = array_diff($currentGroups,$groups);
-//        if ($groupsDelete) {
-//            GroupRole::whereIn('id',$groupsDelete)->delete();
-//        }
         foreach ($groups as $group) {
             GroupRole::where('id',$group)->update(['role_id'=>$role->id]);
         }

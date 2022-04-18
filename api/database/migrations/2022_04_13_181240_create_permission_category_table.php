@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddMemberIdToPaymentsTable extends Migration
+class CreatePermissionCategoryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class AddMemberIdToPaymentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->unsignedBigInteger('member_id')->nullable()->change();
+        Schema::create('permission_category', function (Blueprint $table) {
+            $table->id();
+            $table->string('name',255);
+            $table->boolean('is_active')->default(true);
         });
     }
 
@@ -25,8 +27,6 @@ class AddMemberIdToPaymentsTable extends Migration
      */
     public function down()
     {
-        Schema::table('payments', function (Blueprint $table) {
-            $table->dropColumn('member_id');
-        });
+        Schema::dropIfExists('permission_category');
     }
 }

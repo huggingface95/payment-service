@@ -7,7 +7,14 @@ type Permissions {
     name: String
     display_name: String
     guard_name: String
+    type: String
     all: JSON
+}
+
+type PermissionCategory {
+    id: ID
+    name: String
+    permissions: [Permissions] @hasMany(relation: "permissions")
 }
 
 
@@ -15,7 +22,8 @@ extend type Query {
     "Получить разрешение по ID"
     permission(id: ID @eq): Permissions @find
     "Получить список разрешений"
-    permissions: Permissions @field(resolver:"PermissionQuery@tree")
+    permissions_tree: Permissions @field(resolver:"PermissionQuery@tree")
+    permissions: [PermissionCategory] @all
 }
 
 
