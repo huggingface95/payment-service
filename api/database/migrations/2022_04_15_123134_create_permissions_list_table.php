@@ -16,6 +16,7 @@ class CreatePermissionsListTable extends Migration
         Schema::create('permissions_list', function (Blueprint $table) {
             $table->id();
             $table->string('name',255);
+            $table->enum('type',['member','individual'])->default('member');
             $table->unsignedBigInteger('permission_group_id')->nullable();
             $table->foreign('permission_group_id')->references('id')->on('permission_category');
         });
