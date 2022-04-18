@@ -24,6 +24,9 @@ class EmailTemplate extends BaseModel
     const SUCCESS = 'success';
     const ERROR = 'error';
 
+    const ADMINISTRATION = 'administration';
+    const CLIENT = 'client';
+
     /**
      * The attributes that are mass assignable.
      *

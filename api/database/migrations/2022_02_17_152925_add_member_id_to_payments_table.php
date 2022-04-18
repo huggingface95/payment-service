@@ -14,8 +14,7 @@ class AddMemberIdToPaymentsTable extends Migration
     public function up()
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->unsignedBigInteger('member_id')->nullable();
-            $table->foreign('member_id')->references('id')->on('members');
+            $table->unsignedBigInteger('member_id')->nullable()->change();
         });
     }
 
