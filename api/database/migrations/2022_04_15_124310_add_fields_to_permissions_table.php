@@ -14,9 +14,9 @@ class AddFieldsToPermissionsTable extends Migration
     public function up()
     {
         Schema::table('permissions', function (Blueprint $table) {
-            $table->unsignedBigInteger('permission_group_id')->nullable();
+            $table->unsignedBigInteger('permission_list_id')->nullable();
             $table->enum('type',['info','export','edit','add','important'])->default('info');
-            $table->foreign('permission_group_id')->references('id')->on('permission_category');
+            $table->foreign('permission_list_id')->references('id')->on('permissions_list');
         });
     }
 
