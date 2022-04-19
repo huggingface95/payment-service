@@ -13,14 +13,9 @@ type EmailNotification {
     "Получить мембера"
     member: Members @belongsTo(relation: "member")
     "Группа"
-    group: Group
+    group: Groups @belongsTo(relation: "group")
     created_at: DateTime
     updated_at: DateTime
-}
-
-input Group {
-    id: ID!
-    name: String!
 }
 
 extend type Query {
@@ -35,6 +30,7 @@ extend type Query {
     """
     emailNotifications(
         hasCompany: _ @whereHasConditions(columns: ["name"]),
+        hasGroup: _ @whereHasConditions(columns: ["name"]),
         hasMember: _ @whereHasConditions(columns: ["fullname"]),
         hasTemplates: _ @whereHasConditions(columns: ["subject"]),
         created_at: DateRange @whereBetween,

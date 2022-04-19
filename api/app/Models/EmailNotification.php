@@ -31,29 +31,9 @@ class EmailNotification extends BaseModel
         'member_id', 'company_id', 'group_id', 'type'
     ];
 
-
-    public function getGroupAttribute(): ?array
-    {
-        return ($this->isAdministrator()
-                ? $this->administratorGroup()
-                : $this->clientGroup()
-            )->first(['id', 'name'])->toArray() ?? null;
-    }
-
     private function isAdministrator(): bool
     {
         return $this->attributes['type'] == self::ADMINISTRATION;
-    }
-
-
-    public function clientGroup(): BelongsTo
-    {
-        return $this->belongsTo(GroupRole::class, 'group_id');
-    }
-
-    public function administratorGroup(): BelongsTo
-    {
-        return $this->belongsTo(Groups::class, 'group_id');
     }
 
     public function company(): HasOneThrough
@@ -71,6 +51,16 @@ class EmailNotification extends BaseModel
     public function member(): BelongsTo
     {
         return $this->belongsTo(Members::class);
+    }
+
+    public function group(bool $filter = true): BelongsTo
+    {
+        return $this->belongsTo(Groups::class, 'group_id')->when($filter, function ($query) {
+            return $query->whereIn('name', $this->isAdministrator()
+                ? [Groups::MEMBER]
+                : [Groups::COMPANY, Groups::INDIVIDUAL]
+            );
+        });
     }
 
     public function templates(): BelongsToMany

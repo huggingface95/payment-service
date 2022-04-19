@@ -3,9 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Groups extends Model
 {
+
+    const MEMBER = 'Member';
+    const COMPANY = 'Company';
+    const INDIVIDUAL = 'Individual';
+
     protected $fillable = [
         'name'
     ];
@@ -13,7 +19,7 @@ class Groups extends Model
     public $timestamps = false;
 
 
-    public function groups()
+    public function groups(): HasMany
     {
         return $this->hasMany(GroupRole::class,'group_type_id','id');
     }
