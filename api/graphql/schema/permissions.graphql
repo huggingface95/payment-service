@@ -14,16 +14,29 @@ type Permissions {
 type PermissionCategory {
     id: ID
     name: String
-    permissions: [Permissions] @hasMany(relation: "permissions")
+    permissionList: [PermissionList] @hasMany(relation: "permissionsList")
 }
 
+type PermissionList {
+    id: ID
+    name: String
+    type: PermissionListType
+    permissions: [Permissions] @hasMany(relation: "permissions")
+}
+enum PermissionListType {
+    Member @enum(value: "member")
+    Individual @enum(value: "individual")
+}
 
 extend type Query {
     "Получить разрешение по ID"
     permission(id: ID @eq): Permissions @find
     "Получить список разрешений"
     permissions_tree: Permissions @field(resolver:"PermissionQuery@tree")
-    permissions: [PermissionCategory] @all
+    permissions(
+        hasPermissionList: _ @whereHasConditions(columns: ["name", "id"]),
+        where: _ @whereConditions(columns: ["name"])
+    ): [PermissionCategory] @all
 }
 
 

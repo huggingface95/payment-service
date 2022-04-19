@@ -9,7 +9,7 @@ class PermissionsList extends Model
     protected $table="permissions_list";
 
     protected $fillable = [
-        'name'
+        'name','type','permission_group_id'
     ];
 
     public $timestamps = false;
