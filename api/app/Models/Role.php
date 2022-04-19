@@ -17,7 +17,12 @@ class Role extends SpatieRole
 
     public function groupType()
     {
-        return $this->hasOneThrough(Groups::class,GroupRole::class,'role_id','id');
+        return $this->belongsTo(Groups::class,'group_type_id','id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Companies::class,'company_id','id');
     }
 
     public function groups()

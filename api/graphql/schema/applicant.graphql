@@ -119,7 +119,7 @@ extend type Mutation {
         "Отчество"
         middle_name: String
         "email"
-        email: EMAIL!
+        email: EMAIL! @rules(apply: ["email", "unique:members"])
         "Адрес сайта"
         url: String
         "Телефон"
