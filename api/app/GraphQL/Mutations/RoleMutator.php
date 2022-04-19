@@ -18,7 +18,7 @@ class RoleMutator
      */
     public function create($_, array $args)
     {
-        if ($args['groups'][0] == '2') {
+        if (isset($args['groups']) && $args['groups'][0] == '2') {
             throw new GraphqlException('Role is not be used for this group',"internal", 500);
         }
 
