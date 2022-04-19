@@ -292,11 +292,11 @@ class InitPermissionsListData extends Migration
                 'permission_list_id' => $companyProfileGeneral->id
             ],
             [
-                'name'=>  'Individual Profile:General.Change Member Company',
+                'name'=>  'Company Profile:General.Change Member Company',
                 'guard_name'=> GuardEnum::GUARD_NAME,
                 'display_name'=>'Change Member Company',
                 'type'=>'info',
-                'permission_list_id' => $individualProfileGeneral->id
+                'permission_list_id' => $companyProfileGeneral->id
             ],
             [
                 'name'=>  'Company Profile:General.Labels',
