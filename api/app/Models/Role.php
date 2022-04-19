@@ -9,7 +9,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
 class Role extends SpatieRole
 {
     protected $fillable = [
-        'name', 'guard_name', 'description'
+        'name', 'guard_name', 'description','company_id','group_type_id'
     ];
 
     protected $guard_name = GuardEnum::GUARD_NAME;
