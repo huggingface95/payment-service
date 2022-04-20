@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -9,7 +10,7 @@ class ApplicantIndividual extends Model
 {
     use HasRoles;
 
-    protected $table="applicant_individual";
+    protected $table = "applicant_individual";
     protected $guard_name = 'api';
 
     /**
@@ -53,17 +54,22 @@ class ApplicantIndividual extends Model
     ];
 
     protected $casts = [
-        'personal_additional_fields'=>'array',
-        'contacts_additional_fields'=>'array'
+        'personal_additional_fields' => 'array',
+        'contacts_additional_fields' => 'array'
     ];
 
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new ApplicantFilterByMemberScope);
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function labels()
     {
-        return $this->belongsToMany(ApplicantIndividualLabel::class,'applicant_individual_label_relation','applicant_individual_id','applicant_individual_label_id');
+        return $this->belongsToMany(ApplicantIndividualLabel::class, 'applicant_individual_label_relation', 'applicant_individual_id', 'applicant_individual_label_id');
     }
 
     /**
@@ -71,7 +77,7 @@ class ApplicantIndividual extends Model
      */
     public function status()
     {
-        return $this->belongsTo(ApplicantStatus::class,'applicant_status_id');
+        return $this->belongsTo(ApplicantStatus::class, 'applicant_status_id');
     }
 
     /**
@@ -79,7 +85,7 @@ class ApplicantIndividual extends Model
      */
     public function state()
     {
-        return $this->belongsTo(ApplicantState::class,'applicant_state_id');
+        return $this->belongsTo(ApplicantState::class, 'applicant_state_id');
     }
 
     /**
@@ -87,7 +93,7 @@ class ApplicantIndividual extends Model
      */
     public function stateReason()
     {
-        return $this->belongsTo(ApplicantStateReason::class,'applicant_state_reason_id');
+        return $this->belongsTo(ApplicantStateReason::class, 'applicant_state_reason_id');
     }
 
     /**
@@ -95,7 +101,7 @@ class ApplicantIndividual extends Model
      */
     public function riskLevel()
     {
-        return $this->belongsTo(ApplicantRiskLevel::class,'applicant_risk_level_id');
+        return $this->belongsTo(ApplicantRiskLevel::class, 'applicant_risk_level_id');
     }
 
     /**
@@ -111,7 +117,7 @@ class ApplicantIndividual extends Model
      */
     public function country()
     {
-        return $this->belongsTo(Country::class,'country_id');
+        return $this->belongsTo(Country::class, 'country_id');
     }
 
     /**
@@ -119,7 +125,7 @@ class ApplicantIndividual extends Model
      */
     public function language()
     {
-        return $this->belongsTo(Languages::class,'language_id');
+        return $this->belongsTo(Languages::class, 'language_id');
     }
 
     /**
@@ -127,7 +133,7 @@ class ApplicantIndividual extends Model
      */
     public function citizenshipCountry()
     {
-        return $this->belongsTo(Country::class,'citizenship_country_id');
+        return $this->belongsTo(Country::class, 'citizenship_country_id');
     }
 
     /**
@@ -135,12 +141,12 @@ class ApplicantIndividual extends Model
      */
     public function birthCountry()
     {
-        return $this->belongsTo(Country::class,'birth_country_id');
+        return $this->belongsTo(Country::class, 'birth_country_id');
     }
 
     public function notes()
     {
-        return$this->hasMany(ApplicantIndividualNotes::class,'applicant_individual_id');
+        return $this->hasMany(ApplicantIndividualNotes::class, 'applicant_individual_id');
     }
 
     public function getCreatedForAttribute()
@@ -151,12 +157,12 @@ class ApplicantIndividual extends Model
 
     public function modules()
     {
-        return $this->hasMany(ApplicantIndividualModules::class,'applicant_individual_id','id');
+        return $this->hasMany(ApplicantIndividualModules::class, 'applicant_individual_id', 'id');
     }
 
-    public function  ApplicantIndividual()
+    public function ApplicantIndividual()
     {
-        return $this->belongsTo(ApplicantIndividual::class,'applicant_individual_id','id');
+        return $this->belongsTo(ApplicantIndividual::class, 'applicant_individual_id', 'id');
     }
 
     public function companies()
@@ -179,17 +185,17 @@ class ApplicantIndividual extends Model
      */
     public function group()
     {
-        return $this->belongsTo(GroupRole::class,'group_id');
+        return $this->belongsTo(GroupRole::class, 'group_id');
     }
 
     public function scopeGroupSort($query, $sort)
     {
-        return $query->join('group_role','group_role.id','=','applicant_individual.group_id')->orderBy('group_role.name',$sort)->select('applicant_individual.*');
+        return $query->join('group_role', 'group_role.id', '=', 'applicant_individual.group_id')->orderBy('group_role.name', $sort)->select('applicant_individual.*');
     }
 
     public function scopeCompanySort($query, $sort)
     {
-        return $query->join('companies','companies.id','=','applicant_individual.company_id')->orderBy('companies.name',$sort)->select('applicant_individual.*');
+        return $query->join('companies', 'companies.id', '=', 'applicant_individual.company_id')->orderBy('companies.name', $sort)->select('applicant_individual.*');
     }
 
 }

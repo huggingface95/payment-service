@@ -12,6 +12,13 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * Class Members
+ * @package App\Models
+ * @property int id
+ * @property bool is_show_owner_applicants
+ */
+
 class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
     use SoftDeletes, Authorizable, Authenticatable;
@@ -19,7 +26,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public $password_confirmation;
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'sex', 'is_active', 'company_id', 'country_id', 'language_id', 'group_id', 'two_factor_auth_setting_id', 'password_hash', 'password_salt', 'last_login_at', 'additional_fields', 'additional_info_fields'
+        'first_name', 'last_name', 'email', 'sex', 'is_active', 'company_id', 'country_id', 'language_id', 'group_id', 'two_factor_auth_setting_id', 'password_hash', 'password_salt', 'last_login_at', 'additional_fields', 'additional_info_fields', 'is_show_owner_applicants'
     ];
 
     protected $hidden = [
@@ -43,6 +50,11 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function getJWTCustomClaims(): array
     {
         return [];
+    }
+
+    public function IsShowOwnerApplicants(): bool
+    {
+        return $this->is_show_owner_applicants;
     }
 
     public function company(): BelongsTo
