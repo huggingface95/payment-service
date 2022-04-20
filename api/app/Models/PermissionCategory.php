@@ -3,7 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @method static firstOrCreate(string[] $array)
+ * @method static whereName(string $string)
+ */
 class PermissionCategory extends Model
 {
     protected $table="permission_category";
@@ -14,7 +19,7 @@ class PermissionCategory extends Model
 
     public $timestamps = false;
 
-    public function permissionsList()
+    public function permissionsList(): HasMany
     {
         return $this->hasMany(PermissionsList::class,"permission_group_id");
     }
