@@ -40,6 +40,8 @@ type Members {
     fullname: String
     "Access limitation groups"
     access_groups: [GroupRole] @belongsToMany(relation: "groupRoles")
+    "если true видит только своих аппликантов"
+    is_show_owner_applicants: Boolean
 }
 
 extend type Query {
@@ -68,6 +70,7 @@ enum MembersColumn {
     POSITION_ID @enum(value: "department_position_id")
     IS_ACTIVE @enum(value: "is_active")
     LAST_LOGIN_AT @enum(value: "last_login_at")
+    IS_SHOW_OWNER_APPLICANTS @enum(value: "is_show_owner_applicants")
 }
 
 extend type Mutation {
@@ -97,6 +100,8 @@ extend type Mutation {
         two_factor_auth_setting_id: ID!
         "Пароль участника, если не передан то сгенерируется случайный"
         password: String @rules(apply: ["min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
+        "если true видит только своих аппликантов"
+        is_show_owner_applicants: Boolean
     ): Members @field(resolver: "MembersMutator@create")
 
     """
@@ -153,6 +158,8 @@ extend type Mutation {
         additional_fields: [AdditionalFieldInput]
         "Дополнительны поля для member info"
         additional_info_fields: [AdditionalFieldInput]
+        "если true видит только своих аппликантов"
+        is_show_owner_applicants: Boolean
     ): Members @field(resolver: "MembersMutator@update")
 
     """

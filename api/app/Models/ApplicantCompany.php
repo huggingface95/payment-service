@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Model;
 
 class ApplicantCompany extends Model
@@ -58,6 +59,11 @@ class ApplicantCompany extends Model
         'profile_additional_field'=>'array'
     ];
 
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new ApplicantFilterByMemberScope);
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
