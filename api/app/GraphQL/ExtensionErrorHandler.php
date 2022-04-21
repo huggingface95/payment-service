@@ -15,7 +15,7 @@ class ExtensionErrorHandler implements ErrorHandler
         if ($error === null) {
             return $next(null);
         }
-        if (strpos($error->getMessage(),'email')) {
+        if (strpos($error->getMessage(),'applicant_companies_email_unique')) {
             return $next(new Error(
                 'This Email already exist.',
                 // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
@@ -27,6 +27,201 @@ class ExtensionErrorHandler implements ErrorHandler
                 [
                     'code' => 409,
                     'systemMessage' => $error->getMessage(), 'This Email already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'applicant_companies_name_unique')) {
+            return $next(new Error(
+                'This Company Name already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'This Company Name already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'applicant_individual_email_unique')) {
+            return $next(new Error(
+                'This Email already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'This Email already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'group_role_un')) {
+            return $next(new Error(
+                'Group with this name already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Group with this name already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'companies_name_unique')) {
+            return $next(new Error(
+                'Company with this name already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Company with this name already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'payment_system_name_unique')) {
+            return $next(new Error(
+                'Payment system with this name already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Payment system with this name already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'payment_provider_name_unique')) {
+            return $next(new Error(
+                'Payment provider with this name already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Payment provider with this name already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'applicant_individual_labels_name_unique')) {
+            return $next(new Error(
+                'Label with this name already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Label with this name already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'applicant_company_labels_name_unique')) {
+            return $next(new Error(
+                'Label with this name already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Label with this name already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'applicant_individual_company_relation_name_unique')) {
+            return $next(new Error(
+                'Relation with this name already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Relation with this name already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'applicant_individual_company_position_name_unique')) {
+            return $next(new Error(
+                'Position with this name already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Position with this name already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'applicant_company_business_type_name_unique')) {
+            return $next(new Error(
+                'Business type with this name already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Business type with this name already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'accounts_account_number_unique')) {
+            return $next(new Error(
+                'Account number already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Account number already exist.'
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(),'accounts_account_name_unique')) {
+            return $next(new Error(
+                'Account name already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Account name already exist.'
                 ]
             ));
         }
