@@ -87,12 +87,12 @@ extend type Mutation {
         "Сумма реального зачисления"
         amount_real: Float
         "Комиссия"
-        fee: Float!
+        fee: Float
         fee_type_id: Int!
         "Валюта"
-        currency: ID!
+        currency_id: ID!
         "Статус"
-        status: Int!
+        status_id: ID!
         "Имя отправителя"
         sender_name: String!
         "Детали платежа"
@@ -131,23 +131,23 @@ extend type Mutation {
         updatePayment(
             id: ID!
             "Сумма"
-            amount: Float!
+            amount: Float
             "Комиссия"
-            fee: Float!
+            fee: Float
             "Валюта"
-            currency: ID!
+            currency: ID
             "Статус"
-            status: Int!
+            status: Int
             "Имя отправителя"
-            sender_name: String!
+            sender_name: String
             "Детали платежа"
-            payment_details: String!
+            payment_details: String
             "Аккаунт банка отправителя"
-            sender_bank_account: String!
+            sender_bank_account: String
             "SWIFT отправителя"
             sender_swift: String
             "Имя банка отправителя"
-            sender_bank_name: String!
+            sender_bank_name: String
             "Страна банка отправителя"
             sender_bank_country: ID
             "Адрес банка отправителя"
@@ -161,13 +161,13 @@ extend type Mutation {
             "Тип"
             type_id: ID!
             "Платежный ровайдер"
-            payment_provider_id: ID!
+            payment_provider_id: ID
             "Аккаунт"
-            account_id: ID!
+            account_id: ID
             "Компания"
-            company_id: ID!
+            company_id: ID
             "Номер платежа"
-            payment_number: String!
+            payment_number: String
         ):Payments @field(resolver: "PaymentsMutator@update")
 
         "Удалить платеж"
