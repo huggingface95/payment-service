@@ -15,7 +15,7 @@ type EmailTemplate {
     "Header"
     header: String!
     "Footer"
-    Footer: String!
+    footer: String!
     created_at: DateTime
     updated_at: DateTime
 }
@@ -45,6 +45,8 @@ extend type Mutation {
     createEmailTemplate(
         "Название электронной почты"
         subject: String!
+        "Взять layout"
+        use_layout: Boolean!
         "Тип электронной почты"
         type: String!
         "Тип сервиса"
@@ -54,13 +56,15 @@ extend type Mutation {
         "Header электронной почты"
         header: String!
         "Footer электронной почты"
-        Footer: String!
+        footer: String!
     ): EmailTemplate @create
 
     "Обновить данные компании"
     updateEmailTemplate(
         "Название электронной почты"
         subject: String!
+        "Взять layout"
+        use_layout: Boolean!
         "Тип электронной почты"
         type: String!
         "Тип сервиса"
@@ -70,7 +74,7 @@ extend type Mutation {
         "Header электронной почты"
         header: String!
         "Footer электронной почты"
-        Footer: String!
+        footer: String!
     ): EmailTemplate @update
 
     "Удалить запись"
