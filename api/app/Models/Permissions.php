@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\GuardEnum;
+use Spatie\Permission\Exceptions\PermissionAlreadyExists;
+use Spatie\Permission\Guard;
 use Spatie\Permission\Models\Permission as SpatiePermission;
 use Spatie\Permission\Models\Role;
 
@@ -55,6 +57,19 @@ class Permissions extends SpatiePermission
     public static function getPermissionArrayNamesById(array $permissionId)
     {
         return array_column(self::select('name')->whereIn('id',$permissionId)->get()->toArray(),'name');
+    }
+
+    public static function create(array $attributes = [])
+    {
+        $attributes['guard_name'] = $attributes['guard_name'] ?? Guard::getDefaultName(static::class);
+
+        $permission = static::getPermission(['name' => $attributes['name'], 'guard_name' => $attributes['guard_name'],'type' => $attributes['type']]);
+
+        if ($permission) {
+            throw PermissionAlreadyExists::create($attributes['name'], $attributes['guard_name']);
+        }
+
+        return static::query()->create($attributes);
     }
 
 }
