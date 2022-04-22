@@ -50,7 +50,8 @@ class ApplicantCompany extends Model
         'is_verification_phone',
         'owner_relation_id',
         'owner_position_id',
-        'group_id'
+        'group_id',
+        'company_id'
     ];
 
     protected $casts = [
