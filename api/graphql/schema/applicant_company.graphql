@@ -252,6 +252,8 @@ extend type Mutation {
         applicant_kyc_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID
+        "ID компании"
+        company_id: ID!
         "ID owner"
         owner_id: ID
         "ID relation владельца"
