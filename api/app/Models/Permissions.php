@@ -8,6 +8,16 @@ use Spatie\Permission\Models\Role;
 
 class Permissions extends SpatiePermission
 {
+
+    const TYPE_ADD = 'add';
+    const TYPE_INFO = 'info';
+    const TYPE_EXPORT = 'export';
+    const TYPE_EDIT = 'edit';
+    const TYPE_IMPORTANT = 'important';
+    const TYPE_READ = 'read';
+    const TYPE_REQUIRED = 'required';
+    const TYPE_NO_REQUIRED = 'no_required';
+
     protected $fillable = [
         'name', 'guard_name','display_name','type','permission_list_id'
     ];
