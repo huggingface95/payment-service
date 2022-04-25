@@ -251,6 +251,7 @@ return [
     */
 
     'field_middleware' => [
+    	\App\GraphQL\ValidateDirective::class,
         \Nuwave\Lighthouse\Schema\Directives\TrimDirective::class,
         \Nuwave\Lighthouse\Schema\Directives\SanitizeDirective::class,
         \Nuwave\Lighthouse\Validation\ValidateDirective::class,
