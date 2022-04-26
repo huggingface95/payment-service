@@ -50,7 +50,8 @@ class ApplicantIndividual extends Model
         'password_salt',
         'is_verification_phone',
         'group_id',
-        'company_id'
+        'company_id',
+        'two_factor_auth_id'
     ];
 
     protected $casts = [
@@ -186,6 +187,14 @@ class ApplicantIndividual extends Model
     public function group()
     {
         return $this->belongsTo(GroupRole::class, 'group_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function twoFactorAuth()
+    {
+        return $this->belongsTo(TwoFactorAuthSettings::class, 'two_factor_auth_id');
     }
 
     public function scopeGroupSort($query, $sort)
