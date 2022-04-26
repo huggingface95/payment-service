@@ -78,6 +78,8 @@ type ApplicantIndividual {
     roles: [Role] @belongsToMany (relation: "roles")
     "Получить группу"
     group: GroupRole @belongsTo (relation: "group")
+    "Получить two factor auth"
+    two_factor_auth: TwoFactorAuthSettings @belongsTo (relation: "twoFactorAuth")
 }
 
 
@@ -172,6 +174,8 @@ extend type Mutation {
         labels: [ID]
         "ID группа"
         group_id: ID
+        "Two factor auth"
+        two_factor_auth_id: ID
         "Пароль"
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
@@ -245,6 +249,8 @@ extend type Mutation {
         labels: [ID]
         "ID группы"
         group_id: ID
+        "Two factor auth"
+        two_factor_auth_id: ID
         "Пароль"
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
