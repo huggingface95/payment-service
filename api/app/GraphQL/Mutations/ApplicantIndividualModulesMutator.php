@@ -18,12 +18,12 @@ class ApplicantIndividualModulesMutator extends BaseMutator
 
     public function attach($root, array $args)
     {
-        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_company_id'])->first();
+        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
 
         if (isset($args['applicant_module_id'])) {
             $applicant->modules()->delete();
             foreach ($args['applicant_module_id'] as $module) {
-                ApplicantIndividualModules::insert(['applicant_module_id'=> $module, 'applicant_company_id' => $args['applicant_company_id']]);
+                ApplicantIndividualModules::insert(['applicant_module_id'=> $module, 'applicant_individual_id' => $args['applicant_individual_id']]);
             }
         }
 
@@ -32,19 +32,19 @@ class ApplicantIndividualModulesMutator extends BaseMutator
 
     public function detach($root, array $args)
     {
-        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_company_id'])->first();
+        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
         $applicant->modules()->delete();
         return $applicant;
     }
 
     public function update($root, array $args)
     {
-        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_company_id'])->first();
+        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
 
         if (isset($args['applicant_module_id'])) {
             foreach ($args['applicant_module_id'] as $module) {
                 ApplicantIndividualModules::where([
-                    'applicant_company_id' => $args['applicant_company_id'],
+                    'applicant_individual_id' => $args['applicant_individual_id'],
                     'applicant_module_id' => $module
                 ])->update(['is_active'=>$args['is_active']]);
             }
