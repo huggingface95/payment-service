@@ -2,7 +2,6 @@ package clearjunction
 
 import (
 	"cl-junc-api/internal/clearjunction/models"
-	"cl-junc-api/internal/db"
 )
 
 const (
@@ -10,8 +9,9 @@ const (
 	FEDWIRE string = "fedwire"
 )
 
-func (cj *ClearJunction) CreateExecution(request *db.Payout) (result models.PayoutExecutionResponse, err error) {
-	err = cj.post(request, &result, "gate", "payout/bankTransfer/"+getBankType(request.BankType)+"?checkOnly=false")
+func (cj *ClearJunction) CreateExecution(request models.PayoutExecutionRequest) (result models.PayoutExecutionResponse, err error) {
+	//TODO getBankType(request.BankType)
+	err = cj.post(request, &result, "gate", "payout/bankTransfer/fedwire?checkOnly=false")
 	return
 }
 

@@ -1,7 +1,100 @@
 package models
 
-type Payment struct {
-	ClientOrder string `json:"clientOrder"`
+import (
+	"cl-junc-api/internal/api/models"
+	"cl-junc-api/internal/db"
+	"time"
+)
+
+type PayInPayoutRequest struct {
+	ClientOrder string                       `json:"clientOrder"`
+	Currency    string                       `json:"currency"`
+	Amount      float64                      `json:"amount"`
+	Description string                       `json:"description"`
+	Payer       PayInPayoutRequestPayer      `json:"payer"`
+	Payee       PayInPayoutRequestPayee      `json:"payee"`
+	CustomInfo  PayInPayoutRequestCustomInfo `json:"customInfo"`
+}
+type PayInPayoutRequestPayer struct {
+	ClientCustomerId string                                 `json:"clientCustomerId"`
+	WalletUuid       string                                 `json:"walletUuid"`
+	Individual       PayInPayoutRequestPayeePayerIndividual `json:"individual"`
+}
+type PayInPayoutRequestPayee struct {
+	ClientCustomerId string                                 `json:"clientCustomerId"`
+	WalletUuid       string                                 `json:"walletUuid"`
+	Individual       PayInPayoutRequestPayeePayerIndividual `json:"individual"`
+}
+type PayInPayoutRequestPayeePayerIndividual struct {
+	Phone      string `json:"phone"`
+	Email      string `json:"email"`
+	BirthDate  string `json:"birthDate"`
+	BirthPlace string `json:"birthPlace"`
+	Address    struct {
+		Country string `json:"country"`
+		Zip     string `json:"zip"`
+		City    string `json:"city"`
+		Street  string `json:"street"`
+	} `json:"address"`
+	Document struct {
+		Type              string `json:"type"`
+		Number            string `json:"number"`
+		IssuedCountryCode string `json:"issuedCountryCode"`
+		IssuedBy          string `json:"issuedBy"`
+		IssuedDate        string `json:"issuedDate"`
+		ExpirationDate    string `json:"expirationDate"`
+	} `json:"document"`
+	LastName   string `json:"lastName"`
+	FirstName  string `json:"firstName"`
+	MiddleName string `json:"middleName"`
+	Inn        string `json:"inn"`
+}
+
+type PayInPayoutRequestCustomInfo struct {
+	PaymentId uint64 `json:"payment_id"`
+}
+
+type PayInPayoutResponse struct {
+	RequestReference string                         `json:"requestReference"`
+	OrderReference   string                         `json:"orderReference"`
+	CreatedAt        time.Time                      `json:"createdAt"`
+	Messages         []PayInPayoutResponseMessages  `json:"messages"`
+	SubStatuses      PayInPayoutResponseSubStatuses `json:"subStatuses"`
+}
+
+type PayInPayoutResponseMessages struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+	Details string `json:"details"`
+}
+
+type PayInPayoutResponseSubStatuses struct {
+	OperStatus       string `json:"operStatus"`
+	ComplianceStatus string `json:"complianceStatus"`
 }
 
 type PaymentCommon interface{}
+
+func NewPayInPayoutRequest(request *models.PaymentRequest, payment *db.Payment, payee *db.Payee) PayInPayoutRequest {
+	return PayInPayoutRequest{
+		Amount:   request.Amount,
+		Currency: request.Currency,
+		Payer: PayInPayoutRequestPayer{
+			Individual: PayInPayoutRequestPayeePayerIndividual{
+				Email:     payee.Email,
+				Phone:     payee.Phone,
+				LastName:  payee.LastName,
+				FirstName: payee.FirstName,
+			},
+		},
+		Payee: PayInPayoutRequestPayee{
+			Individual: PayInPayoutRequestPayeePayerIndividual{
+				Email:     payment.Email,
+				Phone:     payment.Phone,
+				LastName:  payment.Name,
+				FirstName: payment.Name,
+			},
+		},
+		CustomInfo: PayInPayoutRequestCustomInfo{PaymentId: payment.Id},
+	}
+}

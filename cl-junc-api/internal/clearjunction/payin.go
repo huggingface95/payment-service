@@ -10,8 +10,9 @@ const (
 	YANDEX string = "yandexMoney"
 )
 
-func (cj *ClearJunction) CreateInvoice(request *models.PayInInvoiceRequest) (result models.PayInInvoiceResponse, err error) {
-	err = cj.post(request, &result, "gate", "invoice/"+getPaymentType(request.PaymentType))
+func (cj *ClearJunction) CreateInvoice(request models.PayInInvoiceRequest) (result models.PayInInvoiceResponse, err error) {
+	//TODO change to bank name +getPaymentType(request.PaymentType)
+	err = cj.post(request, &result, "gate", "invoice/bank")
 	return
 }
 

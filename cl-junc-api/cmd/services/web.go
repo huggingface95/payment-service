@@ -14,9 +14,10 @@ func Web() {
 	r := gin.Default()
 
 	r.GET("/", index)
+	//r.POST("/payment", api.Pay)
 	r.POST("/payin/invoice", api.PayInCreateInvoice)
 	r.POST("/payout/execution", api.PayoutExecution)
-	r.POST("/payin/postback", api.PayinPostBack)
+	r.POST("/payin/postback", api.PayInPostBack)
 	r.POST("/payout/postback", api.PayoutPostBack)
 
 	r.Run(":8080")

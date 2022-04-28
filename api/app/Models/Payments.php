@@ -120,6 +120,7 @@ class Payments extends BaseModel
         return $this->belongsTo(Members::class,'member_id','id');
     }
 
+    //TODO change to HasOneThrough  applicantIndividual
     public function owner()
     {
         return $this->belongsToMany(ApplicantIndividual::class,'accounts','id', 'client_id', 'account_id');
