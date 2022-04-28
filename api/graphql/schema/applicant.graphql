@@ -242,7 +242,7 @@ extend type Mutation {
         "ID менеджера"
         account_manager_member_id: ID
         "ID компании"
-        company_id: ID!
+        company_id: ID
         "Role id"
         role_id: [ID]
         "Массив ID меток"

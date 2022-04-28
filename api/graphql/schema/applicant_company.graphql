@@ -253,7 +253,7 @@ extend type Mutation {
         "ID менеджера"
         account_manager_member_id: ID
         "ID компании"
-        company_id: ID!
+        company_id: ID
         "ID owner"
         owner_id: ID
         "ID relation владельца"
