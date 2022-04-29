@@ -39,7 +39,7 @@ class PaymentJob extends Job
         $dto = TransformerDTO::transform(PaymentDTO::class, $payment);
 
         $response = $client->post(
-            'cl-junc-apicore:8080/payin/invoice',
+            'cl-junc-apicore:8080/payment',
             [
                 'body' => json_encode($dto)
             ]

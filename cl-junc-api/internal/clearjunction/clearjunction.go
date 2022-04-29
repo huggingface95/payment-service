@@ -18,7 +18,7 @@ func New(config models.Config, url string) *ClearJunction {
 
 func (cj *ClearJunction) Pay(payment *db.Payment, payee *db.Payee, amount float64, currency string) *models.PayInPayoutResponse {
 
-	payInPayoutRequest := models.NewPayInPayoutRequest(payment, payee, amount, currency)
+	payInPayoutRequest := models.NewPayInPayoutRequest(payment, payee, amount, currency, cj.Wallet())
 
 	response := &models.PayInPayoutResponse{}
 	err := errors.New("")
@@ -27,7 +27,7 @@ func (cj *ClearJunction) Pay(payment *db.Payment, payee *db.Payee, amount float6
 		response, err = cj.CreateInvoice(request)
 	} else {
 		request := models.NewPayoutExecutionRequest(payInPayoutRequest, cj.baseUrl)
-		response, err = cj.CreateExecution(request)
+		response, err = cj.CreateExecution(request, payment.BankName)
 	}
 
 	if err != nil {
@@ -37,4 +37,8 @@ func (cj *ClearJunction) Pay(payment *db.Payment, payee *db.Payee, amount float6
 
 	return response
 
+}
+
+func (cj *ClearJunction) Wallet() string {
+	return cj.config.Wallet
 }

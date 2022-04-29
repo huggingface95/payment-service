@@ -6,7 +6,7 @@ import (
 )
 
 type PayInPayoutRequest struct {
-	ClientOrder string                       `json:"clientOrder"`
+	ClientOrder int64                        `json:"clientOrder"`
 	Currency    string                       `json:"currency"`
 	Amount      float64                      `json:"amount"`
 	Description string                       `json:"description"`
@@ -15,12 +15,12 @@ type PayInPayoutRequest struct {
 	CustomInfo  PayInPayoutRequestCustomInfo `json:"customInfo"`
 }
 type PayInPayoutRequestPayer struct {
-	ClientCustomerId string                                 `json:"clientCustomerId"`
+	ClientCustomerId uint64                                 `json:"clientCustomerId"`
 	WalletUuid       string                                 `json:"walletUuid"`
 	Individual       PayInPayoutRequestPayeePayerIndividual `json:"individual"`
 }
 type PayInPayoutRequestPayee struct {
-	ClientCustomerId string                                 `json:"clientCustomerId"`
+	ClientCustomerId uint64                                 `json:"clientCustomerId"`
 	WalletUuid       string                                 `json:"walletUuid"`
 	Individual       PayInPayoutRequestPayeePayerIndividual `json:"individual"`
 }
@@ -78,11 +78,14 @@ type PayInPayoutResponseSubStatuses struct {
 
 type PaymentCommon interface{}
 
-func NewPayInPayoutRequest(payment *db.Payment, payee *db.Payee, amount float64, currency string) PayInPayoutRequest {
+func NewPayInPayoutRequest(payment *db.Payment, payee *db.Payee, amount float64, currency string, wallet string) PayInPayoutRequest {
 	return PayInPayoutRequest{
-		Amount:   amount,
-		Currency: currency,
+		ClientOrder: time.Now().Unix(),
+		Amount:      amount,
+		Currency:    currency,
 		Payer: PayInPayoutRequestPayer{
+			ClientCustomerId: payee.Id,
+			WalletUuid:       wallet,
 			Individual: PayInPayoutRequestPayeePayerIndividual{
 				Email:     payee.Email,
 				Phone:     payee.Phone,
@@ -91,6 +94,8 @@ func NewPayInPayoutRequest(payment *db.Payment, payee *db.Payee, amount float64,
 			},
 		},
 		Payee: PayInPayoutRequestPayee{
+			ClientCustomerId: payment.Id,
+			WalletUuid:       wallet,
 			Individual: PayInPayoutRequestPayeePayerIndividual{
 				Email:     payment.Email,
 				Phone:     payment.Phone,
