@@ -13,18 +13,19 @@ class EmailRequestDTO
     public object $data;
     public object $details;
 
-    public function __invoke(): EmailRequestDTO
+    public static function transform(object $data): EmailRequestDTO
     {
-        $data = func_get_arg(0);
+        $dto = new self();
 
-        $this->id = $data->id;
-        $this->type = $data->type;
-        $this->status = $data->status;
-        $this->message = $data->message;
-        $this->error = $data->messages;
-        $this->data = $data->data;
-        $this->details = $data->details;
+        $dto->id = $data->id;
+        $dto->type = $data->type;
+        $dto->status = $data->status;
+        $dto->message = $data->message;
+        $dto->error = $data->messages;
+        $dto->data = $data->data;
+        $dto->details = $data->details;
 
-        return $this;
+        return $dto;
     }
+
 }

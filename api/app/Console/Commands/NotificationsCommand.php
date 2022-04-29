@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\DTO\Email\EmailRequestDTO;
 use App\DTO\Email\SendEmailRequestDTO;
+use App\DTO\TransformerDTO;
 use App\Jobs\SendMailJob;
 use App\Models\EmailTemplate;
 use App\Traits\ReplaceRegularExpressions;
@@ -45,14 +46,14 @@ class NotificationsCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(EmailRequestDTO $emailRequestDTO, SendEmailRequestDTO $sendEmailRequestDTO)
+    public function handle()
     {
         $emailTemplates = EmailTemplate::all();
 
         $redis = Redis::connection();
 
         while ($emailData = $redis->blpop('email:payment:log', 1)) {
-            $emailDTO = $emailRequestDTO(json_decode($emailData[1]));
+            $emailDTO = TransformerDTO::transform(EmailRequestDTO::class, json_decode($emailData[1]));
 
             try {
                 /** @var EmailTemplate $template */
@@ -60,7 +61,7 @@ class NotificationsCommand extends Command
                 $content = $this->replaceObjectData($template->content, $emailDTO, '/(\{\{(.*?)}})/');
                 $subject = $this->replaceObjectData($template->subject, $emailDTO, '/\{\{(.*?)}}/');
 
-                Queue::later(Carbon::now()->addSecond(5), new SendMailJob($sendEmailRequestDTO($content, $subject)));
+                Queue::later(Carbon::now()->addSecond(5), new SendMailJob(TransformerDTO::transform(SendEmailRequestDTO::class, $content, $subject)));
             } catch (\Throwable $e) {
                 Log::error($e);
                 continue;

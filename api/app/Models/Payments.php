@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Models\Scopes\MemberScope;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 
 class Payments extends BaseModel
@@ -31,6 +32,8 @@ class Payments extends BaseModel
         'sender_bank_address',
         'sender_country_id',
         'sender_address',
+        'sender_email',
+        'sender_phone',
         'urgency_id',
         'type_id',
         'payment_provider_id',
@@ -117,6 +120,7 @@ class Payments extends BaseModel
         return $this->belongsTo(Members::class,'member_id','id');
     }
 
+    //TODO change to HasOneThrough  applicantIndividual
     public function owner()
     {
         return $this->belongsToMany(ApplicantIndividual::class,'accounts','id', 'client_id', 'account_id');
@@ -137,5 +141,16 @@ class Payments extends BaseModel
         return $this->belongsTo(PaymentStatus::class,'status_id','id');
     }
 
+    public function applicantIndividual(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            ApplicantIndividual::class,
+            Accounts::class,
+            'id',
+            'id',
+            'account_id',
+            'client_id',
+        );
+    }
 
 }
