@@ -22,7 +22,7 @@ func (a *App) Init() *App {
 	a.config.Load()
 	a.Redis = db.NewRedisDb(a.config.Db.Redis)
 	a.Sql = db.NewPostgresql(true, a.config.Db.Sql)
-	a.Wire = clearjunction.New(a.config.Api.Clearjunction)
+	a.Wire = clearjunction.New(a.config.Api.Clearjunction, a.config.App.Url)
 
 	return a
 }
