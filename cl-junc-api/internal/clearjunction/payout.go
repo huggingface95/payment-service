@@ -9,7 +9,7 @@ const (
 	FEDWIRE string = "fedwire"
 )
 
-func (cj *ClearJunction) CreateExecution(request models.PayoutExecutionRequest) (result models.PayoutExecutionResponse, err error) {
+func (cj *ClearJunction) CreateExecution(request models.PayoutExecutionRequest) (result *models.PayInPayoutResponse, err error) {
 	//TODO getBankType(request.BankType)
 	err = cj.post(request, &result, "gate", "payout/bankTransfer/fedwire?checkOnly=false")
 	return

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"cl-junc-api/internal/api/models"
 	"cl-junc-api/internal/db"
 	"time"
 )
@@ -57,9 +56,13 @@ type PayInPayoutRequestCustomInfo struct {
 type PayInPayoutResponse struct {
 	RequestReference string                         `json:"requestReference"`
 	OrderReference   string                         `json:"orderReference"`
+	Status           string                         `json:"status"`
 	CreatedAt        time.Time                      `json:"createdAt"`
+	RedirectURL      string                         `json:"redirectURL"`
+	CheckOnly        bool                           `json:"checkOnly"`
 	Messages         []PayInPayoutResponseMessages  `json:"messages"`
 	SubStatuses      PayInPayoutResponseSubStatuses `json:"subStatuses"`
+	CustomFormat     PayInPayoutRequestCustomInfo   `json:"customFormat"`
 }
 
 type PayInPayoutResponseMessages struct {
@@ -75,10 +78,10 @@ type PayInPayoutResponseSubStatuses struct {
 
 type PaymentCommon interface{}
 
-func NewPayInPayoutRequest(request *models.PaymentRequest, payment *db.Payment, payee *db.Payee) PayInPayoutRequest {
+func NewPayInPayoutRequest(payment *db.Payment, payee *db.Payee, amount float64, currency string) PayInPayoutRequest {
 	return PayInPayoutRequest{
-		Amount:   request.Amount,
-		Currency: request.Currency,
+		Amount:   amount,
+		Currency: currency,
 		Payer: PayInPayoutRequestPayer{
 			Individual: PayInPayoutRequestPayeePayerIndividual{
 				Email:     payee.Email,

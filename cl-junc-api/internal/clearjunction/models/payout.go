@@ -33,17 +33,10 @@ type PayoutIntermediaryInstitution struct {
 	BankName string `json:"bankName"`
 }
 
-type PayoutExecutionResponse struct {
-	PayInPayoutResponse
-	CustomFormat PayInPayoutRequestCustomInfo `json:"customFormat"`
-	Status       string                       `json:"status"`
-	CheckOnly    bool                         `json:"checkOnly"`
-}
-
 func NewPayoutExecutionRequest(payInPayout PayInPayoutRequest, baseUrl string) PayoutExecutionRequest {
 
 	return PayoutExecutionRequest{
 		PayInPayoutRequest: payInPayout,
-		PostbackUrl:        baseUrl + "/payin/postback",
+		PostbackUrl:        baseUrl + "/clearjunction/postback",
 	}
 }

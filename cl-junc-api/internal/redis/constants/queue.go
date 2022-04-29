@@ -1,11 +1,7 @@
 package constants
 
-const QueuePayInLog = "queue:payIn:invoice"
+const QueueClearJunctionPayLog = "queue:clearjunction:pay:log"
 
-const QueuePayInPostBackLog = "queue:payIn-post-back:invoice"
-
-const QueuePayoutLog = "queue:payout:invoice"
-
-const QueuePayoutPostBackLog = "queue:payout-post-back:invoice"
+const QueuePayInPostBackLog = "queue:clearjunction:postback:LOG"
 
 const QueueEmailLog = "email:payment:log"
