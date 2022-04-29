@@ -13,11 +13,25 @@ type PriceListFee {
     "Период"
     period: Int!
     "Цены"
-    fee: JSON
+    mode_fees: [PriceListModeFees] @hasMany(relation: "fees")
     "Получить Прайс лист комиссий"
     list: CommissionPriceList @belongsTo(relation: "priceList")
     created_at: DateTime
     updated_at: DateTime
+}
+
+type FeesMode {
+    id: ID
+    name: String
+}
+
+type PriceListModeFees {
+    id: ID
+    mode: FeesMode @belongsTo(relation: "mode")
+    fee: Float
+    fee_from: Float
+    fee_to: Float
+    currencies: [Currencies] @hasMany(relation: "currencies")
 }
 
 
@@ -54,8 +68,6 @@ extend type Mutation {
         operation_type: Int
         "Период"
         period: Int
-        "Цены"
-        fee: [Fee]
         "ID Прайс лист"
         price_list_id: Int!
     ): PriceListFee @create
@@ -70,8 +82,6 @@ extend type Mutation {
         operation_type: Int
         "Период"
         period: Int
-        "Цены"
-        fee: [Fee]
         "ID Прайс лист"
         price_list_id: Int
     ): PriceListFee @update
@@ -80,7 +90,26 @@ extend type Mutation {
     Удалить Цен
     """
     deletePriceListFee(
-        "ID участника"
+        "ID price list fee"
         id: ID!
     ): PriceListFee @delete
+
+    """
+    Добавить комиссию
+    """
+    addFee(
+        price_list_fees_id: ID!
+        fees_mode_id: ID!
+        fee: Float
+        fee_from: Float
+        fee_to: Float
+        currency_ids: [ID]
+    ):PriceListModeFees @field(resolver:"PriceListModeFeesMutator@create")
+
+    """
+    Удалить комиссию
+    """
+    deleteFee(
+        id: ID!
+    ):PriceListModeFees @delete
 }

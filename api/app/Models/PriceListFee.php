@@ -34,7 +34,7 @@ class PriceListFee extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'price_list_id', 'type', 'operation_type', 'period', 'fee'];
+    protected $fillable = ['name', 'price_list_id', 'type', 'operation_type', 'period'];
 
     protected function getFeeAttribute($value)
     {
@@ -58,5 +58,10 @@ class PriceListFee extends Model
     public function priceList(): BelongsTo
     {
         return $this->belongsTo(CommissionPriceList::class, 'price_list_id');
+    }
+
+    public function fees()
+    {
+        return $this->hasMany(PriceListModeFees::class,'price_list_fees_id');
     }
 }
