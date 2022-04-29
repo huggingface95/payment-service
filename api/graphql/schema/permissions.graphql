@@ -34,7 +34,7 @@ extend type Query {
     "Получить список разрешений"
     permissions_tree: Permissions @field(resolver:"PermissionQuery@tree")
     permissions(
-        hasPermissionList: _ @whereHasConditions(columns: ["name", "id"]),
+        hasPermissionsList: _ @whereHasConditions(columns: ["name", "id","type"]),
         where: _ @whereConditions(columns: ["name"])
     ): [PermissionCategory] @all
 }
