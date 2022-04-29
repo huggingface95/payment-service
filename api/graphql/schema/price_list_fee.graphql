@@ -69,6 +69,7 @@ extend type Mutation {
 
     "Обновить данные Цен"
     updatePriceListFee(
+        id: ID!
         "Название"
         name: String
         "Тип"
