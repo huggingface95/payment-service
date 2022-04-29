@@ -1,0 +1,14 @@
+"""
+Типы операций
+"""
+type OperationType {
+    id: ID
+    name: String
+}
+
+extend type Query {
+    """
+    Получить список типов операций
+    """
+   operationTypes: [OperationType!]! @all
+}

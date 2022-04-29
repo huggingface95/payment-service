@@ -1,0 +1,14 @@
+"""
+Периоды комиссий
+"""
+type FeePeriod {
+    id: ID
+    name: String
+}
+
+extend type Query {
+    """
+    Получить список  периодов комиссий
+    """
+   feePeriods: [FeePeriod!]! @all
+}

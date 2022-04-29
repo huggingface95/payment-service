@@ -1,0 +1,14 @@
+"""
+Режимы комиссий
+"""
+type FeesMode {
+    id: ID
+    name: String
+}
+
+extend type Query {
+    """
+    Получить список режимов
+    """
+   feesModes: [FeesMode!]! @all
+}

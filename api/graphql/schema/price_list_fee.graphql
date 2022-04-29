@@ -7,22 +7,17 @@ type PriceListFee {
     "Название"
     name: String!
     "Тип"
-    type: String!
+    fee_type: FeeType @belongsTo(relation: "feeType")
     "Тип операции"
-    operation_type: Int!
+    operation_type: OperationType @belongsTo(relation: "operationType")
     "Период"
-    period: Int!
+    period: FeePeriod @belongsTo(relation: "feePeriod")
     "Цены"
     mode_fees: [PriceListModeFees] @hasMany(relation: "fees")
     "Получить Прайс лист комиссий"
     list: CommissionPriceList @belongsTo(relation: "priceList")
     created_at: DateTime
     updated_at: DateTime
-}
-
-type FeesMode {
-    id: ID
-    name: String
 }
 
 type PriceListModeFees {
