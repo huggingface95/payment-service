@@ -12,56 +12,32 @@ import (
 
 func ProcessPayQueue() {
 
-	payInList := getPayInPayments()
-	payoutList := getPayOutPayments()
+	cljPayList := getCljPayments()
 
-	for _, p := range payInList {
-		log.Debug().Msgf("jobs: ProcessPayQueue: p: %#v", p)
-		payIn(p)
-	}
-
-	for _, p := range payoutList {
-		payout(p)
+	for _, p := range cljPayList {
+		payClj(p)
 	}
 }
 
-func getPayInPayments() []*models2.PayInInvoiceResponse {
-	redisList := app.Get.GetRedisList(constants.QueuePayInLog, func() interface{} {
-		return new(models2.PayInInvoiceResponse)
+func getCljPayments() []*models2.PayInPayoutResponse {
+	redisList := app.Get.GetRedisList(constants.QueueClearJunctionPayLog, func() interface{} {
+		return new(models2.PayInPayoutResponse)
 	})
 
-	log.Debug().Msgf("jobs: getPayments: redisList: %#v", redisList)
+	log.Debug().Msgf("jobs: getCljPayments: redisList: %#v", redisList)
 
-	var newList []*models2.PayInInvoiceResponse
+	var newList []*models2.PayInPayoutResponse
 
 	for _, c := range redisList {
-		newList = append(newList, c.(*models2.PayInInvoiceResponse))
+		newList = append(newList, c.(*models2.PayInPayoutResponse))
 	}
 
-	log.Debug().Msgf("jobs: getPayInPayments: newList: %#v", newList)
+	log.Debug().Msgf("jobs: getCljPayments: newList: %#v", newList)
 
 	return newList
 }
 
-func getPayOutPayments() []*models2.PayoutExecutionResponse {
-	redisList := app.Get.GetRedisList(constants.QueuePayoutLog, func() interface{} {
-		return new(models2.PayoutExecutionResponse)
-	})
-
-	log.Debug().Msgf("jobs: getPayments: redisList: %#v", redisList)
-
-	var newList []*models2.PayoutExecutionResponse
-
-	for _, c := range redisList {
-		newList = append(newList, c.(*models2.PayoutExecutionResponse))
-	}
-
-	log.Debug().Msgf("jobs: getPayInPayments: newList: %#v", newList)
-
-	return newList
-}
-
-func payIn(response *models2.PayInInvoiceResponse) {
+func payClj(response *models2.PayInPayoutResponse) {
 
 	dbPayment := &db.Payment{
 		Id:            response.CustomFormat.PaymentId,
@@ -73,6 +49,7 @@ func payIn(response *models2.PayInInvoiceResponse) {
 
 		err := app.Get.Sql.Update(dbPayment, "id", "payment_number")
 
+		//TODO add functionality payin or payout  (select payment and search by type)
 		if err == nil {
 			email := &models.Email{
 				Id:      response.CustomFormat.PaymentId,
@@ -103,47 +80,4 @@ func payIn(response *models2.PayInInvoiceResponse) {
 		return
 	}
 
-}
-
-func payout(response *models2.PayoutExecutionResponse) {
-
-	dbPayment := &db.Payment{
-		Id:            response.CustomFormat.PaymentId,
-		PaymentNumber: response.OrderReference,
-	}
-
-	if len(response.Messages) == 0 {
-		dbPayment.Status.Name = response.Status
-
-		err := app.Get.Sql.Update(dbPayment, "id", "payment_number")
-
-		if err == nil {
-			email := &models.Email{
-				Id:      response.CustomFormat.PaymentId,
-				Type:    "payout",
-				Status:  response.Status,
-				Message: "Payout Success",
-				Data:    response,
-				Details: map[string]string{"test": "", "info": ""},
-				Error:   response.Messages,
-			}
-
-			app.Get.Redis.AddList(constants.QueueEmailLog, email)
-		}
-	} else {
-		marshalMessage, err := json.Marshal(response.Messages)
-
-		if err != nil {
-			log.Error().Err(err)
-			return
-		}
-		dbPayment.Error = string(marshalMessage)
-
-		err = app.Get.Sql.Update(dbPayment, "id", "payment_number")
-
-		if err != nil {
-			log.Error().Err(err)
-		}
-		return
-	}
 }

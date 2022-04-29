@@ -47,10 +47,24 @@ func Pay(c *gin.Context) {
 		response := app.Get.Wire.Pay(dbPayment, dbPayee, request.Amount, request.Currency)
 		if response != nil {
 			app.Get.Redis.AddList(constants.QueueClearJunctionPayLog, response)
+
+			email := &models3.Email{
+				Id:      response.CustomFormat.PaymentId,
+				Type:    "payin",
+				Status:  response.Status,
+				Message: "Payin Success",
+				Data:    response,
+				Details: map[string]string{"test": "", "info": ""},
+				Error:   response.Messages,
+			}
+
+			app.Get.Redis.AddList(constants.QueueEmailLog, email)
+
 		}
 	}
 }
 
+//Clearjunction postback
 func CljPostback(c *gin.Context) {
 	request := &models2.PayInPayoutPostback{}
 	err := UnmarshalJson(c, LogKeyCljPostbackRequest, request)
@@ -98,7 +112,7 @@ func CljPostback(c *gin.Context) {
 			email.Message = "Payout Post Back Success"
 		}
 
-		app.Get.Redis.AddList(constants.QueuePayInPostBackLog, email)
+		app.Get.Redis.AddList(constants.QueueEmailLog, email)
 
 		c.Data(200, "text/plain", []byte(request.OrderReference))
 	}

@@ -4,6 +4,7 @@ import (
 	"cl-junc-api/internal/clearjunction/models"
 	"cl-junc-api/internal/db"
 	"cl-junc-api/pkg/utils/log"
+	"errors"
 )
 
 type ClearJunction struct {
@@ -19,27 +20,21 @@ func (cj *ClearJunction) Pay(payment *db.Payment, payee *db.Payee, amount float6
 
 	payInPayoutRequest := models.NewPayInPayoutRequest(payment, payee, amount, currency)
 
+	response := &models.PayInPayoutResponse{}
+	err := errors.New("")
 	if payment.Type.Name == "payIn" {
 		request := models.NewPayInInvoiceRequest(payInPayoutRequest, cj.baseUrl)
-		response, err := cj.CreateInvoice(request)
-		if err != nil {
-			log.Error().Err(err)
-			return nil
-		}
-		return response
-
-	} else if payment.Type.Name == "payout" {
-		request := models.NewPayoutExecutionRequest(payInPayoutRequest, cj.baseUrl)
-		response, err := cj.CreateExecution(request)
-		if err != nil {
-			log.Error().Err(err)
-			return nil
-		}
-		return response
+		response, err = cj.CreateInvoice(request)
 	} else {
-		log.Debug().Msg("ClearJunction Pay not found payIn or payout types")
+		request := models.NewPayoutExecutionRequest(payInPayoutRequest, cj.baseUrl)
+		response, err = cj.CreateExecution(request)
 	}
 
-	return nil
+	if err != nil {
+		log.Error().Err(err)
+		return nil
+	}
+
+	return response
 
 }
