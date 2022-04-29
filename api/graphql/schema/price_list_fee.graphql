@@ -78,8 +78,6 @@ extend type Mutation {
         operation_type_id: Int
         "Период"
         period_id: Int
-        "ID Прайс лист"
-        price_list_id: Int
     ): PriceListFee @update
 
     """
