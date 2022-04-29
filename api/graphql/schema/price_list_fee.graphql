@@ -58,11 +58,11 @@ extend type Mutation {
         "Название"
         name: String
         "Тип"
-        type: Int
+        type_id: Int
         "Тип операции"
-        operation_type: Int
+        operation_type_id: Int
         "Период"
-        period: Int
+        period_id: Int
         "ID Прайс лист"
         price_list_id: Int!
     ): PriceListFee @create
@@ -72,11 +72,11 @@ extend type Mutation {
         "Название"
         name: String
         "Тип"
-        type: Int
+        type_id: Int
         "Тип операции"
-        operation_type: Int
+        operation_type_id: Int
         "Период"
-        period: Int
+        period_id: Int
         "ID Прайс лист"
         price_list_id: Int
     ): PriceListFee @update
