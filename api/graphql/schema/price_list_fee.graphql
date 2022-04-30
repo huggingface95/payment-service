@@ -67,7 +67,7 @@ extend type Mutation {
         period_id: Int
         "ID Прайс лист"
         price_list_id: Int!
-        fee: [Fee]
+        fee: [[Fee]]
     ): PriceListFee @field(resolver:"PriceListFeesMutator@create")
 
     "Обновить данные Цен"
@@ -81,7 +81,7 @@ extend type Mutation {
         operation_type_id: Int
         "Период"
         period_id: Int
-        fee: [Fee]
+        fee: [[Fee]]
     ): PriceListFee @field(resolver:"PriceListFeesMutator@update")
 
     """
