@@ -36,24 +36,24 @@ class PriceListFee extends Model
      */
     protected $fillable = ['name', 'price_list_id', 'type_id', 'operation_type_id', 'period_id'];
 
-    protected function getFeeAttribute($value)
-    {
-        return json_decode($value, true);
-    }
+//    protected function getFeeAttribute($value)
+//    {
+//        return json_decode($value, true);
+//    }
 
-    protected function setFeeAttribute($input)
-    {
-        $data = [];
-        foreach ($input as $value) {
-            $flag = $value['mode'];
-
-            $data[] = array_filter($value, function ($k) use ($flag) {
-                return in_array($k, $flag == self::RANGE ? self::RANGE_COLUMNS : self::FIX_COLUMNS);
-            }, ARRAY_FILTER_USE_KEY);
-        }
-
-        $this->attributes['fee'] = json_encode($data);
-    }
+//    protected function setFeeAttribute($input)
+//    {
+//        $data = [];
+//        foreach ($input as $value) {
+//            $flag = $value['mode'];
+//
+//            $data[] = array_filter($value, function ($k) use ($flag) {
+//                return in_array($k, $flag == self::RANGE ? self::RANGE_COLUMNS : self::FIX_COLUMNS);
+//            }, ARRAY_FILTER_USE_KEY);
+//        }
+//
+//        $this->attributes['fee'] = json_encode($data);
+//    }
 
     public function priceList(): BelongsTo
     {
@@ -62,7 +62,7 @@ class PriceListFee extends Model
 
     public function fees()
     {
-        return $this->hasMany(PriceListModeFees::class,'price_list_fees_id');
+        return $this->hasMany(PriceListFeesItem::class,'price_list_fees_id');
     }
 
     public function operationType()
@@ -72,7 +72,7 @@ class PriceListFee extends Model
 
     public function feePeriod()
     {
-        return $this->belongsTo(OperationType::class, 'period_id');
+        return $this->belongsTo(FeePeriod::class, 'period_id');
     }
 
     public function feeType()
