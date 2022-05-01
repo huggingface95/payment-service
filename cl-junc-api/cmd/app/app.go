@@ -70,3 +70,63 @@ func (a *App) GetStatusByName(name string) *db2.Status {
 
 	return status
 }
+
+func (a *App) GetPaymentWithRelations(payment *db2.Payment, relations []string, column string) *db2.Payment {
+	err := a.Sql.SelectWhereWithRelationResult(payment, relations, column)
+
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+
+	return payment
+}
+
+func (a *App) GetPayment(payment *db2.Payment, column string) *db2.Payment {
+	err := a.Sql.SelectWhereResult(payment, column)
+
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+
+	return payment
+}
+
+func (a *App) GetPayee(payee *db2.Payee, column string) *db2.Payee {
+	err := a.Sql.SelectWhereResult(payee, column)
+
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+
+	return payee
+}
+
+func (a *App) UpdatePayment(payment *db2.Payment, search string, fields ...string) bool {
+	err := a.Sql.Update(payment, search, fields...)
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+	return true
+}
+
+func (a *App) UpdateAccount(account *db2.Account, search string, fields ...string) bool {
+	err := a.Sql.Update(account, search, fields...)
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+	return true
+}
+
+func (a *App) CreateTransaction(tr *db2.Transaction) *db2.Transaction {
+	err := a.Sql.Insert(tr)
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+	return tr
+}
