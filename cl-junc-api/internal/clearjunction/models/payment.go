@@ -2,6 +2,7 @@ package models
 
 import (
 	"cl-junc-api/internal/db"
+	"encoding/json"
 	"time"
 )
 
@@ -77,6 +78,19 @@ type PayInPayoutResponseSubStatuses struct {
 }
 
 type PaymentCommon interface{}
+
+// MarshalBinary -
+func (p *PayInPayoutResponse) MarshalBinary() ([]byte, error) {
+	return json.Marshal(p)
+}
+
+// UnmarshalBinary -
+func (p *PayInPayoutResponse) UnmarshalBinary(data []byte) error {
+	if err := json.Unmarshal(data, &p); err != nil {
+		return err
+	}
+	return nil
+}
 
 func NewPayInPayoutRequest(payment *db.Payment, payee *db.Payee, amount float64, currency string, wallet string) PayInPayoutRequest {
 	return PayInPayoutRequest{

@@ -8,6 +8,7 @@ import (
 	"cl-junc-api/pkg/utils/log"
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 var Get = App{}
@@ -38,6 +39,20 @@ func (a *App) Config() *config.Config {
 
 func (a *App) LogRedis(key string, data ...interface{}) bool {
 	return a.Redis.AddList(key, fmt.Sprint(data...))
+}
+
+func (a *App) GetRedisDataByBlPop(key string, mc func() interface{}) interface{} {
+	row := a.Redis.BLPop(time.Second, key)
+
+	model := mc()
+
+	err := json.Unmarshal([]byte(row[1]), model)
+	if err != nil {
+		log.Error().Err(err)
+		return nil
+	}
+
+	return model
 }
 
 func (a *App) GetRedisList(key string, mc func() interface{}) []interface{} {

@@ -11,23 +11,19 @@ import (
 )
 
 func ProcessPayQueue() {
-	cljPayList := getCljPayments()
-	for _, p := range cljPayList {
-		payClj(p)
-	}
+	workCljPayments()
 }
 
-func getCljPayments() []*models2.PayInPayoutResponse {
-	redisList := app.Get.GetRedisList(constants.QueueClearJunctionPayLog, func() interface{} {
-		return new(models2.PayInPayoutResponse)
-	})
-	var newList []*models2.PayInPayoutResponse
-	for _, c := range redisList {
-		newList = append(newList, c.(*models2.PayInPayoutResponse))
+func workCljPayments() {
+	for {
+		redisData := app.Get.GetRedisDataByBlPop(constants.QueueClearJunctionPayLog, func() interface{} {
+			return new(models2.PayInPayoutResponse)
+		})
+		if redisData == nil {
+			break
+		}
+		payClj(redisData.(*models2.PayInPayoutResponse))
 	}
-	log.Debug().Msgf("jobs: getCljPayments: newList: %#v", newList)
-
-	return newList
 }
 
 func payClj(response *models2.PayInPayoutResponse) {
@@ -67,5 +63,4 @@ func payClj(response *models2.PayInPayoutResponse) {
 	}
 
 	return
-
 }
