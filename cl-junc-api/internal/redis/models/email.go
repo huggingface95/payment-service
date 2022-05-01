@@ -1,18 +1,14 @@
 package models
 
 import (
-	"cl-junc-api/internal/clearjunction/models"
 	"encoding/json"
 )
 
 type Email struct {
-	Id      uint64                               `json:"id"`
-	Type    string                               `json:"type"`
-	Status  string                               `json:"status"`
-	Message string                               `json:"message"`
-	Error   []models.PayInPayoutResponseMessages `json:"messages"`
-	Data    interface{}                          `json:"data"`
-	Details map[string]string                    `json:"details"`
+	Id      int64       `json:"id"`
+	Status  string      `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 // MarshalBinary -

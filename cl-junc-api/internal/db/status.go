@@ -1,6 +1,8 @@
 package db
 
-import "github.com/uptrace/bun"
+import (
+	"github.com/uptrace/bun"
+)
 
 type Status struct {
 	bun.BaseModel `bun:"table:payment_status"`

@@ -99,6 +99,13 @@ func (p *Postgresql) SelectResult(model interface{}) error {
 	return p.SelectWhereResult(model, "id")
 }
 
+func (p *Postgresql) SelectMultipleResult(model interface{}) {
+	if err := p.Select(model).Scan(context.Background()); err != nil {
+		panic(err)
+	}
+	return
+}
+
 func (p *Postgresql) SelectOneResult(model interface{}) error {
 	return p.SelectWhereResult(model, "id")
 }

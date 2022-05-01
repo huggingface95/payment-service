@@ -44,30 +44,25 @@ func Pay(c *gin.Context) {
 	}
 
 	if dbPayment.Provider.Name == "clearjunction" {
-		response := app.Get.Wire.Pay(dbPayment, dbPayee, request.Amount, request.Currency)
-		if response != nil {
-			app.Get.Redis.AddList(constants.QueueClearJunctionPayLog, response)
+		payResponse := app.Get.Wire.Pay(dbPayment, dbPayee, request.Amount, request.Currency)
 
-			email := &models3.Email{
-				Id:      response.CustomFormat.PaymentId,
-				Type:    "payin",
-				Status:  response.Status,
-				Message: "Payin Success",
-				Data:    response,
-				Details: map[string]string{"test": "", "info": ""},
-				Error:   response.Messages,
-			}
-
-			app.Get.Redis.AddList(constants.QueueEmailLog, email)
-
+		pRef := &db.Payment{
+			Id:            dbPayment.Id,
+			PaymentNumber: payResponse.OrderReference,
 		}
+		err := app.Get.Sql.Update(pRef, "id", "payment_number")
+
+		if err != nil {
+			log.Error().Err(err)
+			return
+		}
+		app.Get.Redis.AddList(constants.QueueClearJunctionPayLog, payResponse)
 	}
 }
 
-//Clearjunction postback
 func CljPostback(c *gin.Context) {
-	request := &models2.PayInPayoutPostback{}
-	err := UnmarshalJson(c, LogKeyCljPostbackRequest, request)
+	response := &models2.PayInPayoutPostback{}
+	err := UnmarshalJson(c, LogKeyCljPostbackRequest, response)
 
 	if err != nil {
 		log.Error().Err(err)
@@ -75,46 +70,69 @@ func CljPostback(c *gin.Context) {
 	}
 
 	payment := &db.Payment{
-		PaymentNumber: request.OrderReference,
+		PaymentNumber: response.OrderReference,
 	}
-	err = app.Get.Sql.SelectWhereResult(&payment, "payment_number")
+
+	err = app.Get.Sql.SelectWhereWithRelationResult(payment, []string{"Account", "Status", "Provider", "Type"}, "payment_number")
 	if err != nil {
 		log.Error().Err(err)
 		return
 	}
 
-	if request.Status != payment.Status.Name {
-		payment := &db.Payment{
-			PaymentNumber: request.OrderReference,
-			Amount:        request.Amount,
-			Status:        &db.Status{Name: request.Status},
+	if response.Status != payment.Status.Name {
+		status := app.Get.GetStatusByName(response.Status)
+
+		upPayment := &db.Payment{
+			PaymentNumber: response.OrderReference,
+			Amount:        response.Amount,
+			StatusId:      int64(status.Id),
 		}
-		err := app.Get.Sql.Update(payment, "payment_number", "amount_real", "status")
+		err := app.Get.Sql.Update(upPayment, "payment_number", "amount_real", "status_id")
 		if err != nil {
 			log.Error().Err(err)
 			return
 		}
-		email := &models3.Email{
-			Status:  request.Status,
-			Data:    request,
-			Details: map[string]string{"test": "", "info": ""},
-			Error:   request.Messages,
+
+		if response.Status == "completed" {
+			var nextBalance = float64(0)
+			if payment.Type.Name == "payIn" {
+				nextBalance = payment.Account.CurrentBalance + response.Amount
+			} else {
+				nextBalance = payment.Account.CurrentBalance - response.Amount
+			}
+			transaction := db.Transaction{
+				PaymentId:   payment.Id,
+				Amount:      response.Amount,
+				BalancePrev: payment.Account.CurrentBalance,
+				BalanceNext: nextBalance,
+			}
+
+			account := db.Account{
+				CurrentBalance: nextBalance,
+			}
+
+			err := app.Get.Sql.Insert(transaction)
+			if err != nil {
+				return
+			}
+
+			err = app.Get.Sql.Insert(account)
+			if err != nil {
+				return
+			}
+
 		}
 
-		if request.Type == "payinNotification" {
-			email.Type = "payIn-post-back"
-			email.Message = "Payin Post Back Success"
-		} else if request.Type == "payoutNotification" {
-			email.Type = "payout-post-back"
-			email.Message = "Payout Post Back Success"
-		} else if request.Type == "payoutReturnNotification" {
-			email.Type = "payout-post-back"
-			email.Message = "Payout Post Back Success"
+		email := &models3.Email{
+			Id:      int64(payment.Id),
+			Status:  response.Status,
+			Message: "Payment postback status",
+			Data:    response,
 		}
 
 		app.Get.Redis.AddList(constants.QueueEmailLog, email)
 
-		c.Data(200, "text/plain", []byte(request.OrderReference))
+		c.Data(200, "text/plain", []byte(response.OrderReference))
 	}
 
 	if !c.IsAborted() {

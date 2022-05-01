@@ -38,29 +38,33 @@ func getCljPayments() []*models2.PayInPayoutResponse {
 }
 
 func payClj(response *models2.PayInPayoutResponse) {
-
 	dbPayment := &db.Payment{
-		Id:            response.CustomFormat.PaymentId,
 		PaymentNumber: response.OrderReference,
 	}
+	err := app.Get.Sql.SelectResult(dbPayment)
+	if err != nil {
+		log.Error().Err(err)
+		return
+	}
+	changeStatusResponse, err := app.Get.Wire.GetPaymentStatus(dbPayment.Type.Name, response.OrderReference)
+	if len(changeStatusResponse.Messages) == 0 {
+		if err != nil {
+			log.Error().Err(err)
+			return
+		}
+		status := app.Get.GetStatusByName(response.Status)
+		dbPayment.StatusId = int64(status.Id)
 
-	if len(response.Messages) == 0 {
-		dbPayment.Status.Name = response.Status
-
-		err := app.Get.Sql.Update(dbPayment, "id", "payment_number")
+		err = app.Get.Sql.Update(dbPayment, "payment_number", "status_id")
 
 		//TODO add functionality payin or payout  (select payment and search by type)
 		if err == nil {
 			email := &models.Email{
-				Id:      response.CustomFormat.PaymentId,
-				Type:    "payin",
+				Id:      int64(dbPayment.Id),
 				Status:  response.Status,
-				Message: "Payin Success",
+				Message: "Payment change status",
 				Data:    response,
-				Details: map[string]string{"test": "", "info": ""},
-				Error:   response.Messages,
 			}
-
 			app.Get.Redis.AddList(constants.QueueEmailLog, email)
 		}
 	} else {
@@ -72,7 +76,7 @@ func payClj(response *models2.PayInPayoutResponse) {
 		}
 		dbPayment.Error = string(marshalMessage)
 
-		err = app.Get.Sql.Update(dbPayment, "id", "payment_number")
+		err = app.Get.Sql.Update(dbPayment, "payment_number", "error")
 
 		if err != nil {
 			log.Error().Err(err)
