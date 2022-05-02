@@ -30,12 +30,14 @@ extend type Query {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     commissionPriceLists(
+        hasPaymentSystem: _ @whereHasConditions(columns: ["name", "id"]),
+        hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
         hasOwner: _ @whereHasConditions(columns: ["name", "id"]),
         hasCompany: _ @whereHasConditions(columns: ["name", "id"]),
         hasAccount: _ @whereHasConditions(columns: ["account_number"]),
         hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
-            where: _ @whereConditions(columns: ["name","payment_system_id","commission_template_id"]),
+            where: _ @whereConditions(columns: ["name","payment_system_id","commission_template_id", "provider_id"]),
             orderBy: _ @orderBy(columns: ["id", "name"])
         ): [CommissionPriceList!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
