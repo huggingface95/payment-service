@@ -28,11 +28,12 @@ class ApplicantIndividualLabelsQuery
         $values = array_values($diff);
         $arr1 = json_decode(json_encode($values), true);
         $arr2= json_decode(json_encode($diff2), true);
-        for ($i = 0; $i < count($arr2); $i++) {
-            $arr2[$i] += ['is_active' => true];
+        foreach ($arr2 as &$value) {
+            $value += ['is_active' => true];
         }
-        for ($i = 0; $i < count($arr1); $i++) {
-            $arr1[$i] += ['is_active' => false];
+
+        foreach ($arr1 as &$value) {
+            $value += ['is_active' => false];
         }
 
         $result = array_merge($arr1, $arr2);
