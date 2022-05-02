@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Models\Scopes\MemberScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 
@@ -61,6 +62,13 @@ class Payments extends BaseModel
                 ->select('commission_template_limit.*')
                 ->first()->amount ?? 0;
         });
+    }
+
+    public function scopeAccountNumber(Builder $query, $sort): Builder
+    {
+        return $query->join('accounts', 'accounts.id', '=', 'payments.account_id')
+            ->orderBy('accounts.account_number', $sort)
+            ->selectRaw('payments.*');
     }
 
     /**
@@ -138,10 +146,10 @@ class Payments extends BaseModel
         return $this->belongsToMany(ApplicantIndividual::class,'accounts','id', 'client_id', 'account_id');
     }
 
-    public function company()
-    {
-        return $this->belongsToMany(ApplicantCompany::class,'accounts','id','client_id', 'account_id', 'owner_id');
-    }
+//    public function company()
+//    {
+//        return $this->belongsToMany(ApplicantCompany::class,'accounts','id','client_id', 'account_id', 'owner_id');
+//    }
 
     public function feeType()
     {
