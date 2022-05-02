@@ -36,7 +36,6 @@ func (cj *ClearJunction) Pay(payment *db.Payment, payee *db.Payee, amount float6
 	}
 
 	return response
-
 }
 
 func (cj *ClearJunction) Wallet() string {

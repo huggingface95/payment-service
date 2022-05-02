@@ -3,10 +3,12 @@ package app
 import (
 	"cl-junc-api/internal/clearjunction"
 	"cl-junc-api/internal/config"
+	db2 "cl-junc-api/internal/db"
 	"cl-junc-api/pkg/db"
 	"cl-junc-api/pkg/utils/log"
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 var Get = App{}
@@ -39,6 +41,20 @@ func (a *App) LogRedis(key string, data ...interface{}) bool {
 	return a.Redis.AddList(key, fmt.Sprint(data...))
 }
 
+func (a *App) GetRedisDataByBlPop(key string, mc func() interface{}) interface{} {
+	row := a.Redis.BLPop(time.Second, key)
+
+	model := mc()
+
+	err := json.Unmarshal([]byte(row[1]), model)
+	if err != nil {
+		log.Error().Err(err)
+		return nil
+	}
+
+	return model
+}
+
 func (a *App) GetRedisList(key string, mc func() interface{}) []interface{} {
 	list := a.Redis.LRange(key, 0, -1)
 	log.Debug().Msgf("jobs: GetRedisList: list: %#v", list)
@@ -55,4 +71,77 @@ func (a *App) GetRedisList(key string, mc func() interface{}) []interface{} {
 	log.Debug().Msgf("jobs: GetRedisList: newList: %#v", newList)
 
 	return newList
+}
+
+func (a *App) GetStatusByName(name string) *db2.Status {
+	status := &db2.Status{
+		Name: name,
+	}
+	err := a.Sql.SelectWhereResult(status, "name")
+	if err != nil {
+		log.Debug().Msgf("DON'T find status")
+		panic(err)
+	}
+
+	return status
+}
+
+func (a *App) GetPaymentWithRelations(payment *db2.Payment, relations []string, column string) *db2.Payment {
+	err := a.Sql.SelectWhereWithRelationResult(payment, relations, column)
+
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+
+	return payment
+}
+
+func (a *App) GetPayment(payment *db2.Payment, column string) *db2.Payment {
+	err := a.Sql.SelectWhereResult(payment, column)
+
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+
+	return payment
+}
+
+func (a *App) GetPayee(payee *db2.Payee, column string) *db2.Payee {
+	err := a.Sql.SelectWhereResult(payee, column)
+
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+
+	return payee
+}
+
+func (a *App) UpdatePayment(payment *db2.Payment, search string, fields ...string) bool {
+	err := a.Sql.Update(payment, search, fields...)
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+	return true
+}
+
+func (a *App) UpdateAccount(account *db2.Account, search string, fields ...string) bool {
+	err := a.Sql.Update(account, search, fields...)
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+	return true
+}
+
+func (a *App) CreateTransaction(tr *db2.Transaction) *db2.Transaction {
+	err := a.Sql.Insert(tr)
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+	return tr
 }

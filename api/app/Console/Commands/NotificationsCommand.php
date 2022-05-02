@@ -56,8 +56,9 @@ class NotificationsCommand extends Command
             $emailDTO = TransformerDTO::transform(EmailRequestDTO::class, json_decode($emailData[1]));
 
             try {
+                //TODO CHANGE to real search in template
                 /** @var EmailTemplate $template */
-                $template = $emailTemplates->where('type', $emailDTO->type)->first();
+                $template = $emailTemplates->where('id', 1)->first();
                 $content = $this->replaceObjectData($template->content, $emailDTO, '/(\{\{(.*?)}})/');
                 $subject = $this->replaceObjectData($template->subject, $emailDTO, '/\{\{(.*?)}}/');
 

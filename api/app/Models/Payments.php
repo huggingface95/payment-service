@@ -49,6 +49,18 @@ class Payments extends BaseModel
     protected static function booted()
     {
         static::addGlobalScope(new MemberScope);
+
+        self::creating(function($model){
+           $model->fee = CommissionTemplateLimit::query()
+                ->join('commission_template_limit_relation AS rel', 'rel.commission_template_limit_id', '=', 'commission_template_limit.id')
+                ->join('commission_template AS ct', 'ct.id', '=', 'rel.commission_template_id')
+                ->join('commission_price_list as l', 'l.commission_template_id', '=', 'ct.id')
+                ->join('payment_provider as p', 'p.id', '=', 'l.provider_id')
+                ->where('p.id', $model->payment_provider_id)
+                ->where('commission_template_limit_type_id', $model->fee_type_id)
+                ->select('commission_template_limit.*')
+                ->first()->amount ?? 0;
+        });
     }
 
     /**
@@ -141,6 +153,7 @@ class Payments extends BaseModel
         return $this->belongsTo(PaymentStatus::class,'status_id','id');
     }
 
+    //TODO  applicantIndividual or applicantCompany
     public function applicantIndividual(): HasOneThrough
     {
         return $this->hasOneThrough(
