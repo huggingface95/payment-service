@@ -4,6 +4,8 @@ namespace App\GraphQL\Queries;
 
 use GraphQL\Exception\InvalidArgument;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\Array_;
+use Illuminate\Support\Arr;
 
 class ApplicantIndividualLabelsQuery
 {
@@ -11,15 +13,31 @@ class ApplicantIndividualLabelsQuery
 
     public function enabled($_, array $args)
     {
-        $args = DB::table('applicant_individual_labels as ail')
-            ->select('*',DB::raw('CASE
-                WHEN ailr.applicant_individual_id is not null and ailr.applicant_individual_id = '.$args['applicant_id'].' THEN true
-                WHEN ailr.applicant_individual_id = '.$args['applicant_id'].'  THEN true
-                ELSE false
-                END AS is_active'))
+        $first = DB::table('applicant_individual_labels as ail')
+            ->select('*')
+            ->get();
+        $second = DB::table('applicant_individual_labels as ail')
+            ->select('*')
+            ->where('ailr.applicant_individual_id', $args['applicant_id'])
             ->leftJoin('applicant_individual_label_relation as ailr','ail.id','=','ailr.applicant_individual_label_id')
             ->get();
-        return $args;
+        $merge = $first->merge($second);
+        $unique = $merge->unique('name');
+        $diff = $unique->whereNotIn('id', $second->pluck('id'))->toArray();
+        $diff2 = $unique->whereIn('id', $second->pluck('id'))->toArray();
+        $values = array_values($diff);
+        $arr1 = json_decode(json_encode($values), true);
+        $arr2= json_decode(json_encode($diff2), true);
+        for ($i = 0; $i < count($arr2); $i++) {
+            $arr2[$i] += ['is_active' => true];
+        }
+        for ($i = 0; $i < count($arr1); $i++) {
+            $arr1[$i] += ['is_active' => false];
+        }
+
+        $result = array_merge($arr1, $arr2);
+
+        return $result;
     }
 
 }
