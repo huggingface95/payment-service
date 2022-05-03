@@ -46,6 +46,9 @@ func (a *App) GetRedisDataByBlPop(key string, mc func() interface{}) interface{}
 
 	model := mc()
 
+	if len(row) < 2 {
+		return nil
+	}
 	err := json.Unmarshal([]byte(row[1]), model)
 	if err != nil {
 		log.Error().Err(err)
