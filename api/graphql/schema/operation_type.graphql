@@ -6,9 +6,9 @@ type OperationType {
     name: String
 }
 
-extend type Query {
+extend type Query  @guard{
     """
     Получить список типов операций
     """
-   operationTypes: [OperationType!]! @all
+   operationTypes: [OperationType!]! @can(ability: "view") @all
 }

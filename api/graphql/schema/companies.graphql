@@ -39,11 +39,11 @@ type Companies {
     updated_at: DateTime!
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить компанию по ID
     """
-    company(id: ID @eq): Companies @find
+    company(id: ID @eq): Companies @can(ability: "view") @find
     """
     Получить список компаний
     member_count: сортировка по количеству участников компании
@@ -54,10 +54,10 @@ extend type Query {
     """
     companies(created_at: DateRange @whereBetween, country: Sort @scope(name:"CountrySort"), member_count: Sort @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url","created_at"]), orderBy: _ @orderBy(
         columns: ["id","created_at","name","email","url"],
-    )): [Companies!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [Companies!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать компанию"
     createCompany(
         "Название компании"
@@ -78,7 +78,7 @@ extend type Mutation {
         contact_name: String
         "ID страны"
         country_id: ID!
-    ): Companies @create
+    ): Companies @can(ability: "create") @create
 
     "Обновить данные компании"
     updateCompany(
@@ -104,10 +104,10 @@ extend type Mutation {
         contact_name: String
         "Дополнительные поля"
         additional_fields: [AdditionalFieldInput]
-    ): Companies @field(resolver:"CompanyMutator@update")
+    ): Companies @can(ability: "update") @field(resolver:"CompanyMutator@update")
 
     "Удалит компанию"
-    deleteCompany(id: ID!): Companies @field(resolver:"CompanyMutator@delete")
+    deleteCompany(id: ID!): Companies @can(ability: "delete") @field(resolver:"CompanyMutator@delete")
 
 }
 

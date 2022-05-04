@@ -9,7 +9,7 @@ type Languages {
 
 type Query {
     "Получить язык по ID"
-    language(id: ID @eq): Languages @find
+    language(id: ID @eq): Languages @can(ability: "view") @find
     "Получить список языков"
-    languages: [Languages!]! @paginate(defaultCount: 10)
+    languages: [Languages!]! @can(ability: "view") @paginate(defaultCount: 10)
 }

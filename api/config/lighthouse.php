@@ -38,9 +38,6 @@ return [
 
             // Logs every incoming GraphQL query.
              \Nuwave\Lighthouse\Support\Http\Middleware\LogGraphQLQueries::class,
-
-            //Jwt auth
-            App\Http\Middleware\Authenticate::class,
         ],
 
         /*

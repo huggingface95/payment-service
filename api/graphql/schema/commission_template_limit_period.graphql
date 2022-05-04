@@ -8,12 +8,12 @@ type CommissionTemplateLimitPeriod {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить по ID"
-    commissionTemplateLimitPeriod(id: ID @eq): CommissionTemplateLimitPeriod @find
+    commissionTemplateLimitPeriod(id: ID @eq): CommissionTemplateLimitPeriod @can(ability: "view")  @find
     "Получить список типов лимитов"
     commissionTemplateLimitPeriods(where: _ @whereConditions(columns: ["name"]),
-        orderBy: _ @orderBy(columns: ["id","name"])): [CommissionTemplateLimitPeriod!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        orderBy: _ @orderBy(columns: ["id","name"])): [CommissionTemplateLimitPeriod!]! @can(ability: "view")  @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 

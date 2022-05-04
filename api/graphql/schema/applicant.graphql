@@ -92,11 +92,11 @@ type ApplicantIndividualCompany {
     position_in_company: ApplicantIndividualCompanyPosition @belongsTo(relation: "ApplicantIndividualCompanyPosition")
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить пользователя  по ID
     """
-    applicantIndividual(id: ID @eq): ApplicantIndividual @find
+    applicantIndividual(id: ID @eq): ApplicantIndividual @can(ability: "view") @find
     """
     Получить список частных пользователей
     orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email
@@ -108,10 +108,10 @@ extend type Query {
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
         created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","group_id","company_id"]), orderBy: _ @orderBy(
         columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"],
-    )): [ApplicantIndividual!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantIndividual!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать частного пользователя"
     createApplicantIndividual(
         "Имя"
@@ -180,7 +180,7 @@ extend type Mutation {
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
         password_confirmation: String
-    ): ApplicantIndividual @field(resolver:"ApplicantMutator@create")
+    ): ApplicantIndividual @can(ability: "create") @field(resolver:"ApplicantMutator@create")
 
     "Редактирование частного пользователя"
     updateApplicantIndividual(
@@ -255,7 +255,7 @@ extend type Mutation {
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
         password_confirmation: String
-    ): ApplicantIndividual @field(resolver:"ApplicantMutator@update")
+    ): ApplicantIndividual @can(ability: "update") @field(resolver:"ApplicantMutator@update")
 
     """
     Установить пароль
@@ -266,12 +266,12 @@ extend type Mutation {
         password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
         password_confirmation: String!
-    ): ApplicantIndividual @field(resolver: "ApplicantMutator@setPassword")
+    ): ApplicantIndividual @can(ability: "change_password") @field(resolver: "ApplicantMutator@setPassword")
 
     "Удалит пользователя"
     deleteApplicantIndividual(
         id: ID!
-    ): ApplicantIndividual @delete
+    ): ApplicantIndividual @can(ability: "delete") @delete
 
 }
 

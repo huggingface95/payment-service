@@ -8,11 +8,11 @@ type ApplicantIndividualCompanyRelation {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить по ID
     """
-    applicantIndividualCompanyRelation(id: ID @eq): ApplicantIndividualCompanyRelation @find
+    applicantIndividualCompanyRelation(id: ID @eq): ApplicantIndividualCompanyRelation @can(ability: "view")  @find
     """
     Получить все  отношения
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -20,15 +20,15 @@ extend type Query {
     """
     applicantIndividualCompanyRelations(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantIndividualCompanyRelation!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantIndividualCompanyRelation!]! @can(ability: "view")  @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать отношение"
     createApplicantIndividualCompanyRelation(
         "Название"
         name: String!
-    ): ApplicantIndividualCompanyRelation @create
+    ): ApplicantIndividualCompanyRelation @can(ability: "create")  @create
 
     "Редактирование отнощения"
     updateApplicantIndividualCompanyRelation (
@@ -36,7 +36,7 @@ extend type Mutation {
         id: ID!
         "Название"
         name: String!
-    ): ApplicantIndividualCompanyRelation @update
+    ): ApplicantIndividualCompanyRelation @can(ability: "update")  @update
 
 
 }

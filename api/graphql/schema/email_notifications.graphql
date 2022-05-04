@@ -18,9 +18,9 @@ type EmailNotification {
     updated_at: DateTime
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить по ID"
-    emailNotification(id: ID @eq): EmailNotification @find
+    emailNotification(id: ID @eq): EmailNotification @can(ability: "view") @find
     """
     Получить список билетов
     orderBy: [
@@ -38,10 +38,10 @@ extend type Query {
         orderBy: _ @orderBy(
             columns: ["id"]
         )
-    ): [EmailTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [EmailNotification!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать электронную почту"
     createEmailNotification(
         "Тип"
@@ -52,7 +52,7 @@ extend type Mutation {
         group_id: ID!
         "ID email templates"
         templates: [ID!]
-    ): EmailNotification @create
+    ): EmailNotification @can(ability: "create") @create
 
     "Обновить данные компании"
     updateEmailNotification(
@@ -64,12 +64,12 @@ extend type Mutation {
         group_id: ID!
         "ID email templates"
         templates: [ID!]
-    ): EmailNotification @update
+    ): EmailNotification @can(ability: "update") @update
 
     "Удалить запись"
     deleteEmailNotification(
         id: ID!
-    ): EmailNotification @delete
+    ): EmailNotification @can(ability: "delete") @delete
 }
 
 

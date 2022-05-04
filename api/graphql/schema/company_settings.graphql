@@ -18,12 +18,12 @@ type CompanySettings {
     show_own_logo: Boolean
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить настройки компании по ID компании"
-    companySettings(company_id: ID @eq): CompanySettings @find
+    companySettings(company_id: ID @eq): CompanySettings @can(ability: "view") @find
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Добавить настройки к компании"
     createCompanySettings(
         "Client applicant URL в формате http://example.com"
@@ -36,7 +36,7 @@ extend type Mutation {
         show_own_logo: Boolean
         "ID компании"
         company_id: Int!
-    ): CompanySettings @create
+    ): CompanySettings @can(ability: "create") @create
 
     "Обновление настроек компании"
     updateCompanySettings(
@@ -50,7 +50,7 @@ extend type Mutation {
         email_from: EMAIL
         "Показывать лого компании или нет"
         show_own_logo: Boolean
-    ): CompanySettings @update
+    ): CompanySettings @can(ability: "update") @update
 
 
 }

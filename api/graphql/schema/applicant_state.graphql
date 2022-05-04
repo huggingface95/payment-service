@@ -8,11 +8,11 @@ type ApplicantState {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить состояние по ID
     """
-    applicantState(id: ID @eq): ApplicantState @find
+    applicantState(id: ID @eq): ApplicantState @can(ability: "view") @find
     """
     Получить все состояния
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -20,7 +20,7 @@ extend type Query {
     """
     applicantStates(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantState!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantState!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 

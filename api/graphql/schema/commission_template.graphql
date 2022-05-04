@@ -29,9 +29,9 @@ type CommissionTemplate {
     commission_template_limits: [CommissionTemplateLimit] @belongsToMany(relation: "commissionTemplateLimit")
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить шаблон по ID"
-    commissionTemplate(id: ID @eq): CommissionTemplate @find
+    commissionTemplate(id: ID @eq): CommissionTemplate @can(ability: "view") @find
     """
     Получить список шаблонов
     orderBy: [{ column: ID, order: DESC }] сортировка ID, NAME, IS_ACTIVE
@@ -51,10 +51,10 @@ extend type Query {
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
         where: _ @whereConditions(columns: ["id","name","is_active"]),
         orderBy: _ @orderBy(columns: ["id","name","is_active","description"]),
-    ): [CommissionTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [CommissionTemplate!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создание шаблона комиссий"
     createCommissionTemplate(
         "Название шаблона"
@@ -63,7 +63,7 @@ extend type Mutation {
         description: String
         "ID платежного провайдера"
         payment_provider_id: ID!
-    ):CommissionTemplate @field(resolver: "CommissionTemplateMutator@create")
+    ):CommissionTemplate @can(ability: "create") @field(resolver: "CommissionTemplateMutator@create")
 
     "Обновление полей шаблона комиссий"
     updateCommissionTemplate(
@@ -85,9 +85,9 @@ extend type Mutation {
         currency_id: [ID]
         "массив ID лимитов"
         commission_template_limit_id: [ID]
-    ):CommissionTemplate @field(resolver: "CommissionTemplateMutator@update")
+    ):CommissionTemplate @can(ability: "update") @field(resolver: "CommissionTemplateMutator@update")
 
     "Удалить шаблон"
-    deleteCommissionTemplate(id: ID!): CommissionTemplate @delete
+    deleteCommissionTemplate(id: ID!): CommissionTemplate @can(ability: "delete") @delete
 
 }

@@ -22,9 +22,9 @@ type CommissionPriceList {
     fees: [PriceListFee] @hasMany(relation:"fees")
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить прайс по ID"
-    commissionPriceList(id: ID @eq): CommissionPriceList @find
+    commissionPriceList(id: ID @eq): CommissionPriceList @can(ability: "view") @find
     """
     Получить список прайсов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -39,10 +39,10 @@ extend type Query {
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
             where: _ @whereConditions(columns: ["name","payment_system_id","commission_template_id", "provider_id"]),
             orderBy: _ @orderBy(columns: ["id", "name"])
-        ): [CommissionPriceList!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        ): [CommissionPriceList!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать прай лист"
     createCommissionPriceList(
 		"Название шаблона"
@@ -53,7 +53,7 @@ extend type Mutation {
         payment_system_id: ID!
         "ID платежного шаблона"
         commission_template_id: ID!
-    ):CommissionPriceList @create
+    ):CommissionPriceList @can(ability: "create") @create
 
     "Редактирование частного пользователя"
     updateCommissionPriceList(
@@ -66,13 +66,13 @@ extend type Mutation {
         payment_system_id: ID!
 		"ID платежного шаблона"
         commission_template_id: ID!
-    ): CommissionPriceList @update
+    ): CommissionPriceList @can(ability: "update") @update
 
 
     "Удалить прайс лист"
     deleteCommissionPriceList(
         id: ID!
-    ): CommissionPriceList @delete
+    ): CommissionPriceList @can(ability: "delete") @delete
 
 }
 

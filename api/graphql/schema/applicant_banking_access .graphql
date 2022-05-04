@@ -26,7 +26,7 @@ type ApplicantBankingAccess {
     month_used_limit: Float
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить список пользователей
     orderBy: [{ column: APPLICANT_INDIVIDUAL_ID, order: DESC }] сортировка по ID, по имени, фамилии, email
@@ -37,10 +37,10 @@ extend type Query {
         columns: ["applicant_individual_id","applicant_company_id","member_id"]),
         orderBy: _ @orderBy(
         columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
-    )): [ApplicantBankingAccess!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantBankingAccess!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать applicant company"
     createApplicantBankingAccess (
         "Applicant individual"
@@ -63,7 +63,7 @@ extend type Mutation {
         operation_limit: Float!
         "Использованный лимит"
         used_limit: Float
-    ): ApplicantBankingAccess @create
+    ): ApplicantBankingAccess @can(ability: "create") @create
 
     "Редактирование applicant company"
     updateApplicantBankingAccess (
@@ -88,12 +88,12 @@ extend type Mutation {
         operation_limit: Float!
         "Использованный лимит"
         used_limit: Float
-    ): ApplicantBankingAccess @update
+    ): ApplicantBankingAccess @can(ability: "update") @update
 
     "Удалить пользователя"
     deleteApplicantBankingAccess (
         id: ID!
-    ): ApplicantBankingAccess @delete
+    ): ApplicantBankingAccess @can(ability: "delete") @delete
 
 }
 

@@ -26,7 +26,7 @@ type PriceListFeesItem {
 }
 
 
-extend type Query {
+extend type Query @guard {
     """
     Получить список Цен
     where:{column: NAME, operator: LIKE, value: ""} фильтр по имени, тип, тип операции, период
@@ -35,7 +35,7 @@ extend type Query {
         hasList: _ @whereHasConditions(columns: ["name"]),
         price_list_id: ID @eq,
         where: _ @whereConditions(columns: ["name", "type", "operation_type", "period"])
-    ): [PriceListFee!]! @orderBy(column: "id", direction: ASC) @all
+    ): [PriceListFee!]! @can(ability: "view") @orderBy(column: "id", direction: ASC) @all
 }
 
 
@@ -54,7 +54,7 @@ enum FeeMode {
 }
 
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать Цен"
     createPriceListFees(
         "Название"
@@ -68,7 +68,7 @@ extend type Mutation {
         "ID Прайс лист"
         price_list_id: Int!
         fee: [[Fee]]
-    ): PriceListFee @field(resolver:"PriceListFeesMutator@create")
+    ): PriceListFee @can(ability: "create") @field(resolver:"PriceListFeesMutator@create")
 
     "Обновить данные Цен"
     updatePriceListFees(
@@ -82,7 +82,7 @@ extend type Mutation {
         "Период"
         period_id: Int
         fee: [[Fee]]
-    ): PriceListFee @field(resolver:"PriceListFeesMutator@update")
+    ): PriceListFee @can(ability: "update") @field(resolver:"PriceListFeesMutator@update")
 
     """
     Удалить Цен
@@ -90,7 +90,7 @@ extend type Mutation {
     deletePriceListFees(
         "ID price list fee"
         id: ID!
-    ): PriceListFee @delete
+    ): PriceListFee @can(ability: "delete") @delete
 
 #    addFee(
 #        price_list_fees_id: ID!
