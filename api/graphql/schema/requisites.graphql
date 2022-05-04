@@ -33,7 +33,7 @@ type Requisites {
 }
 
 
-extend type Query {
+extend type Query @guard {
     "Получить реквизиты по ID"
     requisite(id: ID @eq): Requisites @find
     """
@@ -46,7 +46,7 @@ extend type Query {
         ): [Requisites!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать реквизиты"
     createRequisites(
         "Получить связанный аккаунт"

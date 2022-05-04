@@ -8,14 +8,14 @@ type BusinessActivity {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить по ID"
     businessActivity(id: ID @eq): BusinessActivity @find
     "Получить список всех бизнесов"
     businessActivities(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [BusinessActivity!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создание Business Activity"
     createBusinessActivity(
         "Название"
@@ -23,7 +23,7 @@ extend type Mutation {
     ):BusinessActivity @create
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Изменение Business Activity"
     updateBusinessActivity(
         id: ID!

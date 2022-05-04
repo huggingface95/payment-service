@@ -18,7 +18,7 @@ type EmailNotification {
     updated_at: DateTime
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить по ID"
     emailNotification(id: ID @eq): EmailNotification @find
     """
@@ -41,7 +41,7 @@ extend type Query {
     ): [EmailTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать электронную почту"
     createEmailNotification(
         "Тип"

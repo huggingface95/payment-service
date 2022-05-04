@@ -8,7 +8,7 @@ type ApplicantRiskLevel {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить уровень риска по  ID
     """

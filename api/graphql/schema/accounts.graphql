@@ -37,7 +37,7 @@ type Accounts {
     activated_at : DateTime
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить аккаунт по ID"
     account(id: ID @eq): Accounts @find
     """
@@ -51,7 +51,7 @@ extend type Query {
         ): [Accounts!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать аккаунт"
     createAccount(
 		"ID валюты"

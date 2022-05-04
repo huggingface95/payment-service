@@ -15,7 +15,7 @@ type TicketComments {
     updated_at: DateTime
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить по билет ID"
     ticketComment(id: ID @eq): TicketComments @find
     """
@@ -24,7 +24,7 @@ extend type Query {
     getTicketComments: [TicketComments!]! @all
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать комментарии"
     createTicketComment(
         "Сообщение"

@@ -21,7 +21,7 @@ type EmailTemplate {
 }
 
 
-extend type Query {
+extend type Query @guard {
     "Получить по билет ID"
     emailTemplate(id: ID @eq): EmailTemplate @find
     """
@@ -40,7 +40,7 @@ extend type Query {
     ): [EmailTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать электронную почту"
     createEmailTemplate(
         "Название электронной почты"

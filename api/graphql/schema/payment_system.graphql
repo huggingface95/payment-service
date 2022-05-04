@@ -10,7 +10,7 @@ type PaymentSystem {
     is_active: Boolean
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить платежную систем по ID"
     paymentSystem(id: ID @eq): PaymentSystem @find
     "Получить список платежных систем"
@@ -18,7 +18,7 @@ extend type Query {
         columns: ["id","name","is_active"])): [PaymentSystem!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать платежную систему"
     createPaymentSystem(
         "Название платежной системы"

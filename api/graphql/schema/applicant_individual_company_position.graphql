@@ -8,7 +8,7 @@ type ApplicantIndividualCompanyPosition {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить должность по ID
     """
@@ -23,7 +23,7 @@ extend type Query {
     )): [ApplicantIndividualCompanyPosition!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать должность"
     createApplicantIndividualCompanyPosition(
         "Название"

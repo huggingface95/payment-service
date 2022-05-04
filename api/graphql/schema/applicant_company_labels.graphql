@@ -12,7 +12,7 @@ type ApplicantCompanyLabel {
 }
 
 
-extend type Query {
+extend type Query @guard {
     """
     Получить метку по ID
     """
@@ -30,7 +30,7 @@ extend type Query {
     )): [ApplicantCompanyLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать метку"
     createApplicantCompanyLabel(
         "Название метки"

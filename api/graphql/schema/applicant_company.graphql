@@ -90,7 +90,7 @@ type ApplicantIndividualCompany {
     position_in_company: ApplicantIndividualCompanyPosition @belongsTo(relation: "ApplicantIndividualCompanyPosition")
 }
 
-extend type Query {
+extend type Query @guard{
     """
     Получить пользователя  по ID
     """
@@ -120,7 +120,7 @@ extend type Query {
     )): [ApplicantIndividualCompany!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать applicant company"
     createApplicantCompany (
         "Название"

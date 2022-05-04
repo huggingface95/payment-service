@@ -8,7 +8,7 @@ type ApplicantState {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить состояние по ID
     """

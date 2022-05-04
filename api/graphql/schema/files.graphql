@@ -23,7 +23,7 @@ type Files {
     updated_at: DateTime
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить файл по ID"
     file(id: ID @eq): Files @find
     """
@@ -36,7 +36,7 @@ extend type Query {
         ): [Files!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
         "Удалить файл"
             deleteFile(
                 id: ID!

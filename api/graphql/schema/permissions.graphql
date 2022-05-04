@@ -28,7 +28,7 @@ enum PermissionListType {
     Individual @enum(value: "individual")
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить разрешение по ID"
     permission(id: ID @eq): Permissions @find
     "Получить список разрешений"

@@ -29,7 +29,7 @@ type Ticket {
 }
 
 
-extend type Query {
+extend type Query @guard {
     "Получить по билет ID"
     ticket(id: ID @eq): Ticket @find
     """
@@ -64,7 +64,7 @@ extend type Query {
     ): [Ticket!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать компанию"
     createTicket(
         "Название билета"

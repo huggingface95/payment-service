@@ -14,7 +14,7 @@ type ApplicantCompanyNotes {
     applicant: ApplicantCompany @belongsTo(relation: "applicant")
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить заметку  по ID
     """
@@ -28,7 +28,7 @@ extend type Query {
     )): [ApplicantCompanyNotes!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать заметку"
     createApplicantCompanyNote(
         "Текст заметки"

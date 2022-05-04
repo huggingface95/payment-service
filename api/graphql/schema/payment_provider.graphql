@@ -24,7 +24,7 @@ type PaymentProvider {
     currencies: [Currencies]
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить провайдер по ID"
     paymentProvider(id: ID @eq): PaymentProvider @find
     """
@@ -44,7 +44,7 @@ extend type Query {
     ): [PaymentProvider!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать платежный провайдер"
     createPaymentProvider(
         "Название провайдера"

@@ -7,7 +7,7 @@ type Country {
     iso: String!
 }
 
-extend type Query {
+extend type Query @guard {
     country(id: ID @eq): Country @find
     """
     Получить список стран

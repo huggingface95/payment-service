@@ -18,12 +18,12 @@ type CompanySettings {
     show_own_logo: Boolean
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить настройки компании по ID компании"
     companySettings(company_id: ID @eq): CompanySettings @find
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Добавить настройки к компании"
     createCompanySettings(
         "Client applicant URL в формате http://example.com"

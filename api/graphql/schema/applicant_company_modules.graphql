@@ -12,7 +12,7 @@ type ApplicantCompanyModules {
     is_active: Boolean
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить список всех модулей компании
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -22,7 +22,7 @@ extend type Query {
     )): [ApplicantCompanyModules!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_company_id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать модуль компании"
     createApplicantCompanyModule(
         "Компания"

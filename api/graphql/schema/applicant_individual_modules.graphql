@@ -13,7 +13,7 @@ type ApplicantIndividualModules {
 }
 
 
-extend type Query {
+extend type Query @guard {
     """
     Получить список всех модулей аппликанта
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -23,7 +23,7 @@ extend type Query {
     )): [ApplicantIndividualModules!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать модуль аппликанта"
     createApplicantIndividualModule(
         "Аппликант"

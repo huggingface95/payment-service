@@ -29,7 +29,7 @@ type CommissionTemplate {
     commission_template_limits: [CommissionTemplateLimit] @belongsToMany(relation: "commissionTemplateLimit")
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить шаблон по ID"
     commissionTemplate(id: ID @eq): CommissionTemplate @find
     """
@@ -54,7 +54,7 @@ extend type Query {
     ): [CommissionTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создание шаблона комиссий"
     createCommissionTemplate(
         "Название шаблона"

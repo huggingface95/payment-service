@@ -30,7 +30,7 @@ type CommissionTemplateLimit {
     commission_template_limit_action_type: CommissionTemplateLimitActionType @belongsTo(relation:"commissionTemplateLimitActionType")
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить лимит по ID"
     commissionTemplateLimit(id: ID @eq): CommissionTemplateLimit @find
     """
@@ -39,7 +39,7 @@ extend type Query {
     commissionTemplateLimits: [CommissionTemplateLimit!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать лимит"
     createCommissionTemplateLimit(
         "ID типа лимита"

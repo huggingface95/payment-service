@@ -24,7 +24,7 @@ type Role {
 }
 
 
-extend type Query {
+extend type Query @guard {
     "Получить роль по ID"
     role(id: ID @eq): Role @field(resolver:"RoleQuery@permissions")
     """
@@ -41,7 +41,7 @@ extend type Query {
     )): [Role!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     createRole(
         "Название роли"
         name: String!

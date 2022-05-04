@@ -5,7 +5,7 @@ type TwoFactorAuthSettings {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить второй фактор по ID"
     twoFactorAuth(id: ID @eq): TwoFactorAuthSettings @find
     "Получить список"

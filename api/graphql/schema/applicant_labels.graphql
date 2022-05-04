@@ -11,7 +11,7 @@ type ApplicantIndividualLabel {
     is_active: Boolean
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить метку по ID
     """
@@ -30,7 +30,7 @@ extend type Query {
 
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать метку"
     createApplicantIndividualLabel(
         "Название метки"

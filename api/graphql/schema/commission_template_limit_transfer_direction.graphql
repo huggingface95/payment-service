@@ -8,7 +8,7 @@ type CommissionTemplateLimitTransferDirection {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить по ID"
     commissionTemplateLimitTransferDirection(id: ID @eq): CommissionTemplateLimitTransferDirection @find
     "Получить список направлений"

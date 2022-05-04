@@ -8,7 +8,7 @@ type CommissionTemplateLimitType {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить по ID"
     commissionTemplateLimitType(id: ID @eq): CommissionTemplateLimitType @find
     "Получить список типов лимитов"

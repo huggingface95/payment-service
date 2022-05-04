@@ -8,7 +8,7 @@ type ApplicantCompanyBusinessType {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить по ID
     """
@@ -23,7 +23,7 @@ extend type Query {
     )): [ApplicantCompanyBusinessType!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать бизнес тип"
     createApplicantCompanyBusinessType(
         "Название"

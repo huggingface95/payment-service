@@ -41,7 +41,7 @@ type GroupRole {
 }
 
 
-extend type Query {
+extend type Query @guard {
     "Получить группу по ID"
     group_type(id: ID @eq): Groups @find
     "Получить список групп по умолчанию"
@@ -61,7 +61,7 @@ extend type Query {
         )): [GroupRole!]! @paginate(defaultCount: 10)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать группу"
     createGroupSettings(
         "Название группы"

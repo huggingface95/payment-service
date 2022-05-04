@@ -16,7 +16,7 @@ type ApplicantRiskLevelHistory {
     risk_level_id: ApplicantRiskLevel @belongsTo(relation:"ApplicantRiskLevel")
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить историю списка уровней риска по аппликанту
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -27,7 +27,7 @@ extend type Query {
     )): [ApplicantRiskLevelHistory!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Добавить запись"
     createApplicantRiskLevelHistory(
         "Комментарий"

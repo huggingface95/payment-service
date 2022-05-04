@@ -22,7 +22,7 @@ type CommissionPriceList {
     fees: [PriceListFee] @hasMany(relation:"fees")
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить прайс по ID"
     commissionPriceList(id: ID @eq): CommissionPriceList @find
     """
@@ -42,7 +42,7 @@ extend type Query {
         ): [CommissionPriceList!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать прай лист"
     createCommissionPriceList(
 		"Название шаблона"

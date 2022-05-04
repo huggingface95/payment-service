@@ -6,7 +6,7 @@ type FeePeriod {
     name: String
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить список  периодов комиссий
     """

@@ -8,7 +8,7 @@ type CommissionTemplateLimitPeriod {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить по ID"
     commissionTemplateLimitPeriod(id: ID @eq): CommissionTemplateLimitPeriod @find
     "Получить список типов лимитов"

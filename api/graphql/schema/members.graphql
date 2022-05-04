@@ -44,7 +44,7 @@ type Members {
     is_show_owner_applicants: Boolean
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить участника по ID"
     member(id: ID @eq): Members @find
     """
@@ -73,7 +73,7 @@ enum MembersColumn {
     IS_SHOW_OWNER_APPLICANTS @enum(value: "is_show_owner_applicants")
 }
 
-extend type Mutation {
+extend type Mutation  {
     """
     Создать участника
     """

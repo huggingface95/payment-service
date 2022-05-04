@@ -9,7 +9,7 @@ type ApplicantModules {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить модуль по ID"
     applicant_module(id: ID @eq): ApplicantModules @find
     """
@@ -22,7 +22,7 @@ extend type Query {
         ): [ApplicantModules!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать модуль"
     createApplicantModule(
         "Название модуля"

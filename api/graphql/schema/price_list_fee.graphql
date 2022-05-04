@@ -26,7 +26,7 @@ type PriceListFeesItem {
 }
 
 
-extend type Query {
+extend type Query @guard {
     """
     Получить список Цен
     where:{column: NAME, operator: LIKE, value: ""} фильтр по имени, тип, тип операции, период
@@ -54,7 +54,7 @@ enum FeeMode {
 }
 
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать Цен"
     createPriceListFees(
         "Название"

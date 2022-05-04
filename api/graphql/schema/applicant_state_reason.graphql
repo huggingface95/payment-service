@@ -8,7 +8,7 @@ type ApplicantStateReason {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить причину по ID
     """
@@ -23,7 +23,7 @@ extend type Query {
     )): [ApplicantStateReason!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать причину"
     createApplicantStateReason(
         "Название"
