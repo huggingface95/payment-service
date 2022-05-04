@@ -9,54 +9,54 @@ class BasePolicy
 {
     use HandlesAuthorization;
 
-    public function view($user): bool
+    public function view($user, $model): bool
     {
-        return $user->hasPermission(Permissions::ACTION_TYPE_VIEW);
+        return $user->hasPermission(get_class($model), Permissions::ACTION_TYPE_VIEW);
     }
 
-    public function create($user): bool
+    public function create($user, $model): bool
     {
-        return $user->hasPermission(Permissions::ACTION_TYPE_CREATE);
+        return $user->hasPermission(get_class($model), Permissions::ACTION_TYPE_CREATE);
     }
 
-    public function update($user): bool
+    public function update($user, $model): bool
     {
-        return $user->hasPermission(Permissions::ACTION_TYPE_UPDATE);
+        return $user->hasPermission(get_class($model), Permissions::ACTION_TYPE_UPDATE);
     }
 
-    public function delete($user): bool
+    public function delete($user, $model): bool
     {
-        return $user->hasPermission(Permissions::ACTION_TYPE_DELETE);
+        return $user->hasPermission(get_class($model), Permissions::ACTION_TYPE_DELETE);
     }
 
-    public function restore($user): bool
+    public function restore($user, $model): bool
     {
-        return $user->hasPermission(Permissions::ACTION_TYPE_RESTORE);
+        return $user->hasPermission(get_class($model), Permissions::ACTION_TYPE_RESTORE);
     }
 
-    public function forceDelete($user): bool
+    public function forceDelete($user, $model): bool
     {
-        return $user->hasPermission(Permissions::ACTION_TYPE_FORCE_DELETE);
+        return $user->hasPermission(get_class($model), Permissions::ACTION_TYPE_FORCE_DELETE);
     }
 
-    public function export($user): bool
+    public function export($user, $model): bool
     {
-        return $user->hasPermission(Permissions::ACTION_TYPE_FORCE_DELETE);
+        return $user->hasPermission(get_class($model), Permissions::ACTION_TYPE_FORCE_DELETE);
     }
 
-    public function available($user): bool
+    public function available($user, $model): bool
     {
-        return $user->hasPermission(Permissions::ACTION_TYPE_AVAILABLE);
+        return $user->hasPermission(get_class($model), Permissions::ACTION_TYPE_AVAILABLE);
     }
 
-    public function attach($user): bool
+    public function attach($user, $model): bool
     {
-        return $user->hasPermission(Permissions::ACTION_TYPE_ATTACH);
+        return $user->hasPermission(get_class($model), Permissions::ACTION_TYPE_ATTACH);
     }
 
-    public function detach($user): bool
+    public function detach($user, $model): bool
     {
-        return $user->hasPermission(Permissions::ACTION_TYPE_DETACH);
+        return $user->hasPermission(get_class($model), Permissions::ACTION_TYPE_DETACH);
     }
 
 }

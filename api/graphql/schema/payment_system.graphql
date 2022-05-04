@@ -12,10 +12,10 @@ type PaymentSystem {
 
 extend type Query @guard {
     "Получить платежную систем по ID"
-    paymentSystem(id: ID @eq): PaymentSystem @can(ability: "view") @find
+    paymentSystem(id: ID @eq): PaymentSystem @can(ability: "view", query: true) @find
     "Получить список платежных систем"
     paymentSystems(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
-        columns: ["id","name","is_active"])): [PaymentSystem!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        columns: ["id","name","is_active"])): [PaymentSystem!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -25,7 +25,7 @@ extend type Mutation @guard {
         name: String!
         "Активный не активный (true/false)"
         is_active: Boolean
-    ): PaymentSystem @can(ability: "create") @create
+    ): PaymentSystem @can(ability: "create", query: true) @create
 
     "Обновить поля платежной системы"
     updatePaymentSystem(
@@ -35,10 +35,10 @@ extend type Mutation @guard {
         name: String
         "Активный не активный (true/false)"
         is_active: Boolean
-    ): PaymentSystem @can(ability: "update") @update
+    ): PaymentSystem @can(ability: "update", query: true) @update
 
     "Удалить платежную систему"
-    deletePaymentSystem(id: ID!): PaymentSystem @can(ability: "delete") @field(resolver:"PaymentSystemMutator@delete")
+    deletePaymentSystem(id: ID!): PaymentSystem @can(ability: "delete", query: true) @field(resolver:"PaymentSystemMutator@delete")
 
 }
 

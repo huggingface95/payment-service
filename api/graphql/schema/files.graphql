@@ -25,7 +25,7 @@ type Files {
 
 extend type Query @guard {
     "Получить файл по ID"
-    file(id: ID @eq): Files @can(ability: "view") @find
+    file(id: ID @eq): Files @can(ability: "view", query: true) @find
     """
     Получить список файлов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -33,12 +33,12 @@ extend type Query @guard {
     files(
             where: _ @whereConditions(columns: ["author_id","entity_type"]),
             orderBy: _ @orderBy(columns: ["id", "author_id"])
-        ): [Files!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        ): [Files!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
         "Удалить файл"
             deleteFile(
                 id: ID!
-            ): Files @can(ability: "delete") @delete
+            ): Files @can(ability: "delete", query: true) @delete
 }

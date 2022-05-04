@@ -11,9 +11,9 @@ type Currencies{
 
 extend type Query @guard {
     "Получить валюту по ID"
-    currency(id: ID @eq): Currencies @can(ability: "view") @find
+    currency(id: ID @eq): Currencies @can(ability: "view", query: true) @find
     """
     Получить список валют
     """
-    currencies: [Currencies!]! @can(ability: "view") @paginate(defaultCount: 10)
+    currencies: [Currencies!]! @can(ability: "view", query: true) @paginate(defaultCount: 10)
 }

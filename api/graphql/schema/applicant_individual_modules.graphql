@@ -20,7 +20,7 @@ extend type Query @guard {
     """
     applicantIndividualModules(where: _ @whereConditions(columns: ["applicant_individual_id"]), orderBy: _ @orderBy(
         columns: ["applicant_individual_id"],
-    )): [ApplicantIndividualModules!]! @can(ability: "view")  @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
+    )): [ApplicantIndividualModules!]! @can(ability: "view", query: true)  @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -32,7 +32,7 @@ extend type Mutation @guard {
         applicant_module_id: [ID]
         "Активный или неактивный"
         is_active: Boolean
-    ): ApplicantIndividual @can(ability: "create")  @field(resolver:"ApplicantIndividualModulesMutator@attach")
+    ): ApplicantIndividual @can(ability: "create", query: true)  @field(resolver:"ApplicantIndividualModulesMutator@attach")
 
     "Активировать или деактивировать модуль аппликанту"
     updateApplicantIndividualModule(
@@ -42,13 +42,13 @@ extend type Mutation @guard {
         applicant_module_id: [ID]
         "Активный или неактивный"
         is_active: Boolean
-    ): ApplicantIndividual @can(ability: "update")  @field(resolver:"ApplicantIndividualModulesMutator@update")
+    ): ApplicantIndividual @can(ability: "update", query: true)  @field(resolver:"ApplicantIndividualModulesMutator@update")
 
     "Удалить модуль"
     deleteApplicantIndividualModule(
         applicant_individual_id: ID!
         applicant_module_id: [ID]
-    ): ApplicantIndividual @can(ability: "delete")  @field(resolver: "ApplicantIndividualModulesMutator@detach")
+    ): ApplicantIndividual @can(ability: "delete", query: true)  @field(resolver: "ApplicantIndividualModulesMutator@detach")
 
 
 }

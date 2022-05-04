@@ -43,9 +43,9 @@ type GroupRole {
 
 extend type Query @guard {
     "Получить группу по ID"
-    group_type(id: ID @eq): Groups @can(ability: "view") @find
+    group_type(id: ID @eq): Groups @can(ability: "view", query: true) @find
     "Получить список групп по умолчанию"
-    group_types: [Groups!]! @can(ability: "view") @paginate(defaultCount: 10)
+    group_types: [Groups!]! @can(ability: "view", query: true) @paginate(defaultCount: 10)
     """
     Получить список групп с ролями
     orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
@@ -58,7 +58,7 @@ extend type Query @guard {
         hasRole: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["id","group_type_id", "name","role_id", "payment_provider_id", "commission_template_id", "is_active","company_id"]),
         orderBy: _ @orderBy(columns: ["id","is_active","description"],
-        )): [GroupRole!]! @can(ability: "view") @paginate(defaultCount: 10)
+        )): [GroupRole!]! @can(ability: "view", query: true) @paginate(defaultCount: 10)
 }
 
 extend type Mutation @guard {
@@ -80,7 +80,7 @@ extend type Mutation @guard {
         is_active: Boolean
         "ID компании"
         company_id: ID
-    ): GroupRole @can(ability: "create") @field(resolver:"GroupMutator@create")
+    ): GroupRole @can(ability: "create", query: true) @field(resolver:"GroupMutator@create")
 
     "Обновить поля группы"
     updateGroupSettings (
@@ -102,11 +102,11 @@ extend type Mutation @guard {
         is_active: Boolean
         "ID компании"
         company_id: ID
-    ): GroupRole @can(ability: "update") @field(resolver:"GroupMutator@update")
+    ): GroupRole @can(ability: "update", query: true) @field(resolver:"GroupMutator@update")
 
 
     "Удаление группы"
-    deleteGroup(id:ID!): GroupRole @can(ability: "delete") @field(resolver:"GroupMutator@delete")
+    deleteGroup(id:ID!): GroupRole @can(ability: "delete", query: true) @field(resolver:"GroupMutator@delete")
 
     "Добавить группу мемберу"
     setMemberGroup(
@@ -118,7 +118,7 @@ extend type Mutation @guard {
         commission_template_id: ID!
         "Роль"
         role_id: ID!
-    ): GroupRole @can(ability: "setMemberGroup") @field(resolver:"GroupMutator@setMemberGroup")
+    ): GroupRole @can(ability: "setMemberGroup", query: true) @field(resolver:"GroupMutator@setMemberGroup")
 
 
 

@@ -18,14 +18,14 @@ extend type Query @guard {
     """
     Получить заметку  по ID
     """
-    applicantCompanyNote(id: ID @eq): ApplicantCompanyNotes @can(ability: "view") @find
+    applicantCompanyNote(id: ID @eq): ApplicantCompanyNotes @can(ability: "view", query: true) @find
     """
     Получить список всех заметок
     orderBy: [{ column: CREATED_AT, order: DESC }] сортировка по ID, по времени создания
     """
     applicantCompanyNotes( orderBy: _ @orderBy(
         columns: ["id","created_at"],
-    )): [ApplicantCompanyNotes!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantCompanyNotes!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -37,12 +37,12 @@ extend type Mutation @guard {
         applicant_company_id: ID!
         "ID автора заметки"
         member_id: ID!
-    ): ApplicantCompanyNotes @can(ability: "create") @create
+    ): ApplicantCompanyNotes @can(ability: "create", query: true) @create
 
     "Удалит заметку"
     deleteApplicantCompanyNote(
         id: ID!
-    ): ApplicantCompanyNotes @can(ability: "delete") @delete
+    ): ApplicantCompanyNotes @can(ability: "delete", query: true) @delete
 
 }
 

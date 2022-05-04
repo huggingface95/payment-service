@@ -26,23 +26,23 @@ type DepartmentPosition {
 
 extend type Query @guard {
     "Получить департамент по его ID"
-    department(id: ID @eq): Departments @can(ability: "view") @find
+    department(id: ID @eq): Departments @can(ability: "view", query: true) @find
     """
     Получить список департаментов
     orderBy: [{ column: ID, order: DESC }] сортировка по названию или по ID
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
     hasCompany: {column:ID,operator:EQ,value:1} фильтр по id компании
     """
-    departments( hasCompany: _ @whereHasConditions(columns: ["id"]), where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [Departments!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    departments( hasCompany: _ @whereHasConditions(columns: ["id"]), where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [Departments!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
     "Получить должность по ID"
-    departmentPosition(id: ID @eq): DepartmentPosition @can(ability: "view") @find
+    departmentPosition(id: ID @eq): DepartmentPosition @can(ability: "view", query: true) @find
     """
     Получить список должностей
     orderBy: [{ column: ID, order: DESC }] сортировка по названию, по ID, по is_active
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию, по полю is_active
     hasDepartment: {column:ID,operator:EQ,value:1} фильтр по id департамента
     """
-    departmentPositions(hasDepartment: _ @whereHasConditions(columns: ["id"]), where: _ @whereConditions(columns: ["name","is_active"]), orderBy: _ @orderBy(columns: ["id","name","is_active"])): [DepartmentPosition!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    departmentPositions(hasDepartment: _ @whereHasConditions(columns: ["id"]), where: _ @whereConditions(columns: ["name","is_active"]), orderBy: _ @orderBy(columns: ["id","name","is_active"])): [DepartmentPosition!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -54,7 +54,7 @@ extend type Mutation @guard {
         company_id: ID!
         "Массив названий должностей"
         department_positions_name: [String]
-    ): Departments @can(ability: "create") @field(resolver:"DepartmentMutator@create")
+    ): Departments @can(ability: "create", query: true) @field(resolver:"DepartmentMutator@create")
 
     "Изменить название департамента"
     updateDepartment(
@@ -62,7 +62,7 @@ extend type Mutation @guard {
         id: ID!
         "ID активных должностей"
         active_department_positions_id: [ID]
-    ): Departments @can(ability: "update") @field(resolver:"DepartmentMutator@update")
+    ): Departments @can(ability: "update", query: true) @field(resolver:"DepartmentMutator@update")
 
     "Создание должности"
     createDepartmentPosition(
@@ -72,12 +72,12 @@ extend type Mutation @guard {
         department_id: ID
         "ID компании"
         company_id: ID!
-    ): DepartmentPosition @can(ability: "create") @field(resolver:"DepartmentPositionMutator@create")
+    ): DepartmentPosition @can(ability: "create", query: true) @field(resolver:"DepartmentPositionMutator@create")
 
     "Удалить департамент"
-    deleteDepartment(id: ID!): Departments @can(ability: "delete") @field(resolver:"DepartmentMutator@delete")
+    deleteDepartment(id: ID!): Departments @can(ability: "delete", query: true) @field(resolver:"DepartmentMutator@delete")
     "Удалить должность"
-    deleteDepartmentPosition(id: ID!): DepartmentPosition @can(ability: "delete") @delete
+    deleteDepartmentPosition(id: ID!): DepartmentPosition @can(ability: "delete", query: true) @delete
 
 }
 

@@ -24,7 +24,7 @@ extend type Query @guard {
     """
     applicantRiskLevelHistory(where: _ @whereConditions(columns: ["applicant_id"]), orderBy: _ @orderBy(
         columns: ["id"],
-    )): [ApplicantRiskLevelHistory!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantRiskLevelHistory!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -36,11 +36,11 @@ extend type Mutation @guard {
         applicant_id: ID!
         "Уровень риска"
         risk_level_id: ID!
-    ):ApplicantRiskLevelHistory @can(ability: "create") @field(resolver: "ApplicantHistoryRiskLevelMutator@create")
+    ):ApplicantRiskLevelHistory @can(ability: "create", query: true) @field(resolver: "ApplicantHistoryRiskLevelMutator@create")
 
     "Удалить запись"
     deleteApplicantRiskLevelHistory(
         id: ID!
-    ): ApplicantRiskLevelHistory @can(ability: "delete") @delete
+    ): ApplicantRiskLevelHistory @can(ability: "delete", query: true) @delete
 }
 

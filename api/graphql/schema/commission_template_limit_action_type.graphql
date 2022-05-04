@@ -10,11 +10,11 @@ type CommissionTemplateLimitActionType {
 
 extend type Query @guard {
     "Получить по ID"
-    commissionTemplateLimitActionType(id: ID @eq): CommissionTemplateLimitActionType @can(ability: "view")  @find
+    commissionTemplateLimitActionType(id: ID @eq): CommissionTemplateLimitActionType @can(ability: "view", query: true)  @find
     "Получить список типов лимитов"
     commissionTemplateLimitActionType(where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id","name"])
-    ): [CommissionTemplateLimitActionType!]! @can(ability: "view")  @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [CommissionTemplateLimitActionType!]! @can(ability: "view", query: true)  @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 
