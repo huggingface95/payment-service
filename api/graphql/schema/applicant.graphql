@@ -255,7 +255,7 @@ extend type Mutation @guard {
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
         password_confirmation: String
-    ): ApplicantIndividual @can(ability: "update", query: true) @field(resolver:"ApplicantMutator@update")
+    ): ApplicantIndividual @can(ability: "create", query: true) @field(resolver:"ApplicantMutator@update")
 
     """
     Установить пароль

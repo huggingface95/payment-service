@@ -36,11 +36,11 @@ extend type Mutation @guard {
         applicant_id: ID!
         "Уровень риска"
         risk_level_id: ID!
-    ):ApplicantRiskLevelHistory @can(ability: "create", query: true) @field(resolver: "ApplicantHistoryRiskLevelMutator@create")
+    ):ApplicantRiskLevelHistory @can(ability: "view", query: true) @field(resolver: "ApplicantHistoryRiskLevelMutator@create")
 
     "Удалить запись"
     deleteApplicantRiskLevelHistory(
         id: ID!
-    ): ApplicantRiskLevelHistory @can(ability: "delete", query: true) @delete
+    ): ApplicantRiskLevelHistory @can(ability: "view", query: true) @delete
 }
 
