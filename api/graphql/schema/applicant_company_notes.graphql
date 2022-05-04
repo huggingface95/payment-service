@@ -37,12 +37,12 @@ extend type Mutation @guard {
         applicant_company_id: ID!
         "ID автора заметки"
         member_id: ID!
-    ): ApplicantCompanyNotes @can(ability: "create", query: true) @create
+    ): ApplicantCompanyNotes @can(ability: "view", query: true) @create
 
     "Удалит заметку"
     deleteApplicantCompanyNote(
         id: ID!
-    ): ApplicantCompanyNotes @can(ability: "delete", query: true) @delete
+    ): ApplicantCompanyNotes @can(ability: "view", query: true) @delete
 
 }
 
