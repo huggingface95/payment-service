@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\UserPermission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -21,7 +22,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
-    use SoftDeletes, Authorizable, Authenticatable;
+    use SoftDeletes, Authorizable, Authenticatable, UserPermission;
 
     public $password_confirmation;
 
