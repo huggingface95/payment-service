@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Support\Collection;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -18,6 +19,9 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @package App\Models
  * @property int id
  * @property bool is_show_owner_applicants
+ *
+ * @property Collection groupRoles
+ *
  */
 
 class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject

@@ -33,7 +33,7 @@ class Permissions extends SpatiePermission
 
 
     protected $fillable = [
-        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'action_type'
+        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'action_type', 'model'
     ];
     protected $guard_name = GuardEnum::GUARD_NAME;
 

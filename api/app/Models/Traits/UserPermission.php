@@ -2,27 +2,26 @@
 
 namespace App\Models\Traits;
 
+use Illuminate\Support\Collection;
+
 trait UserPermission
 {
-    public function allPermissions()
+    public function allPermissions(): Collection
     {
-        return $this->roles->pluck('permissions');
+        return $this->groupRoles->map(function ($group){
+            return $group->role->permissions;
+        })->flatten();
     }
 
-    public function hasPermission($name): bool
+    public function hasPermission($model, $name): bool
     {
         $this->loadRolesAndPermissionsRelations();
 
-        $permissions = $this->allPermissions()
-            ->flatten()
-            ->pluck('action_type')
-            ->unique()->toArray();
-
-        return in_array($name, $permissions);
+        return (bool) $this->allPermissions()->where('model', $model)->where('action_type', $name)->count();
     }
 
     private function loadRolesAndPermissionsRelations()
     {
-        $this->load('roles.permissions');
+        $this->load('groupRoles.role.permissions');
     }
 }

@@ -11,7 +11,7 @@ type ApplicantModules {
 
 extend type Query @guard {
     "Получить модуль по ID"
-    applicant_module(id: ID @eq): ApplicantModules @can(ability: "view") @find
+    applicant_module(id: ID @eq): ApplicantModules @can(ability: "view", query: true) @find
     """
     Получить список модулей
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -19,7 +19,7 @@ extend type Query @guard {
     applicant_modules (
             where: _ @whereConditions(columns: ["name"]),
             orderBy: _ @orderBy(columns: ["id"])
-        ): [ApplicantModules!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        ): [ApplicantModules!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -27,6 +27,6 @@ extend type Mutation @guard {
     createApplicantModule(
         "Название модуля"
         name: String!
-    ): ApplicantModules @can(ability: "create") @create
+    ): ApplicantModules @can(ability: "create", query: true) @create
 }
 

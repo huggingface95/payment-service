@@ -11,5 +11,5 @@ extend type Query @guard {
     """
     Получить список статусов
     """
-   feeTypes: [FeeType!]! @can(ability: "view") @all
+   feeTypes: [FeeType!]! @can(ability: "view", query: true) @all
 }

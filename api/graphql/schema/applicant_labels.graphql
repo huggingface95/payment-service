@@ -15,7 +15,7 @@ extend type Query @guard {
     """
     Получить метку по ID
     """
-    applicantIndividualLabel(id: ID @eq): ApplicantIndividualLabel @can(ability: "view") @find
+    applicantIndividualLabel(id: ID @eq): ApplicantIndividualLabel @can(ability: "view", query: true) @find
     """
     Получить все метки
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -23,10 +23,10 @@ extend type Query @guard {
     """
     applicantIndividualLabels(applicant_id: ID @eq, where: _ @whereConditions(columns: ["name", "applicant_id"]), orderBy: _ @orderBy(
         columns: ["applicant_id","name"],
-    )): [ApplicantIndividualLabel!]! @can(ability: "view") @field(resolver: "ApplicantIndividualLabelsQuery@enabled")
+    )): [ApplicantIndividualLabel!]! @can(ability: "view", query: true) @field(resolver: "ApplicantIndividualLabelsQuery@enabled")
     applicantIndividualLabelsAvailable(applicant_id: ID @scope(name:"IndividualId"), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantIndividualLabel!]! @can(ability: "available") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantIndividualLabel!]! @can(ability: "available", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 
 }
 
@@ -37,7 +37,7 @@ extend type Mutation @guard {
         name: String!
         "HEX код метки"
         hex_color_code: String! @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
-    ): ApplicantIndividualLabel @can(ability: "create") @field(resolver: "ApplicantLabelMutator@create")
+    ): ApplicantIndividualLabel @can(ability: "create", query: true) @field(resolver: "ApplicantLabelMutator@create")
 
     "Редактирование метки"
     updateApplicantIndividualLabel(
@@ -47,13 +47,13 @@ extend type Mutation @guard {
         name: String!
         "HEX код метки"
         hex_color_code: String @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
-    ): ApplicantIndividualLabel @can(ability: "update") @field(resolver: "ApplicantLabelMutator@update")
+    ): ApplicantIndividualLabel @can(ability: "update", query: true) @field(resolver: "ApplicantLabelMutator@update")
 
     "Удалить метку"
     deleteApplicantIndividualLabel(
         id: ID!
         deleteAnyway: Boolean
-    ): ApplicantIndividualLabel @can(ability: "delete") @field(resolver: "ApplicantLabelMutator@delete")
+    ): ApplicantIndividualLabel @can(ability: "delete", query: true) @field(resolver: "ApplicantLabelMutator@delete")
 
     "Создать метку аппликанту"
     attachApplicantIndividualLabel(
@@ -61,13 +61,13 @@ extend type Mutation @guard {
         applicant_individual_id: ID!
         "Метка"
         applicant_individual_label_id: [ID]
-    ): ApplicantIndividual @can(ability: "attach") @field(resolver:"ApplicantIndividualLabelsMutator@attach")
+    ): ApplicantIndividual @can(ability: "attach", query: true) @field(resolver:"ApplicantIndividualLabelsMutator@attach")
 
     "Удалить метку"
     detachApplicantIndividualLabel(
         applicant_individual_id: ID!
         applicant_individual_label_id: [ID]
-    ): ApplicantIndividual @can(ability: "detach") @field(resolver: "ApplicantIndividualLabelsMutator@detach")
+    ): ApplicantIndividual @can(ability: "detach", query: true) @field(resolver: "ApplicantIndividualLabelsMutator@detach")
 
 }
 

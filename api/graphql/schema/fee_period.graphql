@@ -10,5 +10,5 @@ extend type Query @guard {
     """
     Получить список  периодов комиссий
     """
-   feePeriods: [FeePeriod!]! @can(ability: "view") @all
+   feePeriods: [FeePeriod!]! @can(ability: "view", query: true) @all
 }
