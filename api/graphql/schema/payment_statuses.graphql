@@ -11,5 +11,5 @@ extend type Query  @guard{
     """
     Получить список статусов
     """
-   paymentStatuses: [PaymentStatus!]! @all
+   paymentStatuses: [PaymentStatus!]! @can(ability: "view") @all
 }

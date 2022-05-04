@@ -94,7 +94,7 @@ extend type Query @guard{
     """
     Получить пользователя  по ID
     """
-    applicantCompany(id: ID @eq): ApplicantCompany @find
+    applicantCompany(id: ID @eq): ApplicantCompany @can(ability: "view") @find
     """
     Получить список applicant companies
     orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email
@@ -109,7 +109,7 @@ extend type Query @guard{
         hasKycLevel: _ @whereHasConditions(columns: ["name", "id"]),
         created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","account_manager_member_id","applicant_state_id","applicant_state_reason_id","name","url" ,"email","created_at","group_id","company_id"]), orderBy: _ @orderBy(
         columns: ["id","name", "email","created_at","url","owner_id","company_id"],
-    )): [ApplicantCompany!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantCompany!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
     """
     Получить список applicant individuals по applicant company
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -117,7 +117,7 @@ extend type Query @guard{
     """
     getMatchedUsers(applicant_company_id: ID! @eq, orderBy: _ @orderBy(
         columns: ["id"],
-    )): [ApplicantIndividualCompany!]! @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
+    )): [ApplicantIndividualCompany!]! @can(ability: "matched_users") @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -189,7 +189,7 @@ extend type Mutation @guard {
         labels: [ID]
         "ID группы"
         group_id: ID
-    ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@create")
+    ): ApplicantCompany @can(ability: "create") @field(resolver:"ApplicantCompanyMutator@create")
 
     "Редактирование applicant company"
     updateApplicantCompany (
@@ -264,12 +264,12 @@ extend type Mutation @guard {
         labels: [ID]
         "ID группы"
         group_id: ID
-    ): ApplicantCompany @field(resolver:"ApplicantCompanyMutator@update")
+    ): ApplicantCompany @can(ability: "update") @field(resolver:"ApplicantCompanyMutator@update")
 
     "Удалить пользователя"
     deleteApplicantCompany (
         id: ID!
-    ): ApplicantCompany @delete
+    ): ApplicantCompany @can(ability: "delete") @delete
 
     "Добавить связь Individual с Company"
     createApplicantIndividualCompany(
@@ -277,7 +277,7 @@ extend type Mutation @guard {
         applicant_company_id: ID!
         applicant_individual_company_relation_id: ID!
         applicant_individual_company_position_id: ID!
-    ): ApplicantIndividualCompany @create
+    ): ApplicantIndividualCompany @can(ability: " create") @create
 
     "Редактировать связь Individual с Company"
     updateApplicantIndividualCompany(
@@ -285,13 +285,13 @@ extend type Mutation @guard {
         applicant_company_id: ID!
         applicant_individual_company_relation_id: ID
         applicant_individual_company_position_id: ID
-    ): ApplicantIndividualCompany @field(resolver: "ApplicantIndividualCompanyMutator@update")
+    ): ApplicantIndividualCompany @can(ability: "update") @field(resolver: "ApplicantIndividualCompanyMutator@update")
 
     "Удалить связь Individual с Company"
     deleteApplicantIndividualCompany(
         applicant_individual_id: ID!
         applicant_company_id: ID!
-    ): ApplicantIndividualCompany @field(resolver: "ApplicantIndividualCompanyMutator@delete")
+    ): ApplicantIndividualCompany @can(ability: "delete") @field(resolver: "ApplicantIndividualCompanyMutator@delete")
 
 }
 

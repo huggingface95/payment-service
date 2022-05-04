@@ -11,5 +11,5 @@ extend type Query @guard {
     """
     Получить список
     """
-   getPaymentUrgencys: [PaymentUrgency!]! @all
+   getPaymentUrgencys: [PaymentUrgency!]! @can(ability: "view") @all
 }

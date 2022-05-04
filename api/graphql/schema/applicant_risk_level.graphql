@@ -12,7 +12,7 @@ extend type Query @guard {
     """
     Получить уровень риска по  ID
     """
-    applicantRiskLevel(id: ID @eq): ApplicantRiskLevel @find
+    applicantRiskLevel(id: ID @eq): ApplicantRiskLevel @can(ability: "view") @find
     """
     Получить список уровней риска
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -20,7 +20,7 @@ extend type Query @guard {
     """
     applicantRiskLevels(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantRiskLevel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantRiskLevel!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 

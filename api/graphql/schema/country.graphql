@@ -8,9 +8,9 @@ type Country {
 }
 
 extend type Query @guard {
-    country(id: ID @eq): Country @find
+    country(id: ID @eq): Country @can(ability: "view") @find
     """
     Получить список стран
     """
-    countries: [Country!]! @paginate(defaultCount: 10)
+    countries: [Country!]! @can(ability: "view") @paginate(defaultCount: 10)
 }

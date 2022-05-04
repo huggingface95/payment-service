@@ -31,7 +31,7 @@ type Ticket {
 
 extend type Query @guard {
     "Получить по билет ID"
-    ticket(id: ID @eq): Ticket @find
+    ticket(id: ID @eq): Ticket @can(ability: "view") @find
     """
     Получить список билетов
     orderBy: [
@@ -61,7 +61,7 @@ extend type Query @guard {
                 { relation: "department", column: "name" },
             ]
         )
-    ): [Ticket!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [Ticket!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -77,13 +77,13 @@ extend type Mutation @guard {
         member_id: ID!
         "ID клиента"
         client_id: ID!
-    ): Ticket @create
+    ): Ticket @can(ability: "create") @create
 
     "Обновить данные компании"
     updateTicket(
         "Статус билета"
         status: Int!
-    ): Ticket @update
+    ): Ticket @can(ability: "update") @update
 }
 
 

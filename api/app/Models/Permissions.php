@@ -20,7 +20,6 @@ class Permissions extends SpatiePermission
     const TYPE_REQUIRED = 'required';
     const TYPE_NO_REQUIRED = 'no_required';
 
-    const ACTION_TYPE_VIEW_ANY = 'viewAny';
     const ACTION_TYPE_VIEW = 'view';
     const ACTION_TYPE_UPDATE = 'update';
     const ACTION_TYPE_CREATE = 'create';
@@ -28,6 +27,9 @@ class Permissions extends SpatiePermission
     const ACTION_TYPE_RESTORE = 'restore';
     const ACTION_TYPE_FORCE_DELETE = 'forceDelete';
     const ACTION_TYPE_EXPORT = 'export';
+    const ACTION_TYPE_AVAILABLE = 'available';
+    const ACTION_TYPE_ATTACH = 'attach';
+    const ACTION_TYPE_DETACH = 'detach';
 
 
     protected $fillable = [
@@ -41,7 +43,6 @@ class Permissions extends SpatiePermission
     public static function getActionTypes(): array
     {
         return [
-            self::ACTION_TYPE_VIEW_ANY,
             self::ACTION_TYPE_VIEW,
             self::ACTION_TYPE_UPDATE,
             self::ACTION_TYPE_CREATE,
@@ -49,6 +50,9 @@ class Permissions extends SpatiePermission
             self::ACTION_TYPE_RESTORE,
             self::ACTION_TYPE_FORCE_DELETE,
             self::ACTION_TYPE_EXPORT,
+            self::ACTION_TYPE_AVAILABLE,
+            self::ACTION_TYPE_ATTACH,
+            self::ACTION_TYPE_DETACH,
         ];
     }
 

@@ -2,11 +2,13 @@
 
 namespace App\Policies;
 
-class MemberPolicy extends BasePolicy
+class GroupRolePolicy extends BasePolicy
 {
-    public function setMemberPassword(): bool
+
+    public function setMemberGroup(): bool
     {
         //Custom logic
         return true;
     }
+
 }

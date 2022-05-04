@@ -16,7 +16,7 @@ extend type Query @guard {
     """
     Получить метку по ID
     """
-    applicantCompanyLabel(id: ID @eq): ApplicantCompanyLabel @find
+    applicantCompanyLabel(id: ID @eq): ApplicantCompanyLabel @can(ability: "view") @find
     """
     Получить все метки
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -24,10 +24,10 @@ extend type Query @guard {
     """
     applicantCompanyLabels(company_id: ID @scope(name:"IsActive"), where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantCompanyLabel!]! @all
+    )): [ApplicantCompanyLabel!]! @can(ability: "view") @all
     applicantCompanyLabelsAvailable(company_id: ID @scope(name:"CompanyId"), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantCompanyLabel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantCompanyLabel!]! @can(ability: "available") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -37,7 +37,7 @@ extend type Mutation @guard {
         name: String!
         "HEX код метки"
         hex_color_code: String! @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
-    ): ApplicantCompanyLabel @field(resolver: "ApplicantCompanyLabelMutator@create")
+    ): ApplicantCompanyLabel  @can(ability: "create") @field(resolver: "ApplicantCompanyLabelMutator@create")
 
 
     "Редактирование метки"
@@ -48,13 +48,13 @@ extend type Mutation @guard {
         name: String!
         "HEX код метки"
         hex_color_code: String @rules(apply: [ "regex:/^#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/"])
-    ): ApplicantCompanyLabel @field(resolver: "ApplicantCompanyLabelMutator@update")
+    ): ApplicantCompanyLabel  @can(ability: "update") @field(resolver: "ApplicantCompanyLabelMutator@update")
 
     "Удалит метку"
     deleteApplicantCompanyLabel(
         id: ID!
         deleteAnyway: Boolean
-    ): ApplicantCompanyLabel @field(resolver: "ApplicantCompanyLabelMutator@delete")
+    ): ApplicantCompanyLabel  @can(ability: "delete") @field(resolver: "ApplicantCompanyLabelMutator@delete")
 
     "Создать метку компании"
     attachApplicantCompanyLabel(
@@ -62,13 +62,13 @@ extend type Mutation @guard {
         applicant_company_id: ID!
         "Метка"
         applicant_company_label_id: [ID]
-    ): ApplicantCompany @field(resolver:"ApplicantCompanyLabelMutator@attach")
+    ): ApplicantCompany  @can(ability: "attach") @field(resolver:"ApplicantCompanyLabelMutator@attach")
 
     "Удалить метку"
     detachApplicantCompanyLabel(
         applicant_company_id: ID!
         applicant_company_label_id: [ID]
-    ): ApplicantCompany @field(resolver: "ApplicantCompanyLabelMutator@detach")
+    ): ApplicantCompany @can(ability: "detach") @field(resolver: "ApplicantCompanyLabelMutator@detach")
 
 }
 

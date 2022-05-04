@@ -12,7 +12,7 @@ extend type Query @guard {
     """
     Получить статутс по ID
     """
-    applicantStatus(id: ID @eq): ApplicantStatus @find
+    applicantStatus(id: ID @eq): ApplicantStatus @can(ability: "view") @find
     """
     Получить все статусы
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -20,7 +20,7 @@ extend type Query @guard {
     """
     applicantStatuses(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantStatus!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantStatus!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 

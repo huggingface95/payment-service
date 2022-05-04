@@ -12,7 +12,7 @@ extend type Query @guard {
     """
     Получить должность по ID
     """
-    applicantIndividualCompanyPosition(id: ID @eq): ApplicantIndividualCompanyPosition @find
+    applicantIndividualCompanyPosition(id: ID @eq): ApplicantIndividualCompanyPosition  @can(ability: "view") @find
     """
     Получить все  должности
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -20,7 +20,7 @@ extend type Query @guard {
     """
     applicantIndividualCompanyPositions(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantIndividualCompanyPosition!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantIndividualCompanyPosition!]!  @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -28,7 +28,7 @@ extend type Mutation @guard {
     createApplicantIndividualCompanyPosition(
         "Название"
         name: String!
-    ): ApplicantIndividualCompanyPosition @create
+    ): ApplicantIndividualCompanyPosition @can(ability: "create")  @create
 
     "Редактирование должности"
     updateApplicantIndividualCompanyPosition(
@@ -36,7 +36,7 @@ extend type Mutation @guard {
         id: ID!
         "Название"
         name: String!
-    ): ApplicantIndividualCompanyPosition @update
+    ): ApplicantIndividualCompanyPosition @can(ability: "update")  @update
 
 
 }

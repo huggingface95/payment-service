@@ -12,7 +12,7 @@ extend type Query @guard {
     """
     Получить по ID
     """
-    applicantCompanyBusinessType(id: ID @eq): ApplicantCompanyBusinessType @find
+    applicantCompanyBusinessType(id: ID @eq): ApplicantCompanyBusinessType @can(ability: "view") @find
     """
     Получить все типы бизнеса
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -20,7 +20,7 @@ extend type Query @guard {
     """
     applicantCompanyBusinessType(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantCompanyBusinessType!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantCompanyBusinessType!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -28,7 +28,7 @@ extend type Mutation @guard {
     createApplicantCompanyBusinessType(
         "Название"
         name: String!
-    ): ApplicantCompanyBusinessType @create
+    ): ApplicantCompanyBusinessType @can(ability: "create") @create
 
     "Редактирование отнощения"
     updateApplicantCompanyBusinessType (
@@ -36,7 +36,7 @@ extend type Mutation @guard {
         id: ID!
         "Название"
         name: String!
-    ): ApplicantCompanyBusinessType @update
+    ): ApplicantCompanyBusinessType @can(ability: "update") @update
 
 
 }

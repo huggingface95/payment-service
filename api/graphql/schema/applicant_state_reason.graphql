@@ -12,7 +12,7 @@ extend type Query @guard {
     """
     Получить причину по ID
     """
-    applicantStateReason(id: ID @eq): ApplicantStateReason @find
+    applicantStateReason(id: ID @eq): ApplicantStateReason @can(ability: "view") @find
     """
     Получить все причины
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -20,7 +20,7 @@ extend type Query @guard {
     """
     applicantStateReasons(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantStateReason!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantStateReason!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -28,7 +28,7 @@ extend type Mutation @guard {
     createApplicantStateReason(
         "Название"
         name: String!
-    ): ApplicantStateReason @create
+    ): ApplicantStateReason @can(ability: "create") @create
 
     "Редактирование причины"
     updateApplicantStateReason(
@@ -36,12 +36,12 @@ extend type Mutation @guard {
         id: ID!
         "Название"
         name: String!
-    ): ApplicantStateReason @update
+    ): ApplicantStateReason @can(ability: "update") @update
 
     "Удалит метку"
     deleteApplicantStateReason(
         id: ID!
-    ):ApplicantStateReason @delete
+    ):ApplicantStateReason @can(ability: "delete") @delete
 
 }
 

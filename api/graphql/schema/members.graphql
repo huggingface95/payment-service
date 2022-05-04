@@ -46,7 +46,7 @@ type Members {
 
 extend type Query @guard {
     "Получить участника по ID"
-    member(id: ID @eq): Members @find
+    member(id: ID @eq): Members @can(ability: "view") @find
     """
     Получить список участников
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -58,7 +58,7 @@ extend type Query @guard {
         hasGroupRole: _ @whereHasConditions(columns: ["group_type_id","role_id"]),
         where: _ @whereConditions(columnsEnum: "MembersColumn"),
         orderBy: _ @orderBy(columns: ["id","email","last_login_at","is_active"],
-    )): [Members!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [Members!]! @can(ability: "view") @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 enum MembersColumn {
@@ -160,7 +160,7 @@ extend type Mutation  {
         additional_info_fields: [AdditionalFieldInput]
         "если true видит только своих аппликантов"
         is_show_owner_applicants: Boolean
-    ): Members @field(resolver: "MembersMutator@update")
+    ): Members @can(ability: "update") @field(resolver: "MembersMutator@update")
 
     """
     Установить пароль участника
@@ -169,7 +169,7 @@ extend type Mutation  {
         id: ID!
         password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         password_confirmation: String!
-    ): Members @field(resolver: "MembersMutator@setPassword")
+    ): Members @can(ability: "setMemberPassword") @field(resolver: "MembersMutator@setPassword")
 
     """
     Удалить участника
@@ -177,7 +177,7 @@ extend type Mutation  {
     deleteMember(
         "ID участника"
         id: ID!
-    ): Members @delete
+    ): Members @can(ability: "delete") @delete
 
 
 

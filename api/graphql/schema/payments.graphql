@@ -87,7 +87,7 @@ extend type Query @guard {
         created_at: DateRange @whereBetween,
         where: _ @whereConditions(columns: ["sender_bank_account","type_id","urgency_id", "status", "payment_provider_id", "company_id", "account_id", "payment_number", "sender_name"]),
         orderBy: _ @orderBy(columns: ["id", "created_at", "amount", "fee", "payment_number"])
-    ): [Payments!]! @can(ability: "viewAny")  @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [Payments!]! @can(ability: "view")  @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -179,10 +179,10 @@ extend type Mutation @guard {
         company_id: ID
         "Номер платежа"
         payment_number: String
-    ):Payments @can(ability: "create") @field(resolver: "PaymentsMutator@update")
+    ):Payments @can(ability: "update") @field(resolver: "PaymentsMutator@update")
 
     "Удалить платеж"
     deletePayment(
         id: ID!
-    ): Payments @can(ability: "create") @delete
+    ): Payments @can(ability: "delete") @delete
 }
