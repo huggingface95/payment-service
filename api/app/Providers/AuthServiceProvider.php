@@ -54,6 +54,7 @@ use App\Models\PaymentStatus;
 use App\Models\PaymentSystem;
 use App\Models\PaymentTypes;
 use App\Models\PaymentUrgency;
+use App\Models\PermissionCategory;
 use App\Models\Permissions;
 use App\Models\PriceListFee;
 use App\Models\Requisites;
@@ -84,7 +85,7 @@ class AuthServiceProvider extends ServiceProvider
         EmailNotification::class, EmailTemplate::class, FeePeriod::class, FeeType::class, Files::class, Groups::class, GroupRole::class,
         Languages::class, OperationType::class, PaymentProvider::class, PaymentStatus::class, PaymentSystem::class, PaymentTypes::class,
         PaymentUrgency::class, Permissions::class, PriceListFee::class, Requisites::class, Role::class, TicketComments::class, Ticket::class,
-        TwoFactorAuthSettings::class,
+        TwoFactorAuthSettings::class,PermissionCategory::class,
     ];
 
     /**
@@ -110,12 +111,12 @@ class AuthServiceProvider extends ServiceProvider
         // should return either a User instance or null. You're free to obtain
         // the User instance via an API token or any other method necessary.
 
-        $this->app['auth']->viaRequest('api', function ($request) {
-            if ($request->input('api_token')) {
-                return User::where('api_token', $request->input('api_token'))->first();
-            }
-            return null;
-        });
+//        $this->app['auth']->viaRequest('api', function ($request) {
+//            if ($request->input('api_token')) {
+//                return User::where('api_token', $request->input('api_token'))->first();
+//            }
+//            return null;
+//        });
     }
 
 
