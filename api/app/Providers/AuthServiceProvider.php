@@ -85,7 +85,7 @@ class AuthServiceProvider extends ServiceProvider
         EmailNotification::class, EmailTemplate::class, FeePeriod::class, FeeType::class, Files::class, Groups::class, GroupRole::class,
         Languages::class, OperationType::class, PaymentProvider::class, PaymentStatus::class, PaymentSystem::class, PaymentTypes::class,
         PaymentUrgency::class, Permissions::class, PriceListFee::class, Requisites::class, Role::class, TicketComments::class, Ticket::class,
-        TwoFactorAuthSettings::class,PermissionCategory::class,
+        TwoFactorAuthSettings::class,PermissionCategory::class,ApplicantCompanyBusinessType::class, ApplicantState::class
     ];
 
     /**
