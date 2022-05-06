@@ -38,7 +38,7 @@ extend type Query @guard {
         hasGroups: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["name","group_type_id","company_id"]), orderBy: _ @orderBy(
         columns: ["id","name","description"],
-    )): [Role!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [Role!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -55,7 +55,7 @@ extend type Mutation @guard {
         company_id: Int
         "Применить ко всем компаниям"
         is_all_companies: Boolean
-    ): Role @can(ability: "create", query: true) @field(resolver:"RoleMutator@create")
+    ): Role   @field(resolver:"RoleMutator@create")
 
     updateRole(
         "ID роли"
@@ -72,12 +72,12 @@ extend type Mutation @guard {
         company_id: Int
         "Применить ко всем компаниям"
         is_all_companies: Boolean
-    ): Role @can(ability: "update", query: true) @field(resolver:"RoleMutator@update")
+    ): Role   @field(resolver:"RoleMutator@update")
 
     deleteRole(
         "ID роли"
         id: ID!
-    ): Role @can(ability: "delete", query: true) @delete
+    ): Role   @delete
 
 
 }

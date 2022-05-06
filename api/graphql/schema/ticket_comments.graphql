@@ -21,7 +21,7 @@ extend type Query @guard {
     """
     Получить список
     """
-    getTicketComments: [TicketComments!]! @can(ability: "view", query: true) @all
+    getTicketComments: [TicketComments!]!   @all
 }
 
 extend type Mutation @guard {
@@ -33,5 +33,5 @@ extend type Mutation @guard {
         ticket_id: ID!
         "ID клиента"
         client_id: ID!
-    ): TicketComments @can(ability: "create", query: true) @create
+    ): TicketComments   @create
 }

@@ -75,7 +75,7 @@ extend type Mutation @guard {
         bank_correspondent: JSON
         created_at: DateTime
         updated_at: DateTime
-    ): Requisites @can(ability: "create", query: true) @create
+    ): Requisites   @create
 
     "Редактировать реквизиты"
         updateRequisites(
@@ -106,10 +106,10 @@ extend type Mutation @guard {
             bank_correspondent: JSON
             created_at: DateTime
             updated_at: DateTime
-        ): Requisites @can(ability: "update", query: true) @update
+        ): Requisites   @update
 
         "Удалить реквизиты"
             deleteRequisites(
                 id: ID!
-            ): Requisites @can(ability: "delete", query: true) @delete
+            ): Requisites   @delete
 }

@@ -10,5 +10,5 @@ extend type Query  @guard{
     """
     Получить список типов операций
     """
-   operationTypes: [OperationType!]! @can(ability: "view", query: true) @all
+   operationTypes: [OperationType!]!   @all
 }
