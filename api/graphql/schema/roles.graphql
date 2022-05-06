@@ -26,7 +26,7 @@ type Role {
 
 extend type Query @guard {
     "Получить роль по ID"
-    role(id: ID @eq): Role @can(ability: "view", query: true) @field(resolver:"RoleQuery@permissions")
+    role(id: ID @eq): Role   @field(resolver:"RoleQuery@permissions")
     """
     Получить список ролей
     groups_sort: сортировка по количеству групп

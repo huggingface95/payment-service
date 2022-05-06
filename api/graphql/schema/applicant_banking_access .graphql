@@ -37,7 +37,7 @@ extend type Query @guard {
         columns: ["applicant_individual_id","applicant_company_id","member_id"]),
         orderBy: _ @orderBy(
         columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
-    )): [ApplicantBankingAccess!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantBankingAccess!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -63,7 +63,7 @@ extend type Mutation @guard {
         operation_limit: Float!
         "Использованный лимит"
         used_limit: Float
-    ): ApplicantBankingAccess @can(ability: "create", query: true) @create
+    ): ApplicantBankingAccess   @create
 
     "Редактирование applicant company"
     updateApplicantBankingAccess (
@@ -88,12 +88,12 @@ extend type Mutation @guard {
         operation_limit: Float!
         "Использованный лимит"
         used_limit: Float
-    ): ApplicantBankingAccess @can(ability: "update", query: true) @update
+    ): ApplicantBankingAccess   @update
 
     "Удалить пользователя"
     deleteApplicantBankingAccess (
         id: ID!
-    ): ApplicantBankingAccess @can(ability: "delete", query: true) @delete
+    ): ApplicantBankingAccess   @delete
 
 }
 

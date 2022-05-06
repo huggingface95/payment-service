@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\GuardEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Models\Role as SpatieRole;
+use Spatie\Permission\PermissionRegistrar;
 
 class Role extends SpatieRole
 {
@@ -28,6 +29,19 @@ class Role extends SpatieRole
     public function groups()
     {
         return $this->hasMany(GroupRole::class, 'role_id');
+    }
+
+    /**
+     * A role may be given various permissions.
+     */
+    public function permissions(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Permissions::class,
+            config('permission.table_names.role_has_permissions'),
+            PermissionRegistrar::$pivotRole,
+            PermissionRegistrar::$pivotPermission
+        );
     }
 
     /**

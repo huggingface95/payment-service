@@ -103,14 +103,14 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
             ->join('departments', 'departments.id', '=', 'department_position.department_id')->select('departments.*')->first();
     }
 
-    public function roles(): BelongsToMany
+    public function roles()
     {
-        return $this->belongsToMany(Role::class, 'group_role_member', 'member_id', 'group_role_id');
+        //TODO add functionality
     }
 
     public function groupRoles(): BelongsToMany
     {
-        return $this->belongsToMany(GroupRole::class, 'group_role_member', 'member_id', 'group_role_id');
+        return $this->belongsToMany(GroupRole::class, 'group_role_members_individuals', 'user_id', 'group_role_id');
     }
 
 }

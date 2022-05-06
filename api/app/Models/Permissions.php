@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GuardEnum;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Permission\Exceptions\PermissionAlreadyExists;
 use Spatie\Permission\Guard;
 use Spatie\Permission\Models\Permission as SpatiePermission;
@@ -20,41 +21,10 @@ class Permissions extends SpatiePermission
     const TYPE_REQUIRED = 'required';
     const TYPE_NO_REQUIRED = 'no_required';
 
-    const ACTION_TYPE_VIEW = 'view';
-    const ACTION_TYPE_UPDATE = 'update';
-    const ACTION_TYPE_CREATE = 'create';
-    const ACTION_TYPE_DELETE = 'delete';
-    const ACTION_TYPE_RESTORE = 'restore';
-    const ACTION_TYPE_FORCE_DELETE = 'forceDelete';
-    const ACTION_TYPE_EXPORT = 'export';
-    const ACTION_TYPE_AVAILABLE = 'available';
-    const ACTION_TYPE_ATTACH = 'attach';
-    const ACTION_TYPE_DETACH = 'detach';
-
-
     protected $fillable = [
-        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'action_type', 'model'
+        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'action_type', 'parent_id'
     ];
     protected $guard_name = GuardEnum::GUARD_NAME;
-
-    /**
-     * @return bool
-     */
-    public static function getActionTypes(): array
-    {
-        return [
-            self::ACTION_TYPE_VIEW,
-            self::ACTION_TYPE_UPDATE,
-            self::ACTION_TYPE_CREATE,
-            self::ACTION_TYPE_DELETE,
-            self::ACTION_TYPE_RESTORE,
-            self::ACTION_TYPE_FORCE_DELETE,
-            self::ACTION_TYPE_EXPORT,
-            self::ACTION_TYPE_AVAILABLE,
-            self::ACTION_TYPE_ATTACH,
-            self::ACTION_TYPE_DETACH,
-        ];
-    }
 
     public static function getTreePermissions($roleId = null)
     {
@@ -101,6 +71,11 @@ class Permissions extends SpatiePermission
         }
 
         return static::query()->create($attributes);
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(static::class, 'parent_id');
     }
 
 }

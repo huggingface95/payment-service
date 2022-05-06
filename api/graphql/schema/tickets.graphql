@@ -31,7 +31,7 @@ type Ticket {
 
 extend type Query @guard {
     "Получить по билет ID"
-    ticket(id: ID @eq): Ticket @can(ability: "view", query: true) @find
+    ticket(id: ID @eq): Ticket   @find
     """
     Получить список билетов
     orderBy: [

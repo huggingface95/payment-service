@@ -10,9 +10,9 @@ type BusinessActivity {
 
 extend type Query @guard {
     "Получить по ID"
-    businessActivity(id: ID @eq): BusinessActivity @can(ability: "view", query: true) @find
+    businessActivity(id: ID @eq): BusinessActivity   @find
     "Получить список всех бизнесов"
-    businessActivities(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [BusinessActivity!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    businessActivities(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [BusinessActivity!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -20,7 +20,7 @@ extend type Mutation @guard {
     createBusinessActivity(
         "Название"
         name: String!
-    ):BusinessActivity @can(ability: "create", query: true) @create
+    ):BusinessActivity   @create
 }
 
 extend type Mutation @guard {
@@ -29,5 +29,5 @@ extend type Mutation @guard {
         id: ID!
         "Название"
         name: String!
-    ):BusinessActivity @can(ability: "update", query: true) @update
+    ):BusinessActivity   @update
 }
