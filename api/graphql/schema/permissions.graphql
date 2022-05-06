@@ -30,13 +30,13 @@ enum PermissionListType {
 
 extend type Query @guard {
     "Получить разрешение по ID"
-    permission(id: ID @eq): Permissions @can(ability: "view", query: true) @find
+    permission(id: ID @eq): Permissions   @find
     "Получить список разрешений"
-    permissions_tree: Permissions @can(ability: "view", query: true) @field(resolver:"PermissionQuery@tree")
+    permissions_tree: Permissions @field(resolver:"PermissionQuery@tree")
     permissions(
         hasPermissionsList: _ @whereHasConditions(columns: ["name", "id","type"]),
         where: _ @whereConditions(columns: ["name"])
-    ): [PermissionCategory] @can(ability: "view", query: true) @all
+    ): [PermissionCategory]   @all
 }
 
 

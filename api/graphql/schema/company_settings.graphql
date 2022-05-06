@@ -20,7 +20,7 @@ type CompanySettings {
 
 extend type Query @guard {
     "Получить настройки компании по ID компании"
-    companySettings(company_id: ID @eq): CompanySettings @can(ability: "view", query: true) @find
+    companySettings(company_id: ID @eq): CompanySettings   @find
 }
 
 extend type Mutation @guard {
@@ -36,7 +36,7 @@ extend type Mutation @guard {
         show_own_logo: Boolean
         "ID компании"
         company_id: Int!
-    ): CompanySettings @can(ability: "create", query: true) @create
+    ): CompanySettings   @create
 
     "Обновление настроек компании"
     updateCompanySettings(
@@ -50,7 +50,7 @@ extend type Mutation @guard {
         email_from: EMAIL
         "Показывать лого компании или нет"
         show_own_logo: Boolean
-    ): CompanySettings @can(ability: "update", query: true) @update
+    ): CompanySettings   @update
 
 
 }

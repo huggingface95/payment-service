@@ -39,7 +39,7 @@ type Accounts {
 
 extend type Query @guard {
     "Получить аккаунт по ID"
-    account(id: ID @eq): Accounts @can(ability: "view", query: true) @find
+    account(id: ID @eq): Accounts   @find
     """
     Получить список аккаунтов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -48,7 +48,7 @@ extend type Query @guard {
         hasGroup: _ @whereHasConditions(columns: ["id","name"]),
         where: _ @whereConditions(columns: ["account_number","client_id","owner_id","account_name","currency_id","payment_provider_id"]),
         orderBy: _ @orderBy(columns: ["id", "client_id"])
-    ): [Accounts!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [Accounts!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -83,7 +83,7 @@ extend type Mutation @guard {
         created_at: DateTime
         updated_at: DateTime
         activated_at : DateTime
-    ):Accounts @can(ability: "create", query: true) @create
+    ):Accounts   @create
 
     "Редактирование аккаунта"
     updateAccount(
@@ -115,10 +115,10 @@ extend type Mutation @guard {
         created_at: DateTime
         updated_at: DateTime
         activated_at : DateTime
-    ): Accounts @can(ability: "update", query: true) @update
+    ): Accounts   @update
 
     "Удалить аккаунт"
     deleteAccount(
         id: ID!
-    ): Accounts @can(ability: "delete", query: true) @delete
+    ): Accounts   @delete
 }

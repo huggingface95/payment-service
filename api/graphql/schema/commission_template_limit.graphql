@@ -32,11 +32,11 @@ type CommissionTemplateLimit {
 
 extend type Query @guard {
     "Получить лимит по ID"
-    commissionTemplateLimit(id: ID @eq): CommissionTemplateLimit @can(ability: "view", query: true) @find
+    commissionTemplateLimit(id: ID @eq): CommissionTemplateLimit   @find
     """
     Получить список лимитов
     """
-    commissionTemplateLimits: [CommissionTemplateLimit!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    commissionTemplateLimits: [CommissionTemplateLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -56,7 +56,7 @@ extend type Mutation @guard {
         commission_template_limit_action_type_id: ID!
         "ID количество срабатываний лимита"
         period_count: ID
-    ):CommissionTemplateLimit @can(ability: "create", query: true) @create
+    ):CommissionTemplateLimit   @create
 
     "Обновить лимит"
     updateCommissionTemplateLimit(
@@ -76,9 +76,9 @@ extend type Mutation @guard {
         commission_template_limit_action_type_id: ID
         "количество срабатываний лимита"
         period_count: Int
-    ):CommissionTemplateLimit @can(ability: "update", query: true) @update
+    ):CommissionTemplateLimit   @update
 
     "Удалить лимит"
-    deleteCommissionTemplateLimit(id: ID!): CommissionTemplateLimit @can(ability: "delete", query: true) @delete
+    deleteCommissionTemplateLimit(id: ID!): CommissionTemplateLimit   @delete
 
 }

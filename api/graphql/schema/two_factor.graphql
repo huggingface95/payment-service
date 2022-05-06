@@ -7,7 +7,7 @@ type TwoFactorAuthSettings {
 
 extend type Query @guard {
     "Получить второй фактор по ID"
-    twoFactorAuth(id: ID @eq): TwoFactorAuthSettings @can(ability: "view", query: true) @find
+    twoFactorAuth(id: ID @eq): TwoFactorAuthSettings   @find
     "Получить список"
     twoFactorsAuth: [TwoFactorAuthSettings!]! @can(ability: "view", query: true) @paginate(defaultCount: 10)
 }

@@ -23,7 +23,7 @@ type EmailTemplate {
 
 extend type Query @guard {
     "Получить по билет ID"
-    emailTemplate(id: ID @eq): EmailTemplate @can(ability: "view", query: true) @find
+    emailTemplate(id: ID @eq): EmailTemplate   @find
     """
     Получить список билетов
     orderBy: [
@@ -37,7 +37,7 @@ extend type Query @guard {
         orderBy: _ @orderBy(
             columns: ["id"]
         )
-    ): [EmailTemplate!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [EmailTemplate!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -57,7 +57,7 @@ extend type Mutation @guard {
         header: String!
         "Footer электронной почты"
         footer: String!
-    ): EmailTemplate @can(ability: "create", query: true) @create
+    ): EmailTemplate   @create
 
     "Обновить данные компании"
     updateEmailTemplate(
@@ -75,12 +75,12 @@ extend type Mutation @guard {
         header: String!
         "Footer электронной почты"
         footer: String!
-    ): EmailTemplate @can(ability: "update", query: true) @update
+    ): EmailTemplate   @update
 
     "Удалить запись"
     deleteEmailTemplate(
         id: ID!
-    ): EmailTemplate @can(ability: "delete", query: true) @delete
+    ): EmailTemplate   @delete
 }
 
 

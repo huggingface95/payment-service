@@ -17,7 +17,7 @@ type TicketComments {
 
 extend type Query @guard {
     "Получить по билет ID"
-    ticketComment(id: ID @eq): TicketComments @can(ability: "view", query: true) @find
+    ticketComment(id: ID @eq): TicketComments   @find
     """
     Получить список
     """
