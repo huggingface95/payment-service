@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GuardEnum;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Exceptions\PermissionAlreadyExists;
 use Spatie\Permission\Guard;
 use Spatie\Permission\Models\Permission as SpatiePermission;
@@ -73,9 +73,9 @@ class Permissions extends SpatiePermission
         return static::query()->create($attributes);
     }
 
-    public function parent(): BelongsTo
+    public function parents(): BelongsToMany
     {
-        return $this->belongsTo(static::class, 'parent_id');
+        return $this->belongsToMany(static::class, 'permissions_tree', 'permission_id', 'parent_id');
     }
 
 }

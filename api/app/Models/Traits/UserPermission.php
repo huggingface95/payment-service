@@ -6,27 +6,26 @@ use Illuminate\Support\Collection;
 
 trait UserPermission
 {
-    public function allPermissions(string $model): Collection
+    public function allPermissions(): Collection
     {
         return $this->groupRoles->pluck('role.permissions')
             ->flatten()->unique();
     }
 
-    public function hasPermission($model, $name): bool
+    public function hasPermission($name): bool
     {
         $this->loadRolesAndPermissionsRelations();
 
-        $allPermissions = $this->allPermissions($model);
+        $allPermissions = $this->allPermissions();
 
         $permission = $allPermissions
-            ->where('model', $model)
-            ->where('action_type', $name)
-            ->first();
+            ->where('action_type', $name)->first();
+
 
         if ($permission) {
-            if (null == $permission->parent) {
+            if (!$permission->parents->count()) {
                 return true;
-            } elseif ($allPermissions->where('id', $permission->parent->id)->count()) {
+            } elseif ($allPermissions->whereIn('id', $permission->parents->pluck('id'))->count()) {
                 return true;
             }
         }
@@ -36,6 +35,6 @@ trait UserPermission
 
     private function loadRolesAndPermissionsRelations()
     {
-        $this->load('groupRoles.role.permissions.parent.children');
+        $this->load('groupRoles.role.permissions.parents');
     }
 }
