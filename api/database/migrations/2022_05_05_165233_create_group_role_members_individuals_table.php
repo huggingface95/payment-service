@@ -14,7 +14,6 @@ class CreateGroupRoleMembersIndividualsTable extends Migration
     public function up()
     {
         Schema::create('group_role_members_individuals', function (Blueprint $table) {
-            $table->id();
             $table->unsignedBigInteger('group_role_id');
             $table->unsignedBigInteger('user_id');
 
