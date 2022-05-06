@@ -90,6 +90,8 @@ extend type Query @guard {
     ): [Payments!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
+
+
 extend type Mutation @guard {
     "Создать платеж"
     createPayment(

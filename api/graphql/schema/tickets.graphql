@@ -61,7 +61,7 @@ extend type Query @guard {
                 { relation: "department", column: "name" },
             ]
         )
-    ): [Ticket!]! @can(ability: "view", query: true) @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [Ticket!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -77,13 +77,13 @@ extend type Mutation @guard {
         member_id: ID!
         "ID клиента"
         client_id: ID!
-    ): Ticket @can(ability: "create", query: true) @create
+    ): Ticket   @create
 
     "Обновить данные компании"
     updateTicket(
         "Статус билета"
         status: Int!
-    ): Ticket @can(ability: "update", query: true) @update
+    ): Ticket   @update
 }
 
 
