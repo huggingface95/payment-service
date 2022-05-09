@@ -12,21 +12,28 @@ trait UserPermission
             ->flatten()->unique();
     }
 
-    public function hasPermission($name): bool
+    public function hasPermission($name, $url): bool
     {
         $this->loadRolesAndPermissionsRelations();
 
         $allPermissions = $this->allPermissions();
 
-        $permission = $allPermissions
-            ->where('action_type', $name)->first();
+        $permission = $allPermissions->filter(function ($p) use ($name, $url) {
+            return strstr($name, $p->action_type) && strstr($p->referer, $url);
+        })->first();
 
 
         if ($permission) {
             if (!$permission->parents->count()) {
                 return true;
-            } elseif ($allPermissions->whereIn('id', $permission->parents->pluck('id'))->count()) {
-                return true;
+            }
+            $currentParents = $allPermissions->whereIn('id', $permission->parents->pluck('id'));
+            if ($currentParents->count()) {
+                foreach ($currentParents as $p) {
+                    if (strstr($name, $p->action_type)) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
