@@ -18,8 +18,8 @@ trait UserPermission
 
         $allPermissions = $this->allPermissions();
 
-        $permission = $allPermissions->filter(function ($p) use ($name, $url) {
-            return strstr($name, $p->action_type) && strstr($p->referer, $url);
+        $permission = $allPermissions->where('parent', false)->filter(function ($p) use ($name, $url) {
+            return str_contains($p->action_type, $name) && str_contains($url, $p->referer);
         })->first();
 
 
