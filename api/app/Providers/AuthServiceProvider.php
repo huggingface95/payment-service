@@ -14,9 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Gate::define('graphql', function ($user, $model, $action){
-            return $user->hasPermission($action);
-        });
+        //
     }
 
     /**
