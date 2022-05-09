@@ -39,9 +39,9 @@ class AccessMiddleware
     public function handle(Request $request, Closure $next, string $guard = null)
     {
         $user = $request->user();
-        $referer = $request->header('referer');
+        $referer = preg_replace('/.*?dashboard\/(.*)/', '$1', $request->header('referer'));
 
-        if (($operationName = $request->input('operationName')) && $user->hasPermission($operationName, $referer)){
+        if (($operationName = $request->input('operationName')) && $user->hasPermission($operationName, $referer)) {
             return $next($request);
         }
 
