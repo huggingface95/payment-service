@@ -2,6 +2,7 @@
 
 namespace App\Models\Traits;
 
+use App\Models\PermissionOperation;
 use Illuminate\Support\Collection;
 
 trait UserPermission
@@ -12,27 +13,27 @@ trait UserPermission
             ->flatten()->unique();
     }
 
-    public function hasPermission($name, $url): bool
+    public function hasPermission(string $name, string $url): bool
     {
         $this->loadRolesAndPermissionsRelations();
 
         $allPermissions = $this->allPermissions();
 
-        $permission = $allPermissions->where('parent', false)->filter(function ($p) use ($name, $url) {
-            return str_contains($p->action_type, $name) && str_contains($url, $p->referer);
-        })->first();
+        $operation = PermissionOperation::query()->with(['parents', 'binds'])
+            ->where('name', $name)
+            ->where('referer', $url)
+            ->first();
 
+        if ($operation) {
+            $bindPermissions = $operation->binds->intersect($allPermissions);
 
-        if ($permission) {
-            if (!$permission->parents->count()) {
-                return true;
-            }
-            $currentParents = $allPermissions->whereIn('id', $permission->parents->pluck('id'));
-            if ($currentParents->count()) {
-                foreach ($currentParents as $p) {
-                    if (strstr($name, $p->action_type)) {
-                        return true;
-                    }
+            if ($bindPermissions->count()) {
+                if (!$operation->parents->count()) {
+                    return true;
+                }
+                $parentPermissions = $operation->parents->intersect($allPermissions);
+                if ($parentPermissions->count()) {
+                    return true;
                 }
             }
         }
@@ -42,6 +43,6 @@ trait UserPermission
 
     private function loadRolesAndPermissionsRelations()
     {
-        $this->load('groupRoles.role.permissions.parents');
+        $this->load('groupRoles.role.permissions');
     }
 }
