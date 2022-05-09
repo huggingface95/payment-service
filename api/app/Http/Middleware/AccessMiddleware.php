@@ -39,7 +39,7 @@ class AccessMiddleware
     public function handle(Request $request, Closure $next, string $guard = null)
     {
         $user = $request->user();
-        $referer = $request->referer;
+        $referer = $request->header('referer');
 
         if (($operationName = $request->input('operationName')) && $user->hasPermission($operationName, $referer)){
             return $next($request);

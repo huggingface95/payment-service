@@ -22,7 +22,7 @@ class Permissions extends SpatiePermission
     const TYPE_NO_REQUIRED = 'no_required';
 
     protected $fillable = [
-        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'action_type', 'parent_id'
+        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'action_type', 'referer', 'parent'
     ];
     protected $guard_name = GuardEnum::GUARD_NAME;
 
@@ -75,7 +75,8 @@ class Permissions extends SpatiePermission
 
     public function parents(): BelongsToMany
     {
-        return $this->belongsToMany(static::class, 'permissions_tree', 'permission_id', 'parent_id');
+        return $this->belongsToMany(static::class, 'permissions_tree', 'permission_id', 'parent_id')
+            ->where('parent', true);
     }
 
 }
