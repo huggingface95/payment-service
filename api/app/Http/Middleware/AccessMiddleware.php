@@ -40,11 +40,11 @@ class AccessMiddleware
     {
         $user = $request->user();
         $referer = preg_replace('/.*?dashboard\/(.*)/', '$1', $request->header('referer'));
+        $referer = preg_replace('/\?.*/', '', $referer);
 
         if (($operationName = $request->input('operationName')) && $user->hasPermission($operationName, $referer)) {
             return $next($request);
         }
-
 
         throw new AuthorizationException(
             "You are not authorized to access {$operationName}"
