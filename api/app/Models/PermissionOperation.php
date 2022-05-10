@@ -22,7 +22,7 @@ class PermissionOperation extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'referer'
+        'name', 'referer', 'hidden'
     ];
 
 

@@ -17,6 +17,7 @@ class CreatePermissionOperationsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('referer');
+            $table->boolean('hidden')->default(false);
 
             $table->unique(['name', 'referer']);
         });

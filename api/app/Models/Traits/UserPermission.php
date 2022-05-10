@@ -20,6 +20,7 @@ trait UserPermission
         $allPermissions = $this->allPermissions();
 
         $operation = PermissionOperation::query()->with(['parents', 'binds'])
+            ->where('hidden', false)
             ->where('name', $name)
             ->where('referer', $url)
             ->first();
@@ -35,6 +36,12 @@ trait UserPermission
                 if ($parentPermissions->count()) {
                     return true;
                 }
+            }
+        }
+        else{
+            //Global operations
+            if (PermissionOperation::query()->where('hidden', true)->where('name', $name)->count()){
+                return true;
             }
         }
         return false;
