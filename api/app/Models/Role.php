@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Models\Role as SpatieRole;
 use Spatie\Permission\PermissionRegistrar;
 
+/**
+ * Class Role
+ * @property BelongsToMany $permissions
+ *
+ */
+
+
 class Role extends SpatieRole
 {
     protected $fillable = [

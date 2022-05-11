@@ -6,6 +6,7 @@ use App\Models\Traits\UserPermission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -21,6 +22,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property bool is_show_owner_applicants
  *
  * @property Collection groupRoles
+ * @property GroupRole $groupRole
  *
  */
 
@@ -91,6 +93,18 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function roles()
     {
         //TODO add functionality
+    }
+
+    public function groupRole(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            GroupRole::class,
+            GroupRoleUser::class,
+            'user_id',
+            'id',
+            'id',
+            'group_role_id',
+        )->where('group_type_id', GroupRole::MEMBER);
     }
 
     public function groupRoles(): BelongsToMany
