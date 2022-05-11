@@ -29,7 +29,7 @@ class PermissionCategory extends Model
     public function scopePermissionType(Builder $query, $type): Builder
     {
         return $query->leftJoin(
-            DB::raw('(SELECT permission_group_id, name as permissions_list_name FROM "permissions_list") pl'),
+            DB::raw('(SELECT id,type,permission_group_id, name as permissions_list_name FROM "permissions_list") pl'),
             function($join)
             {
                 $join->on('permission_category.id', '=','pl.permission_group_id');
