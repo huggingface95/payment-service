@@ -4,8 +4,6 @@ Settings->Manager Roles->Roles List
 """
 type Role {
     id: ID!
-    "Очередь"
-    order: Int
     "Название роли"
     name: String!
     "Описание для роли"
@@ -40,7 +38,7 @@ extend type Query @guard {
         hasGroups: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["name","group_type_id","company_id"]), orderBy: _ @orderBy(
         columns: ["id","name","description"],
-    )): [Role!]!   @paginate(defaultCount: 10) @orderBy(column: "order", direction: ASC)
+    )): [Role!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
