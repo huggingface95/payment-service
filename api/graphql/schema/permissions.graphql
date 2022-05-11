@@ -14,7 +14,7 @@ type Permissions {
 type PermissionCategory {
     id: ID
     name: String
-    permissionList: [PermissionList] @hasMany(relation: "permissionsList")
+    permissionList (permissionType: _ @whereConditions(columns: ["type"])): [PermissionList] @hasMany(relation: "permissionsList")
 }
 
 type PermissionList {
@@ -34,7 +34,6 @@ extend type Query @guard {
     "Получить список разрешений"
     permissions_tree: Permissions @field(resolver:"PermissionQuery@tree")
     permissions(
-        permissionType: PermissionListType @scope(name:"permissionType"),
         where: _ @whereConditions(columns: ["name", "id"])
     ): [PermissionCategory]   @all
 }
