@@ -76,7 +76,7 @@ type ApplicantCompany {
     owner_position: ApplicantIndividualCompany @belongsTo(relation: "ownerPosition")
     company: Companies @belongsTo(relation: "company")
     "Получить группу"
-    group: GroupRole @belongsTo(relation: "group")
+    group: GroupRole @hasOne(relation: "groupRole")
 }
 
 

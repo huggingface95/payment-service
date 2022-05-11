@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\GuardEnum;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Exceptions\PermissionAlreadyExists;
 use Spatie\Permission\Guard;
 use Spatie\Permission\Models\Permission as SpatiePermission;
@@ -22,20 +21,19 @@ class Permissions extends SpatiePermission
     const TYPE_NO_REQUIRED = 'no_required';
 
     protected $fillable = [
-        'name', 'guard_name', 'display_name', 'type', 'permission_list_id'
+        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'order'
     ];
     protected $guard_name = GuardEnum::GUARD_NAME;
 
-    public static function getTreePermissions($roleId = null)
+
+    public static function getTreePermissions($roleId = null): array
     {
         if ($roleId) {
             $role = Role::find($roleId);
             $permissions = $role->permissions;
         } else {
-            $permissions = self::orderBy('id', 'asc')->get();
+            $permissions = self::query()->get();
         }
-
-        $permData = [];
 
         $permData = [];
         foreach ($permissions ?? [] as $item) {

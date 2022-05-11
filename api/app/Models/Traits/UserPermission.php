@@ -7,17 +7,12 @@ use Illuminate\Support\Collection;
 
 trait UserPermission
 {
-    public function allPermissions(): Collection
-    {
-        return $this->groupRoles->pluck('role.permissions')
-            ->flatten()->unique();
-    }
 
     public function hasPermission(string $name, string $url): bool
     {
         $this->loadRolesAndPermissionsRelations();
 
-        $allPermissions = $this->allPermissions();
+        $allPermissions = $this->groupRole->role->permissions;
 
         $operation = PermissionOperation::query()->with(['parents', 'binds'])
             ->where('hidden', false)
@@ -50,6 +45,6 @@ trait UserPermission
 
     private function loadRolesAndPermissionsRelations()
     {
-        $this->load('groupRoles.role.permissions');
+        $this->load('groupRole.role.permissions');
     }
 }
