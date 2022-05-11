@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Traits\HasRoles;
 
 class ApplicantIndividual extends Model
@@ -49,7 +50,6 @@ class ApplicantIndividual extends Model
         'password_hash',
         'password_salt',
         'is_verification_phone',
-        'group_id',
         'company_id',
         'two_factor_auth_id'
     ];
@@ -189,6 +189,16 @@ class ApplicantIndividual extends Model
         return $this->belongsTo(GroupRole::class, 'group_id');
     }
 
+    public function groupRoles(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            GroupRole::class,
+            'group_role_members_individuals',
+            'user_id',
+            'group_role_id'
+        )->where('group_type_id', GroupRole::INDIVIDUAL);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -199,7 +209,12 @@ class ApplicantIndividual extends Model
 
     public function scopeGroupSort($query, $sort)
     {
-        return $query->join('group_role', 'group_role.id', '=', 'applicant_individual.group_id')->orderBy('group_role.name', $sort)->select('applicant_individual.*');
+        return $query
+            ->join('group_role_members_individuals', 'group_role_members_individuals.user_id', 'applicant_individual.id')
+            ->join('group_role', 'group_role.id','=','group_role_members_individuals.group_role_id')
+            ->where('group_role.group_type_id', GroupRole::INDIVIDUAL)
+            ->orderBy('group_role.name',$sort)
+            ->select('applicant_individual.*');
     }
 
     public function scopeCompanySort($query, $sort)
