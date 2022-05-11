@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Spatie\Permission\Traits\HasRoles;
 
 class ApplicantIndividual extends Model
@@ -181,21 +181,15 @@ class ApplicantIndividual extends Model
         return $this->belongsTo(Companies::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function group()
+    public function groupRole(): HasOneThrough
     {
-        return $this->belongsTo(GroupRole::class, 'group_id');
-    }
-
-    public function groupRoles(): BelongsToMany
-    {
-        return $this->belongsToMany(
+        return $this->hasOneThrough(
             GroupRole::class,
-            'group_role_members_individuals',
+            GroupRoleUser::class,
             'user_id',
-            'group_role_id'
+            'id',
+            'id',
+            'group_role_id',
         )->where('group_type_id', GroupRole::INDIVIDUAL);
     }
 
