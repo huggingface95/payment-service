@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\GuardEnum;
-use App\Models\Scopes\PermissionOrderScope;
 use Spatie\Permission\Exceptions\PermissionAlreadyExists;
 use Spatie\Permission\Guard;
 use Spatie\Permission\Models\Permission as SpatiePermission;
@@ -26,10 +25,6 @@ class Permissions extends SpatiePermission
     ];
     protected $guard_name = GuardEnum::GUARD_NAME;
 
-    protected static function booted()
-    {
-        static::addGlobalScope(new PermissionOrderScope);
-    }
 
     public static function getTreePermissions($roleId = null): array
     {
