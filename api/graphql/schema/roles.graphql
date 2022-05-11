@@ -4,6 +4,8 @@ Settings->Manager Roles->Roles List
 """
 type Role {
     id: ID!
+    "Очередь"
+    order: Int
     "Название роли"
     name: String!
     "Описание для роли"
