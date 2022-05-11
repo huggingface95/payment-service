@@ -12,4 +12,5 @@ class PermissionQuery
         $args['all'] = Permissions::getTreePermissions();
         return $args;
     }
+
 }
