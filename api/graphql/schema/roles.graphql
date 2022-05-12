@@ -75,7 +75,7 @@ extend type Mutation @guard {
         "ID компании"
         company_id: Int
         "ID группы полномочий"
-        permission_category_all_member: ID
+        permission_category_all_member: [ID]
         "Применить ко всем компаниям"
         is_all_companies: Boolean
     ): Role   @field(resolver:"RoleMutator@update")

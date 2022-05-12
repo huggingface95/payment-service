@@ -58,6 +58,7 @@ class RoleMutator
         }
 
         if (isset($args['permission_category_all_member'])) {
+            $role->permissionCategories()->detach();
             $role->permissionCategories()->attach($args['permission_category_all_member']);
         }
 
