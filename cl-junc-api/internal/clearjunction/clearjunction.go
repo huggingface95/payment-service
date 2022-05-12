@@ -22,12 +22,12 @@ func (cj *ClearJunction) Pay(payment *db.Payment, payee *db.Payee, amount float6
 
 	response := &models.PayInPayoutResponse{}
 	err := errors.New("")
-	if payment.Type.Name == "payIn" {
+	if payment.TypeId == db.INCOMING {
 		request := models.NewPayInInvoiceRequest(payInPayoutRequest, cj.baseUrl)
 		response, err = cj.CreateInvoice(request)
 	} else {
 		request := models.NewPayoutExecutionRequest(payInPayoutRequest, cj.baseUrl)
-		response, err = cj.CreateExecution(request, payment.BankName)
+		response, err = cj.CreateExecution(request, payment.CurrencyId)
 	}
 
 	if err != nil {

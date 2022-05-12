@@ -24,10 +24,12 @@ type Payment struct {
 	AccountId     int64        `bun:"account_id"`
 	StatusId      int64        `bun:"status_id"`
 	ProviderId    int64        `bun:"payment_provider_id"`
-	TypeId        int64        `bun:"type_id"`
+	TypeId        TypeDb       `bun:"type_id"`
+	CurrencyId    CurrencyDb   `bun:"currency_id"`
 	Account       *Account     `bun:"rel:belongs-to,join:account_id=id"`
 	Status        *Status      `bun:"rel:belongs-to,join:status_id=id"`
 	Provider      *Provider    `bun:"rel:belongs-to,join:payment_provider_id=id"`
 	Type          *Type        `bun:"rel:belongs-to,join:type_id=id"`
 	Transaction   *Transaction `bun:"rel:has-one,join:id=payment_id"`
+	Currency      *Currency    `bun:"rel:belongs-to,join:currency_id=id"`
 }

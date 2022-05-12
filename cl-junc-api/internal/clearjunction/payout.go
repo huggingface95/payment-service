@@ -2,47 +2,32 @@ package clearjunction
 
 import (
 	"cl-junc-api/internal/clearjunction/models"
+	"cl-junc-api/internal/db"
 	"fmt"
 )
 
 const (
-	Swift    = "swift"
-	Fedwire  = "fedwire"
-	Sepa     = "eu"
-	SepaInst = "sepaInst"
-	Ru       = "ru"
-	Md       = "md"
-	UkFps    = "fps"
-	Internal = "internalPayment"
+	SEPA     = "eu"
+	SEPAINST = "sepaInst"
+	UKFPS    = "fps"
+	CHAPS    = "chaps"
 )
 
-func (cj *ClearJunction) CreateExecution(request models.PayoutExecutionRequest, paymentType string) (result *models.PayInPayoutResponse, err error) {
+func (cj *ClearJunction) CreateExecution(request models.PayoutExecutionRequest, currency db.CurrencyDb) (result *models.PayInPayoutResponse, err error) {
 
-	path := fmt.Sprintf("payout/%s?checkOnly=%v", getBankType(paymentType), "true")
+	path := fmt.Sprintf("payout/bankTransfer/%s?checkOnly=%v", getBankType(currency), "true")
 
 	err = cj.post(request, &result, "gate", path)
 	return
 }
 
-func getBankType(paymentType string) string {
-	switch paymentType {
-	case "swift":
-		return Swift
-	case "fedwire":
-		return Fedwire
-	case "eu":
-		return Sepa
-	case "sepaInst":
-		return SepaInst
-	case "ru":
-		return Ru
-	case "md":
-		return Md
-	case "fps":
-		return UkFps
-	case "internalPayment":
-		return Internal
+func getBankType(c db.CurrencyDb) string {
+	switch c {
+	case db.EUR:
+		return SEPA
+	case db.GBP:
+		return UKFPS
 	default:
-		return Swift
+		return SEPA
 	}
 }

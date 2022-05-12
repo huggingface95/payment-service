@@ -2,6 +2,8 @@ package db
 
 import "github.com/uptrace/bun"
 
+const CLEARJUNCTION = "Clearjection"
+
 type Provider struct {
 	bun.BaseModel `bun:"table:payment_provider"`
 

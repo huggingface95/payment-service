@@ -7,13 +7,15 @@ import (
 )
 
 type PayInPayoutRequest struct {
-	ClientOrder int64                        `json:"clientOrder"`
-	Currency    string                       `json:"currency"`
-	Amount      float64                      `json:"amount"`
-	Description string                       `json:"description"`
-	Payer       PayInPayoutRequestPayer      `json:"payer"`
-	Payee       PayInPayoutRequestPayee      `json:"payee"`
-	CustomInfo  PayInPayoutRequestCustomInfo `json:"customInfo"`
+	ClientOrder    int64                          `json:"clientOrder"`
+	Currency       string                         `json:"currency"`
+	Amount         float64                        `json:"amount"`
+	Description    string                         `json:"description"`
+	Payer          PayInPayoutRequestPayer        `json:"payer"`
+	Payee          PayInPayoutRequestPayee        `json:"payee"`
+	CustomInfo     PayInPayoutRequestCustomInfo   `json:"customInfo"`
+	PayeeRequisite PayInPayoutPayeePayerRequisite `json:"payeeRequisite"`
+	PayerRequisite PayInPayoutPayeePayerRequisite `json:"payerRequisite"`
 }
 type PayInPayoutRequestPayer struct {
 	ClientCustomerId uint64                                 `json:"clientCustomerId"`
@@ -26,17 +28,12 @@ type PayInPayoutRequestPayee struct {
 	Individual       PayInPayoutRequestPayeePayerIndividual `json:"individual"`
 }
 type PayInPayoutRequestPayeePayerIndividual struct {
-	Phone      string `json:"phone"`
-	Email      string `json:"email"`
-	BirthDate  string `json:"birthDate"`
-	BirthPlace string `json:"birthPlace"`
-	Address    struct {
-		Country string `json:"country"`
-		Zip     string `json:"zip"`
-		City    string `json:"city"`
-		Street  string `json:"street"`
-	} `json:"address"`
-	Document struct {
+	Phone      string  `json:"phone"`
+	Email      string  `json:"email"`
+	BirthDate  string  `json:"birthDate"`
+	BirthPlace string  `json:"birthPlace"`
+	Address    Address `json:"address"`
+	Document   struct {
 		Type              string `json:"type"`
 		Number            string `json:"number"`
 		IssuedCountryCode string `json:"issuedCountryCode"`
@@ -49,9 +46,14 @@ type PayInPayoutRequestPayeePayerIndividual struct {
 	MiddleName string `json:"middleName"`
 	Inn        string `json:"inn"`
 }
-
 type PayInPayoutRequestCustomInfo struct {
 	PaymentId uint64 `json:"payment_id"`
+}
+type PayInPayoutPayeePayerRequisite struct {
+	SortCode      string `json:"sortCode"`
+	AccountNumber string `json:"accountNumber"`
+	Iban          string `json:"iban"`
+	BankSwiftCode string `json:"bankSwiftCode"`
 }
 
 type PayInPayoutResponse struct {
@@ -97,14 +99,23 @@ func NewPayInPayoutRequest(payment *db.Payment, payee *db.Payee, amount float64,
 		ClientOrder: time.Now().Unix(),
 		Amount:      amount,
 		Currency:    currency,
+		Description: "Custom Description",
 		Payer: PayInPayoutRequestPayer{
 			ClientCustomerId: payee.Id,
 			WalletUuid:       wallet,
+
 			Individual: PayInPayoutRequestPayeePayerIndividual{
 				Email:     payee.Email,
 				Phone:     payee.Phone,
 				LastName:  payee.LastName,
 				FirstName: payee.FirstName,
+				Address: Address{
+					Country: "AM",
+					Zip:     "084",
+					State:   "erevan",
+					City:    "erevan",
+					Street:  "sheram",
+				},
 			},
 		},
 		Payee: PayInPayoutRequestPayee{
@@ -118,5 +129,10 @@ func NewPayInPayoutRequest(payment *db.Payment, payee *db.Payee, amount float64,
 			},
 		},
 		CustomInfo: PayInPayoutRequestCustomInfo{PaymentId: payment.Id},
+		PayeeRequisite: PayInPayoutPayeePayerRequisite{
+			Iban:          "999999",
+			SortCode:      "000000",
+			AccountNumber: "999999",
+		},
 	}
 }
