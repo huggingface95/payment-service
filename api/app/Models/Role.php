@@ -17,7 +17,7 @@ use Spatie\Permission\PermissionRegistrar;
 class Role extends SpatieRole
 {
     protected $fillable = [
-        'name', 'guard_name', 'description','company_id','group_type_id','is_all_companies'
+        'name', 'guard_name', 'description','company_id','group_type_id'
     ];
 
     protected $guard_name = GuardEnum::GUARD_NAME;
@@ -51,9 +51,9 @@ class Role extends SpatieRole
         );
     }
 
-    public function permissionCategory()
+    public function permissionCategories()
     {
-        return $this->hasMany(PermissionCategoryRole::class,'role_id');
+        return $this->belongsToMany(PermissionCategory::class,'permission_category_role','role_id','permission_category_id');
     }
 
     /**

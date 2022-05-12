@@ -3,6 +3,8 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\GroupRole;
+use App\Models\PermissionCategory;
+use App\Models\PermissionCategoryRole;
 use App\Models\Permissions;
 use App\Models\Role;
 use App\Exceptions\GraphqlException;
@@ -29,6 +31,9 @@ class RoleMutator
         if (isset($args['groups'])) {
             $this->syncGroups($role, $args['groups']);
         }
+        if (isset($args['permission_category_all_member'])) {
+            $role->permissionCategories()->attach($args['permission_category_all_member']);
+        }
 
         return $role;
     }
@@ -50,6 +55,10 @@ class RoleMutator
         }
         if (isset($args['groups'])) {
             $this->syncGroups($role, $args['groups']);
+        }
+
+        if (isset($args['permission_category_all_member'])) {
+            $role->permissionCategories()->attach($args['permission_category_all_member']);
         }
 
         $role->update($args);
@@ -74,6 +83,11 @@ class RoleMutator
         foreach ($groups as $group) {
             GroupRole::where('id',$group)->update(['role_id'=>$role->id]);
         }
+    }
+
+    private function applyPermissionCategory(int $permissionCategoryId, bool $isAllCompanies)
+    {
+        return PermissionCategory::where('id',$permissionCategoryId)->update(['is_all_companies'=>$isAllCompanies]);
     }
 
 }
