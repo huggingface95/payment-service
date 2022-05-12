@@ -51,6 +51,11 @@ class Role extends SpatieRole
         );
     }
 
+    public function permissionCategory()
+    {
+        return $this->hasMany(PermissionCategoryRole::class,'role_id');
+    }
+
     /**
      * @param $query
      * @param $sort
