@@ -33,7 +33,13 @@ class MembersMutator extends BaseMutator
         $args['password_hash'] = Hash::make($password);
         $args['password_salt'] = Hash::make($password);
 
-        return Members::create($args);
+        $member = Members::create($args);
+
+        if (isset($args['group_id'])){
+            $member->groupRoles()->sync([$args['group_id']], true);
+        }
+
+        return $member;
     }
 
     /**
@@ -70,6 +76,10 @@ class MembersMutator extends BaseMutator
 
         $member->update($args);
 
+        if (isset($args['group_id'])){
+            $member->groupRoles()->sync([$args['group_id']], true);
+        }
+
         return $member;
     }
 
@@ -89,7 +99,14 @@ class MembersMutator extends BaseMutator
 
         $args['password_hash'] = Hash::make($password);
         $args['password_salt'] = Hash::make($password);
-        return Members::create($args);
+
+        $member = Members::create($args);
+
+        if (isset($args['group_id'])){
+            $member->groupRoles()->sync([$args['group_id']], true);
+        }
+
+        return $member;
     }
 
     /**
