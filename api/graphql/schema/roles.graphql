@@ -55,10 +55,8 @@ extend type Mutation @guard {
         group_type_id: Int
         "ID компании"
         company_id: Int
-        "ID группы полномочий"
+        "ID группы полномочий Применить ко всем компаниям"
         permission_category_all_member: [ID]
-        "Применить ко всем компаниям"
-        is_all_companies: Boolean
     ): Role   @field(resolver:"RoleMutator@create")
 
     updateRole(
@@ -74,10 +72,8 @@ extend type Mutation @guard {
         group_type_id: Int
         "ID компании"
         company_id: Int
-        "ID группы полномочий"
+        "ID группы полномочий Применить ко всем компаниям"
         permission_category_all_member: [ID]
-        "Применить ко всем компаниям"
-        is_all_companies: Boolean
     ): Role   @field(resolver:"RoleMutator@update")
 
     deleteRole(
