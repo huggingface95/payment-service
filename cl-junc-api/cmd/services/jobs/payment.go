@@ -30,7 +30,7 @@ func payClj(response *models2.PayInPayoutResponse) {
 
 	dbPayment := app.Get.GetPayment(&db.Payment{PaymentNumber: response.OrderReference}, "payment_number")
 
-	changeStatusResponse, err := app.Get.Wire.GetPaymentStatus(dbPayment.Type.Name, response.OrderReference)
+	changeStatusResponse, err := app.Get.Wire.GetPaymentStatus(dbPayment.TypeId, response.OrderReference)
 
 	if err != nil {
 		log.Error().Err(err)

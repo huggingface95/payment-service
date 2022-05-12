@@ -4,16 +4,15 @@ import "github.com/uptrace/bun"
 
 type Currency struct {
 	bun.BaseModel `bun:"table:currencies"`
-	Id            CurrencyDb `bun:"Id,pk,autoincrement,type:smallint"`
-	Name          string     `bun:"string,notnull,unique"`
+	Id            CurrencyDb `bun:"id,pk,autoincrement"`
+	Code          string     `bun:"code"`
 }
 
-type CurrencyDb uint16
+type CurrencyDb int64
 
 const (
 	EUR CurrencyDb = 1
-	GBP CurrencyDb = 2
-	RUB CurrencyDb = 3
+	GBP CurrencyDb = 3
 )
 
 func (c CurrencyDb) GetCurrencyCode() string {
@@ -22,8 +21,6 @@ func (c CurrencyDb) GetCurrencyCode() string {
 		return "EUR"
 	case GBP:
 		return "GBP"
-	case RUB:
-		return "RUB"
 	}
 
 	return "EUR"
@@ -35,8 +32,6 @@ func GetCurrency(currencyCode string) CurrencyDb {
 		return EUR
 	case "GBP":
 		return GBP
-	case "RUB":
-		return RUB
 	}
 
 	return EUR

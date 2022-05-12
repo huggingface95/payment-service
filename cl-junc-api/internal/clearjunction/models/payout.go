@@ -10,22 +10,6 @@ type PayoutExecutionRequest struct {
 			MyExampleParam3 string `json:"MyExampleParam3"`
 		} `json:"MyExampleObject1"`
 	} `json:"customInfo"`
-	PayeeRequisite PayoutPayeeRequisite `json:"payeeRequisite"`
-	PayerRequisite PayoutPayerRequisite `json:"payerRequisite"`
-}
-
-type PayoutPayeeRequisite struct {
-	BankAccountNumber       string                        `json:"bankAccountNumber"`
-	BankName                string                        `json:"bankName"`
-	BankSwiftCode           string                        `json:"bankSwiftCode"`
-	IntermediaryInstitution PayoutIntermediaryInstitution `json:"intermediaryInstitution"`
-}
-
-type PayoutPayerRequisite struct {
-	BankAccountNumber       string                        `json:"bankAccountNumber"`
-	BankName                string                        `json:"bankName"`
-	BankSwiftCode           string                        `json:"bankSwiftCode"`
-	IntermediaryInstitution PayoutIntermediaryInstitution `json:"intermediaryInstitution"`
 }
 
 type PayoutIntermediaryInstitution struct {

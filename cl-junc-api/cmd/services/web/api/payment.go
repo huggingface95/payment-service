@@ -25,11 +25,11 @@ func Pay(c *gin.Context) {
 		return
 	}
 
-	dbPayment := app.Get.GetPaymentWithRelations(&db.Payment{Id: request.PaymentId}, []string{"Account", "Status", "Provider", "Type"}, "id")
+	dbPayment := app.Get.GetPaymentWithRelations(&db.Payment{Id: request.PaymentId}, []string{"Account", "Status", "Provider", "Type", "Currency"}, "id")
 
 	dbPayee := app.Get.GetPayee(&db.Payee{Id: dbPayment.Account.ClientId}, "id")
 
-	if dbPayment.Provider.Name == "clearjunction" {
+	if dbPayment.Provider.Name == db.CLEARJUNCTION {
 		payResponse := app.Get.Wire.Pay(dbPayment, dbPayee, request.Amount, request.Currency)
 		app.Get.UpdatePayment(&db.Payment{Id: dbPayment.Id, PaymentNumber: payResponse.OrderReference}, "id", "payment_number")
 		app.Get.Redis.AddList(constants.QueueClearJunctionPayLog, payResponse)
@@ -58,7 +58,7 @@ func CljPostback(c *gin.Context) {
 
 		if response.Status == "completed" {
 			var nextBalance = float64(0)
-			if payment.Type.Name == "payIn" {
+			if payment.TypeId == db.INCOMING {
 				nextBalance = payment.Account.CurrentBalance + response.Amount
 			} else {
 				nextBalance = payment.Account.CurrentBalance - response.Amount
