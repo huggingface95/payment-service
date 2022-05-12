@@ -8,8 +8,10 @@ type Role {
     name: String!
     "Описание для роли"
     description: String
-    "Получить список разрешений"
+    "Получить список полномочий"
     permissions: [Permissions] @belongsToMany(relation: "permissions")
+    "Получить список категорий полномочий"
+    permission_category_all_member: [PermissionCategory] @belongsToMany(relation: "permissionCategories")
     "Получить дерево разрешений"
     permissions_tree: JSON
     "Получить тип группы"
@@ -53,8 +55,8 @@ extend type Mutation @guard {
         group_type_id: Int
         "ID компании"
         company_id: Int
-        "Применить ко всем компаниям"
-        is_all_companies: Boolean
+        "ID группы полномочий Применить ко всем компаниям"
+        permission_category_all_member: [ID]
     ): Role   @field(resolver:"RoleMutator@create")
 
     updateRole(
@@ -70,8 +72,8 @@ extend type Mutation @guard {
         group_type_id: Int
         "ID компании"
         company_id: Int
-        "Применить ко всем компаниям"
-        is_all_companies: Boolean
+        "ID группы полномочий Применить ко всем компаниям"
+        permission_category_all_member: [ID]
     ): Role   @field(resolver:"RoleMutator@update")
 
     deleteRole(

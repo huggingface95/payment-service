@@ -17,6 +17,12 @@ type PermissionCategory {
     permissionList (permissionType: _ @whereConditions(columns: ["type"])): [PermissionList] @hasMany(relation: "permissionsList")
 }
 
+type PermissionCategoryRole {
+    permission_category_id: ID
+    role_id: ID
+    is_all_companies: Boolean
+}
+
 type PermissionList {
     id: ID
     name: String
