@@ -11,10 +11,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class PermissionsList extends Model
 {
+    const PRIVATE = 'private';
+    const BUSINESS = 'business';
+
     protected $table="permissions_list";
 
     protected $fillable = [
-        'name','type','permission_group_id'
+        'name','type','permission_group_id', 'separator'
     ];
 
     public $timestamps = false;
