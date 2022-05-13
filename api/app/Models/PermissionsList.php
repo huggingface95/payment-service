@@ -21,7 +21,7 @@ class PermissionsList extends Model
 
     public function permissions(): HasMany
     {
-        return $this->hasMany(Permissions::class,"permission_list_id")->orderBy('id','ASC');
+        return $this->hasMany(Permissions::class,"permission_list_id");
     }
 
 }
