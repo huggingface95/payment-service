@@ -4,7 +4,6 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\GroupRole;
 use App\Models\PermissionCategory;
-use App\Models\PermissionCategoryRole;
 use App\Models\Permissions;
 use App\Models\Role;
 use App\Exceptions\GraphqlException;
@@ -74,9 +73,9 @@ class RoleMutator
      */
     private function syncPermissions(Role $role, $permissions)
     {
-        $permissionsName = Permissions::getPermissionArrayNamesById($permissions);
-
-        return $role->syncPermissions($permissionsName);
+//        $permissionsName = Permissions::getPermissionArrayNamesById($permissions);
+//        dd($permissionsName);
+        return $role->syncPermissions($permissions);
     }
 
     private function syncGroups(Role $role, array $groups)
