@@ -43,12 +43,8 @@ trait UserPermission
                     return true;
                 }
             }
-        } else {
-            //Global operations
-            if (PermissionOperation::query()->where('hidden', true)->where('name', $name)->count()) {
-                return true;
-            }
         }
+
         return false;
 
     }
