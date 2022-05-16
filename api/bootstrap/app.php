@@ -39,6 +39,9 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
+$app->instance('path.config', app()->basePath() . DIRECTORY_SEPARATOR . 'config');
+$app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storage');
+
 // $app->withFacades();
 
 // $app->withEloquent();
@@ -133,6 +136,10 @@ $app->register(\Illuminate\Mail\MailServiceProvider::class);
 $app->register(\PhpClickHouseLaravel\ClickhouseServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
+$app->register(PragmaRX\Google2FALaravel\ServiceProvider::class);
+$app->register(App\Providers\TwoFactorServiceProvider::class);
+$app->register(Laravel\Passport\PassportServiceProvider::class);
+$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -148,6 +155,7 @@ $app->alias('cache', \Illuminate\Cache\CacheManager::class);
 $app->alias('PDF', Barryvdh\DomPDF\Facade::class);
 $app->alias('mail.manager', Illuminate\Mail\MailManager::class);
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
+$app->alias('Google2FA', \PragmaRX\Google2FALaravel\Facade::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

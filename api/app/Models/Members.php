@@ -11,6 +11,7 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Laravel\Passport\HasApiTokens;
 
 /**
  * Class Members
@@ -21,7 +22,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
-    use SoftDeletes, Authorizable, Authenticatable;
+    use SoftDeletes, Authorizable, Authenticatable, HasApiTokens;
 
     public $password_confirmation;
 
@@ -31,7 +32,8 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $hidden = [
         'password_hash',
-        'password_salt'
+        'password_salt',
+        'twofactor_secret'
     ];
 
     protected $dates = ['deleted_at'];
