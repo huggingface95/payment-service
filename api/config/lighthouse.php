@@ -36,11 +36,10 @@ return [
              \Nuwave\Lighthouse\Support\Http\Middleware\AttemptAuthentication::class,
             \Wimil\LighthouseGraphqlJwtAuth\Http\Middleware\AuthenticateWithApiGuard::class,
 
+            \App\Http\Middleware\AccessMiddleware::class,
+
             // Logs every incoming GraphQL query.
              \Nuwave\Lighthouse\Support\Http\Middleware\LogGraphQLQueries::class,
-
-            //Jwt auth
-            App\Http\Middleware\Authenticate::class,
         ],
 
         /*

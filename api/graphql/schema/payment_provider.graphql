@@ -24,9 +24,9 @@ type PaymentProvider {
     currencies: [Currencies]
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить провайдер по ID"
-    paymentProvider(id: ID @eq): PaymentProvider @find
+    paymentProvider(id: ID @eq): PaymentProvider   @find
     """
     Получить список провайдеров
     paymentProviderCountry: country_id - получить все провайдеры по стране
@@ -41,10 +41,10 @@ extend type Query {
         hasPaymentSystems: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["name","id"]),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
-    ): [PaymentProvider!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [PaymentProvider!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать платежный провайдер"
     createPaymentProvider(
         "Название провайдера"
@@ -61,7 +61,7 @@ extend type Mutation {
         country_id: [ID]
         "массив ID валют"
         currency_id: [ID]
-    ):PaymentProvider @field(resolver: "PaymentProviderMutator@create")
+    ):PaymentProvider   @field(resolver: "PaymentProviderMutator@create")
 
     "Обновить поля платежного провайдера"
     updatePaymentProvider(
@@ -80,9 +80,9 @@ extend type Mutation {
         country_id: [ID]
         "массив ID валют"
         currency_id: [ID]
-    ):PaymentProvider @field(resolver: "PaymentProviderMutator@update")
+    ):PaymentProvider   @field(resolver: "PaymentProviderMutator@update")
 
     "Удалить платежный провайдер"
-    deletePaymentProvider(id: ID!): PaymentProvider @delete
+    deletePaymentProvider(id: ID!): PaymentProvider   @delete
 
 }

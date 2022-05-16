@@ -10,5 +10,4 @@ func main() {
 	log.InitDefault()
 	app.Get.Init()
 	services.Run()
-
 }

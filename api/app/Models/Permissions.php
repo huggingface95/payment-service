@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GuardEnum;
+use App\Models\Scopes\PermissionOrderScope;
 use Spatie\Permission\Exceptions\PermissionAlreadyExists;
 use Spatie\Permission\Guard;
 use Spatie\Permission\Models\Permission as SpatiePermission;
@@ -21,20 +22,23 @@ class Permissions extends SpatiePermission
     const TYPE_NO_REQUIRED = 'no_required';
 
     protected $fillable = [
-        'name', 'guard_name','display_name','type','permission_list_id'
+        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'order'
     ];
     protected $guard_name = GuardEnum::GUARD_NAME;
 
-    public static function getTreePermissions($roleId = null)
+    protected static function booted()
+    {
+        static::addGlobalScope(new PermissionOrderScope);
+    }
+
+    public static function getTreePermissions($roleId = null): array
     {
         if ($roleId) {
             $role = Role::find($roleId);
             $permissions = $role->permissions;
         } else {
-            $permissions = self::orderBy('id','asc')->get();
+            $permissions = self::query()->get();
         }
-
-        $permData = [];
 
         $permData = [];
         foreach ($permissions ?? [] as $item) {
@@ -47,7 +51,7 @@ class Permissions extends SpatiePermission
                     $current[$level] = array();
                 $current = &$current[$level];
             }
-            $current['permissions'][] = ['permission_id'=>$item->id,'permission_name'=>$permission];
+            $current['permissions'][] = ['permission_id' => $item->id, 'permission_name' => $permission];
             $permData[$name]['rules'] = $out;
         }
         return $permData;
@@ -56,14 +60,14 @@ class Permissions extends SpatiePermission
 
     public static function getPermissionArrayNamesById(array $permissionId)
     {
-        return array_column(self::select('name')->whereIn('id',$permissionId)->get()->toArray(),'name');
+        return array_column(self::select('name')->whereIn('id', $permissionId)->get()->toArray(), 'name');
     }
 
     public static function create(array $attributes = [])
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? Guard::getDefaultName(static::class);
 
-        $permission = static::getPermission(['name' => $attributes['name'], 'guard_name' => $attributes['guard_name'],'type' => $attributes['type']]);
+        $permission = static::getPermission(['name' => $attributes['name'], 'guard_name' => $attributes['guard_name'], 'type' => $attributes['type']]);
 
         if ($permission) {
             throw PermissionAlreadyExists::create($attributes['name'], $attributes['guard_name']);

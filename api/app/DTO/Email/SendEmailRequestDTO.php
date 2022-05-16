@@ -8,11 +8,14 @@ class SendEmailRequestDTO
     public string $content;
     public string $subject;
 
-    public function __invoke(): SendEmailRequestDTO
-    {
-        $this->content = func_get_arg(0);
-        $this->subject = func_get_arg(1);
 
-        return $this;
+    public static function transform(string $content, string $subject): SendEmailRequestDTO
+    {
+        $dto = new self();
+        $dto->content = $content;
+        $dto->subject = "$subject";
+
+        return $dto;
     }
+
 }

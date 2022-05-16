@@ -7,10 +7,10 @@ type Country {
     iso: String!
 }
 
-extend type Query {
-    country(id: ID @eq): Country @find
+extend type Query @guard {
+    country(id: ID @eq): Country   @find
     """
     Получить список стран
     """
-    countries: [Country!]! @paginate(defaultCount: 10)
+    countries: [Country!]!   @paginate(defaultCount: 10)
 }

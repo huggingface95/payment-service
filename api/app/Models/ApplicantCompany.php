@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class ApplicantCompany extends Model
 {
@@ -50,7 +51,6 @@ class ApplicantCompany extends Model
         'is_verification_phone',
         'owner_relation_id',
         'owner_position_id',
-        'group_id',
         'company_id'
     ];
 
@@ -189,17 +189,26 @@ class ApplicantCompany extends Model
         return $this->belongsTo(Companies::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function group()
+    public function groupRole(): HasOneThrough
     {
-        return $this->belongsTo(GroupRole::class,'group_id');
+        return $this->hasOneThrough(
+            GroupRole::class,
+            GroupRoleUser::class,
+            'user_id',
+            'id',
+            'id',
+            'group_role_id',
+        )->where('group_type_id', GroupRole::COMPANY);
     }
 
     public function scopeGroupSort($query, $sort)
     {
-        return $query->join('group_role','group_role.id','=','applicant_companies.group_id')->orderBy('group_role.name',$sort)->select('applicant_companies.*');
+        return $query
+            ->join('group_role_members_individuals', 'group_role_members_individuals.user_id', 'applicant_companies.id')
+            ->join('group_role', 'group_role.id','=','group_role_members_individuals.group_role_id')
+            ->where('group_role.group_type_id', GroupRole::COMPANY)
+            ->orderBy('group_role.name',$sort)
+            ->select('applicant_companies.*');
     }
 
     public function scopeCompanySort($query, $sort)

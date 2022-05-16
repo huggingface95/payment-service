@@ -8,12 +8,12 @@ type CommissionTemplateLimitTransferDirection {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить по ID"
-    commissionTemplateLimitTransferDirection(id: ID @eq): CommissionTemplateLimitTransferDirection @find
+    commissionTemplateLimitTransferDirection(id: ID @eq): CommissionTemplateLimitTransferDirection    @find
     "Получить список направлений"
     commissionTemplateLimitTransferDirections(where: _ @whereConditions(columns: ["name"]),
-        orderBy: _ @orderBy(columns: ["id","name"])): [CommissionTemplateLimitTransferDirection!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        orderBy: _ @orderBy(columns: ["id","name"])): [CommissionTemplateLimitTransferDirection!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 

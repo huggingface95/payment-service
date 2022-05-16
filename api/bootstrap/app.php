@@ -1,7 +1,7 @@
 <?php
 
 use Aws\S3\S3Client;
-use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
+use League\Flysystem\AwsS3V3\AwsS3Adapter;
 use League\Flysystem\Filesystem;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -101,9 +101,6 @@ $app->configure('queue');
 */
 
 
- $app->routeMiddleware([
-     'auth' => App\Http\Middleware\Authenticate::class,
- ]);
 
 /*
 |--------------------------------------------------------------------------
@@ -129,6 +126,7 @@ $app->register(\Nuwave\Lighthouse\WhereConditions\WhereConditionsServiceProvider
 $app->register(\Nuwave\Lighthouse\OrderBy\OrderByServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\GlobalId\GlobalIdServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\Validation\ValidationServiceProvider::class);
+$app->register(\Nuwave\Lighthouse\Auth\AuthServiceProvider::class);
 $app->register(\SwaggerLume\ServiceProvider::class);
 $app->register(MLL\GraphQLPlayground\GraphQLPlaygroundServiceProvider::class);
 $app->register(Barryvdh\DomPDF\ServiceProvider::class);

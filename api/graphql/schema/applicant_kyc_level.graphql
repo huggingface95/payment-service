@@ -8,11 +8,11 @@ type ApplicantKycLevel {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить уровень KYC по  ID
     """
-    applicantKycLevel(id: ID @eq): ApplicantKycLevel @find
+    applicantKycLevel(id: ID @eq): ApplicantKycLevel   @find
     """
     Получить список уровней KYC
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -20,7 +20,7 @@ extend type Query {
     """
     applicantKycLevels(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantKycLevel!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantKycLevel!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 

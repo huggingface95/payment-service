@@ -8,11 +8,11 @@ type ApplicantCompanyBusinessType {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить по ID
     """
-    applicantCompanyBusinessType(id: ID @eq): ApplicantCompanyBusinessType @find
+    applicantCompanyBusinessType(id: ID @eq): ApplicantCompanyBusinessType   @find
     """
     Получить все типы бизнеса
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
@@ -20,15 +20,15 @@ extend type Query {
     """
     applicantCompanyBusinessType(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
         columns: ["id","name"],
-    )): [ApplicantCompanyBusinessType!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantCompanyBusinessType!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать бизнес тип"
     createApplicantCompanyBusinessType(
         "Название"
         name: String!
-    ): ApplicantCompanyBusinessType @create
+    ): ApplicantCompanyBusinessType   @create
 
     "Редактирование отнощения"
     updateApplicantCompanyBusinessType (
@@ -36,7 +36,7 @@ extend type Mutation {
         id: ID!
         "Название"
         name: String!
-    ): ApplicantCompanyBusinessType @update
+    ): ApplicantCompanyBusinessType   @update
 
 
 }

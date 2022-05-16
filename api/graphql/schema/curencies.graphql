@@ -9,11 +9,11 @@ type Currencies{
     minor_unit: Int
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить валюту по ID"
-    currency(id: ID @eq): Currencies @find
+    currency(id: ID @eq): Currencies   @find
     """
     Получить список валют
     """
-    currencies: [Currencies!]! @paginate(defaultCount: 10)
+    currencies: [Currencies!]!   @paginate(defaultCount: 10)
 }

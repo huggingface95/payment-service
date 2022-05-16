@@ -91,7 +91,7 @@ class GroupMutator extends BaseMutator
         $member = Members::where('id', '=', Members::DEFAULT_MEMBER_ID)->first();
         $role_id = $groupRole->id;
         if ($role_id) {
-            $member->groupRoles()->attach($role_id);
+            $member->groupRoles()->sync([$role_id], true);
         }
 
         return $groupRole;

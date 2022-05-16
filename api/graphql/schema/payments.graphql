@@ -50,15 +50,21 @@ type Payments {
     member: Members @belongsTo(relation: "member")
     "Получить владельца"
     owner: [ApplicantIndividual] @belongsToMany(relation: "owner")
-    "Получить компанию ownera"
-    company: [ApplicantCompany] @belongsToMany(relation: "company")
+    #    "Получить компанию ownera"
+    #    company: [ApplicantCompany] @belongsToMany(relation: "company")
     received_at: DateTime
     error: String
     sender_additional_fields: JSON
 }
 
 
-extend type Query {
+type Sender {
+    "Sender name"
+    sender_name: String!
+}
+
+extend type Query @guard {
+    senders: [Sender] @all(builder: "App\\GraphQL\\Builders\\Sender@filter")
     "Получить платеж по ID"
     payment(id: ID @eq): Payments @find
     """
@@ -70,16 +76,23 @@ extend type Query {
     hasOwner: {column:NAME,operator:GTE,value:MemberName} фильтр по владельцу
     """
     payments(
-        hasCompany: _ @whereHasConditions(columns: ["name"]),
+        hasCompanies: _ @whereHasConditions(columns: ["name"]),
+        hasPaymentProvider: _ @whereHasConditions(columns: ["name"]),
         hasAccounts: _ @whereHasConditions(columns: ["account_id"]),
         hasOwner: _ @whereHasConditions(columns: ["fullname"]),
+        hasPaymentTypes: _ @whereHasConditions(columns: ["name"]),
+        hasPaymentUrgency: _ @whereHasConditions(columns: ["name"]),
+        hasPaymentStatus: _ @whereHasConditions(columns: ["name"]),
+        AccountNumber: Sort @scope(name:"AccountNumber"),
         created_at: DateRange @whereBetween,
-        where: _ @whereConditions(columns: ["sender_bank_account","type_id","urgency_id", "status", "payment_provider_id", "company_id", "account_id"]),
-        orderBy: _ @orderBy(columns: ["id", "created_at", "amount"])
-    ): [Payments!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        where: _ @whereConditions(columns: ["sender_bank_account","type_id","urgency_id", "status", "payment_provider_id", "company_id", "account_id", "payment_number", "sender_name"]),
+        orderBy: _ @orderBy(columns: ["id", "created_at", "amount", "fee", "payment_number"])
+    ): [Payments!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+
+
+extend type Mutation @guard {
     "Создать платеж"
     createPayment(
         "Сумма"
@@ -125,53 +138,53 @@ extend type Mutation {
         payment_number: String!
         created_at: DateTime
         updated_at: DateTime
-    ):Payments @field(resolver: "PaymentsMutator@create")
+    ):Payments   @field(resolver: "PaymentsMutator@create")
 
     "Редактировать платеж"
-        updatePayment(
-            id: ID!
-            "Сумма"
-            amount: Float
-            "Комиссия"
-            fee: Float
-            "Валюта"
-            currency: ID
-            "Статус"
-            status: Int
-            "Имя отправителя"
-            sender_name: String
-            "Детали платежа"
-            payment_details: String
-            "Аккаунт банка отправителя"
-            sender_bank_account: String
-            "SWIFT отправителя"
-            sender_swift: String
-            "Имя банка отправителя"
-            sender_bank_name: String
-            "Страна банка отправителя"
-            sender_bank_country: ID
-            "Адрес банка отправителя"
-            sender_bank_address: String
-            "Страна отправителя"
-            sender_country: ID
-            "Адрес отправителя"
-            sender_address: String
-            "Срочность"
-            urgency_id: ID!
-            "Тип"
-            type_id: ID!
-            "Платежный ровайдер"
-            payment_provider_id: ID
-            "Аккаунт"
-            account_id: ID
-            "Компания"
-            company_id: ID
-            "Номер платежа"
-            payment_number: String
-        ):Payments @field(resolver: "PaymentsMutator@update")
+    updatePayment(
+        id: ID!
+        "Сумма"
+        amount: Float
+        "Комиссия"
+        fee: Float
+        "Валюта"
+        currency: ID
+        "Статус"
+        status: Int
+        "Имя отправителя"
+        sender_name: String
+        "Детали платежа"
+        payment_details: String
+        "Аккаунт банка отправителя"
+        sender_bank_account: String
+        "SWIFT отправителя"
+        sender_swift: String
+        "Имя банка отправителя"
+        sender_bank_name: String
+        "Страна банка отправителя"
+        sender_bank_country: ID
+        "Адрес банка отправителя"
+        sender_bank_address: String
+        "Страна отправителя"
+        sender_country: ID
+        "Адрес отправителя"
+        sender_address: String
+        "Срочность"
+        urgency_id: ID!
+        "Тип"
+        type_id: ID!
+        "Платежный ровайдер"
+        payment_provider_id: ID
+        "Аккаунт"
+        account_id: ID
+        "Компания"
+        company_id: ID
+        "Номер платежа"
+        payment_number: String
+    ):Payments   @field(resolver: "PaymentsMutator@update")
 
-        "Удалить платеж"
-            deletePayment(
-                id: ID!
-            ): Payments @delete
+    "Удалить платеж"
+    deletePayment(
+        id: ID!
+    ): Payments   @delete
 }

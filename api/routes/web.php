@@ -15,7 +15,7 @@
 $router->group([
 //    'middleware' => 'api',
     'prefix' => 'auth'
-], function ($router) {
+], function () use ($router) {
     $router->post('login', 'AuthController@login');
     $router->post('logout', 'AuthController@logout');
     $router->post('refresh', 'AuthController@refresh');

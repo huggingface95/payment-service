@@ -33,9 +33,9 @@ type Requisites {
 }
 
 
-extend type Query {
+extend type Query @guard {
     "Получить реквизиты по ID"
-    requisite(id: ID @eq): Requisites @find
+    requisite(id: ID @eq): Requisites   @find
     """
     Получить список реквизитов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -43,10 +43,10 @@ extend type Query {
     requisites(
             where: _ @whereConditions(columns: ["account_id","bank_name","account_no"]),
             orderBy: _ @orderBy(columns: ["id"])
-        ): [Requisites!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        ): [Requisites!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать реквизиты"
     createRequisites(
         "Получить связанный аккаунт"
@@ -75,7 +75,7 @@ extend type Mutation {
         bank_correspondent: JSON
         created_at: DateTime
         updated_at: DateTime
-    ): Requisites @create
+    ): Requisites   @create
 
     "Редактировать реквизиты"
         updateRequisites(
@@ -106,10 +106,10 @@ extend type Mutation {
             bank_correspondent: JSON
             created_at: DateTime
             updated_at: DateTime
-        ): Requisites @update
+        ): Requisites   @update
 
         "Удалить реквизиты"
             deleteRequisites(
                 id: ID!
-            ): Requisites @delete
+            ): Requisites   @delete
 }

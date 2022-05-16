@@ -63,8 +63,8 @@ func (p *Postgresql) Insert(model interface{}) (err error) {
 	return
 }
 
-func (p *Postgresql) Update(model interface{}, updateFields ...string) (err error) {
-	_, err = p.client.NewUpdate().Model(model).WherePK("id").Column(updateFields...).Exec(context.Background())
+func (p *Postgresql) Update(model interface{}, searchColumn string, updateFields ...string) (err error) {
+	_, err = p.client.NewUpdate().Model(model).WherePK(searchColumn).Column(updateFields...).Exec(context.Background())
 	return
 }
 
@@ -75,6 +75,14 @@ func (p *Postgresql) UpdateAndSelect(model interface{}, updateFields ...string) 
 
 func (p *Postgresql) SelectWhereResult(model interface{}, column string) error {
 	return p.Select(model).WherePK(column).Scan(context.Background())
+}
+
+func (p *Postgresql) SelectWhereWithRelationResult(model interface{}, relations []string, column string) error {
+	query := p.Select(model).WherePK(column)
+	for _, r := range relations {
+		query.Relation(r)
+	}
+	return query.Scan(context.Background())
 }
 
 func (p *Postgresql) SelectWhereExistsResult(model interface{}, column string) (exists bool, err error) {
@@ -89,6 +97,13 @@ func (p *Postgresql) SelectWhereExistsResult(model interface{}, column string) (
 
 func (p *Postgresql) SelectResult(model interface{}) error {
 	return p.SelectWhereResult(model, "id")
+}
+
+func (p *Postgresql) SelectMultipleResult(model interface{}) {
+	if err := p.Select(model).Scan(context.Background()); err != nil {
+		panic(err)
+	}
+	return
 }
 
 func (p *Postgresql) SelectOneResult(model interface{}) error {

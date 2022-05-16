@@ -6,9 +6,9 @@ type Accounts {
     id: ID!
     "Получить связанный код валюты"
     currency_id: Currencies @belongsTo(relation:"currencies")
-	"Получить связанного аппликанта"
+    "Получить связанного аппликанта"
     client_id: ApplicantIndividual @belongsTo(relation:"applicantIndividual")
-	"Получить связанного владельца"
+    "Получить связанного владельца"
     owner_id: Members @belongsTo(relation:"members")
     "Номер аккаунта"
     account_number: String!
@@ -37,24 +37,24 @@ type Accounts {
     activated_at : DateTime
 }
 
-extend type Query {
+extend type Query @guard {
     "Получить аккаунт по ID"
-    account(id: ID @eq): Accounts @find
+    account(id: ID @eq): Accounts   @find
     """
     Получить список аккаунтов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     accounts(
-            hasGroup: _ @whereHasConditions(columns: ["id","name"]),
-            where: _ @whereConditions(columns: ["account_number","client_id","owner_id","account_name","currency_id","payment_provider_id"]),
-            orderBy: _ @orderBy(columns: ["id", "client_id"])
-        ): [Accounts!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        hasGroup: _ @whereHasConditions(columns: ["id","name"]),
+        where: _ @whereConditions(columns: ["account_number","client_id","owner_id","account_name","currency_id","payment_provider_id"]),
+        orderBy: _ @orderBy(columns: ["id", "client_id"])
+    ): [Accounts!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать аккаунт"
     createAccount(
-		"ID валюты"
+        "ID валюты"
         currency_id: ID!
         "ID аппликанта"
         client_id: ID!
@@ -83,42 +83,42 @@ extend type Mutation {
         created_at: DateTime
         updated_at: DateTime
         activated_at : DateTime
-    ):Accounts @create
+    ):Accounts   @create
 
     "Редактирование аккаунта"
-        updateAccount(
-            id: ID!
-            "ID валюты"
-            currency_id: ID!
-            "ID аппликанта"
-            client_id: ID!
-            "ID владельца"
-            owner_id: ID!
-            "Тип аккаунта"
-            account_type: String!
-            "ID провайдера"
-            payment_provider_id: ID!
-            "ID шаблона комиссии"
-            commission_template_id: ID!
-            "Состояние аккаунта"
-            account_state: String!
-            "Имя аккаунта"
-            account_name: String!
-            "Основной или нет"
-            is_primary: Boolean!
-            "Текущий баланс"
-            current_balance: Int
-            "Текущий баланс"
-            reserved_balance: Int
-            "Текущий баланс"
-            available_balance: Int
-            created_at: DateTime
-            updated_at: DateTime
-            activated_at : DateTime
-        ): Accounts @update
+    updateAccount(
+        id: ID!
+        "ID валюты"
+        currency_id: ID!
+        "ID аппликанта"
+        client_id: ID!
+        "ID владельца"
+        owner_id: ID!
+        "Тип аккаунта"
+        account_type: String!
+        "ID провайдера"
+        payment_provider_id: ID!
+        "ID шаблона комиссии"
+        commission_template_id: ID!
+        "Состояние аккаунта"
+        account_state: String!
+        "Имя аккаунта"
+        account_name: String!
+        "Основной или нет"
+        is_primary: Boolean!
+        "Текущий баланс"
+        current_balance: Int
+        "Текущий баланс"
+        reserved_balance: Int
+        "Текущий баланс"
+        available_balance: Int
+        created_at: DateTime
+        updated_at: DateTime
+        activated_at : DateTime
+    ): Accounts   @update
 
-        "Удалить аккаунт"
-            deleteAccount(
-                id: ID!
-            ): Accounts @delete
+    "Удалить аккаунт"
+    deleteAccount(
+        id: ID!
+    ): Accounts   @delete
 }

@@ -1,20 +1,13 @@
 package db
 
-import (
-	"github.com/uptrace/bun"
-	"time"
-)
+import "github.com/uptrace/bun"
 
 type Account struct {
-	Id               uint64 `bun:"Id,pk,autoincrement"`
-	Number           string `bun:"Number,notnull,unique"`
-	OwnerProfileUUID string `bun:"OwnerProfileUUID,notnull"`
-	Iban             string `bun:"Iban"`
+	bun.BaseModel `bun:"table:accounts"`
 
-	CurrencyId CurrencyDb `bun:"CurrencyId,notnull,type:smallint"`
-	Currency   *Currency  `bun:"rel:belongs-to,join=CurrencyId=Id"`
-
-	Swift       string       `bun:"Swift"`
-	DateCreated time.Time    `bun:"DateCreated,nullzero,notnull,default:current_timestamp"`
-	DateUpdated bun.NullTime `bun:"DateUpdated"`
+	Id               uint64  `bun:"id,pk,autoincrement"`
+	ClientId         uint64  `bun:"client_id"`
+	AvailableBalance float64 `bun:"available_balance"`
+	CurrentBalance   float64 `bun:"current_balance"`
+	ReservedBalance  float64 `bun:"reserved_balance"`
 }

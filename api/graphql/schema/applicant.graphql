@@ -77,7 +77,7 @@ type ApplicantIndividual {
     "Получить роль"
     roles: [Role] @belongsToMany (relation: "roles")
     "Получить группу"
-    group: GroupRole @belongsTo (relation: "group")
+    group: GroupRole @hasOne(relation: "groupRole")
     "Получить two factor auth"
     two_factor_auth: TwoFactorAuthSettings @belongsTo (relation: "twoFactorAuth")
 }
@@ -92,7 +92,7 @@ type ApplicantIndividualCompany {
     position_in_company: ApplicantIndividualCompanyPosition @belongsTo(relation: "ApplicantIndividualCompanyPosition")
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить пользователя  по ID
     """
@@ -108,10 +108,10 @@ extend type Query {
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
         created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","group_id","company_id"]), orderBy: _ @orderBy(
         columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"],
-    )): [ApplicantIndividual!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantIndividual!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать частного пользователя"
     createApplicantIndividual(
         "Имя"
@@ -180,7 +180,7 @@ extend type Mutation {
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
         password_confirmation: String
-    ): ApplicantIndividual @field(resolver:"ApplicantMutator@create")
+    ): ApplicantIndividual   @field(resolver:"ApplicantMutator@create")
 
     "Редактирование частного пользователя"
     updateApplicantIndividual(
@@ -242,7 +242,7 @@ extend type Mutation {
         "ID менеджера"
         account_manager_member_id: ID
         "ID компании"
-        company_id: ID!
+        company_id: ID
         "Role id"
         role_id: [ID]
         "Массив ID меток"
@@ -255,7 +255,7 @@ extend type Mutation {
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
         password_confirmation: String
-    ): ApplicantIndividual @field(resolver:"ApplicantMutator@update")
+    ): ApplicantIndividual   @field(resolver:"ApplicantMutator@update")
 
     """
     Установить пароль
@@ -266,12 +266,12 @@ extend type Mutation {
         password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
         password_confirmation: String!
-    ): ApplicantIndividual @field(resolver: "ApplicantMutator@setPassword")
+    ): ApplicantIndividual   @field(resolver: "ApplicantMutator@setPassword")
 
     "Удалит пользователя"
     deleteApplicantIndividual(
         id: ID!
-    ): ApplicantIndividual @delete
+    ): ApplicantIndividual   @delete
 
 }
 

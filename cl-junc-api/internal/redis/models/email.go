@@ -1,19 +1,14 @@
 package models
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type Email struct {
-	Id      uint64 `json:"id"`
-	Type    string `json:"type"`
-	Status  string `json:"status"`
-	Message string `json:"message"`
-	Error   []struct {
-		Code    string `json:"code"`
-		Message string `json:"message"`
-		Details string `json:"details"`
-	} `json:"messages"`
-	Data    interface{}       `json:"data"`
-	Details map[string]string `json:"details"`
+	Id      int64       `json:"id"`
+	Status  string      `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 // MarshalBinary -

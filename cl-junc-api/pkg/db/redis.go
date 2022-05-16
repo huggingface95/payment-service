@@ -38,6 +38,10 @@ func (r *RedisDb) LRange(key string, start, end int64) []string {
 	return r.client.LRange(context.Background(), key, start, end).Val()
 }
 
+func (r *RedisDb) BLPop(time time.Duration, key string) []string {
+	return r.client.BLPop(context.Background(), time, key).Val()
+}
+
 func (r *RedisDb) GetCmd(key string) *redis.StringCmd {
 	return r.client.Get(context.Background(), key)
 }

@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Traits\UserPermission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Support\Collection;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Laravel\Passport\HasApiTokens;
@@ -18,16 +21,20 @@ use Laravel\Passport\HasApiTokens;
  * @package App\Models
  * @property int id
  * @property bool is_show_owner_applicants
+ *
+ * @property Collection groupRoles
+ * @property GroupRole $groupRole
+ *
  */
 
 class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
-    use SoftDeletes, Authorizable, Authenticatable, HasApiTokens;
+    use SoftDeletes, Authorizable, Authenticatable, UserPermission, HasApiTokens;
 
     public $password_confirmation;
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'sex', 'is_active', 'company_id', 'country_id', 'language_id', 'group_id', 'two_factor_auth_setting_id', 'password_hash', 'password_salt', 'last_login_at', 'additional_fields', 'additional_info_fields', 'is_show_owner_applicants'
+        'first_name', 'last_name', 'email', 'sex', 'is_active', 'company_id', 'country_id', 'language_id', 'two_factor_auth_setting_id', 'password_hash', 'password_salt', 'last_login_at', 'additional_fields', 'additional_info_fields', 'is_show_owner_applicants'
     ];
 
     protected $hidden = [
@@ -79,35 +86,37 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         return $this->belongsTo(DepartmentPosition::class, 'department_position_id');
     }
 
-    public function groupRole(): BelongsTo
-    {
-        return $this->belongsTo(GroupRole::class, 'group_id');
-    }
-
-//    public function getGroupAttribute()
-//    {
-//        return $this->groupRole()->join('groups', 'groups.id', '=', 'group_role.group_type_id')->select('groups.*')->first();
-//    }
-
-//    public function getRoleAttribute()
-//    {
-//        return $this->groupRole()->join('roles', 'roles.id', '=', 'group_role.role_id')->select('roles.*')->first();
-//    }
-
     public function getDepartmentAttribute()
     {
         return $this->position()
             ->join('departments', 'departments.id', '=', 'department_position.department_id')->select('departments.*')->first();
     }
 
-    public function roles(): BelongsToMany
+    public function roles()
     {
-        return $this->belongsToMany(Role::class, 'group_role_member', 'member_id', 'group_role_id');
+        //TODO add functionality
+    }
+
+    public function groupRole(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            GroupRole::class,
+            GroupRoleUser::class,
+            'user_id',
+            'id',
+            'id',
+            'group_role_id',
+        )->where('group_type_id', GroupRole::MEMBER);
     }
 
     public function groupRoles(): BelongsToMany
     {
-        return $this->belongsToMany(GroupRole::class, 'group_role_member', 'member_id', 'group_role_id');
+        return $this->belongsToMany(
+            GroupRole::class,
+            'group_role_members_individuals',
+            'user_id',
+            'group_role_id'
+        )->where('group_type_id', GroupRole::MEMBER);
     }
 
 }

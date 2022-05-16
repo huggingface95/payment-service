@@ -17,9 +17,9 @@ class CreatePriceListFeesTable extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('price_list_id');
-            $table->tinyInteger('type')->default(0);
-            $table->tinyInteger('operation_type')->default(0);
-            $table->integer('period')->default(0);
+            $table->tinyInteger('type_id')->default(0);
+            $table->tinyInteger('operation_type_id')->default(0);
+            $table->integer('period_id')->default(0);
             $table->json('fee')->nullable();
             $table->timestamps();
 

@@ -16,7 +16,7 @@ type ApplicantCompanyRiskLevelHistory {
     risk_level_id: ApplicantRiskLevel @belongsTo(relation:"ApplicantRiskLevel")
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить историю списка уровней риска по аппликанту
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -24,10 +24,10 @@ extend type Query {
     """
     applicantCompanyRiskLevelHistory(where: _ @whereConditions(columns: ["applicant_company_id"]), orderBy: _ @orderBy(
         columns: ["id"],
-    )): [ApplicantCompanyRiskLevelHistory!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantCompanyRiskLevelHistory!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Добавить запись"
     createApplicantCompanyRiskLevelHistory(
         "Комментарий"
@@ -36,11 +36,11 @@ extend type Mutation {
         applicant_company_id: ID!
         "Уровень риска"
         risk_level_id: ID!
-    ):ApplicantCompanyRiskLevelHistory @field(resolver: "ApplicantCompanyRiskLevelHistoryMutator@create")
+    ):ApplicantCompanyRiskLevelHistory    @field(resolver: "ApplicantCompanyRiskLevelHistoryMutator@create")
 
     "Удалить запись"
     deleteApplicantCompanyRiskLevelHistory(
         id: ID!
-    ): ApplicantCompanyRiskLevelHistory @delete
+    ): ApplicantCompanyRiskLevelHistory    @delete
 }
 

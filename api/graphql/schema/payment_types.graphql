@@ -7,9 +7,9 @@ type PaymentTypes {
     name: String!
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить список
     """
-   getPaymentTypes: [PaymentTypes!]! @all
+   getPaymentTypes: [PaymentTypes!]!   @all
 }

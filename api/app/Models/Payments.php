@@ -4,6 +4,8 @@ namespace App\Models;
 
 
 use App\Models\Scopes\MemberScope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 
 class Payments extends BaseModel
@@ -31,6 +33,8 @@ class Payments extends BaseModel
         'sender_bank_address',
         'sender_country_id',
         'sender_address',
+        'sender_email',
+        'sender_phone',
         'urgency_id',
         'type_id',
         'payment_provider_id',
@@ -46,6 +50,25 @@ class Payments extends BaseModel
     protected static function booted()
     {
         static::addGlobalScope(new MemberScope);
+
+        self::creating(function($model){
+           $model->fee = CommissionTemplateLimit::query()
+                ->join('commission_template_limit_relation AS rel', 'rel.commission_template_limit_id', '=', 'commission_template_limit.id')
+                ->join('commission_template AS ct', 'ct.id', '=', 'rel.commission_template_id')
+                ->join('commission_price_list as l', 'l.commission_template_id', '=', 'ct.id')
+                ->join('payment_provider as p', 'p.id', '=', 'l.provider_id')
+                ->where('p.id', $model->payment_provider_id)
+                ->where('commission_template_limit_type_id', $model->fee_type_id)
+                ->select('commission_template_limit.*')
+                ->first()->amount ?? 0;
+        });
+    }
+
+    public function scopeAccountNumber(Builder $query, $sort): Builder
+    {
+        return $query->join('accounts', 'accounts.id', '=', 'payments.account_id')
+            ->orderBy('accounts.account_number', $sort)
+            ->selectRaw('payments.*');
     }
 
     /**
@@ -117,15 +140,16 @@ class Payments extends BaseModel
         return $this->belongsTo(Members::class,'member_id','id');
     }
 
+    //TODO change to HasOneThrough  applicantIndividual
     public function owner()
     {
         return $this->belongsToMany(ApplicantIndividual::class,'accounts','id', 'client_id', 'account_id');
     }
 
-    public function company()
-    {
-        return $this->belongsToMany(ApplicantCompany::class,'accounts','id','client_id', 'account_id', 'owner_id');
-    }
+//    public function company()
+//    {
+//        return $this->belongsToMany(ApplicantCompany::class,'accounts','id','client_id', 'account_id', 'owner_id');
+//    }
 
     public function feeType()
     {
@@ -137,5 +161,17 @@ class Payments extends BaseModel
         return $this->belongsTo(PaymentStatus::class,'status_id','id');
     }
 
+    //TODO  applicantIndividual or applicantCompany
+    public function applicantIndividual(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            ApplicantIndividual::class,
+            Accounts::class,
+            'id',
+            'id',
+            'account_id',
+            'client_id',
+        );
+    }
 
 }

@@ -14,21 +14,21 @@ type ApplicantIndividualNotes {
     applicant: ApplicantIndividual @belongsTo(relation: "applicant")
 }
 
-extend type Query {
+extend type Query @guard {
     """
     Получить заметку  по ID
     """
-    applicantIndividualNote(id: ID @eq): ApplicantIndividualNotes @find
+    applicantIndividualNote(id: ID @eq): ApplicantIndividualNotes   @find
     """
     Получить список всех заметок
     orderBy: [{ column: CREATED_AT, order: DESC }] сортировка по ID, по времени создания
     """
     applicantIndividualNotes( orderBy: _ @orderBy(
         columns: ["id","created_at"],
-    )): [ApplicantIndividualNotes!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantIndividualNotes!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     "Создать заметку"
     createApplicantIndividualNote(
         "Текст заметки"
@@ -37,12 +37,12 @@ extend type Mutation {
         applicant_individual_id: ID!
         "ID автора заметки"
         member_id: ID!
-    ): ApplicantIndividualNotes @create
+    ): ApplicantIndividualNotes   @create
 
     "Удалит заметку"
     deleteApplicantIndividualNote(
         id: ID!
-    ): ApplicantIndividualNotes @delete
+    ): ApplicantIndividualNotes   @delete
 
 }
 

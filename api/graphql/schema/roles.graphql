@@ -8,8 +8,10 @@ type Role {
     name: String!
     "Описание для роли"
     description: String
-    "Получить список разрешений"
+    "Получить список полномочий"
     permissions: [Permissions] @belongsToMany(relation: "permissions")
+    "Получить список категорий полномочий"
+    permission_category_all_member: [PermissionCategory] @belongsToMany(relation: "permissionCategories")
     "Получить дерево разрешений"
     permissions_tree: JSON
     "Получить тип группы"
@@ -24,9 +26,9 @@ type Role {
 }
 
 
-extend type Query {
+extend type Query @guard {
     "Получить роль по ID"
-    role(id: ID @eq): Role @field(resolver:"RoleQuery@permissions")
+    role(id: ID @eq): Role   @field(resolver:"RoleQuery@permissions")
     """
     Получить список ролей
     groups_sort: сортировка по количеству групп
@@ -38,10 +40,10 @@ extend type Query {
         hasGroups: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["name","group_type_id","company_id"]), orderBy: _ @orderBy(
         columns: ["id","name","description"],
-    )): [Role!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [Role!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-extend type Mutation {
+extend type Mutation @guard {
     createRole(
         "Название роли"
         name: String!
@@ -53,9 +55,9 @@ extend type Mutation {
         group_type_id: Int
         "ID компании"
         company_id: Int
-        "Применить ко всем компаниям"
-        is_all_companies: Boolean
-    ): Role @field(resolver:"RoleMutator@create")
+        "ID группы полномочий Применить ко всем компаниям"
+        permission_category_all_member: [ID]
+    ): Role   @field(resolver:"RoleMutator@create")
 
     updateRole(
         "ID роли"
@@ -70,14 +72,14 @@ extend type Mutation {
         group_type_id: Int
         "ID компании"
         company_id: Int
-        "Применить ко всем компаниям"
-        is_all_companies: Boolean
-    ): Role @field(resolver:"RoleMutator@update")
+        "ID группы полномочий Применить ко всем компаниям"
+        permission_category_all_member: [ID]
+    ): Role   @field(resolver:"RoleMutator@update")
 
     deleteRole(
         "ID роли"
         id: ID!
-    ): Role @delete
+    ): Role   @delete
 
 
 }

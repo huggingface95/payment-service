@@ -14,29 +14,39 @@ type Permissions {
 type PermissionCategory {
     id: ID
     name: String
-    permissionList: [PermissionList] @hasMany(relation: "permissionsList")
+    permissionList (permissionType: _ @whereConditions(columns: ["type"])): [PermissionList] @hasMany(relation: "permissionsList")
+}
+
+type PermissionCategoryRole {
+    permission_category_id: ID
+    role_id: ID
+    is_all_companies: Boolean
 }
 
 type PermissionList {
     id: ID
     name: String
     type: PermissionListType
+    separator: PermissionSeparatorType
     permissions: [Permissions] @hasMany(relation: "permissions")
 }
 enum PermissionListType {
     Member @enum(value: "member")
     Individual @enum(value: "individual")
 }
+enum PermissionSeparatorType {
+    Private @enum(value: "private")
+    Business @enum(value: "business")
+}
 
-extend type Query {
+extend type Query @guard {
     "Получить разрешение по ID"
-    permission(id: ID @eq): Permissions @find
+    permission(id: ID @eq): Permissions   @find
     "Получить список разрешений"
     permissions_tree: Permissions @field(resolver:"PermissionQuery@tree")
     permissions(
-        hasPermissionList: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["name"])
-    ): [PermissionCategory] @all
+        where: _ @whereConditions(columns: ["name", "id"])
+    ): [PermissionCategory]   @all
 }
 
 
