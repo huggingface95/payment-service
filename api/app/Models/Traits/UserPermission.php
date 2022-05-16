@@ -14,8 +14,19 @@ trait UserPermission
 
         $allPermissions = $this->groupRole->role->permissions;
 
+        //global permissions
+        if (PermissionOperation::query()
+            ->whereNull('referer')
+            ->where('name', $name)
+            ->whereDoesntHave('parents')
+            ->whereDoesntHave('binds')
+            ->first()
+        ) {
+            return true;
+        }
+
+
         $operation = PermissionOperation::query()->with(['parents', 'binds'])
-            ->where('hidden', false)
             ->where('name', $name)
             ->where('referer', $url)
             ->first();
@@ -32,10 +43,9 @@ trait UserPermission
                     return true;
                 }
             }
-        }
-        else{
+        } else {
             //Global operations
-            if (PermissionOperation::query()->where('hidden', true)->where('name', $name)->count()){
+            if (PermissionOperation::query()->where('hidden', true)->where('name', $name)->count()) {
                 return true;
             }
         }
