@@ -130,9 +130,9 @@ func NewPayInPayoutRequest(payment *db.Payment, payee *db.Payee, amount float64,
 		},
 		CustomInfo: PayInPayoutRequestCustomInfo{PaymentId: payment.Id},
 		PayeeRequisite: PayInPayoutPayeePayerRequisite{
-			Iban:          "999999",
+			Iban:          "HU93116000060000000012345676",
 			SortCode:      "000000",
-			AccountNumber: "999999",
+			AccountNumber: "12345676",
 		},
 	}
 }
