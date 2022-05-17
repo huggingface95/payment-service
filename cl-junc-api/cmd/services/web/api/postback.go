@@ -76,7 +76,7 @@ func IbanPostback(c *gin.Context) {
 		return
 	}
 
-	if response.Status == models2.Allocated {
+	if response.Status == models2.Accepted {
 		app.Get.UpdateAccount(&db.Account{
 			AccountState: db.GetAccountState(response.Status),
 		}, "payment_number", "account_state")

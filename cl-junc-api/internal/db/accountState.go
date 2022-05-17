@@ -19,6 +19,7 @@ const (
 	StateBlocked   AccountStateDb = 3
 	StatePending   AccountStateDb = 4
 	StateClosed    AccountStateDb = 5
+	StateWaiting   AccountStateDb = 6
 )
 
 func (a AccountStateDb) GetAccountStateName() string {
@@ -33,6 +34,8 @@ func (a AccountStateDb) GetAccountStateName() string {
 		return "Pending"
 	case StateClosed:
 		return "Closed"
+	case StateWaiting:
+		return "Waiting"
 	}
 
 	return "error"
@@ -47,7 +50,7 @@ func GetAccountState(name string) AccountStateDb {
 	case "blocked":
 		return StateBlocked
 	case "pending":
-		return StatePending
+		return StateWaiting
 	case "closed":
 		return StateClosed
 	}

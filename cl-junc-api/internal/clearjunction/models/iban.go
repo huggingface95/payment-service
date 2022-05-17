@@ -6,14 +6,12 @@ import (
 	"time"
 )
 
-type StatusIban string
-
 const (
-	Accepted  StatusIban = "accepted"
-	Pending              = "pending"
-	Allocated            = "allocated"
-	Declined             = "declined"
-	Created              = "created"
+	Accepted  = "accepted"
+	Pending   = "pending"
+	Allocated = "allocated"
+	Declined  = "declined"
+	Created   = "created"
 )
 
 type IbanCreateRequest struct {
