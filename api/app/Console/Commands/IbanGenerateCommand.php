@@ -47,6 +47,7 @@ class IbanGenerateCommand extends Command
     {
         $emailTemplates = EmailTemplate::all();
 
+
         $redis = Redis::connection();
 
         while ($ibanData = $redis->blpop('iban:generate:log', 1)) {
