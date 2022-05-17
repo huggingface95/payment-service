@@ -79,7 +79,7 @@ extend type Mutation @guard {
     deleteRole(
         "ID роли"
         id: ID!
-    ): Role   @delete
+    ): Role   @field(resolver:"RoleMutator@delete")
 
 
 }

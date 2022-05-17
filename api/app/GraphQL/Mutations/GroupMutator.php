@@ -7,6 +7,7 @@ use App\Models\BaseModel;
 use App\Models\GroupRole;
 use App\Models\Groups;
 use App\Models\Members;
+use Illuminate\Support\Facades\DB;
 
 class GroupMutator extends BaseMutator
 {
@@ -73,17 +74,16 @@ class GroupMutator extends BaseMutator
      */
     public function delete($root, array $args)
     {
-        try {
-            $group = GroupRole::find($args['id']);
-            $group->delete();
-            return $group;
-
-        } catch (\Exception $exception)
-        {
-            throw new GraphqlException('Group are already in use by member',"use");
-        }
-
-    }
+        $group = GroupRole::find($args['id']);
+        $relation = DB::table('group_role_members_individuals')
+                ->select('*')
+                ->where('group_role_id', '=', $args['id'])->get();
+        if ($relation != '[]') {
+                throw new GraphqlException('It is not possible to delete the group because it has active users',"use");
+            }
+        $group->delete();
+        return $group;
+     }
 
     public function setMemberGroup($root, array $args)
     {
