@@ -21,7 +21,7 @@ func ProcessIbanQueue() {
 }
 
 func createIban(request *models2.IbanRequest) {
-	dbAccount := app.Get.GetAccountWithRelations(&db.Account{Id: request.AccountId}, []string{"AccountState"}, "id")
+	dbAccount := app.Get.GetAccountWithRelations(&db.Account{Id: request.AccountId}, []string{"State"}, "id")
 	response := app.Get.Wire.Iban(dbAccount)
 	if response == nil {
 		return
@@ -32,10 +32,11 @@ func createIban(request *models2.IbanRequest) {
 		return
 	}
 
+	dbAccount.AccountState = db.GetAccountState(statusResponse.Status)
+	dbAccount.AccountNumber = statusResponse.OrderReference
+
 	if len(statusResponse.Messages) == 0 {
-		state := app.Get.GetAccountStateByName(statusResponse.Status)
-		dbAccount.StateId = int64(state.Id)
-		app.Get.UpdateAccount(dbAccount, "id", "account_state")
+		app.Get.UpdateAccount(dbAccount, "id", "account_state", "account_number")
 	}
 
 	return

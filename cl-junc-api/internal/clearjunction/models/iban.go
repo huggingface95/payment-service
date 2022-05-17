@@ -3,6 +3,7 @@ package models
 import (
 	"cl-junc-api/internal/db"
 	"strconv"
+	"time"
 )
 
 type StatusIban string
@@ -16,7 +17,7 @@ const (
 )
 
 type IbanCreateRequest struct {
-	ClientOrder string     `json:"clientOrder"`
+	ClientOrder int64      `json:"clientOrder"`
 	PostbackURL string     `json:"postbackUrl"`
 	WalletUUID  string     `json:"walletUuid"`
 	IbansGroup  string     `json:"ibansGroup"`
@@ -60,12 +61,33 @@ type CheckRequisiteResponse struct {
 
 func NewIbanRequest(account *db.Account, wallet string, baseUrl string) IbanCreateRequest {
 	return IbanCreateRequest{
-		ClientOrder: account.AccountNumber,
+		ClientOrder: time.Now().Unix(),
 		WalletUUID:  wallet,
 		PostbackURL: baseUrl + "/postback/iban",
 		Registrant: Registrant{
 			ClientCustomerID: strconv.FormatUint(account.Id, 10),
-			Individual:       PayInPayoutRequestPayeePayerIndividual{},
+			Individual: PayInPayoutRequestPayeePayerIndividual{
+				Email:     "aa@mail.ru",
+				Phone:     "+37491728062",
+				LastName:  "Gevorgyan",
+				FirstName: "Artur",
+				BirthDate: "2017-01-01",
+				Document: Document{
+					IssuedDate:        "15-26-2017",
+					Type:              "passport",
+					Number:            "45454",
+					IssuedCountryCode: "ru",
+					IssuedBy:          "01-01-2020",
+					ExpirationDate:    "15-26-2017",
+				},
+				Address: Address{
+					Country: "AM",
+					Zip:     "084",
+					State:   "erevan",
+					City:    "erevan",
+					Street:  "sheram",
+				},
+			},
 		},
 	}
 }

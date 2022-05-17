@@ -18,6 +18,6 @@ func ibanGenerate() {
 func Jobs() {
 	for range time.Tick(JobPeriod) {
 		payments()
-		//ibanGenerate()
+		ibanGenerate()
 	}
 }

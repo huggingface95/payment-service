@@ -76,19 +76,6 @@ func (a *App) GetRedisList(key string, mc func() interface{}) []interface{} {
 	return newList
 }
 
-func (a *App) GetAccountStateByName(name string) *db2.AccountState {
-	state := &db2.AccountState{
-		Name: name,
-	}
-	err := a.Sql.SelectWhereResult(state, "name")
-	if err != nil {
-		log.Debug().Msgf("DON'T find status")
-		panic(err)
-	}
-
-	return state
-}
-
 func (a *App) GetPaymentWithRelations(payment *db2.Payment, relations []string, column string) *db2.Payment {
 	err := a.Sql.SelectWhereWithRelationResult(payment, relations, column)
 
