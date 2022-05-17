@@ -25,12 +25,10 @@ func CljPostback(c *gin.Context) {
 	payment := app.Get.GetPaymentWithRelations(&db.Payment{PaymentNumber: response.OrderReference}, []string{"Account", "Status", "Provider", "Type"}, "payment_number")
 
 	if response.Status != payment.Status.Name {
-		status := app.Get.GetStatusByName(response.Status)
-
 		app.Get.UpdatePayment(&db.Payment{
 			PaymentNumber: response.OrderReference,
 			Amount:        response.Amount,
-			StatusId:      int64(status.Id),
+			StatusId:      db.GetStatus(response.Status),
 		}, "payment_number", "amount_real", "status_id")
 
 		if response.Status == "completed" {

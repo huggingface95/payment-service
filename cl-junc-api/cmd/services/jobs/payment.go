@@ -23,7 +23,7 @@ func ProcessPayQueue() {
 
 func pay(request *models.PaymentRequest) {
 
-	dbPayment := app.Get.GetPaymentWithRelations(&db.Payment{Id: request.PaymentId}, []string{"Account", "Status", "Provider", "Type", "Currency"}, "id")
+	dbPayment := app.Get.GetPaymentWithRelations(&db.Payment{Id: request.Id}, []string{"Account", "Status", "Provider", "Type", "Currency"}, "id")
 
 	dbPayee := app.Get.GetPayee(&db.Payee{Id: dbPayment.Account.ClientId}, "id")
 
@@ -38,9 +38,9 @@ func pay(request *models.PaymentRequest) {
 			return
 		}
 		if len(statusResponse.Messages) == 0 {
-			status := app.Get.GetStatusByName(statusResponse.Status)
-			dbPayment.StatusId = int64(status.Id)
-			app.Get.UpdatePayment(dbPayment, "payment_number", "status_id")
+			dbPayment.StatusId = db.GetStatus(statusResponse.Status)
+			dbPayment.PaymentNumber = statusResponse.OrderReference
+			app.Get.UpdatePayment(dbPayment, "payment_number", "status_id", "payment_number")
 			email := &models.Email{
 				Id:      int64(dbPayment.Id),
 				Status:  statusResponse.Status,

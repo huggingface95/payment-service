@@ -22,7 +22,7 @@ type Payment struct {
 	PaymentNumber string       `bun:"payment_number"`
 	Error         string       `bun:"error"`
 	AccountId     int64        `bun:"account_id"`
-	StatusId      int64        `bun:"status_id"`
+	StatusId      StatusDb     `bun:"status_id"`
 	ProviderId    int64        `bun:"payment_provider_id"`
 	TypeId        TypeDb       `bun:"type_id"`
 	CurrencyId    CurrencyDb   `bun:"currency_id"`

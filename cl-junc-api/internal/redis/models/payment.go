@@ -5,9 +5,9 @@ import (
 )
 
 type PaymentRequest struct {
-	Amount    float64 `json:"amount"`
-	Currency  string  `json:"currency"`
-	PaymentId uint64  `json:"payment_id"`
+	Amount   float64 `json:"amount"`
+	Currency string  `json:"currency"`
+	Id       uint64  `json:"id"`
 }
 
 // MarshalBinary -
