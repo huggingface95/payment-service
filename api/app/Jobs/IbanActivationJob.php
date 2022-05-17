@@ -3,8 +3,9 @@
 namespace App\Jobs;
 
 use App\DTO\Account\IbanRequestDTO;
-use GuzzleHttp\Client;
-
+use App\DTO\TransformerDTO;
+use App\Models\Accounts;
+use Illuminate\Support\Facades\Redis;
 
 
 class IbanActivationJob extends Job
@@ -15,11 +16,11 @@ class IbanActivationJob extends Job
      * @return void
      */
 
-    protected IbanRequestDTO $ibanRequestDTO;
+    protected IbanRequestDTO $ibanRequest;
 
-    public function __construct(IbanRequestDTO $ibanRequestDTO)
+    public function __construct(Accounts $account)
     {
-        $this->ibanRequestDTO = $ibanRequestDTO;
+        $this->ibanRequest = TransformerDTO::transform(IbanRequestDTO::class, $account);
     }
 
     /**
@@ -28,17 +29,10 @@ class IbanActivationJob extends Job
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function handle(Client $client)
+    public function handle()
     {
-        $response = $client->post(
-            'cl-junc-apicore:8080/generate',
-            [
-                'body' => json_encode($this->ibanRequestDTO)
-            ]
-        );
+        $redis = Redis::connection();
 
-
-        dd($response);
-
+        $redis->rpush(config('payment.redis.iban'), json_encode($this->ibanRequest));
     }
 }

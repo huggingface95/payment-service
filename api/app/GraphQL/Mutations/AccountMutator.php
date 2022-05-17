@@ -15,7 +15,7 @@ class AccountMutator
         try {
             $account = Accounts::find($args['id']);
 
-            dispatch(new IbanActivationJob(TransformerDTO::transform(IbanRequestDTO::class, $account)));
+            dispatch(new IbanActivationJob($account));
         }
         catch (\Throwable $e){
             dd($e);

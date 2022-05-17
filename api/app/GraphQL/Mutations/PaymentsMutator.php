@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Jobs\PaymentJob;
 use App\Models\Payments;
 
 class PaymentsMutator
@@ -17,6 +18,7 @@ class PaymentsMutator
         $memberId = Payments::DEFAULT_MEMBER_ID;
         $args['member_id'] = $memberId;
         $payment = Payments::create($args);
+        dispatch(new PaymentJob($payment));
 
         return $payment;
     }

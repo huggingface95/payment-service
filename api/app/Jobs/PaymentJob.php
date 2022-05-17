@@ -5,8 +5,7 @@ namespace App\Jobs;
 use App\DTO\Payment\PaymentDTO;
 use App\DTO\TransformerDTO;
 use App\Models\Payments;
-use GuzzleHttp\Client;
-
+use Illuminate\Support\Facades\Redis;
 
 
 class PaymentJob extends Job
@@ -19,9 +18,9 @@ class PaymentJob extends Job
 
     protected PaymentDTO $payment;
 
-    public function __construct(PaymentDTO $payment)
+    public function __construct(Payments $payment)
     {
-        $this->payment = $payment;
+        $this->payment = TransformerDTO::transform(PaymentDTO::class, $payment);
     }
 
     /**
@@ -30,23 +29,23 @@ class PaymentJob extends Job
      * @return void
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function handle(Client $client)
+    public function handle()
     {
+        $redis = Redis::connection();
 
-        $payment = Payments::with('applicantIndividual')->find(1);
-
-
-        $dto = TransformerDTO::transform(PaymentDTO::class, $payment);
-
-        $response = $client->post(
-            'cl-junc-apicore:8080/payment',
-            [
-                'body' => json_encode($dto)
-            ]
-        );
+        $redis->rpush(config('payment.redis.pay'), json_encode($this->payment));
 
 
-        dd($response);
+//        dd($redis->lrange(config('payment.redis.pay'), 0,-1));
+
+
+
+//        $response = $client->post(
+//            'cl-junc-apicore:8080/payment',
+//            [
+//                'body' => json_encode($dto)
+//            ]
+//        );
 
     }
 }
