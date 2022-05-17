@@ -35,17 +35,7 @@ class PaymentJob extends Job
 
         $redis->rpush(config('payment.redis.pay'), json_encode($this->payment));
 
-
 //        dd($redis->lrange(config('payment.redis.pay'), 0,-1));
-
-
-
-//        $response = $client->post(
-//            'cl-junc-apicore:8080/payment',
-//            [
-//                'body' => json_encode($dto)
-//            ]
-//        );
 
     }
 }
