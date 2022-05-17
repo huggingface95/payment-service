@@ -1,5 +1,7 @@
 package constants
 
-const QueueClearJunctionPayLog = "queue:clearjunction:pay:log"
+const QueuePayLog = "queue:pay:log"
+
+const QueueIbanLog = "queue:iban:log"
 
 const QueueEmailLog = "email:payment:log"

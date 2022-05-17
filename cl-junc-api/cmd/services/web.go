@@ -14,8 +14,8 @@ func Web() {
 	r := gin.Default()
 
 	r.GET("/", index)
-	r.POST("/payment", api.Pay)
 	r.POST("/clearjunction/postback", api.CljPostback)
+	r.POST("/clearjunction/iban/postback", api.IbanPostback)
 	r.Run(":8080")
 }
 

@@ -89,7 +89,31 @@ func (a *App) GetStatusByName(name string) *db2.Status {
 	return status
 }
 
+func (a *App) GetAccountStateByName(name string) *db2.AccountState {
+	state := &db2.AccountState{
+		Name: name,
+	}
+	err := a.Sql.SelectWhereResult(state, "name")
+	if err != nil {
+		log.Debug().Msgf("DON'T find status")
+		panic(err)
+	}
+
+	return state
+}
+
 func (a *App) GetPaymentWithRelations(payment *db2.Payment, relations []string, column string) *db2.Payment {
+	err := a.Sql.SelectWhereWithRelationResult(payment, relations, column)
+
+	if err != nil {
+		log.Error().Err(err)
+		panic(err)
+	}
+
+	return payment
+}
+
+func (a *App) GetAccountWithRelations(payment *db2.Account, relations []string, column string) *db2.Account {
 	err := a.Sql.SelectWhereWithRelationResult(payment, relations, column)
 
 	if err != nil {

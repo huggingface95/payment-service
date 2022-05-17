@@ -4,19 +4,19 @@ import (
 	"encoding/json"
 )
 
-type Payment struct {
+type PaymentRequest struct {
 	Amount    float64 `json:"amount"`
 	Currency  string  `json:"currency"`
 	PaymentId uint64  `json:"payment_id"`
 }
 
 // MarshalBinary -
-func (p *Payment) MarshalBinary() ([]byte, error) {
+func (p *PaymentRequest) MarshalBinary() ([]byte, error) {
 	return json.Marshal(p)
 }
 
 // UnmarshalBinary -
-func (p *Payment) UnmarshalBinary(data []byte) error {
+func (p *PaymentRequest) UnmarshalBinary(data []byte) error {
 	if err := json.Unmarshal(data, &p); err != nil {
 		return err
 	}

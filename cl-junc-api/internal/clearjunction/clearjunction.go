@@ -38,6 +38,16 @@ func (cj *ClearJunction) Pay(payment *db.Payment, payee *db.Payee, amount float6
 	return response
 }
 
+func (cj *ClearJunction) Iban(account *db.Account) *models.IbanCreateResponse {
+	ibanRequest := models.NewIbanRequest(account, cj.Wallet(), cj.baseUrl)
+	response, err := cj.CreateIban(ibanRequest)
+	if err != nil {
+		log.Error().Err(err)
+		return nil
+	}
+	return response
+}
+
 func (cj *ClearJunction) Wallet() string {
 	return cj.config.Wallet
 }
