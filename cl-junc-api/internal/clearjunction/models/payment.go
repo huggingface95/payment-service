@@ -28,23 +28,16 @@ type PayInPayoutRequestPayee struct {
 	Individual       PayInPayoutRequestPayeePayerIndividual `json:"individual"`
 }
 type PayInPayoutRequestPayeePayerIndividual struct {
-	Phone      string  `json:"phone"`
-	Email      string  `json:"email"`
-	BirthDate  string  `json:"birthDate"`
-	BirthPlace string  `json:"birthPlace"`
-	Address    Address `json:"address"`
-	Document   struct {
-		Type              string `json:"type"`
-		Number            string `json:"number"`
-		IssuedCountryCode string `json:"issuedCountryCode"`
-		IssuedBy          string `json:"issuedBy"`
-		IssuedDate        string `json:"issuedDate"`
-		ExpirationDate    string `json:"expirationDate"`
-	} `json:"document"`
-	LastName   string `json:"lastName"`
-	FirstName  string `json:"firstName"`
-	MiddleName string `json:"middleName"`
-	Inn        string `json:"inn"`
+	Phone      string   `json:"phone"`
+	Email      string   `json:"email"`
+	BirthDate  string   `json:"birthDate"`
+	BirthPlace string   `json:"birthPlace"`
+	Address    Address  `json:"address"`
+	Document   Document `json:"document"`
+	LastName   string   `json:"lastName"`
+	FirstName  string   `json:"firstName"`
+	MiddleName string   `json:"middleName"`
+	Inn        string   `json:"inn"`
 }
 type PayInPayoutRequestCustomInfo struct {
 	PaymentId uint64 `json:"payment_id"`
@@ -55,7 +48,6 @@ type PayInPayoutPayeePayerRequisite struct {
 	Iban          string `json:"iban"`
 	BankSwiftCode string `json:"bankSwiftCode"`
 }
-
 type PayInPayoutResponse struct {
 	RequestReference string                         `json:"requestReference"`
 	OrderReference   string                         `json:"orderReference"`
@@ -67,18 +59,15 @@ type PayInPayoutResponse struct {
 	SubStatuses      PayInPayoutResponseSubStatuses `json:"subStatuses"`
 	CustomFormat     PayInPayoutRequestCustomInfo   `json:"customFormat"`
 }
-
 type PayInPayoutResponseMessages struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
 	Details string `json:"details"`
 }
-
 type PayInPayoutResponseSubStatuses struct {
 	OperStatus       string `json:"operStatus"`
 	ComplianceStatus string `json:"complianceStatus"`
 }
-
 type PaymentCommon interface{}
 
 // MarshalBinary -
@@ -130,9 +119,9 @@ func NewPayInPayoutRequest(payment *db.Payment, payee *db.Payee, amount float64,
 		},
 		CustomInfo: PayInPayoutRequestCustomInfo{PaymentId: payment.Id},
 		PayeeRequisite: PayInPayoutPayeePayerRequisite{
-			Iban:          "999999",
+			Iban:          "HU93116000060000000012345676",
 			SortCode:      "000000",
-			AccountNumber: "999999",
+			AccountNumber: "12345676",
 		},
 	}
 }

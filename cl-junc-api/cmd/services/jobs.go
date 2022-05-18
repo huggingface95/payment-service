@@ -11,8 +11,13 @@ func payments() {
 	jobs.ProcessPayQueue()
 }
 
+func ibanGenerate() {
+	jobs.ProcessIbanQueue()
+}
+
 func Jobs() {
 	for range time.Tick(JobPeriod) {
 		payments()
+		ibanGenerate()
 	}
 }

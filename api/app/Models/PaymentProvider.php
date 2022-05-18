@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 
 class PaymentProvider extends BaseModel
@@ -22,7 +23,7 @@ class PaymentProvider extends BaseModel
 
     /**
      * Get relation currencies
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function currencies()
     {
@@ -31,7 +32,7 @@ class PaymentProvider extends BaseModel
 
     /**
      * Get relation countries
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function countries()
     {
@@ -40,15 +41,15 @@ class PaymentProvider extends BaseModel
 
     /**
      * Get relation payment systems
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function paymentSystems()
+    public function paymentSystems(): BelongsToMany
     {
         return $this->belongsToMany(PaymentSystem::class,'payment_provider_payment_system','payment_provider_id','payment_system_id');
     }
 
     public function scopePaymentProviderCountry($query, $countryId)
-    {        
+    {
 		$countries = implode(',', $countryId);
         return $query->where('country_id', '&&', DB::raw('ARRAY[' . $countries . ']::integer[]'));
     }

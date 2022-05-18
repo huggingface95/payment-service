@@ -7,7 +7,7 @@ use App\Models\Payments;
 
 class PaymentDTO
 {
-    public int $paymentId;
+    public int $id;
     public string $currency;
     public float $amount;
 
@@ -15,7 +15,7 @@ class PaymentDTO
     public static function transform(Payments $payment): PaymentDTO
     {
         $dto = new self();
-        $dto->paymentId = $payment->id;
+        $dto->id = $payment->id;
         $dto->currency = $payment->Currencies->code;
         $dto->amount = $payment->amount;
         return $dto;

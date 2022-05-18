@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Facades\DB;
 
 class Accounts extends BaseModel
@@ -23,7 +25,7 @@ class Accounts extends BaseModel
 
     /**
      * Get relation currencies
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function currencies()
     {
@@ -32,7 +34,7 @@ class Accounts extends BaseModel
 
     /**
      * Get relation applicant individual
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function applicantIndividual()
     {
@@ -41,7 +43,7 @@ class Accounts extends BaseModel
 
     /**
      * Get relation Member
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function members()
     {
@@ -50,16 +52,28 @@ class Accounts extends BaseModel
 
     /**
      * Get relation Payment Provider
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function paymentProvider()
+    public function paymentProvider(): BelongsTo
     {
         return $this->belongsTo(PaymentProvider::class,'payment_provider_id','id');
     }
 
+    public function paymentSystem(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            PaymentSystem::class,
+            PaymentProviderPaymentSystem::class,
+            'payment_provider_id',
+            'id',
+            'payment_provider_id',
+            'payment_system_id',
+        );
+    }
+
     /**
      * Get relation Payment Provider
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function commissionTemplate()
     {

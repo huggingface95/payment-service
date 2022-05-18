@@ -16,6 +16,8 @@ type Accounts {
     account_type: String!
     "Получить связанного платежного провайдера"
     payment_provider_id: PaymentProvider @belongsTo(relation:"paymentProvider")
+    "Получить связанного Пеймент систем"
+    payment_system: PaymentSystem @hasOne(relation:"paymentSystem")
     "Получить связанный шаблон комиссии"
     commission_template_id: CommissionTemplate @belongsTo(relation:"commissionTemplate")
     "Получить группу"
@@ -121,4 +123,9 @@ extend type Mutation @guard {
     deleteAccount(
         id: ID!
     ): Accounts   @delete
+
+    "Создать аккаунт"
+    generateIban(
+        id: ID!
+    ):Accounts   @field(resolver: "AccountMutator@generate")
 }

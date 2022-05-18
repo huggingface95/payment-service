@@ -89,6 +89,7 @@ $app->configure('filesystems');
 $app->configure('dompdf');
 $app->configure('mail');
 $app->configure('queue');
+$app->configure('payment');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware

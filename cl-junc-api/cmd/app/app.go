@@ -76,20 +76,18 @@ func (a *App) GetRedisList(key string, mc func() interface{}) []interface{} {
 	return newList
 }
 
-func (a *App) GetStatusByName(name string) *db2.Status {
-	status := &db2.Status{
-		Name: name,
-	}
-	err := a.Sql.SelectWhereResult(status, "name")
+func (a *App) GetPaymentWithRelations(payment *db2.Payment, relations []string, column string) *db2.Payment {
+	err := a.Sql.SelectWhereWithRelationResult(payment, relations, column)
+
 	if err != nil {
-		log.Debug().Msgf("DON'T find status")
+		log.Error().Err(err)
 		panic(err)
 	}
 
-	return status
+	return payment
 }
 
-func (a *App) GetPaymentWithRelations(payment *db2.Payment, relations []string, column string) *db2.Payment {
+func (a *App) GetAccountWithRelations(payment *db2.Account, relations []string, column string) *db2.Account {
 	err := a.Sql.SelectWhereWithRelationResult(payment, relations, column)
 
 	if err != nil {

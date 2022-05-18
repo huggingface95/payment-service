@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Tranzbase",
-    "url": "cl-junc-apicore:8080",
+    "url": "http://cl-junc-apicore:8080",
     "is_production": false,
     "tech_email" : "test@test.com",
     "mail": {

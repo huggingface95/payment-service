@@ -15,7 +15,7 @@ const (
 
 func (cj *ClearJunction) CreateExecution(request models.PayoutExecutionRequest, currency db.CurrencyDb) (result *models.PayInPayoutResponse, err error) {
 
-	path := fmt.Sprintf("payout/bankTransfer/%s?checkOnly=%v", getBankType(currency), "true")
+	path := fmt.Sprintf("payout/bankTransfer/%s?checkOnly=%v", getBankType(currency), "false")
 
 	err = cj.post(request, &result, "gate", path)
 	return
