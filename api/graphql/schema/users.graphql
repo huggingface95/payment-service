@@ -1,0 +1,46 @@
+"""
+Пользователи
+Roles->Users
+"""
+type Users {
+    "Имя участника"
+    first_name: String
+    "Фамилия участника"
+    last_name: String
+    "Email участника"
+    email: EMAIL
+    "получить компанию"
+    company: Companies @belongsTo(relation: "company")
+    "Получить группу"
+    group: GroupRole @belongsTo(relation: "groupRole")
+    group_type: Groups @belongsTo(relation: "groupType")
+    "Получить роль"
+    role: Role @belongsTo(relation: "role")
+    "Полное имя"
+    fullname: String
+}
+
+extend type Query @guard {
+    """
+    Получить список пользователей системы
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    where:{column: FIRST_NAME, operator: LIKE, value: ""} фильтр по фамилии, имени, email, компании, роли, департаменту, должности
+    """
+    users(
+        where: _ @whereConditions(columnsEnum: "UsersColumn"),
+        orderBy: _ @orderBy(columns: ["email"],
+    )): [Users!]!   @paginate(defaultCount: 10) @orderBy(column: "email", direction: ASC)
+}
+
+enum UsersColumn {
+    ID @enum(value: "id")
+    FULLNAME @enum(value: "fullname")
+    COMPANY_ID @enum(value: "company_id")
+    EMAIL @enum(value: "email")
+    GROUP_ID @enum(value: "group_id")
+    GROUP_TYPE_ID @enum(value: "group_type_id")
+    ROLE_ID @enum(value: "role_id")
+}
+
+
+
