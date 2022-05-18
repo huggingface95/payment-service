@@ -7,6 +7,7 @@ use App\Models\PermissionCategory;
 use App\Models\Permissions;
 use App\Models\Role;
 use App\Exceptions\GraphqlException;
+use Illuminate\Support\Facades\DB;
 
 class RoleMutator
 {
@@ -88,6 +89,22 @@ class RoleMutator
     private function applyPermissionCategory(int $permissionCategoryId, bool $isAllCompanies)
     {
         return PermissionCategory::where('id',$permissionCategoryId)->update(['is_all_companies'=>$isAllCompanies]);
+    }
+
+    public function delete($root, array $args)
+    {
+        try {
+            $role = Role::find($args['id']);
+            $group = GroupRole::all()->where('role_id', '=', $args['id']);
+            if ($group != '[]') {
+                throw new GraphqlException('It is not possible to delete the role because it has active users', "use");
+            }
+            $role->delete();
+            return $role;
+        } catch (\Exception $exception)
+        {
+            throw new GraphqlException('It is not possible to delete the role because it has active users',"use");
+        }
     }
 
 }
