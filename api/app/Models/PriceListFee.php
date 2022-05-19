@@ -77,6 +77,6 @@ class PriceListFee extends Model
 
     public function feeType()
     {
-        return $this->belongsTo(OperationType::class, 'type_id');
+        return $this->belongsTo(FeeType::class, 'type_id');
     }
 }
