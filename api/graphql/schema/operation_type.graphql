@@ -10,5 +10,5 @@ extend type Query  @guard{
     """
     Получить список типов операций
     """
-   operationTypes: [OperationType!]!   @all
+   operationTypes(where: _ @whereConditions(columns: ["fee_type_id"])): [OperationType!]!   @all
 }
