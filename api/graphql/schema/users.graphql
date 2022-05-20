@@ -28,12 +28,11 @@ extend type Query @guard {
     """
     users(
         where: _ @whereConditions(columnsEnum: "UsersColumn"),
-        orderBy: _ @orderBy(columns: ["email"],
+        orderBy: _ @orderBy(columns: ["email","fullname"],
     )): [Users!]!   @paginate(defaultCount: 10) @orderBy(column: "email", direction: ASC)
 }
 
 enum UsersColumn {
-    ID @enum(value: "id")
     FULLNAME @enum(value: "fullname")
     COMPANY_ID @enum(value: "company_id")
     EMAIL @enum(value: "email")
