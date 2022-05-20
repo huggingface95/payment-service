@@ -32,6 +32,8 @@ type Members {
     department: Departments
     "ID настройки двухфактороной авторизации"
     two_factor_auth_setting_id: ID
+    "Получить настройки двухфакторной авторизации"
+    two_factor_auth_settings: TwoFactorAuthSettings @belongsTo(relation: "twoFactor")
     "Дополнительны поля"
     additional_fields: JSON
     "Дополнительны поля для member info"
@@ -42,6 +44,8 @@ type Members {
     access_groups: [GroupRole] @belongsToMany(relation: "groupRoles")
     "если true видит только своих аппликантов"
     is_show_owner_applicants: Boolean
+    "Security PIN"
+    security_pin: String
 }
 
 extend type Query @guard {
@@ -170,6 +174,13 @@ extend type Mutation  {
         password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         password_confirmation: String!
     ): Members   @field(resolver: "MembersMutator@setPassword")
+
+    """
+    Установить PIN участнику
+    """
+    setMemberSecurityPin(
+        id: ID!
+    ): Members   @field(resolver: "MembersMutator@setSecurityPin")
 
     """
     Удалить участника

@@ -115,6 +115,7 @@ $app->configure('queue');
 
 $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(\Illuminate\Auth\Passwords\PasswordResetServiceProvider::class);
 //$app->register(Spatie\Permission\PermissionServiceProvider::class);
  //$app->register(Wimil\LighthouseGraphqlJwtAuth\LighthouseGraphqlJwtAuthServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
@@ -138,6 +139,7 @@ $app->register(PragmaRX\Google2FALaravel\ServiceProvider::class);
 $app->register(App\Providers\TwoFactorServiceProvider::class);
 //$app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+$app->register(Illuminate\Notifications\NotificationServiceProvider::class);
 
 
 /*
@@ -153,8 +155,10 @@ $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->alias('cache', \Illuminate\Cache\CacheManager::class);
 $app->alias('PDF', Barryvdh\DomPDF\Facade::class);
 $app->alias('mail.manager', Illuminate\Mail\MailManager::class);
+$app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('Google2FA', \PragmaRX\Google2FALaravel\Facade::class);
+$app->alias('Notification', Illuminate\Support\Facades\Notification::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
