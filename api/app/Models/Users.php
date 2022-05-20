@@ -22,24 +22,9 @@ class Users extends BaseModel
     }
 
 
-    public function roles()
-    {
-        //TODO add functionality
-    }
-
     public function groupRole(): BelongsTo
     {
         return $this->belongsTo(GroupRole::class,'group_id');
-    }
-
-    public function groupType(): BelongsTo
-    {
-        return $this->belongsTo(Groups::class,'group_type_d');
-    }
-
-    public function role(): BelongsTo
-    {
-        return $this->belongsTo(Role::class,'role_d');
     }
 
 
