@@ -13,9 +13,6 @@ type Users {
     company: Companies @belongsTo(relation: "company")
     "Получить группу"
     group: GroupRole @belongsTo(relation: "groupRole")
-    group_type: Groups @belongsTo(relation: "groupType")
-    "Получить роль"
-    role: Role @belongsTo(relation: "role")
     "Полное имя"
     fullname: String
 }
