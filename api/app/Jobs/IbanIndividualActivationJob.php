@@ -8,7 +8,7 @@ use App\Models\Accounts;
 use Illuminate\Support\Facades\Redis;
 
 
-class IbanActivationJob extends Job
+class IbanIndividualActivationJob extends Job
 {
     /**
      * Create a new job instance.
@@ -33,6 +33,6 @@ class IbanActivationJob extends Job
     {
         $redis = Redis::connection();
 
-        $redis->rpush(config('payment.redis.iban'), json_encode($this->ibanRequest));
+        $redis->rpush(config('payment.redis.iban.individual'), json_encode($this->ibanRequest));
     }
 }

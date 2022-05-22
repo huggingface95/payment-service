@@ -2,16 +2,37 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Jobs\IbanActivationJob;
+use App\Jobs\IbanIndividualActivationJob;
 use App\Models\Accounts;
+use App\Models\Groups;
 
 class AccountMutator
 {
+
+    public function create($root, array $args)
+    {
+        /** @var Accounts $account */
+        $account = Accounts::create($args);
+        if ($args['client_type'] == Groups::INDIVIDUAL)
+            $account->applicantIndividual()->attach([$args['client_id']]);
+        elseif ($args['client_type'] == Groups::COMPANY)
+            $account->applicantCompany()->attach([$args['client_id']]);
+    }
+
+    public function update($root, array $args)
+    {
+        /** @var Accounts $account */
+        $account = Accounts::find($args['id']);
+        if ($args['client_type'] == Groups::INDIVIDUAL)
+            $account->applicantIndividual()->detach([$args['client_id']]);
+        elseif ($args['client_type'] == Groups::COMPANY)
+            $account->applicantCompany()->detach([$args['client_id']]);
+    }
 
     public function generate($root, array $args)
     {
         $account = Accounts::find($args['id']);
 
-        dispatch(new IbanActivationJob($account));
+        dispatch(new IbanIndividualActivationJob($account));
     }
 }

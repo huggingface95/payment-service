@@ -6,8 +6,6 @@ type Accounts {
     id: ID!
     "Получить связанный код валюты"
     currency_id: Currencies @belongsTo(relation:"currencies")
-    "Получить связанного аппликанта"
-    client_id: ApplicantIndividual @belongsTo(relation:"applicantIndividual")
     "Получить связанного владельца"
     owner_id: Members @belongsTo(relation:"members")
     "Номер аккаунта"
@@ -22,6 +20,8 @@ type Accounts {
     commission_template_id: CommissionTemplate @belongsTo(relation:"commissionTemplate")
     "Получить группу"
     group: GroupRole @hasOne(relation:"group")
+    "Получить или индивидуала или компании"
+    client: ApplicantIndividual!
     "Состояние аккаунта"
     account_state: String!
     "Имя аккаунта"
@@ -60,6 +60,8 @@ extend type Mutation @guard {
         currency_id: ID!
         "ID аппликанта"
         client_id: ID!
+        "Имя аппликанта"
+        client_type: String!
         "ID владельца"
         owner_id: ID!
         "Номер аккаунта"
@@ -85,7 +87,7 @@ extend type Mutation @guard {
         created_at: DateTime
         updated_at: DateTime
         activated_at : DateTime
-    ):Accounts   @create
+    ):Accounts @field(resolver:"AccountMutator@create")
 
     "Редактирование аккаунта"
     updateAccount(
@@ -94,6 +96,8 @@ extend type Mutation @guard {
         currency_id: ID!
         "ID аппликанта"
         client_id: ID!
+        "Имя аппликанта"
+        client_type: String!
         "ID владельца"
         owner_id: ID!
         "Тип аккаунта"
@@ -117,7 +121,7 @@ extend type Mutation @guard {
         created_at: DateTime
         updated_at: DateTime
         activated_at : DateTime
-    ): Accounts   @update
+    ): Accounts   @field(resolver:"AccountMutator@update")
 
     "Удалить аккаунт"
     deleteAccount(
