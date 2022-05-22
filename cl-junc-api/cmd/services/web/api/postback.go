@@ -22,7 +22,7 @@ func CljPostback(c *gin.Context) {
 		return
 	}
 
-	payment := app.Get.GetPaymentWithRelations(&db.Payment{PaymentNumber: response.OrderReference}, []string{"Account", "Status", "Provider", "Type"}, "payment_number")
+	payment := app.Get.GetPaymentWithRelations(&db.Payment{PaymentNumber: response.OrderReference}, []string{"Account.Payee", "Status", "Provider", "Type"}, "payment_number")
 
 	if response.Status != payment.Status.Name {
 		app.Get.UpdatePayment(&db.Payment{
