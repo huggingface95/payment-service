@@ -18,8 +18,8 @@ class CreateAccountIndividualsCompaniesTable extends Migration
         Schema::create('account_individuals_companies', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('account_id');
-            $table->unsignedBigInteger('clientable_id');
-            $table->enum('clientable_type', [ApplicantIndividual::class, ApplicantCompany::class])->default(ApplicantIndividual::class);
+            $table->unsignedBigInteger('client_id');
+            $table->enum('client_type', [ApplicantIndividual::class, ApplicantCompany::class])->default(ApplicantIndividual::class);
             $table->unique(['account_id', 'client_id', 'client_type']);
 
             $table->foreign('account_id')->references('id')->on('accounts')
