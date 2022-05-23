@@ -38,3 +38,7 @@ $router->post('api/sms', ['uses' => 'SmsController@send']);
 
 $router->get('/test', ['uses' => 'ExampleController@index']);
 
+$router->post('/password/email', 'PasswordController@postEmail');
+$router->post('/password/reset/{token}', 'PasswordController@postReset');
+$router->get('/password/reset/{token}', ['as'=>'password.reset', function(){'PasswordController@postReset';}]);
+

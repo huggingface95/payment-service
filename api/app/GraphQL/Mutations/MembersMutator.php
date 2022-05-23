@@ -129,4 +129,10 @@ class MembersMutator extends BaseMutator
         return GroupRole::where(['group_type_id'=>1, 'role_id' => $roleId])->first();
     }
 
+    public function setSecurityPin($_, array $args)
+    {
+        Members::where('id',$args['id'])->update(['security_pin'=>str_pad(mt_rand(1,99999999),8,'0',STR_PAD_LEFT)]);
+        return $args;
+    }
+
 }
