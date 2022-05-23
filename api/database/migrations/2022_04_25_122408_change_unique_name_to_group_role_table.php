@@ -14,7 +14,7 @@ class ChangeUniqueNameToGroupRoleTable extends Migration
     public function up()
     {
         Schema::table('group_role', function (Blueprint $table) {
-            $table->dropUnique('group_role_un');
+//            $table->dropUnique('group_role_un');
             $table->unique(['name', 'group_type_id']);
         });
     }
