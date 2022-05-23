@@ -67,7 +67,12 @@ class Permissions extends SpatiePermission
     {
         $attributes['guard_name'] = $attributes['guard_name'] ?? Guard::getDefaultName(static::class);
 
-        $permission = static::getPermission(['name' => $attributes['name'], 'guard_name' => $attributes['guard_name'], 'type' => $attributes['type']]);
+        $permission = static::getPermission([
+            'name' => $attributes['name'],
+            'guard_name' => $attributes['guard_name'],
+            'type' => $attributes['type'],
+            'permission_list_id'=>$attributes['permission_list_id']
+        ]);
 
         if ($permission) {
             throw PermissionAlreadyExists::create($attributes['name'], $attributes['guard_name']);
