@@ -22,8 +22,10 @@ class PermissionOperation extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'referer', 'hidden'
+        'id', 'name', 'referer', 'hidden'
     ];
+
+    public $timestamps = false;
 
 
     public function parents(): BelongsToMany
