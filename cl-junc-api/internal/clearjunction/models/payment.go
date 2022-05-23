@@ -83,21 +83,21 @@ func (p *PayInPayoutResponse) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
-func NewPayInPayoutRequest(payment *db.Payment, payee *db.Payee, amount float64, currency string, wallet string) PayInPayoutRequest {
+func NewPayInPayoutRequest(payment *db.Payment, amount float64, currency string, wallet string) PayInPayoutRequest {
 	return PayInPayoutRequest{
 		ClientOrder: time.Now().Unix(),
 		Amount:      amount,
 		Currency:    currency,
 		Description: "Custom Description",
 		Payer: PayInPayoutRequestPayer{
-			ClientCustomerId: payee.Id,
+			ClientCustomerId: payment.Account.GetPayee().Id,
 			WalletUuid:       wallet,
 
 			Individual: PayInPayoutRequestPayeePayerIndividual{
-				Email:     payee.Email,
-				Phone:     payee.Phone,
-				LastName:  payee.LastName,
-				FirstName: payee.FirstName,
+				Email:     payment.Account.GetPayee().Email,
+				Phone:     payment.Account.GetPayee().Phone,
+				LastName:  payment.Account.GetPayee().LastName,
+				FirstName: payment.Account.GetPayee().FirstName,
 				Address: Address{
 					Country: "AM",
 					Zip:     "084",

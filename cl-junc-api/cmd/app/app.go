@@ -87,15 +87,15 @@ func (a *App) GetPaymentWithRelations(payment *db2.Payment, relations []string, 
 	return payment
 }
 
-func (a *App) GetAccountWithRelations(payment *db2.Account, relations []string, column string) *db2.Account {
-	err := a.Sql.SelectWhereWithRelationResult(payment, relations, column)
+func (a *App) GetAccountWithRelations(account *db2.Account, relations []string, column string) *db2.Account {
+	err := a.Sql.SelectWhereWithRelationResult(account, relations, column)
 
 	if err != nil {
 		log.Error().Err(err)
 		panic(err)
 	}
 
-	return payment
+	return account
 }
 
 func (a *App) GetPayment(payment *db2.Payment, column string) *db2.Payment {

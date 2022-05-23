@@ -23,12 +23,10 @@ func ProcessPayQueue() {
 
 func pay(request *models.PaymentRequest) {
 
-	dbPayment := app.Get.GetPaymentWithRelations(&db.Payment{Id: request.Id}, []string{"Account", "Status", "Provider", "Type", "Currency"}, "id")
-
-	dbPayee := app.Get.GetPayee(&db.Payee{Id: dbPayment.Account.ClientId}, "id")
+	dbPayment := app.Get.GetPaymentWithRelations(&db.Payment{Id: request.Id}, []string{"Account.Payee", "Status", "Provider", "Type", "Currency"}, "id")
 
 	if dbPayment.Provider.Name == db.CLEARJUNCTION {
-		payResponse := app.Get.Wire.Pay(dbPayment, dbPayee, request.Amount, request.Currency)
+		payResponse := app.Get.Wire.Pay(dbPayment, request.Amount, request.Currency)
 		if payResponse == nil {
 			return
 		}

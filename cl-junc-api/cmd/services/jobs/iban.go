@@ -8,19 +8,19 @@ import (
 	"cl-junc-api/pkg/utils/log"
 )
 
-func ProcessIbanQueue() {
+func ProcessIbanIndGenerateQueue() {
 	for {
-		redisData := app.Get.GetRedisDataByBlPop(constants.QueueIbanLog, func() interface{} {
+		redisData := app.Get.GetRedisDataByBlPop(constants.QueueIbanIndividualLog, func() interface{} {
 			return new(models2.IbanRequest)
 		})
 		if redisData == nil {
 			break
 		}
-		createIban(redisData.(*models2.IbanRequest))
+		createIndividualIban(redisData.(*models2.IbanRequest))
 	}
 }
 
-func createIban(request *models2.IbanRequest) {
+func createIndividualIban(request *models2.IbanRequest) {
 	dbAccount := app.Get.GetAccountWithRelations(&db.Account{Id: request.AccountId}, []string{"State"}, "id")
 	response := app.Get.Wire.Iban(dbAccount)
 	if response == nil {

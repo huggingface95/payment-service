@@ -2,6 +2,7 @@ package constants
 
 const QueuePayLog = "queue:pay:log"
 
-const QueueIbanLog = "queue:iban:log"
+const QueueIbanCompanyLog = "queue:iban:company:log"
+const QueueIbanIndividualLog = "queue:iban:individual:log"
 
 const QueueEmailLog = "email:payment:log"
