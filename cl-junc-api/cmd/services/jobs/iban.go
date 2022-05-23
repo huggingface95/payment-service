@@ -33,10 +33,10 @@ func createIndividualIban(request *models2.IbanRequest) {
 	}
 
 	dbAccount.AccountState = db.GetAccountState(statusResponse.Status)
-	dbAccount.AccountNumber = statusResponse.OrderReference
+	dbAccount.OrderReference = statusResponse.OrderReference
 
 	if len(statusResponse.Messages) == 0 {
-		app.Get.UpdateAccount(dbAccount, "id", "account_state", "account_number")
+		app.Get.UpdateAccount(dbAccount, "id", "account_state", "order_reference")
 	}
 
 	return

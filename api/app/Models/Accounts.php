@@ -23,7 +23,7 @@ class Accounts extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'currency_id', 'owner_id', 'account_number', 'account_type', 'payment_provider_id', 'commission_template_id', 'account_state', 'account_name', 'is_primary', 'current_balance', 'reserved_balance', 'available_balance', 'iban'
+        'currency_id', 'owner_id', 'account_number', 'account_type', 'payment_provider_id', 'commission_template_id', 'account_state', 'account_name', 'is_primary', 'current_balance', 'reserved_balance', 'available_balance', 'order_reference'
     ];
 
     public function getClientAttribute()
