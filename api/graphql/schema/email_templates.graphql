@@ -18,6 +18,7 @@ type EmailTemplate {
     footer: String!
     created_at: DateTime
     updated_at: DateTime
+    use_layout: Boolean
 }
 
 
@@ -61,20 +62,21 @@ extend type Mutation @guard {
 
     "Обновить данные компании"
     updateEmailTemplate(
+        id: ID!
         "Название электронной почты"
-        subject: String!
+        subject: String
         "Взять layout"
-        use_layout: Boolean!
+        use_layout: Boolean
         "Тип электронной почты"
-        type: String!
+        type: String
         "Тип сервиса"
-        service_type: String!
+        service_type: String
         "Контент электронной почты"
-        content: String!
+        content: String
         "Header электронной почты"
-        header: String!
+        header: String
         "Footer электронной почты"
-        footer: String!
+        footer: String
     ): EmailTemplate   @update
 
     "Удалить запись"
