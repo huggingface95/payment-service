@@ -15,6 +15,7 @@ return [
 
     'defaults' => [
         'guard' => env('AUTH_GUARD', 'api'),
+        'passwords' => 'members'
     ],
 
     /*
@@ -92,7 +93,12 @@ return [
     */
 
     'passwords' => [
-        'members',
+        'members' => [
+            'provider' => 'members',
+            //'email' => 'auth.emails.password',
+            'table' => 'passwords_resets',
+            'expire' => 60,
+        ],
         'applicant_individual'
     ],
 

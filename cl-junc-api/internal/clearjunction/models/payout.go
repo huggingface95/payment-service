@@ -17,6 +17,17 @@ type PayoutIntermediaryInstitution struct {
 	BankName string `json:"bankName"`
 }
 
+type PayoutApproveResponse struct {
+	RequestReference string          `json:"requestReference"`
+	ActionResult     []ApproveResult `json:"actionResult"`
+}
+
+type ApproveResult struct {
+	OrderReference         string    `json:"orderReference"`
+	ActionProcessingStatus string    `json:"actionProcessingStatus"`
+	Messages               []Message `json:"messages"`
+}
+
 func NewPayoutExecutionRequest(payInPayout PayInPayoutRequest, baseUrl string) PayoutExecutionRequest {
 
 	return PayoutExecutionRequest{

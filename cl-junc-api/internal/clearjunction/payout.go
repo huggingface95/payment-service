@@ -3,6 +3,7 @@ package clearjunction
 import (
 	"cl-junc-api/internal/clearjunction/models"
 	"cl-junc-api/internal/db"
+	"errors"
 	"fmt"
 )
 
@@ -30,4 +31,17 @@ func getBankType(c db.CurrencyDb) string {
 	default:
 		return SEPA
 	}
+}
+
+func (cj *ClearJunction) PayoutApprove(orderReference string) (result models.ApproveResult, err error) {
+	response := models.PayoutApproveResponse{}
+	err = cj.post(map[string]interface{}{"orderReferenceArray": []string{orderReference}}, &response, "gate", "transactionAction/approve")
+	if err == nil {
+		if len(response.ActionResult) > 0 {
+			result = response.ActionResult[0]
+		} else {
+			err = errors.New("empty result")
+		}
+	}
+	return
 }

@@ -57,6 +57,12 @@ type CheckRequisiteResponse struct {
 	SepaInstReachable bool   `json:"sepaInstReachable"`
 }
 
+type IbanStatusWithCustomerIdResponse struct {
+	RequestReference string   `json:"requestReference"`
+	ClientCustomerId string   `json:"clientCustomerId"`
+	Ibans            []string `json:"ibans"`
+}
+
 func NewIbanRequest(account *db.Account, wallet string, baseUrl string) IbanCreateRequest {
 	return IbanCreateRequest{
 		ClientOrder: time.Now().Unix(),

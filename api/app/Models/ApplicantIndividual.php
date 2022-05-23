@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -9,7 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class ApplicantIndividual extends Model
 {
-    use HasRoles;
+    use HasRoles, MorphToOne;
 
     protected $table = "applicant_individual";
     protected $guard_name = 'api';
@@ -171,9 +172,9 @@ class ApplicantIndividual extends Model
         return $this->belongsToMany(ApplicantCompany::class, 'applicant_individual_company', 'applicant_individual_id', 'applicant_company_id');
     }
 
-    public function account()
+    public function account(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
-        return $this->belongsTo(Accounts::class, 'id', 'client_id');
+        return $this->morphToOne(Accounts::class, 'client', AccountIndividualCompany::class, 'client_id', 'account_id');
     }
 
     public function company()

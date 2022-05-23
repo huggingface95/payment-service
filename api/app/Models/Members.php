@@ -15,7 +15,9 @@ use Illuminate\Support\Collection;
 use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Laravel\Passport\HasApiTokens;
-
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use \Illuminate\Notifications\Notifiable;
 /**
  * Class Members
  * @package App\Models
@@ -27,9 +29,9 @@ use Laravel\Passport\HasApiTokens;
  *
  */
 
-class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject
+class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
 {
-    use SoftDeletes, Authorizable, Authenticatable, UserPermission, HasApiTokens;
+    use SoftDeletes, Authorizable, Authenticatable, UserPermission, HasApiTokens, CanResetPassword, Notifiable;
 
     public $password_confirmation;
 
@@ -40,7 +42,8 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     protected $hidden = [
         'password_hash',
         'password_salt',
-        'twofactor_secret'
+        'twofactor_secret',
+        'security_pin'
     ];
 
     protected $dates = ['deleted_at'];
@@ -90,6 +93,11 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     {
         return $this->position()
             ->join('departments', 'departments.id', '=', 'department_position.department_id')->select('departments.*')->first();
+    }
+
+    public function twoFactor(): BelongsTo
+    {
+        return $this->belongsTo(TwoFactorAuthSettings::class, 'two_factor_auth_setting_id');
     }
 
     public function roles()

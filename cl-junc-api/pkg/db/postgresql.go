@@ -1,6 +1,7 @@
 package db
 
 import (
+	db2 "cl-junc-api/internal/db"
 	"cl-junc-api/pkg/db/config"
 	"cl-junc-api/pkg/utils/log"
 	"context"
@@ -29,12 +30,10 @@ func NewPostgresql(debug bool, config config.SqlDbConfig) Postgresql {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(dsn)))
 	db := bun.NewDB(sqldb, pgdialect.New())
 
-	//fmt.Println(db.Ping())
-	//fmt.Println("sssssssssssss")
-
 	if debug {
 		db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 	}
+	db.RegisterModel((*db2.AccountIndividualsCompanies)(nil))
 
 	return Postgresql{client: db}
 }
@@ -78,11 +77,11 @@ func (p *Postgresql) SelectWhereResult(model interface{}, column string) error {
 }
 
 func (p *Postgresql) SelectWhereWithRelationResult(model interface{}, relations []string, column string) error {
-	query := p.Select(model).WherePK(column)
+	query := p.Select(model)
 	for _, r := range relations {
 		query.Relation(r)
 	}
-	return query.Scan(context.Background())
+	return query.WherePK(column).Scan(context.Background())
 }
 
 func (p *Postgresql) SelectWhereExistsResult(model interface{}, column string) (exists bool, err error) {

@@ -3,51 +3,50 @@
 namespace App\Models;
 
 
+use Ankurk91\Eloquent\MorphToOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Illuminate\Support\Facades\DB;
+
 
 class Accounts extends BaseModel
 {
 
+    use MorphToOne;
+
     public $timestamps = false;
 
-    protected $table="accounts";
+    protected $table = "accounts";
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'currency_id', 'client_id', 'owner_id', 'account_number', 'account_type', 'payment_provider_id', 'commission_template_id', 'account_state', 'account_name', 'is_primary', 'current_balance', 'reserved_balance', 'available_balance'
+        'currency_id', 'owner_id', 'account_number', 'account_type', 'payment_provider_id', 'commission_template_id', 'account_state', 'account_name', 'is_primary', 'current_balance', 'reserved_balance', 'available_balance', 'iban'
     ];
 
+    public function getClientAttribute()
+    {
+        return $this->clientable->client ?? null;
+    }
 
     /**
      * Get relation currencies
      * @return BelongsTo
      */
-    public function currencies()
+    public function currencies(): BelongsTo
     {
-        return $this->belongsTo(Currencies::class,'currency_id','id');
-    }
-
-    /**
-     * Get relation applicant individual
-     * @return BelongsTo
-     */
-    public function applicantIndividual()
-    {
-        return $this->belongsTo(ApplicantIndividual::class,'client_id','id');
+        return $this->belongsTo(Currencies::class, 'currency_id', 'id');
     }
 
     /**
      * Get relation Member
      * @return BelongsTo
      */
-    public function members()
+    public function members(): BelongsTo
     {
-        return $this->belongsTo(Members::class,'owner_id','id');
+        return $this->belongsTo(Members::class, 'owner_id', 'id');
     }
 
     /**
@@ -56,7 +55,7 @@ class Accounts extends BaseModel
      */
     public function paymentProvider(): BelongsTo
     {
-        return $this->belongsTo(PaymentProvider::class,'payment_provider_id','id');
+        return $this->belongsTo(PaymentProvider::class, 'payment_provider_id', 'id');
     }
 
     public function paymentSystem(): HasOneThrough
@@ -75,20 +74,34 @@ class Accounts extends BaseModel
      * Get relation Payment Provider
      * @return BelongsTo
      */
-    public function commissionTemplate()
+    public function commissionTemplate(): BelongsTo
     {
-        return $this->belongsTo(CommissionTemplate::class,'commission_template_id','id');
+        return $this->belongsTo(CommissionTemplate::class, 'commission_template_id', 'id');
     }
 
-    public function group()
+    public function group(): HasOneThrough
     {
-        return $this->hasOneThrough(GroupRole::class, ApplicantIndividual::class,'member_group_role_id','id','client_id','id');
+        return $this->hasOneThrough(GroupRole::class, ApplicantIndividual::class, 'member_group_role_id', 'id', 'client_id', 'id');
     }
 
     public function setAccountIdAttribute()
     {
-        $this->attributes['account_number']=uniqid();
+        $this->attributes['account_number'] = uniqid();
     }
 
+    public function clientable(): HasOne
+    {
+        return $this->hasOne(AccountIndividualCompany::class, 'account_id');
+    }
+
+    public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
+    {
+        return $this->morphedByOne(ApplicantIndividual::class, 'client');
+    }
+
+    public function applicantCompany(): \Ankurk91\Eloquent\Relations\MorphToOne
+    {
+        return $this->morphedByOne(ApplicantIndividual::class, 'client');
+    }
 
 }

@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\BelongsToOne;
+use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class ApplicantCompany extends Model
 {
-
+        use MorphToOne,BelongsToOne;
 
     protected $table="applicant_companies";
 
@@ -199,6 +201,11 @@ class ApplicantCompany extends Model
             'id',
             'group_role_id',
         )->where('group_type_id', GroupRole::COMPANY);
+    }
+
+    public function account(): \Ankurk91\Eloquent\Relations\MorphToOne
+    {
+        return $this->morphToOne(Accounts::class, 'client', AccountIndividualCompany::class, 'client_id', 'account_id');
     }
 
     public function scopeGroupSort($query, $sort)
