@@ -61,6 +61,28 @@ class AddIndividualSectionsPermissions extends Migration
                         'type' => 'info',
                     ],
                 ],
+                'Account Details' => [
+                    [
+                        'display_name' => 'Read',
+                        'name' => 'Account Details.Read',
+                        'type' => 'read',
+                    ],
+                    [
+                        'display_name' => 'Edit',
+                        'name' => 'Account Details.Edit',
+                        'type' => 'edit',
+                    ],
+                    [
+                        'display_name' => 'Show Balance',
+                        'name' => 'Account Details.Show Balance',
+                        'type' => 'add',
+                    ],
+                    [
+                        'display_name' => 'Show Provider info',
+                        'name' => 'Account Details.Show Provider info',
+                        'type' => 'info',
+                    ],
+                ],
                 'makePayments' => [
                     [
                         'display_name' => 'Yes',
