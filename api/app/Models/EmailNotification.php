@@ -53,14 +53,9 @@ class EmailNotification extends BaseModel
         return $this->belongsTo(Members::class);
     }
 
-    public function group(bool $filter = true): BelongsTo
+    public function group(): BelongsTo
     {
-        return $this->belongsTo(Groups::class, 'group_id')->when($filter, function ($query) {
-            return $query->whereIn('name', $this->isAdministrator()
-                ? [Groups::MEMBER]
-                : [Groups::COMPANY, Groups::INDIVIDUAL]
-            );
-        });
+        return $this->belongsTo(GroupRole::class, 'group_id');
     }
 
     public function templates(): BelongsToMany

@@ -5,7 +5,7 @@ Banking-> Email Notifications
 type EmailNotification {
     id: ID!
     "Тип"
-    type: String!
+    type: String
     "Получить templates"
     templates: [EmailTemplate] @belongsToMany(relation: "templates")
     "Получить компанию"
