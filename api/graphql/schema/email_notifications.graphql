@@ -50,6 +50,21 @@ extend type Mutation @guard {
     "Создать электронную почту"
     createEmailNotification(
         "Тип"
+        type: NotifyType!
+        "ID Мембера"
+        member_id: ID
+        "ID Группы"
+        group_id: ID
+        "ID компании"
+        company_id: ID!
+        "ID email templates"
+        templates: [ID!]
+    ): EmailNotification   @create
+
+    "Обновить данные компании"
+    updateEmailNotification(
+        id: ID!
+        "Тип"
         type: NotifyType
         "ID Мембера"
         member_id: ID
@@ -58,21 +73,7 @@ extend type Mutation @guard {
         "ID компании"
         company_id: ID
         "ID email templates"
-        templates: [ID!]
-    ): EmailNotification   @create
-
-    "Обновить данные компании"
-    updateEmailNotification(
-        "Тип"
-        type: String!
-        "ID Мембера"
-        member_id: ID!
-        "ID Группы"
-        group_id: ID!
-        "ID компании"
-        company_id: ID
-        "ID email templates"
-        templates: [ID!]
+        templates: [ID]
     ): EmailNotification   @update
 
     "Удалить запись"
