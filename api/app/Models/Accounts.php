@@ -96,12 +96,12 @@ class Accounts extends BaseModel
 
     public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
-        return $this->morphedByOne(ApplicantIndividual::class, 'client');
+        return $this->morphedByOne(ApplicantIndividual::class, 'client', 'account_individuals_companies', 'account_id');
     }
 
     public function applicantCompany(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
-        return $this->morphedByOne(ApplicantIndividual::class, 'client');
+        return $this->morphedByOne(ApplicantIndividual::class, 'client', 'account_individuals_companies', 'account_id');
     }
 
 }
