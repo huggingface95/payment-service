@@ -31,6 +31,7 @@ extend type Query @guard {
 }
 
 enum UsersColumn {
+    ID @enum(value: "id")
     FULLNAME @enum(value: "fullname")
     COMPANY_ID @enum(value: "company_id")
     EMAIL @enum(value: "email")
