@@ -13,7 +13,7 @@ type EmailNotification {
     "Получить мембера"
     member: Members @belongsTo(relation: "member")
     "Группа"
-    group: Groups @belongsTo(relation: "group")
+    group: GroupRole @belongsTo(relation: "group")
     created_at: DateTime
     updated_at: DateTime
 }
