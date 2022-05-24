@@ -16,7 +16,7 @@ class CreateEmailNotificationsTable extends Migration
     {
         Schema::create('email_notifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('member_id');
+            $table->unsignedBigInteger('member_id')->nullable();
             $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('group_id');
             $table->enum('type', [EmailNotification::ADMINISTRATION, EmailNotification::CLIENT])->default(EmailNotification::ADMINISTRATION);

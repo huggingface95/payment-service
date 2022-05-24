@@ -41,15 +41,22 @@ extend type Query @guard {
     ): [EmailNotification!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
+enum NotifyType {
+    Administration @enum(value: "administration")
+    Client @enum(value: "client")
+}
+
 extend type Mutation @guard {
     "Создать электронную почту"
     createEmailNotification(
         "Тип"
         type: String!
         "ID Мембера"
-        member_id: ID!
+        member_id: ID
         "ID Группы"
-        group_id: ID!
+        group_id: ID
+        "ID компании"
+        company_id: ID
         "ID email templates"
         templates: [ID!]
     ): EmailNotification   @create
@@ -62,6 +69,8 @@ extend type Mutation @guard {
         member_id: ID!
         "ID Группы"
         group_id: ID!
+        "ID компании"
+        company_id: ID
         "ID email templates"
         templates: [ID!]
     ): EmailNotification   @update
