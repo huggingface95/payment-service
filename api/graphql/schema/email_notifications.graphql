@@ -58,7 +58,7 @@ extend type Mutation @guard {
         "ID компании"
         company_id: ID!
         "ID email templates"
-        templates: [ID!]
+        templates: [ID]!
     ): EmailNotification   @create
 
     "Обновить данные компании"
