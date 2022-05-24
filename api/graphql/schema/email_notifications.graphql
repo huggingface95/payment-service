@@ -59,7 +59,7 @@ extend type Mutation @guard {
         company_id: ID!
         "ID email templates"
         templates: [ID]!
-    ): EmailNotification   @create
+    ): EmailNotification   @field(resolver:"EmailNotificationMutator@create")
 
     "Обновить данные компании"
     updateEmailNotification(
@@ -74,7 +74,7 @@ extend type Mutation @guard {
         company_id: ID
         "ID email templates"
         templates: [ID]
-    ): EmailNotification   @update
+    ): EmailNotification   @field(resolver:"EmailNotificationMutator@update")
 
     "Удалить запись"
     deleteEmailNotification(
