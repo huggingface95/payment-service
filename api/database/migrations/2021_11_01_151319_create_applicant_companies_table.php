@@ -20,7 +20,7 @@ class CreateApplicantCompaniesTable extends Migration
             $table->string('url',255);
             $table->string('phone',255);
             $table->unsignedBigInteger('country_id');
-            $table->unsignedBigInteger('language_id');
+            $table->unsignedBigInteger('language_id')->nullable();
             $table->string('state',255)->nullable();
             $table->string('city',100)->nullable();
             $table->string('address',255)->nullable();

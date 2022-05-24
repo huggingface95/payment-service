@@ -3,6 +3,7 @@
 Roles->Users
 """
 type Users {
+    id: ID
     "Имя участника"
     first_name: String
     "Фамилия участника"
@@ -25,11 +26,12 @@ extend type Query @guard {
     """
     users(
         where: _ @whereConditions(columnsEnum: "UsersColumn"),
-        orderBy: _ @orderBy(columns: ["email","fullname"],
-    )): [Users!]!   @paginate(defaultCount: 10) @orderBy(column: "email", direction: ASC)
+        orderBy: _ @orderBy(columns: ["id","email","fullname"],
+    )): [Users!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 enum UsersColumn {
+    ID @enum(value: "id")
     FULLNAME @enum(value: "fullname")
     COMPANY_ID @enum(value: "company_id")
     EMAIL @enum(value: "email")

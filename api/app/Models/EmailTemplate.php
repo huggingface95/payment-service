@@ -28,6 +28,7 @@ class EmailTemplate extends BaseModel
     const BANKING = 'banking';
     const COMMON = 'common';
     const SYSTEM = 'system';
+    const ADMIN = 'admin notify';
 
     /**
      * The attributes that are mass assignable.
@@ -64,6 +65,7 @@ class EmailTemplate extends BaseModel
             self::COMMON,
             self::BANKING,
             self::SYSTEM,
+            self::ADMIN
         ];
     }
 
