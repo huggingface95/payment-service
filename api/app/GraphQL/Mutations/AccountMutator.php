@@ -17,6 +17,8 @@ class AccountMutator
             $account->applicantIndividual()->attach([$args['client_id']]);
         elseif ($args['client_type'] == Groups::COMPANY)
             $account->applicantCompany()->attach([$args['client_id']]);
+
+        return $account;
     }
 
     public function update($root, array $args)
@@ -27,6 +29,10 @@ class AccountMutator
             $account->applicantIndividual()->detach([$args['client_id']]);
         elseif ($args['client_type'] == Groups::COMPANY)
             $account->applicantCompany()->detach([$args['client_id']]);
+
+        $account->update($args);
+
+        return $account;
     }
 
     public function generate($root, array $args)
