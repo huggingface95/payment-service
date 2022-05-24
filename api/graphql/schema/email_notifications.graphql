@@ -50,7 +50,7 @@ extend type Mutation @guard {
     "Создать электронную почту"
     createEmailNotification(
         "Тип"
-        type: String!
+        type: NotifyType
         "ID Мембера"
         member_id: ID
         "ID Группы"
