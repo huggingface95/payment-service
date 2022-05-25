@@ -24,6 +24,8 @@ $router->group([
     $router->post('2fareg', 'AuthController@activate2FA');
     $router->post('2faverify', 'AuthController@verify2FA');
     $router->post('2fadisable', 'AuthController@disable2FA');
+    $router->get('2facodes', 'AuthController@generateBackupCodes');
+    $router->post('2facodes', 'AuthController@storeBackupCodes');
 });
 
 

@@ -163,4 +163,44 @@ class AuthController extends Controller
         }
         return response()->json(['data' => 'Google 2fa disabled successful']);
     }
+
+    public function generateBackupCodes()
+    {
+        $auth_user = auth()->user();
+        $codes = [];
+        for ($i = 0; $i <= 9; $i++) {
+            $codes[$i] = $this->generateUniqueCode();
+        }
+
+        return response()->json(['backup_codes' => $codes, 'user_id' => $auth_user->id]);
+    }
+
+    public function storeBackupCodes(Request $request)
+    {
+        $this->validate($request, [
+            'backup_codes' => 'required'
+        ]);
+        $auth_user = auth()->user();
+        $auth_user->backup_codes = $request->backup_codes;
+        $auth_user->save();
+        return response()->json(['data' => 'Backup Codes stored success for user id '.$auth_user->id]);
+
+    }
+
+    public function generateUniqueCode()
+    {
+            $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            $charactersNumber = strlen($characters);
+            $codeLength = 16;
+
+            $code = '';
+
+            while (strlen($code) < $codeLength) {
+                $position = rand(0, $charactersNumber - 1);
+                $character = $characters[$position];
+                $code = $code . $character;
+            }
+
+            return $code;
+    }
 }

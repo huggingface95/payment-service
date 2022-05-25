@@ -48,6 +48,8 @@ type Members {
     security_pin: String
     "2fa code"
     twofactor_secret: String
+    "Member Backup Codes"
+    backup_codes: JSON
 }
 
 extend type Query @guard {
