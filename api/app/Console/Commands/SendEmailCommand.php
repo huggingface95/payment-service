@@ -56,7 +56,8 @@ class SendEmailCommand extends Command
                 /** @var EmailTemplate $emailTemplate */
                 $emailTemplate = EmailTemplate::with('member.smtp')->find($emailData->templateId);
                 $content = $this->replaceObjectData($emailTemplate->getHtml(), (object)['message' => $emailData->message], '/(\{\{(.*?)}})/');
-                $data = TransformerDTO::transform(SmtpDataDTO::class, $emailTemplate->member->smtp, $content);
+                $subject = $this->replaceObjectData($emailTemplate->subject, (object)['subject' => 'subject'], '/\{\{(.*?)}}/');
+                $data = TransformerDTO::transform(SmtpDataDTO::class, $emailTemplate->member->smtp, $content, $subject);
                 $config = TransformerDTO::transform(SmtpConfigDTO::class, $emailTemplate->member->smtp);
                 dispatch(new SendMailJob($config, $data));
 //                Queue::later(Carbon::now()->addSecond(30), new SendMailJob($config, $data));

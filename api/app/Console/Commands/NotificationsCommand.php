@@ -3,12 +3,12 @@
 namespace App\Console\Commands;
 
 use App\DTO\Email\EmailRequestDTO;
-use App\DTO\Email\SendEmailRequestDTO;
+use App\DTO\Email\SmtpConfigDTO;
+use App\DTO\Email\SmtpDataDTO;
 use App\DTO\TransformerDTO;
 use App\Jobs\SendMailJob;
 use App\Models\EmailTemplate;
 use App\Traits\ReplaceRegularExpressions;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
@@ -39,7 +39,6 @@ class NotificationsCommand extends Command
      */
     public function __construct()
     {
-
         parent::__construct();
     }
 
@@ -48,8 +47,6 @@ class NotificationsCommand extends Command
      */
     public function handle()
     {
-        $emailTemplates = EmailTemplate::all();
-
         $redis = Redis::connection();
 
         while ($emailData = $redis->blpop('email:payment:log', 1)) {
@@ -57,13 +54,14 @@ class NotificationsCommand extends Command
 
             try {
                 //TODO CHANGE to real search in template
-                /** @var EmailTemplate $template */
-                $template = $emailTemplates->where('id', 1)->first();
-                $content = $this->replaceObjectData($template->content, $emailDTO, '/(\{\{(.*?)}})/');
-                $subject = $this->replaceObjectData($template->subject, $emailDTO, '/\{\{(.*?)}}/');
-
-                //TODO refactor SendMailJob DTO PARAMS
-                Queue::later(Carbon::now()->addSecond(5), new SendMailJob(TransformerDTO::transform(SendEmailRequestDTO::class, $content, $subject)));
+                /** @var EmailTemplate $emailTemplate */
+                $emailTemplate = EmailTemplate::with('member.smtp')->where('id', 1)->first();
+                $content = $this->replaceObjectData($emailTemplate->getHtml(), $emailDTO, '/(\{\{(.*?)}})/');
+                $subject = $this->replaceObjectData($emailTemplate->subject, $emailDTO, '/\{\{(.*?)}}/');
+                $data = TransformerDTO::transform(SmtpDataDTO::class, $emailTemplate->member->smtp, $content, $subject);
+                $config = TransformerDTO::transform(SmtpConfigDTO::class, $emailTemplate->member->smtp);
+                dispatch(new SendMailJob($config, $data));
+//                Queue::later(Carbon::now()->addSecond(5), new SendMailJob(TransformerDTO::transform(SendEmailRequestDTO::class, $content, $subject)));
             } catch (\Throwable $e) {
                 Log::error($e);
                 continue;
