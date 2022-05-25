@@ -1,0 +1,95 @@
+"""
+Шаблоны электронной почты
+Banking-> Email Templates Settings
+"""
+type EmailSmtp {
+    id: ID!
+    "Название"
+    name: String!
+    "Защита"
+    security: Securities!
+    "Имя хоста"
+    host_name: String!
+    "От кого"
+    from_name: String!
+    "почта"
+    from_email: String!
+    "логин"
+    username: String!
+    "пароль"
+    password: String!
+    "ответить кому"
+    replay_to: String!
+    "Порт"
+    port: Int!
+    "Получить мембера"
+    member: Members @belongsTo(relation: "member")
+}
+
+enum Securities {
+    Auto @enum(value: auto)
+    Ssl @enum(value: ssl)
+    Starttls @enum(value: starttls)
+}
+
+extend type Query @guard {
+    "Получить по билет ID"
+    emailSmtp(id: ID @eq): EmailSmtp   @find
+}
+
+extend type Mutation @guard {
+    "Создать смтп"
+    createEmailSmtp(
+        "Название"
+        name: String!
+        "Защита"
+        security: String
+        "Имя хоста"
+        host_name: String!
+        "От кого"
+        from_name: String
+        "почта"
+        from_email: String
+        "логин"
+        username: String!
+        "пароль"
+        password: String!
+        "ответить кому"
+        replay_to: String
+        "Порт"
+        port: Int!
+    ): EmailSmtp @field(resolver: "EmailSmtpMutator@create")
+
+    "Обновить данные смтп"
+    updateEmailSmtp(
+        id: ID!
+        "Название"
+        name: String!
+        "Защита"
+        security: String
+        "Имя хоста"
+        host_name: String!
+        "От кого"
+        from_name: String
+        "почта"
+        from_email: String
+        "логин"
+        username: String!
+        "пароль"
+        password: String!
+        "ответить кому"
+        replay_to: String
+        "Порт"
+        port: Int!
+    ): EmailSmtp @update
+
+    "Удалить запись"
+    deleteEmailSmtp(
+        id: ID!
+    ): EmailSmtp @delete
+
+    sendEmail(
+        "почта"
+        email: String
+    ):EmailSmtp @field(resolver: "EmailSmtpMutator@sendEmail")
+}

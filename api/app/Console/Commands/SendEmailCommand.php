@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\DTO\Email\EmailRequestDTO;
 use App\DTO\Email\SmtpConfigDTO;
 use App\DTO\Email\SmtpDataDTO;
+use App\DTO\Email\SmtpUserDTO;
 use App\DTO\TransformerDTO;
 use App\Jobs\SendMailJob;
 use App\Models\EmailTemplate;
@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Redis;
 
 
-class NotificationsCommand extends Command
+class SendEmailCommand extends Command
 {
     use ReplaceRegularExpressions;
 
@@ -24,7 +24,7 @@ class NotificationsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'emails:send';
+    protected $signature = 'smtp:email:send';
 
     /**
      * The console command description.
@@ -39,6 +39,7 @@ class NotificationsCommand extends Command
      */
     public function __construct()
     {
+
         parent::__construct();
     }
 
@@ -49,24 +50,21 @@ class NotificationsCommand extends Command
     {
         $redis = Redis::connection();
 
-        while ($emailData = $redis->blpop('email:payment:log', 1)) {
-            $emailDTO = TransformerDTO::transform(EmailRequestDTO::class, json_decode($emailData[1]));
-
+        while ($emailData = $redis->blpop(config('mail.redis.job'), 1)) {
             try {
-                //TODO CHANGE to real search in template
+                $emailData = TransformerDTO::transform(SmtpUserDTO::class, json_decode($emailData[1]));
                 /** @var EmailTemplate $emailTemplate */
-                $emailTemplate = EmailTemplate::with('member.smtp')->where('id', 1)->first();
-                $content = $this->replaceObjectData($emailTemplate->getHtml(), $emailDTO, '/(\{\{(.*?)}})/');
-                $subject = $this->replaceObjectData($emailTemplate->subject, $emailDTO, '/\{\{(.*?)}}/');
+                $emailTemplate = EmailTemplate::with('member.smtp')->find($emailData->templateId);
+                $content = $this->replaceObjectData($emailTemplate->getHtml(), (object)['message' => $emailData->message], '/(\{\{(.*?)}})/');
+                $subject = $this->replaceObjectData($emailTemplate->subject, (object)['subject' => 'subject'], '/\{\{(.*?)}}/');
                 $data = TransformerDTO::transform(SmtpDataDTO::class, $emailTemplate->member->smtp, $content, $subject);
                 $config = TransformerDTO::transform(SmtpConfigDTO::class, $emailTemplate->member->smtp);
                 dispatch(new SendMailJob($config, $data));
-//                Queue::later(Carbon::now()->addSecond(5), new SendMailJob(TransformerDTO::transform(SendEmailRequestDTO::class, $content, $subject)));
+//                Queue::later(Carbon::now()->addSecond(30), new SendMailJob($config, $data));
             } catch (\Throwable $e) {
                 Log::error($e);
                 continue;
             }
         }
-
     }
 }

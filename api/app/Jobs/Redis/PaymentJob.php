@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Redis;
 
 use App\DTO\Payment\PaymentDTO;
 use App\DTO\TransformerDTO;
+use App\Jobs\Job;
 use App\Models\Payments;
 use Illuminate\Support\Facades\Redis;
 

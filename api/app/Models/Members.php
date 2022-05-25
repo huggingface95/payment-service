@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Models\Traits\UserPermission;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Authenticatable;
@@ -26,6 +27,7 @@ use \Illuminate\Notifications\Notifiable;
  *
  * @property Collection groupRoles
  * @property GroupRole $groupRole
+ * @property EmailSmtp $smtp
  *
  */
 
@@ -125,6 +127,16 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
             'user_id',
             'group_role_id'
         )->where('group_type_id', GroupRole::MEMBER);
+    }
+
+    public function smtp(): HasOne
+    {
+        return $this->hasOne(EmailSmtp::class, 'member_id');
+    }
+
+    public function emailTemplates(): HasMany
+    {
+        return $this->hasMany(EmailTemplate::class, 'member_id');
     }
 
 }

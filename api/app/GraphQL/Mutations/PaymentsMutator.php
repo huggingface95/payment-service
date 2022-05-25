@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Jobs\PaymentJob;
+use App\Jobs\Redis\PaymentJob;
 use App\Models\Payments;
 
 class PaymentsMutator

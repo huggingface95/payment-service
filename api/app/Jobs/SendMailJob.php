@@ -2,22 +2,26 @@
 
 namespace App\Jobs;
 
-use App\DTO\Email\SendEmailRequestDTO;
-use Illuminate\Support\Facades\Mail;
+use App\DTO\Email\SmtpConfigDTO;
+use App\DTO\Email\SmtpDataDTO;
+use App\Mail\SomeMailable;
+use Illuminate\Mail\Mailer;
 
 class SendMailJob extends Job
 {
 
-    protected SendEmailRequestDTO $dto;
+    protected SmtpDataDTO $dataDTO;
+    protected SmtpConfigDTO $configDTO;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(SendEmailRequestDTO $sendEmailRequestDTO)
+    public function __construct(SmtpConfigDTO $configDTO, SmtpDataDTO $dataDTO)
     {
-        $this->dto = $sendEmailRequestDTO;
+        $this->dataDTO = $dataDTO;
+        $this->configDTO = $configDTO;
     }
 
     /**
@@ -28,11 +32,8 @@ class SendMailJob extends Job
      */
     public function handle()
     {
-        Mail::send([], [], function ($message) {
-            //TODO change real administration email
-            $message->to('arthurgevorgyan1992@gmail.com')
-                ->subject($this->dto->subject)
-                ->setBody($this->dto->content, 'text/html');
-        });
+        /** @var Mailer $mailer */
+        $mailer = app()->makeWith('smtp.dynamic.mailer', (array)$this->configDTO);
+        $mailer->to($this->dataDTO->to)->send(new SomeMailable($this->dataDTO));
     }
 }
