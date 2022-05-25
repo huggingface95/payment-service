@@ -35,25 +35,10 @@ enum Securities {
 extend type Query @guard {
     "Получить по билет ID"
     emailSmtp(id: ID @eq): EmailSmtp   @find
-    """
-    Получить список Smtp
-    orderBy: [
-    {column: ID, order: DESC},
-    ] сортировка по ID
-    where:{column: HOST_NAME, operator: LIKE, value: ""} фильтр по имени
-    """
-    emailSmtps(
-        hasMember: _ @whereHasConditions(columns: ["fullname"]),
-        created_at: DateRange @whereBetween,
-        where: _ @whereConditions(columns: ["name", "security", "host_name", "from_name", "from_email", "replay_to", "port"]),
-        orderBy: _ @orderBy(
-            columns: ["id"]
-        )
-    ): [EmailSmtp!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
-    "Создать электронную почту"
+    "Создать смтп"
     createEmailSmtp(
         "Название"
         name: String!
@@ -75,7 +60,7 @@ extend type Mutation @guard {
         port: Int!
     ): EmailSmtp @field(resolver: "EmailSmtpMutator@create")
 
-    "Обновить данные компании"
+    "Обновить данные смтп"
     updateEmailSmtp(
         id: ID!
         "Название"
