@@ -1,0 +1,44 @@
+type EmailTemplateLayout {
+    id: ID!
+    "Header"
+    header: String!
+    "Footer"
+    footer: String!
+    "Ид компании"
+    company_id: Int!
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Query @guard {
+    "Получить по билет ID"
+    emailTemplateLayout(company_id: ID @eq): EmailTemplateLayout @find
+}
+
+extend type Mutation @guard {
+    "Создать электронную почту"
+    createEmailTemplateLayout(
+        header: String!
+        "Footer электронной почты"
+        footer: String!
+        "Ид компании"
+        company_id: Int!
+    ): EmailTemplateLayout @create
+
+    "Обновить данные компании"
+    updateEmailTemplateLayout(
+        id: ID!
+        "Header электронной почты"
+        header: String
+        "Footer электронной почты"
+        footer: String
+        "Ид компании"
+        company_id: Int!
+    ): EmailTemplateLayout @update
+
+    "Удалить запись"
+    deleteEmailTemplateLayout(
+        id: ID!
+    ): EmailTemplateLayout @delete
+
+}
