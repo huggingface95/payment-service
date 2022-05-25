@@ -62,6 +62,7 @@ class NotificationsCommand extends Command
                 $content = $this->replaceObjectData($template->content, $emailDTO, '/(\{\{(.*?)}})/');
                 $subject = $this->replaceObjectData($template->subject, $emailDTO, '/\{\{(.*?)}}/');
 
+                //TODO refactor SendMailJob DTO PARAMS
                 Queue::later(Carbon::now()->addSecond(5), new SendMailJob(TransformerDTO::transform(SendEmailRequestDTO::class, $content, $subject)));
             } catch (\Throwable $e) {
                 Log::error($e);

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Redis;
 
 use App\DTO\Account\IbanRequestDTO;
 use App\DTO\TransformerDTO;
+use App\Jobs\Job;
 use App\Models\Accounts;
 use Illuminate\Support\Facades\Redis;
 

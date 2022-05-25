@@ -117,6 +117,12 @@ return [
             'verify_peer' => false,
             'verify_peer_name' => false,
         ],
+    ],
+    /*
+       Add to redis db sending mails
+       */
+    'redis' => [
+        'job' => 'smtp:email:job',
     ]
 
 ];

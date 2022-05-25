@@ -141,6 +141,7 @@ $app->register(App\Providers\TwoFactorServiceProvider::class);
 //$app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
+$app->register(\App\Providers\MailServiceProvider::class);
 
 
 /*

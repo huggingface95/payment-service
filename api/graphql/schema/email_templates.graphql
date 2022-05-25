@@ -16,6 +16,8 @@ type EmailTemplate {
     header: String!
     "Footer"
     footer: String!
+    "Получить мембера"
+    member: Members @belongsTo(relation: "member")
     created_at: DateTime
     updated_at: DateTime
     use_layout: Boolean
@@ -33,6 +35,7 @@ extend type Query @guard {
     where:{column: SUBJECT, operator: LIKE, value: ""} фильтр по имени
     """
     emailTemplates(
+        hasMember: _ @whereHasConditions(columns: ["fullname"]),
         created_at: DateRange @whereBetween,
         where: _ @whereConditions(columns: ["subject"]),
         orderBy: _ @orderBy(
@@ -58,7 +61,7 @@ extend type Mutation @guard {
         header: String!
         "Footer электронной почты"
         footer: String!
-    ): EmailTemplate   @create
+    ): EmailTemplate @field(resolver: "EmailTemplateMutator@create")
 
     "Обновить данные компании"
     updateEmailTemplate(

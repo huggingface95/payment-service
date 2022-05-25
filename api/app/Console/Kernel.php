@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\NotificationsCommand;
+use App\Console\Commands\SendEmailCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -15,6 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         NotificationsCommand::class,
+        SendEmailCommand::class
     ];
 
     /**
@@ -25,7 +27,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('notifications:send')->everyFiveMinutes();
+//        $schedule->command('notifications:send')->everyFiveMinutes();
 //        $schedule->command('notifications:send')->everyMinute();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 
@@ -17,6 +18,8 @@ use Illuminate\Support\Carbon;
  * @property string service_type
  * @property Carbon created_at
  * @property Carbon updated_at
+ *
+ * @property Members $member
  *
  */
 class EmailTemplate extends BaseModel
@@ -36,7 +39,7 @@ class EmailTemplate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'type', 'service_type', 'use_layout', 'subject', 'content', 'header', 'footer'
+        'type', 'service_type', 'use_layout', 'subject', 'content', 'header', 'footer', 'member_id'
     ];
 
     public function getHtml(): string
@@ -69,5 +72,10 @@ class EmailTemplate extends BaseModel
         ];
     }
 
+
+    public function member(): BelongsTo
+    {
+        return $this->belongsTo(Members::class, 'member_id');
+    }
 
 }

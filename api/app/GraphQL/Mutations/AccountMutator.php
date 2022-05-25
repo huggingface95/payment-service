@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Jobs\IbanIndividualActivationJob;
+use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Accounts;
 use App\Models\Groups;
 
