@@ -48,6 +48,10 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'security_pin'
     ];
 
+    protected $casts = [
+        'backup_codes' => 'array',
+    ];
+
     protected $dates = ['deleted_at'];
 
 
