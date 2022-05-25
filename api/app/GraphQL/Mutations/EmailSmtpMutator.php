@@ -28,7 +28,7 @@ class EmailSmtpMutator
         /** @var EmailSmtp $smtp */
         $smtp = EmailSmtp::where('member_id', $member->id)->first();
         $smtp->replay_to = $args['email'];
-        $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, "Testnaaaaaa");
+        $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, "Testnaaaaaa", "Subjectnaaaaa");
         $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
         dispatch(new SendMailJob($config, $data));
     }
