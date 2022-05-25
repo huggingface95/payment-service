@@ -74,13 +74,14 @@ extend type Mutation @guard {
         "Статус билета"
         status: Int
         "ID мембера"
-        member_id: ID!
+        company_id: ID!
         "ID клиента"
         client_id: ID!
     ): Ticket   @create
 
     "Обновить данные компании"
     updateTicket(
+        id: ID!
         "Статус билета"
         status: Int!
     ): Ticket   @update

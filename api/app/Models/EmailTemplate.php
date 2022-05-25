@@ -20,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon updated_at
  *
  * @property Members $member
+ * @property Companies $company
  *
  */
 class EmailTemplate extends BaseModel
@@ -39,7 +40,7 @@ class EmailTemplate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'type', 'service_type', 'use_layout', 'subject', 'content', 'header', 'footer', 'member_id'
+        'type', 'service_type', 'use_layout', 'subject', 'content', 'header', 'footer', 'member_id', 'company_id'
     ];
 
     public function getHtml(): string
@@ -76,6 +77,11 @@ class EmailTemplate extends BaseModel
     public function member(): BelongsTo
     {
         return $this->belongsTo(Members::class, 'member_id');
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Companies::class, 'company_id');
     }
 
 }
