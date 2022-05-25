@@ -15,6 +15,10 @@ class AddCompanyIdToEmailTemplatesTable extends Migration
     {
         Schema::table('email_templates', function (Blueprint $table) {
             $table->unsignedBigInteger('company_id');
+
+            $table->foreign('company_id')->references('id')->on('companies')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 
