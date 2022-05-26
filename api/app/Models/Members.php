@@ -44,12 +44,12 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     protected $hidden = [
         'password_hash',
         'password_salt',
-        'twofactor_secret',
         'security_pin'
     ];
 
     protected $casts = [
         'backup_codes' => 'array',
+        'twofactor_secret' => 'boolean'
     ];
 
     protected $dates = ['deleted_at'];
