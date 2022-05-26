@@ -35,7 +35,7 @@ class AuthController extends Controller
 
         $user = auth()->user();
 
-        if ($user->two_factor_auth_setting_id == 2) {
+        if ($user->two_factor_auth_setting_id == 2 && $user->twofactor_secret) {
             if ($this->verify2FA(request())) {
                 return $this->respondWithToken($token);
             }
