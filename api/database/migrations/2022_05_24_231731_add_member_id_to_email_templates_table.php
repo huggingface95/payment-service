@@ -14,7 +14,7 @@ class AddMemberIdToEmailTemplatesTable extends Migration
     public function up()
     {
         Schema::table('email_templates', function (Blueprint $table) {
-            $table->unsignedBigInteger('member_id');
+            $table->unsignedBigInteger('member_id')->nullable();
         });
     }
 
