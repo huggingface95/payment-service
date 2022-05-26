@@ -1,3 +1,4 @@
+union Clientable = ApplicantIndividual | ApplicantCompany | GroupRole | Members
 """
 Шаблоны электронной почты
 Banking-> Email Notifications
@@ -6,14 +7,14 @@ type EmailNotification {
     id: ID!
     "Тип"
     type: String
+    "Тип получателя"
+    recipient_type: String
     "Получить templates"
     templates: [EmailTemplate] @belongsToMany(relation: "templates")
+    "Получить клиента ApplicantIndividual | ApplicantCompany | GroupRole | Members"
+    clientable: Clientable @morphTo
     "Получить компанию"
     company: Companies @hasOne(relation: "company")
-    "Получить мембера"
-    member: Members @belongsTo(relation: "member")
-    "Группа"
-    group: GroupRole @belongsTo(relation: "group")
     created_at: DateTime
     updated_at: DateTime
 }
@@ -30,8 +31,6 @@ extend type Query @guard {
     """
     emailNotifications(
         hasCompany: _ @whereHasConditions(columns: ["name"]),
-        hasGroup: _ @whereHasConditions(columns: ["name"]),
-        hasMember: _ @whereHasConditions(columns: ["fullname"]),
         hasTemplates: _ @whereHasConditions(columns: ["subject"]),
         created_at: DateRange @whereBetween,
         where: _ @whereConditions(columns: ["type"]),
@@ -46,17 +45,20 @@ enum NotifyType {
     Client @enum(value: "client")
 }
 
+enum RecipientType {
+    PERSON @enum(value: "person")
+    GROUP @enum(value: "group")
+}
+
 extend type Mutation @guard {
     "Создать электронную почту"
     createEmailNotification(
         "Тип"
         type: NotifyType!
-        "ID Мембера"
-        member_id: ID
-        "ID Группы"
-        group_id: ID
         "ID компании"
         company_id: ID!
+        "ID клиента тип унион"
+        client_id: ID!
         "ID email templates"
         templates: [ID]!
     ): EmailNotification   @field(resolver:"EmailNotificationMutator@create")
@@ -66,12 +68,10 @@ extend type Mutation @guard {
         id: ID!
         "Тип"
         type: NotifyType
-        "ID Мембера"
-        member_id: ID
-        "ID Группы"
-        group_id: ID
         "ID компании"
         company_id: ID
+        "ID клиента тип унион"
+        client_id: ID!
         "ID email templates"
         templates: [ID]
     ): EmailNotification   @field(resolver:"EmailNotificationMutator@update")

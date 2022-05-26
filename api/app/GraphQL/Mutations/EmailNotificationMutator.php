@@ -19,7 +19,8 @@ class EmailNotificationMutator extends BaseMutator
         $templates = $args['templates'];
         unset($args['templates']);
         $emailNotification =  EmailNotification::create($args);
-        $emailNotification->templates()->attach($templates);
+        $emailNotification->templates()->sync($templates, true);
+        $emailNotification->clientable()->sync($args['client_id'], true);
         return $emailNotification;
     }
 
@@ -35,9 +36,12 @@ class EmailNotificationMutator extends BaseMutator
             throw new GraphqlException('An entry with this email notification does not exist',"not found", 404);
         }
         if ($args['templates']) {
-            $emailNotification->templates()->detach();
-            $emailNotification->templates()->attach($args['templates']);
+            $emailNotification->templates()->sync($args['templates'], true);
             unset($args['templates']);
+        }
+
+        if ($args['client_id']) {
+            $emailNotification->clientable()->sync($args['client_id'], true);
         }
 
         $emailNotification->update($args);
