@@ -45,9 +45,7 @@ class EmailTemplate extends BaseModel
 
     public function getHtml(): string
     {
-        return $this->useLayout()
-            ? $this->attributes['header'] . $this->attributes['content'] . $this->attributes['footer']
-            : $this->attributes['content'];
+        return $this->attributes['header'] . $this->attributes['content'] . $this->attributes['footer'];
     }
 
     public function useLayout(): bool
