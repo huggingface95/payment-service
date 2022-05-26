@@ -52,6 +52,15 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'twofactor_secret' => 'boolean'
     ];
 
+    protected function castAttribute($key, $value)
+    {
+        if ($this->getCastType($key) == 'boolean' && is_null($value)) {
+            return false;
+        }
+
+        return parent::castAttribute($key, $value);
+    }
+
     protected $dates = ['deleted_at'];
 
 
