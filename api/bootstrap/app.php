@@ -138,7 +138,7 @@ $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Illuminate\Redis\RedisServiceProvider::class);
 $app->register(PragmaRX\Google2FALaravel\ServiceProvider::class);
 $app->register(App\Providers\TwoFactorServiceProvider::class);
-//$app->register(Laravel\Passport\PassportServiceProvider::class);
+$app->register(App\Providers\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
 $app->register(\App\Providers\MailServiceProvider::class);
