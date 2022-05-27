@@ -37,7 +37,7 @@ extend type Query @guard {
         hasCompany: _ @whereHasConditions(columns: ["name"]),
         hasTemplates: _ @whereHasConditions(columns: ["subject"]),
         created_at: DateRange @whereBetween,
-        where: _ @whereConditions(columns: ["type"]),
+        where: _ @whereConditions(columns: ["type", "company_id"]),
         orderBy: _ @orderBy(
             columns: ["id"]
         )
