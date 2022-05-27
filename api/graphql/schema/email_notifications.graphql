@@ -9,6 +9,8 @@ type EmailNotification {
     type: String
     "Тип получателя"
     recipient_type: String
+    "Тип Группы"
+    group_type: String
     "Получить templates"
     templates: [EmailTemplate] @belongsToMany(relation: "templates")
     "Получить клиента ApplicantIndividual | ApplicantCompany | GroupRole | Members"
@@ -52,11 +54,21 @@ enum RecipientType {
     GROUP @enum(value: "group")
 }
 
+enum GroupType {
+    INDIVIDUAL @enum(value: "Individual")
+    COMPANY @enum(value: "Company")
+    MEMBER @enum(value: "Member")
+}
+
 extend type Mutation @guard {
     "Создать электронную почту"
     createEmailNotification(
         "Тип"
         type: NotifyType!
+        "Тип получателя"
+        recipient_type: RecipientType!
+        "Тип Группы"
+        group_type: GroupType!
         "ID компании"
         company_id: ID!
         "ID клиента тип унион"
@@ -69,7 +81,11 @@ extend type Mutation @guard {
     updateEmailNotification(
         id: ID!
         "Тип"
-        type: NotifyType
+        type: NotifyType!
+        "Тип получателя"
+        recipient_type: RecipientType!
+        "Тип Группы"
+        group_type: GroupType!
         "ID компании"
         company_id: ID
         "ID клиента тип унион"

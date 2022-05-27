@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property int id
  * @property string type
  * @property string recipient_type
+ * @property string group_type
  * @property Carbon created_at
  * @property Carbon updated_at
  *
@@ -34,7 +35,7 @@ class EmailNotification extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'company_id', 'type', 'recipient_type',
+        'company_id', 'type', 'recipient_type', 'group_type'
     ];
 
     public static self $clone;
@@ -74,14 +75,16 @@ class EmailNotification extends BaseModel
             $model = $this;
         }
 
-        if ($model->type == self::CLIENT && $model->recipient_type == self::RECIPIENT_PERSON)
-            return $this->applicantIndividual();
-        elseif ($model->type == self::CLIENT && $model->recipient_type == self::RECIPIENT_GROUP)
+        if ($model->type == self::CLIENT){
+            if ($model->recipient_type == self::RECIPIENT_PERSON && $model->group_type == Groups::INDIVIDUAL)
+                return $this->applicantIndividual();
             return $this->applicantCompany();
-        elseif ($model->type == self::ADMINISTRATION && $model->recipient_type == self::RECIPIENT_GROUP)
+        }
+        else{
+            if ($model->recipient_type == self::RECIPIENT_PERSON && $model->group_type == Groups::MEMBER)
+                return $this->member();
             return $this->groupRole();
-        else
-            return $this->member();
+        }
     }
 
     public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
