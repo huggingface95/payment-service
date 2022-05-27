@@ -13,8 +13,10 @@ type EmailNotification {
     templates: [EmailTemplate] @belongsToMany(relation: "templates")
     "Получить клиента ApplicantIndividual | ApplicantCompany | GroupRole | Members"
     clientable: Clientable @morphTo
+    "Ид компании"
+    company_id: Int
     "Получить компанию"
-    company: Companies @hasOne(relation: "company")
+    company: Companies @belongsTo(relation: "company")
     created_at: DateTime
     updated_at: DateTime
 }
