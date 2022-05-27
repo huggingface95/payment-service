@@ -58,9 +58,9 @@ extend type Mutation @guard {
         "Контент электронной почты"
         content: String!
         "Header электронной почты"
-        header: String!
+        header: String
         "Footer электронной почты"
-        footer: String!
+        footer: String
         "Ид компании"
         company_id: Int!
     ): EmailTemplate @field(resolver: "EmailTemplateMutator@create")
