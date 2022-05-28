@@ -47,7 +47,7 @@ type Members {
     "Security PIN"
     security_pin: String
     "2fa code"
-    twofactor_secret: String
+    google2fa_secret: String
     "Member Backup Codes"
     backup_codes: JSON
 }
