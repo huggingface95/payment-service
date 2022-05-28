@@ -36,7 +36,6 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     use SoftDeletes, Authorizable, Authenticatable, UserPermission, HasApiTokens, CanResetPassword, Notifiable;
 
     public $password_confirmation;
-    public $twoFA;
 
     protected $fillable = [
         'first_name', 'last_name', 'email', 'sex', 'is_active', 'company_id', 'country_id', 'language_id', 'two_factor_auth_setting_id', 'password_hash', 'password_salt', 'last_login_at', 'additional_fields', 'additional_info_fields', 'is_show_owner_applicants'
@@ -58,7 +57,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     protected $dates = ['deleted_at'];
 
 
-    public function getTwoFAAttribute()
+    public function getTwoFactorAttribute()
     {
         return ($this->google2fa_secret) ? true : false;
     }
