@@ -58,7 +58,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     protected $dates = ['deleted_at'];
 
 
-    public function getTwoFAAttribute($key)
+    public function getTwoFAAttribute()
     {
         return ($this->google2fa_secret) ? true : false;
     }
