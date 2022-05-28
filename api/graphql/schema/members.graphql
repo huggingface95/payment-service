@@ -46,8 +46,6 @@ type Members {
     is_show_owner_applicants: Boolean
     "Security PIN"
     security_pin: String
-    "2fa code"
-    google2fa_secret: String
     "Member Backup Codes"
     backup_codes: JSON
 }
