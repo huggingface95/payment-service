@@ -1,0 +1,98 @@
+"""
+Аккаунты
+Banking -> Accounts -> Account Limit
+"""
+type AccountLimit {
+    id: ID!
+    "ID account"
+    account_id: ID
+    "ID направления платежа"
+    commission_template_limit_transfer_direction_id: ID
+    "Сумма лимита"
+    amount: Float
+    "ID валюты лимита"
+    currency_id: ID
+    "Валюта"
+    currency: Currencies @belongsTo(relation: "currency")
+    "ID периода лимита"
+    commission_template_limit_period_id: ID
+    "ID события лимита"
+    commission_template_limit_action_type_id: ID
+    "количество срабатываний лимита"
+    period_count: Int
+    "Получить типы лимита"
+    commission_template_limit_type: CommissionTemplateLimitType @belongsTo(relation:"commissionTemplateLimitType")
+    "Получить направления лимита"
+    commission_template_limit_transfer_direction: CommissionTemplateLimitTransferDirection @belongsTo(relation:"commissionTemplateLimitTransferDirection")
+    "Получить периоды лимита"
+    commission_template_limit_period: CommissionTemplateLimitPeriod @belongsTo(relation:"commissionTemplateLimitPeriod")
+    "Получить события лимита"
+    commission_template_limit_action_type: CommissionTemplateLimitActionType @belongsTo(relation:"commissionTemplateLimitActionType")
+    "Получить Account"
+    account: Accounts @belongsTo(relation:"account")
+
+}
+
+extend type Query @guard {
+    "Получить лимит по ID"
+    accountLimit(id: ID @eq): AccountLimit   @find
+    """
+    Получить список лимитов
+    """
+    accountLimits(
+        hasCurrency: _ @whereHasConditions(columns: ["id","name"]),
+        hasAccount: _ @whereHasConditions(columns: ["id","name"]),
+        hasCommissionTemplateLimitType: _ @whereHasConditions(columns: ["id","name"]),
+        hasCommissionTemplateLimitTransferDirection: _ @whereHasConditions(columns: ["id","name"]),
+        hasCommissionTemplateLimitPeriod: _ @whereHasConditions(columns: ["id","name"]),
+        hasCommissionTemplateLimitActionType: _ @whereHasConditions(columns: ["id","name"]),
+        where: _ @whereConditions(columns: ["period_count", "account_id", "amount"]),
+        orderBy: _ @orderBy(columns: ["id"])
+    ): [AccountLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation @guard {
+    "Создать лимит"
+    createAccountLimit(
+        "ID account"
+        account_id: ID!
+        "ID типа лимита"
+        commission_template_limit_type_id: ID!
+        "ID направления платежа"
+        commission_template_limit_transfer_direction_id: ID!
+        "Сумма лимита"
+        amount: Float!
+        "ID валюты лимита"
+        currency_id: ID
+        "ID периода лимита"
+        commission_template_limit_period_id: ID!
+        "ID события лимита"
+        commission_template_limit_action_type_id: ID!
+        "ID количество срабатываний лимита"
+        period_count: ID
+    ):AccountLimit   @create
+
+    "Обновить лимит"
+    updateAccountLimit(
+        "ID шаблона"
+        id: ID!
+        "ID типа лимита"
+        commission_template_limit_type_id: ID
+        "ID направления платежа"
+        commission_template_limit_transfer_direction_id: ID
+        "Сумма лимита"
+        amount: Float
+        "ID валюты лимита"
+        currency_id: ID
+        "ID периода лимита"
+        commission_template_limit_period_id: ID
+        "ID события лимита"
+        commission_template_limit_action_type_id: ID
+        "количество срабатываний лимита"
+        period_count: Int
+    ):AccountLimit   @update
+
+    "Удалить лимит"
+    deleteAccountLimit(id: ID!): AccountLimit   @delete
+
+}

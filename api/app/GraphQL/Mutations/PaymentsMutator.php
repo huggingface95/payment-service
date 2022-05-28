@@ -47,7 +47,7 @@ class PaymentsMutator
     private function checkLimit(int $accountId, float $amount): bool
     {
         /** @var Accounts $account */
-        $account = Accounts::with('limits', 'commissionTemplate.commissionTemplateLimit')->findOrFail($accountId);
+        $account = Accounts::with('limits', 'commissionTemplate.commissionTemplateLimits')->findOrFail($accountId);
 
         /** @var AccountLimit | CommissionTemplateLimit $reachedLimit */
         $reachedLimit = collect([$account->limits, $account->commissionTemplate->commissionTemplateLimit])->flatten(1)

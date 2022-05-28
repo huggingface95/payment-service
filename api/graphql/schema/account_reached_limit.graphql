@@ -1,0 +1,42 @@
+"""
+Аккаунты
+Banking -> Accounts -> Account Limit
+"""
+type AccountReachedLimit {
+    id: ID!
+    "ID account"
+    account_id: ID!
+    "Получить Account"
+    account: Accounts @belongsTo(relation:"account")
+    "Тип"
+    group_type: String!
+    "Имя аппликанта"
+    client_name: String!
+    "Тип аппликанта"
+    client_type: String!
+    "Тип трансфера"
+    transfer_direction: String!
+    "Тип лимита"
+    limit_type: String!
+    "Значение лимита"
+    limit_value: Int!
+    "Валюта лимита"
+    limit_currency: String!
+    "Период"
+    period: Int!
+    "Сумма"
+    amount: Float!
+}
+
+extend type Query @guard {
+    "Получить лимит по ID"
+    accountLimit(id: ID @eq): AccountLimit   @find
+    """
+    Получить список лимитов
+    """
+    accountLimits(
+        hasAccount: _ @whereHasConditions(columns: ["id","name"]),
+        where: _ @whereConditions(columns: ["account_id", "group_type", "client_name", "client_type", "transfer_direction", "limit_type", "limit_value", "limit_currency", "period", "amount"]),
+        orderBy: _ @orderBy(columns: ["id"])
+    ): [AccountLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}

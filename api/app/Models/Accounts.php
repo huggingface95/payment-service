@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * Class Accounts
  *
  *
+ * @property CommissionTemplate $commissionTemplate
  * @property AccountLimit $limits
  * @property AccountReachedLimit $reachedLimits
  * @property ApplicantIndividual | ApplicantCompany $clientable
