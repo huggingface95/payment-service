@@ -70,11 +70,11 @@ extend type Mutation @guard {
         "Тип Группы"
         group_type: GroupType!
         "ID компании"
-        company_id: ID!
+        company_id: Int!
         "ID клиента тип унион"
-        client_id: ID!
+        client_id: Int!
         "ID email templates"
-        templates: [ID]!
+        templates: [Int]!
     ): EmailNotification   @field(resolver:"EmailNotificationMutator@create")
 
     "Обновить данные компании"
@@ -87,11 +87,11 @@ extend type Mutation @guard {
         "Тип Группы"
         group_type: GroupType!
         "ID компании"
-        company_id: ID
+        company_id: Int
         "ID клиента тип унион"
-        client_id: ID!
+        client_id: Int!
         "ID email templates"
-        templates: [ID]
+        templates: [Int]
     ): EmailNotification   @field(resolver:"EmailNotificationMutator@update")
 
     "Удалить запись"
