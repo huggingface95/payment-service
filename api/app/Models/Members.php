@@ -56,6 +56,8 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $dates = ['deleted_at'];
 
+    protected $appends = array('two_factor');
+
 
     public function getTwoFactorAttribute()
     {
