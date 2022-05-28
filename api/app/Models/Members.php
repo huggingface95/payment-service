@@ -49,7 +49,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $casts = [
         'backup_codes' => 'array',
-        'twofactor_secret' => 'boolean'
+        'google2fa_secret' => 'boolean'
     ];
 
     protected function castAttribute($key, $value)

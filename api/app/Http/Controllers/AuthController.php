@@ -35,7 +35,7 @@ class AuthController extends Controller
 
         $user = auth()->user();
 
-        if ($user->two_factor_auth_setting_id == 2 && $user->twofactor_secret) {
+        if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
             if ($this->verify2FA(request())) {
                 return $this->respondWithToken($token);
             }
@@ -122,7 +122,7 @@ class AuthController extends Controller
         $user->createToken('Lumen Password Grant Client')->accessToken;
         $secretKey = $request->secret;
         $user->two_factor_auth_setting_id = 2;
-        $user->twofactor_secret =
+        $user->google2fa_secret =
             str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), config('lumen2fa.string_pad', 'X'));
         $user->save();
 
@@ -136,13 +136,13 @@ class AuthController extends Controller
         ]);
         $auth_user = auth()->user();
         $token = DB::table('oauth_access_tokens')->where('user_id', $request->user()->id)->latest()->limit(1);
-        $valid = Google2FA::verifyGoogle2FA($auth_user->twofactor_secret, $request->code);
+        $valid = Google2FA::verifyGoogle2FA($auth_user->google2fa_secret, $request->code);
         if (!$valid) {
             $token->update(['twofactor_verified' => false]);
-            return false;
+            return response()->json(['data' => 'Unable to verify your code']);
         }
         $token->update(['twofactor_verified' => true]);
-        return true;
+        return response()->json(['data' => 'success']);
     }
 
     public function disable2FA(Request $request)
@@ -152,9 +152,9 @@ class AuthController extends Controller
         ]);
         $auth_user = auth()->user();
         $token = DB::table('oauth_access_tokens')->where('user_id', $request->user()->id)->latest()->limit(1);
-        $valid = Google2FA::verifyGoogle2FA($auth_user->twofactor_secret, $request->code);
+        $valid = Google2FA::verifyGoogle2FA($auth_user->google2fa_secret, $request->code);
         if ($valid) {
-            $auth_user->twofactor_secret = null;
+            $auth_user->google2fa_secret = null;
             $auth_user->two_factor_auth_setting_id = 1;
             $auth_user->save();
             $token->update(['twofactor_verified' => false]);
@@ -183,6 +183,7 @@ class AuthController extends Controller
         $auth_user = auth()->user();
         $auth_user->backup_codes = $request->backup_codes;
         $auth_user->save();
+
         return response()->json(['data' => 'Backup Codes stored success for user id '.$auth_user->id]);
 
     }
