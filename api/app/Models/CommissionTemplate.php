@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 /**
  * Class CommissionTemplate
  *
- * @property CommissionTemplateLimit[] $commissionTemplateLimits
+ * @property CommissionTemplateLimit $commissionTemplateLimits
  *
  */
 class CommissionTemplate extends BaseModel

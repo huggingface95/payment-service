@@ -70,7 +70,7 @@ extend type Mutation @guard {
         commission_template_limit_action_type_id: ID!
         "ID количество срабатываний лимита"
         period_count: ID
-    ):AccountLimit   @create
+    ):AccountLimit   @field(resolver: "AccountLimitMutator@create")
 
     "Обновить лимит"
     updateAccountLimit(
@@ -90,7 +90,7 @@ extend type Mutation @guard {
         commission_template_limit_action_type_id: ID
         "количество срабатываний лимита"
         period_count: Int
-    ):AccountLimit   @update
+    ):AccountLimit   @field(resolver: "AccountLimitMutator@update")
 
     "Удалить лимит"
     deleteAccountLimit(id: ID!): AccountLimit   @delete

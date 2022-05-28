@@ -50,8 +50,11 @@ class PaymentsMutator
         $account = Accounts::with('limits', 'commissionTemplate.commissionTemplateLimits')->findOrFail($accountId);
 
         /** @var AccountLimit | CommissionTemplateLimit $reachedLimit */
-        $reachedLimit = collect([$account->limits, $account->commissionTemplate->commissionTemplateLimit])->flatten(1)
-            ->filter(function ($limit) use ($amount){return !($amount <= $limit->amount);})
+        $reachedLimit = collect([$account->limits, $account->commissionTemplate->commissionTemplateLimits])->flatten(1)
+            ->filter(function ($limit) use ($amount){
+                //TODO add all conditions
+                return !($amount <= $limit->amount);
+            })
             ->sortBy([fn ($a, $b) => $a instanceof AccountLimit < $b instanceof AccountLimit])
             ->first();
 

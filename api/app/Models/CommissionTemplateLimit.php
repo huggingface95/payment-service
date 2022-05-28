@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * Class CommissionTemplateLimit
  * @package App\Models
  *
+ * @property int id
+ * @property int period_count
+ * @property float amount
+
+ *
  * @property CommissionTemplateLimitType $commissionTemplateLimitType
  * @property CommissionTemplateLimitTransferDirection $commissionTemplateLimitTransferDirection
  * @property CommissionTemplateLimitPeriod $commissionTemplateLimitPeriod
