@@ -2,37 +2,42 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * Class CommissionTemplateLimit
+ * Class AccountLimit
  * @package App\Models
- *
  * @property int id
+ * @property int account_id
  * @property int period_count
  * @property float amount
-
+ * @property int currency_id
+ * @property int commission_template_limit_type_id
+ * @property int commission_template_limit_transfer_direction_id
+ * @property int commission_template_limit_period_id
+ * @property int commission_template_limit_action_type_id
  *
  * @property CommissionTemplateLimitType $commissionTemplateLimitType
  * @property CommissionTemplateLimitTransferDirection $commissionTemplateLimitTransferDirection
  * @property CommissionTemplateLimitPeriod $commissionTemplateLimitPeriod
  * @property CommissionTemplateLimitActionType $commissionTemplateLimitActionType
  * @property Currencies $currency
+ * @property Accounts $account
  *
  */
-class CommissionTemplateLimit extends BaseModel
+class AccountLimit extends BaseModel
 {
+
 
     public $timestamps = false;
 
-    protected $table = "commission_template_limit";
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
+        'account_id',
         'period_count',
         'amount',
         'currency_id',
@@ -42,30 +47,33 @@ class CommissionTemplateLimit extends BaseModel
         'commission_template_limit_action_type_id',
     ];
 
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Accounts::class, 'account_id');
+    }
 
     public function commissionTemplateLimitType(): BelongsTo
     {
-        return $this->belongsTo(CommissionTemplateLimitType::class, 'commission_template_limit_type_id', 'id');
+        return $this->belongsTo(CommissionTemplateLimitType::class, 'commission_template_limit_type_id');
     }
 
     public function commissionTemplateLimitTransferDirection(): BelongsTo
     {
-        return $this->belongsTo(CommissionTemplateLimitTransferDirection::class, 'commission_template_limit_transfer_direction_id', 'id');
+        return $this->belongsTo(CommissionTemplateLimitTransferDirection::class, 'commission_template_limit_transfer_direction_id');
     }
 
     public function commissionTemplateLimitPeriod(): BelongsTo
     {
-        return $this->belongsTo(CommissionTemplateLimitPeriod::class, 'commission_template_limit_period_id', 'id');
+        return $this->belongsTo(CommissionTemplateLimitPeriod::class, 'commission_template_limit_period_id');
     }
 
     public function commissionTemplateLimitActionType(): BelongsTo
     {
-        return $this->belongsTo(CommissionTemplateLimitActionType::class, 'commission_template_limit_action_type_id', 'id');
+        return $this->belongsTo(CommissionTemplateLimitActionType::class, 'commission_template_limit_action_type_id');
     }
 
     public function currency(): BelongsTo
     {
-        return $this->belongsTo(Currencies::class, 'currency_id', 'id');
+        return $this->belongsTo(Currencies::class, 'currency_id');
     }
-
 }

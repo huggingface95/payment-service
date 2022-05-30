@@ -9,6 +9,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class CommissionTemplate
+ *
+ * @property CommissionTemplateLimit $commissionTemplateLimits
+ *
+ */
 class CommissionTemplate extends BaseModel
 {
 

@@ -5,10 +5,20 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\MorphToOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 
+/**
+ * Class Accounts
+ *
+ *
+ * @property CommissionTemplate $commissionTemplate
+ * @property AccountLimit $limits
+ * @property AccountReachedLimit $reachedLimits
+ * @property ApplicantIndividual | ApplicantCompany $clientable
+ *
+ */
 class Accounts extends BaseModel
 {
 
@@ -25,6 +35,14 @@ class Accounts extends BaseModel
     protected $fillable = [
         'currency_id', 'owner_id', 'account_number', 'account_type', 'payment_provider_id', 'commission_template_id', 'account_state', 'account_name', 'is_primary', 'current_balance', 'reserved_balance', 'available_balance', 'order_reference'
     ];
+
+    public static self $clone;
+
+    public function load($relations): Accounts
+    {
+        self::$clone = $this->replicate();
+        return parent::load($relations);
+    }
 
     public function getClientAttribute()
     {
@@ -89,9 +107,17 @@ class Accounts extends BaseModel
         $this->attributes['account_number'] = uniqid();
     }
 
-    public function clientable(): HasOne
+    public function clientable(string $type = null): \Ankurk91\Eloquent\Relations\MorphToOne
     {
-        return $this->hasOne(AccountIndividualCompany::class, 'account_id');
+        try {$model = self::$clone;}
+        catch (\Error $ex){$model = $this;}
+
+        $clientType = AccountIndividualCompany::where('account_id', $model->account_id)->first()->type ?? null;
+
+        if (in_array(ApplicantIndividual::class, [$clientType, $type])){
+            return $this->applicantIndividual();
+        }
+        return $this->applicantCompany();
     }
 
     public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
@@ -104,4 +130,13 @@ class Accounts extends BaseModel
         return $this->morphedByOne(ApplicantIndividual::class, 'client', 'account_individuals_companies', 'account_id');
     }
 
+    public function limits(): HasMany
+    {
+        return $this->hasMany(AccountLimit::class, 'account_id');
+    }
+
+    public function reachedLimits(): HasMany
+    {
+        return $this->hasMany(AccountReachedLimit::class, 'account_id');
+    }
 }
