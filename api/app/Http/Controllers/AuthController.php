@@ -119,7 +119,7 @@ class AuthController extends Controller
             'secret' => 'required'
         ]);
         $user = auth()->user();
-        $user->createToken('Lumen Password Grant Client')->accessToken;
+        $user->createToken($user->fullname)->accessToken;
         $secretKey = $request->secret;
         $user->two_factor_auth_setting_id = 2;
         $user->google2fa_secret =
