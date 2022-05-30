@@ -16,6 +16,8 @@ class AccountIndividualCompany extends BaseModel
 {
     protected $table="account_individuals_companies";
 
+    protected $fillable = ['account_id', 'client_type', 'client_id'];
+
     public function client(): MorphTo
     {
         return $this->morphTo();
