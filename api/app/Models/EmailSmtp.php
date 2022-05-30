@@ -37,7 +37,7 @@ class EmailSmtp extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'member_id', 'security', 'host_name', 'from_name', 'from_email', 'username', 'password', 'replay_to', 'port'
+       'email_template_id', 'member_id', 'security', 'host_name', 'from_name', 'from_email', 'username', 'password', 'replay_to', 'port'
     ];
 
     public static function getSecurities(): array
@@ -52,6 +52,11 @@ class EmailSmtp extends BaseModel
     public function member(): BelongsTo
     {
         return $this->belongsTo(Members::class, 'member_id');
+    }
+
+    public function emailTemplate(): BelongsTo
+    {
+        return $this->belongsTo(EmailTemplate::class, 'email_template_id');
     }
 
 }
