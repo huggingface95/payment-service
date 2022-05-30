@@ -36,12 +36,7 @@ class AuthController extends Controller
         $user = auth()->user();
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
-            if ($this->verify2FA(request())) {
-                return $this->respondWithToken($token);
-            }
-            else {
-                return response()->json(['data' => 'Unable to verify your code'], 401);
-            }
+            return $this->respondWithToken2Fa($token);
         }
         else {
             return $this->respondWithToken($token);
@@ -94,6 +89,16 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
+        ]);
+    }
+
+    protected function respondWithToken2Fa($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'two_factor' => 'true'
         ]);
     }
 
@@ -172,7 +177,7 @@ class AuthController extends Controller
             $codes[$i] = $this->generateUniqueCode();
         }
 
-        return response()->json(['backup_codes' => $codes, 'user_id' => $auth_user->id]);
+        return response()->json(['backup_codes' => $codes, 'user_id' => $auth_user->id, '2fa_secret' => $auth_user->google2fa_secret]);
     }
 
     public function storeBackupCodes(Request $request)
