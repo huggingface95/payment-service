@@ -5,9 +5,18 @@ namespace App\Models;
 
 use App\Models\Scopes\MemberScope;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class Payments
+ * @package App\Models
 
+ * @property int owner_id
+ *
+ *
+ * @property ApplicantIndividual $applicantIndividual
+ *
+ */
 class Payments extends BaseModel
 {
 
@@ -44,7 +53,9 @@ class Payments extends BaseModel
         'error',
         'member_id',
         'received_at',
-        'sender_additional_fields'
+        'sender_additional_fields',
+        'owner_id',
+        'created_at',
     ];
 
     protected static function booted()
@@ -73,7 +84,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation Country
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function Country()
     {
@@ -83,16 +94,16 @@ class Payments extends BaseModel
 
     /**
      * Get relation applicant Account
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function Accounts()
+    public function Accounts(): BelongsTo
     {
-        return $this->belongsTo(Accounts::class,'account_id','id');
+        return $this->belongsTo(Accounts::class,'account_id');
     }
 
     /**
      * Get relation Companies
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function Companies()
     {
@@ -101,7 +112,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation payment_urgency
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function PaymentUrgency()
     {
@@ -110,7 +121,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation PaymentTypes
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function PaymentTypes()
     {
@@ -119,7 +130,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation PaymentProvider
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function PaymentProvider()
     {
@@ -128,7 +139,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation Currencies
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function Currencies()
     {
@@ -140,10 +151,9 @@ class Payments extends BaseModel
         return $this->belongsTo(Members::class,'member_id','id');
     }
 
-    //TODO change to HasOneThrough  applicantIndividual
-    public function owner()
+    public function applicantIndividual(): BelongsTo
     {
-        return $this->belongsToMany(ApplicantIndividual::class,'accounts','id', 'client_id', 'account_id');
+        return $this->belongsTo(ApplicantIndividual::class,'owner_id');
     }
 
 //    public function company()
@@ -159,19 +169,6 @@ class Payments extends BaseModel
     public function paymentStatus()
     {
         return $this->belongsTo(PaymentStatus::class,'status_id','id');
-    }
-
-    //TODO  applicantIndividual or applicantCompany
-    public function applicantIndividual(): HasOneThrough
-    {
-        return $this->hasOneThrough(
-            ApplicantIndividual::class,
-            Accounts::class,
-            'id',
-            'id',
-            'account_id',
-            'client_id',
-        );
     }
 
 }
