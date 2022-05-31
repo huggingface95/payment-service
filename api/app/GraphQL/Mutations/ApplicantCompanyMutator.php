@@ -72,6 +72,10 @@ class ApplicantCompanyMutator extends BaseMutator
             $applicant->labels()->detach($args['labels']);
             $applicant->labels()->attach($args['labels']);
         }
+        if(isset($args['group_id'])) {
+            $applicant->groupRole()->detach();
+            $applicant->groupRole()->attach($args['group_id']);
+        }
 
         $applicant->update($args);
 
