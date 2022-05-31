@@ -109,6 +109,8 @@ extend type Mutation  {
         password: String @rules(apply: ["min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "если true видит только своих аппликантов"
         is_show_owner_applicants: Boolean
+        "Подписывать или нет транзакцию"
+        is_sign_transaction: Boolean
     ): Members @field(resolver: "MembersMutator@create")
 
     """
@@ -167,6 +169,8 @@ extend type Mutation  {
         additional_info_fields: [AdditionalFieldInput]
         "если true видит только своих аппликантов"
         is_show_owner_applicants: Boolean
+        "Подписывать или нет транзакцию"
+        is_sign_transaction: Boolean
     ): Members   @field(resolver: "MembersMutator@update")
 
     """
