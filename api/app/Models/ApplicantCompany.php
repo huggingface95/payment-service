@@ -6,7 +6,7 @@ use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ApplicantCompany extends Model
 {
@@ -191,16 +191,9 @@ class ApplicantCompany extends Model
         return $this->belongsTo(Companies::class);
     }
 
-    public function groupRole(): HasOneThrough
+    public function groupRole(): HasOne
     {
-        return $this->hasOneThrough(
-            GroupRole::class,
-            GroupRoleUser::class,
-            'user_id',
-            'id',
-            'id',
-            'group_role_id',
-        )->where('group_type_id', GroupRole::COMPANY);
+        return $this->hasOne(GroupRole::class);
     }
 
     public function account(): \Ankurk91\Eloquent\Relations\MorphToOne
