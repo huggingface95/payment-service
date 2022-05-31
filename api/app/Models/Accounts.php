@@ -6,6 +6,7 @@ namespace App\Models;
 use Ankurk91\Eloquent\MorphToOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 
@@ -42,11 +43,6 @@ class Accounts extends BaseModel
     {
         self::$clone = $this->replicate();
         return parent::load($relations);
-    }
-
-    public function getClientAttribute()
-    {
-        return $this->clientable->client ?? null;
     }
 
     /**
@@ -107,12 +103,19 @@ class Accounts extends BaseModel
         $this->attributes['account_number'] = uniqid();
     }
 
+    public function accountIndividualCompany(): HasOne
+    {
+        return $this->hasOne(AccountIndividualCompany::class, 'account_id', 'id');
+    }
+
     public function clientable(string $type = null): \Ankurk91\Eloquent\Relations\MorphToOne
     {
-        try {$model = self::$clone;}
+        /** @var Accounts $model */
+        try {
+            $model = self::$clone;}
         catch (\Error $ex){$model = $this;}
 
-        $clientType = AccountIndividualCompany::where('account_id', $model->account_id)->first()->type ?? null;
+        $clientType = $model->accountIndividualCompany->client_type ?? null;
 
         if (in_array(ApplicantIndividual::class, [$clientType, $type])){
             return $this->applicantIndividual();
@@ -127,7 +130,7 @@ class Accounts extends BaseModel
 
     public function applicantCompany(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
-        return $this->morphedByOne(ApplicantIndividual::class, 'client', 'account_individuals_companies', 'account_id');
+        return $this->morphedByOne(ApplicantCompany::class, 'client', 'account_individuals_companies', 'account_id');
     }
 
     public function limits(): HasMany

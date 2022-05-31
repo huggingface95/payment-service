@@ -2,15 +2,25 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Spatie\Permission\Traits\HasRoles;
 
+
+/**
+ * Class ApplicantIndividual
+ * @package App\Models
+
+ * @property ApplicantBankingAccess $applicantBankingAccess
+ *
+ */
 class ApplicantIndividual extends Model
 {
-    use HasRoles, MorphToOne;
+    use HasRoles, MorphToOne, BelongsToOne;
 
     protected $table = "applicant_individual";
     protected $guard_name = 'api';
@@ -75,7 +85,7 @@ class ApplicantIndividual extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function status()
     {
@@ -83,7 +93,7 @@ class ApplicantIndividual extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function state()
     {
@@ -91,7 +101,7 @@ class ApplicantIndividual extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function stateReason()
     {
@@ -99,7 +109,7 @@ class ApplicantIndividual extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function riskLevel()
     {
@@ -107,7 +117,7 @@ class ApplicantIndividual extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function manager()
     {
@@ -115,7 +125,7 @@ class ApplicantIndividual extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function country()
     {
@@ -123,7 +133,7 @@ class ApplicantIndividual extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function language()
     {
@@ -131,7 +141,7 @@ class ApplicantIndividual extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function citizenshipCountry()
     {
@@ -139,7 +149,7 @@ class ApplicantIndividual extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function birthCountry()
     {
@@ -195,7 +205,7 @@ class ApplicantIndividual extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function twoFactorAuth()
     {
@@ -217,4 +227,8 @@ class ApplicantIndividual extends Model
         return $query->join('companies', 'companies.id', '=', 'applicant_individual.company_id')->orderBy('companies.name', $sort)->select('applicant_individual.*');
     }
 
+    public function applicantBankingAccess(): \Ankurk91\Eloquent\Relations\BelongsToOne
+    {
+        return $this->belongsToOne(ApplicantBankingAccess::class, ApplicantIndividualCompany::class, 'applicant_individual_id', 'applicant_company_id', 'id', 'applicant_company_id');
+    }
 }

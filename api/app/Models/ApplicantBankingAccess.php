@@ -3,10 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+/**
+ * Class ApplicantBankingAccess
+ * @package App\Models
 
+ * @property float daily_limit
+ * @property float monthly_limit
+ * @property float operation_limit
+ * @property float used_limit
+ *
+ */
 class ApplicantBankingAccess extends Model
 {
 

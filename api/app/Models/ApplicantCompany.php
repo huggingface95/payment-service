@@ -6,8 +6,18 @@ use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
+
+/**
+ * Class ApplicantCompany
+ * @package App\Models
+
+ * @property ApplicantIndividual $applicantIndividuals
+ * @property ApplicantIndividual $applicantsWithBankingAccess
+ *
+ */
 class ApplicantCompany extends Model
 {
         use MorphToOne,BelongsToOne;
@@ -69,7 +79,7 @@ class ApplicantCompany extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function labels()
     {
@@ -184,6 +194,11 @@ class ApplicantCompany extends Model
     public function ownerPosition()
     {
         return $this->belongsTo(ApplicantIndividualCompany::class,'owner_id', 'applicant_individual_id', 'applicant_individual_company_position_id');
+    }
+
+    public function applicantIndividuals(): BelongsToMany
+    {
+        return $this->belongsToMany(ApplicantIndividual::class, ApplicantIndividualCompany::class, 'applicant_company_id', 'applicant_individual_id');
     }
 
     public function company()
