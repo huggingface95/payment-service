@@ -42,7 +42,7 @@ extend type Query @guard {
         orderBy: _ @orderBy(
             columns: ["id"]
         )
-    ): [EmailSmtp!]! @orderBy(column: "id", direction: ASC)
+    ): [EmailSmtp!]! @all @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
