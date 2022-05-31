@@ -4,8 +4,6 @@ Banking-> Email Templates Settings
 """
 type EmailSmtp {
     id: ID!
-    "Название"
-    name: String!
     "Защита"
     security: Securities!
     "Имя хоста"
@@ -22,6 +20,8 @@ type EmailSmtp {
     replay_to: String!
     "Порт"
     port: Int!
+    "Получить шаблон"
+    template: EmailTemplate @belongsTo(relation: "emailTemplate")
     "Получить мембера"
     member: Members @belongsTo(relation: "member")
 }
@@ -34,14 +34,20 @@ enum Securities {
 
 extend type Query @guard {
     "Получить по билет ID"
-    emailSmtp(id: ID @eq): EmailSmtp   @find
+    emailSmtp(id: ID @eq): EmailSmtp @find
+
+    emailSmtps(
+        hasTemplate: _ @whereHasConditions(columns: ["name", "id"]),
+        where: _ @whereConditions(columns: ["template_id"]),
+        orderBy: _ @orderBy(
+            columns: ["id"]
+        )
+    ): [EmailSmtp!]! @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
     "Создать смтп"
     createEmailSmtp(
-        "Название"
-        name: String!
         "Защита"
         security: String
         "Имя хоста"
@@ -58,13 +64,13 @@ extend type Mutation @guard {
         replay_to: String
         "Порт"
         port: Int!
+        "Ид шаблона"
+        email_template_id: ID!
     ): EmailSmtp @field(resolver: "EmailSmtpMutator@create")
 
     "Обновить данные смтп"
     updateEmailSmtp(
         id: ID!
-        "Название"
-        name: String!
         "Защита"
         security: String
         "Имя хоста"
@@ -81,6 +87,8 @@ extend type Mutation @guard {
         replay_to: String
         "Порт"
         port: Int!
+        "Ид шаблона"
+        email_template_id: ID!
     ): EmailSmtp @update
 
     "Удалить запись"
