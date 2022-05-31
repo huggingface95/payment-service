@@ -110,10 +110,15 @@ class ApplicantCompanyMutator extends BaseMutator
 
     private function setApplicantCompanyGroup(ApplicantCompany $applicantCompany, int $groupId)
     {
-        GroupRoleUser::updateOrCreate(
-            ["user_id"=>$applicantCompany->id],
-            ["group_role_id" => $groupId]
-        );
+        $groupRoleUser =GroupRoleUser::where('user_id',$applicantCompany->id)->first();
+        if ($groupRoleUser !== null) {
+            GroupRoleUser::where('user_id',$applicantCompany->id)->update(['group_role_id'=>$groupId]);
+        } else {
+            GroupRoleUser::create([
+                'user_id'=>$applicantCompany->id,
+                    'group_role_id' => $groupId
+                ]);
+        }
     }
 
 }
