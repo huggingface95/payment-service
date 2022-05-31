@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PragmaRX\Google2FALaravel\Facade as Google2FA;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -153,9 +154,14 @@ class AuthController extends Controller
     public function disable2FA(Request $request)
     {
         $this->validate($request, [
-            'code' => 'required'
+            'code' => 'required',
+            'password' => 'required'
         ]);
         $auth_user = auth()->user();
+        if (!Hash::check($request->password,$auth_user->getAuthPassword()))
+        {
+            return response()->json(['data' => 'Password is not valid']);
+        }
         $token = DB::table('oauth_access_tokens')->where('user_id', $request->user()->id)->latest()->limit(1);
         $valid = Google2FA::verifyGoogle2FA($auth_user->google2fa_secret, $request->code);
         if ($valid) {
