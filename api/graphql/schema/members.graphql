@@ -48,6 +48,8 @@ type Members {
     security_pin: String
     "Member Backup Codes"
     backup_codes: JSON
+    "Подписывать или нет транзакцию"
+    is_sign_transaction: Boolean
 }
 
 extend type Query @guard {
