@@ -16,4 +16,8 @@ class GroupRoleUser extends Model
         'group_role_id', 'user_id'
     ];
 
+    protected $primaryKey = 'user_id';
+
+    public $timestamps = false;
+
 }
