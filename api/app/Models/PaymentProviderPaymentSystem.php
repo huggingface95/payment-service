@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class PaymentProviderPaymentSystem extends Model
+class PaymentProviderPaymentSystem extends BaseModel
 {
     public $timestamps = false;
     protected $table = 'payment_provider_payment_system';

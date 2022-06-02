@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Files extends Model
+class Files extends BaseModel
 {
 
     /**

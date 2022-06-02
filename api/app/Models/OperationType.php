@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class OperationType extends Model
+class OperationType extends BaseModel
 {
     protected $table="operation_type";
 

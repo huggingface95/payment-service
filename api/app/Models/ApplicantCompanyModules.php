@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ApplicantCompanyModules extends Model
+class ApplicantCompanyModules extends BaseModel
 {
 
     protected $table="applicant_company_modules";

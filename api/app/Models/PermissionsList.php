@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @method static create(array $array)
  * @method static whereName(string $string)
  */
-class PermissionsList extends Model
+class PermissionsList extends BaseModel
 {
     const PRIVATE = 'private';
     const BUSINESS = 'business';

@@ -163,4 +163,8 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         return $this->hasMany(EmailTemplate::class, 'member_id');
     }
 
+    public function accessLimitations(): HasMany
+    {
+        return $this->hasMany(MemberAccessLimitation::class, 'member_id')->with('groupRole');
+    }
 }

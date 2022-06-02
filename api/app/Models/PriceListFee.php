@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
@@ -21,7 +20,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon updated_at
  *
  */
-class PriceListFee extends Model
+class PriceListFee extends BaseModel
 {
 
     const RANGE = 'range';

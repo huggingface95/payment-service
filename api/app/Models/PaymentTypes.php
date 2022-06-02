@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class PaymentTypes extends Model
+class PaymentTypes extends BaseModel
 {
     const INCOMING = 'Incoming';
     const OUTGOING = 'Outgoing';

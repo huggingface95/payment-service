@@ -73,6 +73,7 @@ class Payments extends BaseModel
                 ->select('commission_template_limit.*')
                 ->first()->amount ?? 0;
         });
+        parent::booted();
     }
 
     public function scopeAccountNumber(Builder $query, $sort): Builder

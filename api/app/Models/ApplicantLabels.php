@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-
-class ApplicantLabels extends Model
+class ApplicantLabels extends BaseModel
 {
 
     protected $table="applicant_individual_label_relation";

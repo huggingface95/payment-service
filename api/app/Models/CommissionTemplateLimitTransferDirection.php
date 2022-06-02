@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class CommissionTemplateLimitTransferDirection extends Model
+class CommissionTemplateLimitTransferDirection extends BaseModel
 {
 
     const ALL = 'All';

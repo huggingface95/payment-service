@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ApplicantKycLevel extends Model
+class ApplicantKycLevel extends BaseModel
 {
 
     protected $table="applicant_kyc_level";

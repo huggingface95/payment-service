@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ApplicantIndividualNotes extends Model
+class ApplicantIndividualNotes extends BaseModel
 {
 
     protected $table="applicant_individual_notes";

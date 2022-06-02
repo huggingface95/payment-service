@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
-use App\Models\Scopes\ApplicantFilterByMemberScope;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
@@ -18,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property ApplicantIndividual $applicantsWithBankingAccess
  *
  */
-class ApplicantCompany extends Model
+class ApplicantCompany extends BaseModel
 {
         use MorphToOne,BelongsToOne;
 
@@ -71,12 +69,6 @@ class ApplicantCompany extends Model
         'contacts_additional_fields'=>'array',
         'profile_additional_field'=>'array'
     ];
-
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new ApplicantFilterByMemberScope);
-    }
 
     /**
      * @return BelongsToMany

@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class Languages extends Model
+class Languages extends BaseModel
 {
 
     /**

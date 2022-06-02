@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
-use App\Models\Scopes\ApplicantFilterByMemberScope;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Spatie\Permission\Traits\HasRoles;
@@ -18,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property ApplicantBankingAccess $applicantBankingAccess
  *
  */
-class ApplicantIndividual extends Model
+class ApplicantIndividual extends BaseModel
 {
     use HasRoles, MorphToOne, BelongsToOne;
 
@@ -69,12 +67,6 @@ class ApplicantIndividual extends Model
         'personal_additional_fields' => 'array',
         'contacts_additional_fields' => 'array'
     ];
-
-
-    protected static function booted()
-    {
-        static::addGlobalScope(new ApplicantFilterByMemberScope);
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class CommissionTemplateLimitActionType extends Model
+class CommissionTemplateLimitActionType extends BaseModel
 {
 
     public $timestamps = false;

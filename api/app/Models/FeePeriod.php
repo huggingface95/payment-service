@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class FeePeriod extends Model
+class FeePeriod extends BaseModel
 {
     protected $table="fee_period";
 

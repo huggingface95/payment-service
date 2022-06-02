@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
@@ -21,7 +20,7 @@ use Illuminate\Support\Carbon;
  * @property ApplicantIndividual client
  *
  */
-class TicketComments extends Model
+class TicketComments extends BaseModel
 {
     /**
      * The attributes that are mass assignable.

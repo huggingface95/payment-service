@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 
@@ -14,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string referer
  *
  */
-class PermissionOperation extends Model
+class PermissionOperation extends BaseModel
 {
     /**
      * The attributes that are mass assignable.

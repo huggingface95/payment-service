@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class BaseModel extends Model
 {
@@ -18,5 +20,19 @@ class BaseModel extends Model
         return json_decode(str_replace(['{', '}'], ['[', ']'], $value));
     }
 
+
+    protected static function booted()
+    {
+        parent::booted();
+
+        /** @var Members $member */
+        if ($member = Auth::user()){
+            $ids = $member->accessLimitations()->get()->pluck('groupRole')->map(function ($role){
+                return $role->users;
+            })->flatten(1)->pluck('id')->toArray();
+
+            static::addGlobalScope(new ApplicantFilterByMemberScope($ids, $member->is_show_owner_applicants));
+        }
+    }
 
 }

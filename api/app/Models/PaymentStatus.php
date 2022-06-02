@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class PaymentStatus extends Model
+class PaymentStatus extends BaseModel
 {
     const PENDING_ID = 1;
     const COMPLETED_ID = 2;
