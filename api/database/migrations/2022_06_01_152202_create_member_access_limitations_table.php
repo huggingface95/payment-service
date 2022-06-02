@@ -27,7 +27,7 @@ class CreateMemberAccessLimitationsTable extends Migration
             $table->foreign('commission_template_id')->references('id')->on('commission_template')
                 ->onDelete('cascade')->onUpdate('cascade');
 
-            $table->unique(['member_id', 'group_id', 'group_role_id', 'provider_id', 'commission_template_id']);
+            $table->unique(['member_id', 'group_role_id', 'commission_template_id']);
         });
     }
 
