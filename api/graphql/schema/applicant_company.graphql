@@ -101,6 +101,7 @@ extend type Query @guard{
     where:{column: EMAIL, operator: LIKE, value: ""} фильтр по имени, фамилии, Email
     """
     applicantCompanies(
+        hasGroupRole: _ @whereHasConditions(columns: ["name", "id"]),
         hasRiskLevel: _ @whereHasConditions(columns: ["name", "id"]),
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
