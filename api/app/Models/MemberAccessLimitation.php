@@ -11,9 +11,7 @@ use Illuminate\Support\Collection;
  * @package App\Models
  * @property int id
  * @property int member_id
- * @property int group_id
  * @property int group_role_id
- * @property int provider_id
  * @property int commission_template_id
  *
  * @property Collection groupRoles

@@ -16,19 +16,13 @@ class CreateMemberAccessLimitationsTable extends Migration
         Schema::create('member_access_limitations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('member_id');
-            $table->unsignedBigInteger('group_id');
             $table->unsignedBigInteger('group_role_id');
-            $table->unsignedBigInteger('provider_id');
             $table->unsignedBigInteger('commission_template_id');
             $table->timestamps();
 
             $table->foreign('member_id')->references('id')->on('members')
                 ->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('group_id')->references('id')->on('groups')
-                ->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('group_role_id')->references('id')->on('group_role')
-                ->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('provider_id')->references('id')->on('payment_provider')
                 ->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('commission_template_id')->references('id')->on('commission_template')
                 ->onDelete('cascade')->onUpdate('cascade');
