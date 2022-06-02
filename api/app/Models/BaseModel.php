@@ -27,12 +27,21 @@ class BaseModel extends Model
 
         /** @var Members $member */
         if ($member = Auth::user()){
+            self::filterApplicantsByMember($member);
+        }
+    }
+
+    private static function filterApplicantsByMember(Members $member){
+        if ($member->IsShowOwnerApplicants()){
+            $ids = collect($member->accountManagerApplicantIndividuals()->get()->pluck('id'))->merge($member->accountManagerApplicantCompanies()->get()->pluck('id'))->unique();
+        }
+        else{
             $ids = $member->accessLimitations()->get()->pluck('groupRole')->map(function ($role){
                 return $role->users;
             })->flatten(1)->pluck('id')->toArray();
-
-            static::addGlobalScope(new ApplicantFilterByMemberScope($ids, $member->is_show_owner_applicants));
         }
+
+        static::addGlobalScope(new ApplicantFilterByMemberScope($ids));
     }
 
 }

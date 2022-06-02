@@ -167,4 +167,14 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     {
         return $this->hasMany(MemberAccessLimitation::class, 'member_id')->with('groupRole');
     }
+
+    public function accountManagerApplicantIndividuals(): HasMany
+    {
+        return $this->hasMany(ApplicantIndividual::class, 'account_manager_member_id');
+    }
+
+    public function accountManagerApplicantCompanies(): HasMany
+    {
+        return $this->hasMany(ApplicantCompany::class, 'account_manager_member_id');
+    }
 }

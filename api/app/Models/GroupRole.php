@@ -28,6 +28,15 @@ class GroupRole extends BaseModel
         'name', 'group_type_id', 'role_id', 'payment_provider_id', 'commission_template_id', 'is_active', 'description', 'company_id'
     ];
 
+    public static self $clone;
+
+    public function load($relations): GroupRole
+    {
+        self::$clone = $this->replicate();
+        return parent::load($relations);
+    }
+
+
     public function groupType(): BelongsTo
     {
         return $this->belongsTo(Groups::class, "group_type_id");
@@ -83,18 +92,19 @@ class GroupRole extends BaseModel
         );
     }
 
-    /** Dynamic call */
     public function users(): BelongsToMany
     {
-        $type = $this->attributes['group_type_id'];
+        /** @var GroupRole $model */
+        try {
+            $model = self::$clone;}
+        catch (\Error $ex){$model = $this;}
 
-        if ($type == self::INDIVIDUAL)
+        if ($model->group_type_id == self::INDIVIDUAL)
             return $this->individuals();
-        elseif ($type == self::COMPANY)
+        elseif ($model->group_type_id == self::COMPANY)
             return $this->companies();
         else
             return $this->members();
     }
-
 
 }
