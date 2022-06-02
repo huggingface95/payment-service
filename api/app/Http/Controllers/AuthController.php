@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Members;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PragmaRX\Google2FALaravel\Facade as Google2FA;
@@ -162,8 +163,17 @@ class AuthController extends Controller
         {
             return response()->json(['data' => 'Password is not valid']);
         }
+        $secret = $auth_user->google2fa_secret;
+        if ($request->member_id) {
+            $member = Members::find($request->member_id);
+            if (!$member){
+                return response()->json(['data' => 'Member not found']);
+            }
+            $secret = $member->google2fa_secret;
+        }
         $token = DB::table('oauth_access_tokens')->where('user_id', $request->user()->id)->latest()->limit(1);
-        $valid = Google2FA::verifyGoogle2FA($auth_user->google2fa_secret, $request->code);
+        $valid = Google2FA::verifyGoogle2FA($secret, $request->code);
+
         if ($valid) {
             $auth_user->google2fa_secret = null;
             $auth_user->two_factor_auth_setting_id = 1;
