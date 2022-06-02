@@ -13,14 +13,26 @@ type EmailTemplate {
     "Контент"
     content: String!
     "Header"
-    header: String!
+    header: String
     "Footer"
-    footer: String!
+    footer: String
     "Получить Компанию"
     company: Companies @belongsTo(relation: "company")
     created_at: DateTime
     updated_at: DateTime
     use_layout: Boolean
+}
+
+enum ClientType{
+    Administration @enum(value: "administration")
+    Client @enum(value: "client")
+}
+
+enum ServiceType {
+    Banking @enum(value: "banking")
+    Common @enum(value: "common")
+    System @enum(value: "system")
+    AdminNotify @enum(value: "admin notify")
 }
 
 
@@ -37,7 +49,7 @@ extend type Query @guard {
     emailTemplates(
         hasCompany: _ @whereHasConditions(columns: ["name"]),
         created_at: DateRange @whereBetween,
-        where: _ @whereConditions(columns: ["subject", "company_id"]),
+        where: _ @whereConditions(columns: ["subject", "company_id", "type", "service_type"]),
         orderBy: _ @orderBy(
             columns: ["id"]
         )
@@ -52,9 +64,9 @@ extend type Mutation @guard {
         "Взять layout"
         use_layout: Boolean!
         "Тип электронной почты"
-        type: String!
+        type: ClientType!
         "Тип сервиса"
-        service_type: String!
+        service_type: ServiceType!
         "Контент электронной почты"
         content: String!
         "Header электронной почты"
@@ -73,9 +85,9 @@ extend type Mutation @guard {
         "Взять layout"
         use_layout: Boolean
         "Тип электронной почты"
-        type: String
+        type: ClientType
         "Тип сервиса"
-        service_type: String
+        service_type: ServiceType
         "Контент электронной почты"
         content: String
         "Header электронной почты"
