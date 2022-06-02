@@ -33,7 +33,7 @@ class BaseModel extends Model
 
     private static function filterApplicantsByMember(Members $member){
         if ($member->IsShowOwnerApplicants()){
-            $ids = collect($member->accountManagerApplicantIndividuals()->get()->pluck('id'))->merge($member->accountManagerApplicantCompanies()->get()->pluck('id'))->unique();
+            $ids = collect($member->accountManagerApplicantIndividuals()->get()->pluck('id'))->merge($member->accountManagerApplicantCompanies()->get()->pluck('id'))->unique()->toArray();
         }
         else{
             $ids = $member->accessLimitations()->get()->pluck('groupRole')->map(function ($role){

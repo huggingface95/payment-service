@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Collection;
 
 /**
@@ -22,7 +23,9 @@ use Illuminate\Support\Collection;
  */
 class MemberAccessLimitation extends BaseModel
 {
-    protected $fillable = ['member_id', 'group_id', 'group_role_id', 'provider_id', 'commission_template_id'];
+
+
+    protected $fillable = ['member_id', 'group_role_id', 'commission_template_id'];
 
 
     public function member(): BelongsTo
@@ -30,29 +33,40 @@ class MemberAccessLimitation extends BaseModel
         return $this->belongsTo(Members::class, 'member_id');
     }
 
-    public function group(): BelongsTo
+
+    public function group(): HasOneThrough
     {
-        return $this->belongsTo(Groups::class, 'group_id');
+        return $this->hasOneThrough(
+            Groups::class,
+            GroupRole::class,
+            'id',
+            'id',
+            'group_role_id',
+            'group_type_id'
+        );
     }
+
 
     public function groupRole(): BelongsTo
     {
         return $this->belongsTo(GroupRole::class, 'group_role_id');
     }
 
-    public function provider(): BelongsTo
+    public function provider(): HasOneThrough
     {
-        return $this->belongsTo(PaymentProvider::class, 'provider_id');
+        return $this->hasOneThrough(
+            PaymentProvider::class,
+            CommissionTemplate::class,
+            'id',
+            'id',
+            'commission_template_id',
+            'payment_provider_id'
+        );
     }
 
     public function commissionTemplate(): BelongsTo
     {
         return $this->belongsTo(CommissionTemplate::class, 'commission_template_id');
-    }
-
-    public function clients()
-    {
-
     }
 
 }

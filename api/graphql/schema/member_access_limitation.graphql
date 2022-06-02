@@ -1,17 +1,17 @@
 """
 Участники
-Administration->Members
+Administration->Members->MemberAccessLimitation
 """
 type MemberAccessLimitation {
     id: ID!
     "Получить Group"
     member: Members @belongsTo(relation: "member")
     "Получить Group"
-    group: Groups @belongsTo(relation: "group")
+    group: Groups @hasOne(relation: "group")
     "Получить groupRole"
     group_role: GroupRole @belongsTo(relation: "groupRole")
     "Получить связанный платежный провайдер"
-    provider: PaymentProvider @belongsTo(relation:"paymentProvider")
+    provider: PaymentProvider @hasOne(relation:"paymentProvider")
     "Получить связанный платежный шаблон"
     commission_template: CommissionTemplate @belongsTo(relation:"CommissionTemplate")
 }
@@ -23,14 +23,14 @@ extend type Query @guard {
     Получить список участников
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     where:{column: FIRST_NAME, operator: LIKE, value: ""} фильтр по фамилии, имени, email, компании, роли, департаменту, должности
-    hasPosition: {column: DEPARTMENT_ID, operator:EQ, value: 8} поиск по id департамента
+    hasPosition: {column: GROUP_ROLE_ID, operator:EQ, value: 8} поиск по id GROUP ROLE
     """
     memberAccessLimitations(
         hasGroupRole: _ @whereHasConditions(columns: ["id","name"]),
         hasGroup: _ @whereHasConditions(columns: ["id","name"]),
         hasPaymentProvider: _ @whereHasConditions(columns: ["id","name"]),
         hasCommissionTemplate: _ @whereHasConditions(columns: ["id","name"]),
-        where: _ @whereConditions(columns: ["id","member_id","group_id","group_role_id", "commission_template_id", "provider_id"]),
+        where: _ @whereConditions(columns: ["id","member_id","group_role_id", "provider_id"]),
         orderBy: _ @orderBy(columns: ["id"],
     )): [MemberAccessLimitation!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -42,12 +42,8 @@ extend type Mutation  {
     createMemberAccessLimitation(
         "ID Мембера"
         member_id: ID!
-        "ID группы"
-        group_id: ID!
         "ID Груп Роль"
         group_role_id: ID!
-        "ID Провайдера"
-        provider_id: ID!
         "ID платежный шаблон"
         commission_template_id: ID!
     ): MemberAccessLimitation @create
@@ -58,12 +54,8 @@ extend type Mutation  {
     updateMemberAccessLimitation(
         "ID Мембера"
         member_id: ID!
-        "ID группы"
-        group_id: ID!
         "ID Груп Роль"
         group_role_id: ID!
-        "ID Провайдера"
-        provider_id: ID!
         "ID платежный шаблон"
         commission_template_id: ID!
     ): MemberAccessLimitation @update
