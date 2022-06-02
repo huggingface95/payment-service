@@ -24,6 +24,17 @@ use \Illuminate\Notifications\Notifiable;
  * @package App\Models
  * @property int id
  * @property bool is_show_owner_applicants
+ * @property string email
+ * @property string first_name
+ * @property string last_name
+ * @property string fullname
+ * @property string sex
+ * @property int company_id
+ * @property int country_id
+ * @property int language_id
+ * @property int two_factor_auth_setting_id
+ * @property string google2fa_secret
+ * @property string backup_codes
  *
  * @property Collection groupRoles
  * @property GroupRole $groupRole

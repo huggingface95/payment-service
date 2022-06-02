@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Members;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PragmaRX\Google2FALaravel\Facade as Google2FA;
@@ -140,9 +141,9 @@ class AuthController extends Controller
         $this->validate($request, [
             'code' => 'required'
         ]);
-        $auth_user = auth()->user();
+        $authUser = auth()->user();
         $token = DB::table('oauth_access_tokens')->where('user_id', $request->user()->id)->latest()->limit(1);
-        $valid = Google2FA::verifyGoogle2FA($auth_user->google2fa_secret, $request->code);
+        $valid = Google2FA::verifyGoogle2FA($authUser->google2fa_secret, $request->code);
         if (!$valid) {
             $token->update(['twofactor_verified' => false]);
             return response()->json(['data' => 'Unable to verify your code']);
@@ -157,17 +158,26 @@ class AuthController extends Controller
             'code' => 'required',
             'password' => 'required'
         ]);
-        $auth_user = auth()->user();
-        if (!Hash::check($request->password,$auth_user->getAuthPassword()))
+        $authUser = auth()->user();
+        if (!Hash::check($request->password,$authUser->getAuthPassword()))
         {
             return response()->json(['data' => 'Password is not valid']);
         }
+        $secret = $authUser->google2fa_secret;
+        if ($request->member_id) {
+            $member = Members::find($request->member_id);
+            if (!$member){
+                return response()->json(['data' => 'Member not found']);
+            }
+            $secret = $member->google2fa_secret;
+        }
         $token = DB::table('oauth_access_tokens')->where('user_id', $request->user()->id)->latest()->limit(1);
-        $valid = Google2FA::verifyGoogle2FA($auth_user->google2fa_secret, $request->code);
+        $valid = Google2FA::verifyGoogle2FA($secret, $request->code);
+
         if ($valid) {
-            $auth_user->google2fa_secret = null;
-            $auth_user->two_factor_auth_setting_id = 1;
-            $auth_user->save();
+            $authUser->google2fa_secret = null;
+            $authUser->two_factor_auth_setting_id = 1;
+            $authUser->save();
             $token->update(['twofactor_verified' => false]);
         } else {
             return response()->json(['data' => 'Unable to verify your code']);
@@ -177,13 +187,13 @@ class AuthController extends Controller
 
     public function generateBackupCodes()
     {
-        $auth_user = auth()->user();
+        $authUser = auth()->user();
         $codes = [];
         for ($i = 0; $i <= 9; $i++) {
             $codes[$i] = $this->generateUniqueCode();
         }
 
-        return response()->json(['backup_codes' => $codes, 'user_id' => $auth_user->id, '2fa_secret' => $auth_user->google2fa_secret]);
+        return response()->json(['backup_codes' => $codes, 'user_id' => $authUser->id, '2fa_secret' => $authUser->google2fa_secret]);
     }
 
     public function storeBackupCodes(Request $request)
@@ -191,11 +201,11 @@ class AuthController extends Controller
         $this->validate($request, [
             'backup_codes' => 'required'
         ]);
-        $auth_user = auth()->user();
-        $auth_user->backup_codes = $request->backup_codes;
-        $auth_user->save();
+        $authUser = auth()->user();
+        $authUser->backup_codes = $request->backup_codes;
+        $authUser->save();
 
-        return response()->json(['data' => 'Backup Codes stored success for user id '.$auth_user->id]);
+        return response()->json(['data' => 'Backup Codes stored success for user id '.$authUser->id]);
 
     }
 
