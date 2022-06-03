@@ -104,12 +104,19 @@ class AuthController extends Controller
         ]);
     }
 
-    public function show2FARegistrationInfo()
+    public function show2FARegistrationInfo(Request $request)
     {
         $secret = Google2FA::generateSecretKey(config('lumen2fa.key_length', 32));
+        $user = auth()->user();
+        if ($request->member_id) {
+            $user = Members::find($request->member_id);
+            if (!$user){
+                return response()->json(['data' => 'Member not found']);
+            }
+        }
         $QR_Image = Google2FA::getQRCodeInline(
             config('app.name'),
-            auth()->user()->{config('lumen2fa.user_identified_field')},
+            $user->{config('lumen2fa.user_identified_field')},
             $secret
         );
         $data = [
@@ -125,7 +132,16 @@ class AuthController extends Controller
         $this->validate($request, [
             'secret' => 'required'
         ]);
+
         $user = auth()->user();
+
+        if ($request->member_id) {
+            $user = Members::find($request->member_id);
+            if (!$user){
+                return response()->json(['data' => 'Member not found']);
+            }
+        }
+
         $user->createToken($user->fullname)->accessToken;
         $secretKey = $request->secret;
         $user->two_factor_auth_setting_id = 2;
@@ -141,9 +157,17 @@ class AuthController extends Controller
         $this->validate($request, [
             'code' => 'required'
         ]);
-        $authUser = auth()->user();
-        $token = DB::table('oauth_access_tokens')->where('user_id', $request->user()->id)->latest()->limit(1);
-        $valid = Google2FA::verifyGoogle2FA($authUser->google2fa_secret, $request->code);
+        $user = auth()->user();
+
+        if ($request->member_id) {
+            $user = Members::find($request->member_id);
+            if (!$user){
+                return response()->json(['data' => 'Member not found']);
+            }
+        }
+
+        $token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
+        $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
         if (!$valid) {
             $token->update(['twofactor_verified' => false]);
             return response()->json(['data' => 'Unable to verify your code']);
@@ -158,26 +182,25 @@ class AuthController extends Controller
             'code' => 'required',
             'password' => 'required'
         ]);
-        $authUser = auth()->user();
-        if (!Hash::check($request->password,$authUser->getAuthPassword()))
+        $user = auth()->user();
+        if (!Hash::check($request->password,$user->getAuthPassword()))
         {
             return response()->json(['data' => 'Password is not valid']);
         }
-        $secret = $authUser->google2fa_secret;
+
         if ($request->member_id) {
-            $member = Members::find($request->member_id);
-            if (!$member){
+            $user = Members::find($request->member_id);
+            if (!$user){
                 return response()->json(['data' => 'Member not found']);
             }
-            $secret = $member->google2fa_secret;
         }
-        $token = DB::table('oauth_access_tokens')->where('user_id', $request->user()->id)->latest()->limit(1);
-        $valid = Google2FA::verifyGoogle2FA($secret, $request->code);
+        $token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
+        $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
 
         if ($valid) {
-            $authUser->google2fa_secret = null;
-            $authUser->two_factor_auth_setting_id = 1;
-            $authUser->save();
+            $user->google2fa_secret = null;
+            $user->two_factor_auth_setting_id = 1;
+            $user->save();
             $token->update(['twofactor_verified' => false]);
         } else {
             return response()->json(['data' => 'Unable to verify your code']);
@@ -185,15 +208,21 @@ class AuthController extends Controller
         return response()->json(['data' => 'Google 2fa disabled successful']);
     }
 
-    public function generateBackupCodes()
+    public function generateBackupCodes(Request $request)
     {
-        $authUser = auth()->user();
+        $user = auth()->user();
+        if ($request->member_id) {
+            $user = Members::find($request->member_id);
+            if (!$user){
+                return response()->json(['data' => 'Member not found']);
+            }
+        }
         $codes = [];
         for ($i = 0; $i <= 9; $i++) {
             $codes[$i] = $this->generateUniqueCode();
         }
 
-        return response()->json(['backup_codes' => $codes, 'user_id' => $authUser->id, '2fa_secret' => $authUser->google2fa_secret]);
+        return response()->json(['backup_codes' => $codes, 'user_id' => $user->id, '2fa_secret' => $user->google2fa_secret]);
     }
 
     public function storeBackupCodes(Request $request)
@@ -201,11 +230,18 @@ class AuthController extends Controller
         $this->validate($request, [
             'backup_codes' => 'required'
         ]);
-        $authUser = auth()->user();
-        $authUser->backup_codes = $request->backup_codes;
-        $authUser->save();
 
-        return response()->json(['data' => 'Backup Codes stored success for user id '.$authUser->id]);
+        $user = auth()->user();
+        if ($request->member_id) {
+            $user = Members::find($request->member_id);
+            if (!$user){
+                return response()->json(['data' => 'Member not found']);
+            }
+        }
+        $user->backup_codes = $request->backup_codes;
+        $user->save();
+
+        return response()->json(['data' => 'Backup Codes stored success for user id '.$user->id]);
 
     }
 
