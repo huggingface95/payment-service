@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -39,6 +40,12 @@ class Ticket extends BaseModel
     protected $fillable = [
         'member_id', 'client_id', 'title', 'message', 'status'
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
 
     public function comments(): HasMany

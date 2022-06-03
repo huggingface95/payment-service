@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
+
 class ApplicantCompanyNotes extends BaseModel
 {
 
@@ -16,6 +18,11 @@ class ApplicantCompanyNotes extends BaseModel
         'note','applicant_company_id','member_id'
     ];
 
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
@@ -69,6 +70,12 @@ class ApplicantCompany extends BaseModel
         'contacts_additional_fields'=>'array',
         'profile_additional_field'=>'array'
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     /**
      * @return BelongsToMany

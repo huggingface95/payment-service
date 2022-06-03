@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -29,6 +30,12 @@ class GroupRole extends BaseModel
     ];
 
     public static self $clone;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     public function load($relations): GroupRole
     {

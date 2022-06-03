@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
@@ -30,6 +31,12 @@ class TicketComments extends BaseModel
     protected $fillable = [
         'ticket_id', 'client_id', 'message'
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     public function ticket(): BelongsTo
     {

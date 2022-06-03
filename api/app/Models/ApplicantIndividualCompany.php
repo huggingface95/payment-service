@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
+
 class ApplicantIndividualCompany extends BaseModel
 {
 
@@ -17,6 +19,12 @@ class ApplicantIndividualCompany extends BaseModel
     ];
 
     public $timestamps = false;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     public function ApplicantIndividual()
     {

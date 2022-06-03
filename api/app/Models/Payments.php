@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\MemberScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -60,8 +61,9 @@ class Payments extends BaseModel
 
     protected static function booted()
     {
+        parent::booted();
         static::addGlobalScope(new MemberScope);
-
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
         self::creating(function($model){
            $model->fee = CommissionTemplateLimit::query()
                 ->join('commission_template_limit_relation AS rel', 'rel.commission_template_limit_id', '=', 'commission_template_limit.id')
@@ -73,7 +75,7 @@ class Payments extends BaseModel
                 ->select('commission_template_limit.*')
                 ->first()->amount ?? 0;
         });
-        parent::booted();
+
     }
 
     public function scopeAccountNumber(Builder $query, $sort): Builder

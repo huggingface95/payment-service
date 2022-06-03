@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\MemberScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,8 +33,9 @@ class CommissionTemplate extends BaseModel
 
     protected static function booted()
     {
-        static::addGlobalScope(new MemberScope);
         parent::booted();
+        static::addGlobalScope(new MemberScope);
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
 
 

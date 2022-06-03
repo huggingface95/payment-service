@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Spatie\Permission\Traits\HasRoles;
@@ -67,6 +68,12 @@ class ApplicantIndividual extends BaseModel
         'personal_additional_fields' => 'array',
         'contacts_additional_fields' => 'array'
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

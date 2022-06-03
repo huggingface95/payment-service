@@ -12,7 +12,7 @@ class BaseModel extends Model
 
     protected function setArrayAttribute($value)
     {
-        return  str_replace(['[', ']'], ['{', '}'], json_encode($value));
+        return str_replace(['[', ']'], ['{', '}'], json_encode($value));
     }
 
     protected function getArrayAttribute($value)
@@ -21,27 +21,31 @@ class BaseModel extends Model
     }
 
 
-    protected static function booted()
+    protected static function getApplicantIdsByAuthMember(): ?array
     {
-        parent::booted();
-
         /** @var Members $member */
-        if ($member = Auth::user()){
-            self::filterApplicantsByMember($member);
+        if ($member = Auth::user()) {
+            if ($member->IsShowOwnerApplicants()) {
+                return [
+                    'applicant_individual' => $member->accountManagerApplicantIndividuals()->get()->pluck('id'),
+                    'applicant_companies' => $member->accountManagerApplicantCompanies()->get()->pluck('id'),
+                ];
+            } else {
+                return $member->accessLimitations()->get()
+                    ->pluck('groupRole')->map(function ($role) {
+                        return $role->users;
+                    })
+                    ->flatten(1)
+                    ->groupBy(function ($v) {
+                        return $v->getTable();
+                    })
+                    ->map(function ($v) {
+                        return $v->pluck('id');
+                    })->toArray();
+            }
         }
-    }
 
-    private static function filterApplicantsByMember(Members $member){
-        if ($member->IsShowOwnerApplicants()){
-            $ids = collect($member->accountManagerApplicantIndividuals()->get()->pluck('id'))->merge($member->accountManagerApplicantCompanies()->get()->pluck('id'))->unique()->toArray();
-        }
-        else{
-            $ids = $member->accessLimitations()->get()->pluck('groupRole')->map(function ($role){
-                return $role->users;
-            })->flatten(1)->pluck('id')->toArray();
-        }
-
-        static::addGlobalScope(new ApplicantFilterByMemberScope($ids));
+        return null;
     }
 
 }

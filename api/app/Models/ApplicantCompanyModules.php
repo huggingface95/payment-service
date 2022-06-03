@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
+
 class ApplicantCompanyModules extends BaseModel
 {
 
@@ -16,6 +18,12 @@ class ApplicantCompanyModules extends BaseModel
         'applicant_company_id','applicant_module_id', 'is_active'
     ];
     public $timestamps = false;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     /**
      * Get relation applicant_company

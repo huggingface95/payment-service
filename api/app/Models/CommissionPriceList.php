@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,6 +28,12 @@ class CommissionPriceList extends BaseModel
     protected $fillable = [
         'name', 'provider_id', 'payment_system_id', 'commission_template_id'
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     /**
      * Get relation payment provider

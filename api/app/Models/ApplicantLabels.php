@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
+
 class ApplicantLabels extends BaseModel
 {
 
@@ -16,6 +18,12 @@ class ApplicantLabels extends BaseModel
         'applicant_individual_id','applicant_individual_label_id'
     ];
     public $timestamps = false;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     /**
      * Get relation applicant_individual

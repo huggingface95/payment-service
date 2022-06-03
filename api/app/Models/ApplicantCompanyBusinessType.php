@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
+
 class ApplicantCompanyBusinessType extends BaseModel
 {
 
@@ -17,5 +19,10 @@ class ApplicantCompanyBusinessType extends BaseModel
 
     public $timestamps = false;
 
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
 }
