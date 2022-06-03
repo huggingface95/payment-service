@@ -104,12 +104,19 @@ class AuthController extends Controller
         ]);
     }
 
-    public function show2FARegistrationInfo()
+    public function show2FARegistrationInfo(Request $request)
     {
         $secret = Google2FA::generateSecretKey(config('lumen2fa.key_length', 32));
+        $user = auth()->user();
+        if ($request->member_id) {
+            $user = Members::find($request->member_id);
+            if (!$user){
+                return response()->json(['data' => 'Member not found']);
+            }
+        }
         $QR_Image = Google2FA::getQRCodeInline(
             config('app.name'),
-            auth()->user()->{config('lumen2fa.user_identified_field')},
+            $user->{config('lumen2fa.user_identified_field')},
             $secret
         );
         $data = [
@@ -201,15 +208,21 @@ class AuthController extends Controller
         return response()->json(['data' => 'Google 2fa disabled successful']);
     }
 
-    public function generateBackupCodes()
+    public function generateBackupCodes(Request $request)
     {
-        $authUser = auth()->user();
+        $user = auth()->user();
+        if ($request->member_id) {
+            $user = Members::find($request->member_id);
+            if (!$user){
+                return response()->json(['data' => 'Member not found']);
+            }
+        }
         $codes = [];
         for ($i = 0; $i <= 9; $i++) {
             $codes[$i] = $this->generateUniqueCode();
         }
 
-        return response()->json(['backup_codes' => $codes, 'user_id' => $authUser->id, '2fa_secret' => $authUser->google2fa_secret]);
+        return response()->json(['backup_codes' => $codes, 'user_id' => $user->id, '2fa_secret' => $user->google2fa_secret]);
     }
 
     public function storeBackupCodes(Request $request)
@@ -217,11 +230,18 @@ class AuthController extends Controller
         $this->validate($request, [
             'backup_codes' => 'required'
         ]);
-        $authUser = auth()->user();
-        $authUser->backup_codes = $request->backup_codes;
-        $authUser->save();
 
-        return response()->json(['data' => 'Backup Codes stored success for user id '.$authUser->id]);
+        $user = auth()->user();
+        if ($request->member_id) {
+            $user = Members::find($request->member_id);
+            if (!$user){
+                return response()->json(['data' => 'Member not found']);
+            }
+        }
+        $user->backup_codes = $request->backup_codes;
+        $user->save();
+
+        return response()->json(['data' => 'Backup Codes stored success for user id '.$user->id]);
 
     }
 
