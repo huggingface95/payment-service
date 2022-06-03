@@ -150,9 +150,17 @@ class AuthController extends Controller
         $this->validate($request, [
             'code' => 'required'
         ]);
-        $authUser = auth()->user();
-        $token = DB::table('oauth_access_tokens')->where('user_id', $request->user()->id)->latest()->limit(1);
-        $valid = Google2FA::verifyGoogle2FA($authUser->google2fa_secret, $request->code);
+        $user = auth()->user();
+
+        if ($request->member_id) {
+            $user = Members::find($request->member_id);
+            if (!$user){
+                return response()->json(['data' => 'Member not found']);
+            }
+        }
+
+        $token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
+        $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
         if (!$valid) {
             $token->update(['twofactor_verified' => false]);
             return response()->json(['data' => 'Unable to verify your code']);
@@ -167,26 +175,25 @@ class AuthController extends Controller
             'code' => 'required',
             'password' => 'required'
         ]);
-        $authUser = auth()->user();
-        if (!Hash::check($request->password,$authUser->getAuthPassword()))
+        $user = auth()->user();
+        if (!Hash::check($request->password,$user->getAuthPassword()))
         {
             return response()->json(['data' => 'Password is not valid']);
         }
-        $secret = $authUser->google2fa_secret;
+
         if ($request->member_id) {
-            $member = Members::find($request->member_id);
-            if (!$member){
+            $user = Members::find($request->member_id);
+            if (!$user){
                 return response()->json(['data' => 'Member not found']);
             }
-            $secret = $member->google2fa_secret;
         }
-        $token = DB::table('oauth_access_tokens')->where('user_id', $request->user()->id)->latest()->limit(1);
-        $valid = Google2FA::verifyGoogle2FA($secret, $request->code);
+        $token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
+        $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
 
         if ($valid) {
-            $authUser->google2fa_secret = null;
-            $authUser->two_factor_auth_setting_id = 1;
-            $authUser->save();
+            $user->google2fa_secret = null;
+            $user->two_factor_auth_setting_id = 1;
+            $user->save();
             $token->update(['twofactor_verified' => false]);
         } else {
             return response()->json(['data' => 'Unable to verify your code']);
