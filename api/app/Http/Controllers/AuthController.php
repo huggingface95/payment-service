@@ -125,7 +125,16 @@ class AuthController extends Controller
         $this->validate($request, [
             'secret' => 'required'
         ]);
+
         $user = auth()->user();
+
+        if ($request->member_id) {
+            $user = Members::find($request->member_id);
+            if (!$user){
+                return response()->json(['data' => 'Member not found']);
+            }
+        }
+
         $user->createToken($user->fullname)->accessToken;
         $secretKey = $request->secret;
         $user->two_factor_auth_setting_id = 2;
