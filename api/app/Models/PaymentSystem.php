@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class PaymentSystem extends Model
+class PaymentSystem extends BaseModel
 {
 
     public $timestamps = false;

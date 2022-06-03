@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class PaymentUrgency extends Model
+class PaymentUrgency extends BaseModel
 {
     protected $table="payment_urgency";
 

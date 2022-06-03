@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class DepartmentPosition extends Model
+class DepartmentPosition extends BaseModel
 {
     public $timestamps = false;
     protected $table = 'department_position';

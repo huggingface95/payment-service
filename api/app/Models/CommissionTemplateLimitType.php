@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class CommissionTemplateLimitType extends Model
+class CommissionTemplateLimitType extends BaseModel
 {
 
     const ALL = 'All';
@@ -14,7 +13,7 @@ class CommissionTemplateLimitType extends Model
 
     public $timestamps = false;
 
-    protected $table="commission_template_limit_type";
+    protected $table = "commission_template_limit_type";
     /**
      * The attributes that are mass assignable.
      *

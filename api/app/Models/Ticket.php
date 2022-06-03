@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -30,7 +30,7 @@ use Illuminate\Support\Carbon;
  * @property Departments department
  *
  */
-class Ticket extends Model
+class Ticket extends BaseModel
 {
     /**
      * The attributes that are mass assignable.
@@ -40,6 +40,12 @@ class Ticket extends Model
     protected $fillable = [
         'member_id', 'client_id', 'title', 'message', 'status'
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
 
     public function comments(): HasMany

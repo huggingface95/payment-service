@@ -2,21 +2,34 @@
 
 namespace App\Models\Scopes;
 
-use App\Models\Members;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Support\Facades\Auth;
 
 class ApplicantFilterByMemberScope implements Scope
 {
+    protected ?array $ids;
+
+    public function __construct(?array $ids)
+    {
+        $this->ids = $ids;
+    }
+
     public function apply(Builder $builder, Model $model)
     {
-        //TODO Replace when guards are ready  Ex. Auth::user('members')
-        /** @var Members $member */
-        $member = Auth::user();
-        if ($member instanceof Members && $member->IsShowOwnerApplicants()) {
-            $builder->where('account_manager_member_id', $member->id);
+        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $log) {
+            if (isset($log['function']) && $log['function'] == 'getApplicantIdsByAuthMember') {
+                return;
+            }
+        }
+
+        if (preg_match("/^(SELECT|select)/", $builder->getQuery()->toSql())) {
+            if ($this->ids && preg_match("/applicant_individual|applicant_companies/", $builder->getQuery()->toSql(), $matches)) {
+                foreach ($matches as $match) {
+                    /**  applicant_inidividual|applicant_companies $match */
+                    $builder->whereIn("{$match}.id", $this->ids[$match]);
+                }
+            }
         }
     }
 }

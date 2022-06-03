@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class GroupRoleUser extends Model
+class GroupRoleUser extends BaseModel
 {
     protected $table = 'group_role_members_individuals';
     /**

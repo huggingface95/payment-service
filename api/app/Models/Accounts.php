@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use Ankurk91\Eloquent\MorphToOne;
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -38,6 +39,12 @@ class Accounts extends BaseModel
     ];
 
     public static self $clone;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     public function load($relations): Accounts
     {

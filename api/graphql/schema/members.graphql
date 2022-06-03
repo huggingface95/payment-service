@@ -41,7 +41,7 @@ type Members {
     "Полное имя"
     fullname: String
     "Access limitation groups"
-    access_groups: [GroupRole] @belongsToMany(relation: "groupRoles")
+    access_groups: [MemberAccessLimitation] @hasMany(relation: "accessLimitations")
     "если true видит только своих аппликантов"
     is_show_owner_applicants: Boolean
     "Security PIN"

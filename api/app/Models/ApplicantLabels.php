@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 
-class ApplicantLabels extends Model
+class ApplicantLabels extends BaseModel
 {
 
     protected $table="applicant_individual_label_relation";
@@ -19,6 +18,12 @@ class ApplicantLabels extends Model
         'applicant_individual_id','applicant_individual_label_id'
     ];
     public $timestamps = false;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     /**
      * Get relation applicant_individual

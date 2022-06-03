@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\MemberScope;
-use Illuminate\Database\Eloquent\Model;
 
-class ApplicantRiskLevelHistory extends Model
+class ApplicantRiskLevelHistory extends BaseModel
 {
 
     protected $table="applicant_individual_risk_level_history";
@@ -21,7 +21,9 @@ class ApplicantRiskLevelHistory extends Model
 
     protected static function booted()
     {
+        parent::booted();
         static::addGlobalScope(new MemberScope);
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
 
     public function ApplicantIndividual()

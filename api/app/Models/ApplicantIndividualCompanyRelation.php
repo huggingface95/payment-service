@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ApplicantIndividualCompanyRelation extends Model
+class ApplicantIndividualCompanyRelation extends BaseModel
 {
 
     protected $table = 'applicant_individual_company_relation';

@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\Country;
-use Illuminate\Database\Eloquent\Model;
 
-class Requisites extends Model
+class Requisites extends BaseModel
 {
 
-    protected $table="requisites";
+    protected $table = "requisites";
     /**
      * The attributes that are mass assignable.
      *
@@ -47,83 +45,83 @@ class Requisites extends Model
                     <table border="1" align="center" width="100%">
                         <tbody id="body"><tr>
                             <td>
-                               <p style="font-weight: bold; margin-left: 3px">Recipient</p> 
+                               <p style="font-weight: bold; margin-left: 3px">Recipient</p>
                             </td>
                             <td><p style="margin-left: 3px">' .
                 $field->recipient .
-                '</p></td> 
+                '</p></td>
                 </tr>
                 <tr>
                     <td>
-                       <p style="font-weight: bold; margin-left: 3px">Registration Number</p> 
+                       <p style="font-weight: bold; margin-left: 3px">Registration Number</p>
                     </td>
                     <td><p style="margin-left: 3px">' .
                 $field->registration_number .
-                '</p></td> 
+                '</p></td>
                 </tr>
                 <tr>
                     <td>
-                       <p style="font-weight: bold; margin-left: 3px">Address</p> 
+                       <p style="font-weight: bold; margin-left: 3px">Address</p>
                     </td>
                     <td><p style="margin-left: 3px">' .
                 $field->address .
-                '</p></td> 
+                '</p></td>
                 </tr>
                 <tr>
                     <td>
-                       <p style="font-weight: bold; margin-left: 3px">Country</p> 
+                       <p style="font-weight: bold; margin-left: 3px">Country</p>
                     </td>
                     <td><p style="margin-left: 3px">' .
                 Country::query()->where('id', $field->country_id)->value('name') .
-                '</p></td> 
+                '</p></td>
                 </tr>
                 <tr>
                     <td>
-                       <p style="font-weight: bold; margin-left: 3px">Bank Name</p> 
+                       <p style="font-weight: bold; margin-left: 3px">Bank Name</p>
                     </td>
                     <td><p style="margin-left: 3px">' .
                 $field->bank_name .
-                '</p></td> 
+                '</p></td>
                 </tr>
                 <tr>
                     <td>
-                       <p style="font-weight: bold; margin-left: 3px">Bank Address</p> 
+                       <p style="font-weight: bold; margin-left: 3px">Bank Address</p>
                     </td>
                     <td><p style="margin-left: 3px">' .
                 $field->bank_address .
-                '</p></td> 
+                '</p></td>
                 </tr>
                 <tr>
                     <td>
-                       <p style="font-weight: bold; margin-left: 3px">IBAN/Account No.</p> 
+                       <p style="font-weight: bold; margin-left: 3px">IBAN/Account No.</p>
                     </td>
                     <td><p style="margin-left: 3px">' .
                 $field->iban.
-                '</p></td> 
+                '</p></td>
                 </tr>
                 <tr>
                     <td>
-                       <p style="font-weight: bold; margin-left: 3px">Swift code</p> 
+                       <p style="font-weight: bold; margin-left: 3px">Swift code</p>
                     </td>
                     <td><p style="margin-left: 3px">' .
                 $field->swift.
-                '</p></td> 
+                '</p></td>
                 </tr>
                 <tr>
                     <td>
-                       <p style="font-weight: bold; margin-left: 3px">Bank address</p> 
+                       <p style="font-weight: bold; margin-left: 3px">Bank address</p>
                     </td>
                     <td><p style="margin-left: 3px">' .
                 $field->bank_address.
-                '</p></td> 
+                '</p></td>
                 </tr>
                 <tr>
                     <td>
-                       <p style="font-weight: bold; margin-left: 3px">Bank country</p> 
+                       <p style="font-weight: bold; margin-left: 3px">Bank country</p>
                     </td>
                     <td><p style="margin-left: 3px">' .
                 Country::query()->where('id', $field->bank_country_id)->value('name') .
-                '</p></td> 
+                '</p></td>
                 </tr>
                </tbody>
             </table>

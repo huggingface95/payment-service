@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  */
 
-class GroupRole extends Model
+class GroupRole extends BaseModel
 {
     use SoftDeletes;
 
@@ -28,6 +28,21 @@ class GroupRole extends Model
     protected $fillable = [
         'name', 'group_type_id', 'role_id', 'payment_provider_id', 'commission_template_id', 'is_active', 'description', 'company_id'
     ];
+
+    public static self $clone;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
+
+    public function load($relations): GroupRole
+    {
+        self::$clone = $this->replicate();
+        return parent::load($relations);
+    }
+
 
     public function groupType(): BelongsTo
     {
@@ -84,18 +99,19 @@ class GroupRole extends Model
         );
     }
 
-    /** Dynamic call */
     public function users(): BelongsToMany
     {
-        $type = $this->attributes['group_type_id'];
+        /** @var GroupRole $model */
+        try {
+            $model = self::$clone;}
+        catch (\Error $ex){$model = $this;}
 
-        if ($type == self::INDIVIDUAL)
+        if ($model->group_type_id == self::INDIVIDUAL)
             return $this->individuals();
-        elseif ($type == self::COMPANY)
+        elseif ($model->group_type_id == self::COMPANY)
             return $this->companies();
         else
             return $this->members();
     }
-
 
 }

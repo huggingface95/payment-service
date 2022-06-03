@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property float used_limit
  *
  */
-class ApplicantBankingAccess extends Model
+class ApplicantBankingAccess extends BaseModel
 {
 
     use HasFactory;
@@ -34,6 +34,12 @@ class ApplicantBankingAccess extends Model
         'applicant_individual_id','applicant_company_id','member_id','can_create_payment','can_sign_payment','contact_administrator','daily_limit','monthly_limit','operation_limit', 'used_limit'
     ];
     public $timestamps = false;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     /**
      * Get relation applicant_individual

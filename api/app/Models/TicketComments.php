@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property ApplicantIndividual client
  *
  */
-class TicketComments extends Model
+class TicketComments extends BaseModel
 {
     /**
      * The attributes that are mass assignable.
@@ -31,6 +31,12 @@ class TicketComments extends Model
     protected $fillable = [
         'ticket_id', 'client_id', 'message'
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     public function ticket(): BelongsTo
     {

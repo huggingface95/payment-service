@@ -1,0 +1,69 @@
+"""
+Участники
+Administration->Members->MemberAccessLimitation
+"""
+type MemberAccessLimitation {
+    id: ID!
+    "Получить Group"
+    member: Members @belongsTo(relation: "member")
+    "Получить Group"
+    group: Groups @hasOne(relation: "group")
+    "Получить groupRole"
+    group_role: GroupRole @belongsTo(relation: "groupRole")
+    "Получить связанный платежный провайдер"
+    provider: PaymentProvider @hasOne(relation:"paymentProvider")
+    "Получить связанный платежный шаблон"
+    commission_template: CommissionTemplate @belongsTo(relation:"CommissionTemplate")
+}
+
+extend type Query @guard {
+    "Получить участника по ID"
+    memberAccessLimitation(id: ID @eq): MemberAccessLimitation   @find
+    """
+    Получить список участников
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    where:{column: FIRST_NAME, operator: LIKE, value: ""} фильтр по фамилии, имени, email, компании, роли, департаменту, должности
+    hasPosition: {column: GROUP_ROLE_ID, operator:EQ, value: 8} поиск по id GROUP ROLE
+    """
+    memberAccessLimitations(
+        hasGroupRole: _ @whereHasConditions(columns: ["id","name"]),
+        hasGroup: _ @whereHasConditions(columns: ["id","name"]),
+        hasPaymentProvider: _ @whereHasConditions(columns: ["id","name"]),
+        hasCommissionTemplate: _ @whereHasConditions(columns: ["id","name"]),
+        where: _ @whereConditions(columns: ["id","member_id","group_role_id", "provider_id"]),
+        orderBy: _ @orderBy(columns: ["id"],
+    )): [MemberAccessLimitation!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation  {
+    """
+    Создать ограничение доступа
+    """
+    createMemberAccessLimitation(
+        "ID Мембера"
+        member_id: ID!
+        "ID Груп Роль"
+        group_role_id: ID!
+        "ID платежный шаблон"
+        commission_template_id: ID!
+    ): MemberAccessLimitation @create
+
+    """
+    Обновить ограничение доступа
+    """
+    updateMemberAccessLimitation(
+        "ID Мембера"
+        member_id: ID!
+        "ID Груп Роль"
+        group_role_id: ID!
+        "ID платежный шаблон"
+        commission_template_id: ID!
+    ): MemberAccessLimitation @update
+    """
+    Удалить ограничение доступа
+    """
+    deleteMemberAccessLimitation(
+        "ID доступа"
+        id: ID!
+    ): Members   @delete
+}

@@ -29,6 +29,7 @@ class Permissions extends SpatiePermission
     protected static function booted()
     {
         static::addGlobalScope(new PermissionOrderScope);
+        parent::booted();
     }
 
     public static function getTreePermissions($roleId = null): array

@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ApplicantState extends Model
+class ApplicantState extends BaseModel
 {
 
     protected $table="applicant_state";

@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class CommissionTemplateLimitPeriod extends Model
+class CommissionTemplateLimitPeriod extends BaseModel
 {
     const EACH_TIME = 'Each time';
     const ONE_TIME = 'One time';

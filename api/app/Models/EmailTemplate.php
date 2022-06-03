@@ -61,7 +61,7 @@ class EmailTemplate extends BaseModel
         ];
     }
 
-    public function getServiceTypes(): array
+    public static function getServiceTypes(): array
     {
         return [
             self::COMMON,

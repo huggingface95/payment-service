@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\UserPermission;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -63,11 +64,15 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'backup_codes' => 'array',
     ];
 
-
-
     protected $dates = ['deleted_at'];
 
     protected $appends = array('two_factor');
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
 
     public function getTwoFactorAttribute()
@@ -163,4 +168,18 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         return $this->hasMany(EmailTemplate::class, 'member_id');
     }
 
+    public function accessLimitations(): HasMany
+    {
+        return $this->hasMany(MemberAccessLimitation::class, 'member_id')->with('groupRole');
+    }
+
+    public function accountManagerApplicantIndividuals(): HasMany
+    {
+        return $this->hasMany(ApplicantIndividual::class, 'account_manager_member_id');
+    }
+
+    public function accountManagerApplicantCompanies(): HasMany
+    {
+        return $this->hasMany(ApplicantCompany::class, 'account_manager_member_id');
+    }
 }

@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class AccountStates extends Model
+class AccountStates extends BaseModel
 {
     const WAITING_IBAN_ACTIVATION = 6;
 

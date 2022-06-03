@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 
-class ApplicantCompanyBusinessType extends Model
+class ApplicantCompanyBusinessType extends BaseModel
 {
 
     protected $table = 'applicant_company_business_type';
@@ -19,5 +19,10 @@ class ApplicantCompanyBusinessType extends Model
 
     public $timestamps = false;
 
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
 }

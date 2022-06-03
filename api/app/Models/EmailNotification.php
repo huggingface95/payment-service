@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Ankurk91\Eloquent\MorphToOne;
+use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
@@ -39,6 +40,12 @@ class EmailNotification extends BaseModel
     ];
 
     public static self $clone;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+    }
 
     private function isAdministrator(): bool
     {

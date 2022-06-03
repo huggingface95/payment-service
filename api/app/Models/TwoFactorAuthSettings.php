@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class TwoFactorAuthSettings extends Model
+class TwoFactorAuthSettings extends BaseModel
 {
     public $timestamps = false;
 

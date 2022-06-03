@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class ApplicantRiskLevel extends Model
+class ApplicantRiskLevel extends BaseModel
 {
 
     protected $table="applicant_risk_level";
