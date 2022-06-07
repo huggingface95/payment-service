@@ -44,7 +44,7 @@ type GroupRole {
 extend type Query @guard {
     "Получить группу по ID"
     group_type(id: ID @eq): Groups   @find
-    "Получить список групп по умолчанию"
+    "Получить список типов групп"
     group_types: [Groups!]!   @paginate(defaultCount: 10)
     """
     Получить список групп с ролями
