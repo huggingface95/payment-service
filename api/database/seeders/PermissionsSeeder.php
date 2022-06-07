@@ -3,9 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\PermissionCategory;
+use App\Models\PermissionOperation;
 use App\Models\Permissions;
 use App\Models\PermissionsList;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class PermissionsSeeder extends Seeder
 {
@@ -16,6 +18,10 @@ class PermissionsSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('truncate table permission_category restart identity cascade;');
+        DB::statement('truncate table permissions_list restart identity cascade;');
+        DB::statement('truncate table permissions restart identity cascade;');
+        DB::statement('truncate table permission_operations restart identity cascade;');
 
         $allPermissions = array(
             'Management Module' =>
@@ -3607,85 +3613,1442 @@ class PermissionsSeeder extends Seeder
             }
         }
 
-//        $operations = [
-//            'GetApplicantTableSelects' => [
-//                'data' => ['referer' => 'applicants/individual/list'],
-//                'binds' => ['Applicants Individual list.Read'],
-//            ],
-//            'GetIndividualsList' => [
-//                'data' => ['referer' => 'applicants/individual/list'],
-//                'binds' => ['Applicants Individual list.Read'],
-//            ],
-//            'getAllIndividualCompanies' => [
-//                'data' => ['referer' => 'applicants/individual/list'],
-//                'binds' => ['Applicants Individual list.Read'],
-//            ],
-//            'GetIndividual' => [
-//                'data' => ['referer' => 'applicants/new/individual/profile/general'],
-//                'binds' => ['Applicants Individual.Create New Individual'],
-//                'parents' => ['Applicants Individual list.Read'],
-//            ],
-//            'CreateIndividual' => [
-//                'data' => ['referer' => 'applicants/new/individual/profile/general'],
-//                'binds' => ['Applicants Individual.Create New Individual'],
-//                'parents' => ['Applicants Individual list.Read'],
-//            ],
-//            'GetApplicantCompanyTableSelects' => [
-//                'data' => ['referer' => 'applicants/company/list'],
-//                'binds' => ['Applicants Company list.Read'],
-//            ],
-//            'getAllIndividualCompanies' => [
-//                'data' => ['referer' => 'applicants/company/list'],
-//                'binds' => ['Applicants Company list.Read'],
-//            ],
-//            'GetApplicantCompanyList' => [
-//                'data' => ['referer' => 'applicants/company/list'],
-//                'binds' => ['Applicants Company list.Read'],
-//            ],
-////            'CreateIndividual' => [
-////                'data' => ['referer' => 'applicants/new/company/profile/general'],
-////                'binds' => ['Applicants Company.Create New Company'],
-////                'parents' => ['Applicants Company list.Read'],
-////            ],
-//            'GetCompanyMembers' => [
-//                'data' => ['referer' => 'applicants/new/company/profile/general'],
-//                'binds' => ['Applicants Company.Create New Company'],
-//                'parents' => ['Applicants Company list.Read'],
-//            ],
-//            'GetCompany' => [
-//                'data' => ['referer' => 'applicants/new/company/profile/general'],
-//                'binds' => ['Applicants Company.Create New Company'],
-//                'parents' => ['Applicants Company list.Read'],
-//            ],
-//
-//            'GetCompany' => [
-//                'data' => ['referer' => 'applicants/new/company/profile/general'],
-//                'binds' => ['Applicants Company.Create New Company'],
-//                'parents' => ['Applicants Company list.Read'],
-//            ],
-//
-//
-//
-//
-//        ];
-//
-//        //verjum vecra globalner@
-//
-//        $esim = array(
-//            0 => 'getMemberData',
-//            1 => 'GetMemberByField',
-//            2 => 'GetFilterFieldsProfileData',
-//            3 => 'GetMemberFullName',
-//            4 => 'GetMemberCoverData',
-//            5 => 'GetMemberInfoForm',
-//            6 => 'getMember',
-//            7 => 'GetMember2FaData',
-//            8 => 'GetMemberTfaStatus',
-//            9 => 'ChangeMemberPassword',
-//            10 => 'GetMemberSettingsInfoForm',
-//            11 => 'UpdateMemberQuery',
-//        );
+        $operations = array(
+            'GetIndividualLabel' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetIndividualLabel',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Labels',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantIndividualManager' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantIndividualManager',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Account Manager',
+                            1 => 'Individual Profile:General.Change Member Company',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantIndividualInfo' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantIndividualInfo',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'GetIndividualNote' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetIndividualNote',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Internal Notes',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantIndividualProfileData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantIndividualProfileData',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'GetCompanyMembers' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetCompanyMembers',
+                            'referer' => 'applicants/new/company/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Matched Companies',
+                            1 => 'Company Profile:General.Matched Companies',
+                            2 => 'Applicants Company.Create New Company',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                            2 => 'Company Profile:General.Read',
+                            3 => 'Company Profile:General.Edit',
+                            4 => 'Applicants Company list.Read',
+                        ),
+                ),
+            'GetRiskLevel' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetRiskLevel',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Risk Level',
+                            1 => 'Company Profile:General.Risk Level',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                            2 => 'Company Profile:General.Read',
+                            3 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantIndividualAddress' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantIndividualAddress',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'GetIndividualRiskLevel' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetIndividualRiskLevel',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Risk Level',
+                            1 => 'Company Profile:General.Risk Level',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                            2 => 'Company Profile:General.Read',
+                            3 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'GetIndividualsList' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetIndividualsList',
+                            'referer' => 'applicants/individual/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Applicants Individual list.Read',
+                            1 => 'Applicants Individual list.Export',
+                        ),
+                ),
+            'GetApplicantTableSelects' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantTableSelects',
+                            'referer' => 'applicants/individual/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Applicants Individual list.Read',
+                            1 => 'Applicants Individual list.Export',
+                        ),
+                ),
+            'getAllIndividualCompanies' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'getAllIndividualCompanies',
+                            'referer' => 'applicants/company/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Applicants Individual list.Read',
+                            1 => 'Applicants Individual list.Export',
+                            2 => 'Applicants Company list.Read',
+                        ),
+                ),
+            'GetGroupsListByType' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetGroupsListByType',
+                            'referer' => 'applicants/company/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Matched Companies',
+                            1 => 'Individual Profile:Settings.Read',
+                            2 => 'Individual Profile:Settings.Edit',
+                            3 => 'Company Profile:Settings.Read',
+                            4 => 'Company Profile:Settings.Edit',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantIndividualContacts' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantIndividualContacts',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'GetFilterFieldsData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetFilterFieldsData',
+                            'referer' => 'administration/company/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                            2 => 'Member Company List.Read',
+                            3 => 'Member Company List.Edit',
+                        ),
+                ),
+            'GetApplicantIndividualsData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantIndividualsData',
+                            'referer' => 'applicants/individual/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                            2 => 'Individual Profile:Settings.Read',
+                            3 => 'Individual Profile:Settings.Edit',
+                        ),
+                ),
+            'CreateIndividualRiskLevel' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CreateIndividualRiskLevel',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Risk Level',
+                            1 => 'Company Profile:General.Risk Level',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Edit',
+                            1 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'UpdateApplicantIndividualProfileData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantIndividualProfileData',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'SaveIndividualLabel' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'SaveIndividualLabel',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Labels',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'UpdateApplicantIndividualAddress' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantIndividualAddress',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'UpdateApplicantIndividualContacts' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantIndividualContacts',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'UpdateApplicantIndividualManager' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantIndividualManager',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Account Manager',
+                            1 => 'Individual Profile:General.Change Member Company',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'UpdateApplicantIndividualInfo' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantIndividualInfo',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'CreateIndividualNote' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CreateIndividualNote',
+                            'referer' => 'applicants/individual/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Internal Notes',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantCompaniesData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompaniesData',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:General.Matched Companies',
+                            1 => 'Company Profile:General.Matched Companies',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:General.Read',
+                            1 => 'Individual Profile:General.Edit',
+                            2 => 'Company Profile:General.Read',
+                            3 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'CreateIndividual' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CreateIndividual',
+                            'referer' => 'applicants/new/company/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Applicants Individual.Create New Individual',
+                            1 => 'Applicants Company.Create New Company',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Applicants Individual list.Read',
+                            1 => 'Applicants Individual list.Export',
+                            2 => 'Applicants Company list.Read',
+                        ),
+                ),
+            'GetApplicantCompanyPageData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyPageData',
+                            'referer' => 'applicants/company/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Read',
+                            1 => 'Company Profile:General.Edit',
+                            2 => 'Company Profile:Settings.Read',
+                            3 => 'Company Profile:Settings.Edit',
+                        ),
+                ),
+            'GetIndividual' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetIndividual',
+                            'referer' => 'applicants/individual/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Read',
+                            1 => 'Individual Profile:Settings.Edit',
+                        ),
+                ),
+            'GetIndividualModules' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetIndividualModules',
+                            'referer' => 'applicants/individual/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Access Limitation',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Read',
+                            1 => 'Individual Profile:Settings.Edit',
+                        ),
+                ),
+            'GetApplicantIndividualPhone' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantIndividualPhone',
+                            'referer' => 'applicants/individual/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Phone Confirmation',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Read',
+                            1 => 'Individual Profile:Settings.Edit',
+                        ),
+                ),
+            'GetApplicantCompanyBankingAccess' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyBankingAccess',
+                            'referer' => 'applicants/company/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Add Banking Module',
+                            1 => 'Company Profile:Settings.Banking Access',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Read',
+                            1 => 'Individual Profile:Settings.Edit',
+                            2 => 'Company Profile:Settings.Read',
+                            3 => 'Company Profile:Settings.Edit',
+                        ),
+                ),
+            'GetApplicantCompanyManager' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyManager',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Account Manager',
+                            1 => 'Company Profile:General.Change Member Company',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Company Profile:General.Read',
+                            1 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantCompanyLabel' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyLabel',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Labels',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Company Profile:General.Read',
+                            1 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantCompanyProfileData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyProfileData',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Read',
+                            1 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantCompanyAddress' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyAddress',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Read',
+                            1 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantCompanyInfo' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyInfo',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Read',
+                            1 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantCompanyContacts' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyContacts',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Read',
+                            1 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantCompanyNote' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyNote',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Internal Notes',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Company Profile:General.Read',
+                            1 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantMatchedUsers' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantMatchedUsers',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Read',
+                            1 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'updateApplicantIndividual' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'updateApplicantIndividual',
+                            'referer' => 'applicants/individual/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Edit',
+                        ),
+                ),
+            'UpdateApplicantIndividualPhone' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantIndividualPhone',
+                            'referer' => 'applicants/individual/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Phone Confirmation',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Edit',
+                        ),
+                ),
+            'UpdateApplicantIndividualPassword' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantIndividualPassword',
+                            'referer' => 'applicants/individual/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Edit',
+                        ),
+                ),
+            'CreateIndividualModules' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CreateIndividualModules',
+                            'referer' => 'applicants/individual/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Access Limitation',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Edit',
+                        ),
+                ),
+            'UpdateApplicantIndividualModule' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantIndividualModule',
+                            'referer' => 'applicants/individual/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Access Limitation',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Individual Profile:Settings.Edit',
+                        ),
+                ),
+            'GetApplicantCompanyTableSelects' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyTableSelects',
+                            'referer' => 'applicants/company/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Applicants Company list.Read',
+                        ),
+                ),
+            'GetApplicantCompanyList' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyList',
+                            'referer' => 'applicants/company/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Applicants Company list.Read',
+                        ),
+                ),
+            'GetCompany' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetCompany',
+                            'referer' => 'applicants/new/company/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Applicants Company.Create New Company',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Applicants Company list.Read',
+                        ),
+                ),
+            'SaveApplicantCompanyLabel' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'SaveApplicantCompanyLabel',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Labels',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'CreateApplicantMatchedUsers' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CreateApplicantMatchedUsers',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'UpdateApplicantCompanyAddress' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantCompanyAddress',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'UpdateApplicantMatchedUsers' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantMatchedUsers',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'UpdateApplicantCompanyManager' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantCompanyManager',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Account Manager',
+                            1 => 'Company Profile:General.Change Member Company',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'CreateApplicantCompanyNote' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CreateApplicantCompanyNote',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Internal Notes',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'UpdateApplicantCompanyProfileData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantCompanyProfileData',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'UpdateApplicantCompanyInfo' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantCompanyInfo',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'UpdateApplicantCompanyContacts' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantCompanyContacts',
+                            'referer' => 'applicants/company/full-profile/profile/general',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:General.Edit',
+                        ),
+                ),
+            'GetApplicantCompanyModules' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyModules',
+                            'referer' => 'applicants/company/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:Settings.Access Limitation',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Company Profile:Settings.Read',
+                            1 => 'Company Profile:Settings.Edit',
+                        ),
+                ),
+            'GetApplicantCompanyPhone' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetApplicantCompanyPhone',
+                            'referer' => 'applicants/company/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:Settings.Phone Confirmation',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Company Profile:Settings.Read',
+                            1 => 'Company Profile:Settings.Edit',
+                        ),
+                ),
+            'getMemberData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'getMemberData',
+                            'referer' => NULL,
+                        ),
+                ),
+            'GetAllCountries' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetAllCountries',
+                            'referer' => 'applicants/company/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:Settings.Read',
+                            1 => 'Company Profile:Settings.Edit',
+                        ),
+                ),
+            'UpdateApplicantCompanyPhone' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantCompanyPhone',
+                            'referer' => 'applicants/company/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:Settings.Phone Confirmation',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Company Profile:Settings.Edit',
+                        ),
+                ),
+            'UpdateApplicantCompany' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantCompany',
+                            'referer' => 'applicants/company/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:Settings.Edit',
+                        ),
+                ),
+            'CreateApplicantCompanyModule' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CreateApplicantCompanyModule',
+                            'referer' => 'applicants/company/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:Settings.Access Limitation',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Company Profile:Settings.Edit',
+                        ),
+                ),
+            'UpdateApplicantCompanyModule' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateApplicantCompanyModule',
+                            'referer' => 'applicants/company/full-profile/profile/settings',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Company Profile:Settings.Access Limitation',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Company Profile:Settings.Edit',
+                        ),
+                ),
+            'GET_ALL_COMPANIES' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GET_ALL_COMPANIES',
+                            'referer' => 'settings/manager-roles/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Role list.Read',
+                        ),
+                ),
+            'GetManagerRoleList' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetManagerRoleList',
+                            'referer' => 'settings/manager-roles/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Role list.Read',
+                        ),
+                ),
+            'GetRolesName' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetRolesName',
+                            'referer' => 'settings/manager-groups/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Role list.Read',
+                            1 => 'Groups list.Read',
+                        ),
+                ),
+            'GetGroupsName' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetGroupsName',
+                            'referer' => 'settings/manager-roles/new',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Role list.Add new',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Role list.Read',
+                        ),
+                ),
+            'GetRolesByFilter' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetRolesByFilter',
+                            'referer' => 'settings/manager-roles/edit',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Role list.Add new',
+                            1 => 'Roles settings.Read',
+                            2 => 'Roles settings.Edit',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Role list.Read',
+                        ),
+                ),
+            'GetAllPermissions' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetAllPermissions',
+                            'referer' => 'settings/manager-roles/new',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Role list.Add new',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Role list.Read',
+                        ),
+                ),
+            'CreateManagerRole' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CreateManagerRole',
+                            'referer' => 'settings/manager-roles/new',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Role list.Add new',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Role list.Read',
+                        ),
+                ),
+            'GetManagerRole' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetManagerRole',
+                            'referer' => 'settings/manager-roles/edit',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Roles settings.Read',
+                            1 => 'Roles settings.Edit',
+                        ),
+                ),
+            'UpdateManagerRole' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateManagerRole',
+                            'referer' => 'settings/manager-roles/edit',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Roles settings.Edit',
+                        ),
+                ),
+            'GroupsByFilter' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GroupsByFilter',
+                            'referer' => 'settings/manager-groups/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Groups list.Read',
+                        ),
+                ),
+            'GetGroups' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetGroups',
+                            'referer' => 'settings/manager-groups/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Groups list.Read',
+                        ),
+                ),
+            'GetGroupsTableSelects' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetGroupsTableSelects',
+                            'referer' => 'settings/manager-groups/new-group',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Groups list.Read',
+                            1 => 'Groups list.Add new',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Groups list.Read',
+                        ),
+                ),
+            'GetRolesByCompany' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetRolesByCompany',
+                            'referer' => 'settings/manager-groups/new-group',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Groups list.Add new',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Groups list.Read',
+                        ),
+                ),
+            'CheckGroups' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CheckGroups',
+                            'referer' => 'settings/manager-groups/new-group',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Groups list.Add new',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Groups list.Read',
+                        ),
+                ),
+            'CreateGroupSetting' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CreateGroupSetting',
+                            'referer' => 'settings/manager-groups/new-group',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Groups list.Add new',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Groups list.Read',
+                        ),
+                ),
+            'GetPaymentsList' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetPaymentsList',
+                            'referer' => 'settings/payment-list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Payment System List.Read',
+                            1 => 'Payment System List.Edit',
+                        ),
+                ),
+            'UpdatePayment' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdatePayment',
+                            'referer' => 'settings/payment-list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Payment System List.Edit',
+                        ),
+                ),
+            'CreatePayment' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CreatePayment',
+                            'referer' => 'settings/payment-list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Payment System List.Add new',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Payment System List.Read',
+                            1 => 'Payment System List.Edit',
+                        ),
+                ),
+            'DeletePayment' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'DeletePayment',
+                            'referer' => 'settings/payment-list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Payment System List.Delete',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Payment System List.Read',
+                            1 => 'Payment System List.Edit',
+                        ),
+                ),
+            'GetAdministrationCompanyList' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetAdministrationCompanyList',
+                            'referer' => 'administration/company/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Member Company List.Read',
+                            1 => 'Member Company List.Edit',
+                        ),
+                ),
+            'CreateMemberCompanyQuery' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'CreateMemberCompanyQuery',
+                            'referer' => 'administration/company/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Member Company List.Add New',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Member Company List.Read',
+                            1 => 'Member Company List.Read',
+                        ),
+                ),
+            'DeleteMemberCompanyQuery' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'DeleteMemberCompanyQuery',
+                            'referer' => 'administration/company/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Member Company List.Delete',
+                        ),
+                    'parents' =>
+                        array(
+                            0 => 'Member Company List.Edit',
+                            1 => 'Member Company List.Edit',
+                        ),
+                ),
+            'GetMemberByField' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetMemberByField',
+                            'referer' => NULL,
+                        ),
+                ),
+            'getMemberCompanies' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'getMemberCompanies',
+                            'referer' => 'administration/members/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Members List.Read',
+                            1 => 'Members List.Edit',
+                        ),
+                ),
+            'GetMembersList' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetMembersList',
+                            'referer' => 'administration/members/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Members List.Read',
+                            1 => 'Members List.Edit',
+                        ),
+                ),
+            'GetFilterFieldsTableData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetFilterFieldsTableData',
+                            'referer' => 'administration/members/list',
+                        ),
+                    'binds' =>
+                        array(
+                            0 => 'Members List.Read',
+                            1 => 'Members List.Edit',
+                        ),
+                ),
 
+            'GetFilterFieldsProfileData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetFilterFieldsProfileData',
+                            'referer' => NULL,
+                        ),
+                ),
+            'GetMemberFullName' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetMemberFullName',
+                            'referer' => NULL,
+                        ),
+                ),
+            'GetMemberCoverData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetMemberCoverData',
+                            'referer' => NULL,
+                        ),
+                ),
+            'GetMemberInfoForm' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetMemberInfoForm',
+                            'referer' => NULL,
+                        ),
+                ),
+            'getMember' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'getMember',
+                            'referer' => NULL,
+                        ),
+                ),
+            'GetMember2FaData' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetMember2FaData',
+                            'referer' => NULL,
+                        ),
+                ),
+
+            'GetMemberTfaStatus' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetMemberTfaStatus',
+                            'referer' => NULL,
+                        ),
+                ),
+
+            'ChangeMemberPassword' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'ChangeMemberPassword',
+                            'referer' => NULL,
+                        ),
+                ),
+            'GetMemberSettingsInfoForm' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'GetMemberSettingsInfoForm',
+                            'referer' => NULL,
+                        ),
+                ),
+            'UpdateMemberQuery' =>
+                array(
+                    'data' =>
+                        array(
+                            'name' => 'UpdateMemberQuery',
+                            'referer' => NULL,
+                        ),
+                ),
+        );
+
+        foreach ($operations as $key => $operation) {
+            $oper = PermissionOperation::firstOrCreate($operation['data']);
+            foreach ($operation['binds'] ?? [] as $name) {
+                $permission = Permissions::query()->where('name', $name)->first();
+                if ($permission) {
+                    $oper->binds()->attach([$permission->id]);
+                } else {
+                    throw new \Exception("Not found bind permission in {$key}");
+                }
+            }
+
+            foreach ($operation['parents'] ?? [] as $name) {
+                $permission = Permissions::query()->where('name', $name)->first();
+                if ($permission) {
+                    $oper->parents()->attach([$permission->id]);
+                } else {
+                    throw new \Exception("Not found parent permission in {$key}");
+                }
+            }
+
+
+        }
 
     }
 }
