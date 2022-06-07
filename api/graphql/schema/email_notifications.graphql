@@ -34,6 +34,10 @@ extend type Query @guard {
     where:{column: SUBJECT, operator: LIKE, value: ""} фильтр по имени
     """
     emailNotifications(
+        hasApplicantIndividual: _ @whereHasConditions(columns: ["id", "fullname"]),
+        hasApplicantCompany: _ @whereHasConditions(columns: ["id", "name"]),
+        hasGroupRole: _ @whereHasConditions(columns: ["id", "name"]),
+        hasMember: _ @whereHasConditions(columns: ["id", "fullname"]),
         hasCompany: _ @whereHasConditions(columns: ["name"]),
         hasTemplates: _ @whereHasConditions(columns: ["subject"]),
         created_at: DateRange @whereBetween,
