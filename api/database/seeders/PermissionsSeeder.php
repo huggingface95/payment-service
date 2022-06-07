@@ -18,10 +18,10 @@ class PermissionsSeeder extends Seeder
      */
     public function run()
     {
-        DB::statement('truncate table permission_category restart identity cascade;');
-        DB::statement('truncate table permissions_list restart identity cascade;');
-        DB::statement('truncate table permissions restart identity cascade;');
-        DB::statement('truncate table permission_operations restart identity cascade;');
+//        DB::statement('truncate table permission_category restart identity cascade;');
+//        DB::statement('truncate table permissions_list restart identity cascade;');
+//        DB::statement('truncate table permissions restart identity cascade;');
+//        DB::statement('truncate table permission_operations restart identity cascade;');
 
         $allPermissions = array(
             'Management Module' =>
@@ -5032,7 +5032,8 @@ class PermissionsSeeder extends Seeder
             foreach ($operation['binds'] ?? [] as $name) {
                 $permission = Permissions::query()->where('name', $name)->first();
                 if ($permission) {
-                    $oper->binds()->attach([$permission->id]);
+                    $ids = $oper->binds()->get()->pluck('id')->push($permission->id)->unique()->toArray();
+                    $oper->binds()->sync($ids, true);
                 } else {
                     throw new \Exception("Not found bind permission in {$key}");
                 }
@@ -5041,7 +5042,8 @@ class PermissionsSeeder extends Seeder
             foreach ($operation['parents'] ?? [] as $name) {
                 $permission = Permissions::query()->where('name', $name)->first();
                 if ($permission) {
-                    $oper->parents()->attach([$permission->id]);
+                    $ids = $oper->parents()->get()->pluck('id')->push($permission->id)->unique()->toArray();
+                    $oper->parents()->sync($ids, true);
                 } else {
                     throw new \Exception("Not found parent permission in {$key}");
                 }
