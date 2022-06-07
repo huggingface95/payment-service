@@ -1451,6 +1451,51 @@ class PermissionsSeeder extends Seeder
                                                                 ),
                                                         ),
                                                 ),
+                                            'Member: Security' =>
+                                                array(
+                                                    'data' =>
+                                                        array(
+                                                            'name' => 'Member: Security',
+                                                            'type' => 'member',
+                                                            'separator' => NULL,
+                                                        ),
+                                                    'list' =>
+                                                        array(
+                                                            'Member: Security.Read' =>
+                                                                array(
+                                                                    'data' =>
+                                                                        array(
+                                                                            'name' => 'Member: Security.Read',
+                                                                            'display_name' => 'Read',
+                                                                            'guard_name' => 'api',
+                                                                            'order' => NULL,
+                                                                            'type' => 'read',
+                                                                        ),
+                                                                ),
+                                                            'Member: Security.Edit' =>
+                                                                array(
+                                                                    'data' =>
+                                                                        array(
+                                                                            'name' => 'Member: Security.Edit',
+                                                                            'display_name' => 'Edit',
+                                                                            'guard_name' => 'api',
+                                                                            'order' => NULL,
+                                                                            'type' => 'edit',
+                                                                        ),
+                                                                ),
+                                                            'Member: Security.Security Settings' =>
+                                                                array(
+                                                                    'data' =>
+                                                                        array(
+                                                                            'name' => 'Member: Security.Security Settings',
+                                                                            'display_name' => 'Security Settings',
+                                                                            'guard_name' => 'api',
+                                                                            'order' => NULL,
+                                                                            'type' => 'info',
+                                                                        ),
+                                                                ),
+                                                        ),
+                                                ),
                                         ),
                                 ),
                         ),
