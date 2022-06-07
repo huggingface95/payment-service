@@ -39,7 +39,7 @@ class AccessMiddleware
     public function handle(Request $request, Closure $next, string $guard = null)
     {
         $user = $request->user();
-        if ($user->id == 32 or $user->id == 78 or $user->id == 2 or $user->id == 41 or $user->id == 42 or $user->id == 43)
+        if ($user->id == 32 or $user->id == 78 or $user->id == 2)
             return $next($request);
 
         $referer = preg_replace('/.*?dashboard\/(.*)/', '$1', $request->header('referer'));
