@@ -6,11 +6,11 @@ Banking-> Email Notifications
 type EmailNotification {
     id: ID!
     "Тип"
-    type: String
+    type: NotifyType
     "Тип получателя"
-    recipient_type: String
+    recipient_type: RecipientType
     "Тип Группы"
-    group_type: String
+    group_type: GroupType
     "Получить templates"
     templates: [EmailTemplate] @belongsToMany(relation: "templates")
     "Получить клиента ApplicantIndividual | ApplicantCompany | GroupRole | Members"
