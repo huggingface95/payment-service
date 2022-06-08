@@ -4519,6 +4519,10 @@ class PermissionsSeeder extends Seeder
                 'name' => 'getMemberData',
                 'referer' => null,
             ],
+            [
+                'name' => 'GetFilterFieldsData',
+                'referer' => null,
+            ],
         ];
 
 
