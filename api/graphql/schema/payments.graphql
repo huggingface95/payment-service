@@ -29,7 +29,7 @@ type Payments {
     "Адрес банка отправителя"
     sender_bank_address: String
     "Страна отправителя"
-    sender_country: Country @belongsTo(relation:"Country")
+    sender_country_id: Country @belongsTo(relation:"Country")
     "Адрес отправителя"
     sender_address: String
     "Получить связанныую срочность"
@@ -49,7 +49,7 @@ type Payments {
     "Получить связанного мембера"
     member: Members @belongsTo(relation: "member")
     "Получить владельца"
-    owner: [ApplicantIndividual] @belongsTo(relation: "owner")
+    owner: [ApplicantIndividual] @belongsToMany(relation: "owner")
     #    "Получить компанию ownera"
     #    company: [ApplicantCompany] @belongsToMany(relation: "company")
     received_at: DateTime
@@ -101,7 +101,7 @@ extend type Mutation @guard {
         amount_real: Float
         "Комиссия"
         fee: Float
-        fee_type_id: Int!
+        fee_type_id: ID!
         "Валюта"
         currency_id: ID!
         "Статус"
@@ -121,7 +121,7 @@ extend type Mutation @guard {
         "Адрес банка отправителя"
         sender_bank_address: String
         "Страна отправителя"
-        sender_country: ID
+        sender_country_id: ID
         "Адрес отправителя"
         sender_address: String
         "Срочность"
@@ -136,10 +136,11 @@ extend type Mutation @guard {
         company_id: ID!
         "Номер платежа"
         payment_number: String!
-        "Кто делает пеймент"
-        owner_id: ID
+        "Error"
+        error: String
         created_at: DateTime
         updated_at: DateTime
+        received_at: DateTime
     ):Payments   @field(resolver: "PaymentsMutator@create")
 
     "Редактировать платеж"
@@ -181,8 +182,6 @@ extend type Mutation @guard {
         account_id: ID
         "Компания"
         company_id: ID
-        "Кто делает пеймент"
-        owner_id: ID
         "Номер платежа"
         payment_number: String
     ):Payments   @field(resolver: "PaymentsMutator@update")
