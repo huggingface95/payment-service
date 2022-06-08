@@ -32,7 +32,7 @@ extend type Query @guard {
         hasGroupRole: _ @whereHasConditions(columns: ["id", "name"]),
         hasMember: _ @whereHasConditions(columns: ["id", "fullname"]),
         where: _ @whereConditions(columns: ["type", "company_id", "recipient_type", "group_type"]),
-    ): EmailNotification   @find
+    ): EmailNotification   @first
     """
     Получить список email notification
     orderBy: [
