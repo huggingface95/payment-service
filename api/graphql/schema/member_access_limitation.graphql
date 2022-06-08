@@ -11,7 +11,7 @@ type MemberAccessLimitation {
     "Получить groupRole"
     group_role: GroupRole @belongsTo(relation: "groupRole")
     "Получить связанный платежный провайдер"
-    provider: PaymentProvider @hasOne(relation:"paymentProvider")
+    provider: PaymentProvider @hasOne(relation:"provider")
     "Получить связанный платежный шаблон"
     commission_template: CommissionTemplate @belongsTo(relation:"CommissionTemplate")
 }
@@ -28,7 +28,7 @@ extend type Query @guard {
     memberAccessLimitations(
         hasGroupRole: _ @whereHasConditions(columns: ["id","name"]),
         hasGroup: _ @whereHasConditions(columns: ["id","name"]),
-        hasPaymentProvider: _ @whereHasConditions(columns: ["id","name"]),
+        hasProvider: _ @whereHasConditions(columns: ["id","name"]),
         hasCommissionTemplate: _ @whereHasConditions(columns: ["id","name"]),
         where: _ @whereConditions(columns: ["id","member_id","group_role_id", "provider_id"]),
         orderBy: _ @orderBy(columns: ["id"],
