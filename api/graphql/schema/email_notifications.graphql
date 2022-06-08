@@ -24,7 +24,7 @@ type EmailNotification {
 }
 
 extend type Query @guard {
-    "Получить по ID"
+    "Получить email notification"
     emailNotifications(
         id: ID @eq
         hasApplicantIndividual: _ @whereHasConditions(columns: ["id", "fullname"]),
@@ -34,11 +34,11 @@ extend type Query @guard {
         where: _ @whereConditions(columns: ["type", "company_id", "recipient_type", "group_type"]),
     ): EmailNotification   @find
     """
-    Получить список билетов
+    Получить список email notification
     orderBy: [
     {column: ID, order: DESC},
     ] сортировка по ID
-    where:{column: SUBJECT, operator: LIKE, value: ""} фильтр по имени
+    where:{column: TYPE, operator: EQ, value: ""} фильтр по типу нотификаций
     """
     emailNotifications(
         hasApplicantIndividual: _ @whereHasConditions(columns: ["id", "fullname"]),
