@@ -54,7 +54,7 @@ extend type Query @guard {
     """
     companies(created_at: DateRange @whereBetween, country: Sort @scope(name:"CountrySort"), member_count: Sort @scope(name:"MemberSort"), where: _ @whereConditions(columns: ["name", "email","url","created_at"]), orderBy: _ @orderBy(
         columns: ["id","created_at","name","email","url"],
-    )): [Companies!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [Companies!]!   @paginate(defaultCount: 100) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {

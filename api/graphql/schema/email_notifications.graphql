@@ -24,21 +24,27 @@ type EmailNotification {
 }
 
 extend type Query @guard {
-    "Получить по ID"
-    emailNotification(id: ID @eq): EmailNotification   @find
+    "Получить email notification"
+    emailNotification(
+        id: ID @eq
+        hasApplicantIndividual: _ @whereHasConditions(columns: ["id", "fullname"]),
+        hasApplicantCompany: _ @whereHasConditions(columns: ["id", "name"]),
+        hasGroupRole: _ @whereHasConditions(columns: ["id", "name"]),
+        hasMember: _ @whereHasConditions(columns: ["id", "fullname"]),
+        where: _ @whereConditions(columns: ["type", "company_id", "recipient_type", "group_type"]),
+    ): EmailNotification   @first
     """
-    Получить список билетов
+    Получить список email notification
     orderBy: [
     {column: ID, order: DESC},
     ] сортировка по ID
-    where:{column: SUBJECT, operator: LIKE, value: ""} фильтр по имени
+    where:{column: TYPE, operator: EQ, value: ""} фильтр по типу нотификаций
     """
     emailNotifications(
         hasApplicantIndividual: _ @whereHasConditions(columns: ["id", "fullname"]),
         hasApplicantCompany: _ @whereHasConditions(columns: ["id", "name"]),
         hasGroupRole: _ @whereHasConditions(columns: ["id", "name"]),
         hasMember: _ @whereHasConditions(columns: ["id", "fullname"]),
-        hasCompany: _ @whereHasConditions(columns: ["name"]),
         hasTemplates: _ @whereHasConditions(columns: ["subject"]),
         created_at: DateRange @whereBetween,
         where: _ @whereConditions(columns: ["type", "company_id", "recipient_type", "group_type"]),
