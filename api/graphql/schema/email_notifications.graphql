@@ -25,7 +25,7 @@ type EmailNotification {
 
 extend type Query @guard {
     "Получить email notification"
-    emailNotifications(
+    emailNotification(
         id: ID @eq
         hasApplicantIndividual: _ @whereHasConditions(columns: ["id", "fullname"]),
         hasApplicantCompany: _ @whereHasConditions(columns: ["id", "name"]),
