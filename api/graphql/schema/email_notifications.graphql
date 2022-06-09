@@ -26,7 +26,10 @@ type EmailNotification {
 extend type Query @guard {
     "Получить email notification"
     emailNotification(
-        id: ID @eq
+        company_id: Int! @eq
+        type: NotifyType! @eq
+        recipient_type: RecipientType @eq
+        group_type: GroupType @eq
     ): EmailNotification   @find
     """
     Получить список email notification
