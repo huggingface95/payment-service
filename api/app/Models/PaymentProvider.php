@@ -48,6 +48,11 @@ class PaymentProvider extends BaseModel
         return $this->belongsToMany(PaymentSystem::class,'payment_provider_payment_system','payment_provider_id','payment_system_id');
     }
 
+    public function commissionPriceList()
+    {
+        return $this->hasOne(CommissionPriceList::class, 'provider_id','id');
+    }
+
     public function scopePaymentProviderCountry($query, $countryId)
     {
 		$countries = implode(',', $countryId);

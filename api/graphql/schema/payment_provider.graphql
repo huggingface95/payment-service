@@ -14,6 +14,7 @@ type PaymentProvider {
     is_active: Boolean
     "Получить связанные платежные системы"
     payment_systems: [PaymentSystem] @belongsToMany(relation:"paymentSystems")
+    commission_price_list: CommissionPriceList @hasOne(relation:"commissionPriceList")
     "массив ID стран"
     country_id: [ID]
     "Получить связанные страны"
