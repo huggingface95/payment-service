@@ -27,12 +27,7 @@ extend type Query @guard {
     "Получить email notification"
     emailNotification(
         id: ID @eq
-        hasApplicantIndividual: _ @whereHasConditions(columns: ["id", "fullname"]),
-        hasApplicantCompany: _ @whereHasConditions(columns: ["id", "name"]),
-        hasGroupRole: _ @whereHasConditions(columns: ["id", "name"]),
-        hasMember: _ @whereHasConditions(columns: ["id", "fullname"]),
-        where: _ @whereConditions(columns: ["type", "company_id", "recipient_type", "group_type"]),
-    ): EmailNotification   @first
+    ): EmailNotification   @find
     """
     Получить список email notification
     orderBy: [
