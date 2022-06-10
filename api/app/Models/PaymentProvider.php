@@ -3,8 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @method static findOrFail(int $providerId)
+ */
 class PaymentProvider extends BaseModel
 {
 
@@ -48,7 +52,7 @@ class PaymentProvider extends BaseModel
         return $this->belongsToMany(PaymentSystem::class,'payment_provider_payment_system','payment_provider_id','payment_system_id');
     }
 
-    public function commissionPriceList()
+    public function commissionPriceList(): HasOne
     {
         return $this->hasOne(CommissionPriceList::class, 'provider_id','id');
     }
