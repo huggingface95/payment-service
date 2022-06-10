@@ -43,7 +43,7 @@ enum Securities {
 
 extend type Query @guard {
     "Получить по билет ID"
-    emailSmtp(company_id: ID @eq): EmailSmtp @find
+    emailSmtp(company_id: ID @eq, email_setting_id: ID @eq): EmailSmtp @find
 
     emailSmtps(
         hasTemplate: _ @whereHasConditions(columns: ["name", "id"]),
