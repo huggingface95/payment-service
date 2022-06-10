@@ -54,6 +54,11 @@ class EmailSmtp extends BaseModel
         return $this->belongsTo(Members::class, 'member_id');
     }
 
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Companies::class, 'company_id');
+    }
+
     public function emailTemplate(): BelongsTo
     {
         return $this->belongsTo(EmailTemplate::class, 'email_template_id');
