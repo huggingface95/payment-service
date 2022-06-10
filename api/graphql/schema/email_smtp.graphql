@@ -71,8 +71,6 @@ extend type Mutation @guard {
         replay_to: String
         "Порт"
         port: Int!
-        "Ид шаблона"
-        email_setting_id: ID!
         "ID компании"
         company_id: ID!
     ): EmailSmtp @field(resolver: "EmailSmtpMutator@create")

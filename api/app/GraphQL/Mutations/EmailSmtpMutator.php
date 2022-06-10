@@ -23,8 +23,9 @@ class EmailSmtpMutator
         $count = EmailSmtp::where('company_id',$args['company_id'])->count();
 
         $emailSetting = EmailSetting::create([
-            'name' => 'Setting'.$count+1
+            'name' => "Setting" . ($count + 1),
         ]);
+        $args['email_setting_id'] = $emailSetting->id;
 
         return EmailSmtp::create($args);
     }
