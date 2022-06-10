@@ -94,7 +94,7 @@ extend type Mutation @guard {
         port: Int!
         "Ид шаблона"
         email_template_id: ID!
-    ): EmailSmtp @update
+    ): EmailSmtp @field(resolver: "EmailSmtpMutator@update")
 
     "Удалить запись"
     deleteEmailSmtp(
