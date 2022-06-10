@@ -43,15 +43,9 @@ enum Securities {
 
 extend type Query @guard {
     "Получить по билет ID"
-    emailSmtp(company_id: ID @eq, email_setting_id: ID @eq): EmailSmtp @find
-
-    emailSmtps(
-        hasTemplate: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["template_id","company_id"]),
-        orderBy: _ @orderBy(
-            columns: ["id"]
-        )
-    ): [EmailSmtp!]! @all @orderBy(column: "id", direction: ASC)
+    emailSmtp(
+        company_id: ID! @eq
+    ): EmailSmtp @first
 }
 
 extend type Mutation @guard {
