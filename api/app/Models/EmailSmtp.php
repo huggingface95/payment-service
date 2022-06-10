@@ -37,7 +37,7 @@ class EmailSmtp extends BaseModel
      * @var array
      */
     protected $fillable = [
-       'email_template_id', 'member_id', 'security', 'host_name', 'from_name', 'from_email', 'username', 'password', 'replay_to', 'port'
+       'email_setting_id', 'member_id', 'security', 'host_name', 'from_name', 'from_email', 'username', 'password', 'replay_to', 'port'
     ];
 
     public static function getSecurities(): array
