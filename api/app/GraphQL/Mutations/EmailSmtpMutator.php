@@ -40,6 +40,16 @@ class EmailSmtpMutator
         return $emailSmtp;
     }
 
+    public function delete($root, array $args)
+    {
+        $emailSmtp = EmailSmtp::where(['company_id'=>$args['company_id'], 'email_template_id'=>$args['email_template_id']])->first();
+        if (!$emailSmtp) {
+            throw new GraphqlException('An entry with this id does not exist',"not found",404);
+        }
+        $emailSmtp->delete();
+        return $emailSmtp;
+    }
+
     public function sendEmail($root, array $args)
     {
         /** @var Members $member */

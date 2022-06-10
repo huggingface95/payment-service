@@ -73,6 +73,8 @@ extend type Mutation @guard {
         port: Int!
         "ID компании"
         company_id: ID!
+        "Определяем отправлять через данные настройки всю почту или нет"
+        is_sending_mail:Boolean
     ): EmailSmtp @field(resolver: "EmailSmtpMutator@create")
 
     "Обновить данные смтп"
@@ -97,13 +99,16 @@ extend type Mutation @guard {
         port: Int!
         "Ид шаблона"
         email_setting_id: ID!
+        "Определяем отправлять через данные настройки всю почту или нет"
+        is_sending_mail: Boolean
     ): EmailSmtp @field(resolver: "EmailSmtpMutator@update")
 
     "Удалить запись"
     deleteEmailSmtp(
         "ID компании"
         company_id: ID!
-    ): EmailSmtp @delete
+        email_setting_id: ID!
+    ): EmailSmtp @field(resolver: "EmailSmtpMutator@delete")
 
     sendEmail(
         "почта"
