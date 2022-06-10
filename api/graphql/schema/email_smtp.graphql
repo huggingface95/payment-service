@@ -20,12 +20,19 @@ type EmailSmtp {
     replay_to: String!
     "Порт"
     port: Int!
+    "Определяем отправлять через данные настройки всю почту или нет"
+    is_sending_mail: Boolean
     "Получить шаблон"
-    template: EmailTemplate @belongsTo(relation: "emailTemplate")
+    settings: EmailSetting @belongsTo(relation: "emailSetting")
     "Получить мембера"
     member: Members @belongsTo(relation: "member")
     "Получить компанию"
     company: Companies @belongsTo(relation: "company")
+}
+
+type EmailSetting {
+    id: ID
+    name: String
 }
 
 enum Securities {
@@ -36,15 +43,9 @@ enum Securities {
 
 extend type Query @guard {
     "Получить по билет ID"
-    emailSmtp(company_id: ID @eq): EmailSmtp @find
-
-    emailSmtps(
-        hasTemplate: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["template_id","company_id"]),
-        orderBy: _ @orderBy(
-            columns: ["id"]
-        )
-    ): [EmailSmtp!]! @all @orderBy(column: "id", direction: ASC)
+    emailSmtp(
+        company_id: ID! @eq
+    ): EmailSmtp @first
 }
 
 extend type Mutation @guard {
@@ -66,10 +67,10 @@ extend type Mutation @guard {
         replay_to: String
         "Порт"
         port: Int!
-        "Ид шаблона"
-        email_template_id: ID!
         "ID компании"
         company_id: ID!
+        "Определяем отправлять через данные настройки всю почту или нет"
+        is_sending_mail:Boolean
     ): EmailSmtp @field(resolver: "EmailSmtpMutator@create")
 
     "Обновить данные смтп"
@@ -93,14 +94,17 @@ extend type Mutation @guard {
         "Порт"
         port: Int!
         "Ид шаблона"
-        email_template_id: ID!
+        email_setting_id: ID!
+        "Определяем отправлять через данные настройки всю почту или нет"
+        is_sending_mail: Boolean
     ): EmailSmtp @field(resolver: "EmailSmtpMutator@update")
 
     "Удалить запись"
     deleteEmailSmtp(
         "ID компании"
         company_id: ID!
-    ): EmailSmtp @delete
+        email_setting_id: ID!
+    ): EmailSmtp @field(resolver: "EmailSmtpMutator@delete")
 
     sendEmail(
         "почта"

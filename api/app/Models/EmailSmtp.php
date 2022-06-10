@@ -20,6 +20,7 @@ use Illuminate\Support\Carbon;
  * @property string username
  * @property string password
  * @property string replay_to
+ * @property boolean is_sending_mail
  * @property Carbon created_at
  * @property Carbon updated_at
  *
@@ -37,7 +38,7 @@ class EmailSmtp extends BaseModel
      * @var array
      */
     protected $fillable = [
-       'email_template_id', 'member_id', 'security', 'host_name', 'from_name', 'from_email', 'username', 'password', 'replay_to', 'port'
+       'email_setting_id', 'member_id', 'security', 'company_id','host_name', 'from_name', 'from_email', 'username', 'password', 'replay_to', 'port','is_sending_mail'
     ];
 
     public static function getSecurities(): array
@@ -59,9 +60,9 @@ class EmailSmtp extends BaseModel
         return $this->belongsTo(Companies::class, 'company_id');
     }
 
-    public function emailTemplate(): BelongsTo
+    public function emailSetting(): BelongsTo
     {
-        return $this->belongsTo(EmailTemplate::class, 'email_template_id');
+        return $this->belongsTo(EmailSetting::class, 'email_setting_id');
     }
 
 }
