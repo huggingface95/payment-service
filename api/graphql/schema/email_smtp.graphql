@@ -51,7 +51,7 @@ extend type Mutation @guard {
     "Создать смтп"
     createEmailSmtp(
         "Защита"
-        security: String
+        security: Securities
         "Имя хоста"
         host_name: String!
         "От кого"
@@ -77,7 +77,7 @@ extend type Mutation @guard {
         "ID компании"
         company_id: ID!
         "Защита"
-        security: String
+        security: Securities
         "Имя хоста"
         host_name: String!
         "От кого"
