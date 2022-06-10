@@ -36,6 +36,12 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
+        if ($user->ip_address) {
+            $ip_address = explode(',', $user->ip_address);
+            if(!in_array( $_SERVER['REMOTE_ADDR'], $ip_address)){
+                return response()->json(['error' => 'Access denied'], 403);
+            }
+        }
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
             return $this->respondWithToken2Fa($token);
@@ -245,20 +251,44 @@ class AuthController extends Controller
 
     }
 
+    public function storeIpAddress(Request $request)
+    {
+        $this->validate($request, [
+            'ip_address' => 'required'
+        ]);
+
+        $user = auth()->user();
+        if ($request->member_id) {
+            $user = Members::find($request->member_id);
+            if (!$user){
+                return response()->json(['data' => 'Member not found']);
+            }
+        }
+        $valid_ip = preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:,\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})*$/', $request->ip_address);
+        if (!$valid_ip) {
+            return response()->json(['data' => 'Not a valid ip address'], 403);
+        }
+        $user->ip_address = $request->ip_address;
+        $user->save();
+
+        return response()->json(['data' => 'Backup Codes stored success for user id '.$user->id]);
+
+    }
+
     public function generateUniqueCode()
     {
-            $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-            $charactersNumber = strlen($characters);
-            $codeLength = 16;
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        $charactersNumber = strlen($characters);
+        $codeLength = 16;
 
-            $code = '';
+        $code = '';
 
-            while (strlen($code) < $codeLength) {
-                $position = rand(0, $charactersNumber - 1);
-                $character = $characters[$position];
-                $code = $code . $character;
-            }
+        while (strlen($code) < $codeLength) {
+            $position = rand(0, $charactersNumber - 1);
+            $character = $characters[$position];
+            $code = $code . $character;
+        }
 
-            return $code;
+        return $code;
     }
 }
