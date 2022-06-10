@@ -6,6 +6,7 @@ use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -19,7 +20,7 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class ApplicantIndividual extends BaseModel
 {
-    use HasRoles, MorphToOne, BelongsToOne;
+    use MorphToOne, BelongsToOne;
 
     protected $table = "applicant_individual";
     protected $guard_name = 'api';
@@ -200,6 +201,16 @@ class ApplicantIndividual extends BaseModel
             'id',
             'id',
             'group_role_id',
+        )->where('group_type_id', GroupRole::INDIVIDUAL);
+    }
+
+    public function groupRoles(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            GroupRole::class,
+            'group_role_members_individuals',
+            'user_id',
+            'group_role_id'
         )->where('group_type_id', GroupRole::INDIVIDUAL);
     }
 

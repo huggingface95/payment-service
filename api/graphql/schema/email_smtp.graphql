@@ -24,21 +24,23 @@ type EmailSmtp {
     template: EmailTemplate @belongsTo(relation: "emailTemplate")
     "Получить мембера"
     member: Members @belongsTo(relation: "member")
+    "Получить компанию"
+    company: Companies @belongsTo(relation: "company")
 }
 
 enum Securities {
-    Auto @enum(value: auto)
-    Ssl @enum(value: ssl)
-    Starttls @enum(value: starttls)
+    Auto @enum(value: "auto")
+    Ssl @enum(value: "ssl")
+    Starttls @enum(value: "starttls")
 }
 
 extend type Query @guard {
     "Получить по билет ID"
-    emailSmtp(id: ID @eq): EmailSmtp @find
+    emailSmtp(company_id: ID @eq): EmailSmtp @find
 
     emailSmtps(
         hasTemplate: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["template_id"]),
+        where: _ @whereConditions(columns: ["template_id","company_id"]),
         orderBy: _ @orderBy(
             columns: ["id"]
         )
@@ -49,7 +51,7 @@ extend type Mutation @guard {
     "Создать смтп"
     createEmailSmtp(
         "Защита"
-        security: String
+        security: Securities
         "Имя хоста"
         host_name: String!
         "От кого"
@@ -66,13 +68,16 @@ extend type Mutation @guard {
         port: Int!
         "Ид шаблона"
         email_template_id: ID!
+        "ID компании"
+        company_id: ID!
     ): EmailSmtp @field(resolver: "EmailSmtpMutator@create")
 
     "Обновить данные смтп"
     updateEmailSmtp(
-        id: ID!
+        "ID компании"
+        company_id: ID!
         "Защита"
-        security: String
+        security: Securities
         "Имя хоста"
         host_name: String!
         "От кого"
@@ -89,11 +94,12 @@ extend type Mutation @guard {
         port: Int!
         "Ид шаблона"
         email_template_id: ID!
-    ): EmailSmtp @update
+    ): EmailSmtp @field(resolver: "EmailSmtpMutator@update")
 
     "Удалить запись"
     deleteEmailSmtp(
-        id: ID!
+        "ID компании"
+        company_id: ID!
     ): EmailSmtp @delete
 
     sendEmail(

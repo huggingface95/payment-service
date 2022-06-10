@@ -76,7 +76,7 @@ extend type Mutation @guard {
         "Тип получателя"
         recipient_type: RecipientType!
         "Тип Группы"
-        group_type: GroupType!
+        group_type_id: ID!
         "ID компании"
         company_id: Int!
         "ID клиента тип унион"
@@ -93,7 +93,7 @@ extend type Mutation @guard {
         "Тип получателя"
         recipient_type: RecipientType!
         "Тип Группы"
-        group_type: GroupType!
+        group_type_id: ID!
         "ID компании"
         company_id: Int
         "ID клиента тип унион"

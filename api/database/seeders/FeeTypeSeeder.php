@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\FeesMode;
+use App\Models\FeeType;
 use Illuminate\Database\Seeder;
 
-class FeesModeSeeder extends Seeder
+class FeeTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,9 +14,9 @@ class FeesModeSeeder extends Seeder
      */
     public function run()
     {
-        $feesMode = ['Fix','Range','%'];
-        foreach ($feesMode as $item) {
-            FeesMode::firstOrCreate(['name'=>$item]);
+        $feeType = ['Fees','Service Fees'];
+        foreach ($feeType as $item) {
+            FeeType::firstOrCreate(['name'=>$item]);
         }
     }
 }

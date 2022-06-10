@@ -31,7 +31,7 @@ class BaseModel extends Model
                     'applicant_companies' => $member->accountManagerApplicantCompanies()->get()->pluck('id'),
                 ];
             } else {
-                return $member->accessLimitations()->get()
+                $ids = $member->accessLimitations()->get()
                     ->pluck('groupRole')->map(function ($role) {
                         return $role->users;
                     })
@@ -42,6 +42,11 @@ class BaseModel extends Model
                     ->map(function ($v) {
                         return $v->pluck('id');
                     })->toArray();
+
+                return [
+                    'applicant_individual' => $ids['applicant_individual'] ?? [],
+                    'applicant_companies' => $ids['applicant_companies'] ?? [],
+                ];
             }
         }
 

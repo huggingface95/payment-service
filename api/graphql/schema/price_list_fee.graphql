@@ -34,7 +34,7 @@ extend type Query @guard {
     priceListFees(
         hasList: _ @whereHasConditions(columns: ["name"]),
         price_list_id: ID @eq,
-        where: _ @whereConditions(columns: ["name", "type", "operation_type", "period"])
+        where: _ @whereConditions(columns: ["name", "type_id", "operation_type_id", "period_id"])
     ): [PriceListFee!]!   @orderBy(column: "id", direction: ASC) @all
 }
 

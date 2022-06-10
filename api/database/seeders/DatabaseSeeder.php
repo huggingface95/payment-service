@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
         $this->call( ApplicantCompanyLabelsTableSeeder::class);
         $this->call( PaymentStatusSeed::class);
         $this->call( PaymentTypeSeed::class);
-        $this->call( FeesModeSeeder::class);
+        $this->call( FeeTypeSeeder::class);
+        $this->call( FeePeriodSeeder::class);
+        $this->call( OperationTypeSeeder::class);
     }
 }
