@@ -20,6 +20,8 @@ type EmailSmtp {
     replay_to: String!
     "Порт"
     port: Int!
+    "Определяем отправлять через данные настройки всю почту или нет"
+    is_sending_mail: Boolean
     "Получить шаблон"
     settings: EmailSetting @belongsTo(relation: "emailSetting")
     "Получить мембера"
