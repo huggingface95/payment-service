@@ -21,11 +21,16 @@ type EmailSmtp {
     "Порт"
     port: Int!
     "Получить шаблон"
-    template: EmailTemplate @belongsTo(relation: "emailTemplate")
+    settings: EmailSetting @belongsTo(relation: "emailSetting")
     "Получить мембера"
     member: Members @belongsTo(relation: "member")
     "Получить компанию"
     company: Companies @belongsTo(relation: "company")
+}
+
+type EmailSetting {
+    id: ID
+    name: String
 }
 
 enum Securities {

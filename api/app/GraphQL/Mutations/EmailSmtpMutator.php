@@ -9,6 +9,7 @@ use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
 use App\Models\BaseModel;
+use App\Models\EmailSetting;
 use App\Models\EmailSmtp;
 use App\Models\Members;
 
@@ -18,6 +19,12 @@ class EmailSmtpMutator
     public function create($root, array $args)
     {
         $args['member_id'] = BaseModel::DEFAULT_MEMBER_ID;
+
+        $count = EmailSmtp::where('company_id',$args['company_id'])->count();
+
+        $emailSetting = EmailSetting::create([
+            'name' => 'Setting'.$count+1
+        ]);
 
         return EmailSmtp::create($args);
     }
