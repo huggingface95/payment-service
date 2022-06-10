@@ -72,7 +72,7 @@ extend type Mutation @guard {
         "Порт"
         port: Int!
         "Ид шаблона"
-        email_template_id: ID!
+        email_setting_id: ID!
         "ID компании"
         company_id: ID!
     ): EmailSmtp @field(resolver: "EmailSmtpMutator@create")
@@ -98,7 +98,7 @@ extend type Mutation @guard {
         "Порт"
         port: Int!
         "Ид шаблона"
-        email_template_id: ID!
+        email_setting_id: ID!
     ): EmailSmtp @field(resolver: "EmailSmtpMutator@update")
 
     "Удалить запись"
