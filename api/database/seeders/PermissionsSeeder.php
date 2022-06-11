@@ -4528,6 +4528,11 @@ class PermissionsSeeder extends Seeder
                 'referer' => 'settings/manager-roles/edit',
                 'binds' => ['Roles settings.Read', 'Roles settings.Edit'],
             ],
+            [
+                'name' => 'GetGroups',
+                'referer' => 'settings/manager-groups/settings',
+                'binds' => ['Groups settings.Read', 'Groups settings.Edit'],
+            ],
         ];
 
 
