@@ -42,7 +42,7 @@ func CljPostback(c *gin.Context) {
 			}
 
 			var nextBalance = float64(0)
-			if payment.TypeId == db.INCOMING {
+			if payment.OperationTypeId == db.INCOMING {
 				nextBalance = payment.Account.CurrentBalance + response.Amount
 			} else {
 				nextBalance = payment.Account.CurrentBalance - response.Amount

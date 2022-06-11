@@ -22,7 +22,7 @@ func (cj *ClearJunction) Pay(payment *db.Payment, amount float64, currency strin
 
 	response := &models.PayInPayoutResponse{}
 	err := errors.New("")
-	if payment.TypeId == db.INCOMING {
+	if payment.OperationTypeId == db.INCOMING {
 		request := models.NewPayInInvoiceRequest(payInPayoutRequest, cj.baseUrl)
 		response, err = cj.CreateInvoice(request)
 	} else {
