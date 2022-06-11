@@ -4523,6 +4523,11 @@ class PermissionsSeeder extends Seeder
                 'name' => 'GetFilterFieldsData',
                 'referer' => null,
             ],
+            [
+                'name' => 'GetManagerRole',
+                'referer' => 'settings/manager-roles/edit',
+                'binds' => ['Roles settings.Read', 'Roles settings.Edit'],
+            ],
         ];
 
 
