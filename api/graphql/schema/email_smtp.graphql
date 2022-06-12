@@ -49,7 +49,7 @@ extend type Query @guard {
         orderBy: _ @orderBy(
             columns: ["id","name"]
         )
-    ): [EmailSmtp!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [EmailSmtp!]!   @all @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
