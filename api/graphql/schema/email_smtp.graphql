@@ -5,19 +5,19 @@ Banking-> Email Templates Settings
 type EmailSmtp {
     id: ID!
     "Защита"
-    security: Securities!
+    security: Securities
     "Имя хоста"
     host_name: String!
     "От кого"
-    from_name: String!
+    from_name: String
     "почта"
-    from_email: String!
+    from_email: String
     "логин"
     username: String!
     "пароль"
     password: String!
     "ответить кому"
-    replay_to: String!
+    replay_to: String
     "Порт"
     port: Int!
     "Определяем отправлять через данные настройки всю почту или нет"
