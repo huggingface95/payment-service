@@ -7,15 +7,24 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\MemberScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * Class Payments
  * @package App\Models
-
  * @property int owner_id
- *
+ * @property float amount
+ * @property int fee_type_id
+ * @property int currency_id
+ * @property float $fee
+ * @property float amount_real
+ * @property int $operation_type_id
  *
  * @property ApplicantIndividual $applicantIndividual
+ * @property CommissionPriceList $commissionPriceList
+ * @property Accounts $Accounts
+ * @property OperationType $PaymentOperation
+ * @property Currencies $Currencies
  *
  */
 class Payments extends BaseModel
@@ -46,7 +55,7 @@ class Payments extends BaseModel
         'sender_email',
         'sender_phone',
         'urgency_id',
-        'type_id',
+        'operation_type_id',
         'payment_provider_id',
         'account_id',
         'company_id',
@@ -123,12 +132,12 @@ class Payments extends BaseModel
     }
 
     /**
-     * Get relation PaymentTypes
+     * Get relation OperationType
      * @return BelongsTo
      */
-    public function PaymentTypes()
+    public function PaymentOperation(): BelongsTo
     {
-        return $this->belongsTo(PaymentTypes::class,'type_id','id');
+        return $this->belongsTo(OperationType::class,'operation_type_id');
     }
 
     /**
@@ -144,7 +153,7 @@ class Payments extends BaseModel
      * Get relation Currencies
      * @return BelongsTo
      */
-    public function Currencies()
+    public function Currencies(): BelongsTo
     {
         return $this->belongsTo(Currencies::class,'currency_id','id');
     }
@@ -164,14 +173,19 @@ class Payments extends BaseModel
 //        return $this->belongsToMany(ApplicantCompany::class,'accounts','id','client_id', 'account_id', 'owner_id');
 //    }
 
-    public function feeType()
+    public function feeType(): BelongsTo
     {
-        return $this->belongsTo(FeeType::class,'fee_type_id','id');
+        return $this->belongsTo(FeeType::class,'fee_type_id');
     }
 
-    public function paymentStatus()
+    public function paymentStatus(): BelongsTo
     {
-        return $this->belongsTo(PaymentStatus::class,'status_id','id');
+        return $this->belongsTo(PaymentStatus::class,'status_id');
+    }
+
+    public function commissionPriceList(): HasOneThrough
+    {
+        return $this->hasOneThrough(CommissionPriceList::class, PaymentProvider::class, 'id', 'provider_id', 'payment_provider_id', 'id');
     }
 
 }

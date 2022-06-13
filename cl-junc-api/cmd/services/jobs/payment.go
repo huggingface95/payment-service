@@ -30,7 +30,7 @@ func pay(request *models.PaymentRequest) {
 		if payResponse == nil {
 			return
 		}
-		statusResponse, err := app.Get.Wire.GetPaymentStatus(dbPayment.TypeId, payResponse.OrderReference)
+		statusResponse, err := app.Get.Wire.GetPaymentStatus(dbPayment.OperationTypeId, payResponse.OrderReference)
 		if err != nil {
 			log.Error().Err(err)
 			return
