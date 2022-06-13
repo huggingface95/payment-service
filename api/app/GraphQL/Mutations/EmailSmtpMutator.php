@@ -18,7 +18,7 @@ class EmailSmtpMutator
     public function create($root, array $args)
     {
         $args['member_id'] = BaseModel::DEFAULT_MEMBER_ID;
-        if (isset($args['is_sending_mail'])) {
+        if ($args['is_sending_mail'] === true ) {
             EmailSmtp::where('company_id',$args['company_id'])->update(['is_sending_mail'=>false]);
         }
         return EmailSmtp::create($args);
@@ -30,7 +30,7 @@ class EmailSmtpMutator
         if (!$emailSmtp) {
             throw new GraphqlException('An entry with this id does not exist',"not found",404);
         }
-        if (isset($args['is_sending_mail'])) {
+        if ($args['is_sending_mail'] === true) {
             EmailSmtp::where('company_id',$emailSmtp->company_id)->update(['is_sending_mail'=>false]);
         }
         $emailSmtp->update($args);
