@@ -30,7 +30,7 @@ class BaseModel extends Model
                     'applicant_individual' => $member->accountManagerApplicantIndividuals()->get()->pluck('id'),
                     'applicant_companies' => $member->accountManagerApplicantCompanies()->get()->pluck('id'),
                 ];
-            } else {
+            } elseif($member->accessLimitations()->count()) {
                 $ids = $member->accessLimitations()->get()
                     ->pluck('groupRole')->map(function ($role) {
                         return $role->users;
