@@ -24,7 +24,7 @@ class EmailSmtpMutator
 
     public function update($root, array $args)
     {
-        $emailSmtp = EmailSmtp::where(['company_id'=>$args['company_id'], 'email_template_id'=>$args['email_template_id']])->first();
+        $emailSmtp = EmailSmtp::find($args['id']);
         if (!$emailSmtp) {
             throw new GraphqlException('An entry with this id does not exist',"not found",404);
         }
@@ -34,7 +34,7 @@ class EmailSmtpMutator
 
     public function delete($root, array $args)
     {
-        $emailSmtp = EmailSmtp::where(['company_id'=>$args['company_id'], 'email_template_id'=>$args['email_template_id']])->first();
+        $emailSmtp = EmailSmtp::find($args['id']);
         if (!$emailSmtp) {
             throw new GraphqlException('An entry with this id does not exist',"not found",404);
         }
