@@ -13,7 +13,7 @@ class AddForeignKeyEmailNotification extends Migration
      */
     public function up()
     {
-        Schema::table('email_notification', function (Blueprint $table) {
+        Schema::table('email_notifications', function (Blueprint $table) {
             $table->foreign('group_role_id')->references('id')->on('group_role')->onUpdate('cascade');
         });
     }
@@ -25,7 +25,7 @@ class AddForeignKeyEmailNotification extends Migration
      */
     public function down()
     {
-        Schema::table('email_notification', function (Blueprint $table) {
+        Schema::table('email_notifications', function (Blueprint $table) {
             $table->dropForeign(['group_role_id']);
         });
     }
