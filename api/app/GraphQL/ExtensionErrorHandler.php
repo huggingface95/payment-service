@@ -276,7 +276,7 @@ class ExtensionErrorHandler implements ErrorHandler
 
         if (strpos($error->getMessage(),'non-nullable')) {
             return $next(new Error(
-                'An entry with this id does not exist',
+                'Internal server error',
                 // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
                 $error->getNodes(),
                 $error->getSource(),
@@ -284,7 +284,7 @@ class ExtensionErrorHandler implements ErrorHandler
                 $error->getPath(),
                 new GraphqlException($error->getMessage()),
                 [
-                    'code' => 404,
+                    'code' => 500,
                     'systemMessage' => $error->getMessage()
                 ]
             ));
