@@ -92,11 +92,14 @@ class EmailNotification extends BaseModel
         catch (\Error $ex){
             $model = $this;
         }
-        if ($model->group_type_id == 1)
+
+        $name = $model->groupType->name ?? null;
+
+        if ($name == Groups::MEMBER)
             return $this->member();
-        elseif($model->group_type_id == 2)
+        elseif($name == Groups::COMPANY)
             return $this->applicantCompany();
-        elseif($model->group_type_id == 3)
+        elseif($name == Groups::INDIVIDUAL)
             return $this->applicantIndividual();
         return null;
     }
