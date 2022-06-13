@@ -45,7 +45,7 @@ extend type Query @guard {
 
     "Получить список smtp настроек для компании"
     emailSmtps(
-        company_id: ID!
+        company_id: ID! @eq
         orderBy: _ @orderBy(
             columns: ["id","name"]
         )
