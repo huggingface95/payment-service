@@ -26,9 +26,9 @@ type EmailNotification {
 extend type Query @guard {
     "Получить email notification"
     emailNotification(
-        company_id: Int! @eq
-        group_role_id: Int! @eq
-        group_type_id: Int @eq
+        company_id: ID! @eq
+        group_role_id: ID! @eq
+        group_type_id: ID @eq
         hasClientable: _ @whereHasConditions(columns: ["id"], handler: "App\\GraphQL\\Handlers\\EmailNotificationClientableHandler"),
     ): EmailNotification @first
     """
