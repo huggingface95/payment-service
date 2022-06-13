@@ -55,6 +55,7 @@ extend type Query @guard {
 extend type Mutation @guard {
     "Создать смтп"
     createEmailSmtp(
+        name: String!
         "Защита"
         security: Securities
         "Имя хоста"

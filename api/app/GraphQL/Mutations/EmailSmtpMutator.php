@@ -19,9 +19,6 @@ class EmailSmtpMutator
     {
         $args['member_id'] = BaseModel::DEFAULT_MEMBER_ID;
 
-        $count = EmailSmtp::where('company_id',$args['company_id'])->count();
-        $args['name'] = "Setting" . ($count + 1);
-
         return EmailSmtp::create($args);
     }
 
