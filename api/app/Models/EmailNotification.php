@@ -18,6 +18,7 @@ use Illuminate\Support\Carbon;
  * @property string group_type
  * @property Carbon created_at
  * @property Carbon updated_at
+ * @property int $group_type_id
  *
  */
 class EmailNotification extends BaseModel
@@ -36,7 +37,7 @@ class EmailNotification extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'company_id', 'type', 'recipient_type', 'group_type'
+        'company_id', 'type', 'recipient_type', 'group_type_id', 'group_role_id'
     ];
 
     public static self $clone;
@@ -57,6 +58,16 @@ class EmailNotification extends BaseModel
         return $this->belongsTo(Companies::class, 'company_id');
     }
 
+    public function groupRole(): BelongsTo
+    {
+        return $this->belongsTo(GroupRole::class, 'group_role_id');
+    }
+
+    public function groupType(): BelongsTo
+    {
+        return $this->belongsTo(Groups::class, 'group_type_id');
+    }
+
     public function templates(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -73,7 +84,7 @@ class EmailNotification extends BaseModel
         return parent::load($relations);
     }
 
-    public function clientable(): \Ankurk91\Eloquent\Relations\MorphToOne
+    public function clientable(): ?\Ankurk91\Eloquent\Relations\MorphToOne
     {
         try {
             $model = self::$clone;
@@ -82,16 +93,15 @@ class EmailNotification extends BaseModel
             $model = $this;
         }
 
-        if ($model->type == self::CLIENT){
-            if ($model->recipient_type == self::RECIPIENT_PERSON && $model->group_type == Groups::INDIVIDUAL)
-                return $this->applicantIndividual();
+        $name = $model->groupType->name ?? null;
+
+        if ($name == Groups::MEMBER)
+            return $this->member();
+        elseif($name == Groups::COMPANY)
             return $this->applicantCompany();
-        }
-        else{
-            if ($model->recipient_type == self::RECIPIENT_PERSON && $model->group_type == Groups::MEMBER)
-                return $this->member();
-            return $this->groupRole();
-        }
+        elseif($name == Groups::INDIVIDUAL)
+            return $this->applicantIndividual();
+        return null;
     }
 
     public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
@@ -102,11 +112,6 @@ class EmailNotification extends BaseModel
     public function applicantCompany(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
         return $this->morphedByOne(ApplicantCompany::class, 'client', 'email_notification_clients', 'notification_id');
-    }
-
-    public function groupRole(): \Ankurk91\Eloquent\Relations\MorphToOne
-    {
-        return $this->morphedByOne(GroupRole::class, 'client', 'email_notification_clients', 'notification_id');
     }
 
     public function member(): \Ankurk91\Eloquent\Relations\MorphToOne

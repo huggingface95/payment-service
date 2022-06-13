@@ -18,9 +18,15 @@ class EmailNotificationMutator extends BaseMutator
     {
         $templates = $args['templates'];
         unset($args['templates']);
+        /** @var EmailNotification $emailNotification */
         $emailNotification =  EmailNotification::create($args);
         $emailNotification->templates()->sync($templates, true);
-        $emailNotification->clientable()->sync($args['client_id'], true);
+
+        if (isset($args['client_id'])){
+            $emailNotification->recipient_type = EmailNotification::RECIPIENT_PERSON;
+            $emailNotification->save();
+            $emailNotification->clientable()->sync($args['client_id'], true);
+        }
         return $emailNotification;
     }
 
@@ -40,7 +46,8 @@ class EmailNotificationMutator extends BaseMutator
             unset($args['templates']);
         }
 
-        if ($args['client_id']) {
+        if (isset($args['client_id'])){
+            $emailNotification->recipient_type = EmailNotification::RECIPIENT_PERSON;
             $emailNotification->clientable()->sync($args['client_id'], true);
         }
 
