@@ -31,7 +31,7 @@ class EmailSmtpMutator
             throw new GraphqlException('An entry with this id does not exist',"not found",404);
         }
         if (isset($args['is_sending_mail'])) {
-            EmailSmtp::where('company_id',$args['company_id'])->update(['is_sending_mail'=>false]);
+            EmailSmtp::where('company_id',$emailSmtp->company_id)->update(['is_sending_mail'=>false]);
         }
         $emailSmtp->update($args);
         return $emailSmtp;
