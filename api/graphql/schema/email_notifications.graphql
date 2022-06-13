@@ -29,9 +29,7 @@ extend type Query @guard {
         company_id: Int! @eq
         group_role_id: Int! @eq
         group_type_id: Int @eq
-        hasMember: _ @whereHasConditions(columns: ["id"]),
-        hasApplicantCompany: _ @whereHasConditions(columns: ["id"]),
-        hasApplicantIndividual: _ @whereHasConditions(columns: ["id"]),
+        hasClientable: _ @whereHasConditions(columns: ["id"], handler: "App\\GraphQL\\Handlers\\EmailNotificationClientableHandler"),
     ): EmailNotification @first
     """
     Получить список email notification
