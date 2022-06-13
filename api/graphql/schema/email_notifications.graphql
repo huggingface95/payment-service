@@ -67,14 +67,12 @@ enum RecipientType {
 extend type Mutation @guard {
     "Создать электронную почту"
     createEmailNotification(
-        "Тип"
-        type: NotifyType!
         "Тип Группы"
         group_type_id: ID!
         "Тип Group Role"
         group_role_id: ID!
         "ID компании"
-        company_id: Int!
+        company_id: ID!
         "ID клиента тип унион"
         client_id: Int
         "ID email templates"
@@ -84,19 +82,17 @@ extend type Mutation @guard {
     "Обновить данные компании"
     updateEmailNotification(
         id: ID!
-        "Тип"
-        type: NotifyType!
         "Тип Группы"
         group_type_id: ID!
         "Тип Group Role"
         group_role_id: ID!
         "ID компании"
-        company_id: Int
+        company_id: ID
         "ID клиента тип унион"
         client_id: Int
         "ID email templates"
         templates: [Int]
-    ): EmailNotification   @field(resolver:"EmailNotificationMutator@update")
+    ): EmailNotification  @field(resolver:"EmailNotificationMutator@update")
 
     "Удалить запись"
     deleteEmailNotification(

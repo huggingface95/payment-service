@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphqlException;
 use App\Models\BaseModel;
 use App\Models\EmailNotification;
+use App\Models\GroupRole;
 
 
 class EmailNotificationMutator extends BaseMutator
@@ -18,6 +19,7 @@ class EmailNotificationMutator extends BaseMutator
     {
         $templates = $args['templates'];
         unset($args['templates']);
+        ($args['group_type_id'] == GroupRole::MEMBER) ? $args['type'] = EmailNotification::ADMINISTRATION : $args['type'] = EmailNotification::CLIENT;
         /** @var EmailNotification $emailNotification */
         $emailNotification =  EmailNotification::create($args);
         $emailNotification->templates()->sync($templates, true);
@@ -50,6 +52,7 @@ class EmailNotificationMutator extends BaseMutator
             $emailNotification->recipient_type = EmailNotification::RECIPIENT_PERSON;
             $emailNotification->clientable()->sync($args['client_id'], true);
         }
+        ($args['group_type_id'] == GroupRole::MEMBER) ? $args['type'] = EmailNotification::ADMINISTRATION : $args['type'] = EmailNotification::CLIENT;
 
         $emailNotification->update($args);
         return $emailNotification;
