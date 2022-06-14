@@ -28,9 +28,10 @@ extend type Query @guard {
     emailNotification(
         company_id: ID! @eq
         group_role_id: ID! @eq
-        group_type_id: ID @eq
-        hasClientable: _ @whereHasConditions(columns: ["id"], handler: "App\\GraphQL\\Handlers\\EmailNotificationClientableHandler"),
-    ): EmailNotification @first
+        group_type_id: ID! @eq
+        client_id: ID @eq
+        #hasClientable: _ @whereHasConditions(columns: ["id"], handler: "App\\GraphQL\\Handlers\\EmailNotificationClientableHandler"),
+    ): EmailNotification @field(resolver:"EmailNotificationQuery@get")
     """
     Получить список email notification
     orderBy: [
