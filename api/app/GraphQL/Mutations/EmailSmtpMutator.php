@@ -52,10 +52,16 @@ class EmailSmtpMutator
     public function sendEmail($root, array $args)
     {
         /** @var EmailSmtp $smtp */
-        $smtp = EmailSmtp::find($args['email_smtp_id']);
-        if (!$smtp->replay_to) {
-            $smtp->replay_to = $args['email'];
-        }
+        $smtp = new EmailSmtp();
+        $smtp->replay_to = (isset($args['reply_to'])) ? $args['reply_to'] : $args['email'];
+        $smtp->security = $args['security'];
+        $smtp->host_name = $args['host_name'];
+        $smtp->username = $args['username'];
+        $smtp->password = $args['password'];
+        $smtp->from_email = (isset($args['from_email'])) ? $args['from_email'] : $args['email'];
+        $smtp->from_name = (isset($args['from_name'])) ? $args['from_name'] : "Test Name";
+        $smtp->port = $args['port'];
+
         $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, "Testnaaaaaa", "Subjectnaaaaa");
         $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
         dispatch(new SendMailJob($config, $data));
