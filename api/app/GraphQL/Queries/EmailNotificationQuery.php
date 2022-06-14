@@ -29,8 +29,8 @@ class EmailNotificationQuery
 
             $clientId = $args['client_id'];
             return  EmailNotification::whereHas($relation, function (Builder $q) use ($clientId){
-                $q->where($q->getModel()->getTable().". id", "=", $clientId);
-            })->where($condition);
+                $q->where($q->getModel()->getTable().".id", "=", $clientId);
+            })->where($condition)->first();
 
         } else {
             return EmailNotification::where($condition)->first();
