@@ -9,11 +9,11 @@ type ApplicantRiskLevelHistory {
     "Дата создания сообщения"
     created_at: DateTime
     "Получить аппликанта"
-    applicant_id: ApplicantIndividual @belongsTo(relation:"ApplicantIndividual")
+    applicant: ApplicantIndividual @belongsTo(relation:"applicantIndividual")
     "Получить владельца"
-    manager_id: Members @belongsTo(relation:"Members")
+    manager: Members @belongsTo(relation:"member")
     "Получить уровень риска"
-    risk_level_id: ApplicantRiskLevel @belongsTo(relation:"ApplicantRiskLevel")
+    risk_level: ApplicantRiskLevel @belongsTo(relation:"applicantRiskLevel")
 }
 
 extend type Query @guard {
@@ -22,7 +22,9 @@ extend type Query @guard {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     where:{column: applicant_id, operator: LIKE, value: ""} фильтр по аппликанту
     """
-    applicantRiskLevelHistory(where: _ @whereConditions(columns: ["applicant_id"]), orderBy: _ @orderBy(
+    applicantRiskLevelHistory(
+        applicant_id: ID! @eq
+        where: _ @whereConditions(columns: ["risk_level_id"]), orderBy: _ @orderBy(
         columns: ["id"],
     )): [ApplicantRiskLevelHistory!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }

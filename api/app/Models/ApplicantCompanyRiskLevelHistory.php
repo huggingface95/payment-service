@@ -26,17 +26,17 @@ class ApplicantCompanyRiskLevelHistory extends BaseModel
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
 
-    public function ApplicantCompany()
+    public function applicantCompany()
     {
         return $this->belongsTo(ApplicantCompany::class,'applicant_company_id','id');
     }
 
-    public function Members()
+    public function member()
     {
-        return $this->belongsTo(Members::class,'manager_id','id');
+        return $this->belongsTo(Members::class,'member_id','id');
     }
 
-    public function ApplicantRiskLevel()
+    public function applicantRiskLevel()
     {
         return $this->belongsTo(ApplicantRiskLevel::class,'risk_level_id','id');
     }
