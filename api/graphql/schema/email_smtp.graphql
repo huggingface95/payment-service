@@ -109,7 +109,9 @@ extend type Mutation @guard {
     ): [EmailSmtp!]! @field(resolver: "EmailSmtpMutator@delete")
 
     sendEmail(
-        "почта"
-        email: String
+        "ID шаблона smtp настроек"
+        email_smtp_id: ID!
+        "e-mail"
+        email: String!
     ):EmailSmtp @field(resolver: "EmailSmtpMutator@sendEmail")
 }

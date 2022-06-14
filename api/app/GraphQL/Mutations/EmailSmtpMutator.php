@@ -51,11 +51,11 @@ class EmailSmtpMutator
 
     public function sendEmail($root, array $args)
     {
-        /** @var Members $member */
-        $member = Members::find(BaseModel::DEFAULT_MEMBER_ID);
         /** @var EmailSmtp $smtp */
-        $smtp = EmailSmtp::where('member_id', $member->id)->first();
-        $smtp->replay_to = $args['email'];
+        $smtp = EmailSmtp::find($args['email_smtp_id']);
+        if (!$smtp->replay_to) {
+            $smtp->replay_to = $args['email'];
+        }
         $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, "Testnaaaaaa", "Subjectnaaaaa");
         $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
         dispatch(new SendMailJob($config, $data));
