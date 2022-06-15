@@ -36,6 +36,13 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
+        $get_ip_address = DB::select("SELECT ip_address FROM client_ip_address WHERE id = ".$user->id);
+        if ($get_ip_address) {
+            $ip_address = explode(',', $get_ip_address[0]->ip_address);
+            if(!in_array( $_SERVER['REMOTE_ADDR'], $ip_address)){
+                return response()->json(['error' => 'Access denied'], 403);
+            }
+        }
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
             return $this->respondWithToken2Fa($token);
@@ -247,18 +254,18 @@ class AuthController extends Controller
 
     public function generateUniqueCode()
     {
-            $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-            $charactersNumber = strlen($characters);
-            $codeLength = 16;
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        $charactersNumber = strlen($characters);
+        $codeLength = 16;
 
-            $code = '';
+        $code = '';
 
-            while (strlen($code) < $codeLength) {
-                $position = rand(0, $charactersNumber - 1);
-                $character = $characters[$position];
-                $code = $code . $character;
-            }
+        while (strlen($code) < $codeLength) {
+            $position = rand(0, $charactersNumber - 1);
+            $character = $characters[$position];
+            $code = $code . $character;
+        }
 
-            return $code;
+        return $code;
     }
 }

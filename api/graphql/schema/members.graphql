@@ -50,6 +50,7 @@ type Members {
     backup_codes: JSON
     "Подписывать или нет транзакцию"
     is_sign_transaction: Boolean
+    ip_address: String
 }
 
 extend type Query @guard {
@@ -171,6 +172,8 @@ extend type Mutation  {
         is_show_owner_applicants: Boolean
         "Подписывать или нет транзакцию"
         is_sign_transaction: Boolean
+        "ip_address"
+        ip_address: String
     ): Members   @field(resolver: "MembersMutator@update")
 
     """
