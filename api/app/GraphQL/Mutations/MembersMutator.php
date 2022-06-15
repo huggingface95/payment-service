@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
+use App\Models\ClientIpAddress;
 use App\Models\DepartmentPosition;
 use App\Models\GroupRole;
 use App\Models\Members;
@@ -81,11 +82,13 @@ class MembersMutator extends BaseMutator
             if (!$valid_ip) {
                 throw new GraphqlException('Not a valid ip address',"internal",403);
             }
-            $user = DB::select("SELECT client_id FROM client_ip_address WHERE id = ".$member->id);
+            $user = ClientIpAddress::where('client_id', $member->id)->first();
             if ($user) {
-                DB::update("UPDATE client_ip_address SET ip_address = ? WHERE client_id = ?", [$args['ip_address'], $member->id]);
+                $user->ip_address = $args['ip_address'];
+                $user->update();
             } else {
-               DB::insert("INSERT INTO client_ip_address VALUES (ip_address, client_id) VALUES (?, ?)",[$args['ip_address'],$member->id ]);
+                $insertIp = new ClientIpAddress(['ip_address' => $args['ip_address'], 'client_id' => $member->id]);
+                $insertIp->save();
             }
         }
 

@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientIpAddress;
 use App\Models\Members;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +37,7 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
-        $get_ip_address = DB::select("SELECT ip_address FROM client_ip_address WHERE id = ".$user->id);
+        $get_ip_address = ClientIpAddress::select()->where('client_id', $user->id)->get();
         if ($get_ip_address) {
             $ip_address = explode(',', $get_ip_address[0]->ip_address);
             if(!in_array( $_SERVER['REMOTE_ADDR'], $ip_address)){
