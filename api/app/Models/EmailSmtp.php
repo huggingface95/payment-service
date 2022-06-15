@@ -38,7 +38,7 @@ class EmailSmtp extends BaseModel
      * @var array
      */
     protected $fillable = [
-       'email_setting_id', 'member_id', 'security', 'company_id','host_name', 'from_name', 'from_email', 'username', 'password', 'replay_to', 'port','is_sending_mail'
+       'name', 'member_id', 'security', 'company_id','host_name', 'from_name', 'from_email', 'username', 'password', 'replay_to', 'port','is_sending_mail'
     ];
 
     public static function getSecurities(): array
@@ -60,9 +60,5 @@ class EmailSmtp extends BaseModel
         return $this->belongsTo(Companies::class, 'company_id');
     }
 
-    public function emailSetting(): BelongsTo
-    {
-        return $this->belongsTo(EmailSetting::class, 'email_setting_id');
-    }
 
 }

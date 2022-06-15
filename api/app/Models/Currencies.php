@@ -3,6 +3,10 @@
 namespace App\Models;
 
 
+/**
+ * @property string name
+ * @property string code
+ */
 class Currencies extends BaseModel
 {
 

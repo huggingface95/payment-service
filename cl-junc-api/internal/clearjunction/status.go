@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func (cj *ClearJunction) GetPaymentStatus(typeId db.TypeDb, clientOrder string) (result *models.PayInPayoutStatusResponse, err error) {
+func (cj *ClearJunction) GetPaymentStatus(typeId db.OperationTypeDb, clientOrder string) (result *models.PayInPayoutStatusResponse, err error) {
 	var name = "payout"
 
 	if typeId == db.INCOMING {

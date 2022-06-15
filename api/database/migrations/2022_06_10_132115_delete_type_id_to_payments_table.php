@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmailSettingTable extends Migration
+class DeleteTypeIdToPaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateEmailSettingTable extends Migration
      */
     public function up()
     {
-        Schema::create('email_settings', function (Blueprint $table) {
-            $table->id();
-            $table->string('name',255);
+        Schema::table('payments', function (Blueprint $table) {
+            $table->dropColumn('type_id');
         });
     }
 
@@ -26,6 +25,8 @@ class CreateEmailSettingTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('email_setting');
+        Schema::table('payments', function (Blueprint $table) {
+            $table->unsignedBigInteger('type_id');
+        });
     }
 }

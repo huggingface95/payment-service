@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 
@@ -13,12 +14,14 @@ use Illuminate\Support\Carbon;
  * @property string name
  * @property int price_list_id
  * @property int type
- * @property int operation_type
+ * @property int operation_type_id
  * @property int period
  * @property object fee
  * @property Carbon created_at
  * @property Carbon updated_at
+ * @property int type_id
  *
+ * @method static findOrFail()
  */
 class PriceListFee extends BaseModel
 {
@@ -59,22 +62,22 @@ class PriceListFee extends BaseModel
         return $this->belongsTo(CommissionPriceList::class, 'price_list_id');
     }
 
-    public function fees()
+    public function fees(): HasMany
     {
         return $this->hasMany(PriceListFeesItem::class,'price_list_fees_id');
     }
 
-    public function operationType()
+    public function operationType(): BelongsTo
     {
         return $this->belongsTo(OperationType::class, 'operation_type_id');
     }
 
-    public function feePeriod()
+    public function feePeriod(): BelongsTo
     {
         return $this->belongsTo(FeePeriod::class, 'period_id');
     }
 
-    public function feeType()
+    public function feeType(): BelongsTo
     {
         return $this->belongsTo(FeeType::class, 'type_id');
     }

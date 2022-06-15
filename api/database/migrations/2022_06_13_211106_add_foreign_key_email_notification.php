@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeColumnEmailSmtp extends Migration
+class AddForeignKeyEmailNotification extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class ChangeColumnEmailSmtp extends Migration
      */
     public function up()
     {
-        Schema::table('email_smtps', function (Blueprint $table) {
-            $table->dropForeign(['email_template_id']);
-            $table->dropColumn('email_template_id');
+        Schema::table('email_notifications', function (Blueprint $table) {
+            $table->foreign('group_role_id')->references('id')->on('group_role')->onUpdate('cascade');
         });
     }
 
@@ -26,6 +25,8 @@ class ChangeColumnEmailSmtp extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('email_notifications', function (Blueprint $table) {
+            $table->dropForeign(['group_role_id']);
+        });
     }
 }

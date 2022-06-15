@@ -1,4 +1,4 @@
-union Clientable = ApplicantIndividual | ApplicantCompany | GroupRole | Members
+union Clientable = ApplicantIndividual | ApplicantCompany | Members
 """
 Шаблоны электронной почты
 Banking-> Email Notifications
@@ -10,15 +10,15 @@ type EmailNotification {
     "Тип получателя"
     recipient_type: RecipientType
     "Тип Группы"
-    group_type: GroupType
+    group_type: Groups @belongsTo(relation: "groupType")
     "Получить templates"
     templates: [EmailTemplate] @belongsToMany(relation: "templates")
-    "Получить клиента ApplicantIndividual | ApplicantCompany | GroupRole | Members"
+    "Получить клиента ApplicantIndividual | ApplicantCompany | Members"
     clientable: Clientable @morphTo
-    "Ид компании"
-    company_id: Int
     "Получить компанию"
     company: Companies @belongsTo(relation: "company")
+    "Получить Group Role"
+    group_role: GroupRole @belongsTo(relation: "groupRole")
     created_at: DateTime
     updated_at: DateTime
 }
@@ -26,11 +26,12 @@ type EmailNotification {
 extend type Query @guard {
     "Получить email notification"
     emailNotification(
-        company_id: Int! @eq
-        type: NotifyType! @eq
-        recipient_type: RecipientType @eq
-        group_type: GroupType @eq
-    ): EmailNotification   @find
+        company_id: ID! @eq
+        group_role_id: ID! @eq
+        group_type_id: ID! @eq
+        client_id: ID @eq
+        #hasClientable: _ @whereHasConditions(columns: ["id"], handler: "App\\GraphQL\\Handlers\\EmailNotificationClientableHandler"),
+    ): EmailNotification @field(resolver:"EmailNotificationQuery@get")
     """
     Получить список email notification
     orderBy: [
@@ -43,6 +44,7 @@ extend type Query @guard {
         hasApplicantCompany: _ @whereHasConditions(columns: ["id", "name"]),
         hasGroupRole: _ @whereHasConditions(columns: ["id", "name"]),
         hasMember: _ @whereHasConditions(columns: ["id", "fullname"]),
+        hasGroupType: _ @whereHasConditions(columns: ["id", "name"]),
         hasTemplates: _ @whereHasConditions(columns: ["subject"]),
         created_at: DateRange @whereBetween,
         where: _ @whereConditions(columns: ["type", "company_id", "recipient_type", "group_type"]),
@@ -62,25 +64,18 @@ enum RecipientType {
     GROUP @enum(value: "group")
 }
 
-enum GroupType {
-    INDIVIDUAL @enum(value: "Individual")
-    COMPANY @enum(value: "Company")
-    MEMBER @enum(value: "Member")
-}
 
 extend type Mutation @guard {
     "Создать электронную почту"
     createEmailNotification(
-        "Тип"
-        type: NotifyType!
-        "Тип получателя"
-        recipient_type: RecipientType!
         "Тип Группы"
         group_type_id: ID!
+        "Тип Group Role"
+        group_role_id: ID!
         "ID компании"
-        company_id: Int!
+        company_id: ID!
         "ID клиента тип унион"
-        client_id: Int!
+        client_id: Int
         "ID email templates"
         templates: [Int]!
     ): EmailNotification   @field(resolver:"EmailNotificationMutator@create")
@@ -88,19 +83,17 @@ extend type Mutation @guard {
     "Обновить данные компании"
     updateEmailNotification(
         id: ID!
-        "Тип"
-        type: NotifyType!
-        "Тип получателя"
-        recipient_type: RecipientType!
         "Тип Группы"
         group_type_id: ID!
+        "Тип Group Role"
+        group_role_id: ID!
         "ID компании"
-        company_id: Int
+        company_id: ID
         "ID клиента тип унион"
-        client_id: Int!
+        client_id: Int
         "ID email templates"
         templates: [Int]
-    ): EmailNotification   @field(resolver:"EmailNotificationMutator@update")
+    ): EmailNotification  @field(resolver:"EmailNotificationMutator@update")
 
     "Удалить запись"
     deleteEmailNotification(

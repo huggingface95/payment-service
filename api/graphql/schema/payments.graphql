@@ -35,7 +35,7 @@ type Payments {
     "Получить связанныую срочность"
     payment_urgency: PaymentUrgency @belongsTo(relation:"PaymentUrgency")
     "Получить связанный тип"
-    payment_type: PaymentTypes @belongsTo(relation:"PaymentTypes")
+    payment_operation_type: OperationType @belongsTo(relation:"PaymentOperation")
     "Получить связанный провайдер"
     payment_provider: PaymentProvider @belongsTo(relation:"PaymentProvider")
     "Получить связанный аккаунт"
@@ -49,7 +49,7 @@ type Payments {
     "Получить связанного мембера"
     member: Members @belongsTo(relation: "member")
     "Получить владельца"
-    owner: [ApplicantIndividual] @belongsToMany(relation: "owner")
+    owner: [ApplicantIndividual] @belongsToMany(relation: "applicantIndividual")
     #    "Получить компанию ownera"
     #    company: [ApplicantCompany] @belongsToMany(relation: "company")
     received_at: DateTime
@@ -80,7 +80,7 @@ extend type Query @guard {
         hasPaymentProvider: _ @whereHasConditions(columns: ["name"]),
         hasAccounts: _ @whereHasConditions(columns: ["account_id"]),
         hasOwner: _ @whereHasConditions(columns: ["fullname"]),
-        hasPaymentTypes: _ @whereHasConditions(columns: ["name"]),
+        hasPaymentOperation: _ @whereHasConditions(columns: ["name"]),
         hasPaymentUrgency: _ @whereHasConditions(columns: ["name"]),
         hasPaymentStatus: _ @whereHasConditions(columns: ["name"]),
         AccountNumber: Sort @scope(name:"AccountNumber"),
@@ -113,13 +113,13 @@ extend type Mutation @guard {
         "Аккаунт банка отправителя"
         sender_bank_account: String!
         "SWIFT отправителя"
-        sender_swift: String
+        sender_swift: String!
         "Имя банка отправителя"
         sender_bank_name: String!
         "Страна банка отправителя"
-        sender_bank_country: ID
+        sender_bank_country: ID!
         "Адрес банка отправителя"
-        sender_bank_address: String
+        sender_bank_address: String!
         "Страна отправителя"
         sender_country_id: ID
         "Адрес отправителя"
@@ -127,13 +127,15 @@ extend type Mutation @guard {
         "Срочность"
         urgency_id: ID!
         "Тип"
-        type_id: ID!
+        operation_type_id: ID!
         "Платежный ровайдер"
         payment_provider_id: ID!
         "Аккаунт"
         account_id: ID!
         "Компания"
         company_id: ID!
+        "Кто делает пеймент"
+        owner_id: ID!
         "Номер платежа"
         payment_number: String!
         "Error"
@@ -175,7 +177,7 @@ extend type Mutation @guard {
         "Срочность"
         urgency_id: ID!
         "Тип"
-        type_id: ID!
+        operation_type_id: ID!
         "Платежный ровайдер"
         payment_provider_id: ID
         "Аккаунт"
