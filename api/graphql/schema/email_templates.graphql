@@ -103,7 +103,7 @@ extend type Mutation @guard {
         id: ID!
     ): EmailTemplate   @delete
 
-    sendEmailWithData(
+    sendEmailWithTemplate(
         "почта"
         email: String!
         "Company Id"
@@ -112,7 +112,11 @@ extend type Mutation @guard {
         subject: String!
         "Content"
         content: String
-    ):EmailTemplate @field(resolver: "EmailTemplateMutator@sendEmailWithData")
+        "Header электронной почты"
+        header: String
+        "Footer электронной почты"
+        footer: String
+    ):StatusType @field(resolver: "EmailTemplateMutator@sendEmailWithData")
 }
 
 
