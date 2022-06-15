@@ -102,6 +102,17 @@ extend type Mutation @guard {
     deleteEmailTemplate(
         id: ID!
     ): EmailTemplate   @delete
+
+    sendEmailWithData(
+        "почта"
+        email: String!
+        "Company Id"
+        company_id: ID!
+        "Subject"
+        subject: String!
+        "Content"
+        content: String
+    ):EmailTemplate @field(resolver: "EmailTemplateMutator@sendEmailWithData")
 }
 
 
