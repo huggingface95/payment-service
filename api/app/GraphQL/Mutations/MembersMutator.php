@@ -7,6 +7,7 @@ use App\Models\DepartmentPosition;
 use App\Models\GroupRole;
 use App\Models\Members;
 use GraphQL\Exception\InvalidArgument;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -72,6 +73,20 @@ class MembersMutator extends BaseMutator
             }
 
             $member->department_position_id = $args['department_position'];
+        }
+
+        if(isset($args['ip_address']))
+        {
+            $valid_ip = preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:,\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})*$/', $args['ip_address']);
+            if (!$valid_ip) {
+                throw new GraphqlException('Not a valid ip address',"internal",403);
+            }
+            $user = DB::select("SELECT client_id FROM client_ip_address WHERE id = ".$member->id);
+            if ($user) {
+                DB::update("UPDATE client_ip_address SET ip_address = ? WHERE client_id = ?", [$args['ip_address'], $member->id]);
+            } else {
+               DB::insert("INSERT INTO client_ip_address VALUES (ip_address, client_id) VALUES (?, ?)",[$args['ip_address'],$member->id ]);
+            }
         }
 
         $member->update($args);

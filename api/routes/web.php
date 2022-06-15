@@ -26,7 +26,6 @@ $router->group([
     $router->post('2fadisable', 'AuthController@disable2FA');
     $router->get('2facodes', 'AuthController@generateBackupCodes');
     $router->post('2facodes', 'AuthController@storeBackupCodes');
-    $router->post('ip', 'AuthController@storeIpAddress');
 });
 
 

@@ -36,8 +36,9 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
-        if ($user->ip_address) {
-            $ip_address = explode(',', $user->ip_address);
+        $get_ip_address = DB::select("SELECT ip_address FROM client_ip_address WHERE id = ".$user->id);
+        if ($get_ip_address) {
+            $ip_address = explode(',', $get_ip_address[0]->ip_address);
             if(!in_array( $_SERVER['REMOTE_ADDR'], $ip_address)){
                 return response()->json(['error' => 'Access denied'], 403);
             }
@@ -245,30 +246,6 @@ class AuthController extends Controller
             }
         }
         $user->backup_codes = $request->backup_codes;
-        $user->save();
-
-        return response()->json(['data' => 'Backup Codes stored success for user id '.$user->id]);
-
-    }
-
-    public function storeIpAddress(Request $request)
-    {
-        $this->validate($request, [
-            'ip_address' => 'required'
-        ]);
-
-        $user = auth()->user();
-        if ($request->member_id) {
-            $user = Members::find($request->member_id);
-            if (!$user){
-                return response()->json(['data' => 'Member not found']);
-            }
-        }
-        $valid_ip = preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:,\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})*$/', $request->ip_address);
-        if (!$valid_ip) {
-            return response()->json(['data' => 'Not a valid ip address'], 403);
-        }
-        $user->ip_address = $request->ip_address;
         $user->save();
 
         return response()->json(['data' => 'Backup Codes stored success for user id '.$user->id]);
