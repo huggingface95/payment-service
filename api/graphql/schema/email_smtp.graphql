@@ -126,5 +126,5 @@ extend type Mutation @guard {
         port: Int!
         "e-mail"
         email: String!
-    ):EmailSmtp @field(resolver: "EmailSmtpMutator@sendEmail")
+    ):StatusType @field(resolver: "EmailSmtpMutator@sendEmail")
 }

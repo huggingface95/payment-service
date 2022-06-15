@@ -17,6 +17,11 @@ type ApplicantModules {
     name: String !
 }
 
+type StatusType {
+    status: String!
+    message: String
+}
+
 input DateRange {
     from: Date!
     to: DateEnd!

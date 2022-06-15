@@ -65,5 +65,6 @@ class EmailSmtpMutator
         $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, "Testnaaaaaa", "Subjectnaaaaa");
         $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
         dispatch(new SendMailJob($config, $data));
+        return ['status'=>'OK', "message"=>"Email sent for processing"];
     }
 }
