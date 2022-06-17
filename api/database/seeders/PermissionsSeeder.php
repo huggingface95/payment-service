@@ -4313,7 +4313,20 @@ class PermissionsSeeder extends Seeder
             [
                 'name' => 'GetCompanyById',
                 'referer' => 'administration/company/full-profile/profile/business-information',
-                'binds' => ['Member Company Profile.Read', 'Member Company Profile.Edit'],
+                'binds' => ['Member Company Profile.Business Info'],
+                'parents' => ['Member Company Profile.Read', 'Member Company Profile.Edit'],
+            ],
+            [
+                'name' => 'GetCompanyById',
+                'referer' => 'administration/company/full-profile/profile/departments',
+                'binds' => ['Member Company Profile.Departments'],
+                'parents' => ['Member Company Profile.Read', 'Member Company Profile.Edit'],
+            ],
+            [
+                'name' => 'GetCompanyById',
+                'referer' => 'administration/company/full-profile/profile/branding',
+                'binds' => ['Member Company Profile.Branding'],
+                'parents' => ['Member Company Profile.Read', 'Member Company Profile.Edit'],
             ],
             [
                 'name' => 'UpdateMemberCompanyQuery',
@@ -4534,7 +4547,6 @@ class PermissionsSeeder extends Seeder
                 'binds' => ['Groups settings.Read', 'Groups settings.Edit'],
             ],
         ];
-
 
 
         $lists = PermissionsList::where('type', 'member')->get()->pluck('id')->toArray();
