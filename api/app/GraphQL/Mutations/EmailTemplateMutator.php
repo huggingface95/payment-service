@@ -32,14 +32,14 @@ class EmailTemplateMutator
             /** @var EmailSmtp $smtp */
             $smtp = EmailSmtp::where('member_id', $member->id)->where('company_id', $args['company_id'])->first();
             $smtp->replay_to = $args['email'];
-            $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, $args['content'] ?? '', $args['subject']);
+            $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, (isset($args['content'])) ?? ' ', $args['subject']);
             $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
             dispatch(new SendMailJob($config, $data));
 
             return ['status'=>'OK', "message"=>"Email sent for processing"];
         }
         catch (\Throwable $e){
-            return ['status'=>'FAIL',"message"=>$e->getMessage()];
+            throw new GraphqlException($e->getMessage(),"Internal",$e->getCode());
         }
 
     }
