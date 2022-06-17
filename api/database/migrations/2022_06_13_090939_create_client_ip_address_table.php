@@ -19,7 +19,7 @@ class CreateClientIpAddressTable extends Migration
         Schema::create('client_ip_address', function (Blueprint $table) {
             $table->id();
             $table->text('ip_address')->nullable();
-            $table->unsignedBigInteger('client_id')->unique();
+            $table->unsignedBigInteger('client_id');
             $table->enum('client_type', [ApplicantIndividual::class, ApplicantCompany::class])->default(ApplicantCompany::class);
         });
     }

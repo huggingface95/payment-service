@@ -37,10 +37,9 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
-        $get_ip_address = ClientIpAddress::select()->where('client_id', $user->id)->get();
+        $get_ip_address = ClientIpAddress::select()->where('client_id', $user->id)->pluck('ip_address')->toArray();
         if ($get_ip_address) {
-            $ip_address = explode(',', $get_ip_address[0]->ip_address);
-            if(!in_array( $_SERVER['REMOTE_ADDR'], $ip_address)){
+            if(!in_array(request()->ip(), $get_ip_address)){
                 return response()->json(['error' => 'Access denied'], 403);
             }
         }

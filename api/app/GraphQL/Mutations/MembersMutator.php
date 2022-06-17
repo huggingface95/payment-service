@@ -78,17 +78,28 @@ class MembersMutator extends BaseMutator
 
         if(isset($args['ip_address']))
         {
-            $valid_ip = preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(?:,\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})*$/', $args['ip_address']);
-            if (!$valid_ip) {
-                throw new GraphqlException('Not a valid ip address',"internal",403);
+            $ip_address = str_replace(' ', '', explode(',', $args['ip_address']));
+            for ($i=0; $i < count($ip_address); $i++) {
+                if (!filter_var($ip_address[$i], FILTER_VALIDATE_IP)) {
+                    throw new GraphqlException('Not a valid ip address. Addresses mast be comma separated', "internal", 403);
+                }
             }
-            $user = ClientIpAddress::where('client_id', $member->id)->first();
+            $user = ClientIpAddress::where('client_id', $member->id)->get();
             if ($user) {
-                $user->ip_address = $args['ip_address'];
-                $user->update();
+                $user->each->delete();
+                for ($i=0; $i < count($ip_address); $i++) {
+                    $newIp = new ClientIpAddress();
+                    $newIp->ip_address = $ip_address[$i];
+                    $newIp->client_id = $member->id;
+                    $newIp->save();
+                }
             } else {
-                $insertIp = new ClientIpAddress(['ip_address' => $args['ip_address'], 'client_id' => $member->id]);
-                $insertIp->save();
+                for ($i=0; $i < count($ip_address); $i++) {
+                    $newIp = new ClientIpAddress();
+                    $newIp->ip_address = $ip_address[$i];
+                    $newIp->client_id = $member->id;
+                    $newIp->save();
+                }
             }
         }
 
