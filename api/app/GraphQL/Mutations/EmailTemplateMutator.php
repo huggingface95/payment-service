@@ -31,6 +31,9 @@ class EmailTemplateMutator
 
             /** @var EmailSmtp $smtp */
             $smtp = EmailSmtp::where('member_id', $member->id)->where('company_id', $args['company_id'])->first();
+            if (!$smtp) {
+                throw new GraphqlException("SMTP configuration for this company not found","Not found","404");
+            }
             $smtp->replay_to = $args['email'];
             $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, (isset($args['content'])) ?? ' ', $args['subject']);
             $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
