@@ -4537,6 +4537,10 @@ class PermissionsSeeder extends Seeder
                 'referer' => null,
             ],
             [
+                'name' => 'GetFilterFieldsTableData',
+                'referer' => null,
+            ],
+            [
                 'name' => 'GetManagerRole',
                 'referer' => 'settings/manager-roles/edit',
                 'binds' => ['Roles settings.Read', 'Roles settings.Edit'],
@@ -4545,6 +4549,32 @@ class PermissionsSeeder extends Seeder
                 'name' => 'GetGroups',
                 'referer' => 'settings/manager-groups/settings',
                 'binds' => ['Groups settings.Read', 'Groups settings.Edit'],
+            ],
+            [
+                'name' => 'GetMemberFullName',
+                'referer' => 'administration/members/full-profile/profile/security',
+                'binds' => ['Member: Security.Edit', 'Member: Security.Read'],
+            ],
+            [
+                'name' => 'GetMemberCoverData',
+                'referer' => 'administration/members/full-profile/profile/security',
+                'binds' => ['Member: Security.Edit', 'Member: Security.Read'],
+            ],
+            [
+                'name' => 'GetMemberInfoForm',
+                'referer' => 'administration/members/full-profile/profile/security',
+                'binds' => ['Member: Security.Edit', 'Member: Security.Read'],
+            ],
+            [
+                'name' => 'GetFilterFieldsProfileData',
+                'referer' => 'administration/members/full-profile/profile/security',
+                'binds' => ['Member: Security.Edit', 'Member: Security.Read'],
+            ],
+            [
+                'name' => 'UpdateMemberQuery',
+                'referer' => 'administration/members/full-profile/profile/security',
+                'binds' => ['Member: Security.Security Settings'],
+                'parents' => ['Member: Security.Edit'],
             ],
         ];
 
