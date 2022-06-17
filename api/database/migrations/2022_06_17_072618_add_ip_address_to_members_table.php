@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCommissionTemplateLimitTransferDirectionTable extends Migration
+class AddIpAddressToMembersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateCommissionTemplateLimitTransferDirectionTable extends Migration
      */
     public function up()
     {
-        Schema::create('commission_template_limit_transfer_direction', function (Blueprint $table) {
-            $table->id();
-            $table->string('name',255);
+        Schema::table('members', function (Blueprint $table) {
+            $table->text('ip_address')->nullable();
         });
     }
 
@@ -26,6 +25,8 @@ class CreateCommissionTemplateLimitTransferDirectionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('commission_template_limit_transfer_direction');
+        Schema::table('members', function (Blueprint $table) {
+            $table->dropColumn('ip_address');
+        });
     }
 }
