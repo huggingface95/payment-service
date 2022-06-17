@@ -81,7 +81,7 @@ class MembersMutator extends BaseMutator
             $ip_address = str_replace(' ', '', explode(',', $args['ip_address']));
             for ($i=0; $i < count($ip_address); $i++) {
                 if (!filter_var($ip_address[$i], FILTER_VALIDATE_IP)) {
-                    throw new GraphqlException('Not a valid ip address. Addresses mast be comma separated', "internal", 403);
+                    throw new GraphqlException('Not a valid ip address. Address format xxx.xxx.xxx.xxx and must be comma separated', "internal", 403);
                 }
             }
             $user = ClientIpAddress::where('client_id', $member->id)->get();
