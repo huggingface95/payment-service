@@ -39,7 +39,7 @@ class EmailTemplateMutator
             return ['status'=>'OK', "message"=>"Email sent for processing"];
         }
         catch (\Throwable $e){
-            throw new GraphqlException($e->getMessage(),"Internal",$e->getCode());
+            return ['status'=>'FAIL',"message"=>$e->getMessage()];
         }
 
     }
