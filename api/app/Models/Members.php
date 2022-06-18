@@ -234,4 +234,9 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     {
         return $this->hasMany(ApplicantCompany::class, 'account_manager_member_id');
     }
+
+    public function scopeCompanySort($query, $sort)
+    {
+        return $query->join('companies','companies.id','=','members.company_id')->orderBy('companies.name',$sort)->select('members.*');
+    }
 }

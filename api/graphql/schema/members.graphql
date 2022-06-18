@@ -50,6 +50,7 @@ type Members {
     backup_codes: JSON
     "Подписывать или нет транзакцию"
     is_sign_transaction: Boolean
+    ip_address: String
 }
 
 extend type Query @guard {
@@ -65,6 +66,7 @@ extend type Query @guard {
         hasDepartment: _ @whereHasConditions(columns: ["department_id"]),
         hasGroupRole: _ @whereHasConditions(columns: ["group_type_id","role_id","id"]),
         where: _ @whereConditions(columnsEnum: "MembersColumn"),
+        companyName: Sort @scope(name:"CompanyNameSort"),
         orderBy: _ @orderBy(columns: ["id","email","last_login_at","is_active"],
     )): [Members!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -171,6 +173,8 @@ extend type Mutation  {
         is_show_owner_applicants: Boolean
         "Подписывать или нет транзакцию"
         is_sign_transaction: Boolean
+        "ip_address"
+        ip_address: String
     ): Members   @field(resolver: "MembersMutator@update")
 
     """

@@ -3,10 +3,12 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
+use App\Models\ClientIpAddress;
 use App\Models\DepartmentPosition;
 use App\Models\GroupRole;
 use App\Models\Members;
 use GraphQL\Exception\InvalidArgument;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -72,6 +74,33 @@ class MembersMutator extends BaseMutator
             }
 
             $member->department_position_id = $args['department_position'];
+        }
+
+        if(isset($args['ip_address']))
+        {
+            $ip_address = str_replace(' ', '', explode(',', $args['ip_address']));
+            for ($i=0; $i < count($ip_address); $i++) {
+                if (!filter_var($ip_address[$i], FILTER_VALIDATE_IP)) {
+                    throw new GraphqlException('Not a valid ip address. Address format xxx.xxx.xxx.xxx and must be comma separated', "internal", 403);
+                }
+            }
+            $user = ClientIpAddress::where('client_id', $member->id)->get();
+            if ($user) {
+                $user->each->delete();
+                for ($i=0; $i < count($ip_address); $i++) {
+                    $newIp = new ClientIpAddress();
+                    $newIp->ip_address = $ip_address[$i];
+                    $newIp->client_id = $member->id;
+                    $newIp->save();
+                }
+            } else {
+                for ($i=0; $i < count($ip_address); $i++) {
+                    $newIp = new ClientIpAddress();
+                    $newIp->ip_address = $ip_address[$i];
+                    $newIp->client_id = $member->id;
+                    $newIp->save();
+                }
+            }
         }
 
         $member->update($args);

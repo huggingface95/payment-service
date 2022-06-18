@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClientIpAddress;
 use App\Models\Members;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -36,6 +37,12 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
+        $get_ip_address = ClientIpAddress::select()->where('client_id', $user->id)->pluck('ip_address')->toArray();
+        if ($get_ip_address) {
+            if(!in_array(request()->ip(), $get_ip_address)){
+                return response()->json(['error' => 'Access denied'], 403);
+            }
+        }
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
             return $this->respondWithToken2Fa($token);
@@ -247,18 +254,18 @@ class AuthController extends Controller
 
     public function generateUniqueCode()
     {
-            $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-            $charactersNumber = strlen($characters);
-            $codeLength = 16;
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        $charactersNumber = strlen($characters);
+        $codeLength = 16;
 
-            $code = '';
+        $code = '';
 
-            while (strlen($code) < $codeLength) {
-                $position = rand(0, $charactersNumber - 1);
-                $character = $characters[$position];
-                $code = $code . $character;
-            }
+        while (strlen($code) < $codeLength) {
+            $position = rand(0, $charactersNumber - 1);
+            $character = $characters[$position];
+            $code = $code . $character;
+        }
 
-            return $code;
+        return $code;
     }
 }
