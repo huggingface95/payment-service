@@ -118,19 +118,24 @@ class Accounts extends BaseModel
         return $this->hasOne(AccountIndividualCompany::class, 'account_id', 'id');
     }
 
-    public function clientable(string $type = null): \Ankurk91\Eloquent\Relations\MorphToOne
+    public function clientable(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
         /** @var Accounts $model */
         try {
-            $model = self::$clone;}
+            $model = self::$clone;
+        }
         catch (\Error $ex){$model = $this;}
 
-        $clientType = $model->accountIndividualCompany->client_type ?? null;
 
-        if (in_array(ApplicantIndividual::class, [$clientType, $type])){
+        if ($this->account_type === Accounts::BUSINESS)
+        {
+            return $this->applicantCompany();
+        } else
+        {
             return $this->applicantIndividual();
         }
-        return $this->applicantCompany();
+
+
     }
 
     public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
@@ -157,4 +162,5 @@ class Accounts extends BaseModel
     {
         return $this->belongsTo(AccountState::class,'account_state_id');
     }
+
 }
