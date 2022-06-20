@@ -26,6 +26,9 @@ class Accounts extends BaseModel
 
     use MorphToOne;
 
+    const PRIVATE = "Private";
+    const BUSINESS =   "Business";
+
     public $timestamps = false;
 
     protected $table = "accounts";
@@ -35,7 +38,7 @@ class Accounts extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'currency_id', 'owner_id', 'account_number', 'account_type', 'payment_provider_id', 'commission_template_id', 'account_state', 'account_name', 'is_primary', 'current_balance', 'reserved_balance', 'available_balance', 'order_reference'
+        'currency_id', 'owner_id', 'account_number', 'account_type', 'payment_provider_id', 'commission_template_id', 'account_state_id', 'account_name', 'is_primary', 'current_balance', 'reserved_balance', 'available_balance', 'order_reference'
     ];
 
     public static self $clone;
@@ -148,5 +151,10 @@ class Accounts extends BaseModel
     public function reachedLimits(): HasMany
     {
         return $this->hasMany(AccountReachedLimit::class, 'account_id');
+    }
+
+    public function accountState(): BelongsTo
+    {
+        return $this->belongsTo(AccountState::class,'account_state_id');
     }
 }

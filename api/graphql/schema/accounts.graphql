@@ -5,13 +5,13 @@ Banking -> Accounts -> Accounts List
 type Accounts {
     id: ID!
     "Получить связанный код валюты"
-    currency_id: Currencies @belongsTo(relation:"currencies")
+    currency: Currencies @belongsTo(relation:"currencies")
     "Получить связанного владельца"
-    owner_id: Members @belongsTo(relation:"members")
+    owner: Members @belongsTo(relation:"members")
     "Номер аккаунта"
     account_number: String!
     "Тип аккаунта"
-    account_type: String!
+    account_type: AccountType
     "Получить связанного платежного провайдера"
     payment_provider_id: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Получить связанного Пеймент систем"
@@ -23,7 +23,7 @@ type Accounts {
     "Получить или индивидуала или компании"
     client: ApplicantIndividual!
     "Состояние аккаунта"
-    account_state: String!
+    account_state: AccountState @belongsTo(relation:"accountState")
     "Имя аккаунта"
     account_name: String!
     "Основной или нет"
@@ -37,6 +37,14 @@ type Accounts {
     created_at: DateTime
     updated_at: DateTime
     activated_at : DateTime
+}
+type AccountState {
+    id: ID!
+    name: String!
+}
+enum AccountType {
+    Private @enum(value: "Private")
+    Business @enum(value: "Business")
 }
 
 extend type Query @guard {
@@ -53,74 +61,39 @@ extend type Query @guard {
     ): [Accounts!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
+input InputAccount{
+    "ID валюты"
+    currency_id: ID!
+    "ID аппликанта"
+    client_id: ID!
+    "ID владельца"
+    owner_id: ID!
+    "Номер аккаунта"
+    account_number: String!
+    "Тип аккаунта"
+    account_type: AccountType!
+    "ID провайдера"
+    payment_provider_id: ID!
+    "ID шаблона комиссии"
+    commission_template_id: ID!
+    "Состояние аккаунта"
+    account_state_id: ID!
+    "Имя аккаунта"
+    account_name: String!
+    "Основной или нет"
+    is_primary: Boolean
+}
+
 extend type Mutation @guard {
     "Создать аккаунт"
     createAccount(
-        "ID валюты"
-        currency_id: ID!
-        "ID аппликанта"
-        client_id: ID!
-        "Имя аппликанта"
-        client_type: String!
-        "ID владельца"
-        owner_id: ID!
-        "Номер аккаунта"
-        account_number: String!
-        "Тип аккаунта"
-        account_type: String!
-        "ID провайдера"
-        payment_provider_id: ID!
-        "ID шаблона комиссии"
-        commission_template_id: ID!
-        "Состояние аккаунта"
-        account_state: String!
-        "Имя аккаунта"
-        account_name: String!
-        "Основной или нет"
-        is_primary: Boolean!
-        "Текущий баланс"
-        current_balance: Int
-        "Текущий баланс"
-        reserved_balance: Int
-        "Текущий баланс"
-        available_balance: Int
-        created_at: DateTime
-        updated_at: DateTime
-        activated_at : DateTime
+        input: InputAccount!
     ):Accounts @field(resolver:"AccountMutator@create")
 
     "Редактирование аккаунта"
     updateAccount(
         id: ID!
-        "ID валюты"
-        currency_id: ID!
-        "ID аппликанта"
-        client_id: ID!
-        "Имя аппликанта"
-        client_type: String!
-        "ID владельца"
-        owner_id: ID!
-        "Тип аккаунта"
-        account_type: String!
-        "ID провайдера"
-        payment_provider_id: ID!
-        "ID шаблона комиссии"
-        commission_template_id: ID!
-        "Состояние аккаунта"
-        account_state: String!
-        "Имя аккаунта"
-        account_name: String!
-        "Основной или нет"
-        is_primary: Boolean!
-        "Текущий баланс"
-        current_balance: Int
-        "Текущий баланс"
-        reserved_balance: Int
-        "Текущий баланс"
-        available_balance: Int
-        created_at: DateTime
-        updated_at: DateTime
-        activated_at : DateTime
+        input: InputAccount!
     ): Accounts   @field(resolver:"AccountMutator@update")
 
     "Удалить аккаунт"

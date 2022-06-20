@@ -12,11 +12,11 @@ class AccountMutator
     public function create($root, array $args)
     {
         /** @var Accounts $account */
-        $account = Accounts::create($args);
-        if ($args['client_type'] == Groups::INDIVIDUAL)
-            $account->applicantIndividual()->attach([$args['client_id']]);
-        elseif ($args['client_type'] == Groups::COMPANY)
-            $account->applicantCompany()->attach([$args['client_id']]);
+        $account = Accounts::create($args['input']);
+        if ($args['input']['account_type'] == Accounts::PRIVATE)
+            $account->applicantIndividual()->attach([$args['input']['client_id']]);
+        elseif ($args['input']['account_type'] == Accounts::BUSINESS)
+            $account->applicantCompany()->attach([$args['input']['client_id']]);
 
         return $account;
     }
@@ -25,10 +25,10 @@ class AccountMutator
     {
         /** @var Accounts $account */
         $account = Accounts::find($args['id']);
-        if ($args['client_type'] == Groups::INDIVIDUAL)
-            $account->applicantIndividual()->detach([$args['client_id']]);
-        elseif ($args['client_type'] == Groups::COMPANY)
-            $account->applicantCompany()->detach([$args['client_id']]);
+        if ($args['input']['account_type'] == Accounts::PRIVATE)
+            $account->applicantIndividual()->detach([$args['input']['client_id']]);
+        elseif ($args['input']['account_type'] == Accounts::BUSINESS)
+            $account->applicantCompany()->detach([$args['input']['client_id']]);
 
         $account->update($args);
 
