@@ -50,7 +50,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public $password_confirmation;
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'sex', 'is_active', 'company_id', 'country_id', 'language_id', 'two_factor_auth_setting_id', 'password_hash', 'password_salt', 'last_login_at', 'additional_fields', 'additional_info_fields', 'is_show_owner_applicants','is_sign_transaction', 'ip_address'
+        'first_name', 'last_name', 'email', 'sex', 'is_active', 'company_id', 'country_id', 'language_id', 'two_factor_auth_setting_id', 'password_hash', 'password_salt', 'last_login_at', 'additional_fields', 'additional_info_fields', 'is_show_owner_applicants','is_sign_transaction'
     ];
 
     protected $hidden = [
@@ -129,6 +129,11 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function twoFactor(): BelongsTo
     {
         return $this->belongsTo(TwoFactorAuthSettings::class, 'two_factor_auth_setting_id');
+    }
+
+    public function ipAddress()
+    {
+        return $this->hasMany(ClientIpAddress::class, 'client_id');
     }
 
     public function roles()

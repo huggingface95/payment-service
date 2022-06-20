@@ -1,0 +1,15 @@
+"""
+Client ip address
+"""
+type ClientIpAddress {
+    id: ID!
+    "ip_address"
+    ip_address: String
+    "Client type"
+    client_type: String
+    "Client ID"
+    client_id: ID
+}
+
+
+

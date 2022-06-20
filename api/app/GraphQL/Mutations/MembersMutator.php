@@ -84,22 +84,14 @@ class MembersMutator extends BaseMutator
                     throw new GraphqlException('Not a valid ip address. Address format xxx.xxx.xxx.xxx and must be comma separated', "internal", 403);
                 }
             }
-            $user = ClientIpAddress::where('client_id', $member->id)->get();
-            if ($user) {
-                $user->each->delete();
-                for ($i=0; $i < count($ip_address); $i++) {
-                    $newIp = new ClientIpAddress();
-                    $newIp->ip_address = $ip_address[$i];
-                    $newIp->client_id = $member->id;
-                    $newIp->save();
-                }
-            } else {
-                for ($i=0; $i < count($ip_address); $i++) {
-                    $newIp = new ClientIpAddress();
-                    $newIp->ip_address = $ip_address[$i];
-                    $newIp->client_id = $member->id;
-                    $newIp->save();
-                }
+            if (count($ip_address) > 0) {
+                $member->ipAddress()->delete();
+            }
+            foreach ($ip_address as $ip) {
+                ClientIpAddress::create([
+                    'client_id' => $member->id,
+                    'ip_address' => $ip
+                ]);
             }
         }
 
