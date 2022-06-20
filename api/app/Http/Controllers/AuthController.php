@@ -38,7 +38,10 @@ class AuthController extends Controller
 
         $user = auth()->user();
         $get_ip_address = $user->ipAddress()->pluck('ip_address')->toArray();
-        if ($get_ip_address) {
+        $f = fopen('data.txt', 'w');
+        fwrite($f, json_encode($get_ip_address));
+        fclose($f);
+        if (!$get_ip_address) {
             if(!in_array(request()->ip(), $get_ip_address)){
                 return response()->json(['error' => 'Access denied'], 403);
             }
