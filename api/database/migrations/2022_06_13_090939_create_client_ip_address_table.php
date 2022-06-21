@@ -20,7 +20,7 @@ class CreateClientIpAddressTable extends Migration
             $table->id();
             $table->text('ip_address')->nullable();
             $table->unsignedBigInteger('client_id');
-            $table->enum('client_type', [ApplicantIndividual::class, ApplicantCompany::class])->default(ApplicantCompany::class);
+            $table->enum('client_type', [ApplicantIndividual::class, Members::class])->default(Members::class);
         });
     }
 

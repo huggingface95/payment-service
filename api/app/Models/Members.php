@@ -183,6 +183,11 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         return $this->belongsTo(TwoFactorAuthSettings::class, 'two_factor_auth_setting_id');
     }
 
+    public function ipAddress()
+    {
+        return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', 'App\Models\Members');
+    }
+
     public function roles()
     {
         //TODO add functionality

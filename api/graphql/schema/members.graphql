@@ -50,7 +50,8 @@ type Members {
     backup_codes: JSON
     "Подписывать или нет транзакцию"
     is_sign_transaction: Boolean
-    ip_address: String
+    "Member ip address"
+    ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
 }
 
 extend type Query @guard {
