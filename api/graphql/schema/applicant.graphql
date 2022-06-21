@@ -105,9 +105,15 @@ extend type Query @guard {
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
         hasGroupRole: _ @whereHasConditions(columns: ["group_type_id","role_id","id"]),
-        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","group_id","company_id"]), orderBy: _ @orderBy(
-        columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"],
-    )): [ApplicantIndividual!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"),
+        where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","group_id","company_id"]),
+        orderBy: _ @orderBy(columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"])
+    ): [ApplicantIndividual!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+
+    "Вывод списка овнеров для компаний"
+    owners(
+        orderBy: _ @orderBy(columns: ["id","email","created_at","fullname"])
+    ): [ApplicantIndividual!]!  @field(resolver:"ApplicantIndividualQuery@owners") @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {

@@ -65,12 +65,12 @@ class Accounts extends BaseModel
     }
 
     /**
-     * Get relation Member
+     * Get relation Owner
      * @return BelongsTo
      */
-    public function members(): BelongsTo
+    public function owner(): BelongsTo
     {
-        return $this->belongsTo(Members::class, 'owner_id', 'id');
+        return $this->belongsTo(ApplicantIndividual::class, 'owner_id', 'id');
     }
 
     /**
