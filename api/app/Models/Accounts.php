@@ -38,7 +38,20 @@ class Accounts extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'currency_id', 'owner_id', 'account_number', 'account_type', 'payment_provider_id', 'commission_template_id', 'account_state_id', 'account_name', 'is_primary', 'current_balance', 'reserved_balance', 'available_balance', 'order_reference'
+        'currency_id',
+        'owner_id',
+        'account_number',
+        'account_type',
+        'payment_provider_id',
+        'commission_template_id',
+        'account_state_id',
+        'account_name',
+        'is_primary',
+        'current_balance',
+        'reserved_balance',
+        'available_balance',
+        'order_reference',
+        'company_id'
     ];
 
     public static self $clone;
@@ -71,6 +84,15 @@ class Accounts extends BaseModel
     public function owner(): BelongsTo
     {
         return $this->belongsTo(ApplicantIndividual::class, 'owner_id', 'id');
+    }
+
+    /**
+     * Get relation Company
+     * @return BelongsTo
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Companies::class, 'company_id', 'id');
     }
 
     /**

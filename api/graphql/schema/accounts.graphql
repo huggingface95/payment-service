@@ -25,6 +25,8 @@ type Accounts {
     client: Client @morphOne(relation:"clientable")
     "Состояние аккаунта"
     account_state: AccountState @belongsTo(relation:"accountState")
+    "Компания которой принадлежит аккаунт"
+    company: Companies @belongsTo(relation:"company")
     "Имя аккаунта"
     account_name: String!
     "Основной или нет"
