@@ -5,7 +5,7 @@ namespace App\Jobs;
 use App\DTO\Account\IbanRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Models\Accounts;
-use App\Models\AccountStates;
+use App\Models\AccountState;
 use GuzzleHttp\Client;
 
 
@@ -37,7 +37,7 @@ class IbanCompanyActivationJob extends Job
         $response = $client->get('cl-junc-apicore:8080/clearjunction/iban-compnay/check?'.http_build_query(['clientCustomerId' => $this->ibanRequest->id]));
 
         if ($response->getStatusCode() == 200) {
-            $this->account->account_state = AccountStates::WAITING_IBAN_ACTIVATION;
+            $this->account->account_state = AccountState::WAITING_IBAN_ACTIVATION;
             $this->account->save();
         }
     }

@@ -22,7 +22,7 @@ class CreateAccountsTable extends Migration
             $table->enum('account_type', ['Business', 'Private']);
             $table->unsignedBigInteger('payment_provider_id');
             $table->unsignedBigInteger('commission_template_id');
-            $table->unsignedBigInteger('account_state');
+            $table->unsignedBigInteger('account_state_id');
             $table->string('account_name', 255)->unique();
             $table->boolean('is_primary');
             $table->decimal('current_balance',15,5)->default(0);
@@ -35,7 +35,7 @@ class CreateAccountsTable extends Migration
             $table->foreign('owner_id')->references('id')->on('members');
             $table->foreign('payment_provider_id')->references('id')->on('payment_provider');
             $table->foreign('commission_template_id')->references('id')->on('commission_template');
-            $table->foreign('account_state')->references('id')->on('account_states');
+            $table->foreign('account_state_id')->references('id')->on('account_states');
         });
     }
 

@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 
 use App\Jobs\IbanCompanyActivationJob;
 use App\Models\Accounts;
-use App\Models\AccountStates;
+use App\Models\AccountState;
 use Illuminate\Console\Command;
 
 
@@ -40,7 +40,7 @@ class IbanCompanyCommand extends Command
     public function handle()
     {
         $companyIbanActivateAccounts = Accounts::query()
-            ->where('status', AccountStates::WAITING_IBAN_ACTIVATION)
+            ->where('status', AccountState::WAITING_IBAN_ACTIVATION)
             ->whereHas('applicantCompany')
             ->get();
 

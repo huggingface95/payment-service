@@ -3,7 +3,7 @@
 namespace App\Models;
 
 
-class AccountStates extends BaseModel
+class AccountState extends BaseModel
 {
     const WAITING_IBAN_ACTIVATION = 6;
 

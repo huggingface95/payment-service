@@ -50,7 +50,23 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public $password_confirmation;
 
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'sex', 'is_active', 'company_id', 'country_id', 'language_id', 'two_factor_auth_setting_id', 'password_hash', 'password_salt', 'last_login_at', 'additional_fields', 'additional_info_fields', 'is_show_owner_applicants','is_sign_transaction'
+        'first_name',
+        'last_name',
+        'email',
+        'sex',
+        'is_active',
+        'company_id',
+        'country_id',
+        'language_id',
+        'two_factor_auth_setting_id',
+        'password_hash',
+        'password_salt',
+        'last_login_at',
+        'additional_fields',
+        'additional_info_fields',
+        'is_show_owner_applicants',
+        'is_sign_transaction',
+        'groupRoles'
     ];
 
     protected $hidden = [
@@ -66,7 +82,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = array('two_factor');
+    protected $appends = array('two_factor','permissions');
 
     protected static function booted()
     {
@@ -78,6 +94,42 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function getTwoFactorAttribute()
     {
         return ($this->google2fa_secret) ? true : false;
+    }
+
+    public function getPermissionsAttribute()
+    {
+        $permissions = collect();
+
+        $permissionsArray =  $this->groupRole()
+            ->join('role_has_permissions','role_has_permissions.role_id','=','group_role.role_id')
+            ->join('permissions','permissions.id','=','role_has_permissions.permission_id')
+            ->join('permissions_list','permissions_list.id','permissions.permission_list_id')
+            ->select('permissions.id','permissions.display_name','permissions.permission_list_id','permissions_list.name as permission','permissions_list.id as list_id')
+            ->get();
+
+        foreach ($permissionsArray as $item)
+        {
+            $list[] = $item->permission;
+        }
+        $lists = array_unique($list);
+
+        foreach ($lists as $listItem)
+        {
+            $permission['permission'] = $listItem;
+            $actions = [];
+
+            foreach ($permissionsArray as $item)
+            {
+                if ($item->permission != $listItem) {
+                    continue;
+                }
+                $actions[] = $item->display_name;
+            }
+            $permission['actions'] = $actions;
+            $permissions[] = $permission;
+        }
+
+        return $permissions;
     }
 
     public function getAuthPassword()
@@ -186,5 +238,10 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function accountManagerApplicantCompanies(): HasMany
     {
         return $this->hasMany(ApplicantCompany::class, 'account_manager_member_id');
+    }
+
+    public function scopeCompanySort($query, $sort)
+    {
+        return $query->join('companies','companies.id','=','members.company_id')->orderBy('companies.name',$sort)->select('members.*');
     }
 }

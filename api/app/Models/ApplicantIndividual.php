@@ -65,6 +65,11 @@ class ApplicantIndividual extends BaseModel
         'two_factor_auth_id'
     ];
 
+    protected $hidden = [
+        'password_hash',
+        'password_salt',
+    ];
+
     protected $casts = [
         'personal_additional_fields' => 'array',
         'contacts_additional_fields' => 'array'
