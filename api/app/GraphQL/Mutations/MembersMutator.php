@@ -90,7 +90,8 @@ class MembersMutator extends BaseMutator
             foreach ($ip_address as $ip) {
                 ClientIpAddress::create([
                     'client_id' => $member->id,
-                    'ip_address' => $ip
+                    'ip_address' => $ip,
+                    'client_type' => 'App\Models\Members'
                 ]);
             }
         }

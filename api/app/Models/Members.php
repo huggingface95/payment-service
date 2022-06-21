@@ -133,7 +133,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function ipAddress()
     {
-        return $this->hasMany(ClientIpAddress::class, 'client_id');
+        return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', 'App\Models\Members');
     }
 
     public function roles()
