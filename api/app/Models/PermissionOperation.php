@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string name
  * @property string referer
  *
+ * @method static firstOrCreate(array $array)
  */
 class PermissionOperation extends BaseModel
 {

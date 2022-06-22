@@ -9,6 +9,11 @@ use Spatie\Permission\Guard;
 use Spatie\Permission\Models\Permission as SpatiePermission;
 use Spatie\Permission\Models\Role;
 
+/**
+ *
+ * @method static firstOrCreate(mixed $data)
+ *@property int $id
+ */
 class Permissions extends SpatiePermission
 {
 

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @method static create(array $array)
  * @method static whereName(string $string)
+ * @method static firstOrCreate(array $uniqueData)
+ * @method static where(string $string, string $string1)
  */
 class PermissionsList extends BaseModel
 {
