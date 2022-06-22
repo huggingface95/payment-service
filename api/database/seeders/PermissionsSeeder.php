@@ -6,8 +6,8 @@ use App\Models\PermissionCategory;
 use App\Models\PermissionOperation;
 use App\Models\Permissions;
 use App\Models\PermissionsList;
+use Exception;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class PermissionsSeeder extends Seeder
 {
@@ -15,6 +15,7 @@ class PermissionsSeeder extends Seeder
      * Run the database seeds.
      *
      * @return void
+     * @throws Exception
      */
     public function run()
     {
@@ -3723,9 +3724,9 @@ class PermissionsSeeder extends Seeder
                 ),
         );
 
-        foreach ($allPermissions as $moduleKey => $moduleValue) {
+        foreach ($allPermissions as $moduleValue) {
             $category = PermissionCategory::firstOrCreate($moduleValue['data']);
-            foreach ($moduleValue['list'] as $type => $listValue) {
+            foreach ($moduleValue['list'] as $listValue) {
                 foreach ($listValue as $lists) {
                     foreach ($lists as $list) {
                         $uniqueData = [
@@ -4357,24 +4358,29 @@ class PermissionsSeeder extends Seeder
             ],
             [
                 'name' => 'GetEmailTemplatesOnCompanyID',
-                'referer' => 'administration/email/profile/email-template-settings',
+                'referer' => 'administration/email/email-template-settings',
                 'binds' => ['Email Templates:Settings.Read', 'Email Templates:Settings.Edit'],
             ],
             [
                 'name' => 'GetCompanies',
-                'referer' => 'administration/email/profile/email-template-settings',
+                'referer' => 'administration/email/email-template-settings',
                 'binds' => ['Email Templates:Settings.Read', 'Email Templates:Settings.Edit'],
             ],
             [
                 'name' => 'CreateEmailTemplate',
-                'referer' => 'administration/email/profile/email-template-settings',
+                'referer' => 'administration/email/email-template-settings',
                 'binds' => ['Email Templates:Settings.Add New'],
                 'parents' => ['Email Templates:Settings.Read', 'Email Templates:Settings.Edit'],
             ],
             [
                 'name' => 'GetCompanies',
-                'referer' => 'administration/email/profile/email-notifications',
+                'referer' => 'administration/email/email-notifications',
                 'binds' => ['Email Templates:Notifications.Read', 'Email Templates:Notifications.Edit'],
+            ],
+            [
+                'name' => 'GetCompanies',
+                'referer' => 'administration/email/smtp-details',
+                'binds' => ['Email Templates:SMTP Details.Edit', 'Email Templates:SMTP Details.Read'],
             ],
             [
                 'name' => 'GetAdministrationCompanyList',
@@ -4673,22 +4679,24 @@ class PermissionsSeeder extends Seeder
             $operation = PermissionOperation::firstOrCreate(['name' => $data['name'], 'referer' => $data['referer']]);
 
             foreach ($data['binds'] ?? [] as $perName) {
+                /** @var Permissions $permission */
                 $permission = Permissions::query()->where('name', $perName)->whereIn('permission_list_id', $lists)->first();
                 if ($permission) {
                     $ids = $operation->binds()->get()->pluck('id')->push($permission->id)->unique()->toArray();
                     $operation->binds()->sync($ids, true);
                 } else {
-                    throw new \Exception("Not found bind permission in {$data['name']} operation");
+                    throw new Exception("Not found bind permission in {$data['name']} operation");
                 }
             }
 
             foreach ($data['parents'] ?? [] as $perName) {
+                /** @var Permissions $permission */
                 $permission = Permissions::query()->where('name', $perName)->whereIn('permission_list_id', $lists)->first();
                 if ($permission) {
                     $ids = $operation->parents()->get()->pluck('id')->push($permission->id)->unique()->toArray();
                     $operation->parents()->sync($ids, true);
                 } else {
-                    throw new \Exception("Not found parent permission in {$data['name']} operation");
+                    throw new Exception("Not found parent permission in {$data['name']} operation");
                 }
             }
 
