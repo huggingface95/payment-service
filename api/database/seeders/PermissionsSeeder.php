@@ -18,10 +18,6 @@ class PermissionsSeeder extends Seeder
      */
     public function run()
     {
-//        DB::statement('truncate table permission_category restart identity cascade;');
-//        DB::statement('truncate table permissions_list restart identity cascade;');
-//        DB::statement('truncate table permissions restart identity cascade;');
-//        DB::statement('truncate table permission_operations restart identity cascade;');
 
         $allPermissions = array(
             'Management Module' =>
@@ -44,6 +40,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Applicants Individual List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 1,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -100,6 +97,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Applicants Company List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 2,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -156,6 +154,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Individual Profile:General',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 3,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -256,6 +255,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Individual Profile:Settings',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 4,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -334,6 +334,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Individual Profile:Active Session',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 5,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -357,6 +358,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Individual Profile:Authentication Log',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 6,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -380,6 +382,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Company Profile:General',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 7,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -480,6 +483,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Company Profile:Settings',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 8,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -558,6 +562,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Company Profile:Active Session',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 9,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -581,6 +586,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Company Profile:Authentication Log',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 10,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -621,6 +627,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Roles List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 1,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -677,6 +684,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Roles Settings',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 2,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -711,6 +719,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Groups List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 3,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -767,6 +776,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Groups Settings',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 4,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -801,6 +811,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Payment System List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 5,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -874,6 +885,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Email Templates:Tag',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 1,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -930,6 +942,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Email Templates:Settings',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 2,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1008,6 +1021,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Email Templates:Notifications',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 3,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1075,6 +1089,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Member Company List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 4,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1131,6 +1146,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Member Company Profile',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 5,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1209,6 +1225,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Members List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 6,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1254,6 +1271,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Member Profile:General',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 7,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1288,6 +1306,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Member Profile:Settings',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 8,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1344,6 +1363,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Logs:Active Session',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 10,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1367,6 +1387,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Logs:Authentication Log',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 11,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1390,6 +1411,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Logs:Activity Log',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 12,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1413,6 +1435,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Email Templates:SMTP Details',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 13,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1469,6 +1492,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Member: Security',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 9,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1531,6 +1555,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Email Templates:Tag',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 1,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1554,6 +1579,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Account List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 2,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1599,6 +1625,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Account Details',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 3,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1666,6 +1693,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Open Account',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 4,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1689,6 +1717,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'makePayments',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 5,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1712,6 +1741,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Requisites',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 6,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1757,6 +1787,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Statements',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 7,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1791,6 +1822,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Payment List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 8,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1836,6 +1868,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Payment Details',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 9,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1870,6 +1903,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Tickets',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 10,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -1959,6 +1993,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Payment Provider List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 11,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2015,6 +2050,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Payment Provider Settings',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 12,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2049,6 +2085,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Commission Template List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 13,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2105,6 +2142,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Commission Template Limits',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 14,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2161,6 +2199,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Commission Price List',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 15,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2217,6 +2256,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Make Payments',
                                                             'type' => 'member',
                                                             'separator' => NULL,
+                                                            'order' => 16,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2257,6 +2297,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Tickets',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 1,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2346,6 +2387,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Dashboard',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 2,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2402,6 +2444,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'My Net Worth',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 3,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2458,6 +2501,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Account Details',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 4,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2514,6 +2558,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'makePayments',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 5,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2537,6 +2582,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Requisites',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 6,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2582,6 +2628,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'My Templates',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 7,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2638,6 +2685,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Statements',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 8,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2672,6 +2720,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Payment List',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 9,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2717,6 +2766,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Payment Details',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 10,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2751,6 +2801,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Settings:Contact Details',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 11,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2785,6 +2836,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Settings:Log in Details',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 12,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2852,6 +2904,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Settings:Security Level',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 13,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2886,6 +2939,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Settings:Accounts',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 14,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2920,6 +2974,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Make Payments',
                                                             'type' => 'individual',
                                                             'separator' => 'business',
+                                                            'order' => 15,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -2957,6 +3012,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Dashboard',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 1,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3013,6 +3069,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'My Net Worth',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 2,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3069,6 +3126,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Account Details',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 3,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3125,6 +3183,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'makePayments',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 4,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3148,6 +3207,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Requisites',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 5,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3193,6 +3253,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'My Templates',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 6,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3249,6 +3310,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Statements',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 7,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3283,6 +3345,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Payment List',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 8,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3328,6 +3391,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Payment Details',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 9,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3362,6 +3426,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Tickets',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 10,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3451,6 +3516,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Settings:Contact Details',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 11,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3485,6 +3551,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Settings:Log in Details',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 12,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3552,6 +3619,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Settings:Security Level',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 13,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3586,6 +3654,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Settings:Accounts',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 14,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3620,6 +3689,7 @@ class PermissionsSeeder extends Seeder
                                                             'name' => 'Make Payments',
                                                             'type' => 'individual',
                                                             'separator' => 'private',
+                                                            'order' => 15,
                                                         ),
                                                     'list' =>
                                                         array(
@@ -3658,8 +3728,16 @@ class PermissionsSeeder extends Seeder
             foreach ($moduleValue['list'] as $type => $listValue) {
                 foreach ($listValue as $lists) {
                     foreach ($lists as $list) {
-                        $list['data']['permission_group_id'] = $category->id;
-                        $l = PermissionsList::firstOrCreate($list['data']);
+                        $uniqueData = [
+                            'permission_group_id' => $category->id,
+                            'name' => $list['data']['name'],
+                            'type' => $list['data']['type'],
+                            'separator' => $list['data']['separator'],
+                        ];
+                        $l = PermissionsList::firstOrCreate($uniqueData);
+                        $l->order = $list['data']['order'];
+                        $l->save();
+
                         foreach ($list['list'] as $permission) {
                             $permission['data']['permission_list_id'] = $l->id;
                             Permissions::firstOrCreate($permission['data']);
