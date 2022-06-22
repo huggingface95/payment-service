@@ -910,6 +910,17 @@ class PermissionsSeeder extends Seeder
                                                                             'type' => 'info',
                                                                         ),
                                                                 ),
+                                                            'Email Templates:Tag.Banking' =>
+                                                                array(
+                                                                    'data' =>
+                                                                        array(
+                                                                            'name' => 'Email Templates:Tag.Banking',
+                                                                            'display_name' => 'Banking',
+                                                                            'guard_name' => 'api',
+                                                                            'order' => NULL,
+                                                                            'type' => 'info',
+                                                                        ),
+                                                                ),
                                                         ),
                                                 ),
                                             'Email Templates:Settings' =>
