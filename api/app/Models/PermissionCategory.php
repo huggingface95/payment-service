@@ -20,7 +20,7 @@ class PermissionCategory extends BaseModel
 
     public function permissionsList(): HasMany
     {
-        return $this->hasMany(PermissionsList::class,"permission_group_id");
+        return $this->hasMany(PermissionsList::class,"permission_group_id")->orderBy('order');
     }
 
 
