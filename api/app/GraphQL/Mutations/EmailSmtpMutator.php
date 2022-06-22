@@ -11,6 +11,9 @@ use App\Jobs\SendMailJob;
 use App\Models\BaseModel;
 use App\Models\EmailSmtp;
 use App\Models\Members;
+use Exception;
+use Swift_SmtpTransport;
+use Swift_TransportException;
 
 class EmailSmtpMutator
 {
@@ -21,7 +24,9 @@ class EmailSmtpMutator
         if ($args['is_sending_mail'] === true ) {
             EmailSmtp::where('company_id',$args['company_id'])->update(['is_sending_mail'=>false]);
         }
-        return EmailSmtp::create($args);
+        if ($this->checkSmtp($args)) {
+            return EmailSmtp::create($args);
+        }
     }
 
     public function update($root, array $args)
@@ -33,8 +38,12 @@ class EmailSmtpMutator
         if ($args['is_sending_mail'] === true) {
             EmailSmtp::where('company_id',$emailSmtp->company_id)->update(['is_sending_mail'=>false]);
         }
-        $emailSmtp->update($args);
-        return $emailSmtp;
+
+        if ($this->checkSmtp($args)) {
+            $emailSmtp->update($args);
+            return $emailSmtp;
+        }
+
     }
 
     public function delete($root, array $args)
@@ -66,5 +75,19 @@ class EmailSmtpMutator
         $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
         dispatch(new SendMailJob($config, $data));
         return ['status'=>'OK', "message"=>"Email sent for processing"];
+    }
+
+    public function checkSmtp(array $args)
+    {
+        try{
+            $transport = new Swift_SmtpTransport($args['host_name'], $args['port'], $args['security']);
+            $transport->setUsername($args['username']);
+            $transport->setPassword($args['password']);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
+            return true;
+        } catch (Exception $e) {
+            throw new GraphqlException('SMTP doesnt work correctly. Please check configuration',"internal",403);
+        }
     }
 }
