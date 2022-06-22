@@ -10,12 +10,10 @@ use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
 use App\Models\BaseModel;
 use App\Models\EmailSmtp;
-use App\Models\Members;
 use Exception;
 use Swift_SmtpTransport;
-use Swift_TransportException;
 
-class EmailSmtpMutator
+class EmailSmtpMutator extends BaseMutator
 {
 
     public function create($root, array $args)
@@ -60,10 +58,13 @@ class EmailSmtpMutator
 
     public function sendEmail($root, array $args)
     {
+        if (!$this->validEmail($args['email'])) {
+            throw new GraphqlException('Email not correct',"Bad Request",400);
+        }
         /** @var EmailSmtp $smtp */
         $smtp = new EmailSmtp();
         $smtp->replay_to = (isset($args['reply_to'])) ? $args['reply_to'] : $args['email'];
-        $smtp->security = $args['security'];
+        $smtp->security = ($args['security']) ?? 'No';
         $smtp->host_name = $args['host_name'];
         $smtp->username = $args['username'];
         $smtp->password = $args['password'];

@@ -46,4 +46,9 @@ class BaseMutator
         return $args;
     }
 
+    protected function validEmail($email)
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
 }

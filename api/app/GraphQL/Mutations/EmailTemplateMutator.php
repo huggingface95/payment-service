@@ -13,7 +13,7 @@ use App\Models\EmailTemplate;
 use App\Models\Members;
 use Illuminate\Support\Facades\Auth;
 
-class EmailTemplateMutator
+class EmailTemplateMutator extends BaseMutator
 {
     public function create($root, array $args)
     {
@@ -26,6 +26,9 @@ class EmailTemplateMutator
     {
 
         try {
+            if (!$this->validEmail($args['email'])) {
+                throw new GraphqlException('Email not correct',"Bad Request",400);
+            }
             /** @var Members $member */
             $member = Auth::user();
 
