@@ -4383,6 +4383,33 @@ class PermissionsSeeder extends Seeder
                 'binds' => ['Email Templates:SMTP Details.Edit', 'Email Templates:SMTP Details.Read'],
             ],
             [
+                'name' => 'CreateSMTPTemplate',
+                'referer' => 'administration/email/smtp-details',
+                'binds' => ['Email Templates:SMTP Details.Add New'],
+                'parents' => ['Email Templates:SMTP Details.Edit'],
+            ],
+            [
+                'name' => 'GetSMTPTemplates',
+                'referer' => 'administration/email/smtp-details',
+                'binds' => ['Email Templates:SMTP Details.Edit', 'Email Templates:SMTP Details.Read'],
+            ],
+            [
+                'name' => 'SendTestTemplateEmail',
+                'referer' => 'administration/email/smtp-details',
+                'binds' => ['Email Templates:SMTP Details.Send test email'],
+                'parents' => ['Email Templates:SMTP Details.Edit', 'Email Templates:SMTP Details.Read'],
+            ],
+            [
+                'name' => 'SendTestTemplateEmail',
+                'referer' => 'administration/email/email-template-settings',
+                'binds' => ['Email Templates:Settings.Read', 'Email Templates:Settings.Edit'],
+            ],
+            [
+                'name' => 'GetGroupTypes',
+                'referer' => 'administration/email/email-notifications',
+                'binds' => ['Email Templates:Notifications.Read', 'Email Templates:Notifications.Edit'],
+            ],
+            [
                 'name' => 'GetAdministrationCompanyList',
                 'referer' => 'administration/company/list',
                 'binds' => ['Member Company List.Read', 'Member Company List.Edit'],
