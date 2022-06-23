@@ -4,7 +4,6 @@ namespace App\DTO;
 
 class TransformerDTO
 {
-
     /**
      * @template Tr
      *

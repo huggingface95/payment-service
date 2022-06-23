@@ -15,7 +15,7 @@ class CreateApplicantStateReasonTable extends Migration
     {
         Schema::create('applicant_state_reason', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255)->unique();
+            $table->string('name', 255)->unique();
         });
     }
 

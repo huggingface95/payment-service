@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\MemberScope;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,21 +13,20 @@ use Illuminate\Support\Facades\DB;
  * Class CommissionTemplate
  *
  * @property CommissionTemplateLimit $commissionTemplateLimits
- *
  */
 class CommissionTemplate extends BaseModel
 {
-
     public $timestamps = false;
 
-    protected $table = "commission_template";
+    protected $table = 'commission_template';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'is_active', 'description', 'payment_provider_id', 'country_id', 'currency_id', 'commission_template_limit_id', 'member_id'
+        'name', 'is_active', 'description', 'payment_provider_id', 'country_id', 'currency_id', 'commission_template_limit_id', 'member_id',
     ];
 
     protected static function booted()
@@ -37,7 +35,6 @@ class CommissionTemplate extends BaseModel
         static::addGlobalScope(new MemberScope);
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
-
 
     /**
      * Get relation currencies
@@ -84,14 +81,12 @@ class CommissionTemplate extends BaseModel
         return $this->belongsTo(PaymentProvider::class, 'payment_provider_id', 'id');
     }
 
-
     public function scopePaymentProviderName(Builder $query, $sort): Builder
     {
         return $query->leftJoin(
             DB::raw('(SELECT id, name as payment_provider_name FROM "payment_provider") p'),
-            function($join)
-            {
-                $join->on('p.id', '=','commission_template.payment_provider_id');
+            function ($join) {
+                $join->on('p.id', '=', 'commission_template.payment_provider_id');
             })
             ->orderBy('p.payment_provider_name', $sort)
             ->selectRaw('commission_template.*');
@@ -117,6 +112,4 @@ class CommissionTemplate extends BaseModel
     {
         return $this->belongsToMany(CommissionTemplateLimit::class, 'commission_template_limit_relation', 'commission_template_id', 'commission_template_limit_id');
     }
-
-
 }

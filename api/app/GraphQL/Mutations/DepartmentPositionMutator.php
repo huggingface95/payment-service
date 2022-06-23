@@ -6,11 +6,8 @@ use App\Exceptions\GraphqlException;
 use App\Models\DepartmentPosition;
 use App\Models\Departments;
 
-
 class DepartmentPositionMutator extends BaseMutator
 {
-
-
     /**
      * Update position
      * @param $root
@@ -22,8 +19,8 @@ class DepartmentPositionMutator extends BaseMutator
         if (isset($args['department_id'])) {
             $department = Departments::find($args['department_id']);
             unset($args['department_id']);
-            if (!$department) {
-                throw new GraphqlException('Department not found',"not found", 404);
+            if (! $department) {
+                throw new GraphqlException('Department not found', 'not found', 404);
             }
             $position = DepartmentPosition::create($args);
             $department->positions()->attach($position->id);
@@ -42,14 +39,12 @@ class DepartmentPositionMutator extends BaseMutator
      */
     public function update($root, array $args)
     {
-            $position = DepartmentPosition::find($args['id']);
-            if (!$position->is_active && !$position->members->isEmpty() ) {
-                throw new GraphqlException('Department positions are already in use',"used");
-            }
-            $position->update($args);
+        $position = DepartmentPosition::find($args['id']);
+        if (! $position->is_active && ! $position->members->isEmpty()) {
+            throw new GraphqlException('Department positions are already in use', 'used');
+        }
+        $position->update($args);
 
-            return $position;
+        return $position;
     }
-
-
 }

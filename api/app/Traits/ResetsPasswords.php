@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use App\Models\Members;
 use Illuminate\Http\Request;
-use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Password;
 
 trait ResetsPasswords
@@ -50,6 +49,7 @@ trait ResetsPasswords
             case Password::INVALID_USER:
                 return $this->getSendResetLinkEmailFailureResponse($response);
         }
+
         return $this->getSendResetLinkEmailSuccessResponse($response);
     }
 
@@ -84,7 +84,6 @@ trait ResetsPasswords
     {
         return response()->json(['success' => false]);
     }
-
 
     /**
      * Reset the given user's password.

@@ -15,7 +15,7 @@ class CreateApplicantRiskLevelTable extends Migration
     {
         Schema::create('applicant_risk_level', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255)->unique();
+            $table->string('name', 255)->unique();
         });
     }
 

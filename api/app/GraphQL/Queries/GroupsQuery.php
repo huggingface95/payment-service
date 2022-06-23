@@ -2,8 +2,6 @@
 
 namespace App\GraphQL\Queries;
 
-use App\Models\Groups;
-
 class GroupsQuery
 {
     /**

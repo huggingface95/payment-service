@@ -17,11 +17,11 @@ class PaymentSystemTableSeeder extends Seeder
     {
         $faker = Factory::create();
 
-        for ($i=1; $i<=10; $i++ ) {
+        for ($i = 1; $i <= 10; $i++) {
             PaymentSystem::create([
                 'id'        => $i,
-                'name'     => $faker->company .'Pay',
-                'is_active' => true
+                'name'     => $faker->company.'Pay',
+                'is_active' => true,
             ]);
         }
     }

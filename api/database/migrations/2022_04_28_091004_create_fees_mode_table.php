@@ -15,7 +15,7 @@ class CreateFeesModeTable extends Migration
     {
         Schema::create('fees_mode', function (Blueprint $table) {
             $table->id();
-            $table->string('name',50);
+            $table->string('name', 50);
             $table->unique('name');
         });
     }

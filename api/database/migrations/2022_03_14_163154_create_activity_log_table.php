@@ -1,8 +1,6 @@
 <?php
 
-
 use PhpClickHouseLaravel\Migration;
-
 
 class CreateActivityLogTable extends Migration
 {

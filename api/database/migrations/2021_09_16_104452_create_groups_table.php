@@ -15,7 +15,7 @@ class CreateGroupsTable extends Migration
     {
         Schema::create('groups', function (Blueprint $table) {
             $table->id();
-            $table->enum('name',['Member','Company','Individual']);
+            $table->enum('name', ['Member', 'Company', 'Individual']);
         });
     }
 

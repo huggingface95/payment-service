@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class CommissionTemplateLimit
- * @package App\Models
  *
  * @property int id
  * @property int period_count
@@ -19,14 +17,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property CommissionTemplateLimitPeriod $commissionTemplateLimitPeriod
  * @property CommissionTemplateLimitActionType $commissionTemplateLimitActionType
  * @property Currencies $currency
- *
  */
 class CommissionTemplateLimit extends BaseModel
 {
-
     public $timestamps = false;
 
-    protected $table = "commission_template_limit";
+    protected $table = 'commission_template_limit';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -41,7 +38,6 @@ class CommissionTemplateLimit extends BaseModel
         'commission_template_limit_period_id',
         'commission_template_limit_action_type_id',
     ];
-
 
     public function commissionTemplateLimitType(): BelongsTo
     {
@@ -67,5 +63,4 @@ class CommissionTemplateLimit extends BaseModel
     {
         return $this->belongsTo(Currencies::class, 'currency_id', 'id');
     }
-
 }

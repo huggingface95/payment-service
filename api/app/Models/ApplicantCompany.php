@@ -8,20 +8,16 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
-
 /**
  * Class ApplicantCompany
- * @package App\Models
-
  * @property ApplicantIndividual $applicantIndividuals
  * @property ApplicantIndividual $applicantsWithBankingAccess
- *
  */
 class ApplicantCompany extends BaseModel
 {
-        use MorphToOne,BelongsToOne;
+    use MorphToOne,BelongsToOne;
 
-    protected $table="applicant_companies";
+    protected $table = 'applicant_companies';
 
     /**
      * The attributes that are mass assignable.
@@ -62,13 +58,13 @@ class ApplicantCompany extends BaseModel
         'is_verification_phone',
         'owner_relation_id',
         'owner_position_id',
-        'company_id'
+        'company_id',
     ];
 
     protected $casts = [
         'company_info_additional_fields'=>'array',
         'contacts_additional_fields'=>'array',
-        'profile_additional_field'=>'array'
+        'profile_additional_field'=>'array',
     ];
 
     protected static function booted()
@@ -82,7 +78,7 @@ class ApplicantCompany extends BaseModel
      */
     public function labels()
     {
-        return $this->belongsToMany(ApplicantCompanyLabel::class,'applicant_company_label_relation','applicant_company_id','applicant_company_label_id');
+        return $this->belongsToMany(ApplicantCompanyLabel::class, 'applicant_company_label_relation', 'applicant_company_id', 'applicant_company_label_id');
     }
 
     /**
@@ -90,7 +86,7 @@ class ApplicantCompany extends BaseModel
      */
     public function status()
     {
-        return $this->belongsTo(ApplicantStatus::class,'applicant_status_id');
+        return $this->belongsTo(ApplicantStatus::class, 'applicant_status_id');
     }
 
     /**
@@ -98,7 +94,7 @@ class ApplicantCompany extends BaseModel
      */
     public function state()
     {
-        return $this->belongsTo(ApplicantState::class,'applicant_state_id');
+        return $this->belongsTo(ApplicantState::class, 'applicant_state_id');
     }
 
     /**
@@ -106,7 +102,7 @@ class ApplicantCompany extends BaseModel
      */
     public function stateReason()
     {
-        return $this->belongsTo(ApplicantStateReason::class,'applicant_state_reason_id');
+        return $this->belongsTo(ApplicantStateReason::class, 'applicant_state_reason_id');
     }
 
     /**
@@ -114,7 +110,7 @@ class ApplicantCompany extends BaseModel
      */
     public function riskLevel()
     {
-        return $this->belongsTo(ApplicantRiskLevel::class,'applicant_risk_level_id');
+        return $this->belongsTo(ApplicantRiskLevel::class, 'applicant_risk_level_id');
     }
 
     /**
@@ -122,7 +118,7 @@ class ApplicantCompany extends BaseModel
      */
     public function kycLevel()
     {
-        return $this->belongsTo(ApplicantKycLevel::class,'applicant_kyc_level_id');
+        return $this->belongsTo(ApplicantKycLevel::class, 'applicant_kyc_level_id');
     }
 
     /**
@@ -146,7 +142,7 @@ class ApplicantCompany extends BaseModel
      */
     public function country()
     {
-        return $this->belongsTo(Country::class,'country_id');
+        return $this->belongsTo(Country::class, 'country_id');
     }
 
     /**
@@ -154,17 +150,17 @@ class ApplicantCompany extends BaseModel
      */
     public function businessType()
     {
-        return $this->belongsTo(ApplicantCompanyBusinessType::class,'applicant_company_business_type_id');
+        return $this->belongsTo(ApplicantCompanyBusinessType::class, 'applicant_company_business_type_id');
     }
 
     public function modules()
     {
-        return $this->hasMany(ApplicantCompanyModules::class,'applicant_company_id','id');
+        return $this->hasMany(ApplicantCompanyModules::class, 'applicant_company_id', 'id');
     }
 
     public function notes()
     {
-        return$this->hasMany(ApplicantCompanyNotes::class,'applicant_company_id');
+        return$this->hasMany(ApplicantCompanyNotes::class, 'applicant_company_id');
     }
 
     /**
@@ -172,27 +168,27 @@ class ApplicantCompany extends BaseModel
      */
     public function language()
     {
-        return $this->belongsTo(Languages::class,'language_id');
+        return $this->belongsTo(Languages::class, 'language_id');
     }
 
-    public function  ApplicantCompany()
+    public function ApplicantCompany()
     {
-        return $this->belongsTo(ApplicantCompany::class,'applicant_company_id','id');
+        return $this->belongsTo(self::class, 'applicant_company_id', 'id');
     }
 
     public function applicantIndividualCompany()
     {
-        return $this->belongsTo(ApplicantIndividualCompany::class,'id', 'applicant_company_id');
+        return $this->belongsTo(ApplicantIndividualCompany::class, 'id', 'applicant_company_id');
     }
 
     public function ownerRelation()
     {
-        return $this->belongsTo(ApplicantIndividualCompany::class,'owner_id', 'applicant_individual_id', 'applicant_individual_company_relation_id');
+        return $this->belongsTo(ApplicantIndividualCompany::class, 'owner_id', 'applicant_individual_id', 'applicant_individual_company_relation_id');
     }
 
     public function ownerPosition()
     {
-        return $this->belongsTo(ApplicantIndividualCompany::class,'owner_id', 'applicant_individual_id', 'applicant_individual_company_position_id');
+        return $this->belongsTo(ApplicantIndividualCompany::class, 'owner_id', 'applicant_individual_id', 'applicant_individual_company_position_id');
     }
 
     public function applicantIndividuals(): BelongsToMany
@@ -226,15 +222,14 @@ class ApplicantCompany extends BaseModel
     {
         return $query
             ->join('group_role_members_individuals', 'group_role_members_individuals.user_id', 'applicant_companies.id')
-            ->join('group_role', 'group_role.id','=','group_role_members_individuals.group_role_id')
+            ->join('group_role', 'group_role.id', '=', 'group_role_members_individuals.group_role_id')
             ->where('group_role.group_type_id', GroupRole::COMPANY)
-            ->orderBy('group_role.name',$sort)
+            ->orderBy('group_role.name', $sort)
             ->select('applicant_companies.*');
     }
 
     public function scopeCompanySort($query, $sort)
     {
-        return $query->join('companies','companies.id','=','applicant_companies.company_id')->orderBy('companies.name',$sort)->select('applicant_companies.*');
+        return $query->join('companies', 'companies.id', '=', 'applicant_companies.company_id')->orderBy('companies.name', $sort)->select('applicant_companies.*');
     }
-
 }

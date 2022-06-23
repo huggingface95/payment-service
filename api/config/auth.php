@@ -15,7 +15,7 @@ return [
 
     'defaults' => [
         'guard' => env('AUTH_GUARD', 'api'),
-        'passwords' => 'members'
+        'passwords' => 'members',
     ],
 
     /*
@@ -39,7 +39,7 @@ return [
         'api' => [
             'driver' => 'jwt',
             'provider' => 'members',
-            ],
+        ],
     ],
 
     /*
@@ -63,14 +63,14 @@ return [
         'members' => [
             'driver' => 'eloquent',
             'model'  =>  App\Models\Members::class,
-        ]
-//        ,
-//        'applicant_individual' => [
-//            [
-//                'driver' => 'eloquent',
-//                'model'  =>  App\Models\ApplicantIndividual::class,
-//            ]
-//        ]
+        ],
+        //        ,
+        //        'applicant_individual' => [
+        //            [
+        //                'driver' => 'eloquent',
+        //                'model'  =>  App\Models\ApplicantIndividual::class,
+        //            ]
+        //        ]
     ],
 
     /*
@@ -99,7 +99,7 @@ return [
             'table' => 'passwords_resets',
             'expire' => 60,
         ],
-        'applicant_individual'
+        'applicant_individual',
     ],
 
 ];

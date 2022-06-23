@@ -2,14 +2,13 @@
 
 namespace App\DTO\Email;
 
-
 class SendEmailRequestDTO
 {
     public string $content;
+
     public string $subject;
 
-
-    public static function transform(string $content, string $subject): SendEmailRequestDTO
+    public static function transform(string $content, string $subject): self
     {
         $dto = new self();
         $dto->content = $content;
@@ -17,5 +16,4 @@ class SendEmailRequestDTO
 
         return $dto;
     }
-
 }

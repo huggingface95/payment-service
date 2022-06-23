@@ -6,10 +6,8 @@ use App\Exceptions\GraphqlException;
 use App\Models\DepartmentPosition;
 use App\Models\Departments;
 
-
 class DepartmentMutator extends BaseMutator
 {
-
     /**
      * Create department
      * @param $root
@@ -24,10 +22,9 @@ class DepartmentMutator extends BaseMutator
             foreach ($args['department_positions_name'] as $position) {
                 DepartmentPosition::create([
                     'name'=> $position,
-                    'department_id' => $department->id
+                    'department_id' => $department->id,
                 ]);
             }
-
         }
 
         return $department;
@@ -41,24 +38,24 @@ class DepartmentMutator extends BaseMutator
      */
     public function update($root, array $args)
     {
-            $department = Departments::find($args['id']);
-            if (!$department) {
-                throw new GraphqlException('An entry with this id does not exist',"not found",404);
+        $department = Departments::find($args['id']);
+        if (! $department) {
+            throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
+        }
+        if (isset($args['active_department_positions_id'])) {
+            if (! $department->positions->isEmpty()) {
+                $currentPosition = collect($department->positions)->pluck('id')->all();
+                $positionsActive = array_diff($args['active_department_positions_id'], $currentPosition);
+            } else {
+                $positionsActive = $args['active_department_positions_id'];
             }
-            if (isset($args['active_department_positions_id'])) {
-                if (!$department->positions->isEmpty()) {
-                    $currentPosition =collect($department->positions)->pluck('id')->all();
-                    $positionsActive = array_diff($args['active_department_positions_id'],$currentPosition);
-                } else {
-                    $positionsActive=$args['active_department_positions_id'];
-                }
-                $department->positions()->attach($positionsActive);
+            $department->positions()->attach($positionsActive);
 
-                unset($args['active_department_positions_id']);
-            }
-            $department->update($args);
+            unset($args['active_department_positions_id']);
+        }
+        $department->update($args);
 
-            return $department;
+        return $department;
     }
 
     /**
@@ -71,16 +68,14 @@ class DepartmentMutator extends BaseMutator
     {
         try {
             $department = Departments::find($args['id']);
-            if (!$department) {
-                throw new GraphqlException('An entry with this id does not exist',"not found",404);
+            if (! $department) {
+                throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
             }
             $department->delete();
+
             return $department;
-        } catch (\Exception $exception)
-        {
-            throw new GraphqlException('Department positions are already in use',"use");
+        } catch (\Exception $exception) {
+            throw new GraphqlException('Department positions are already in use', 'use');
         }
-
     }
-
 }

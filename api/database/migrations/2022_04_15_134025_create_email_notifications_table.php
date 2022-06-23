@@ -22,7 +22,6 @@ class CreateEmailNotificationsTable extends Migration
             $table->enum('type', [EmailNotification::ADMINISTRATION, EmailNotification::CLIENT])->default(EmailNotification::ADMINISTRATION);
             $table->timestamps();
 
-
             $table->foreign('member_id')->references('id')->on('members')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();

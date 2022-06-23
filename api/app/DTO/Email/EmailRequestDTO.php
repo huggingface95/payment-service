@@ -2,15 +2,17 @@
 
 namespace App\DTO\Email;
 
-
 class EmailRequestDTO
 {
     public int $id;
+
     public string $status;
+
     public string $message;
+
     public object $data;
 
-    public static function transform(object $data): EmailRequestDTO
+    public static function transform(object $data): self
     {
         $dto = new self();
 
@@ -21,5 +23,4 @@ class EmailRequestDTO
 
         return $dto;
     }
-
 }

@@ -7,26 +7,26 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-
 /**
  * Class GroupRole
  * @property Role $role
- *
  */
-
 class GroupRole extends BaseModel
 {
     use SoftDeletes;
 
     const INDIVIDUAL = '3';
+
     const COMPANY = '2';
+
     const MEMBER = '1';
 
     public $timestamps = false;
+
     protected $table = 'group_role';
 
     protected $fillable = [
-        'name', 'group_type_id', 'role_id', 'payment_provider_id', 'commission_template_id', 'is_active', 'description', 'company_id'
+        'name', 'group_type_id', 'role_id', 'payment_provider_id', 'commission_template_id', 'is_active', 'description', 'company_id',
     ];
 
     public static self $clone;
@@ -37,36 +37,36 @@ class GroupRole extends BaseModel
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
 
-    public function load($relations): GroupRole
+    public function load($relations): self
     {
         self::$clone = $this->replicate();
+
         return parent::load($relations);
     }
 
-
     public function groupType(): BelongsTo
     {
-        return $this->belongsTo(Groups::class, "group_type_id");
+        return $this->belongsTo(Groups::class, 'group_type_id');
     }
 
     public function role(): BelongsTo
     {
-        return $this->belongsTo(Role::class, "role_id");
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
     public function paymentProvider(): BelongsTo
     {
-        return $this->belongsTo(PaymentProvider::class, "payment_provider_id");
+        return $this->belongsTo(PaymentProvider::class, 'payment_provider_id');
     }
 
     public function commissionTemplate(): BelongsTo
     {
-        return $this->belongsTo(CommissionTemplate::class, "commission_template_id");
+        return $this->belongsTo(CommissionTemplate::class, 'commission_template_id');
     }
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class, "company_id");
+        return $this->belongsTo(Companies::class, 'company_id');
     }
 
     public function individuals(): BelongsToMany
@@ -103,15 +103,17 @@ class GroupRole extends BaseModel
     {
         /** @var GroupRole $model */
         try {
-            $model = self::$clone;}
-        catch (\Error $ex){$model = $this;}
+            $model = self::$clone;
+        } catch (\Error $ex) {
+            $model = $this;
+        }
 
-        if ($model->group_type_id == self::INDIVIDUAL)
+        if ($model->group_type_id == self::INDIVIDUAL) {
             return $this->individuals();
-        elseif ($model->group_type_id == self::COMPANY)
+        } elseif ($model->group_type_id == self::COMPANY) {
             return $this->companies();
-        else
+        } else {
             return $this->members();
+        }
     }
-
 }

@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use App\Models\BusinessActivity;
+use Illuminate\Database\Migrations\Migration;
 
 class InitBusinessActivity extends Migration
 {
@@ -14,13 +12,14 @@ class InitBusinessActivity extends Migration
      */
     public function up()
     {
-        $names= [
-            'E-commerce','Retail'
+        $names = [
+            'E-commerce', 'Retail',
         ];
-        foreach ($names as $name)
+        foreach ($names as $name) {
             BusinessActivity::create([
-                'name' => $name
+                'name' => $name,
             ]);
+        }
     }
 
     /**

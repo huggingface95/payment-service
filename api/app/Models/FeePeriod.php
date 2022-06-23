@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-
 class FeePeriod extends BaseModel
 {
-    protected $table="fee_period";
+    protected $table = 'fee_period';
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public $timestamps = false;
-
 }

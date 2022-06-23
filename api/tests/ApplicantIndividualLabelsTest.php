@@ -1,9 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Models\Accounts;
-
 class ApplicantIndividualLabelsTest extends TestCase
 {
     /**
@@ -66,7 +62,7 @@ class ApplicantIndividualLabelsTest extends TestCase
             'company_id' => 1,
             'country_id' => 1,
             'language_id' => 1,
-            'phone' => '098'.str_pad(mt_rand(1,9),6,'0',STR_PAD_LEFT),
+            'phone' => '098'.str_pad(mt_rand(1, 9), 6, '0', STR_PAD_LEFT),
             'city' => 'New York',
             'address' => '1st Street',
             'birth_country_id' => 1,
@@ -74,13 +70,13 @@ class ApplicantIndividualLabelsTest extends TestCase
             'sex' => 'Male',
             'applicant_state_id' => 1,
             'account_manager_member_id' => 2,
-            'role_id' => 1
+            'role_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createApplicantIndividual' => [
-                    'id' => $id['data']['createApplicantIndividual']['id']
+                    'id' => $id['data']['createApplicantIndividual']['id'],
                 ],
             ],
         ]);
@@ -105,13 +101,13 @@ class ApplicantIndividualLabelsTest extends TestCase
             }
         ', [
             'name' => 'Label_'.\Illuminate\Support\Str::random(5),
-            'hex_color_code' => '#'.mt_rand(100000, 999999)
+            'hex_color_code' => '#'.mt_rand(100000, 999999),
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createApplicantIndividualLabel' => [
-                    'id' => $id['data']['createApplicantIndividualLabel']['id']
+                    'id' => $id['data']['createApplicantIndividualLabel']['id'],
                 ],
             ],
         ]);
@@ -178,7 +174,7 @@ class ApplicantIndividualLabelsTest extends TestCase
         $this->seeJson([
             'data' => [
                 'attachApplicantIndividualLabel' => [
-                    'id' => $id['data']['attachApplicantIndividualLabel']['id']
+                    'id' => $id['data']['attachApplicantIndividualLabel']['id'],
                 ],
             ],
         ]);
@@ -211,7 +207,7 @@ class ApplicantIndividualLabelsTest extends TestCase
         $this->seeJson([
             'data' => [
                 'detachApplicantIndividualLabel' => [
-                    'id' => $id['data']['detachApplicantIndividualLabel']['id']
+                    'id' => $id['data']['detachApplicantIndividualLabel']['id'],
                 ],
             ],
         ]);
@@ -240,7 +236,7 @@ class ApplicantIndividualLabelsTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantIndividualLabel' => [
-                    'id' => $id['data']['deleteApplicantIndividualLabel']['id']
+                    'id' => $id['data']['deleteApplicantIndividualLabel']['id'],
                 ],
             ],
         ]);
@@ -269,11 +265,9 @@ class ApplicantIndividualLabelsTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantIndividual' => [
-                    'id' => $id['data']['deleteApplicantIndividual']['id']
+                    'id' => $id['data']['deleteApplicantIndividual']['id'],
                 ],
             ],
         ]);
     }
-
 }
-

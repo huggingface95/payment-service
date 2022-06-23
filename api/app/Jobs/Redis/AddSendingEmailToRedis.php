@@ -6,7 +6,6 @@ use App\Jobs\Job;
 use App\Models\EmailSmtp;
 use Illuminate\Support\Facades\Redis;
 
-
 class AddSendingEmailToRedis extends Job
 {
     /**
@@ -14,7 +13,6 @@ class AddSendingEmailToRedis extends Job
      *
      * @return void
      */
-
     protected EmailSmtp $smtp;
 
     public function __construct(EmailSmtp $emailSmtp)

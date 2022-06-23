@@ -8,7 +8,6 @@ use App\Models\Accounts;
 use App\Models\AccountState;
 use GuzzleHttp\Client;
 
-
 class IbanCompanyActivationJob extends Job
 {
     /**
@@ -16,8 +15,8 @@ class IbanCompanyActivationJob extends Job
      *
      * @return void
      */
-
     protected Accounts $account;
+
     protected IbanRequestDTO $ibanRequest;
 
     public function __construct(Accounts $account)

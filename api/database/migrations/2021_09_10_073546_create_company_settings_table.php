@@ -15,10 +15,10 @@ class CreateCompanySettingsTable extends Migration
     {
         Schema::create('company_settings', function (Blueprint $table) {
             $table->unsignedBigInteger('company_id')->primary();
-            $table->string('email_url',255)->nullable();
-            $table->string('email_jwt',255)->nullable();
-            $table->string('email_from',255)->nullable();
-            $table->string('logo_object_key',255)->nullable();
+            $table->string('email_url', 255)->nullable();
+            $table->string('email_jwt', 255)->nullable();
+            $table->string('email_from', 255)->nullable();
+            $table->string('logo_object_key', 255)->nullable();
             $table->boolean('show_own_logo')->default(false);
             $table->foreign('company_id')->references('id')->on('companies');
         });

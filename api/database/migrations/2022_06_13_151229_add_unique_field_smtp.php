@@ -14,7 +14,7 @@ class AddUniqueFieldSmtp extends Migration
     public function up()
     {
         Schema::table('email_smtps', function (Blueprint $table) {
-            $table->unique(['name','company_id']);
+            $table->unique(['name', 'company_id']);
         });
     }
 

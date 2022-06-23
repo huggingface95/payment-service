@@ -13,7 +13,5 @@ class CompanyQuery
      */
     public function paginate($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-
     }
-
 }

@@ -1,9 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Models\Accounts;
-
 class PaymentProviderTest extends TestCase
 {
     /**
@@ -42,7 +38,7 @@ class PaymentProviderTest extends TestCase
         $this->seeJson([
             'data' => [
                 'createPaymentProvider' => [
-                    'id' => $id['data']['createPaymentProvider']['id']
+                    'id' => $id['data']['createPaymentProvider']['id'],
                 ],
             ],
         ]);
@@ -72,7 +68,7 @@ class PaymentProviderTest extends TestCase
         ', [
             'id' => strval($payment_provider[0]->id),
             'name' => 'PaymentProviderName_Updated_'.\Illuminate\Support\Str::random(3),
-            'description' => 'PaymentProviderDescription_Updated_'.\Illuminate\Support\Str::random(3)
+            'description' => 'PaymentProviderDescription_Updated_'.\Illuminate\Support\Str::random(3),
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -96,13 +92,13 @@ class PaymentProviderTest extends TestCase
                 }
             }
         ', [
-            'id' => strval($payment_provider[0]->id)
+            'id' => strval($payment_provider[0]->id),
         ])->seeJson([
-                'data' => [
-                    'paymentProvider' => [
-                        'id' => strval($payment_provider[0]->id),
-                    ],
+            'data' => [
+                'paymentProvider' => [
+                    'id' => strval($payment_provider[0]->id),
                 ],
+            ],
         ]);
     }
 
@@ -118,9 +114,9 @@ class PaymentProviderTest extends TestCase
                 }
                 }
         }')->seeJsonContains([
-                [
-                    'id' => strval($payment_provider[0]->id)
-                ]
+            [
+                'id' => strval($payment_provider[0]->id),
+            ],
         ]);
     }
 
@@ -137,8 +133,8 @@ class PaymentProviderTest extends TestCase
                 }
         }')->seeJsonContains([
             [
-                'id' => strval($payment_provider[0]->id)
-            ]
+                'id' => strval($payment_provider[0]->id),
+            ],
         ]);
     }
 
@@ -165,11 +161,9 @@ class PaymentProviderTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deletePaymentProvider' => [
-                    'id' => $id['data']['deletePaymentProvider']['id']
+                    'id' => $id['data']['deletePaymentProvider']['id'],
                 ],
             ],
         ]);
     }
-
 }
-

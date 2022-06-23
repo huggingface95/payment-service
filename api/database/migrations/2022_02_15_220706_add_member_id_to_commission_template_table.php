@@ -27,7 +27,7 @@ class AddMemberIdToCommissionTemplateTable extends Migration
     public function down()
     {
         Schema::table('commission_template', function (Blueprint $table) {
-                $table->dropColumn('member_id');
+            $table->dropColumn('member_id');
         });
     }
 }

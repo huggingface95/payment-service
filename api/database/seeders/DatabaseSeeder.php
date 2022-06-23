@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -24,11 +25,11 @@ class DatabaseSeeder extends Seeder
         $this->call(ApplicantStateReasonTableSeeder::class);
         $this->call(ApplicantStateTableSeeder::class);
         $this->call(ApplicantStatusTableSeeder::class);
-        $this->call( ApplicantLabelsTableSeeder::class);
-        $this->call( ApplicantCompanyLabelsTableSeeder::class);
-        $this->call( PaymentStatusSeed::class);
-        $this->call( FeeTypeSeeder::class);
-        $this->call( FeePeriodSeeder::class);
-        $this->call( OperationTypeSeeder::class);
+        $this->call(ApplicantLabelsTableSeeder::class);
+        $this->call(ApplicantCompanyLabelsTableSeeder::class);
+        $this->call(PaymentStatusSeed::class);
+        $this->call(FeeTypeSeeder::class);
+        $this->call(FeePeriodSeeder::class);
+        $this->call(OperationTypeSeeder::class);
     }
 }

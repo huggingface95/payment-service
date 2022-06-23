@@ -6,8 +6,7 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 
 class ApplicantCompanyNotes extends BaseModel
 {
-
-    protected $table="applicant_company_notes";
+    protected $table = 'applicant_company_notes';
 
     /**
      * The attributes that are mass assignable.
@@ -15,7 +14,7 @@ class ApplicantCompanyNotes extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'note','applicant_company_id','member_id'
+        'note', 'applicant_company_id', 'member_id',
     ];
 
     protected static function booted()
@@ -39,6 +38,4 @@ class ApplicantCompanyNotes extends BaseModel
     {
         return $this->belongsTo(ApplicantCompany::class, ' applicant_company_id');
     }
-
-
 }

@@ -7,8 +7,7 @@ use App\Models\Scopes\MemberScope;
 
 class ApplicantCompanyRiskLevelHistory extends BaseModel
 {
-
-    protected $table="applicant_company_risk_level_history";
+    protected $table = 'applicant_company_risk_level_history';
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +15,7 @@ class ApplicantCompanyRiskLevelHistory extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'risk_level_id', 'comment', 'applicant_company_id', 'member_id'
+        'risk_level_id', 'comment', 'applicant_company_id', 'member_id',
     ];
 
     protected static function booted()
@@ -28,17 +27,16 @@ class ApplicantCompanyRiskLevelHistory extends BaseModel
 
     public function applicantCompany()
     {
-        return $this->belongsTo(ApplicantCompany::class,'applicant_company_id','id');
+        return $this->belongsTo(ApplicantCompany::class, 'applicant_company_id', 'id');
     }
 
     public function member()
     {
-        return $this->belongsTo(Members::class,'member_id','id');
+        return $this->belongsTo(Members::class, 'member_id', 'id');
     }
 
     public function applicantRiskLevel()
     {
-        return $this->belongsTo(ApplicantRiskLevel::class,'risk_level_id','id');
+        return $this->belongsTo(ApplicantRiskLevel::class, 'risk_level_id', 'id');
     }
-
 }

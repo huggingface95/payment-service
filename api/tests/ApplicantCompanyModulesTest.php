@@ -1,9 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Models\Accounts;
-
 class ApplicantCompanyModulesTest extends TestCase
 {
     /**
@@ -61,7 +57,7 @@ class ApplicantCompanyModulesTest extends TestCase
             'name' =>  'AppCompany'.\Illuminate\Support\Str::random(3),
             'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
             'url' => \Illuminate\Support\Str::random(6).'@com',
-            'phone' => '098'.str_pad(mt_rand(1,9),6,'0',STR_PAD_LEFT),
+            'phone' => '098'.str_pad(mt_rand(1, 9), 6, '0', STR_PAD_LEFT),
             'country_id' => 1,
             'city' => 'New York',
             'address' => '1st Street',
@@ -71,13 +67,13 @@ class ApplicantCompanyModulesTest extends TestCase
             'company_id' => 1,
             'language_id' => 1,
             'owner_relation_id' => 1,
-            'owner_position_id' => 1
+            'owner_position_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createApplicantCompany' => [
-                    'id' => $id['data']['createApplicantCompany']['id']
+                    'id' => $id['data']['createApplicantCompany']['id'],
                 ],
             ],
         ]);
@@ -99,13 +95,13 @@ class ApplicantCompanyModulesTest extends TestCase
                 }
             }
         ', [
-            'name' => 'Module_'.\Illuminate\Support\Str::random(7)
+            'name' => 'Module_'.\Illuminate\Support\Str::random(7),
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createApplicantModule' => [
-                    'id' => $id['data']['createApplicantModule']['id']
+                    'id' => $id['data']['createApplicantModule']['id'],
                 ],
             ],
         ]);
@@ -173,7 +169,7 @@ class ApplicantCompanyModulesTest extends TestCase
         $this->seeJson([
             'data' => [
                 'createApplicantCompanyModule' => [
-                    'id' => $id['data']['createApplicantCompanyModule']['id']
+                    'id' => $id['data']['createApplicantCompanyModule']['id'],
                 ],
             ],
         ]);
@@ -206,7 +202,7 @@ class ApplicantCompanyModulesTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantCompanyModule' => [
-                    'id' => $id['data']['deleteApplicantCompanyModule']['id']
+                    'id' => $id['data']['deleteApplicantCompanyModule']['id'],
                 ],
             ],
         ]);
@@ -235,7 +231,7 @@ class ApplicantCompanyModulesTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantModule' => [
-                    'id' => $id['data']['deleteApplicantModule']['id']
+                    'id' => $id['data']['deleteApplicantModule']['id'],
                 ],
             ],
         ]);
@@ -264,11 +260,9 @@ class ApplicantCompanyModulesTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantCompany' => [
-                    'id' => $id['data']['deleteApplicantCompany']['id']
+                    'id' => $id['data']['deleteApplicantCompany']['id'],
                 ],
             ],
         ]);
     }
-
 }
-

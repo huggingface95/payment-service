@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Redis;
 
-
 class NotificationsCommand extends Command
 {
     use ReplaceRegularExpressions;
@@ -35,7 +34,6 @@ class NotificationsCommand extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -67,6 +65,5 @@ class NotificationsCommand extends Command
                 continue;
             }
         }
-
     }
 }

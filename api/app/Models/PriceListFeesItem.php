@@ -2,14 +2,9 @@
 
 namespace App\Models;
 
-
-
-
 class PriceListFeesItem extends BaseModel
 {
-
-
-    protected $table="price_list_fees_item";
+    protected $table = 'price_list_fees_item';
 
     protected $fillable = [
         'price_list_fees_id',
@@ -27,5 +22,4 @@ class PriceListFeesItem extends BaseModel
     {
         $this->attributes['fee_item'] = json_encode($input);
     }
-
 }

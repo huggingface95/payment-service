@@ -1,10 +1,6 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Models\CommissionPriceList;
-use Illuminate\Support\Facades\Auth;
 
 class CommissionPriceListTest extends TestCase
 {
@@ -41,7 +37,7 @@ class CommissionPriceListTest extends TestCase
             'name' => 'Test Commission Price List',
             'provider_id' => 1,
             'payment_system_id' => 1,
-            'commission_template_id' => 1
+            'commission_template_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -81,7 +77,7 @@ class CommissionPriceListTest extends TestCase
             'name' => 'Updated Commission Price List',
             'provider_id' => 1,
             'payment_system_id' => 1,
-            'commission_template_id' => 1
+            'commission_template_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -106,13 +102,13 @@ class CommissionPriceListTest extends TestCase
                             'id' => strval($getRecord[0]->id),
                             'name' => $getRecord[0]->name,
                             'provider' => [
-                                'id' => strval($getRecord[0]->provider_id)
+                                'id' => strval($getRecord[0]->provider_id),
                             ],
                             'payment_system' => [
-                                'id' => strval($getRecord[0]->payment_system_id)
+                                'id' => strval($getRecord[0]->payment_system_id),
                             ],
                             'commission_template' => [
-                                'id' => strval($getRecord[0]->commission_template_id)
+                                'id' => strval($getRecord[0]->commission_template_id),
                             ],
                         ]],
                     ],
@@ -162,21 +158,21 @@ class CommissionPriceListTest extends TestCase
                     }
                 }
             }
-        ',[
-            'id' => strval($getRecord[0]->id)
+        ', [
+            'id' => strval($getRecord[0]->id),
         ])->seeJson([
             'data' => [
                 'commissionPriceList' => [
                     'id' => strval($getRecord[0]->id),
                     'name' => $getRecord[0]->name,
                     'provider' => [
-                        'id' => strval($getRecord[0]->provider_id)
+                        'id' => strval($getRecord[0]->provider_id),
                     ],
                     'payment_system' => [
-                        'id' => strval($getRecord[0]->payment_system_id)
+                        'id' => strval($getRecord[0]->payment_system_id),
                     ],
                     'commission_template' => [
-                        'id' => strval($getRecord[0]->commission_template_id)
+                        'id' => strval($getRecord[0]->commission_template_id),
                     ],
                 ],
             ],
@@ -193,15 +189,15 @@ class CommissionPriceListTest extends TestCase
                     'id' => strval($getRecord[0]->id),
                     'name' => $getRecord[0]->name,
                     'provider' => [
-                        'id' => strval($getRecord[0]->provider_id)
+                        'id' => strval($getRecord[0]->provider_id),
                     ],
                     'payment_system' => [
-                        'id' => strval($getRecord[0]->payment_system_id)
+                        'id' => strval($getRecord[0]->payment_system_id),
                     ],
                     'commission_template' => [
-                        'id' => strval($getRecord[0]->commission_template_id)
+                        'id' => strval($getRecord[0]->commission_template_id),
                     ],
-                ]
+                ],
             ];
 
         $this->graphQL('
@@ -241,7 +237,7 @@ class CommissionPriceListTest extends TestCase
             }
             }
         ', [
-            'id' => strval($getRecord[0]->id)
+            'id' => strval($getRecord[0]->id),
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -252,6 +248,4 @@ class CommissionPriceListTest extends TestCase
             ],
         ]);
     }
-
 }
-

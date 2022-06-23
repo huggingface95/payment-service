@@ -3,11 +3,9 @@
 namespace App\Models\Traits;
 
 use App\Models\PermissionOperation;
-use Illuminate\Support\Collection;
 
 trait UserPermission
 {
-
     public function hasPermission(string $name, string $url): bool
     {
         $this->loadRolesAndPermissionsRelations();
@@ -25,7 +23,6 @@ trait UserPermission
             return true;
         }
 
-
         $operation = PermissionOperation::query()->with(['parents', 'binds'])
             ->where('name', $name)
             ->where('referer', $url)
@@ -35,7 +32,7 @@ trait UserPermission
             $bindPermissions = $operation->binds->intersect($allPermissions);
 
             if ($bindPermissions->count()) {
-                if (!$operation->parents->count()) {
+                if (! $operation->parents->count()) {
                     return true;
                 }
                 $parentPermissions = $operation->parents->intersect($allPermissions);
@@ -46,7 +43,6 @@ trait UserPermission
         }
 
         return false;
-
     }
 
     private function loadRolesAndPermissionsRelations()

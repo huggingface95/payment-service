@@ -1,8 +1,8 @@
 <?php
 
-use \Nuwave\Lighthouse\Testing\MakesGraphQLRequestsLumen;
-use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
+use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
+use Nuwave\Lighthouse\Testing\MakesGraphQLRequestsLumen;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -14,6 +14,7 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
         $this->bootClearsSchemaCache();
     }
+
     /**
      * Creates the application.
      *

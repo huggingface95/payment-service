@@ -3,10 +3,6 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\ApplicantIndividual;
-use App\Models\ApplicantIndividualModules;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-
 
 class ApplicantIndividualLabelsMutator extends BaseMutator
 {
@@ -17,7 +13,6 @@ class ApplicantIndividualLabelsMutator extends BaseMutator
      * @param  array<string, mixed>  $args The field arguments passed by the client.
      * @return mixed
      */
-
     public function attach($root, array $args)
     {
         $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
@@ -34,7 +29,7 @@ class ApplicantIndividualLabelsMutator extends BaseMutator
     {
         $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
         $applicant->labels()->detach($args['applicant_individual_label_id']);
+
         return $applicant;
     }
-
 }

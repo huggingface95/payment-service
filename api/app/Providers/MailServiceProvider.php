@@ -24,9 +24,9 @@ class MailServiceProvider extends ServiceProvider
 
             $swift_mailer = new Swift_Mailer($transport);
 
-
             $mailer = new Mailer('smtp', app(Factory::class), $swift_mailer, $app->get('events'));
             $mailer->alwaysFrom($config['from'], $config['subject']);
+
             return $mailer;
         });
         parent::register();

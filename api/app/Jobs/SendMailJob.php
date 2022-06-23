@@ -9,8 +9,8 @@ use Illuminate\Mail\Mailer;
 
 class SendMailJob extends Job
 {
-
     protected SmtpDataDTO $dataDTO;
+
     protected SmtpConfigDTO $configDTO;
 
     /**

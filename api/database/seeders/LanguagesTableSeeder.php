@@ -18,9 +18,9 @@ class LanguagesTableSeeder extends Seeder
         $dataCsv = array_map('str_getcsv', file($path));
         foreach ($dataCsv as $item) {
             Languages::create([
-                    'name' => $item[1],
-                    'iso' => $item[0]
-                ]
+                'name' => $item[1],
+                'iso' => $item[0],
+            ]
             );
         }
     }

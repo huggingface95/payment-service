@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\ApplicantStateReason;
-use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class ApplicantStateReasonTableSeeder extends Seeder

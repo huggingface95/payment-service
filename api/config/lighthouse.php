@@ -33,13 +33,13 @@ return [
 
             // Logs in a user if they are authenticated. In contrast to Laravel's 'auth'
             // middleware, this delegates auth and permission checks to the field level.
-             \Nuwave\Lighthouse\Support\Http\Middleware\AttemptAuthentication::class,
+            \Nuwave\Lighthouse\Support\Http\Middleware\AttemptAuthentication::class,
             \Wimil\LighthouseGraphqlJwtAuth\Http\Middleware\AuthenticateWithApiGuard::class,
 
             \App\Http\Middleware\AccessMiddleware::class,
 
             // Logs every incoming GraphQL query.
-             \Nuwave\Lighthouse\Support\Http\Middleware\LogGraphQLQueries::class,
+            \Nuwave\Lighthouse\Support\Http\Middleware\LogGraphQLQueries::class,
         ],
 
         /*
@@ -73,7 +73,7 @@ return [
     */
 
     'schema' => [
-        'register' => base_path('graphql/schema.graphql')
+        'register' => base_path('graphql/schema.graphql'),
     ],
 
     /*
@@ -250,7 +250,7 @@ return [
     */
 
     'field_middleware' => [
-    	\App\GraphQL\ValidateDirective::class,
+        \App\GraphQL\ValidateDirective::class,
         \Nuwave\Lighthouse\Schema\Directives\TrimDirective::class,
         \Nuwave\Lighthouse\Schema\Directives\SanitizeDirective::class,
         \Nuwave\Lighthouse\Validation\ValidateDirective::class,

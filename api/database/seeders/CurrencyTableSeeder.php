@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\Currencies;
 use Illuminate\Database\Seeder;
 
@@ -22,7 +21,7 @@ class CurrencyTableSeeder extends Seeder
                 [
                     'name'=> $item[0],
                     'code' => $item[1],
-                    'minor_unit' => $item[2]
+                    'minor_unit' => $item[2],
                 ]
             );
         }

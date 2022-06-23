@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\GraphQL\Types;
 
-
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\AST;
-
 
 class StringIntegerType extends ScalarType
 {
@@ -17,7 +15,7 @@ class StringIntegerType extends ScalarType
     public function parseValue($value)
     {
         //if (is_string($value) || is_int($value)) {
-            return $value;
+        return $value;
         //}
     }
 
@@ -30,6 +28,4 @@ class StringIntegerType extends ScalarType
     {
         return $value;
     }
-
-
 }

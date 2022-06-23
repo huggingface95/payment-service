@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-
-
 class Transactions extends BaseModel
 {
+    protected $table = 'transactions';
 
-    protected $table="transactions";
     /**
      * The attributes that are mass assignable.
      *
@@ -23,9 +21,6 @@ class Transactions extends BaseModel
         'balance_prev',
         'balance_next',
         'amount',
-        'txtype'
+        'txtype',
     ];
-
-
-
 }

@@ -14,7 +14,7 @@ class AddUniqueEmailTemplateTable extends Migration
     public function up()
     {
         Schema::table('email_templates', function (Blueprint $table) {
-            $table->unique(['subject','company_id','service_type']);
+            $table->unique(['subject', 'company_id', 'service_type']);
         });
     }
 

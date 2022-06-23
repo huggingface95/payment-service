@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-
 
 /**
  * Class Accounts
@@ -19,19 +17,19 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property AccountLimit $limits
  * @property AccountReachedLimit $reachedLimits
  * @property ApplicantIndividual | ApplicantCompany $clientable
- *
  */
 class Accounts extends BaseModel
 {
-
     use MorphToOne;
 
-    const PRIVATE = "Private";
-    const BUSINESS =   "Business";
+    const PRIVATE = 'Private';
+
+    const BUSINESS = 'Business';
 
     public $timestamps = false;
 
-    protected $table = "accounts";
+    protected $table = 'accounts';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -51,7 +49,7 @@ class Accounts extends BaseModel
         'reserved_balance',
         'available_balance',
         'order_reference',
-        'company_id'
+        'company_id',
     ];
 
     public static self $clone;
@@ -62,9 +60,10 @@ class Accounts extends BaseModel
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
 
-    public function load($relations): Accounts
+    public function load($relations): self
     {
         self::$clone = $this->replicate();
+
         return parent::load($relations);
     }
 
@@ -145,19 +144,15 @@ class Accounts extends BaseModel
         /** @var Accounts $model */
         try {
             $model = self::$clone;
+        } catch (\Error $ex) {
+            $model = $this;
         }
-        catch (\Error $ex){$model = $this;}
 
-
-        if ($this->account_type === Accounts::BUSINESS)
-        {
+        if ($this->account_type === self::BUSINESS) {
             return $this->applicantCompany();
-        } else
-        {
+        } else {
             return $this->applicantIndividual();
         }
-
-
     }
 
     public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
@@ -182,7 +177,6 @@ class Accounts extends BaseModel
 
     public function accountState(): BelongsTo
     {
-        return $this->belongsTo(AccountState::class,'account_state_id');
+        return $this->belongsTo(AccountState::class, 'account_state_id');
     }
-
 }

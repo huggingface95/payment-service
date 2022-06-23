@@ -16,7 +16,7 @@ class CreateApplicantLabelRelationTable extends Migration
         Schema::create('applicant_individual_label_relation', function (Blueprint $table) {
             $table->unsignedBigInteger('applicant_individual_id');
             $table->unsignedBigInteger('applicant_individual_label_id');
-            $table->unique(['applicant_individual_id','applicant_individual_label_id']);
+            $table->unique(['applicant_individual_id', 'applicant_individual_label_id']);
             $table->foreign('applicant_individual_id')->references('id')->on('applicant_individual')->onDelete('cascade');
             $table->foreign('applicant_individual_label_id')->references('id')->on('applicant_individual_labels')->onDelete('cascade');
         });

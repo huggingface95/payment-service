@@ -16,28 +16,27 @@ class AccountStatesTableSeeder extends Seeder
     {
         AccountStates::create([
             'id'        => 1,
-            'name'     => 'Active'
+            'name'     => 'Active',
         ]);
 
         AccountStates::create([
             'id'        => 2,
-            'name'     => 'Suspended'
+            'name'     => 'Suspended',
         ]);
 
         AccountStates::create([
             'id'        => 3,
-            'name'     => 'Blocked'
+            'name'     => 'Blocked',
         ]);
 
         AccountStates::create([
             'id'        => 4,
-            'name'     => 'Pending'
+            'name'     => 'Pending',
         ]);
 
         AccountStates::create([
             'id'        => 5,
-            'name'     => 'Closed'
+            'name'     => 'Closed',
         ]);
     }
-
 }

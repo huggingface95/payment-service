@@ -1,9 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Models\Accounts;
-
 class CompaniesTest extends TestCase
 {
     /**
@@ -52,14 +48,14 @@ class CompaniesTest extends TestCase
             'zip' => '72319',
             'address' => '1st Street',
             'city' => 'New York',
-            'company_number' => '265555411'.mt_rand(1,9999),
-            'country_id' => 1
+            'company_number' => '265555411'.mt_rand(1, 9999),
+            'country_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createCompany' => [
-                    'id' => $id['data']['createCompany']['id']
+                    'id' => $id['data']['createCompany']['id'],
                 ],
             ],
         ]);
@@ -86,7 +82,7 @@ class CompaniesTest extends TestCase
             }
         ', [
             'id' => strval($company[0]->id),
-            'email' => 'company_'.\Illuminate\Support\Str::random(3).'@gmail.com'
+            'email' => 'company_'.\Illuminate\Support\Str::random(3).'@gmail.com',
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -110,13 +106,13 @@ class CompaniesTest extends TestCase
                 }
             }
         ', [
-            'id' => strval($company[0]->id)
+            'id' => strval($company[0]->id),
         ])->seeJson([
-                'data' => [
-                    'company' => [
-                        'id' => strval($company[0]->id),
-                    ],
+            'data' => [
+                'company' => [
+                    'id' => strval($company[0]->id),
                 ],
+            ],
         ]);
     }
 
@@ -132,9 +128,9 @@ class CompaniesTest extends TestCase
                 }
                 }
         }')->seeJsonContains([
-                [
-                    'id' => strval($applicant[0]->id)
-                ]
+            [
+                'id' => strval($applicant[0]->id),
+            ],
         ]);
     }
 
@@ -161,11 +157,9 @@ class CompaniesTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteCompany' => [
-                    'id' => $id['data']['deleteCompany']['id']
+                    'id' => $id['data']['deleteCompany']['id'],
                 ],
             ],
         ]);
     }
-
 }
-

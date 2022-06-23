@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class AccountReachedLimit
- * @package App\Models
  * @property int id
  * @property int account_id
  * @property string group_type
@@ -20,7 +19,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property float amount
 
  * @property Accounts $account
- *
  */
 class AccountReachedLimit extends BaseModel
 {
@@ -30,7 +28,7 @@ class AccountReachedLimit extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'account_id', 'group_type', 'client_name', 'client_type', 'transfer_direction', 'limit_type', 'limit_value', 'limit_currency', 'period', 'amount'
+        'account_id', 'group_type', 'client_name', 'client_type', 'transfer_direction', 'limit_type', 'limit_value', 'limit_currency', 'period', 'amount',
     ];
 
     protected $dates = ['expires_at'];

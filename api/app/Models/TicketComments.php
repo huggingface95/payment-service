@@ -9,7 +9,6 @@ use Illuminate\Support\Carbon;
 
 /**
  * Class TicketComment
- * @package App\Models
  * @property int id
  * @property int ticket_id
  * @property int client_id
@@ -19,7 +18,6 @@ use Illuminate\Support\Carbon;
  *
  * @property Ticket ticket
  * @property ApplicantIndividual client
- *
  */
 class TicketComments extends BaseModel
 {
@@ -29,7 +27,7 @@ class TicketComments extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'ticket_id', 'client_id', 'message'
+        'ticket_id', 'client_id', 'message',
     ];
 
     protected static function booted()

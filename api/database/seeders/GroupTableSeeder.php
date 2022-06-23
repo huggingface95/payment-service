@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Groups;
-use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class GroupTableSeeder extends Seeder
@@ -16,19 +15,18 @@ class GroupTableSeeder extends Seeder
     public function run()
     {
         Groups::create([
-                'id'        => 1,
-                'name'     => 'Member'
-            ]);
+            'id'        => 1,
+            'name'     => 'Member',
+        ]);
 
         Groups::create([
             'id'        => 2,
-            'name'     => 'Company'
+            'name'     => 'Company',
         ]);
 
         Groups::create([
             'id'        => 3,
-            'name'     => 'Individual'
+            'name'     => 'Individual',
         ]);
     }
-
 }

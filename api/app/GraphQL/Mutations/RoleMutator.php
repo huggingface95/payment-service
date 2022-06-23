@@ -2,17 +2,14 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphqlException;
 use App\Models\GroupRole;
 use App\Models\PermissionCategory;
 use App\Models\Permissions;
 use App\Models\Role;
-use App\Exceptions\GraphqlException;
-use Illuminate\Support\Facades\DB;
 
 class RoleMutator
 {
-
-
     /**
      * @param $_
      * @param array $args
@@ -21,7 +18,7 @@ class RoleMutator
     public function create($_, array $args)
     {
         if (isset($args['groups']) && $args['groups'][0] == '2') {
-            throw new GraphqlException('Role is not be used for this group',"internal", 500);
+            throw new GraphqlException('Role is not be used for this group', 'internal', 500);
         }
 
         $role = Role::create($args);
@@ -46,7 +43,7 @@ class RoleMutator
     public function update($_, array $args)
     {
         if (isset($args['groups']) && $args['groups'][0] == '2') {
-            throw new GraphqlException('Role is not be used for this group',"internal", 500);
+            throw new GraphqlException('Role is not be used for this group', 'internal', 500);
         }
 
         $role = Role::find($args['id']);
@@ -82,13 +79,13 @@ class RoleMutator
     private function syncGroups(Role $role, array $groups)
     {
         foreach ($groups as $group) {
-            GroupRole::where('id',$group)->update(['role_id'=>$role->id]);
+            GroupRole::where('id', $group)->update(['role_id'=>$role->id]);
         }
     }
 
     private function applyPermissionCategory(int $permissionCategoryId, bool $isAllCompanies)
     {
-        return PermissionCategory::where('id',$permissionCategoryId)->update(['is_all_companies'=>$isAllCompanies]);
+        return PermissionCategory::where('id', $permissionCategoryId)->update(['is_all_companies'=>$isAllCompanies]);
     }
 
     public function delete($root, array $args)
@@ -97,14 +94,13 @@ class RoleMutator
             $role = Role::find($args['id']);
             $group = GroupRole::all()->where('role_id', '=', $args['id']);
             if ($group != '[]') {
-                throw new GraphqlException('It is not possible to delete the role because it has active users', "use");
+                throw new GraphqlException('It is not possible to delete the role because it has active users', 'use');
             }
             $role->delete();
+
             return $role;
-        } catch (\Exception $exception)
-        {
-            throw new GraphqlException('It is not possible to delete the role because it has active users',"use");
+        } catch (\Exception $exception) {
+            throw new GraphqlException('It is not possible to delete the role because it has active users', 'use');
         }
     }
-
 }

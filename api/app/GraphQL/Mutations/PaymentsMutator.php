@@ -23,13 +23,11 @@ use Illuminate\Support\Collection;
 
 class PaymentsMutator
 {
-
     /**
      * @param null $_
      * @param array<string, mixed> $args
      * @throws GraphqlException
      */
-
     public function create($root, array $args)
     {
         $memberId = Payments::DEFAULT_MEMBER_ID;
@@ -41,7 +39,7 @@ class PaymentsMutator
         $allLimits = $this->getAllLimits($payment);
 
         if (false === $this->checkLimit($payment->Accounts, $allLimits, $allAmount, $payment->amount)) {
-            throw new GraphqlException('limit is exceeded', "use");
+            throw new GraphqlException('limit is exceeded', 'use');
         }
 
         $this->commissionCalculation($payment);
@@ -59,9 +57,9 @@ class PaymentsMutator
         $memberId = Payments::DEFAULT_MEMBER_ID;
         $args['member_id'] = $memberId;
         $payment->update($args);
+
         return $payment;
     }
-
 
     private function checkLimit(Accounts $account, Collection $allLimits, Collection $allProcessedAmount, $paymentAmount): bool
     {
@@ -79,6 +77,7 @@ class PaymentsMutator
                     || $limit->used_limit < $allProcessedAmount->sum('amount')
                 ) {
                     $this->createReachedLimit($account, $limit);
+
                     return false;
                 }
             } elseif ($limit instanceof AccountLimit || $limit instanceof CommissionTemplateLimit) {
@@ -88,28 +87,28 @@ class PaymentsMutator
                             return $q->whereBetween(
                                 'created_at', [
                                     Carbon::now()->startOfYear()->format('Y-m-d H:i:s'),
-                                    Carbon::now()->endOfYear()->format('Y-m-d H:i:s')
+                                    Carbon::now()->endOfYear()->format('Y-m-d H:i:s'),
                                 ]
                             );
                         } elseif ($name == CommissionTemplateLimitPeriod::MONTHLY) {
                             return $q->whereBetween(
                                 'created_at', [
                                     Carbon::now()->startOfMonth()->format('Y-m-d H:i:s'),
-                                    Carbon::now()->endOfMonth()->format('Y-m-d H:i:s')
+                                    Carbon::now()->endOfMonth()->format('Y-m-d H:i:s'),
                                 ]
                             );
                         } elseif ($name == CommissionTemplateLimitPeriod::WEEKLY) {
                             return $q->whereBetween(
                                 'created_at', [
                                     Carbon::now()->startOfWeek()->format('Y-m-d H:i:s'),
-                                    Carbon::now()->endOfWeek()->format('Y-m-d H:i:s')
+                                    Carbon::now()->endOfWeek()->format('Y-m-d H:i:s'),
                                 ]
                             );
                         } elseif ($name == CommissionTemplateLimitPeriod::DAILY) {
                             return $q->whereBetween(
                                 'created_at', [
                                     Carbon::now()->startOfDay()->format('Y-m-d H:i:s'),
-                                    Carbon::now()->endOfDay()->format('Y-m-d H:i:s')
+                                    Carbon::now()->endOfDay()->format('Y-m-d H:i:s'),
                                 ]
                             );
                         } elseif ($name == CommissionTemplateLimitPeriod::EACH_TIME) {
@@ -117,6 +116,7 @@ class PaymentsMutator
                         } elseif ($name == CommissionTemplateLimitPeriod::ONE_TIME) {
                             return $q->whereNull('id');
                         }
+
                         return $q;
                     })
                     ->when($limit->commissionTemplateLimitTransferDirection->name, function ($q, $name) {
@@ -127,6 +127,7 @@ class PaymentsMutator
                         } elseif ($name == CommissionTemplateLimitTransferDirection::ALL) {
                             return $q;
                         }
+
                         return $q;
                     });
 
@@ -134,20 +135,24 @@ class PaymentsMutator
                     && $limit->amount < $processedAmount->sum('amount')
                 ) {
                     $this->createReachedLimit($account, $limit);
+
                     return false;
                 } elseif ($limit->commissionTemplateLimitType->name == CommissionTemplateLimitType::TRANSACTION_COUNT
                     && $limit->period_count < $processedAmount->count()) {
                     $this->createReachedLimit($account, $limit);
+
                     return false;
                 } elseif ($limit->commissionTemplateLimitType->name == CommissionTemplateLimitType::ALL
                     && $limit->amount < $processedAmount->sum('amount')
                     && $limit->period_count < $processedAmount->count()
                 ) {
                     $this->createReachedLimit($account, $limit);
+
                     return false;
                 }
             }
         }
+
         return true;
     }
 
@@ -207,7 +212,6 @@ class PaymentsMutator
             ->get()->push($payment);
     }
 
-
     private static function getFee(Collection $list, $amount, $currency)
     {
         return $list->map(function ($fee) use ($amount, $currency) {
@@ -216,6 +220,7 @@ class PaymentsMutator
             } elseif (count(array_column($fee->fee_item, 'currency'))) {
                 return self::getFeeByCurrencyMode($fee->fee_item, $amount, $currency);
             }
+
             return null;
         })->sum();
     }
@@ -224,8 +229,10 @@ class PaymentsMutator
     {
         if ($data[$modeKey]['fee_from'] <= $amount && $amount <= $data[$modeKey]['fee_to']) {
             unset($data[$modeKey]);
+
             return self::getConstantFee(current($data), $amount);
         }
+
         return null;
     }
 
@@ -235,6 +242,7 @@ class PaymentsMutator
         if (in_array($currency, $data['currency'])) {
             return self::getConstantFee($data, $amount);
         }
+
         return null;
     }
 
@@ -245,8 +253,7 @@ class PaymentsMutator
         } elseif ($data['mode'] == '%') {
             return $amount % $data['fee'];
         }
+
         return null;
     }
-
-
 }

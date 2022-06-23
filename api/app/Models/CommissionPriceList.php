@@ -2,34 +2,33 @@
 
 namespace App\Models;
 
-
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @method static findOrFail()
  */
 class CommissionPriceList extends BaseModel
 {
-
     use HasFactory;
 
     public $timestamps = false;
 
-    protected $table = "commission_price_list";
+    protected $table = 'commission_price_list';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'provider_id', 'payment_system_id', 'commission_template_id'
+        'name', 'provider_id', 'payment_system_id', 'commission_template_id',
     ];
 
     protected static function booted()
@@ -69,9 +68,8 @@ class CommissionPriceList extends BaseModel
     {
         return $query->leftJoin(
             DB::raw('(SELECT id, name as payment_provider_name FROM "payment_provider") p'),
-            function($join)
-            {
-                $join->on('p.id', '=','commission_price_list.provider_id');
+            function ($join) {
+                $join->on('p.id', '=', 'commission_price_list.provider_id');
             })
             ->orderBy('p.payment_provider_name', $sort)
             ->selectRaw('commission_price_list.*');
@@ -94,7 +92,6 @@ class CommissionPriceList extends BaseModel
 
     public function account(): HasOneThrough
     {
-        return $this->hasOneThrough(Accounts::class, CommissionTemplate::class, 'id', 'commission_template_id', 'commission_template_id', 'id',);
+        return $this->hasOneThrough(Accounts::class, CommissionTemplate::class, 'id', 'commission_template_id', 'commission_template_id', 'id', );
     }
-
 }

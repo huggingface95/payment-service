@@ -6,8 +6,7 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 
 class ApplicantLabels extends BaseModel
 {
-
-    protected $table="applicant_individual_label_relation";
+    protected $table = 'applicant_individual_label_relation';
 
     /**
      * The attributes that are mass assignable.
@@ -15,8 +14,9 @@ class ApplicantLabels extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'applicant_individual_id','applicant_individual_label_id'
+        'applicant_individual_id', 'applicant_individual_label_id',
     ];
+
     public $timestamps = false;
 
     protected static function booted()
@@ -31,22 +31,20 @@ class ApplicantLabels extends BaseModel
      */
     public function ApplicantIndividual()
     {
-        return $this->belongsTo(ApplicantIndividual::class,'applicant_individual_id','applicant_individual_label_id', 'id');
+        return $this->belongsTo(ApplicantIndividual::class, 'applicant_individual_id', 'applicant_individual_label_id', 'id');
     }
 
     /**
      * Get relation applicant_modules
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
-
     public function ApplicantIndividualLabel()
     {
-        return $this->belongsTo(ApplicantIndividualLabel::class,'applicant_individual_label_id','id');
+        return $this->belongsTo(ApplicantIndividualLabel::class, 'applicant_individual_label_id', 'id');
     }
 
     public function labels()
     {
         return $this->belongsToMany(ApplicantIndividualLabel::class, 'applicant_individual_label_relation', 'applicant_individual_id', 'applicant_individual_label_id');
     }
-
 }

@@ -2,15 +2,12 @@
 
 namespace App\GraphQL\Mutations;
 
-
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantCompanyLabel;
 use GraphQL\Exception\InvalidArgument;
 
-
 class ApplicantCompanyLabelMutator
 {
-
     /**
      * @param $root
      * @param array $args
@@ -36,8 +33,10 @@ class ApplicantCompanyLabelMutator
         $memberId = ApplicantCompanyLabel::DEFAULT_MEMBER_ID;
         $args['member_id'] = $memberId;
         $label->update($args);
+
         return $label;
     }
+
     /**
      * @param $root
      * @param array $args
@@ -47,23 +46,22 @@ class ApplicantCompanyLabelMutator
     {
         try {
             $applicantLabel = ApplicantCompanyLabel::with('applicants')->find($args['id']);
-            if (!$applicantLabel) {
+            if (! $applicantLabel) {
                 throw new InvalidArgument("Label {$args['id']} not  found");
             }
 
             if ($applicantLabel->applicants->isNotEmpty()) {
-                if (!isset($args['deleteAnyway']) || $args['deleteAnyway'] === false) {
-                    throw new InvalidArgument("Label is used other applicants");
+                if (! isset($args['deleteAnyway']) || $args['deleteAnyway'] === false) {
+                    throw new InvalidArgument('Label is used other applicants');
                 }
             }
 
             $applicantLabel->delete();
+
             return $applicantLabel;
-        } catch (\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             throw new InvalidArgument($exception->getMessage());
         }
-
     }
 
     /**
@@ -73,7 +71,6 @@ class ApplicantCompanyLabelMutator
      * @param  array<string, mixed>  $args The field arguments passed by the client.
      * @return mixed
      */
-
     public function attach($root, array $args)
     {
         $applicantCompany = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
@@ -90,7 +87,7 @@ class ApplicantCompanyLabelMutator
     {
         $applicantCompany = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
         $applicantCompany->labels()->detach($args['applicant_company_label_id']);
+
         return $applicantCompany;
     }
-
 }

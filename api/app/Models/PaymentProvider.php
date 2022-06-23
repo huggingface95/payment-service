@@ -11,19 +11,18 @@ use Illuminate\Support\Facades\DB;
  */
 class PaymentProvider extends BaseModel
 {
-
     public $timestamps = false;
 
-    protected $table="payment_provider";
+    protected $table = 'payment_provider';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'is_active','description','logo_key'
+        'name', 'is_active', 'description', 'logo_key',
     ];
-
 
     /**
      * Get relation currencies
@@ -31,7 +30,7 @@ class PaymentProvider extends BaseModel
      */
     public function currencies()
     {
-        return $this->belongsToMany(Currencies::class,'payment_provider_currency','payment_provider_id','currency_id');
+        return $this->belongsToMany(Currencies::class, 'payment_provider_currency', 'payment_provider_id', 'currency_id');
     }
 
     /**
@@ -40,7 +39,7 @@ class PaymentProvider extends BaseModel
      */
     public function countries()
     {
-        return $this->belongsToMany(Country::class,'payment_provider_country','payment_provider_id','country_id');
+        return $this->belongsToMany(Country::class, 'payment_provider_country', 'payment_provider_id', 'country_id');
     }
 
     /**
@@ -49,24 +48,25 @@ class PaymentProvider extends BaseModel
      */
     public function paymentSystems(): BelongsToMany
     {
-        return $this->belongsToMany(PaymentSystem::class,'payment_provider_payment_system','payment_provider_id','payment_system_id');
+        return $this->belongsToMany(PaymentSystem::class, 'payment_provider_payment_system', 'payment_provider_id', 'payment_system_id');
     }
 
     public function commissionPriceList(): HasOne
     {
-        return $this->hasOne(CommissionPriceList::class, 'provider_id','id');
+        return $this->hasOne(CommissionPriceList::class, 'provider_id', 'id');
     }
 
     public function scopePaymentProviderCountry($query, $countryId)
     {
-		$countries = implode(',', $countryId);
-        return $query->where('country_id', '&&', DB::raw('ARRAY[' . $countries . ']::integer[]'));
+        $countries = implode(',', $countryId);
+
+        return $query->where('country_id', '&&', DB::raw('ARRAY['.$countries.']::integer[]'));
     }
 
     public function scopePaymentProviderCurrency($query, $currencyId)
     {
         $currencies = implode(',', $currencyId);
-        return $query->where('country_id', '&&', DB::raw('ARRAY[' . $currencies . ']::integer[]'));
-    }
 
+        return $query->where('country_id', '&&', DB::raw('ARRAY['.$currencies.']::integer[]'));
+    }
 }

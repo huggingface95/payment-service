@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use App\Models\CommissionTemplateLimitPeriod;
+use Illuminate\Database\Migrations\Migration;
 
 class InitCommissionTemplateLimitPeriod extends Migration
 {
@@ -14,13 +12,14 @@ class InitCommissionTemplateLimitPeriod extends Migration
      */
     public function up()
     {
-        $names= [
-            'Each time','One time','Daily','Weekly','Monthly','Yearly'
+        $names = [
+            'Each time', 'One time', 'Daily', 'Weekly', 'Monthly', 'Yearly',
         ];
-        foreach ($names as $name)
+        foreach ($names as $name) {
             CommissionTemplateLimitPeriod::create([
                 'name' => $name,
             ]);
+        }
     }
 
     /**

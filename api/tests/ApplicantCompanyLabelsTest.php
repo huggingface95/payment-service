@@ -1,9 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Models\Accounts;
-
 class ApplicantCompanyLabelsTest extends TestCase
 {
     /**
@@ -61,7 +57,7 @@ class ApplicantCompanyLabelsTest extends TestCase
             'name' =>  'AppCompany'.\Illuminate\Support\Str::random(3),
             'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
             'url' => \Illuminate\Support\Str::random(6).'@com',
-            'phone' => '098'.str_pad(mt_rand(1,9),6,'0',STR_PAD_LEFT),
+            'phone' => '098'.str_pad(mt_rand(1, 9), 6, '0', STR_PAD_LEFT),
             'country_id' => 1,
             'city' => 'New York',
             'address' => '1st Street',
@@ -71,13 +67,13 @@ class ApplicantCompanyLabelsTest extends TestCase
             'company_id' => 1,
             'language_id' => 1,
             'owner_relation_id' => 1,
-            'owner_position_id' => 1
+            'owner_position_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createApplicantCompany' => [
-                    'id' => $id['data']['createApplicantCompany']['id']
+                    'id' => $id['data']['createApplicantCompany']['id'],
                 ],
             ],
         ]);
@@ -102,13 +98,13 @@ class ApplicantCompanyLabelsTest extends TestCase
             }
         ', [
             'name' => 'Label_'.\Illuminate\Support\Str::random(5),
-            'hex_color_code' => '#'.mt_rand(100000, 999999)
+            'hex_color_code' => '#'.mt_rand(100000, 999999),
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createApplicantCompanyLabel' => [
-                    'id' => $id['data']['createApplicantCompanyLabel']['id']
+                    'id' => $id['data']['createApplicantCompanyLabel']['id'],
                 ],
             ],
         ]);
@@ -175,7 +171,7 @@ class ApplicantCompanyLabelsTest extends TestCase
         $this->seeJson([
             'data' => [
                 'attachApplicantCompanyLabel' => [
-                    'id' => $id['data']['attachApplicantCompanyLabel']['id']
+                    'id' => $id['data']['attachApplicantCompanyLabel']['id'],
                 ],
             ],
         ]);
@@ -208,7 +204,7 @@ class ApplicantCompanyLabelsTest extends TestCase
         $this->seeJson([
             'data' => [
                 'detachApplicantCompanyLabel' => [
-                    'id' => $id['data']['detachApplicantCompanyLabel']['id']
+                    'id' => $id['data']['detachApplicantCompanyLabel']['id'],
                 ],
             ],
         ]);
@@ -237,7 +233,7 @@ class ApplicantCompanyLabelsTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantCompanyLabel' => [
-                    'id' => $id['data']['deleteApplicantCompanyLabel']['id']
+                    'id' => $id['data']['deleteApplicantCompanyLabel']['id'],
                 ],
             ],
         ]);
@@ -266,11 +262,9 @@ class ApplicantCompanyLabelsTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantCompany' => [
-                    'id' => $id['data']['deleteApplicantCompany']['id']
+                    'id' => $id['data']['deleteApplicantCompany']['id'],
                 ],
             ],
         ]);
     }
-
 }
-

@@ -8,7 +8,6 @@ use App\Jobs\Job;
 use App\Models\Accounts;
 use Illuminate\Support\Facades\Redis;
 
-
 class IbanIndividualActivationJob extends Job
 {
     /**
@@ -16,7 +15,6 @@ class IbanIndividualActivationJob extends Job
      *
      * @return void
      */
-
     protected IbanRequestDTO $ibanRequest;
 
     public function __construct(Accounts $account)

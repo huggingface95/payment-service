@@ -15,7 +15,7 @@ class AddCompanyIdDepartmentPositionTable extends Migration
     {
         Schema::table('department_position', function (Blueprint $table) {
             $table->unsignedBigInteger('company_id')->nullable();
-            $table->unique(['name','company_id']);
+            $table->unique(['name', 'company_id']);
             $table->foreign('company_id')->references('id')->on('companies');
         });
     }

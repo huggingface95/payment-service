@@ -4,8 +4,7 @@ namespace App\Models;
 
 class ApplicantState extends BaseModel
 {
-
-    protected $table="applicant_state";
+    protected $table = 'applicant_state';
 
     /**
      * The attributes that are mass assignable.
@@ -13,10 +12,8 @@ class ApplicantState extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public $timestamps = false;
-
-
 }

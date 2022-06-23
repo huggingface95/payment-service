@@ -5,9 +5,6 @@ namespace App\GraphQL\Mutations;
 use App\Models\ApplicantIndividual;
 use App\Models\ApplicantRiskLevelHistory;
 use App\Models\BaseModel;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-
 
 class ApplicantHistoryRiskLevelMutator extends BaseMutator
 {
@@ -18,7 +15,6 @@ class ApplicantHistoryRiskLevelMutator extends BaseMutator
      * @param  array<string, mixed>  $args The field arguments passed by the client.
      * @return mixed
      */
-
     public function create($root, array $args)
     {
         $args['member_id'] = BaseModel::DEFAULT_MEMBER_ID;
@@ -30,5 +26,4 @@ class ApplicantHistoryRiskLevelMutator extends BaseMutator
 
         return $applicantRiskLevelHistory;
     }
-
 }

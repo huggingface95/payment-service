@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class AccountLimit
- * @package App\Models
  * @property int id
  * @property int account_id
  * @property int period_count
@@ -23,12 +22,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property CommissionTemplateLimitActionType $commissionTemplateLimitActionType
  * @property Currencies $currency
  * @property Accounts $account
- *
  */
 class AccountLimit extends BaseModel
 {
-
-
     public $timestamps = false;
 
     /**
