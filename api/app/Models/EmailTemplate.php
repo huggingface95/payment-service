@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
  * Class EmailTemplate
  * @package App\Models
  * @property int id
+ * @property string name
  * @property string subject
  * @property string content
  * @property string header
@@ -40,7 +41,7 @@ class EmailTemplate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'type', 'service_type', 'use_layout', 'subject', 'content', 'header', 'footer', 'member_id', 'company_id'
+        'type', 'service_type', 'use_layout', 'subject', 'content', 'header', 'footer', 'member_id', 'company_id', 'name'
     ];
 
     public function getHtml(): string

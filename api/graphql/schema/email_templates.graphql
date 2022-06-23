@@ -5,6 +5,8 @@ Banking-> Email Templates Settings
 type EmailTemplate {
     id: ID!
     "Название"
+    name: String!
+    "Тема"
     subject: String!
     "Тип"
     type: ClientType!
@@ -49,7 +51,7 @@ extend type Query @guard {
     emailTemplates(
         hasCompany: _ @whereHasConditions(columns: ["name"]),
         created_at: DateRange @whereBetween,
-        where: _ @whereConditions(columns: ["subject", "company_id", "type", "service_type"]),
+        where: _ @whereConditions(columns: ["name", "company_id", "type", "service_type"]),
         orderBy: _ @orderBy(
             columns: ["id"]
         )
@@ -59,7 +61,9 @@ extend type Query @guard {
 extend type Mutation @guard {
     "Создать электронную почту"
     createEmailTemplate(
-        "Название электронной почты"
+        "Название"
+        name: String!
+        "Тема"
         subject: String!
         "Взять layout"
         use_layout: Boolean!
@@ -80,7 +84,9 @@ extend type Mutation @guard {
     "Обновить данные компании"
     updateEmailTemplate(
         id: ID!
-        "Название электронной почты"
+        "Название"
+        name: String
+        "Тема"
         subject: String
         "Взять layout"
         use_layout: Boolean

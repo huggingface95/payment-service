@@ -17,7 +17,9 @@ class EmailTemplateMutator extends BaseMutator
 {
     public function create($root, array $args)
     {
-        $args['member_id'] = BaseModel::DEFAULT_MEMBER_ID;
+        /** @var Members $member */
+        $member = Auth::user();
+        $args['member_id'] = $member->id;
 
         return EmailTemplate::create($args);
     }
