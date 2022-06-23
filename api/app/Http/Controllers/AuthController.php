@@ -45,7 +45,7 @@ class AuthController extends Controller
         }
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
-            if ($this->verify2FA(request())) {
+            if ($this->verify2FA(request())->getData()->data == "success") {
                 return $this->respondWithToken2Fa($token);
             }
             else {
@@ -182,10 +182,10 @@ class AuthController extends Controller
         $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
         if (!$valid) {
             $token->update(['twofactor_verified' => false]);
-            return false;
+            return response()->json(['data' => 'Unable to verify your code']);
         }
         $token->update(['twofactor_verified' => true]);
-        return true;
+        return response()->json(['data' => 'success']);
     }
 
     public function disable2FA(Request $request)
