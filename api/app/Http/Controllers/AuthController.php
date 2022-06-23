@@ -142,7 +142,8 @@ class AuthController extends Controller
     public function activate2FA(Request $request)
     {
         $this->validate($request, [
-            'secret' => 'required'
+            'secret' => 'required',
+            'code' => 'required'
         ]);
 
         $user = auth()->user();
@@ -153,15 +154,19 @@ class AuthController extends Controller
                 return response()->json(['data' => 'Member not found']);
             }
         }
+        if ($this->verify2FA(request())->getData()->data == "success") {
+            $user->createToken($user->fullname)->accessToken;
+            $secretKey = $request->secret;
+            $user->two_factor_auth_setting_id = 2;
+            $user->google2fa_secret =
+                str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), config('lumen2fa.string_pad', 'X'));
+            $user->save();
 
-        $user->createToken($user->fullname)->accessToken;
-        $secretKey = $request->secret;
-        $user->two_factor_auth_setting_id = 2;
-        $user->google2fa_secret =
-            str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), config('lumen2fa.string_pad', 'X'));
-        $user->save();
-
-        return response()->json(['data' => '2fa activated']);
+            return response()->json(['data' => '2fa activated']);
+        }
+        else {
+            return response()->json(['data' => 'Unable to verify your code'], 401);
+        }
     }
 
     public function verify2FA(Request $request)
