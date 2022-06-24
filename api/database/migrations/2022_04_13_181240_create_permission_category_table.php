@@ -15,7 +15,7 @@ class CreatePermissionCategoryTable extends Migration
     {
         Schema::create('permission_category', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255);
+            $table->string('name', 255);
             $table->boolean('is_active')->default(true);
         });
     }

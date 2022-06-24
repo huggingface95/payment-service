@@ -16,7 +16,7 @@ class CreateApplicantCompanyModulesTable extends Migration
         Schema::create('applicant_company_modules', function (Blueprint $table) {
             $table->unsignedBigInteger('applicant_company_id');
             $table->unsignedBigInteger('applicant_module_id');
-            $table->unique(['applicant_company_id','applicant_module_id']);
+            $table->unique(['applicant_company_id', 'applicant_module_id']);
             $table->foreign('applicant_company_id')->references('id')->on('applicant_companies')->onDelete('cascade');
             $table->foreign('applicant_module_id')->references('id')->on('applicant_modules')->onDelete('cascade');
         });

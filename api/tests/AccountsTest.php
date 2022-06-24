@@ -1,7 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Models\Accounts;
 
 class AccountsTest extends TestCase
@@ -54,19 +52,19 @@ class AccountsTest extends TestCase
             'currency_id' =>  2,
             'client_id' => 1,
             'owner_id' => 2,
-            'account_number' => '2566'.str_pad(mt_rand(1,99999),5,'0',STR_PAD_LEFT),
+            'account_number' => '2566'.str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
             'account_type' => 'Business',
             'payment_provider_id' => 1,
             'commission_template_id' => 1,
             'account_state' => '1',
             'account_name' => 'Test_'.\Illuminate\Support\Str::random(3),
-            'client_type' => 'Individual'
+            'client_type' => 'Individual',
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createAccount' => [
-                    'id' => $id['data']['createAccount']['id']
+                    'id' => $id['data']['createAccount']['id'],
                 ],
             ],
         ]);
@@ -118,7 +116,7 @@ class AccountsTest extends TestCase
             'payment_provider_id' => 1,
             'commission_template_id' => 1,
             'account_state' => '1',
-            'account_name' => 'Test_'.\Illuminate\Support\Str::random(3)
+            'account_name' => 'Test_'.\Illuminate\Support\Str::random(3),
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -142,13 +140,13 @@ class AccountsTest extends TestCase
                 }
             }
         ', [
-            'id' => strval($accounts[0]->id)
+            'id' => strval($accounts[0]->id),
         ]))->seeJson([
-                'data' => [
-                    'account' => [
-                        'id' => strval($accounts[0]->id),
-                    ],
+            'data' => [
+                'account' => [
+                    'id' => strval($accounts[0]->id),
                 ],
+            ],
         ]);
     }
 
@@ -165,8 +163,8 @@ class AccountsTest extends TestCase
                 }
         }')->seeJsonContains([
             [
-                'id' => strval($account[0]->id)
-            ]
+                'id' => strval($account[0]->id),
+            ],
         ]);
     }
 
@@ -183,8 +181,8 @@ class AccountsTest extends TestCase
                 }
         }')->seeJsonContains([
             [
-                'id' => strval($account[0]->id)
-            ]
+                'id' => strval($account[0]->id),
+            ],
         ]);
     }
 
@@ -211,11 +209,9 @@ class AccountsTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteAccount' => [
-                    'id' => $id['data']['deleteAccount']['id']
+                    'id' => $id['data']['deleteAccount']['id'],
                 ],
             ],
         ]);
     }
-
 }
-

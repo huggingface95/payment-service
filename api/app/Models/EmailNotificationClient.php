@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Class EmailTemplate
- * @package App\Models
  * @property int id
  * @property int notification_id
  * @property string client_type
@@ -15,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  */
 class EmailNotificationClient extends BaseModel
 {
-    protected $table="email_notification_clients";
+    protected $table = 'email_notification_clients';
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +22,7 @@ class EmailNotificationClient extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'notification_id', 'client_type', 'client_id'
+        'notification_id', 'client_type', 'client_id',
     ];
 
     public $timestamps = false;

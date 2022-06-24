@@ -15,14 +15,15 @@ class PriceListFeesMutator
     {
         $priceListFee = PriceListFee::create($args);
         if ($args['fee']) {
-            foreach ($args['fee'] as $feeItem)
-            PriceListFeesItem::create([
-                'price_list_fees_id' => $priceListFee->id,
-                'fee_item'=> $feeItem
-            ]);
+            foreach ($args['fee'] as $feeItem) {
+                PriceListFeesItem::create([
+                    'price_list_fees_id' => $priceListFee->id,
+                    'fee_item'=> $feeItem,
+                ]);
+            }
         }
 
-         return $priceListFee;
+        return $priceListFee;
     }
 
     /**
@@ -36,16 +37,16 @@ class PriceListFeesMutator
         if ($priceListFee) {
             $priceListFee->update($args);
             if (isset($args['fee'])) {
-                PriceListFeesItem::where('price_list_fees_id',$args['id'])->delete();
-                foreach ($args['fee'] as $feeItem)
+                PriceListFeesItem::where('price_list_fees_id', $args['id'])->delete();
+                foreach ($args['fee'] as $feeItem) {
                     PriceListFeesItem::create([
                         'price_list_fees_id' =>  $priceListFee->id,
-                        'fee_item'=> $feeItem
+                        'fee_item'=> $feeItem,
                     ]);
+                }
             }
         }
+
         return  $priceListFee;
     }
-
-
 }

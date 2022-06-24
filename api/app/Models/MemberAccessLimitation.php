@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 
 /**
  * Class MemberAccessLimitation
- * @package App\Models
  * @property int id
  * @property int member_id
  * @property int group_role_id
@@ -17,20 +16,15 @@ use Illuminate\Support\Collection;
  * @property Collection groupRoles
  * @property GroupRole $groupRole
  * @property EmailSmtp $smtp
- *
  */
 class MemberAccessLimitation extends BaseModel
 {
-
-
     protected $fillable = ['member_id', 'group_role_id', 'commission_template_id'];
-
 
     public function member(): BelongsTo
     {
         return $this->belongsTo(Members::class, 'member_id');
     }
-
 
     public function group(): HasOneThrough
     {
@@ -43,7 +37,6 @@ class MemberAccessLimitation extends BaseModel
             'group_type_id'
         );
     }
-
 
     public function groupRole(): BelongsTo
     {
@@ -66,5 +59,4 @@ class MemberAccessLimitation extends BaseModel
     {
         return $this->belongsTo(CommissionTemplate::class, 'commission_template_id');
     }
-
 }

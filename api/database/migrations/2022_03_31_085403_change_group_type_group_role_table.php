@@ -14,7 +14,7 @@ class ChangeGroupTypeGroupRoleTable extends Migration
     public function up()
     {
         Schema::table('group_role', function (Blueprint $table) {
-            $table->renameColumn('group_id','group_type_id');
+            $table->renameColumn('group_id', 'group_type_id');
         });
     }
 
@@ -26,7 +26,7 @@ class ChangeGroupTypeGroupRoleTable extends Migration
     public function down()
     {
         Schema::table('group_role', function (Blueprint $table) {
-            $table->renameColumn('group_type_id','group_id');
+            $table->renameColumn('group_type_id', 'group_id');
         });
     }
 }

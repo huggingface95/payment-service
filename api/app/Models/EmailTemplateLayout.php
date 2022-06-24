@@ -5,10 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
-
 /**
  * Class EmailTemplate
- * @package App\Models
  * @property int id
  * @property int email_template_id
  * @property string header
@@ -17,7 +15,6 @@ use Illuminate\Support\Carbon;
  * @property Carbon updated_at
  *
  * @property Companies $company
- *
  */
 class EmailTemplateLayout extends BaseModel
 {
@@ -27,7 +24,7 @@ class EmailTemplateLayout extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'header', 'footer', 'company_id'
+        'header', 'footer', 'company_id',
     ];
 
     public function company(): BelongsTo

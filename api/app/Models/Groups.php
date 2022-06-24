@@ -6,21 +6,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Groups extends BaseModel
 {
-
     const MEMBER = 'Member';
+
     const COMPANY = 'Company';
+
     const INDIVIDUAL = 'Individual';
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public $timestamps = false;
 
-
     public function groups(): HasMany
     {
-        return $this->hasMany(GroupRole::class,'group_type_id','id');
+        return $this->hasMany(GroupRole::class, 'group_type_id', 'id');
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\ApplicantRiskLevel;
 use Illuminate\Database\Seeder;
 

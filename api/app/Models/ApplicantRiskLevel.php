@@ -4,8 +4,7 @@ namespace App\Models;
 
 class ApplicantRiskLevel extends BaseModel
 {
-
-    protected $table="applicant_risk_level";
+    protected $table = 'applicant_risk_level';
 
     /**
      * The attributes that are mass assignable.
@@ -13,10 +12,8 @@ class ApplicantRiskLevel extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public $timestamps = false;
-
-
 }

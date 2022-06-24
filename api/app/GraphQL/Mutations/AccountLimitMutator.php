@@ -8,7 +8,6 @@ use App\Models\CommissionTemplateLimit;
 
 class AccountLimitMutator
 {
-
     /**
      * @throws GraphqlException
      */
@@ -16,8 +15,8 @@ class AccountLimitMutator
     {
         $limit = new AccountLimit($args);
 
-        if (false === $this->compareWithCommissionLimit($limit)){
-            throw new GraphqlException('limit does not match with commission limit',"use");
+        if (false === $this->compareWithCommissionLimit($limit)) {
+            throw new GraphqlException('limit does not match with commission limit', 'use');
         }
 
         $limit->save();
@@ -34,8 +33,8 @@ class AccountLimitMutator
         $limit = AccountLimit::find($args['id']);
         $limit = $limit->fill($args);
 
-        if (false === $this->compareWithCommissionLimit($limit)){
-            throw new GraphqlException('limit does not match with commission limit',"use");
+        if (false === $this->compareWithCommissionLimit($limit)) {
+            throw new GraphqlException('limit does not match with commission limit', 'use');
         }
 
         $limit->save();
@@ -56,5 +55,4 @@ class AccountLimitMutator
 
         return $commissionLimit->amount >= $limit->amount;
     }
-
 }

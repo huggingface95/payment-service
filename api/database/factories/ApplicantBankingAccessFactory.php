@@ -30,7 +30,7 @@ class ApplicantBankingAccessFactory extends Factory
             'contact_administrator' => true,
             'daily_limit' => 5000.00,
             'monthly_limit' => 50000.00,
-            'operation_limit' => 1000.00
+            'operation_limit' => 1000.00,
         ];
     }
 }

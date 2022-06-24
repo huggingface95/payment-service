@@ -14,10 +14,10 @@ class PaymentStatusSeed extends Seeder
      */
     public function run()
     {
-        $statuses = ['Pending', 'Completed','Error','Canceled', 'Unsigned'];
+        $statuses = ['Pending', 'Completed', 'Error', 'Canceled', 'Unsigned'];
         foreach ($statuses as $item) {
             PaymentStatus::create([
-                'name' => $item
+                'name' => $item,
             ]);
         }
     }

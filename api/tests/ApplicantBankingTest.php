@@ -1,7 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
 use App\Models\ApplicantBankingAccess;
 
 class ApplicantBankingTest extends TestCase
@@ -22,20 +20,20 @@ class ApplicantBankingTest extends TestCase
                         'data' => [[
                             'id' => strval($getRecord[0]->id),
                             'applicant_individual' => [
-                                'id' => strval($getRecord[0]->applicant_individual_id)
+                                'id' => strval($getRecord[0]->applicant_individual_id),
                             ],
                             'applicant_company' => [
-                                'id' => strval($getRecord[0]->applicant_company_id)
+                                'id' => strval($getRecord[0]->applicant_company_id),
                             ],
                             'member' => [
-                                'id' => strval($getRecord[0]->member_id)
+                                'id' => strval($getRecord[0]->member_id),
                             ],
                             'can_create_payment' => $getRecord[0]->can_create_payment,
                             'can_sign_payment' => $getRecord[0]->can_sign_payment,
                             'contact_administrator' => $getRecord[0]->contact_administrator,
                             'daily_limit' => intval($getRecord[0]->daily_limit),
                             'monthly_limit' => intval($getRecord[0]->monthly_limit),
-                            'operation_limit' => intval($getRecord[0]->operation_limit)
+                            'operation_limit' => intval($getRecord[0]->operation_limit),
                         ]],
                     ],
                 ],
@@ -73,23 +71,23 @@ class ApplicantBankingTest extends TestCase
         $data =
             [
                 [
-                'id' => strval($applicantBankingAccess->id),
-                'applicant_individual' => [
-                    'id' => strval($applicantBankingAccess->applicant_individual_id)
+                    'id' => strval($applicantBankingAccess->id),
+                    'applicant_individual' => [
+                        'id' => strval($applicantBankingAccess->applicant_individual_id),
+                    ],
+                    'applicant_company' => [
+                        'id' => strval($applicantBankingAccess->applicant_company_id),
+                    ],
+                    'member' => [
+                        'id' => strval($applicantBankingAccess->member_id),
+                    ],
+                    'can_create_payment' => $applicantBankingAccess->can_create_payment,
+                    'can_sign_payment' => $applicantBankingAccess->can_sign_payment,
+                    'contact_administrator' => $applicantBankingAccess->contact_administrator,
+                    'daily_limit' => intval($applicantBankingAccess->daily_limit),
+                    'monthly_limit' => intval($applicantBankingAccess->monthly_limit),
+                    'operation_limit' => intval($applicantBankingAccess->operation_limit),
                 ],
-                'applicant_company' => [
-                    'id' => strval($applicantBankingAccess->applicant_company_id)
-                ],
-                'member' => [
-                    'id' => strval($applicantBankingAccess->member_id)
-                ],
-                'can_create_payment' => $applicantBankingAccess->can_create_payment,
-                'can_sign_payment' => $applicantBankingAccess->can_sign_payment,
-                'contact_administrator' => $applicantBankingAccess->contact_administrator,
-                'daily_limit' => intval($applicantBankingAccess->daily_limit),
-                'monthly_limit' => intval($applicantBankingAccess->monthly_limit),
-                'operation_limit' => intval($applicantBankingAccess->operation_limit)
-                ]
             ];
 
         $this->graphQL('
@@ -120,8 +118,8 @@ class ApplicantBankingTest extends TestCase
                         }
                     }
             }
-        ',[
-            'applicant_individual_id' => strval($applicantBankingAccess->applicant_individual_id)
+        ', [
+            'applicant_individual_id' => strval($applicantBankingAccess->applicant_individual_id),
         ])->seeJsonContains($data);
     }
 
@@ -171,7 +169,7 @@ class ApplicantBankingTest extends TestCase
             'name' => 'Test Commission Price List',
             'provider_id' => 1,
             'payment_system_id' => 1,
-            'commission_template_id' => 1
+            'commission_template_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -350,4 +348,3 @@ class ApplicantBankingTest extends TestCase
     }
     */
 }
-

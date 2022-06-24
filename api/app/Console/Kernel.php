@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         NotificationsCommand::class,
-        SendEmailCommand::class
+        SendEmailCommand::class,
     ];
 
     /**

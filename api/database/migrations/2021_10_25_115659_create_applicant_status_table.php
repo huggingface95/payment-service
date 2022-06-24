@@ -15,7 +15,7 @@ class CreateApplicantStatusTable extends Migration
     {
         Schema::create('applicant_status', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255)->unique();
+            $table->string('name', 255)->unique();
         });
     }
 

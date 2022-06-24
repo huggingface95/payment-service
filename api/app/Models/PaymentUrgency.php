@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-
 class PaymentUrgency extends BaseModel
 {
-    protected $table="payment_urgency";
+    protected $table = 'payment_urgency';
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public $timestamps = false;
-
 }

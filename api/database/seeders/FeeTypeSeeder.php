@@ -14,7 +14,7 @@ class FeeTypeSeeder extends Seeder
      */
     public function run()
     {
-        $feeType = ['Fees','Service Fees'];
+        $feeType = ['Fees', 'Service Fees'];
         foreach ($feeType as $item) {
             FeeType::firstOrCreate(['name'=>$item]);
         }

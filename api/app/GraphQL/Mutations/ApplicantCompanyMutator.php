@@ -6,12 +6,9 @@ use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividualCompany;
 use App\Models\GroupRoleUser;
-use App\Models\Role;
-
 
 class ApplicantCompanyMutator extends BaseMutator
 {
-
     /**
      * Return a value for the field.
      *
@@ -19,15 +16,13 @@ class ApplicantCompanyMutator extends BaseMutator
      * @param  array<string, mixed>  $args The field arguments passed by the client.
      * @return mixed
      */
-
     public function create($root, array $args)
     {
-
         if (isset($args['company_info_additional_fields'])) {
-            $args['company_info_additional_fields']  = $this->setAdditionalField($args['company_info_additional_fields']);
+            $args['company_info_additional_fields'] = $this->setAdditionalField($args['company_info_additional_fields']);
         }
         if (isset($args['contacts_additional_fields'])) {
-            $args['contacts_additional_fields']  = $this->setAdditionalField($args['contacts_additional_fields']);
+            $args['contacts_additional_fields'] = $this->setAdditionalField($args['contacts_additional_fields']);
         }
 
         $applicant = ApplicantCompany::create($args);
@@ -41,12 +36,13 @@ class ApplicantCompanyMutator extends BaseMutator
             $applicant->labels()->attach($args['labels']);
         }
 
-        if(isset($args['group_id'])) {
+        if (isset($args['group_id'])) {
             $this->setApplicantCompanyGroup($applicant, $args['group_id']);
         }
 
         return $applicant;
     }
+
     /**
      * Return a value for the field.
      *
@@ -54,19 +50,18 @@ class ApplicantCompanyMutator extends BaseMutator
      * @param  array<string, mixed>  $args The field arguments passed by the client.
      * @return mixed
      */
-
     public function update($root, array $args)
     {
         $applicant = ApplicantCompany::find($args['id']);
         if (isset($args['info_additional_fields'])) {
-            $args['info_additional_fields']  = $this->setAdditionalField($args['info_additional_fields']);
+            $args['info_additional_fields'] = $this->setAdditionalField($args['info_additional_fields']);
         }
         if (isset($args['contacts_additional_fields'])) {
-            $args['contacts_additional_fields']  = $this->setAdditionalField($args['contacts_additional_fields']);
+            $args['contacts_additional_fields'] = $this->setAdditionalField($args['contacts_additional_fields']);
         }
 
         if (isset($args['profile_additional_fields'])) {
-            $args['profile_additional_fields']  = $this->setAdditionalField($args['profile_additional_fields']);
+            $args['profile_additional_fields'] = $this->setAdditionalField($args['profile_additional_fields']);
         }
 
         if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {
@@ -77,7 +72,7 @@ class ApplicantCompanyMutator extends BaseMutator
             $applicant->labels()->detach($args['labels']);
             $applicant->labels()->attach($args['labels']);
         }
-        if(isset($args['group_id'])) {
+        if (isset($args['group_id'])) {
             $this->setApplicantCompanyGroup($applicant, $args['group_id']);
         }
 
@@ -92,33 +87,30 @@ class ApplicantCompanyMutator extends BaseMutator
      * @return ApplicantIndividualCompany
      * @throws GraphqlException
      */
-    private function setOwner(ApplicantCompany $applicant, array $args):ApplicantIndividualCompany
+    private function setOwner(ApplicantCompany $applicant, array $args): ApplicantIndividualCompany
     {
         try {
             return ApplicantIndividualCompany::create([
                 'applicant_individual_id'=> $args['owner_id'],
                 'applicant_company_id' => $applicant->id,
                 'applicant_individual_company_relation_id' => ($args['owner_relation_id']) ?? $args['owner_relation_id'],
-                'applicant_individual_company_position_id' => ($args['owner_position_id']) ?? $args['owner_position_id']
+                'applicant_individual_company_position_id' => ($args['owner_position_id']) ?? $args['owner_position_id'],
             ]);
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             throw new GraphqlException($exception->getMessage());
         }
-
     }
 
     private function setApplicantCompanyGroup(ApplicantCompany $applicantCompany, int $groupId)
     {
-        $groupRoleUser =GroupRoleUser::where('user_id',$applicantCompany->id)->first();
+        $groupRoleUser = GroupRoleUser::where('user_id', $applicantCompany->id)->first();
         if ($groupRoleUser !== null) {
-            GroupRoleUser::where('user_id',$applicantCompany->id)->update(['group_role_id'=>$groupId]);
+            GroupRoleUser::where('user_id', $applicantCompany->id)->update(['group_role_id'=>$groupId]);
         } else {
             GroupRoleUser::create([
                 'user_id'=>$applicantCompany->id,
-                    'group_role_id' => $groupId
-                ]);
+                'group_role_id' => $groupId,
+            ]);
         }
     }
-
 }

@@ -4,10 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-
 /**
  * Class PermissionOperation
- * @package App\Models
  * @property int id
  * @property string name
  * @property string referer
@@ -22,11 +20,10 @@ class PermissionOperation extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'referer', 'hidden'
+        'id', 'name', 'referer', 'hidden',
     ];
 
     public $timestamps = false;
-
 
     public function parents(): BelongsToMany
     {
@@ -41,6 +38,4 @@ class PermissionOperation extends BaseModel
             Permissions::class, 'permission_operations_binds', 'permission_operations_id', 'permission_id'
         );
     }
-
-
 }

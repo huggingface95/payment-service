@@ -6,10 +6,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
-
 /**
  * Class PriceListFee
- * @package App\Models
  * @property int id
  * @property string name
  * @property int price_list_id
@@ -25,10 +23,12 @@ use Illuminate\Support\Carbon;
  */
 class PriceListFee extends BaseModel
 {
-
     const RANGE = 'range';
+
     const FIX = 'fix';
+
     const RANGE_COLUMNS = ['amount_from', 'amount_to', 'mode'];
+
     const FIX_COLUMNS = ['fee', 'currency', 'mode'];
 
     /**
@@ -64,7 +64,7 @@ class PriceListFee extends BaseModel
 
     public function fees(): HasMany
     {
-        return $this->hasMany(PriceListFeesItem::class,'price_list_fees_id');
+        return $this->hasMany(PriceListFeesItem::class, 'price_list_fees_id');
     }
 
     public function operationType(): BelongsTo

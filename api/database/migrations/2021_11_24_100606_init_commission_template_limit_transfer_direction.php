@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use App\Models\CommissionTemplateLimitTransferDirection;
+use Illuminate\Database\Migrations\Migration;
 
 class InitCommissionTemplateLimitTransferDirection extends Migration
 {
@@ -14,13 +12,14 @@ class InitCommissionTemplateLimitTransferDirection extends Migration
      */
     public function up()
     {
-        $names= [
-            'All','Incoming','Outgoing'
+        $names = [
+            'All', 'Incoming', 'Outgoing',
         ];
-        foreach ($names as $name)
+        foreach ($names as $name) {
             CommissionTemplateLimitTransferDirection::create([
                 'name' => $name,
             ]);
+        }
     }
 
     /**

@@ -14,7 +14,7 @@ class AddUniquePriceListFees extends Migration
     public function up()
     {
         Schema::table('price_list_fees', function (Blueprint $table) {
-            $table->unique(['name', 'price_list_id'],'price_list_fees_name_price_list_uniq');
+            $table->unique(['name', 'price_list_id'], 'price_list_fees_name_price_list_uniq');
         });
     }
 

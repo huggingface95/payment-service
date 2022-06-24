@@ -6,10 +6,12 @@ class SmtpUserDTO
 {
 //    public string $memberId;
     public string $templateId;
+
     public string $email;
+
     public string $message;
 
-    public static function transform(object $data): SmtpUserDTO
+    public static function transform(object $data): self
     {
         $dto = new self();
         $dto->templateId = $data->template_id;
@@ -18,5 +20,4 @@ class SmtpUserDTO
 
         return $dto;
     }
-
 }

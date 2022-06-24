@@ -4,7 +4,6 @@ namespace App\Traits;
 
 trait ReplaceRegularExpressions
 {
-
     public function replaceObjectData(string $content, object $object, string $regexp): string
     {
         return $this->replaceData($content, json_decode(json_encode($object), true), $regexp);
@@ -20,6 +19,4 @@ trait ReplaceRegularExpressions
             return  $d[$m[2] ?? $m[1]] ?? $m[0];
         }, $content);
     }
-
-
 }

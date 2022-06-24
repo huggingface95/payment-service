@@ -2,9 +2,7 @@
 
 namespace App\Jobs;
 
-
 use GuzzleHttp\Client;
-
 
 class SendPushJob extends Job
 {
@@ -26,6 +24,5 @@ class SendPushJob extends Job
      */
     public function handle(Client $client)
     {
-
     }
 }

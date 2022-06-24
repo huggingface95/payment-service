@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Queries;
 
-
 class PaymentProviderQuery
 {
     /**
@@ -11,7 +10,5 @@ class PaymentProviderQuery
      */
     public function __invoke($_, array $args)
     {
-
     }
-
 }

@@ -3,7 +3,6 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\Companies;
-use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class CompanyMutator extends BaseMutator
@@ -17,15 +16,15 @@ class CompanyMutator extends BaseMutator
      * @param  \GraphQL\Type\Definition\ResolveInfo  $resolveInfo Metadata for advanced query resolution.
      * @return mixed
      */
-
     public function update($root, array $args, GraphQLContext $context)
     {
-            $company = Companies::find($args['id']);
-            if (isset($args['additional_fields'])) {
-                $args['additional_fields']  = $this->setAdditionalField($args['additional_fields']);
-            }
-            $company->update($args);
-            return $company;
+        $company = Companies::find($args['id']);
+        if (isset($args['additional_fields'])) {
+            $args['additional_fields'] = $this->setAdditionalField($args['additional_fields']);
+        }
+        $company->update($args);
+
+        return $company;
     }
 
     public function delete($root, array $args, GraphQLContext $context)
@@ -33,7 +32,7 @@ class CompanyMutator extends BaseMutator
         $company = Companies::find($args['id']);
 
         $company->delete();
+
         return $company;
     }
-
 }

@@ -15,7 +15,7 @@ class CreateKycLevelTable extends Migration
     {
         Schema::create('applicant_kyc_level', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255)->unique();
+            $table->string('name', 255)->unique();
         });
     }
 

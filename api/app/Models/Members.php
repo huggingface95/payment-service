@@ -4,25 +4,25 @@ namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\UserPermission;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Laravel\Lumen\Auth\Authorizable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Laravel\Passport\HasApiTokens;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use \Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
 /**
  * Class Members
- * @package App\Models
  * @property int id
  * @property bool is_show_owner_applicants
  * @property string email
@@ -40,9 +40,7 @@ use \Illuminate\Notifications\Notifiable;
  * @property Collection groupRoles
  * @property GroupRole $groupRole
  * @property EmailSmtp $smtp
- *
  */
-
 class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
 {
     use SoftDeletes, Authorizable, Authenticatable, UserPermission, HasApiTokens, CanResetPassword, Notifiable;
@@ -66,14 +64,14 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'additional_info_fields',
         'is_show_owner_applicants',
         'is_sign_transaction',
-        'groupRoles'
+        'groupRoles',
     ];
 
     protected $hidden = [
         'password_hash',
         'password_salt',
         'google2fa_secret',
-        'security_pin'
+        'security_pin',
     ];
 
     protected $casts = [
@@ -82,14 +80,13 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = array('two_factor','permissions');
+    protected $appends = ['two_factor', 'permissions'];
 
     protected static function booted()
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
-
 
     public function getTwoFactorAttribute()
     {
@@ -100,26 +97,23 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     {
         $permissions = collect();
 
-        $permissionsArray =  $this->groupRole()
-            ->join('role_has_permissions','role_has_permissions.role_id','=','group_role.role_id')
-            ->join('permissions','permissions.id','=','role_has_permissions.permission_id')
-            ->join('permissions_list','permissions_list.id','permissions.permission_list_id')
-            ->select('permissions.id','permissions.display_name','permissions.permission_list_id','permissions_list.name as permission','permissions_list.id as list_id')
+        $permissionsArray = $this->groupRole()
+            ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'group_role.role_id')
+            ->join('permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
+            ->join('permissions_list', 'permissions_list.id', 'permissions.permission_list_id')
+            ->select('permissions.id', 'permissions.display_name', 'permissions.permission_list_id', 'permissions_list.name as permission', 'permissions_list.id as list_id')
             ->get();
 
-        foreach ($permissionsArray as $item)
-        {
+        foreach ($permissionsArray as $item) {
             $list[] = $item->permission;
         }
         $lists = array_unique($list);
 
-        foreach ($lists as $listItem)
-        {
+        foreach ($lists as $listItem) {
             $permission['permission'] = $listItem;
             $actions = [];
 
-            foreach ($permissionsArray as $item)
-            {
+            foreach ($permissionsArray as $item) {
                 if ($item->permission != $listItem) {
                     continue;
                 }
@@ -242,6 +236,6 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function scopeCompanySort($query, $sort)
     {
-        return $query->join('companies','companies.id','=','members.company_id')->orderBy('companies.name',$sort)->select('members.*');
+        return $query->join('companies', 'companies.id', '=', 'members.company_id')->orderBy('companies.name', $sort)->select('members.*');
     }
 }

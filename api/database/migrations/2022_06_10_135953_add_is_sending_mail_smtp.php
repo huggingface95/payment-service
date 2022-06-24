@@ -15,7 +15,7 @@ class AddIsSendingMailSmtp extends Migration
     {
         Schema::table('email_smtps', function (Blueprint $table) {
             $table->boolean('is_sending_mail')->default(false);
-            $table->string('name',255)->nullable();
+            $table->string('name', 255)->nullable();
         });
     }
 

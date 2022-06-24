@@ -15,7 +15,7 @@ class CreatePaymentSystemTable extends Migration
     {
         Schema::create('payment_system', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255)->unique();
+            $table->string('name', 255)->unique();
             $table->boolean('is_active')->default(true);
         });
     }

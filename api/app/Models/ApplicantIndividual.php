@@ -8,21 +8,17 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Spatie\Permission\Traits\HasRoles;
-
 
 /**
  * Class ApplicantIndividual
- * @package App\Models
-
  * @property ApplicantBankingAccess $applicantBankingAccess
- *
  */
 class ApplicantIndividual extends BaseModel
 {
     use MorphToOne, BelongsToOne;
 
-    protected $table = "applicant_individual";
+    protected $table = 'applicant_individual';
+
     protected $guard_name = 'api';
 
     /**
@@ -62,7 +58,7 @@ class ApplicantIndividual extends BaseModel
         'password_salt',
         'is_verification_phone',
         'company_id',
-        'two_factor_auth_id'
+        'two_factor_auth_id',
     ];
 
     protected $hidden = [
@@ -72,7 +68,7 @@ class ApplicantIndividual extends BaseModel
 
     protected $casts = [
         'personal_additional_fields' => 'array',
-        'contacts_additional_fields' => 'array'
+        'contacts_additional_fields' => 'array',
     ];
 
     protected static function booted()
@@ -179,7 +175,7 @@ class ApplicantIndividual extends BaseModel
 
     public function ApplicantIndividual()
     {
-        return $this->belongsTo(ApplicantIndividual::class, 'applicant_individual_id', 'id');
+        return $this->belongsTo(self::class, 'applicant_individual_id', 'id');
     }
 
     public function companies()
@@ -231,9 +227,9 @@ class ApplicantIndividual extends BaseModel
     {
         return $query
             ->join('group_role_members_individuals', 'group_role_members_individuals.user_id', 'applicant_individual.id')
-            ->join('group_role', 'group_role.id','=','group_role_members_individuals.group_role_id')
+            ->join('group_role', 'group_role.id', '=', 'group_role_members_individuals.group_role_id')
             ->where('group_role.group_type_id', GroupRole::INDIVIDUAL)
-            ->orderBy('group_role.name',$sort)
+            ->orderBy('group_role.name', $sort)
             ->select('applicant_individual.*');
     }
 

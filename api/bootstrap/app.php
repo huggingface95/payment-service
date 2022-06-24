@@ -1,24 +1,21 @@
 <?php
 
-use Aws\S3\S3Client;
-use League\Flysystem\AwsS3V3\AwsS3Adapter;
-use League\Flysystem\Filesystem;
-
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
 ))->bootstrap();
 
-if (!function_exists('config_path')) {
+if (! function_exists('config_path')) {
     /**
      * Get the configuration path.
      *
      * @param  string $path
      * @return string
      */
-    function config_path($path = '') {
-        return app()->basePath().DIRECTORY_SEPARATOR.'config' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+    function config_path($path = '')
+    {
+        return app()->basePath().DIRECTORY_SEPARATOR.'config'.($path ? DIRECTORY_SEPARATOR.$path : $path);
     }
 }
 
@@ -39,8 +36,8 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-$app->instance('path.config', app()->basePath() . DIRECTORY_SEPARATOR . 'config');
-$app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storage');
+$app->instance('path.config', app()->basePath().DIRECTORY_SEPARATOR.'config');
+$app->instance('path.storage', app()->basePath().DIRECTORY_SEPARATOR.'storage');
 
 // $app->withFacades();
 
@@ -101,8 +98,6 @@ $app->configure('payment');
 |
 */
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -143,7 +138,6 @@ $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
 $app->register(\App\Providers\MailServiceProvider::class);
 
-
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
@@ -165,7 +159,7 @@ $app->alias('Notification', Illuminate\Support\Facades\Notification::class);
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__ . '/../routes/web.php';
+    require __DIR__.'/../routes/web.php';
 });
 
 return $app;

@@ -6,8 +6,7 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 
 class ApplicantIndividualModules extends BaseModel
 {
-
-    protected $table="applicant_individual_modules";
+    protected $table = 'applicant_individual_modules';
 
     /**
      * The attributes that are mass assignable.
@@ -15,8 +14,9 @@ class ApplicantIndividualModules extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'applicant_individual_id','applicant_module_id', 'is_active'
+        'applicant_individual_id', 'applicant_module_id', 'is_active',
     ];
+
     public $timestamps = false;
 
     protected static function booted()
@@ -31,7 +31,7 @@ class ApplicantIndividualModules extends BaseModel
      */
     public function ApplicantIndividual()
     {
-        return $this->belongsTo(ApplicantIndividual::class,'applicant_individual_id','id');
+        return $this->belongsTo(ApplicantIndividual::class, 'applicant_individual_id', 'id');
     }
 
     /**
@@ -40,7 +40,6 @@ class ApplicantIndividualModules extends BaseModel
      */
     public function module()
     {
-        return $this->belongsTo(ApplicantModules::class,'applicant_module_id', 'id');
+        return $this->belongsTo(ApplicantModules::class, 'applicant_module_id', 'id');
     }
-
 }

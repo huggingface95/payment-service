@@ -6,7 +6,6 @@ use App\Models\ApplicantCompany;
 use App\Models\ApplicantCompanyRiskLevelHistory;
 use App\Models\BaseModel;
 
-
 class ApplicantCompanyRiskLevelHistoryMutator extends BaseMutator
 {
     /**
@@ -16,7 +15,6 @@ class ApplicantCompanyRiskLevelHistoryMutator extends BaseMutator
      * @param  array<string, mixed>  $args The field arguments passed by the client.
      * @return mixed
      */
-
     public function create($root, array $args)
     {
         $args['member_id'] = BaseModel::DEFAULT_MEMBER_ID;
@@ -28,5 +26,4 @@ class ApplicantCompanyRiskLevelHistoryMutator extends BaseMutator
 
         return $applicantCompanyRiskLevelHistory;
     }
-
 }

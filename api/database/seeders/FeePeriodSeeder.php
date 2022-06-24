@@ -14,7 +14,7 @@ class FeePeriodSeeder extends Seeder
      */
     public function run()
     {
-        $feesPeriod = ['Each time','One time','Daily','Weekly','Monthly','Yearly'];
+        $feesPeriod = ['Each time', 'One time', 'Daily', 'Weekly', 'Monthly', 'Yearly'];
         foreach ($feesPeriod as $item) {
             FeePeriod::firstOrCreate(['name'=>$item]);
         }

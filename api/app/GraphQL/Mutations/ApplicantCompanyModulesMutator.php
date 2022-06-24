@@ -5,7 +5,6 @@ namespace App\GraphQL\Mutations;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantCompanyModules;
 
-
 class ApplicantCompanyModulesMutator extends BaseMutator
 {
     /**
@@ -15,7 +14,6 @@ class ApplicantCompanyModulesMutator extends BaseMutator
      * @param  array<string, mixed>  $args The field arguments passed by the client.
      * @return mixed
      */
-
     public function attach($root, array $args)
     {
         $applicant = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
@@ -34,6 +32,7 @@ class ApplicantCompanyModulesMutator extends BaseMutator
     {
         $applicant = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
         $applicant->modules()->delete();
+
         return $applicant;
     }
 
@@ -45,13 +44,11 @@ class ApplicantCompanyModulesMutator extends BaseMutator
             foreach ($args['applicant_module_id'] as $module) {
                 ApplicantCompanyModules::where([
                     'applicant_company_id' => $args['applicant_company_id'],
-                    'applicant_module_id' => $module
+                    'applicant_module_id' => $module,
                 ])->update(['is_active'=>$args['is_active']]);
             }
-
         }
 
         return $applicant;
     }
-
 }

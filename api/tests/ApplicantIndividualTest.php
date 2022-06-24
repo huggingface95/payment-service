@@ -1,9 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Models\Accounts;
-
 class ApplicantIndividualTest extends TestCase
 {
     /**
@@ -66,7 +62,7 @@ class ApplicantIndividualTest extends TestCase
             'company_id' => 1,
             'country_id' => 1,
             'language_id' => 1,
-            'phone' => '098'.str_pad(mt_rand(1,9),6,'0',STR_PAD_LEFT),
+            'phone' => '098'.str_pad(mt_rand(1, 9), 6, '0', STR_PAD_LEFT),
             'city' => 'New York',
             'address' => '1st Street',
             'birth_country_id' => 1,
@@ -74,13 +70,13 @@ class ApplicantIndividualTest extends TestCase
             'sex' => 'Male',
             'applicant_state_id' => 1,
             'account_manager_member_id' => 2,
-            'role_id' => 1
+            'role_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createApplicantIndividual' => [
-                    'id' => $id['data']['createApplicantIndividual']['id']
+                    'id' => $id['data']['createApplicantIndividual']['id'],
                 ],
             ],
         ]);
@@ -97,13 +93,13 @@ class ApplicantIndividualTest extends TestCase
                 }
             }
         ', [
-            'id' => strval($applicant[0]->id)
+            'id' => strval($applicant[0]->id),
         ])->seeJson([
-                'data' => [
-                    'applicantIndividual' => [
-                        'id' => strval($applicant[0]->id),
-                    ],
+            'data' => [
+                'applicantIndividual' => [
+                    'id' => strval($applicant[0]->id),
                 ],
+            ],
         ]);
     }
 
@@ -128,7 +124,7 @@ class ApplicantIndividualTest extends TestCase
             }
         ', [
             'id' => strval($applicant[0]->id),
-            'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com'
+            'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -164,13 +160,13 @@ class ApplicantIndividualTest extends TestCase
         ', [
             'id' => strval($applicant[0]->id),
             'password' => '1234567Za',
-            'password_confirmation' => '1234567Za'
+            'password_confirmation' => '1234567Za',
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'setApplicantIndividualPassword' => [
-                    'id' => $id['data']['setApplicantIndividualPassword']['id']
+                    'id' => $id['data']['setApplicantIndividualPassword']['id'],
                 ],
             ],
         ]);
@@ -188,9 +184,9 @@ class ApplicantIndividualTest extends TestCase
                 }
                 }
         }')->seeJsonContains([
-                [
-                    'id' => strval($applicant[0]->id)
-                ]
+            [
+                'id' => strval($applicant[0]->id),
+            ],
         ]);
     }
 
@@ -207,8 +203,8 @@ class ApplicantIndividualTest extends TestCase
                 }
         }')->seeJsonContains([
             [
-                'id' => strval($applicant[0]->id)
-            ]
+                'id' => strval($applicant[0]->id),
+            ],
         ]);
     }
 
@@ -235,11 +231,9 @@ class ApplicantIndividualTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantIndividual' => [
-                    'id' => $id['data']['deleteApplicantIndividual']['id']
+                    'id' => $id['data']['deleteApplicantIndividual']['id'],
                 ],
             ],
         ]);
     }
-
 }
-

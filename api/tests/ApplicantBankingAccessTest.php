@@ -1,9 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Models\Accounts;
-
 class ApplicantBankingAccessTest extends TestCase
 {
     /**
@@ -50,7 +46,7 @@ class ApplicantBankingAccessTest extends TestCase
         $this->seeJson([
             'data' => [
                 'createApplicantBankingAccess' => [
-                    'id' => $id['data']['createApplicantBankingAccess']['id']
+                    'id' => $id['data']['createApplicantBankingAccess']['id'],
                 ],
             ],
         ]);
@@ -112,9 +108,9 @@ class ApplicantBankingAccessTest extends TestCase
                 }
                 }
         }')->seeJsonContains([
-                [
-                    'id' => strval($access[0]->id)
-                ]
+            [
+                'id' => strval($access[0]->id),
+            ],
         ]);
     }
 
@@ -131,8 +127,8 @@ class ApplicantBankingAccessTest extends TestCase
                 }
         }')->seeJsonContains([
             [
-                'id' => strval($access[0]->id)
-            ]
+                'id' => strval($access[0]->id),
+            ],
         ]);
     }
 
@@ -159,11 +155,9 @@ class ApplicantBankingAccessTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantBankingAccess' => [
-                    'id' => $id['data']['deleteApplicantBankingAccess']['id']
+                    'id' => $id['data']['deleteApplicantBankingAccess']['id'],
                 ],
             ],
         ]);
     }
-
 }
-

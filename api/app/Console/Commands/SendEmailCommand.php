@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Redis;
 
-
 class SendEmailCommand extends Command
 {
     use ReplaceRegularExpressions;
@@ -35,11 +34,9 @@ class SendEmailCommand extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
-
         parent::__construct();
     }
 
@@ -55,8 +52,8 @@ class SendEmailCommand extends Command
                 $emailData = TransformerDTO::transform(SmtpUserDTO::class, json_decode($emailData[1]));
                 /** @var EmailTemplate $emailTemplate */
                 $emailTemplate = EmailTemplate::with('member.smtp')->find($emailData->templateId);
-                $content = $this->replaceObjectData($emailTemplate->getHtml(), (object)['message' => $emailData->message], '/(\{\{(.*?)}})/');
-                $subject = $this->replaceObjectData($emailTemplate->subject, (object)['subject' => 'subject'], '/\{\{(.*?)}}/');
+                $content = $this->replaceObjectData($emailTemplate->getHtml(), (object) ['message' => $emailData->message], '/(\{\{(.*?)}})/');
+                $subject = $this->replaceObjectData($emailTemplate->subject, (object) ['subject' => 'subject'], '/\{\{(.*?)}}/');
                 $data = TransformerDTO::transform(SmtpDataDTO::class, $emailTemplate->member->smtp, $content, $subject);
                 $config = TransformerDTO::transform(SmtpConfigDTO::class, $emailTemplate->member->smtp);
                 dispatch(new SendMailJob($config, $data));

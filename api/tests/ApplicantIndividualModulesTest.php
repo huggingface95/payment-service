@@ -1,9 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Models\Accounts;
-
 class ApplicantIndividualModulesTest extends TestCase
 {
     /**
@@ -66,7 +62,7 @@ class ApplicantIndividualModulesTest extends TestCase
             'company_id' => 1,
             'country_id' => 1,
             'language_id' => 1,
-            'phone' => '098'.str_pad(mt_rand(1,9),6,'0',STR_PAD_LEFT),
+            'phone' => '098'.str_pad(mt_rand(1, 9), 6, '0', STR_PAD_LEFT),
             'city' => 'New York',
             'address' => '1st Street',
             'birth_country_id' => 1,
@@ -74,13 +70,13 @@ class ApplicantIndividualModulesTest extends TestCase
             'sex' => 'Male',
             'applicant_state_id' => 1,
             'account_manager_member_id' => 2,
-            'role_id' => 1
+            'role_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createApplicantIndividual' => [
-                    'id' => $id['data']['createApplicantIndividual']['id']
+                    'id' => $id['data']['createApplicantIndividual']['id'],
                 ],
             ],
         ]);
@@ -102,13 +98,13 @@ class ApplicantIndividualModulesTest extends TestCase
                 }
             }
         ', [
-            'name' => 'Module_'.\Illuminate\Support\Str::random(7)
+            'name' => 'Module_'.\Illuminate\Support\Str::random(7),
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createApplicantModule' => [
-                    'id' => $id['data']['createApplicantModule']['id']
+                    'id' => $id['data']['createApplicantModule']['id'],
                 ],
             ],
         ]);
@@ -176,7 +172,7 @@ class ApplicantIndividualModulesTest extends TestCase
         $this->seeJson([
             'data' => [
                 'createApplicantIndividualModule' => [
-                    'id' => $id['data']['createApplicantIndividualModule']['id']
+                    'id' => $id['data']['createApplicantIndividualModule']['id'],
                 ],
             ],
         ]);
@@ -209,7 +205,7 @@ class ApplicantIndividualModulesTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantIndividualModule' => [
-                    'id' => $id['data']['deleteApplicantIndividualModule']['id']
+                    'id' => $id['data']['deleteApplicantIndividualModule']['id'],
                 ],
             ],
         ]);
@@ -238,7 +234,7 @@ class ApplicantIndividualModulesTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantModule' => [
-                    'id' => $id['data']['deleteApplicantModule']['id']
+                    'id' => $id['data']['deleteApplicantModule']['id'],
                 ],
             ],
         ]);
@@ -267,11 +263,9 @@ class ApplicantIndividualModulesTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteApplicantIndividual' => [
-                    'id' => $id['data']['deleteApplicantIndividual']['id']
+                    'id' => $id['data']['deleteApplicantIndividual']['id'],
                 ],
             ],
         ]);
     }
-
 }
-

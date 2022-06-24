@@ -32,13 +32,3 @@ class DeleteSpatieTables extends Migration
         });
     }
 }
-
-
-
-
-
-
-
-
-
-

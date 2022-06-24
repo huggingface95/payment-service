@@ -1,10 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Auth;
-
 class CommissionTemplateTest extends TestCase
 {
     public function login()
@@ -38,7 +33,7 @@ class CommissionTemplateTest extends TestCase
         ', [
             'name' => 'TestCommissionTemplate_'.\Illuminate\Support\Str::random(5),
             'description' => 'TemplateDecs_'.\Illuminate\Support\Str::random(5),
-            'payment_provider_id' => 1
+            'payment_provider_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -72,7 +67,7 @@ class CommissionTemplateTest extends TestCase
         ', [
             'id' => strval($template[0]->id),
             'name' => 'Updated Commission Template',
-            'description' => 'Updated Description'
+            'description' => 'Updated Description',
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -96,7 +91,7 @@ class CommissionTemplateTest extends TestCase
                         'data' => [[
                             'id' => strval($getRecord[0]->id),
                             'name' => $getRecord[0]->name,
-                            'description' => $getRecord[0]->description
+                            'description' => $getRecord[0]->description,
                         ]],
                     ],
                 ],
@@ -129,14 +124,14 @@ class CommissionTemplateTest extends TestCase
                     description
                 }
             }
-        ',[
-            'id' => strval($getRecord[0]->id)
+        ', [
+            'id' => strval($getRecord[0]->id),
         ])->seeJson([
             'data' => [
                 'commissionTemplate' => [
                     'id' => strval($getRecord[0]->id),
                     'name' => $getRecord[0]->name,
-                    'description' => $getRecord[0]->description
+                    'description' => $getRecord[0]->description,
 
                 ],
             ],
@@ -152,9 +147,9 @@ class CommissionTemplateTest extends TestCase
                 [
                     'id' => strval($getRecord[0]->id),
                     'name' => $getRecord[0]->name,
-                    'description' => $getRecord[0]->description
+                    'description' => $getRecord[0]->description,
 
-                ]
+                ],
             ];
 
         $this->graphQL('
@@ -179,9 +174,9 @@ class CommissionTemplateTest extends TestCase
                 [
                     'id' => strval($getRecord[0]->id),
                     'name' => $getRecord[0]->name,
-                    'description' => $getRecord[0]->description
+                    'description' => $getRecord[0]->description,
 
-                ]
+                ],
             ];
 
         $this->graphQL('
@@ -213,7 +208,7 @@ class CommissionTemplateTest extends TestCase
             }
             }
         ', [
-            'id' => strval($getRecord[0]->id)
+            'id' => strval($getRecord[0]->id),
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -224,6 +219,4 @@ class CommissionTemplateTest extends TestCase
             ],
         ]);
     }
-
 }
-

@@ -10,18 +10,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class PermissionCategory extends BaseModel
 {
-    protected $table="permission_category";
+    protected $table = 'permission_category';
 
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public $timestamps = false;
 
     public function permissionsList(): HasMany
     {
-        return $this->hasMany(PermissionsList::class,"permission_group_id")->orderBy('order');
+        return $this->hasMany(PermissionsList::class, 'permission_group_id')->orderBy('order');
     }
-
-
 }

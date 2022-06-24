@@ -3,10 +3,8 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\ApplicantIndividual;
-use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-
 
 class ApplicantMutator extends BaseMutator
 {
@@ -17,26 +15,25 @@ class ApplicantMutator extends BaseMutator
      * @param  array<string, mixed>  $args The field arguments passed by the client.
      * @return mixed
      */
-
     public function create($root, array $args)
     {
-        if (!isset($args['password'])) {
+        if (! isset($args['password'])) {
             $password = Str::random(8);
         } else {
-            $password =$args['password'];
+            $password = $args['password'];
         }
         $args['password_hash'] = Hash::make($password);
         $args['password_salt'] = Hash::make($password);
 
         if (isset($args['personal_additional_fields'])) {
-            $args['personal_additional_fields']  = $this->setAdditionalField($args['personal_additional_fields']);
+            $args['personal_additional_fields'] = $this->setAdditionalField($args['personal_additional_fields']);
         }
         if (isset($args['contacts_additional_fields'])) {
-            $args['contacts_additional_fields']  = $this->setAdditionalField($args['contacts_additional_fields']);
+            $args['contacts_additional_fields'] = $this->setAdditionalField($args['contacts_additional_fields']);
         }
         $applicant = ApplicantIndividual::create($args);
 
-        if (isset($args['group_id'])){
+        if (isset($args['group_id'])) {
             $applicant->groupRoles()->sync([$args['group_id']], true);
         }
 
@@ -55,7 +52,6 @@ class ApplicantMutator extends BaseMutator
      * @param  array<string, mixed>  $args The field arguments passed by the client.
      * @return mixed
      */
-
     public function update($root, array $args)
     {
         if (isset($args['password'])) {
@@ -65,13 +61,13 @@ class ApplicantMutator extends BaseMutator
 
         $applicant = ApplicantIndividual::find($args['id']);
         if (isset($args['personal_additional_fields'])) {
-            $args['personal_additional_fields']  = $this->setAdditionalField($args['personal_additional_fields']);
+            $args['personal_additional_fields'] = $this->setAdditionalField($args['personal_additional_fields']);
         }
         if (isset($args['profile_additional_fields'])) {
-            $args['profile_additional_fields']  = $this->setAdditionalField($args['profile_additional_fields']);
+            $args['profile_additional_fields'] = $this->setAdditionalField($args['profile_additional_fields']);
         }
         if (isset($args['contacts_additional_fields'])) {
-            $args['contacts_additional_fields']  = $this->setAdditionalField($args['contacts_additional_fields']);
+            $args['contacts_additional_fields'] = $this->setAdditionalField($args['contacts_additional_fields']);
         }
         if (isset($args['labels'])) {
             $applicant->labels()->detach($args['labels']);
@@ -79,11 +75,10 @@ class ApplicantMutator extends BaseMutator
         }
         $applicant->update($args);
 
-        if (isset($args['group_id'])){
+        if (isset($args['group_id'])) {
             $applicant->groupRoles()->sync([$args['group_id']], true);
         }
 
         return $applicant;
     }
-
 }

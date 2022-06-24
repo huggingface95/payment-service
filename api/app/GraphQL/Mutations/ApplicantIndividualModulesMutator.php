@@ -5,7 +5,6 @@ namespace App\GraphQL\Mutations;
 use App\Models\ApplicantIndividual;
 use App\Models\ApplicantIndividualModules;
 
-
 class ApplicantIndividualModulesMutator extends BaseMutator
 {
     /**
@@ -15,7 +14,6 @@ class ApplicantIndividualModulesMutator extends BaseMutator
      * @param  array<string, mixed>  $args The field arguments passed by the client.
      * @return mixed
      */
-
     public function attach($root, array $args)
     {
         $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
@@ -34,6 +32,7 @@ class ApplicantIndividualModulesMutator extends BaseMutator
     {
         $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
         $applicant->modules()->delete();
+
         return $applicant;
     }
 
@@ -45,13 +44,11 @@ class ApplicantIndividualModulesMutator extends BaseMutator
             foreach ($args['applicant_module_id'] as $module) {
                 ApplicantIndividualModules::where([
                     'applicant_individual_id' => $args['applicant_individual_id'],
-                    'applicant_module_id' => $module
+                    'applicant_module_id' => $module,
                 ])->update(['is_active'=>$args['is_active']]);
             }
-
         }
 
         return $applicant;
     }
-
 }

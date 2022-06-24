@@ -2,21 +2,19 @@
 
 namespace App\Models;
 
-
 use App\Models\Scopes\MemberScope;
 
 class ApplicantIndividualLabel extends BaseModel
 {
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $table="applicant_individual_labels";
+    protected $table = 'applicant_individual_labels';
 
     protected $fillable = [
-        'name', 'hex_color_code', 'member_id'
+        'name', 'hex_color_code', 'member_id',
     ];
 
     public $timestamps = false;
@@ -29,12 +27,12 @@ class ApplicantIndividualLabel extends BaseModel
 
     public function applicants()
     {
-        return $this->belongsToMany(ApplicantIndividual::class,'applicant_individual_label_relation','applicant_individual_label_id','applicant_individual_id');
+        return $this->belongsToMany(ApplicantIndividual::class, 'applicant_individual_label_relation', 'applicant_individual_label_id', 'applicant_individual_id');
     }
 
     public function members()
     {
-        return $this->belongsTo(Members::class,'member_id','id');
+        return $this->belongsTo(Members::class, 'member_id', 'id');
     }
 
     public function companyMembers()
@@ -42,22 +40,21 @@ class ApplicantIndividualLabel extends BaseModel
         return $this->hasMany(Members::class, 'company_id');
     }
 
-
     public function ApplicantIndividualLabel()
     {
-        return $this->belongsTo(ApplicantIndividualLabel::class,'applicant_individual_label_id','id');
+        return $this->belongsTo(self::class, 'applicant_individual_label_id', 'id');
     }
 
     public function ApplicantIndividualLabels()
     {
-        return $this->belongsToMany(ApplicantIndividualLabel::class,'applicant_individual_label_relation','applicant_individual_id', 'applicant_individual_label_id');
+        return $this->belongsToMany(self::class, 'applicant_individual_label_relation', 'applicant_individual_id', 'applicant_individual_label_id');
     }
 
     public function scopeIndividualId($query, $id)
     {
         $applicant = ApplicantIndividual::where('id', '=', $id)->first();
         $labels = collect($applicant->labels()->get())->pluck('id')->toArray();
+
         return $query->whereNotIn('id', $labels);
     }
-
 }

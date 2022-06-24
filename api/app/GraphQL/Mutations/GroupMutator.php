@@ -18,21 +18,21 @@ class GroupMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
-
         if ($args['group_type_id'][0] == 1 && isset($args['payment_provider_id'])) {
-            throw new GraphqlException('Payment Provider is not be used for this group',"internal", 500);
+            throw new GraphqlException('Payment Provider is not be used for this group', 'internal', 500);
         }
         if ($args['group_type_id'][0] == 1 && isset($args['commission_template_id'])) {
-            throw new GraphqlException('Commission Template is not be used for this group',"internal", 500);
+            throw new GraphqlException('Commission Template is not be used for this group', 'internal', 500);
         }
-        if(!isset($args['company_id'])) {
+        if (! isset($args['company_id'])) {
             $member = Members::find(BaseModel::DEFAULT_MEMBER_ID);
             $args['company_id'] = $member->company_id;
         }
         $group = Groups::find($args['group_type_id']);
-        if (!$group) {
-            throw new GraphqlException('An entry with this group does not exist',"not found",404);
+        if (! $group) {
+            throw new GraphqlException('An entry with this group does not exist', 'not found', 404);
         }
+
         return GroupRole::create($args);
     }
 
@@ -44,25 +44,26 @@ class GroupMutator extends BaseMutator
     public function update($root, array $args)
     {
         if ($args['group_type_id'][0] == 1 && isset($args['payment_provider_id'])) {
-            throw new GraphqlException('Payment Provider is not be used for this group',"internal", 500);
+            throw new GraphqlException('Payment Provider is not be used for this group', 'internal', 500);
         }
         if ($args['group_type_id'][0] == 1 && isset($args['commission_template_id'])) {
-            throw new GraphqlException('Commission Template is not be used for this group',"internal", 500);
+            throw new GraphqlException('Commission Template is not be used for this group', 'internal', 500);
         }
-        if(!isset($args['company_id'])) {
+        if (! isset($args['company_id'])) {
             $member = Members::find(BaseModel::DEFAULT_MEMBER_ID);
             $args['company_id'] = $member->company_id;
         }
         $group = Groups::find($args['group_type_id']);
-        if (!$group) {
-            throw new GraphqlException('An entry with this group does not exist',"not found",404);
+        if (! $group) {
+            throw new GraphqlException('An entry with this group does not exist', 'not found', 404);
         }
         $groupRole = GroupRole::find($args['id']);
-        if (!$groupRole) {
-            throw new GraphqlException('An entry with this id does not exist',"not found",404);
+        if (! $groupRole) {
+            throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
         }
 
         $groupRole->update($args);
+
         return $groupRole;
     }
 
@@ -79,11 +80,12 @@ class GroupMutator extends BaseMutator
                 ->select('*')
                 ->where('group_role_id', '=', $args['id'])->get();
         if ($relation != '[]') {
-                throw new GraphqlException('It is not possible to delete the group because it has active users',"use");
-            }
+            throw new GraphqlException('It is not possible to delete the group because it has active users', 'use');
+        }
         $group->delete();
+
         return $group;
-     }
+    }
 
     public function setMemberGroup($root, array $args)
     {
@@ -96,7 +98,4 @@ class GroupMutator extends BaseMutator
 
         return $groupRole;
     }
-
-
-
 }

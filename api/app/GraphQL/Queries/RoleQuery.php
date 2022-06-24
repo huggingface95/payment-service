@@ -17,12 +17,10 @@ class RoleQuery
         try {
             $args = Role::findById($args['id']);
             $args['permisssions_tree'] = Permissions::getTreePermissions($args['id']);
+
             return $args;
-        }
-        catch (InvalidArgument $exception) {
+        } catch (InvalidArgument $exception) {
             return $exception->getMessage();
         }
-
     }
-
 }

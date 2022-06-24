@@ -8,11 +8,11 @@ class IbanRequestDTO
 {
     public int $id;
 
-    public static function transform(Accounts $account): IbanRequestDTO
+    public static function transform(Accounts $account): self
     {
         $dto = new self();
         $dto->id = $account->id;
+
         return $dto;
     }
-
 }
