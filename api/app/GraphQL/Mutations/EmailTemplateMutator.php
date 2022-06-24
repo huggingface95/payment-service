@@ -7,7 +7,6 @@ use App\DTO\Email\SmtpDataDTO;
 use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
-use App\Models\BaseModel;
 use App\Models\EmailSmtp;
 use App\Models\EmailTemplate;
 use App\Models\Members;
