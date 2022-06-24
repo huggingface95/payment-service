@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUniqueEmailTemplateTable extends Migration
+class AddNameToEmailTemplatesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddUniqueEmailTemplateTable extends Migration
     public function up()
     {
         Schema::table('email_templates', function (Blueprint $table) {
-            $table->unique(['subject', 'company_id', 'service_type']);
+            $table->string('name');
         });
     }
 
@@ -25,6 +25,8 @@ class AddUniqueEmailTemplateTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('email_templates', function (Blueprint $table) {
+            $table->dropColumn('name');
+        });
     }
 }
