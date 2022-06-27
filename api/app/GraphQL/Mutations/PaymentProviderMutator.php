@@ -20,6 +20,7 @@ class PaymentProviderMutator
         } else {
             $paymentProvider = PaymentProvider::create($args);
         }
+
         return $paymentProvider;
     }
 
@@ -36,6 +37,7 @@ class PaymentProviderMutator
             unset($args['payment_systems']);
         }
         $paymentProvider->update($args);
+
         return $paymentProvider;
     }
 }

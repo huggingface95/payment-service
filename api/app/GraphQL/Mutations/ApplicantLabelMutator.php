@@ -2,14 +2,11 @@
 
 namespace App\GraphQL\Mutations;
 
-
 use App\Models\ApplicantIndividualLabel;
 use GraphQL\Exception\InvalidArgument;
 
-
 class ApplicantLabelMutator
 {
-
     /**
      * @param $root
      * @param array $args
@@ -35,6 +32,7 @@ class ApplicantLabelMutator
         $memberId = ApplicantIndividualLabel::DEFAULT_MEMBER_ID;
         $args['member_id'] = $memberId;
         $label->update($args);
+
         return $label;
     }
 
@@ -47,23 +45,21 @@ class ApplicantLabelMutator
     {
         try {
             $applicantLabel = ApplicantIndividualLabel::with('applicants')->find($args['id']);
-            if (!$applicantLabel) {
+            if (! $applicantLabel) {
                 throw new InvalidArgument("Label {$args['id']} not  found");
             }
 
             if ($applicantLabel->applicants->isNotEmpty()) {
-                if (!isset($args['deleteAnyway']) || $args['deleteAnyway'] === false) {
-                    throw new InvalidArgument("Label is used other applicants");
+                if (! isset($args['deleteAnyway']) || $args['deleteAnyway'] === false) {
+                    throw new InvalidArgument('Label is used other applicants');
                 }
             }
 
             $applicantLabel->delete();
+
             return $applicantLabel;
-        } catch (\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             throw new InvalidArgument($exception->getMessage());
         }
-
     }
-
 }

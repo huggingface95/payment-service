@@ -21,9 +21,8 @@ class CreateAccountLimitsTable extends Migration
             $table->unsignedBigInteger('commission_template_limit_period_id');
             $table->unsignedBigInteger('commission_template_limit_action_type_id');
             $table->bigInteger('period_count')->nullable();
-            $table->decimal('amount',15,5)->default(0);
+            $table->decimal('amount', 15, 5)->default(0);
             $table->unsignedBigInteger('currency_id')->nullable();
-
 
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('commission_template_limit_type_id')->references('id')->on('commission_template_limit_type');
@@ -32,7 +31,6 @@ class CreateAccountLimitsTable extends Migration
             $table->foreign('commission_template_limit_action_type_id')->references('id')->on('commission_template_limit_action_type');
             $table->foreign('currency_id')->references('id')->on('currencies');
         });
-
     }
 
     /**

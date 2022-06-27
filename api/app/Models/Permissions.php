@@ -10,25 +10,31 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
 use Spatie\Permission\Models\Role;
 
 /**
- *
  * @method static firstOrCreate(mixed $data)
  *@property int $id
  */
 class Permissions extends SpatiePermission
 {
-
     const TYPE_ADD = 'add';
+
     const TYPE_INFO = 'info';
+
     const TYPE_EXPORT = 'export';
+
     const TYPE_EDIT = 'edit';
+
     const TYPE_IMPORTANT = 'important';
+
     const TYPE_READ = 'read';
+
     const TYPE_REQUIRED = 'required';
+
     const TYPE_NO_REQUIRED = 'no_required';
 
     protected $fillable = [
-        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'order'
+        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'order',
     ];
+
     protected $guard_name = GuardEnum::GUARD_NAME;
 
     protected static function booted()
@@ -53,16 +59,17 @@ class Permissions extends SpatiePermission
             $permission = array_pop($actions);
             $current = &$out;
             foreach ($actions as $level) {
-                if (!isset($current[$level]))
-                    $current[$level] = array();
+                if (! isset($current[$level])) {
+                    $current[$level] = [];
+                }
                 $current = &$current[$level];
             }
             $current['permissions'][] = ['permission_id' => $item->id, 'permission_name' => $permission];
             $permData[$name]['rules'] = $out;
         }
+
         return $permData;
     }
-
 
     public static function getPermissionArrayNamesById(array $permissionId)
     {
@@ -77,7 +84,7 @@ class Permissions extends SpatiePermission
             'name' => $attributes['name'],
             'guard_name' => $attributes['guard_name'],
             'type' => $attributes['type'],
-            'permission_list_id'=>$attributes['permission_list_id']
+            'permission_list_id'=>$attributes['permission_list_id'],
         ]);
 
         if ($permission) {
@@ -86,5 +93,4 @@ class Permissions extends SpatiePermission
 
         return static::query()->create($attributes);
     }
-
 }

@@ -4,8 +4,7 @@ namespace App\Models;
 
 class ApplicantIndividualNotes extends BaseModel
 {
-
-    protected $table="applicant_individual_notes";
+    protected $table = 'applicant_individual_notes';
 
     /**
      * The attributes that are mass assignable.
@@ -13,9 +12,8 @@ class ApplicantIndividualNotes extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'note','applicant_individual_id','member_id'
+        'note', 'applicant_individual_id', 'member_id',
     ];
-
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -32,6 +30,4 @@ class ApplicantIndividualNotes extends BaseModel
     {
         return $this->belongsTo(ApplicantIndividual::class, ' applicant_individual_id');
     }
-
-
 }

@@ -12,7 +12,6 @@ class Controller extends BaseController
      *      title="L5 OpenApi",
      *      description="L5 Swagger OpenApi description"
      * )
-     *
      */
     /**
      * @OA\Get(

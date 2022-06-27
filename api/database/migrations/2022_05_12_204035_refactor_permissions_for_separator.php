@@ -38,13 +38,11 @@ class RefactorPermissionsForSeparator extends Migration
                             DB::table('permission_operations_binds')
                                 ->insert(['permission_id' => $newPermission->id, 'permission_operations_id' => $parent->permission_operations_id]);
                         }
-                    }
-                    else{
+                    } else {
                         exit('Error');
                     }
                 }
-            }
-            else{
+            } else {
                 exit('Error');
             }
         }

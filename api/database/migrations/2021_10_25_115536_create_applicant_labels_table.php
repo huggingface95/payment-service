@@ -15,8 +15,8 @@ class CreateApplicantLabelsTable extends Migration
     {
         Schema::create('applicant_individual_labels', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255)->unique();
-            $table->string('hex_color_code',10);
+            $table->string('name', 255)->unique();
+            $table->string('hex_color_code', 10);
             $table->unsignedBigInteger('member_id');
             $table->foreign('member_id')->references('id')->on('members');
         });

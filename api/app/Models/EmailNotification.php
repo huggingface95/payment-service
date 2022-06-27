@@ -8,10 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
-
 /**
  * Class EmailTemplate
- * @package App\Models
  * @property int id
  * @property string type
  * @property string recipient_type
@@ -19,16 +17,17 @@ use Illuminate\Support\Carbon;
  * @property Carbon created_at
  * @property Carbon updated_at
  * @property int $group_type_id
- *
  */
 class EmailNotification extends BaseModel
 {
     use MorphToOne;
 
     const ADMINISTRATION = 'administration';
+
     const CLIENT = 'client';
 
     const RECIPIENT_PERSON = 'person';
+
     const RECIPIENT_GROUP = 'group';
 
     /**
@@ -37,7 +36,7 @@ class EmailNotification extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'company_id', 'type', 'recipient_type', 'group_type_id', 'group_role_id'
+        'company_id', 'type', 'recipient_type', 'group_type_id', 'group_role_id',
     ];
 
     public static self $clone;
@@ -81,6 +80,7 @@ class EmailNotification extends BaseModel
     public function load($relations)
     {
         self::$clone = $this->replicate();
+
         return parent::load($relations);
     }
 
@@ -88,19 +88,20 @@ class EmailNotification extends BaseModel
     {
         try {
             $model = self::$clone;
-        }
-        catch (\Error $ex){
+        } catch (\Error $ex) {
             $model = $this;
         }
 
         $name = $model->groupType->name ?? null;
 
-        if ($name == Groups::MEMBER)
+        if ($name == Groups::MEMBER) {
             return $this->member();
-        elseif($name == Groups::COMPANY)
+        } elseif ($name == Groups::COMPANY) {
             return $this->applicantCompany();
-        elseif($name == Groups::INDIVIDUAL)
+        } elseif ($name == Groups::INDIVIDUAL) {
             return $this->applicantIndividual();
+        }
+
         return null;
     }
 

@@ -15,24 +15,24 @@ class CreateApplicantCompaniesTable extends Migration
     {
         Schema::create('applicant_companies', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255);
-            $table->string('email',255)->unique();
-            $table->string('url',255);
-            $table->string('phone',255);
+            $table->string('name', 255);
+            $table->string('email', 255)->unique();
+            $table->string('url', 255);
+            $table->string('phone', 255);
             $table->unsignedBigInteger('country_id');
             $table->unsignedBigInteger('language_id')->nullable();
-            $table->string('state',255)->nullable();
-            $table->string('city',100)->nullable();
-            $table->string('address',255)->nullable();
-            $table->string('address2',255)->nullable();
-            $table->string('office_address',255)->nullable();
-            $table->string('zip',20)->nullable();
+            $table->string('state', 255)->nullable();
+            $table->string('city', 100)->nullable();
+            $table->string('address', 255)->nullable();
+            $table->string('address2', 255)->nullable();
+            $table->string('office_address', 255)->nullable();
+            $table->string('zip', 20)->nullable();
             $table->date('reg_at')->nullable();
             $table->date('expires_at')->nullable();
-            $table->string('tax',100)->nullable();
-            $table->string('reg_number',100)->nullable();
-            $table->string('license_number',100)->nullable();
-            $table->string('company_type',100)->nullable();
+            $table->string('tax', 100)->nullable();
+            $table->string('reg_number', 100)->nullable();
+            $table->string('license_number', 100)->nullable();
+            $table->string('company_type', 100)->nullable();
             $table->jsonb('company_info_additional_fields')->nullable();
             $table->jsonb('contacts_additional_fields')->nullable();
             $table->jsonb('profile_additional_fields')->nullable();

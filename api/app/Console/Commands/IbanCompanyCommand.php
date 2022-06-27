@@ -2,12 +2,10 @@
 
 namespace App\Console\Commands;
 
-
 use App\Jobs\IbanCompanyActivationJob;
 use App\Models\Accounts;
 use App\Models\AccountState;
 use Illuminate\Console\Command;
-
 
 class IbanCompanyCommand extends Command
 {
@@ -27,7 +25,6 @@ class IbanCompanyCommand extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -45,7 +42,7 @@ class IbanCompanyCommand extends Command
             ->get();
 
         /** @var Accounts $account */
-        foreach ($companyIbanActivateAccounts as $account){
+        foreach ($companyIbanActivateAccounts as $account) {
             dispatch(new IbanCompanyActivationJob($account));
         }
     }

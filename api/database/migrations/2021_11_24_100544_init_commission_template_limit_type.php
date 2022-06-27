@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use App\Models\CommissionTemplateLimitType;
+use Illuminate\Database\Migrations\Migration;
 
 class InitCommissionTemplateLimitType extends Migration
 {
@@ -14,13 +12,14 @@ class InitCommissionTemplateLimitType extends Migration
      */
     public function up()
     {
-        $names= [
-          'All','Transaction Amount','Transaction Count','Transfer Count'
+        $names = [
+            'All', 'Transaction Amount', 'Transaction Count', 'Transfer Count',
         ];
-        foreach ($names as $name)
-        CommissionTemplateLimitType::create([
-            'name' => $name,
-        ]);
+        foreach ($names as $name) {
+            CommissionTemplateLimitType::create([
+                'name' => $name,
+            ]);
+        }
     }
 
     /**

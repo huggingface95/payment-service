@@ -12,22 +12,21 @@ class Departments extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name','company_id'
+        'name', 'company_id',
     ];
 
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Companies','company_id');
+        return $this->belongsTo('App\Models\Companies', 'company_id');
     }
 
     public function positions()
     {
-        return $this->belongsToMany(DepartmentPosition::class,'department_position_relation','department_id','position_id');
+        return $this->belongsToMany(DepartmentPosition::class, 'department_position_relation', 'department_id', 'position_id');
     }
 
     public function setActive($active = true)
     {
         $this->positions()->update(['is_active'=>$active]);
     }
-
 }

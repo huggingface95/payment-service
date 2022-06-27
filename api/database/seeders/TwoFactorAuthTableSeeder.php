@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\TwoFactorAuthSettings;
-use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class TwoFactorAuthTableSeeder extends Seeder

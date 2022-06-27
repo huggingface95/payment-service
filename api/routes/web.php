@@ -13,8 +13,8 @@
 |
 */
 $router->group([
-//    'middleware' => 'api',
-    'prefix' => 'auth'
+    //    'middleware' => 'api',
+    'prefix' => 'auth',
 ], function () use ($router) {
     $router->post('login', 'AuthController@login');
     $router->post('logout', 'AuthController@logout');
@@ -27,7 +27,6 @@ $router->group([
     $router->get('2facodes', 'AuthController@generateBackupCodes');
     $router->post('2facodes', 'AuthController@storeBackupCodes');
 });
-
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
@@ -42,5 +41,5 @@ $router->get('/test', ['uses' => 'ExampleController@index']);
 
 $router->post('/password/email', 'PasswordController@postEmail');
 $router->post('/password/reset/{token}', 'PasswordController@postReset');
-$router->get('/password/reset/{token}', ['as'=>'password.reset', function(){'PasswordController@postReset';}]);
-
+$router->get('/password/reset/{token}', ['as'=>'password.reset', function () {
+}]);

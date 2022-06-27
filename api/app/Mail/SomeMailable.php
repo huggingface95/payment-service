@@ -17,7 +17,7 @@ class SomeMailable extends Mailable
         $this->subject = $smtpDataDTO->subject;
     }
 
-    public function build(){
-
+    public function build()
+    {
     }
 }

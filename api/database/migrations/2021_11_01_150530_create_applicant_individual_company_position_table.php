@@ -15,7 +15,7 @@ class CreateApplicantIndividualCompanyPositionTable extends Migration
     {
         Schema::create('applicant_individual_company_position', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255)->unique();
+            $table->string('name', 255)->unique();
         });
     }
 

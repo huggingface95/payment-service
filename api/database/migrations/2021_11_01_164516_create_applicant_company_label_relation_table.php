@@ -16,7 +16,7 @@ class CreateApplicantCompanyLabelRelationTable extends Migration
         Schema::create('applicant_company_label_relation', function (Blueprint $table) {
             $table->unsignedBigInteger('applicant_company_id');
             $table->unsignedBigInteger('applicant_company_label_id');
-            $table->unique(['applicant_company_id','applicant_company_label_id']);
+            $table->unique(['applicant_company_id', 'applicant_company_label_id']);
             $table->foreign('applicant_company_id')->references('id')->on('applicant_companies')->onDelete('cascade');
             $table->foreign('applicant_company_label_id')->references('id')->on('applicant_company_labels')->onDelete('cascade');
         });

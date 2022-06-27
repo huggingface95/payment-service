@@ -24,7 +24,7 @@ class CreateAccountReachedLimitsTable extends Migration
             $table->integer('limit_value');
             $table->string('limit_currency');
             $table->integer('period');
-            $table->decimal('amount',15,5)->default(0);
+            $table->decimal('amount', 15, 5)->default(0);
             $table->dateTime('expires_at')->nullable();
             $table->timestamps();
 

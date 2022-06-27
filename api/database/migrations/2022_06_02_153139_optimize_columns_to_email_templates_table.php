@@ -15,15 +15,14 @@ class OptimizeColumnsToEmailTemplatesTable extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE email_templates DROP CONSTRAINT email_templates_service_type_check");
+        DB::statement('ALTER TABLE email_templates DROP CONSTRAINT email_templates_service_type_check');
 
         $types = EmailTemplate::getServiceTypes();
-        $result = join( ', ', array_map(function ($value){
+        $result = implode(', ', array_map(function ($value) {
             return sprintf("'%s'::character varying", $value);
         }, $types));
 
         DB::statement("ALTER TABLE email_templates ADD CONSTRAINT email_templates_service_type_check CHECK (service_type::text = ANY (ARRAY[$result]::text[]))");
-
 
         Schema::table('email_templates', function (Blueprint $table) {
             $table->string('header')->nullable()->change();

@@ -15,7 +15,7 @@ class CreateTwoFactorAuthSettingsTable extends Migration
     {
         Schema::create('two_factor_auth_settings', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255);
+            $table->string('name', 255);
         });
     }
 

@@ -1,9 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
-use Laravel\Lumen\Testing\DatabaseTransactions;
-use App\Models\Accounts;
-
 class MembersTest extends TestCase
 {
     /**
@@ -46,20 +42,20 @@ class MembersTest extends TestCase
                 }
             }
         ', [
-            'first_name' =>  'Member'.str_pad(mt_rand(1,9),3,'0',STR_PAD_LEFT),
-            'last_name' => 'MemberLast'.str_pad(mt_rand(1,9),3,'0',STR_PAD_LEFT),
-            'email' => 'test'.str_pad(mt_rand(1,9),2,'0',STR_PAD_LEFT).'@test.com',
+            'first_name' =>  'Member'.str_pad(mt_rand(1, 9), 3, '0', STR_PAD_LEFT),
+            'last_name' => 'MemberLast'.str_pad(mt_rand(1, 9), 3, '0', STR_PAD_LEFT),
+            'email' => 'test'.str_pad(mt_rand(1, 9), 2, '0', STR_PAD_LEFT).'@test.com',
             'company_id' => 1,
             'country_id' => 1,
             'language_id' => 1,
             'group_id' => 1,
-            'two_factor_auth_setting_id' => 1
+            'two_factor_auth_setting_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createMember' => [
-                    'id' => $id['data']['createMember']['id']
+                    'id' => $id['data']['createMember']['id'],
                 ],
             ],
         ]);
@@ -76,13 +72,13 @@ class MembersTest extends TestCase
                 }
             }
         ', [
-            'id' => strval($member[0]->id)
+            'id' => strval($member[0]->id),
         ]))->seeJson([
-                'data' => [
-                    'member' => [
-                        'id' => strval($member[0]->id),
-                    ],
+            'data' => [
+                'member' => [
+                    'id' => strval($member[0]->id),
                 ],
+            ],
         ]);
     }
 
@@ -107,7 +103,7 @@ class MembersTest extends TestCase
             }
         ', [
             'id' => strval($member[0]->id),
-            'email' => 'test'.str_pad(mt_rand(1,9),2,'0',STR_PAD_LEFT).'@test.com',
+            'email' => 'test'.str_pad(mt_rand(1, 9), 2, '0', STR_PAD_LEFT).'@test.com',
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -143,13 +139,13 @@ class MembersTest extends TestCase
         ', [
             'id' => strval($member[0]->id),
             'password' => '1234567Za',
-            'password_confirmation' => '1234567Za'
+            'password_confirmation' => '1234567Za',
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'setMemberPassword' => [
-                    'id' => $id['data']['setMemberPassword']['id']
+                    'id' => $id['data']['setMemberPassword']['id'],
                 ],
             ],
         ]);
@@ -172,13 +168,13 @@ class MembersTest extends TestCase
                 }
             }
         ', [
-            'id' => strval($member[0]->id)
+            'id' => strval($member[0]->id),
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'setMemberSecurityPin' => [
-                    'id' => $id['data']['setMemberSecurityPin']['id']
+                    'id' => $id['data']['setMemberSecurityPin']['id'],
                 ],
             ],
         ]);
@@ -196,9 +192,9 @@ class MembersTest extends TestCase
                 }
                 }
         }')->seeJsonContains([
-                [
-                    'id' => strval($member[0]->id)
-                ]
+            [
+                'id' => strval($member[0]->id),
+            ],
         ]);
     }
 
@@ -215,8 +211,8 @@ class MembersTest extends TestCase
                 }
         }')->seeJsonContains([
             [
-                'id' => strval($member[0]->id)
-            ]
+                'id' => strval($member[0]->id),
+            ],
         ]);
     }
 
@@ -243,11 +239,9 @@ class MembersTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deleteMember' => [
-                    'id' => $id['data']['deleteMember']['id']
+                    'id' => $id['data']['deleteMember']['id'],
                 ],
             ],
         ]);
     }
-
 }
-

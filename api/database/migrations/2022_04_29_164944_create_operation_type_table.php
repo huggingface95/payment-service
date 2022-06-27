@@ -15,7 +15,7 @@ class CreateOperationTypeTable extends Migration
     {
         Schema::create('operation_type', function (Blueprint $table) {
             $table->id();
-            $table->string('name',100);
+            $table->string('name', 100);
         });
     }
 

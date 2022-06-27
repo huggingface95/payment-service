@@ -4,8 +4,7 @@ namespace App\Models;
 
 class ApplicantKycLevel extends BaseModel
 {
-
-    protected $table="applicant_kyc_level";
+    protected $table = 'applicant_kyc_level';
 
     /**
      * The attributes that are mass assignable.
@@ -13,10 +12,8 @@ class ApplicantKycLevel extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public $timestamps = false;
-
-
 }

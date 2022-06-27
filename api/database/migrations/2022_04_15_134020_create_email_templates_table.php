@@ -19,8 +19,8 @@ class CreateEmailTemplatesTable extends Migration
             $table->enum('type', [EmailTemplate::ADMINISTRATION, EmailTemplate::CLIENT])->default(EmailTemplate::ADMINISTRATION);
             $table->enum('service_type', [EmailTemplate::BANKING, EmailTemplate::COMMON, EmailTemplate::SYSTEM])->default(EmailTemplate::BANKING);
             $table->boolean('use_layout')->default(0);
-            $table->string("subject");
-            $table->longText("content");
+            $table->string('subject');
+            $table->longText('content');
             $table->text('header')->nullable();
             $table->text('footer')->nullable();
             $table->timestamps();

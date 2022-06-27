@@ -8,7 +8,6 @@ use App\Jobs\Job;
 use App\Models\Payments;
 use Illuminate\Support\Facades\Redis;
 
-
 class PaymentJob extends Job
 {
     /**
@@ -16,7 +15,6 @@ class PaymentJob extends Job
      *
      * @return void
      */
-
     protected PaymentDTO $payment;
 
     public function __construct(Payments $payment)
@@ -37,6 +35,5 @@ class PaymentJob extends Job
         $redis->rpush(config('payment.redis.pay'), json_encode($this->payment));
 
 //        dd($redis->lrange(config('payment.redis.pay'), 0,-1));
-
     }
 }

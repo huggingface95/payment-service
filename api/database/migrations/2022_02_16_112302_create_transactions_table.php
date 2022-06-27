@@ -21,10 +21,10 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('currency_dst_id');
             $table->unsignedBigInteger('account_src_id')->nullable();
             $table->unsignedBigInteger('account_dst_id')->nullable();
-            $table->decimal('balance_prev', 15,5);
-            $table->decimal('balance_next', 15,5);
-            $table->decimal('amount', 15,5);
-            $table->enum('txtype',['income','outgoing','fee','internal']);
+            $table->decimal('balance_prev', 15, 5);
+            $table->decimal('balance_next', 15, 5);
+            $table->decimal('amount', 15, 5);
+            $table->enum('txtype', ['income', 'outgoing', 'fee', 'internal']);
             $table->timestamps();
             $table->foreign('company_id')->references('id')->on('companies');
             $table->foreign('currency_src_id')->references('id')->on('currencies');

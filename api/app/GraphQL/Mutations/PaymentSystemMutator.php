@@ -7,7 +7,6 @@ use App\Models\PaymentSystem;
 
 class PaymentSystemMutator
 {
-
     /**
      * @param  null  $_
      * @param  array<string, mixed>  $args
@@ -17,11 +16,10 @@ class PaymentSystemMutator
         try {
             $paymentSystem = PaymentSystem::find($args['id']);
             $paymentSystem->delete();
-            return $paymentSystem;
-        } catch (\Exception $exception)
-        {
-            throw new GraphqlException('Payment system was not deleted. Please, check if it`s assigned to a Payment Provider.',"use");
-        }
 
+            return $paymentSystem;
+        } catch (\Exception $exception) {
+            throw new GraphqlException('Payment system was not deleted. Please, check if it`s assigned to a Payment Provider.', 'use');
+        }
     }
 }

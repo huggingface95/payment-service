@@ -31,6 +31,5 @@ class DeleteGroupIdInMembersAndIndividuals extends Migration
      */
     public function down()
     {
-
     }
 }

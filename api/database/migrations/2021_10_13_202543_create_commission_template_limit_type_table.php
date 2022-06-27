@@ -15,7 +15,7 @@ class CreateCommissionTemplateLimitTypeTable extends Migration
     {
         Schema::create('commission_template_limit_type', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255);
+            $table->string('name', 255);
         });
     }
 

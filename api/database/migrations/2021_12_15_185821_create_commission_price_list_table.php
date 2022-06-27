@@ -15,7 +15,7 @@ class CreateCommissionPriceListTable extends Migration
     {
         Schema::create('commission_price_list', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255);
+            $table->string('name', 255);
             $table->unsignedBigInteger('provider_id');
             $table->unsignedBigInteger('payment_system_id');
             $table->unsignedBigInteger('commission_template_id');

@@ -2,10 +2,10 @@
 
 namespace App\GraphQL\Mutations;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
 use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class AuthMutator
@@ -27,9 +27,10 @@ class AuthMutator
             $user = auth()->user();
             $user->api_token = $token;
             $user->save();
+
             return $token;
         }
+
         return null;
     }
-
 }

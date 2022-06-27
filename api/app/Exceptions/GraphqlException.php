@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Exceptions;
 
 use Exception;
@@ -10,6 +11,7 @@ class GraphqlException extends Exception implements RendersErrorsExtensions
      * @var @string
      */
     protected $category;
+
     protected $code;
 
     public function __construct(string $message, string $category = 'internal', $code = 500)
@@ -53,8 +55,7 @@ class GraphqlException extends Exception implements RendersErrorsExtensions
     {
         return [
             'code' => $this->getCode(),
-            'systemMessage'=> $this->getMessage()
+            'systemMessage'=> $this->getMessage(),
         ];
     }
-
 }

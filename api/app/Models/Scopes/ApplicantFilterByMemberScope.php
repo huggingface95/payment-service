@@ -23,7 +23,7 @@ class ApplicantFilterByMemberScope implements Scope
             }
         }
 
-        if (preg_match("/^(SELECT|select)/", $builder->getQuery()->toSql())) {
+        if (preg_match('/^(SELECT|select)/', $builder->getQuery()->toSql())) {
             if ($this->ids && preg_match("/applicant_individual(?=[\.\"\' ])|applicant_companies(?=[\.\"\' ])/", $builder->getQuery()->toSql(), $matches)) {
                 foreach ($matches as $match) {
                     /**  applicant_inidividual|applicant_companies $match */

@@ -2,21 +2,25 @@
 
 namespace App\DTO\Email;
 
-
 use App\Models\EmailSmtp;
 
 class SmtpConfigDTO
 {
     public string $username;
+
     public string $password;
+
     public string $port;
+
     public string $host;
+
     public string $security;
+
     public string $subject;
+
     public string $from;
 
-
-    public static function transform(EmailSmtp $smtp): SmtpConfigDTO
+    public static function transform(EmailSmtp $smtp): self
     {
         $dto = new self();
         $dto->username = $smtp->username;
@@ -29,5 +33,4 @@ class SmtpConfigDTO
 
         return $dto;
     }
-
 }

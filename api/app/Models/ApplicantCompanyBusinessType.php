@@ -6,15 +6,15 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 
 class ApplicantCompanyBusinessType extends BaseModel
 {
-
     protected $table = 'applicant_company_business_type';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public $timestamps = false;
@@ -24,5 +24,4 @@ class ApplicantCompanyBusinessType extends BaseModel
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
-
 }

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\PaymentUrgency;
-use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class PaymentUrgencyTableSeeder extends Seeder
@@ -17,14 +16,12 @@ class PaymentUrgencyTableSeeder extends Seeder
     {
         PaymentUrgency::create([
             'id' => 1,
-            'name' => 'Standart'
+            'name' => 'Standart',
         ]);
 
         PaymentUrgency::create([
             'id' => 2,
-            'name' => 'Urgent'
+            'name' => 'Urgent',
         ]);
-
     }
-
 }

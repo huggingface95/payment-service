@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Nuwave\Lighthouse\Exceptions\AuthorizationException;
@@ -28,7 +27,6 @@ class AccessMiddleware
         $this->auth = $auth;
     }
 
-
     /**
      * @param Request $request
      * @param Closure $next
@@ -39,8 +37,9 @@ class AccessMiddleware
     public function handle(Request $request, Closure $next, string $guard = null)
     {
         $user = $request->user();
-        if ($user->id == 32 or $user->id == 78 or $user->id == 2)
+        if ($user->id == 32 or $user->id == 78 or $user->id == 2) {
             return $next($request);
+        }
 
         $referer = preg_replace('/.*?dashboard\/(.*)/', '$1', $request->header('referer'));
         $referer = preg_replace('/\?.*/', '', $referer);
@@ -53,19 +52,15 @@ class AccessMiddleware
             "You are not authorized to access {$operationName}"
         );
 
-
 //        if ($this->permissibleAction($request->getContent()) || !$this->auth->guard($guard)->guest()) {
 //            return $next($request);
 //        }
-
-
     }
 
     private function permissibleAction($content): bool
     {
-        return (
+        return
             is_string($content) &&
-            preg_match_all('/(createMember\()|(inviteMember\()/', $content)
-        );
+            preg_match_all('/(createMember\()|(inviteMember\()/', $content);
     }
 }

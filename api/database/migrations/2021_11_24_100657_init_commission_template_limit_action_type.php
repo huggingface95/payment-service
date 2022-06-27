@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use App\Models\CommissionTemplateLimitActionType;
+use Illuminate\Database\Migrations\Migration;
 
 class InitCommissionTemplateLimitActionType extends Migration
 {
@@ -14,13 +12,14 @@ class InitCommissionTemplateLimitActionType extends Migration
      */
     public function up()
     {
-        $names= [
-            'Notify','Suspend'
+        $names = [
+            'Notify', 'Suspend',
         ];
-        foreach ($names as $name)
+        foreach ($names as $name) {
             CommissionTemplateLimitActionType::create([
                 'name' => $name,
             ]);
+        }
     }
 
     /**

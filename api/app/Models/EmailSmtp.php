@@ -5,10 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
-
 /**
  * Class EmailTemplate
- * @package App\Models
  * @property int id
  * @property int member_id
  * @property string name
@@ -20,16 +18,16 @@ use Illuminate\Support\Carbon;
  * @property string username
  * @property string password
  * @property string replay_to
- * @property boolean is_sending_mail
+ * @property bool is_sending_mail
  * @property Carbon created_at
  * @property Carbon updated_at
- *
  */
 class EmailSmtp extends BaseModel
 {
-
     const SECURITY_AUTO = 'auto';
+
     const SECURITY_SSL = 'ssl';
+
     const SECURITY_STARTTLS = 'starttls';
 
     /**
@@ -38,7 +36,7 @@ class EmailSmtp extends BaseModel
      * @var array
      */
     protected $fillable = [
-       'name', 'member_id', 'security', 'company_id','host_name', 'from_name', 'from_email', 'username', 'password', 'replay_to', 'port','is_sending_mail'
+        'name', 'member_id', 'security', 'company_id', 'host_name', 'from_name', 'from_email', 'username', 'password', 'replay_to', 'port', 'is_sending_mail',
     ];
 
     public static function getSecurities(): array
@@ -59,6 +57,4 @@ class EmailSmtp extends BaseModel
     {
         return $this->belongsTo(Companies::class, 'company_id');
     }
-
-
 }

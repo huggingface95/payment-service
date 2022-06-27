@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\MemberScope;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * Class Payments
- * @package App\Models
  * @property int owner_id
  * @property float amount
  * @property int fee_type_id
@@ -25,12 +23,11 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property Accounts $Accounts
  * @property OperationType $PaymentOperation
  * @property Currencies $Currencies
- *
  */
 class Payments extends BaseModel
 {
+    protected $table = 'payments';
 
-    protected $table="payments";
     /**
      * The attributes that are mass assignable.
      *
@@ -73,8 +70,8 @@ class Payments extends BaseModel
         parent::booted();
         static::addGlobalScope(new MemberScope);
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
-        self::creating(function($model){
-           $model->fee = CommissionTemplateLimit::query()
+        self::creating(function ($model) {
+            $model->fee = CommissionTemplateLimit::query()
                 ->join('commission_template_limit_relation AS rel', 'rel.commission_template_limit_id', '=', 'commission_template_limit.id')
                 ->join('commission_template AS ct', 'ct.id', '=', 'rel.commission_template_id')
                 ->join('commission_price_list as l', 'l.commission_template_id', '=', 'ct.id')
@@ -84,7 +81,6 @@ class Payments extends BaseModel
                 ->select('commission_template_limit.*')
                 ->first()->amount ?? 0;
         });
-
     }
 
     public function scopeAccountNumber(Builder $query, $sort): Builder
@@ -100,9 +96,8 @@ class Payments extends BaseModel
      */
     public function Country()
     {
-        return $this->belongsTo(Country::class,'country_id','id');
+        return $this->belongsTo(Country::class, 'country_id', 'id');
     }
-
 
     /**
      * Get relation applicant Account
@@ -110,7 +105,7 @@ class Payments extends BaseModel
      */
     public function Accounts(): BelongsTo
     {
-        return $this->belongsTo(Accounts::class,'account_id');
+        return $this->belongsTo(Accounts::class, 'account_id');
     }
 
     /**
@@ -119,7 +114,7 @@ class Payments extends BaseModel
      */
     public function Companies()
     {
-        return $this->belongsTo(Companies::class,'company_id','id');
+        return $this->belongsTo(Companies::class, 'company_id', 'id');
     }
 
     /**
@@ -128,7 +123,7 @@ class Payments extends BaseModel
      */
     public function PaymentUrgency()
     {
-        return $this->belongsTo(PaymentUrgency::class,'urgency_id','id');
+        return $this->belongsTo(PaymentUrgency::class, 'urgency_id', 'id');
     }
 
     /**
@@ -137,7 +132,7 @@ class Payments extends BaseModel
      */
     public function PaymentOperation(): BelongsTo
     {
-        return $this->belongsTo(OperationType::class,'operation_type_id');
+        return $this->belongsTo(OperationType::class, 'operation_type_id');
     }
 
     /**
@@ -146,7 +141,7 @@ class Payments extends BaseModel
      */
     public function PaymentProvider()
     {
-        return $this->belongsTo(PaymentProvider::class,'payment_provider_id','id');
+        return $this->belongsTo(PaymentProvider::class, 'payment_provider_id', 'id');
     }
 
     /**
@@ -155,17 +150,17 @@ class Payments extends BaseModel
      */
     public function Currencies(): BelongsTo
     {
-        return $this->belongsTo(Currencies::class,'currency_id','id');
+        return $this->belongsTo(Currencies::class, 'currency_id', 'id');
     }
 
     public function member()
     {
-        return $this->belongsTo(Members::class,'member_id','id');
+        return $this->belongsTo(Members::class, 'member_id', 'id');
     }
 
     public function applicantIndividual(): BelongsTo
     {
-        return $this->belongsTo(ApplicantIndividual::class,'owner_id');
+        return $this->belongsTo(ApplicantIndividual::class, 'owner_id');
     }
 
 //    public function company()
@@ -175,17 +170,16 @@ class Payments extends BaseModel
 
     public function feeType(): BelongsTo
     {
-        return $this->belongsTo(FeeType::class,'fee_type_id');
+        return $this->belongsTo(FeeType::class, 'fee_type_id');
     }
 
     public function paymentStatus(): BelongsTo
     {
-        return $this->belongsTo(PaymentStatus::class,'status_id');
+        return $this->belongsTo(PaymentStatus::class, 'status_id');
     }
 
     public function commissionPriceList(): HasOneThrough
     {
         return $this->hasOneThrough(CommissionPriceList::class, PaymentProvider::class, 'id', 'provider_id', 'payment_provider_id', 'id');
     }
-
 }

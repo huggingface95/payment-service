@@ -16,7 +16,7 @@ class CreatePaymentProviderPaymentSystemTable extends Migration
         Schema::create('payment_provider_payment_system', function (Blueprint $table) {
             $table->unsignedBigInteger('payment_provider_id');
             $table->unsignedBigInteger('payment_system_id');
-            $table->unique(['payment_provider_id','payment_system_id']);
+            $table->unique(['payment_provider_id', 'payment_system_id']);
             $table->foreign('payment_provider_id')->references('id')->on('payment_provider')->onDelete('cascade');
             $table->foreign('payment_system_id')->references('id')->on('payment_system');
         });

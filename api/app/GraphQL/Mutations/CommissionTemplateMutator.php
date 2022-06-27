@@ -6,12 +6,10 @@ use App\Models\CommissionTemplate;
 
 class CommissionTemplateMutator
 {
-
     /**
      * @param  null  $_
      * @param  array<string, mixed>  $args
      */
-
     public function create($root, array $args)
     {
         $memberId = CommissionTemplate::DEFAULT_MEMBER_ID;
@@ -47,6 +45,7 @@ class CommissionTemplateMutator
             unset($args['country_id']);
         }
         $commissionTemplate->update($args);
+
         return $commissionTemplate;
     }
 }

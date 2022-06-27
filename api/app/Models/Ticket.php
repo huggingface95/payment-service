@@ -9,10 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Carbon;
 
-
 /**
  * Class Ticket
- * @package App\Models
  * @property int id
  * @property int member_id
  * @property int client_id
@@ -28,7 +26,6 @@ use Illuminate\Support\Carbon;
  * @property Companies company
  * @property DepartmentPosition position
  * @property Departments department
- *
  */
 class Ticket extends BaseModel
 {
@@ -38,7 +35,7 @@ class Ticket extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'member_id', 'client_id', 'title', 'message', 'status'
+        'member_id', 'client_id', 'title', 'message', 'status',
     ];
 
     protected static function booted()
@@ -46,7 +43,6 @@ class Ticket extends BaseModel
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
-
 
     public function comments(): HasMany
     {
@@ -62,7 +58,6 @@ class Ticket extends BaseModel
     {
         return $this->belongsTo(ApplicantIndividual::class, 'client_id');
     }
-
 
     public function company(): HasOneThrough
     {

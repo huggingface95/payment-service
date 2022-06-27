@@ -4,18 +4,16 @@ namespace App\Models;
 
 class ApplicantIndividualCompanyPosition extends BaseModel
 {
+    protected $table = 'applicant_individual_company_position';
 
-    protected $table='applicant_individual_company_position';
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     public $timestamps = false;
-
-
 }

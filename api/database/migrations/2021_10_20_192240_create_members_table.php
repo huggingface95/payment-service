@@ -16,9 +16,9 @@ class CreateMembersTable extends Migration
     {
         Schema::create('members', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name',100);
-            $table->string('last_name',100);
-            $table->string('email',255);
+            $table->string('first_name', 100);
+            $table->string('last_name', 100);
+            $table->string('email', 255);
             $table->unsignedSmallInteger('sex')->nullable();
             $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('country_id')->nullable();
@@ -27,8 +27,8 @@ class CreateMembersTable extends Migration
             $table->unsignedBigInteger('two_factor_auth_setting_id')->default(1);
             $table->unsignedBigInteger('department_position_id')->nullable();
             $table->boolean('is_active')->default(false);
-            $table->string('password_hash',255);
-            $table->string('password_salt',255);
+            $table->string('password_hash', 255);
+            $table->string('password_salt', 255);
             $table->jsonb('additional_fields')->nullable();
             $table->jsonb('additional_info_fields')->nullable();
             $table->timestamp('deleted_at')->nullable();
