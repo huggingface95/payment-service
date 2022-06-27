@@ -4,20 +4,19 @@ namespace App\Models;
 
 use App\Enums\GuardEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Role as SpatieRole;
 use Spatie\Permission\PermissionRegistrar;
 
 /**
  * Class Role
- * @property BelongsToMany $permissions
+ * @property Collection $permissions
  *
  */
-
-
 class Role extends SpatieRole
 {
     protected $fillable = [
-        'name', 'guard_name', 'description','company_id','group_type_id'
+        'name', 'guard_name', 'description', 'company_id', 'group_type_id'
     ];
 
     protected $guard_name = GuardEnum::GUARD_NAME;
@@ -25,12 +24,12 @@ class Role extends SpatieRole
 
     public function groupType()
     {
-        return $this->belongsTo(Groups::class,'group_type_id','id');
+        return $this->belongsTo(Groups::class, 'group_type_id', 'id');
     }
 
     public function company()
     {
-        return $this->belongsTo(Companies::class,'company_id','id');
+        return $this->belongsTo(Companies::class, 'company_id', 'id');
     }
 
     public function groups()
@@ -53,7 +52,7 @@ class Role extends SpatieRole
 
     public function permissionCategories()
     {
-        return $this->belongsToMany(PermissionCategory::class,'permission_category_role','role_id','permission_category_id');
+        return $this->belongsToMany(PermissionCategory::class, 'permission_category_role', 'role_id', 'permission_category_id');
     }
 
     /**
@@ -63,7 +62,7 @@ class Role extends SpatieRole
      */
     public function scopeGroupsSort($query, $sort)
     {
-        return $query->with('groups')->orderBy('id',$sort);
+        return $query->with('groups')->orderBy('id', $sort);
     }
 
     /**
@@ -82,8 +81,7 @@ class Role extends SpatieRole
     public function getGroupsIdByRole(): array
     {
         $ids = [];
-        foreach ($this->groups as $group)
-        {
+        foreach ($this->groups as $group) {
             $ids[] = $group->id;
         }
         return $ids;
