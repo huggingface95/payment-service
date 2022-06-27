@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\PermissionCategory;
+use App\Models\PermissionFilter;
 use App\Models\PermissionOperation;
 use App\Models\Permissions;
 use App\Models\PermissionsList;
@@ -3995,5 +3996,156 @@ class PermissionsSeeder extends Seeder
                 }
             }
         }
+
+
+        $filters = [
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'banking',
+                'binds' => ['Email Templates:Tag.Banking'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'banking',
+                'binds' => ['Email Templates:Tag.Banking'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'banking',
+                'binds' => ['Email Templates:Tag.Banking'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_DELETING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'banking',
+                'binds' => ['Email Templates:Tag.Banking'],
+            ],
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_DELETING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.Common'],
+            ],
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_DELETING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_DELETING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.System'],
+            ],
+
+        ];
+
+        foreach ($filters as $filter){
+            $binds = $filter['binds'];
+            unset($filter['binds']);
+            $permissionFilter = PermissionFilter::firstOrCreate($filter);
+
+            foreach ($binds ?? [] as $perName) {
+                /** @var Permissions $permission */
+                $permission = Permissions::query()->where('name', $perName)->whereIn('permission_list_id', $lists)->first();
+                if ($permission) {
+                    $ids = $permissionFilter->binds()->get()->pluck('id')->push($permission->id)->unique()->toArray();
+                    $operation->binds()->sync($ids, true);
+                } else {
+                    throw new Exception("Not found bind permission in {$data['name']} filter");
+                }
+            }
+        }
+
     }
 }

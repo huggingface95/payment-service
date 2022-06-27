@@ -19,7 +19,7 @@ trait PermissionFilterData
                         $query->where('column', $column)->where('value', $value);
                     });
                 }
-            })->first();
+            })->get();
     }
 
 

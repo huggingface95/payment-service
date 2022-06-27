@@ -76,9 +76,10 @@ class BaseModel extends Model
         $user = Auth::user();
         $allPermissions = $user->getAllPermissions();
 
-        $filter = self::getPermissionFilter(PermissionFilter::EVENT_MODE, $action, $model->getTable(), $model->getAttributes());
+        $filters = self::getPermissionFilter(PermissionFilter::EVENT_MODE, $action, $model->getTable(), $model->getAttributes());
 
-        if ($filter) {
+
+        foreach ($filters as $filter){
             $bindPermissions = $filter->binds->intersect($allPermissions);
             if ($bindPermissions->count() != $filter->binds->count()) {
                 return false;

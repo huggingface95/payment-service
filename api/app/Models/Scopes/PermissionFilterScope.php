@@ -21,9 +21,9 @@ class PermissionFilterScope implements Scope
         $user = \auth()->user();
         $allPermissions = $user->getAllPermissions();
 
-        $filter = self::getPermissionFilter(PermissionFilter::SCOPE_MODE, null, $model->getTable(), $conditions);
+        $filters = self::getPermissionFilter(PermissionFilter::SCOPE_MODE, null, $model->getTable(), $conditions);
 
-        if ($filter) {
+        foreach ($filters as $filter){
             $bindPermissions = $filter->binds->intersect($allPermissions);
 
             if ($bindPermissions->count() != $filter->binds->count()) {
