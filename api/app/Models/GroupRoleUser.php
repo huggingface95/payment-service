@@ -14,7 +14,7 @@ class GroupRoleUser extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'group_role_id', 'user_id', 'user_type'
+        'group_role_id', 'user_id', 'user_type',
     ];
 
     public $timestamps = false;

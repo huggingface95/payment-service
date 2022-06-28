@@ -138,7 +138,7 @@ class Accounts extends BaseModel
 
     public function groupRole(): \Ankurk91\Eloquent\Relations\BelongsToOne
     {
-        return $this->belongsToOne(GroupRole::class, GroupRoleUser::class,  'user_id', 'group_role_id',  'owner_id', 'id');
+        return $this->belongsToOne(GroupRole::class, GroupRoleUser::class, 'user_id', 'group_role_id', 'owner_id', 'id');
     }
 
     public function setAccountIdAttribute()

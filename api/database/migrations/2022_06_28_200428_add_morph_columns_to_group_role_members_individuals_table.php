@@ -21,7 +21,6 @@ class AddMorphColumnsToGroupRoleMembersIndividualsTable extends Migration
             $table->enum('user_type', [Members::class, ApplicantIndividual::class, ApplicantCompany::class]);
 
             $table->unique(['group_role_id', 'user_type', 'user_id']);
-
         });
     }
 

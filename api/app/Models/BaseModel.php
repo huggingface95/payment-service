@@ -72,7 +72,7 @@ class BaseModel extends Model
     protected static function filterByPermissionFilters($action, Model $model): bool
     {
         /** @var Members $user */
-        if ($user = Auth::user()){
+        if ($user = Auth::user()) {
             $allPermissions = $user->getAllPermissions();
 
             $filters = self::getPermissionFilter(PermissionFilter::EVENT_MODE, $action, $model->getTable(), $model->getAttributes());
