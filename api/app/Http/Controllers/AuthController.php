@@ -149,6 +149,11 @@ class AuthController extends Controller
                 return response()->json(['data' => 'Member not found']);
             }
         }
+        $secretKey = $request->secret;
+        $user->google2fa_secret =
+            str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), config('lumen2fa.string_pad', 'X'));
+        $user->save();
+
         if ($this->verify2FA(request())->getData()->data == 'success') {
             $user->createToken($user->fullname)->accessToken;
             $secretKey = $request->secret;
