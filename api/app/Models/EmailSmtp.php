@@ -7,6 +7,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * Class EmailTemplate
+ *
  * @property int id
  * @property int member_id
  * @property string name

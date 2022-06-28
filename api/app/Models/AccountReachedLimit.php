@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class AccountReachedLimit
+ *
  * @property int id
  * @property int account_id
  * @property string group_type

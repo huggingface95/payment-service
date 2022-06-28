@@ -17,6 +17,7 @@ class Requisites extends BaseModel
 
     /**
      * Get relation Country
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function Country()
@@ -26,6 +27,7 @@ class Requisites extends BaseModel
 
     /**
      * Get relation applicant Account
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function Accounts()

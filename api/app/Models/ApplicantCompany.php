@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * Class ApplicantCompany
+ *
  * @property ApplicantIndividual $applicantIndividuals
  * @property ApplicantIndividual $applicantsWithBankingAccess
  */

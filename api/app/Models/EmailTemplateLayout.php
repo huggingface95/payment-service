@@ -7,13 +7,13 @@ use Illuminate\Support\Carbon;
 
 /**
  * Class EmailTemplate
+ *
  * @property int id
  * @property int email_template_id
  * @property string header
  * @property string footer
  * @property Carbon created_at
  * @property Carbon updated_at
- *
  * @property Companies $company
  */
 class EmailTemplateLayout extends BaseModel

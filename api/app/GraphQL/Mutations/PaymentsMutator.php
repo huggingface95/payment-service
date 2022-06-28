@@ -24,8 +24,9 @@ use Illuminate\Support\Collection;
 class PaymentsMutator
 {
     /**
-     * @param null $_
-     * @param array<string, mixed> $args
+     * @param  null  $_
+     * @param  array<string, mixed>  $args
+     *
      * @throws GraphqlException
      */
     public function create($root, array $args)

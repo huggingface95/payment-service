@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int period_count
  * @property float amount
 
- *
  * @property CommissionTemplateLimitType $commissionTemplateLimitType
  * @property CommissionTemplateLimitTransferDirection $commissionTemplateLimitTransferDirection
  * @property CommissionTemplateLimitPeriod $commissionTemplateLimitPeriod

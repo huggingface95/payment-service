@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * Class ApplicantBankingAccess
+ *
  * @property float daily_limit
  * @property float monthly_limit
  * @property float operation_limit
@@ -41,6 +42,7 @@ class ApplicantBankingAccess extends BaseModel
 
     /**
      * Get relation applicant_individual
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function ApplicantIndividual()
@@ -50,6 +52,7 @@ class ApplicantBankingAccess extends BaseModel
 
     /**
      * Get relation applicant_company
+     *
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
     public function ApplicantCompany()
@@ -59,6 +62,7 @@ class ApplicantBankingAccess extends BaseModel
 
     /**
      * Get relation members
+     *
      * @return \Illuminate\Database\Eloquent\Relations\belongsTo
      */
     public function Members()

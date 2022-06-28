@@ -39,6 +39,7 @@ class CommissionPriceList extends BaseModel
 
     /**
      * Get relation payment provider
+     *
      * @return BelongsTo
      */
     public function paymentProvider(): BelongsTo
@@ -48,6 +49,7 @@ class CommissionPriceList extends BaseModel
 
     /**
      * Get relation payment system
+     *
      * @return BelongsTo
      */
     public function paymentSystem(): BelongsTo
@@ -57,6 +59,7 @@ class CommissionPriceList extends BaseModel
 
     /**
      * Get relation commission template
+     *
      * @return BelongsTo
      */
     public function commissionTemplate(): BelongsTo

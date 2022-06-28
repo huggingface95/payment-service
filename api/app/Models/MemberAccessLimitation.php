@@ -8,11 +8,11 @@ use Illuminate\Support\Collection;
 
 /**
  * Class MemberAccessLimitation
+ *
  * @property int id
  * @property int member_id
  * @property int group_role_id
  * @property int commission_template_id
- *
  * @property Collection groupRoles
  * @property GroupRole $groupRole
  * @property EmailSmtp $smtp

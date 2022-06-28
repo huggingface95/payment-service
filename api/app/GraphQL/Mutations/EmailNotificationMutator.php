@@ -10,7 +10,7 @@ class EmailNotificationMutator extends BaseMutator
 {
     /**
      * @param $root
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      */
     public function create($root, array $args)
@@ -43,7 +43,7 @@ class EmailNotificationMutator extends BaseMutator
 
     /**
      * @param $root
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      */
     public function update($root, array $args)

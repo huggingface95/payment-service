@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class AccountLimit
+ *
  * @property int id
  * @property int account_id
  * @property int period_count
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int commission_template_limit_transfer_direction_id
  * @property int commission_template_limit_period_id
  * @property int commission_template_limit_action_type_id
- *
  * @property CommissionTemplateLimitType $commissionTemplateLimitType
  * @property CommissionTemplateLimitTransferDirection $commissionTemplateLimitTransferDirection
  * @property CommissionTemplateLimitPeriod $commissionTemplateLimitPeriod

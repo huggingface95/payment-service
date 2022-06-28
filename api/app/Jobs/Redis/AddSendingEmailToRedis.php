@@ -24,6 +24,7 @@ class AddSendingEmailToRedis extends Job
      * Execute the job.
      *
      * @return void
+     *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function handle()

@@ -9,13 +9,13 @@ use Illuminate\Support\Carbon;
 
 /**
  * Class TicketComment
+ *
  * @property int id
  * @property int ticket_id
  * @property int client_id
  * @property string message
  * @property Carbon created_at
  * @property Carbon updated_at
- *
  * @property Ticket ticket
  * @property ApplicantIndividual client
  */

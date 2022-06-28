@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class GroupRole
+ *
  * @property Role $role
  */
 class GroupRole extends BaseModel

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Class EmailTemplate
+ *
  * @property int id
  * @property int notification_id
  * @property string client_type

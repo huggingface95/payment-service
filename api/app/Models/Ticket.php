@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * Class Ticket
+ *
  * @property int id
  * @property int member_id
  * @property int client_id
@@ -19,7 +20,6 @@ use Illuminate\Support\Carbon;
  * @property int status
  * @property Carbon created_at
  * @property Carbon updated_at
- *
  * @property TicketComments comments
  * @property Members member
  * @property ApplicantIndividual client

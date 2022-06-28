@@ -82,9 +82,10 @@ class ApplicantCompanyMutator extends BaseMutator
     }
 
     /**
-     * @param ApplicantCompany $applicant
-     * @param array $args
+     * @param  ApplicantCompany  $applicant
+     * @param  array  $args
      * @return ApplicantIndividualCompany
+     *
      * @throws GraphqlException
      */
     private function setOwner(ApplicantCompany $applicant, array $args): ApplicantIndividualCompany

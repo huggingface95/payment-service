@@ -38,6 +38,7 @@ class CommissionTemplate extends BaseModel
 
     /**
      * Get relation currencies
+     *
      * @return BelongsToMany
      */
     public function currencies(): BelongsToMany
@@ -47,6 +48,7 @@ class CommissionTemplate extends BaseModel
 
     /**
      * Get relation countries
+     *
      * @return BelongsToMany
      */
     public function countries(): BelongsToMany
@@ -56,6 +58,7 @@ class CommissionTemplate extends BaseModel
 
     /**
      * Get relation bussiness activities
+     *
      * @return BelongsToMany
      */
     public function businessActivity(): BelongsToMany
@@ -65,6 +68,7 @@ class CommissionTemplate extends BaseModel
 
     /**
      * Get relation commission template limits
+     *
      * @return BelongsToMany
      */
     public function commissionTemplateLimits(): BelongsToMany
@@ -74,6 +78,7 @@ class CommissionTemplate extends BaseModel
 
     /**
      * Get relation payment provider
+     *
      * @return BelongsTo
      */
     public function paymentProvider(): BelongsTo

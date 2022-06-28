@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 class BaseMutator
 {
     /**
-     * @param array $additionalFields
+     * @param  array  $additionalFields
      * @return array
      */
     public function setAdditionalField(array $additionalFields): array
@@ -32,7 +32,7 @@ class BaseMutator
 
     /**
      * @param $_
-     * @param array $args
+     * @param  array  $args
      * @return array
      */
     public function setPassword($_, array $args)

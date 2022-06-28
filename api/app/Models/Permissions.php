@@ -11,6 +11,7 @@ use Spatie\Permission\Models\Role;
 
 /**
  * @method static firstOrCreate(mixed $data)
+ *
  *@property int $id
  */
 class Permissions extends SpatiePermission
