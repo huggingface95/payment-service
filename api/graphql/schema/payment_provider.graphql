@@ -15,14 +15,6 @@ type PaymentProvider {
     "Получить связанные платежные системы"
     payment_systems: [PaymentSystem] @belongsToMany(relation:"paymentSystems")
     commission_price_list: CommissionPriceList @hasOne(relation:"commissionPriceList")
-    "массив ID стран"
-    country_id: [ID]
-    "Получить связанные страны"
-    countries: [Country]
-    "массив ID валют"
-    currency_id: [ID]
-    "Получить связанные валюты"
-    currencies: [Currencies]
 }
 
 extend type Query @guard {
@@ -37,8 +29,6 @@ extend type Query @guard {
     hasPaymentSystems: {column:NAME,operator:GTE,value:PaymentSystemName} фильтр по платежным системам
     """
     paymentProviders(
-        paymentProviderCountry: [ID] @scope(name:"PaymentProviderCountry"),
-        paymentProviderCurrency: [ID] @scope(name:"PaymentProviderCurrency"),
         hasPaymentSystems: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["name","id"]),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
@@ -58,10 +48,6 @@ extend type Mutation @guard {
         is_active: Boolean
         "массив ID платежных систем"
         payment_systems: [ID]
-        "массив ID стран"
-        country_id: [ID]
-        "массив ID валют"
-        currency_id: [ID]
     ):PaymentProvider   @field(resolver: "PaymentProviderMutator@create")
 
     "Обновить поля платежного провайдера"
@@ -77,10 +63,6 @@ extend type Mutation @guard {
         is_active: Boolean
         "массив ID платежных систем"
         payment_systems: [ID]
-        "массив ID стран"
-        country_id: [ID]
-        "массив ID валют"
-        currency_id: [ID]
     ):PaymentProvider   @field(resolver: "PaymentProviderMutator@update")
 
     "Удалить платежный провайдер"
