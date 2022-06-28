@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+
 class GroupRoleUser extends BaseModel
 {
     protected $table = 'group_role_members_individuals';
@@ -12,10 +14,13 @@ class GroupRoleUser extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'group_role_id', 'user_id',
+        'group_role_id', 'user_id', 'user_type'
     ];
 
-    protected $primaryKey = 'user_id';
-
     public $timestamps = false;
+
+    public function user(): MorphTo
+    {
+        return $this->morphTo();
+    }
 }

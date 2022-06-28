@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  */
 class Accounts extends BaseModel
 {
-    use MorphToOne;
+    use MorphToOne, BelongsToOne;
 
     const PRIVATE = 'Private';
 
@@ -50,6 +51,7 @@ class Accounts extends BaseModel
         'available_balance',
         'order_reference',
         'company_id',
+        'member_id',
     ];
 
     public static self $clone;
@@ -65,6 +67,11 @@ class Accounts extends BaseModel
         self::$clone = $this->replicate();
 
         return parent::load($relations);
+    }
+
+    public function member(): BelongsTo
+    {
+        return $this->belongsTo(Members::class, 'member_id');
     }
 
     /**
@@ -129,9 +136,9 @@ class Accounts extends BaseModel
         return $this->belongsTo(CommissionTemplate::class, 'commission_template_id', 'id');
     }
 
-    public function group(): HasOneThrough
+    public function groupRole(): \Ankurk91\Eloquent\Relations\BelongsToOne
     {
-        return $this->hasOneThrough(GroupRole::class, ApplicantIndividual::class, 'member_group_role_id', 'id', 'client_id', 'id');
+        return $this->belongsToOne(GroupRole::class, GroupRoleUser::class,  'user_id', 'group_role_id',  'owner_id', 'id');
     }
 
     public function setAccountIdAttribute()
@@ -162,7 +169,7 @@ class Accounts extends BaseModel
 
     public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
-        return $this->morphedByOne(ApplicantIndividual::class, 'client', 'account_individuals_companies', 'account_id');
+        return $this->morphedByOne(ApplicantIndividual::class, 'client', AccountIndividualCompany::class, 'account_id');
     }
 
     public function applicantCompany(): \Ankurk91\Eloquent\Relations\MorphToOne

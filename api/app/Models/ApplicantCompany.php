@@ -202,16 +202,9 @@ class ApplicantCompany extends BaseModel
         return $this->belongsTo(Companies::class);
     }
 
-    public function groupRole(): HasOneThrough
+    public function groupRole(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
-        return $this->hasOneThrough(
-            GroupRole::class,
-            GroupRoleUser::class,
-            'user_id',
-            'id',
-            'id',
-            'group_role_id',
-        )->where('group_type_id', GroupRole::COMPANY);
+        return $this->morphToOne(GroupRole::class, 'user', GroupRoleUser::class, 'user_id', 'group_role_id');
     }
 
     public function account(): \Ankurk91\Eloquent\Relations\MorphToOne

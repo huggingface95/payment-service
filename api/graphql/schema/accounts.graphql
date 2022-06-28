@@ -20,13 +20,15 @@ type Accounts {
     "Получить связанный шаблон комиссии"
     commission_template_id: CommissionTemplate @belongsTo(relation:"commissionTemplate")
     "Получить группу"
-    group: GroupRole @hasOne(relation:"group")
+    group: GroupRole @belongsTo(relation:"groupRole")
     "Получить или индивидуала или компании"
     client: Client @morphOne(relation:"clientable")
     "Состояние аккаунта"
     account_state: AccountState @belongsTo(relation:"accountState")
     "Компания которой принадлежит аккаунт"
     company: Companies @belongsTo(relation:"company")
+    "Получить менеджера"
+    member: Members @belongsTo(relation:"member")
     "Имя аккаунта"
     account_name: String!
     "Основной или нет"
@@ -59,8 +61,13 @@ extend type Query @guard {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     accounts(
+        hasGroupRole: _ @whereHasConditions(columns: ["id"]),
+        hasClientable: _ @whereHasConditions(columns: ["id"]),
         query: QueryAccountCondition
         created_at: DateRange @whereBetween,
+        where: _ @whereConditions(columns: ["company_id", "payment_provider_id", "owner_id","account_number", "currency_id", "group_id", "member_id",
+            "is_primary", "commission_template_id", "currency_id", "account_type", "account_state_id", "account_name"
+        ]),
         orderBy: _ @orderBy(columns: ["id", "client_id"])
     ): [Accounts!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -68,14 +75,17 @@ extend type Query @guard {
 input QueryAccountCondition {
     company_id: ID @eq
     payment_provider_id: ID @eq
-    payment_system_id: ID @eq
-    client_id: ID @eq
     owner_id: ID @eq
     account_number: String @like
     currency_id: ID @eq
     group_id: ID @eq
-    group_type_id: ID @eq
     member_id: ID @eq
+    is_primary: Boolean @eq
+    commission_template_id: ID @eq
+    currency_id: ID @eq
+    account_type: String @eq
+    account_state_id: ID @eq
+    account_name: String @like
 }
 
 enum QueryAccountWhereColumn {

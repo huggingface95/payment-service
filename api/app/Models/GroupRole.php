@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -70,34 +71,19 @@ class GroupRole extends BaseModel
         return $this->belongsTo(Companies::class, 'company_id');
     }
 
-    public function individuals(): BelongsToMany
+    public function individuals(): MorphToMany
     {
-        return $this->belongsToMany(
-            ApplicantIndividual::class,
-            'group_role_members_individuals',
-            'group_role_id',
-            'user_id'
-        );
+        return $this->morphedByMany(ApplicantIndividual::class, 'user', GroupRoleUser::class, 'group_role_id');
     }
 
-    public function companies(): BelongsToMany
+    public function companies(): MorphToMany
     {
-        return $this->belongsToMany(
-            ApplicantCompany::class,
-            'group_role_members_individuals',
-            'group_role_id',
-            'user_id'
-        );
+        return $this->morphedByMany(ApplicantCompany::class, 'user', GroupRoleUser::class, 'group_role_id');
     }
 
-    public function members(): BelongsToMany
+    public function members(): MorphToMany
     {
-        return $this->belongsToMany(
-            Members::class,
-            'group_role_members_individuals',
-            'group_role_id',
-            'user_id'
-        );
+        return $this->morphedByMany(Members::class, 'user', GroupRoleUser::class, 'group_role_id');
     }
 
     public function users(): BelongsToMany
