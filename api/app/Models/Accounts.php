@@ -69,6 +69,7 @@ class Accounts extends BaseModel
 
     /**
      * Get relation currencies
+     *
      * @return BelongsTo
      */
     public function currencies(): BelongsTo
@@ -78,6 +79,7 @@ class Accounts extends BaseModel
 
     /**
      * Get relation Owner
+     *
      * @return BelongsTo
      */
     public function owner(): BelongsTo
@@ -87,6 +89,7 @@ class Accounts extends BaseModel
 
     /**
      * Get relation Company
+     *
      * @return BelongsTo
      */
     public function company(): BelongsTo
@@ -96,6 +99,7 @@ class Accounts extends BaseModel
 
     /**
      * Get relation Payment Provider
+     *
      * @return BelongsTo
      */
     public function paymentProvider(): BelongsTo
@@ -117,6 +121,7 @@ class Accounts extends BaseModel
 
     /**
      * Get relation Payment Provider
+     *
      * @return BelongsTo
      */
     public function commissionTemplate(): BelongsTo

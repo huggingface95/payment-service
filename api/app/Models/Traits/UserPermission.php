@@ -3,14 +3,20 @@
 namespace App\Models\Traits;
 
 use App\Models\PermissionOperation;
+use Illuminate\Support\Collection;
 
 trait UserPermission
 {
-    public function hasPermission(string $name, string $url): bool
+    public function getAllPermissions(): Collection
     {
         $this->loadRolesAndPermissionsRelations();
 
-        $allPermissions = $this->groupRole->role->permissions;
+        return $this->groupRole->role->permissions;
+    }
+
+    public function hasPermission(string $name, string $url): bool
+    {
+        $allPermissions = $this->getAllPermissions();
 
         //global permissions
         if (PermissionOperation::query()

@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * Class PriceListFee
+ *
  * @property int id
  * @property string name
  * @property int price_list_id

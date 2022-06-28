@@ -19,7 +19,7 @@ class AccessMiddleware
     /**
      * Create a new middleware instance.
      *
-     * @param \Illuminate\Contracts\Auth\Factory $auth
+     * @param  \Illuminate\Contracts\Auth\Factory  $auth
      * @return void
      */
     public function __construct(Auth $auth)
@@ -28,10 +28,11 @@ class AccessMiddleware
     }
 
     /**
-     * @param Request $request
-     * @param Closure $next
-     * @param string|null $guard
+     * @param  Request  $request
+     * @param  Closure  $next
+     * @param  string|null  $guard
      * @return mixed
+     *
      * @throws AuthorizationException
      */
     public function handle(Request $request, Closure $next, string $guard = null)

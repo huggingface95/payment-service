@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * Class ApplicantIndividual
+ *
  * @property ApplicantBankingAccess $applicantBankingAccess
  */
 class ApplicantIndividual extends BaseModel

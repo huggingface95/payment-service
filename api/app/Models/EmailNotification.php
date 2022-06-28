@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * Class EmailTemplate
+ *
  * @property int id
  * @property string type
  * @property string recipient_type

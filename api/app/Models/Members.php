@@ -23,6 +23,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * Class Members
+ *
  * @property int id
  * @property bool is_show_owner_applicants
  * @property string email
@@ -36,7 +37,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property int two_factor_auth_setting_id
  * @property string google2fa_secret
  * @property string backup_codes
- *
  * @property Collection groupRoles
  * @property GroupRole $groupRole
  * @property EmailSmtp $smtp

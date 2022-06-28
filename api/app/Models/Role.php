@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Enums\GuardEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Role as SpatieRole;
 use Spatie\Permission\PermissionRegistrar;
 
 /**
  * Class Role
- * @property BelongsToMany $permissions
+ *
+ * @property Collection $permissions
  */
 class Role extends SpatieRole
 {

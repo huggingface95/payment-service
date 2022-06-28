@@ -9,7 +9,7 @@ class ApplicantLabelMutator
 {
     /**
      * @param $root
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      */
     public function create($root, array $args)
@@ -23,7 +23,7 @@ class ApplicantLabelMutator
 
     /**
      * @param $root
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      */
     public function update($root, array $args)
@@ -38,7 +38,7 @@ class ApplicantLabelMutator
 
     /**
      * @param $root
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      */
     public function delete($root, array $args)

@@ -12,7 +12,7 @@ class RoleMutator
 {
     /**
      * @param $_
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      */
     public function create($_, array $args)
@@ -37,7 +37,7 @@ class RoleMutator
 
     /**
      * @param $_
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      */
     public function update($_, array $args)
@@ -65,7 +65,7 @@ class RoleMutator
     }
 
     /**
-     * @param Role $role
+     * @param  Role  $role
      * @param $permissions
      * @return Role
      */

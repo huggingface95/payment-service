@@ -25,6 +25,7 @@ class GraphqlException extends Exception implements RendersErrorsExtensions
      * Returns true when exception message is safe to be displayed to a client.
      *
      * @api
+     *
      * @return bool
      */
     public function isClientSafe(): bool
@@ -38,6 +39,7 @@ class GraphqlException extends Exception implements RendersErrorsExtensions
      * Value "graphql" is reserved for errors produced by query parsing or validation, do not use it.
      *
      * @api
+     *
      * @return string
      */
     public function getCategory(): string

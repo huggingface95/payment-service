@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * Class Payments
+ *
  * @property int owner_id
  * @property float amount
  * @property int fee_type_id
@@ -17,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property float $fee
  * @property float amount_real
  * @property int $operation_type_id
- *
  * @property ApplicantIndividual $applicantIndividual
  * @property CommissionPriceList $commissionPriceList
  * @property Accounts $Accounts
@@ -92,6 +92,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation Country
+     *
      * @return BelongsTo
      */
     public function Country()
@@ -101,6 +102,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation applicant Account
+     *
      * @return BelongsTo
      */
     public function Accounts(): BelongsTo
@@ -110,6 +112,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation Companies
+     *
      * @return BelongsTo
      */
     public function Companies()
@@ -119,6 +122,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation payment_urgency
+     *
      * @return BelongsTo
      */
     public function PaymentUrgency()
@@ -128,6 +132,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation OperationType
+     *
      * @return BelongsTo
      */
     public function PaymentOperation(): BelongsTo
@@ -137,6 +142,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation PaymentProvider
+     *
      * @return BelongsTo
      */
     public function PaymentProvider()
@@ -146,6 +152,7 @@ class Payments extends BaseModel
 
     /**
      * Get relation Currencies
+     *
      * @return BelongsTo
      */
     public function Currencies(): BelongsTo

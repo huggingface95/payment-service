@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\PermissionFilterScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
  * Class EmailTemplate
+ *
  * @property int id
  * @property string name
  * @property string subject
@@ -17,7 +19,6 @@ use Illuminate\Support\Carbon;
  * @property string service_type
  * @property Carbon created_at
  * @property Carbon updated_at
- *
  * @property Members $member
  * @property Companies $company
  */
@@ -43,6 +44,12 @@ class EmailTemplate extends BaseModel
     protected $fillable = [
         'type', 'service_type', 'use_layout', 'subject', 'content', 'header', 'footer', 'member_id', 'company_id', 'name',
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new PermissionFilterScope);
+    }
 
     public function getHtml(): string
     {
