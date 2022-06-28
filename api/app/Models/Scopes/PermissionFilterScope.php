@@ -8,6 +8,7 @@ use App\Models\Traits\PermissionFilterData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Support\Facades\Auth;
 
 class PermissionFilterScope implements Scope
 {
@@ -18,16 +19,17 @@ class PermissionFilterScope implements Scope
         $conditions = self::getEloquentSqlWithBindings($builder);
 
         /** @var Members $user */
-        $user = \auth()->user();
-        $allPermissions = $user->getAllPermissions();
+        if ($user = Auth::user()) {
+            $allPermissions = $user->getAllPermissions();
 
-        $filters = self::getPermissionFilter(PermissionFilter::SCOPE_MODE, null, $model->getTable(), $conditions);
+            $filters = self::getPermissionFilter(PermissionFilter::SCOPE_MODE, null, $model->getTable(), $conditions);
 
-        foreach ($filters as $filter) {
-            $bindPermissions = $filter->binds->intersect($allPermissions);
+            foreach ($filters as $filter) {
+                $bindPermissions = $filter->binds->intersect($allPermissions);
 
-            if ($bindPermissions->count() != $filter->binds->count()) {
-                $builder->where($filter->column, '<>', $filter->value);
+                if ($bindPermissions->count() != $filter->binds->count()) {
+                    $builder->where($filter->column, '<>', $filter->value);
+                }
             }
         }
     }

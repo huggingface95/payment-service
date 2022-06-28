@@ -72,15 +72,16 @@ class BaseModel extends Model
     protected static function filterByPermissionFilters($action, Model $model): bool
     {
         /** @var Members $user */
-        $user = Auth::user();
-        $allPermissions = $user->getAllPermissions();
+        if ($user = Auth::user()){
+            $allPermissions = $user->getAllPermissions();
 
-        $filters = self::getPermissionFilter(PermissionFilter::EVENT_MODE, $action, $model->getTable(), $model->getAttributes());
+            $filters = self::getPermissionFilter(PermissionFilter::EVENT_MODE, $action, $model->getTable(), $model->getAttributes());
 
-        foreach ($filters as $filter) {
-            $bindPermissions = $filter->binds->intersect($allPermissions);
-            if ($bindPermissions->count() != $filter->binds->count()) {
-                return false;
+            foreach ($filters as $filter) {
+                $bindPermissions = $filter->binds->intersect($allPermissions);
+                if ($bindPermissions->count() != $filter->binds->count()) {
+                    return false;
+                }
             }
         }
 
