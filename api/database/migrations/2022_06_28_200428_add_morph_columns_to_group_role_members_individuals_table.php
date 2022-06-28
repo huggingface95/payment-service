@@ -17,8 +17,9 @@ class AddMorphColumnsToGroupRoleMembersIndividualsTable extends Migration
     public function up()
     {
         Schema::table('group_role_members_individuals', function (Blueprint $table) {
+            $table->dropUnique('group_role_members_individuals_group_role_id_user_id_unique');
             $table->id()->first();
-            $table->enum('user_type', [Members::class, ApplicantIndividual::class, ApplicantCompany::class]);
+            $table->enum('user_type', [Members::class, ApplicantIndividual::class, ApplicantCompany::class])->default(Members::class);
 
             $table->unique(['group_role_id', 'user_type', 'user_id']);
         });
@@ -32,6 +33,7 @@ class AddMorphColumnsToGroupRoleMembersIndividualsTable extends Migration
     public function down()
     {
         Schema::table('group_role_members_individuals', function (Blueprint $table) {
+            $table->dropUnique('group_role_members_individuals_group_role_id_user_type_user_id_');
             $table->dropColumn('id');
             $table->dropColumn('user_type');
         });
