@@ -21,18 +21,15 @@ class TemporarySeeder extends Seeder
      */
     public function run()
     {
-
         $groupRoleUsers = GroupRoleUser::query()->get();
 
-        foreach ($groupRoleUsers as $groupRoleUser){
+        foreach ($groupRoleUsers as $groupRoleUser) {
             $groupRole = GroupRole::find($groupRoleUser->group_role_id);
-            if ($groupRole->group_type_id == GroupRole::MEMBER){
+            if ($groupRole->group_type_id == GroupRole::MEMBER) {
                 $groupRoleUser->user_type = Members::class;
-            }
-            elseif ($groupRole->group_type_id == GroupRole::COMPANY){
+            } elseif ($groupRole->group_type_id == GroupRole::COMPANY) {
                 $groupRoleUser->user_type = ApplicantCompany::class;
-            }
-            else{
+            } else {
                 $groupRoleUser->user_type = ApplicantIndividual::class;
             }
             $groupRoleUser->save();
