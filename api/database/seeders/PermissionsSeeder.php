@@ -16,6 +16,7 @@ class PermissionsSeeder extends Seeder
      * Run the database seeds.
      *
      * @return void
+     *
      * @throws Exception
      */
     public function run()
@@ -3997,7 +3998,6 @@ class PermissionsSeeder extends Seeder
             }
         }
 
-
         $filters = [
             [
                 'mode' => PermissionFilter::SCOPE_MODE,
@@ -4130,7 +4130,7 @@ class PermissionsSeeder extends Seeder
 
         ];
 
-        foreach ($filters as $filter){
+        foreach ($filters as $filter) {
             $binds = $filter['binds'];
             unset($filter['binds']);
             $permissionFilter = PermissionFilter::firstOrCreate($filter);
@@ -4146,6 +4146,5 @@ class PermissionsSeeder extends Seeder
                 }
             }
         }
-
     }
 }

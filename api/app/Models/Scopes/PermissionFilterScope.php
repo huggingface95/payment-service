@@ -23,7 +23,7 @@ class PermissionFilterScope implements Scope
 
         $filters = self::getPermissionFilter(PermissionFilter::SCOPE_MODE, null, $model->getTable(), $conditions);
 
-        foreach ($filters as $filter){
+        foreach ($filters as $filter) {
             $bindPermissions = $filter->binds->intersect($allPermissions);
 
             if ($bindPermissions->count() != $filter->binds->count()) {
@@ -34,7 +34,7 @@ class PermissionFilterScope implements Scope
 
     private static function getEloquentSqlWithBindings(Builder $builder): array
     {
-        $wheres = $builder->withoutGlobalScope(PermissionFilterScope::class)->getQuery()->wheres;
+        $wheres = $builder->withoutGlobalScope(self::class)->getQuery()->wheres;
 
         return count($wheres) ? collect($wheres[0]['query']->wheres)->pluck('value', 'column')->toArray() : [];
     }

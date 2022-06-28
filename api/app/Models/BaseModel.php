@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\PermissionFilterData;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -78,8 +77,7 @@ class BaseModel extends Model
 
         $filters = self::getPermissionFilter(PermissionFilter::EVENT_MODE, $action, $model->getTable(), $model->getAttributes());
 
-
-        foreach ($filters as $filter){
+        foreach ($filters as $filter) {
             $bindPermissions = $filter->binds->intersect($allPermissions);
             if ($bindPermissions->count() != $filter->binds->count()) {
                 return false;

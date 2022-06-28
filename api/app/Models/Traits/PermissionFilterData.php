@@ -21,6 +21,4 @@ trait PermissionFilterData
                 }
             })->get();
     }
-
-
 }

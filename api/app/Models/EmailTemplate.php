@@ -8,6 +8,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * Class EmailTemplate
+ *
  * @property int id
  * @property string name
  * @property string subject
@@ -18,7 +19,6 @@ use Illuminate\Support\Carbon;
  * @property string service_type
  * @property Carbon created_at
  * @property Carbon updated_at
- *
  * @property Members $member
  * @property Companies $company
  */

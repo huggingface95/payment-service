@@ -14,7 +14,7 @@ class MembersMutator extends BaseMutator
 {
     /**
      * @param $_
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      */
     public function create($_, array $args)
@@ -39,7 +39,7 @@ class MembersMutator extends BaseMutator
 
     /**
      * @param $_
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      */
     public function update($_, array $args)
@@ -97,7 +97,7 @@ class MembersMutator extends BaseMutator
 
     /**
      * @param $_
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      */
     public function invite($_, array $args)
@@ -119,7 +119,7 @@ class MembersMutator extends BaseMutator
 
     /**
      * @param $_
-     * @param array $args
+     * @param  array  $args
      * @return array
      */
     public function setPassword($_, array $args)
@@ -130,7 +130,7 @@ class MembersMutator extends BaseMutator
     }
 
     /**
-     * @param int $roleId
+     * @param  int  $roleId
      * @return mixed
      */
     private function getMemberGroupRole(int $roleId)

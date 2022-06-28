@@ -27,6 +27,7 @@ class ApplicantCompanyModules extends BaseModel
 
     /**
      * Get relation applicant_company
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function ApplicantCompany()
@@ -36,6 +37,7 @@ class ApplicantCompanyModules extends BaseModel
 
     /**
      * Get relation applicant_modules
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function module()

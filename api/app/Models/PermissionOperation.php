@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class PermissionOperation
+ *
  * @property int id
  * @property string name
  * @property string referer

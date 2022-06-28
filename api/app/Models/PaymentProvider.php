@@ -26,6 +26,7 @@ class PaymentProvider extends BaseModel
 
     /**
      * Get relation currencies
+     *
      * @return BelongsToMany
      */
     public function currencies()
@@ -35,6 +36,7 @@ class PaymentProvider extends BaseModel
 
     /**
      * Get relation countries
+     *
      * @return BelongsToMany
      */
     public function countries()
@@ -44,6 +46,7 @@ class PaymentProvider extends BaseModel
 
     /**
      * Get relation payment systems
+     *
      * @return BelongsToMany
      */
     public function paymentSystems(): BelongsToMany

@@ -27,6 +27,7 @@ class ApplicantIndividualModules extends BaseModel
 
     /**
      * Get relation applicant_individual
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function ApplicantIndividual()
@@ -36,6 +37,7 @@ class ApplicantIndividualModules extends BaseModel
 
     /**
      * Get relation applicant_modules
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function module()

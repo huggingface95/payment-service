@@ -10,17 +10,16 @@ use Spatie\Permission\PermissionRegistrar;
 
 /**
  * Class Role
- * @property Collection $permissions
  *
+ * @property Collection $permissions
  */
 class Role extends SpatieRole
 {
     protected $fillable = [
-        'name', 'guard_name', 'description', 'company_id', 'group_type_id'
+        'name', 'guard_name', 'description', 'company_id', 'group_type_id',
     ];
 
     protected $guard_name = GuardEnum::GUARD_NAME;
-
 
     public function groupType()
     {
@@ -84,7 +83,7 @@ class Role extends SpatieRole
         foreach ($this->groups as $group) {
             $ids[] = $group->id;
         }
+
         return $ids;
     }
-
 }
