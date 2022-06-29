@@ -14,7 +14,7 @@ class AddMemberIdColumnToAccountsTable extends Migration
     public function up()
     {
         Schema::table('accounts', function (Blueprint $table) {
-            $table->unsignedBigInteger('member_id');
+            $table->unsignedBigInteger('member_id')->default(2);
             $table->foreign('member_id')->references('id')->on('members')->onUpdate('cascade');
         });
     }
