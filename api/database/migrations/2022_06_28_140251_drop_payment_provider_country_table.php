@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCommissionTemplateLimitTransferDirectionTable extends Migration
+class DropPaymentProviderCountryTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,7 @@ class CreateCommissionTemplateLimitTransferDirectionTable extends Migration
      */
     public function up()
     {
-        Schema::create('commission_template_limit_transfer_direction', function (Blueprint $table) {
-            $table->id();
-            $table->string('name',255);
-        });
+        Schema::dropIfExists('payment_provider_country');
     }
 
     /**
@@ -26,6 +23,9 @@ class CreateCommissionTemplateLimitTransferDirectionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('commission_template_limit_transfer_direction');
+        Schema::create('payment_provider_country', function (Blueprint $table) {
+            $table->unsignedBigInteger('payment_provider_id');
+            $table->unsignedBigInteger('country_id');
+        });
     }
 }
