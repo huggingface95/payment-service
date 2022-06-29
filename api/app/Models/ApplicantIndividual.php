@@ -6,8 +6,7 @@ use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 /**
  * Class ApplicantIndividual
@@ -189,31 +188,19 @@ class ApplicantIndividual extends BaseModel
         return $this->morphToOne(Accounts::class, 'client', AccountIndividualCompany::class, 'client_id', 'account_id');
     }
 
-    public function company()
+    public function groupRole(): \Ankurk91\Eloquent\Relations\MorphToOne
+    {
+        return $this->morphToOne(GroupRole::class, 'user', GroupRoleUser::class, 'user_id', 'group_role_id');
+    }
+
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Companies::class);
     }
 
-    public function groupRole(): HasOneThrough
+    public function groupRoles(): MorphToMany
     {
-        return $this->hasOneThrough(
-            GroupRole::class,
-            GroupRoleUser::class,
-            'user_id',
-            'id',
-            'id',
-            'group_role_id',
-        )->where('group_type_id', GroupRole::INDIVIDUAL);
-    }
-
-    public function groupRoles(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            GroupRole::class,
-            'group_role_members_individuals',
-            'user_id',
-            'group_role_id'
-        )->where('group_type_id', GroupRole::INDIVIDUAL);
+        return $this->morphToMany(GroupRole::class, 'user', GroupRoleUser::class, 'user_id', 'group_role_id');
     }
 
     /**

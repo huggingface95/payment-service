@@ -4,11 +4,13 @@ namespace App\GraphQL\Mutations;
 
 use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Accounts;
+use Illuminate\Support\Facades\Auth;
 
 class AccountMutator
 {
-    public function create($root, array $args)
+    public function create($root, array &$args): Accounts
     {
+        $args['member_id'] = Auth::user()->id;
         /** @var Accounts $account */
         $account = Accounts::create($args['input']);
         if ($args['input']['account_type'] == Accounts::PRIVATE) {
@@ -20,7 +22,7 @@ class AccountMutator
         return $account;
     }
 
-    public function update($root, array $args)
+    public function update($root, array $args): Accounts
     {
         /** @var Accounts $account */
         $account = Accounts::find($args['id']);
@@ -35,7 +37,7 @@ class AccountMutator
         return $account;
     }
 
-    public function generate($root, array $args)
+    public function generate($root, array $args): void
     {
         $account = Accounts::find($args['id']);
 
