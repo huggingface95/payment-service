@@ -75,7 +75,7 @@ type ApplicantIndividual {
     "Получить компании"
     companies: [ApplicantCompany] @belongsToMany (relation: "companies")
     "Получить группу"
-    group: GroupRole @hasOne(relation: "groupRole")
+    group: GroupRole @morphOne(relation: "groupRole")
     "Получить two factor auth"
     two_factor_auth: TwoFactorAuthSettings @belongsTo (relation: "twoFactorAuth")
 }

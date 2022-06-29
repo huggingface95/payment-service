@@ -15,7 +15,7 @@ class CreateCommissionTemplateLimitTransferDirectionTable extends Migration
     {
         Schema::create('commission_template_limit_transfer_direction', function (Blueprint $table) {
             $table->id();
-            $table->string('name',255);
+            $table->string('name', 255);
         });
     }
 

@@ -34,7 +34,7 @@ class ApplicantMutator extends BaseMutator
         $applicant = ApplicantIndividual::create($args);
 
         if (isset($args['group_id'])) {
-            $applicant->groupRoles()->sync([$args['group_id']], true);
+            $applicant->groupRole()->sync([$args['group_id']], true);
         }
 
         if (isset($args['labels'])) {
@@ -76,7 +76,7 @@ class ApplicantMutator extends BaseMutator
         $applicant->update($args);
 
         if (isset($args['group_id'])) {
-            $applicant->groupRoles()->sync([$args['group_id']], true);
+            $applicant->groupRole()->sync([$args['group_id']], true);
         }
 
         return $applicant;

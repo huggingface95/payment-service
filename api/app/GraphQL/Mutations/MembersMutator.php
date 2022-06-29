@@ -31,7 +31,7 @@ class MembersMutator extends BaseMutator
         $member = Members::create($args);
 
         if (isset($args['group_id'])) {
-            $member->groupRoles()->sync([$args['group_id']], true);
+            $member->groupRole()->sync([$args['group_id']], true);
         }
 
         return $member;
@@ -89,7 +89,7 @@ class MembersMutator extends BaseMutator
         $member->update($args);
 
         if (isset($args['group_id'])) {
-            $member->groupRoles()->sync([$args['group_id']], true);
+            $member->groupRole()->sync([$args['group_id']], true);
         }
 
         return $member;

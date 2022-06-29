@@ -5,7 +5,6 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividualCompany;
-use App\Models\GroupRoleUser;
 
 class ApplicantCompanyMutator extends BaseMutator
 {
@@ -37,7 +36,7 @@ class ApplicantCompanyMutator extends BaseMutator
         }
 
         if (isset($args['group_id'])) {
-            $this->setApplicantCompanyGroup($applicant, $args['group_id']);
+            $applicant->groupRole()->sync([$args['group_id']], true);
         }
 
         return $applicant;
@@ -73,7 +72,7 @@ class ApplicantCompanyMutator extends BaseMutator
             $applicant->labels()->attach($args['labels']);
         }
         if (isset($args['group_id'])) {
-            $this->setApplicantCompanyGroup($applicant, $args['group_id']);
+            $applicant->groupRole()->sync([$args['group_id']], true);
         }
 
         $applicant->update($args);
@@ -99,19 +98,6 @@ class ApplicantCompanyMutator extends BaseMutator
             ]);
         } catch (\Exception $exception) {
             throw new GraphqlException($exception->getMessage());
-        }
-    }
-
-    private function setApplicantCompanyGroup(ApplicantCompany $applicantCompany, int $groupId)
-    {
-        $groupRoleUser = GroupRoleUser::where('user_id', $applicantCompany->id)->first();
-        if ($groupRoleUser !== null) {
-            GroupRoleUser::where('user_id', $applicantCompany->id)->update(['group_role_id'=>$groupId]);
-        } else {
-            GroupRoleUser::create([
-                'user_id'=>$applicantCompany->id,
-                'group_role_id' => $groupId,
-            ]);
         }
     }
 }

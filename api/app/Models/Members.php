@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\UserPermission;
 use Illuminate\Auth\Authenticatable;
@@ -10,10 +11,10 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
@@ -43,7 +44,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  */
 class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
 {
-    use SoftDeletes, Authorizable, Authenticatable, UserPermission, HasApiTokens, CanResetPassword, Notifiable;
+    use SoftDeletes, Authorizable, Authenticatable, UserPermission, HasApiTokens, CanResetPassword, Notifiable, MorphToOne;
 
     public $password_confirmation;
 
@@ -187,7 +188,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         //TODO add functionality
     }
 
-    public function groupRole(): HasOneThrough
+    public function groupRole():HasOneThrough
     {
         return $this->hasOneThrough(
             GroupRole::class,
@@ -199,14 +200,9 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         )->where('group_type_id', GroupRole::MEMBER);
     }
 
-    public function groupRoles(): BelongsToMany
+    public function groupRoles(): MorphToMany
     {
-        return $this->belongsToMany(
-            GroupRole::class,
-            'group_role_members_individuals',
-            'user_id',
-            'group_role_id'
-        )->where('group_type_id', GroupRole::MEMBER);
+        return $this->morphToMany(GroupRole::class, 'user', GroupRoleUser::class, 'user_id', 'group_role_id');
     }
 
     public function smtp(): HasOne
