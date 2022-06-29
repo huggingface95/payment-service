@@ -13,6 +13,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -187,9 +188,16 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         //TODO add functionality
     }
 
-    public function groupRole(): \Ankurk91\Eloquent\Relations\MorphToOne
+    public function groupRole():HasOneThrough
     {
-        return $this->morphToOne(GroupRole::class, 'user', GroupRoleUser::class, 'user_id', 'group_role_id');
+        return $this->hasOneThrough(
+            GroupRole::class,
+            GroupRoleUser::class,
+            'user_id',
+            'id',
+            'id',
+            'group_role_id',
+        )->where('group_type_id', GroupRole::MEMBER);
     }
 
     public function groupRoles(): MorphToMany
