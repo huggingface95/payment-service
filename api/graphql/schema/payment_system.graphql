@@ -8,14 +8,25 @@ type PaymentSystem {
     name: String!
     "Активна или нет"
     is_active: Boolean
+    "Получить связанные страны"
+    countries: [Country] @belongsToMany(relation:"countries")
+    "Получить связанные валюты"
+    currencies: [Currencies] @belongsToMany(relation:"currencies")
+    "Получить Платежные провайдеры"
+    providers: [PaymentProvider] @belongsToMany(relation:"providers")
 }
 
 extend type Query @guard {
     "Получить платежную систем по ID"
     paymentSystem(id: ID @eq): PaymentSystem   @find
     "Получить список платежных систем"
-    paymentSystems(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
-        columns: ["id","name","is_active"])): [PaymentSystem!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    paymentSystems(
+        hasCountries: _ @whereHasConditions(columns: ["name", "id"]),
+        hasCurrencies: _ @whereHasConditions(columns: ["name", "id"]),
+        hasProviders: _ @whereHasConditions(columns: ["name", "id"]),
+        where: _ @whereConditions(columns: ["name"]),
+        orderBy: _ @orderBy(columns: ["id","name","is_active"])
+    ): [PaymentSystem!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
@@ -25,6 +36,12 @@ extend type Mutation @guard {
         name: String!
         "Активный не активный (true/false)"
         is_active: Boolean
+        "массив ID стран"
+        countries: [ID]
+        "массив ID валют"
+        currencies: [ID]
+        "массив ID провайдеров"
+        providers: [ID]
     ): PaymentSystem   @create
 
     "Обновить поля платежной системы"
@@ -35,6 +52,12 @@ extend type Mutation @guard {
         name: String
         "Активный не активный (true/false)"
         is_active: Boolean
+        "массив ID стран"
+        countries: [ID]
+        "массив ID валют"
+        currencies: [ID]
+        "массив ID провайдеров"
+        providers: [ID]
     ): PaymentSystem   @update
 
     "Удалить платежную систему"
