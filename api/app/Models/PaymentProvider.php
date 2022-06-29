@@ -25,26 +25,6 @@ class PaymentProvider extends BaseModel
     ];
 
     /**
-     * Get relation currencies
-     *
-     * @return BelongsToMany
-     */
-    public function currencies()
-    {
-        return $this->belongsToMany(Currencies::class, 'payment_provider_currency', 'payment_provider_id', 'currency_id');
-    }
-
-    /**
-     * Get relation countries
-     *
-     * @return BelongsToMany
-     */
-    public function countries()
-    {
-        return $this->belongsToMany(Country::class, 'payment_provider_country', 'payment_provider_id', 'country_id');
-    }
-
-    /**
      * Get relation payment systems
      *
      * @return BelongsToMany
