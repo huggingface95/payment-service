@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\PermissionOrderScope;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -13,10 +14,16 @@ class PermissionCategory extends BaseModel
     protected $table = 'permission_category';
 
     protected $fillable = [
-        'name',
+        'name', 'order',
     ];
 
     public $timestamps = false;
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new PermissionOrderScope);
+        parent::booted();
+    }
 
     public function permissionsList(): HasMany
     {
