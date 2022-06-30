@@ -56,6 +56,7 @@ class BaseModel extends Model
                         } elseif ($type == 'applicant_companies') {
                             return $records->pluck('id')->intersect($member->accountManagerApplicantCompanies()->get()->pluck('id'));
                         }
+
                         return collect();
                     });
                 })
