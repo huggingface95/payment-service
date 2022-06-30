@@ -24,7 +24,7 @@ class PermissionsSeeder extends Seeder
         $allPermissions = [
             'KYC Management Module' => [
                 'data' => [
-                    'name' => 'Management Module',
+                    'name' => 'KYC Management Module',
                     'is_active' => true,
                     'order' => 1,
                 ],
