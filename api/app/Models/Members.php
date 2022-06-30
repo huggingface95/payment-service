@@ -188,7 +188,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         //TODO add functionality
     }
 
-    public function groupRole():HasOneThrough
+    public function groupRole(): HasOneThrough
     {
         return $this->hasOneThrough(
             GroupRole::class,
