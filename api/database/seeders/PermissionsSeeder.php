@@ -595,24 +595,6 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Groups list.Edit' => [
-                                        'data' => [
-                                            'name' => 'Groups list.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => null,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                    'Groups list.Delete' => [
-                                        'data' => [
-                                            'name' => 'Groups list.Delete',
-                                            'display_name' => 'Delete',
-                                            'guard_name' => 'api',
-                                            'order' => null,
-                                            'type' => 'important',
-                                        ],
-                                    ],
                                     'Groups list.Add new' => [
                                         'data' => [
                                             'name' => 'Groups list.Add new',
@@ -3566,41 +3548,41 @@ class PermissionsSeeder extends Seeder
             [
                 'name' => 'getGroupSelects',
                 'referer' => 'settings/manager-groups/list',
-                'binds' => ['Groups list.Read', 'Groups list.Edit'],
+                'binds' => ['Groups list.Read'],
             ],
             [
                 'name' => 'GetGroups',
                 'referer' => 'settings/manager-groups/list',
-                'binds' => ['Groups list.Read', 'Groups list.Edit'],
+                'binds' => ['Groups list.Read'],
             ],
             [
                 'name' => 'GetGroupsTableSelects',
                 'referer' => 'settings/manager-groups/list',
-                'binds' => ['Groups list.Read', 'Groups list.Edit'],
+                'binds' => ['Groups list.Read'],
             ],
             [
                 'name' => 'GetRolesByFilter',
                 'referer' => 'settings/manager-groups/new-group',
                 'binds' => ['Groups list.Add new'],
-                'parents' => ['Groups list.Read', 'Groups list.Edit'],
+                'parents' => ['Groups list.Read'],
             ],
             [
                 'name' => 'getGroupSelects',
                 'referer' => 'settings/manager-groups/new-group',
                 'binds' => ['Groups list.Add new'],
-                'parents' => ['Groups list.Read', 'Groups list.Edit'],
+                'parents' => ['Groups list.Read'],
             ],
             [
                 'name' => 'CreateGroupSetting',
                 'referer' => 'settings/manager-groups/new-group',
                 'binds' => ['Groups list.Add new'],
-                'parents' => ['Groups list.Read', 'Groups list.Edit'],
+                'parents' => ['Groups list.Read'],
             ],
             [
                 'name' => 'CheckGroups',
                 'referer' => 'settings/manager-groups/new-group',
                 'binds' => ['Groups list.Add new'],
-                'parents' => ['Groups list.Read', 'Groups list.Edit'],
+                'parents' => ['Groups list.Read'],
             ],
             [
                 'name' => 'GetRolesByFilter',
