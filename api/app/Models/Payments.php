@@ -72,8 +72,7 @@ class Payments extends BaseModel
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
         self::creating(function ($model) {
             $model->fee = CommissionTemplateLimit::query()
-                ->join('commission_template_limit_relation AS rel', 'rel.commission_template_limit_id', '=', 'commission_template_limit.id')
-                ->join('commission_template AS ct', 'ct.id', '=', 'rel.commission_template_id')
+                ->join('commission_template AS ct', 'ct.id', '=', 'commission_template_limit.commission_template_id')
                 ->join('commission_price_list as l', 'l.commission_template_id', '=', 'ct.id')
                 ->join('payment_provider as p', 'p.id', '=', 'l.provider_id')
                 ->where('p.id', $model->payment_provider_id)
