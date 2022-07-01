@@ -1350,6 +1350,51 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'info',
                                         ],
                                     ],
+                                    'Account Details.Status: Pending' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Pending',
+                                            'display_name' => 'Status: Pending',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Active' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Active',
+                                            'display_name' => 'Status: Active',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Waiting for IBAN Activation' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Waiting for IBAN Activation',
+                                            'display_name' => 'Waiting for IBAN Activation',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Closed' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Closed',
+                                            'display_name' => 'Status: Closed',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Suspended' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Suspended',
+                                            'display_name' => 'Status: Suspended',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
                                 ],
                             ],
                             'Open Account' => [
@@ -2046,6 +2091,51 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'info',
                                         ],
                                     ],
+                                    'Account Details.Status: Pending' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Pending',
+                                            'display_name' => 'Status: Pending',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Active' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Active',
+                                            'display_name' => 'Status: Active',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Waiting for IBAN Activation' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Waiting for IBAN Activation',
+                                            'display_name' => 'Waiting for IBAN Activation',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Closed' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Closed',
+                                            'display_name' => 'Status: Closed',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Suspended' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Suspended',
+                                            'display_name' => 'Status: Suspended',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
                                 ],
                             ],
                             'makePayments' => [
@@ -2543,6 +2633,51 @@ class PermissionsSeeder extends Seeder
                                         'data' => [
                                             'name' => 'Account Details.Show Provider info',
                                             'display_name' => 'Show Provider info',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Pending' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Pending',
+                                            'display_name' => 'Status: Pending',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Active' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Active',
+                                            'display_name' => 'Status: Active',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Waiting for IBAN Activation' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Waiting for IBAN Activation',
+                                            'display_name' => 'Waiting for IBAN Activation',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Closed' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Closed',
+                                            'display_name' => 'Status: Closed',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Suspended' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Suspended',
+                                            'display_name' => 'Status: Suspended',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',
