@@ -7,6 +7,7 @@ use App\Models\Scopes\MemberScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -66,14 +67,10 @@ class CommissionTemplate extends BaseModel
         return $this->belongsToMany(BusinessActivity::class, 'commission_template_business_activity', 'commission_template_id', 'business_activity_id');
     }
 
-    /**
-     * Get relation commission template limits
-     *
-     * @return BelongsToMany
-     */
-    public function commissionTemplateLimits(): BelongsToMany
+
+    public function commissionTemplateLimits(): HasMany
     {
-        return $this->belongsToMany(CommissionTemplateLimit::class, 'commission_template_limit_relation', 'commission_template_id', 'commission_template_limit_id');
+        return $this->hasMany(CommissionTemplateLimit::class,  'commission_template_id');
     }
 
     /**
@@ -110,11 +107,5 @@ class CommissionTemplate extends BaseModel
     public function company(): BelongsToMany
     {
         return $this->belongsToMany(ApplicantCompany::class, 'accounts', 'commission_template_id', 'client_id', 'id', 'owner_id');
-    }
-
-    //TODO equal to commissionTemplateLimits. Remove commissionTemplateLimits or self function
-    public function commissionTemplateLimit(): BelongsToMany
-    {
-        return $this->belongsToMany(CommissionTemplateLimit::class, 'commission_template_limit_relation', 'commission_template_id', 'commission_template_limit_id');
     }
 }

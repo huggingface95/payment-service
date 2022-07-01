@@ -10,12 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int id
  * @property int period_count
  * @property float amount
-
  * @property CommissionTemplateLimitType $commissionTemplateLimitType
  * @property CommissionTemplateLimitTransferDirection $commissionTemplateLimitTransferDirection
  * @property CommissionTemplateLimitPeriod $commissionTemplateLimitPeriod
  * @property CommissionTemplateLimitActionType $commissionTemplateLimitActionType
  * @property Currencies $currency
+ *@method static whereIn(string $string, mixed $commission_template_limit_id)
  */
 class CommissionTemplateLimit extends BaseModel
 {
@@ -36,6 +36,7 @@ class CommissionTemplateLimit extends BaseModel
         'commission_template_limit_transfer_direction_id',
         'commission_template_limit_period_id',
         'commission_template_limit_action_type_id',
+        'commission_template_id',
     ];
 
     public function commissionTemplateLimitType(): BelongsTo
@@ -62,4 +63,10 @@ class CommissionTemplateLimit extends BaseModel
     {
         return $this->belongsTo(Currencies::class, 'currency_id', 'id');
     }
+
+    public function commissionTemplate(): BelongsTo
+    {
+        return $this->belongsTo(CommissionTemplate::class, 'commission_template_id');
+    }
+
 }
