@@ -103,7 +103,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
             ->join('permissions_list', 'permissions_list.id', 'permissions.permission_list_id')
             ->select('permissions.id', 'permissions.display_name', 'permissions.permission_list_id', 'permissions_list.name as permission', 'permissions_list.id as list_id')
             ->get();
-
+        $list = [];
         foreach ($permissionsArray as $item) {
             $list[] = $item->permission;
         }
@@ -209,7 +209,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function accessLimitations(): HasMany
     {
-        return $this->hasMany(MemberAccessLimitation::class, 'member_id')->with('groupRole');
+        return $this->hasMany(MemberAccessLimitation::class, 'member_id');
     }
 
     public function accountManagerApplicantIndividuals(): HasMany

@@ -40,30 +40,32 @@ class BaseModel extends Model
     protected static function getApplicantIdsByAuthMember(): ?array
     {
         /** @var Members $member */
-        if ($member = Auth::user()) {
-            if ($member->IsShowOwnerApplicants()) {
-                return [
-                    'applicant_individual' => $member->accountManagerApplicantIndividuals()->get()->pluck('id'),
-                    'applicant_companies' => $member->accountManagerApplicantCompanies()->get()->pluck('id'),
-                ];
-            } elseif ($member->accessLimitations()->count()) {
-                $ids = $member->accessLimitations()->get()
-                    ->pluck('groupRole')->map(function ($role) {
-                        return $role->users;
-                    })
-                    ->flatten(1)
-                    ->groupBy(function ($v) {
-                        return $v->getTable();
-                    })
-                    ->map(function ($v) {
-                        return $v->pluck('id');
-                    })->toArray();
+        if (($member = Auth::user()) && $member->accessLimitations()->count()) {
+            $ids = $member->accessLimitations()->get()
+                ->map(function ($limitation) {
+                    return $limitation->groupRole->users()->get();
+                })
+                ->flatten(1)
+                ->groupBy(function ($v) {
+                    return $v->getTable();
+                })
+                ->when($member->IsShowOwnerApplicants(), function ($col) use ($member) {
+                    return $col->map(function ($records, $type) use ($member) {
+                        if ($type == 'applicant_individual') {
+                            return $records->pluck('id')->intersect($member->accountManagerApplicantIndividuals()->get()->pluck('id'));
+                        } elseif ($type == 'applicant_companies') {
+                            return $records->pluck('id')->intersect($member->accountManagerApplicantCompanies()->get()->pluck('id'));
+                        }
 
-                return [
-                    'applicant_individual' => $ids['applicant_individual'] ?? [],
-                    'applicant_companies' => $ids['applicant_companies'] ?? [],
-                ];
-            }
+                        return collect();
+                    });
+                })
+                ->toArray();
+
+            return [
+                'applicant_individual' => $ids['applicant_individual'] ?? [],
+                'applicant_companies' => $ids['applicant_companies'] ?? [],
+            ];
         }
 
         return null;
