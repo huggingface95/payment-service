@@ -68,6 +68,10 @@ extend type Query @guard {
         created_at: DateRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id", "client_id"])
     ): [Accounts!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+
+    accountStates(
+        orderBy: _ @orderBy(columns: ["id", "name"])
+    ): [AccountState!]!   @all @orderBy(column: "id", direction: ASC)
 }
 
 input QueryAccountCondition {
