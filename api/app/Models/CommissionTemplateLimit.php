@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property CommissionTemplateLimitPeriod $commissionTemplateLimitPeriod
  * @property CommissionTemplateLimitActionType $commissionTemplateLimitActionType
  * @property Currencies $currency
+ *
  *@method static whereIn(string $string, mixed $commission_template_limit_id)
  */
 class CommissionTemplateLimit extends BaseModel
@@ -68,5 +69,4 @@ class CommissionTemplateLimit extends BaseModel
     {
         return $this->belongsTo(CommissionTemplate::class, 'commission_template_id');
     }
-
 }

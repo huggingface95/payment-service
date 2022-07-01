@@ -67,10 +67,9 @@ class CommissionTemplate extends BaseModel
         return $this->belongsToMany(BusinessActivity::class, 'commission_template_business_activity', 'commission_template_id', 'business_activity_id');
     }
 
-
     public function commissionTemplateLimits(): HasMany
     {
-        return $this->hasMany(CommissionTemplateLimit::class,  'commission_template_id');
+        return $this->hasMany(CommissionTemplateLimit::class, 'commission_template_id');
     }
 
     /**
