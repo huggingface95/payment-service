@@ -10,6 +10,7 @@ use App\Jobs\SendMailJob;
 use App\Models\BaseModel;
 use App\Models\EmailSmtp;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Swift_SmtpTransport;
 
 class EmailSmtpMutator extends BaseMutator
@@ -87,6 +88,7 @@ class EmailSmtpMutator extends BaseMutator
 
             return true;
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             throw new GraphqlException('SMTP doesnt work correctly. Please check configuration', 'internal', 403);
         }
     }
