@@ -6,7 +6,6 @@ use App\Models\Accounts;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use App\Models\GroupRole;
-use App\Models\GroupType;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 

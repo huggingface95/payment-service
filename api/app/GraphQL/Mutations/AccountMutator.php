@@ -5,7 +5,6 @@ namespace App\GraphQL\Mutations;
 use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Accounts;
 use App\Models\GroupRole;
-use App\Models\GroupType;
 use Illuminate\Support\Facades\Auth;
 
 class AccountMutator
@@ -40,7 +39,7 @@ class AccountMutator
 
     protected function setAccountType(int $groupId)
     {
-        if ($groupId== GroupRole::INDIVIDUAL) {
+        if ($groupId == GroupRole::INDIVIDUAL) {
             return Accounts::PRIVATE;
         } elseif ($groupId == GroupRole::COMPANY) {
             return Accounts::BUSINESS;

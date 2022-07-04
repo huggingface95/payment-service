@@ -54,7 +54,7 @@ class Accounts extends BaseModel
         'group_type_id',
         'group_role_id',
         'payment_system_id',
-        'client_id'
+        'client_id',
     ];
 
     public static self $clone;
@@ -192,5 +192,4 @@ class Accounts extends BaseModel
     {
         return $this->belongsTo(AccountState::class, 'account_state_id');
     }
-
 }

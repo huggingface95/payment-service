@@ -14,7 +14,7 @@ class GroupsQuery
     public function get($_, array $args)
     {
         if (isset($args['mode']) && $args['mode'] === 'clients') {
-            return GroupType::where('id','!=',GroupRole::MEMBER)->get();
+            return GroupType::where('id', '!=', GroupRole::MEMBER)->get();
         } else {
             return GroupType::get();
         }
