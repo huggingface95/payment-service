@@ -8,10 +8,6 @@ enum GroupsEntities {
     Individual @enum(value: Individual)
 }
 
-enum GroupTypeEnum {
-    Company @enum(value: 2)
-    Individual @enum(value: 3)
-}
 
 "Группы"
 type Groups {
@@ -50,7 +46,7 @@ extend type Query @guard {
     "Получить группу по ID"
     group_type(id: ID @eq): Groups   @find
     "Получить список типов групп"
-    group_types: [Groups!]!   @paginate(defaultCount: 10)
+    group_types(mode: GroupTypeMode): [Groups!]!  @field(resolver:"GroupsQuery@get") @orderBy(column: "id", direction: ASC)
     """
     Получить список групп с ролями
     orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
@@ -64,6 +60,11 @@ extend type Query @guard {
         where: _ @whereConditions(columns: ["id","group_type_id", "name","role_id", "payment_provider_id", "commission_template_id", "is_active","company_id"]),
         orderBy: _ @orderBy(columns: ["id","is_active","description"],
         )): [GroupRole!]!   @paginate(defaultCount: 10)
+}
+
+enum GroupTypeMode {
+    CLIENTS @enum(value: "clients")
+    ALL @enum(value: "all")
 }
 
 extend type Mutation @guard {
