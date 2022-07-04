@@ -3,7 +3,7 @@
 namespace App\GraphQL\Queries;
 
 use App\Models\GroupRole;
-use App\Models\Groups;
+use App\Models\GroupType;
 
 class GroupsQuery
 {
@@ -14,9 +14,9 @@ class GroupsQuery
     public function get($_, array $args)
     {
         if (isset($args['mode']) && $args['mode'] === 'clients') {
-            return Groups::where('id','!=',GroupRole::MEMBER)->get();
+            return GroupType::where('id','!=',GroupRole::MEMBER)->get();
         } else {
-            return Groups::get();
+            return GroupType::get();
         }
     }
 }

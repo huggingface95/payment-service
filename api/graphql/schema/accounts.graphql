@@ -94,7 +94,6 @@ input QueryAccountCondition {
     member_id: ID @eq
     is_primary: Boolean @eq
     commission_template_id: ID @eq
-    currency_id: ID @eq
     account_type: String @eq
     account_state_id: ID @eq
     account_name: String @like
