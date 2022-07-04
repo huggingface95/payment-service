@@ -13,7 +13,7 @@ class CreateGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::create('group_types', function (Blueprint $table) {
             $table->id();
             $table->enum('name', ['Member', 'Company', 'Individual']);
         });
@@ -26,6 +26,6 @@ class CreateGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('group_types');
     }
 }
