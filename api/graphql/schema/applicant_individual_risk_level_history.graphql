@@ -26,7 +26,7 @@ extend type Query @guard {
         applicant_id: ID! @eq
         where: _ @whereConditions(columns: ["risk_level_id"]), orderBy: _ @orderBy(
         columns: ["id"],
-    )): [ApplicantRiskLevelHistory!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): [ApplicantRiskLevelHistory!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
 }
 
 extend type Mutation @guard {
