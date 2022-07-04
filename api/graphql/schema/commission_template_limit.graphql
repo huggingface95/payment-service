@@ -28,6 +28,8 @@ type CommissionTemplateLimit {
     commission_template_limit_period: CommissionTemplateLimitPeriod @belongsTo(relation:"commissionTemplateLimitPeriod")
     "Получить события лимита"
     commission_template_limit_action_type: CommissionTemplateLimitActionType @belongsTo(relation:"commissionTemplateLimitActionType")
+    "Получить шаблон комиссии"
+    commission_template: CommissionTemplate @belongsTo(relation:"commissionTemplate")
 }
 
 extend type Query @guard {
@@ -56,6 +58,8 @@ extend type Mutation @guard {
         commission_template_limit_action_type_id: ID!
         "ID количество срабатываний лимита"
         period_count: ID
+        "ID шаблона комиссии"
+        commission_template_id: ID!
     ):CommissionTemplateLimit   @create
 
     "Обновить лимит"
@@ -76,6 +80,8 @@ extend type Mutation @guard {
         commission_template_limit_action_type_id: ID
         "количество срабатываний лимита"
         period_count: Int
+        "ID шаблона комиссии"
+        commission_template_id: ID!
     ):CommissionTemplateLimit   @update
 
     "Удалить лимит"

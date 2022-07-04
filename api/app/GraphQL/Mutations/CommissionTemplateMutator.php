@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\CommissionTemplate;
+use App\Models\CommissionTemplateLimit;
 
 class CommissionTemplateMutator
 {
@@ -21,6 +22,7 @@ class CommissionTemplateMutator
 
     public function update($_, array $args)
     {
+        /** @var CommissionTemplate $commissionTemplate */
         $commissionTemplate = CommissionTemplate::find($args['id']);
         $memberId = CommissionTemplate::DEFAULT_MEMBER_ID;
         $args['member_id'] = $memberId;
@@ -30,8 +32,8 @@ class CommissionTemplateMutator
             unset($args['business_activity']);
         }
         if (isset($args['commission_template_limit_id'])) {
-            $commissionTemplate->commissionTemplateLimits()->detach();
-            $commissionTemplate->commissionTemplateLimits()->attach($args['commission_template_limit_id']);
+            $limits = CommissionTemplateLimit::whereIn('id', $args['commission_template_limit_id'])->get();
+            $commissionTemplate->commissionTemplateLimits()->saveMany($limits);
             unset($args['commission_template_limit_id']);
         }
         if (isset($args['currency_id'])) {
