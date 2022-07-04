@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Groups extends BaseModel
+class GroupType extends BaseModel
 {
     const MEMBER = 'Member';
 

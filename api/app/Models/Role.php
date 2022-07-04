@@ -23,7 +23,7 @@ class Role extends SpatieRole
 
     public function groupType()
     {
-        return $this->belongsTo(Groups::class, 'group_type_id', 'id');
+        return $this->belongsTo(GroupType::class, 'group_type_id', 'id');
     }
 
     public function company()

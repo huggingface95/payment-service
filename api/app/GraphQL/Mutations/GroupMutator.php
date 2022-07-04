@@ -5,7 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphqlException;
 use App\Models\BaseModel;
 use App\Models\GroupRole;
-use App\Models\Groups;
+use App\Models\GroupType;
 use App\Models\Members;
 use Illuminate\Support\Facades\DB;
 
@@ -28,7 +28,7 @@ class GroupMutator extends BaseMutator
             $member = Members::find(BaseModel::DEFAULT_MEMBER_ID);
             $args['company_id'] = $member->company_id;
         }
-        $group = Groups::find($args['group_type_id']);
+        $group = GroupType::find($args['group_type_id']);
         if (! $group) {
             throw new GraphqlException('An entry with this group does not exist', 'not found', 404);
         }
@@ -53,7 +53,7 @@ class GroupMutator extends BaseMutator
             $member = Members::find(BaseModel::DEFAULT_MEMBER_ID);
             $args['company_id'] = $member->company_id;
         }
-        $group = Groups::find($args['group_type_id']);
+        $group = GroupType::find($args['group_type_id']);
         if (! $group) {
             throw new GraphqlException('An entry with this group does not exist', 'not found', 404);
         }

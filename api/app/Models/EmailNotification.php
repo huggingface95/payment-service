@@ -65,7 +65,7 @@ class EmailNotification extends BaseModel
 
     public function groupType(): BelongsTo
     {
-        return $this->belongsTo(Groups::class, 'group_type_id');
+        return $this->belongsTo(GroupType::class, 'group_type_id');
     }
 
     public function templates(): BelongsToMany
@@ -95,11 +95,11 @@ class EmailNotification extends BaseModel
 
         $name = $model->groupType->name ?? null;
 
-        if ($name == Groups::MEMBER) {
+        if ($name == GroupType::MEMBER) {
             return $this->member();
-        } elseif ($name == Groups::COMPANY) {
+        } elseif ($name == GroupType::COMPANY) {
             return $this->applicantCompany();
-        } elseif ($name == Groups::INDIVIDUAL) {
+        } elseif ($name == GroupType::INDIVIDUAL) {
             return $this->applicantIndividual();
         }
 
