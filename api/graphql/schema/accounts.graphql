@@ -123,7 +123,7 @@ input InputAccount{
     "ID владельца"
     owner_id: ID!
     "Номер аккаунта"
-    account_number: String!
+    account_number: String
     "Тип аккаунта"
     account_type: AccountType!
     "ID провайдера"
