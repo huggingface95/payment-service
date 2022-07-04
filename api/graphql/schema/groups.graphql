@@ -8,6 +8,11 @@ enum GroupsEntities {
     Individual @enum(value: Individual)
 }
 
+enum GroupTypeEnum {
+    Company @enum(value: 2)
+    Individual @enum(value: 3)
+}
+
 "Группы"
 type Groups {
     id: ID!
