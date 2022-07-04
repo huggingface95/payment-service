@@ -24,7 +24,7 @@ type Accounts {
     "Получить тип группы"
     group: Groups @belongsTo(relation:"group")
     "Получить или индивидуала или компании"
-    client: Client @morphOne(relation:"clientable")
+    client: Client @belongsTo(relation:"clientable")
     "Состояние аккаунта"
     account_state: AccountState @belongsTo(relation:"accountState")
     "Компания которой принадлежит аккаунт"
@@ -75,9 +75,15 @@ extend type Query @guard {
     accountStates(
         orderBy: _ @orderBy(columns: ["id", "name"])
     ): [AccountState!]!   @all @orderBy(column: "id", direction: ASC)
+
+    """
+    Получить список клиентов
+    """
+    clientList(group_type: ID! @eq): [Client!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
 }
 
 input QueryAccountCondition {
+    client_id: ID @eq
     company_id: ID @eq
     payment_provider_id: ID @eq
     owner_id: ID @eq
@@ -125,7 +131,7 @@ input InputAccount{
     "Номер аккаунта"
     account_number: String
     "Тип аккаунта"
-    account_type: AccountType!
+    account_type: AccountType
     "ID провайдера"
     payment_provider_id: ID!
     "ID шаблона комиссии"
