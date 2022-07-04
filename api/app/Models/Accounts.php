@@ -139,7 +139,7 @@ class Accounts extends BaseModel
 
     public function group(): BelongsTo
     {
-        return $this->belongsTo(Groups::class, 'group_type_id');
+        return $this->belongsTo(GroupType::class, 'group_type_id');
     }
 
     public function setAccountIdAttribute()

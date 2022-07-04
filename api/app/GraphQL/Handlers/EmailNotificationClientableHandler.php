@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Handlers;
 
-use App\Models\Groups;
+use App\Models\GroupType;
 use Illuminate\Database\Eloquent\Builder;
 
 class EmailNotificationClientableHandler
@@ -14,14 +14,14 @@ class EmailNotificationClientableHandler
     public function __invoke(Builder $builder, array $whereConditions): void
     {
         if (count($builder->getBindings()) == 3) {
-            $group = Groups::find(last($builder->getBindings()));
+            $group = GroupType::find(last($builder->getBindings()));
             $relation = null;
             $condition = $whereConditions['HAS']['condition'];
-            if ($group->name == Groups::MEMBER) {
+            if ($group->name == GroupType::MEMBER) {
                 $relation = 'member';
-            } elseif ($group->name == Groups::COMPANY) {
+            } elseif ($group->name == GroupType::COMPANY) {
                 $relation = 'applicantCompany';
-            } elseif ($group->name == Groups::INDIVIDUAL) {
+            } elseif ($group->name == GroupType::INDIVIDUAL) {
                 $relation = 'applicantIndividual';
             }
 

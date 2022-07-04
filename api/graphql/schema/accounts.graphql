@@ -22,7 +22,7 @@ type Accounts {
     "Получить групроле"
     group_role: GroupRole @belongsTo(relation:"groupRole")
     "Получить тип группы"
-    group: Groups @belongsTo(relation:"group")
+    group: GroupType @belongsTo(relation:"group")
     "Получить или индивидуала или компании"
     client: Client @belongsTo(relation:"clientable")
     "Состояние аккаунта"
@@ -94,7 +94,6 @@ input QueryAccountCondition {
     member_id: ID @eq
     is_primary: Boolean @eq
     commission_template_id: ID @eq
-    currency_id: ID @eq
     account_type: String @eq
     account_state_id: ID @eq
     account_name: String @like

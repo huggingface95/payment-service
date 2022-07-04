@@ -15,7 +15,7 @@ type Role {
     "Получить дерево разрешений"
     permissions_tree: JSON
     "Получить тип группы"
-    group_type: Groups @belongsTo(relation: "groupType")
+    group_type: GroupType @belongsTo(relation: "groupType")
     "Получить компанию"
     company: Companies @belongsTo(relation: "company")
     "Получить список групп"

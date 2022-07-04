@@ -5,7 +5,8 @@ namespace App\GraphQL\Queries;
 use App\Models\Accounts;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
-use App\Models\Groups;
+use App\Models\GroupRole;
+use App\Models\GroupType;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
@@ -28,7 +29,7 @@ class AccountsQuery
      */
     public function clientList($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-        if ($args['group_type'] == Groups::COMPANY) {
+        if ($args['group_type'] == GroupRole::COMPANY) {
             return ApplicantCompany::get();
         } else {
             return ApplicantIndividual::get();

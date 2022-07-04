@@ -13,7 +13,7 @@ use App\Models\CommissionTemplateLimit;
 use App\Models\CommissionTemplateLimitPeriod;
 use App\Models\CommissionTemplateLimitTransferDirection;
 use App\Models\CommissionTemplateLimitType;
-use App\Models\Groups;
+use App\Models\GroupType;
 use App\Models\OperationType;
 use App\Models\Payments;
 use App\Models\PaymentStatus;
@@ -160,7 +160,7 @@ class PaymentsMutator
     private function createReachedLimit(Accounts $account, $limit)
     {
         $account->reachedLimits()->create([
-            'group_type' => $account->clientable instanceof ApplicantIndividual ? Groups::INDIVIDUAL : Groups::COMPANY,
+            'group_type' => $account->clientable instanceof ApplicantIndividual ? GroupType::INDIVIDUAL : GroupType::COMPANY,
             'client_name' => $account->clientable->fullname ?? $account->clientable->name,
             'client_state' => $account->clientable->state->name,
             'transfer_direction' => $limit->commissionTemplateLimitTransferDirection->name,

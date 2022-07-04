@@ -29,7 +29,7 @@ class MemberAccessLimitation extends BaseModel
     public function group(): HasOneThrough
     {
         return $this->hasOneThrough(
-            Groups::class,
+            GroupType::class,
             GroupRole::class,
             'id',
             'id',
