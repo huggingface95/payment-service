@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Groups extends BaseModel
 {
     protected $table = 'group_types';
+
     const MEMBER = 'Member';
 
     const COMPANY = 'Company';

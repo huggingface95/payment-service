@@ -29,5 +29,4 @@ class PaymentBank extends BaseModel
     {
         return $this->belongsToMany(PaymentSystem::class, 'payment_system_banks', 'payment_bank_id', 'payment_system_id');
     }
-
 }
