@@ -1,0 +1,70 @@
+"""
+Банки
+Settings->Payment System -> Payment System List -> Profile
+"""
+type PaymentBank {
+    id: ID!
+    "Название банка"
+    name: String!
+    "Адрес банка"
+    address: String
+    "Код банка"
+    bank_code: String
+    "Код платежной системы"
+    payment_system_code: String
+    "Страна"
+    country: Country @belongsTo(relation:"country")
+    "Платежные системы"
+    payment_systems: [PaymentSystem] @belongsToMany(relation:"paymentSystems")
+}
+
+extend type Query @guard {
+    "Получить банк по ID"
+    paymentBank(id: ID @eq): PaymentBank @find
+    "Получить список банков"
+    paymentBanks(
+        hasPaymentSystems: _ @whereHasConditions(columns: ["name", "id", "is_active"]),
+        query: QueryPaymentBankCondition
+        orderBy: _ @orderBy(columns: ["id","name","is_active"])
+    ): [PaymentBank!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryPaymentBankCondition {
+    country_id: ID @eq
+    name: String @eq
+    address: String @like
+    bank_code: String @eq
+    payment_system_code: String @eq
+}
+
+input InputPaymentBank{
+    "Название банка"
+    name: String!
+    "Адрес банка"
+    address: String!
+    "Код банка"
+    bank_code: String
+    "Код платежной системы"
+    payment_system_code: String
+    "ID страны"
+    country_id: ID!
+    "ID платежных систем"
+    payment_systems: [ID!]
+}
+
+extend type Mutation @guard {
+    "Создать банк"
+    createPaymentBank(
+        input: InputPaymentBank!
+    ): PaymentBank   @create
+
+    "Обновить поля банка"
+    updatePaymentBank(
+        id: ID!
+        input: InputPaymentBank!
+    ): PaymentBank   @update
+
+    "Удалить платежную систему"
+    deletePaymentBank(id: ID!): PaymentBank   @delete
+
+}
