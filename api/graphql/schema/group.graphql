@@ -10,11 +10,13 @@ enum GroupsEntities {
 
 
 "Группы"
-type GroupType {
+type GroupType{
     id: ID!
     "Название группы"
     name: GroupsEntities!
+    groups: [GroupRole] @hasMany(relation: "groups") @deprecated
 }
+
 
 type GroupRole {
     id: ID!
@@ -51,8 +53,17 @@ extend type Query @guard {
     where:{column: ID, operator: EQ, value: ""} фильтр по ID, ID группы, ID роли, ID платежного провайдера, ID шаблона комиссий, по статусу
     """
     groups(
-        query: QueryGroupCondition
+        hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
+        hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
+        hasGroupType: _ @whereHasConditions(columns: ["name", "id"]),
+        hasRole: _ @whereHasConditions(columns: ["name", "id"]),
+        where: _ @whereConditions(columns: ["id","group_type_id", "name","role_id", "payment_provider_id", "commission_template_id", "is_active","company_id"]),
         orderBy: _ @orderBy(columns: ["id","is_active","description"],
+        )): [GroupRole!]!   @paginate(defaultCount: 10) @deprecated
+
+    groupList(
+        query: QueryGroupCondition
+        orderBy: _ @orderBy(columns: ["id","is_active","name"],
         )): [GroupRole!]!   @paginate(defaultCount: 10)
 }
 
