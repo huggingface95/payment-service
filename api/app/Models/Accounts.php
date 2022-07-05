@@ -55,6 +55,7 @@ class Accounts extends BaseModel
         'group_role_id',
         'payment_system_id',
         'client_id',
+        'payment_bank_id',
     ];
 
     public static self $clone;
@@ -120,6 +121,11 @@ class Accounts extends BaseModel
     public function paymentSystem(): BelongsTo
     {
         return $this->belongsTo(PaymentSystem::class, 'payment_system_id');
+    }
+
+    public function paymentBank(): BelongsTo
+    {
+        return $this->belongsTo(PaymentBank::class, 'payment_bank_id');
     }
 
     /**
