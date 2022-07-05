@@ -6,8 +6,8 @@ type MemberAccessLimitation {
     id: ID!
     "Получить Group"
     member: Members @belongsTo(relation: "member")
-    "Получить Group"
-    group: Groups @hasOne(relation: "group")
+    "Получить GroupType"
+    group: GroupType @hasOne(relation: "group")
     "Получить groupRole"
     group_role: GroupRole @belongsTo(relation: "groupRole")
     "Получить связанный платежный провайдер"

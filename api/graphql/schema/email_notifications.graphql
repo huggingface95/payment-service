@@ -10,7 +10,7 @@ type EmailNotification {
     "Тип получателя"
     recipient_type: RecipientType
     "Тип Группы"
-    group_type: Groups @belongsTo(relation: "groupType")
+    group_type: GroupType @belongsTo(relation: "groupType")
     "Получить templates"
     templates: [EmailTemplate] @belongsToMany(relation: "templates")
     "Получить клиента ApplicantIndividual | ApplicantCompany | Members"
