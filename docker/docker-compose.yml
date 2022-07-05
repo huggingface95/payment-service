@@ -33,8 +33,6 @@ services:
   php-worker:
       build:
         context: ./php-worker
-        args:
-          - INSTALL_REDIS=${PHP_WORKER_INSTALL_REDIS}
       volumes:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - ./php-worker/supervisord.d:/etc/supervisord.d
