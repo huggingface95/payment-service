@@ -20,9 +20,9 @@ type Accounts {
     "Получить связанный шаблон комиссии"
     commission_template_id: CommissionTemplate @belongsTo(relation:"commissionTemplate")
     "Получить групроле"
-    group_role: GroupRole @belongsTo(relation:"groupRole")
+    group: GroupRole @belongsTo(relation:"groupRole")
     "Получить тип группы"
-    group: GroupType @belongsTo(relation:"group")
+    group_type: GroupType @belongsTo(relation:"group")
     "Получить или индивидуала или компании"
     client: Client @belongsTo(relation:"clientable")
     "Состояние аккаунта"
@@ -136,7 +136,7 @@ input InputAccount{
     "ID шаблона комиссии"
     commission_template_id: ID!
     "Состояние аккаунта"
-    account_state_id: ID!
+    account_state_id: ID
     "Имя аккаунта"
     account_name: String!
     "Основной или нет"
