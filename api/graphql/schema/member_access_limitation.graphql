@@ -6,8 +6,8 @@ type MemberAccessLimitation {
     id: ID!
     "Получить Group"
     member: Members @belongsTo(relation: "member")
-    "Получить Group"
-    group: Groups @hasOne(relation: "group")
+    "Получить GroupType"
+    group: GroupType @hasOne(relation: "group")
     "Получить groupRole"
     group_role: GroupRole @belongsTo(relation: "groupRole")
     "Получить связанный платежный провайдер"
@@ -45,7 +45,7 @@ extend type Mutation  {
         "ID Груп Роль"
         group_role_id: ID!
         "ID платежный шаблон"
-        commission_template_id: ID!
+        commission_template_id: ID
     ): MemberAccessLimitation @create
 
     """
@@ -57,7 +57,7 @@ extend type Mutation  {
         "ID Груп Роль"
         group_role_id: ID!
         "ID платежный шаблон"
-        commission_template_id: ID!
+        commission_template_id: ID
     ): MemberAccessLimitation @update
     """
     Удалить ограничение доступа

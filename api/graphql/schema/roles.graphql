@@ -15,7 +15,7 @@ type Role {
     "Получить дерево разрешений"
     permissions_tree: JSON
     "Получить тип группы"
-    group_type: Groups @belongsTo(relation: "groupType")
+    group_type: GroupType @belongsTo(relation: "groupType")
     "Получить компанию"
     company: Companies @belongsTo(relation: "company")
     "Получить список групп"
@@ -52,9 +52,9 @@ extend type Mutation @guard {
         "Массив разрешений"
         permissions: [ID]
         "Тип группы"
-        group_type_id: Int
+        group_type_id: ID
         "ID компании"
-        company_id: Int
+        company_id: ID
         "ID группы полномочий Применить ко всем компаниям"
         permission_category_all_member: [ID]
     ): Role   @field(resolver:"RoleMutator@create")
@@ -69,9 +69,9 @@ extend type Mutation @guard {
         "Массив разрешений"
         permissions: [ID]
         "Тип группы"
-        group_type_id: Int
+        group_type_id: ID
         "ID компании"
-        company_id: Int
+        company_id: ID
         "ID группы полномочий Применить ко всем компаниям"
         permission_category_all_member: [ID]
     ): Role   @field(resolver:"RoleMutator@update")

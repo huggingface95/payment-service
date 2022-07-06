@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGroupsTable extends Migration
+class AddClientAccountTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateGroupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('group_types', function (Blueprint $table) {
-            $table->id();
-            $table->enum('name', ['Member', 'Company', 'Individual']);
+        Schema::table('accounts', function (Blueprint $table) {
+            $table->unsignedBigInteger('client_id');
         });
     }
 
@@ -26,6 +25,8 @@ class CreateGroupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group_types');
+        Schema::table('accounts', function (Blueprint $table) {
+            $table->dropColumn('client_id');
+        });
     }
 }

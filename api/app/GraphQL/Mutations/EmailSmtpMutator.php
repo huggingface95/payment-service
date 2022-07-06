@@ -10,6 +10,7 @@ use App\Jobs\SendMailJob;
 use App\Models\BaseModel;
 use App\Models\EmailSmtp;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Swift_SmtpTransport;
 
 class EmailSmtpMutator extends BaseMutator
@@ -17,7 +18,7 @@ class EmailSmtpMutator extends BaseMutator
     public function create($root, array $args)
     {
         $args['member_id'] = BaseModel::DEFAULT_MEMBER_ID;
-        if ($args['is_sending_mail'] === true) {
+        if (isset($args['is_sending_mail']) && $args['is_sending_mail'] === true) {
             EmailSmtp::where('company_id', $args['company_id'])->update(['is_sending_mail'=>false]);
         }
         if ($this->checkSmtp($args)) {
@@ -31,7 +32,7 @@ class EmailSmtpMutator extends BaseMutator
         if (! $emailSmtp) {
             throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
         }
-        if ($args['is_sending_mail'] === true) {
+        if (isset($args['is_sending_mail']) && $args['is_sending_mail'] === true) {
             EmailSmtp::where('company_id', $emailSmtp->company_id)->update(['is_sending_mail'=>false]);
         }
 
@@ -87,6 +88,7 @@ class EmailSmtpMutator extends BaseMutator
 
             return true;
         } catch (Exception $e) {
+            Log::error($e->getMessage());
             throw new GraphqlException('SMTP doesnt work correctly. Please check configuration', 'internal', 403);
         }
     }

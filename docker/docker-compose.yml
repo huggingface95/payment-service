@@ -30,6 +30,18 @@ services:
       - FAKETIME=${PHP_FPM_FAKETIME}
     networks:
       - backend
+  php-worker:
+      build:
+        context: ./php-worker
+      volumes:
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+        - ./php-worker/supervisord.d:/etc/supervisord.d
+      depends_on:
+        - php-dev
+      extra_hosts:
+        - "dockerhost:${DOCKER_HOST_IP}"
+      networks:
+        - backend
 
   cl-junc-apicore:
     build:

@@ -22,10 +22,11 @@ class PermissionsSeeder extends Seeder
     public function run()
     {
         $allPermissions = [
-            'Management Module' => [
+            'KYC Management Module' => [
                 'data' => [
-                    'name' => 'Management Module',
+                    'name' => 'KYC Management Module',
                     'is_active' => true,
+                    'order' => 1,
                 ],
                 'list' => [
                     'member' => [
@@ -498,6 +499,7 @@ class PermissionsSeeder extends Seeder
                 'data' => [
                     'name' => 'Settings Module',
                     'is_active' => true,
+                    'order' => 2,
                 ],
                 'list' => [
                     'member' => [
@@ -519,24 +521,6 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Role list.Edit' => [
-                                        'data' => [
-                                            'name' => 'Role list.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => null,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                    'Role list.Delete' => [
-                                        'data' => [
-                                            'name' => 'Role list.Delete',
-                                            'display_name' => 'Delete',
-                                            'guard_name' => 'api',
-                                            'order' => null,
-                                            'type' => 'important',
-                                        ],
-                                    ],
                                     'Role list.Add new' => [
                                         'data' => [
                                             'name' => 'Role list.Add new',
@@ -544,6 +528,15 @@ class PermissionsSeeder extends Seeder
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'add',
+                                        ],
+                                    ],
+                                    'Role list.Show users list' => [
+                                        'data' => [
+                                            'name' => 'Role list.Show users list',
+                                            'display_name' => 'Show users list',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
                                         ],
                                     ],
                                 ],
@@ -574,46 +567,37 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'edit',
                                         ],
                                     ],
-                                ],
-                            ],
-                            'Groups List' => [
-                                'data' => [
-                                    'name' => 'Groups List',
-                                    'type' => 'member',
-                                    'separator' => null,
-                                    'order' => 3,
-                                ],
-                                'list' => [
-                                    'Groups list.Read' => [
+                                    'Roles settings.Delete' => [
                                         'data' => [
-                                            'name' => 'Groups list.Read',
-                                            'display_name' => 'Read',
-                                            'guard_name' => 'api',
-                                            'order' => null,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Groups list.Edit' => [
-                                        'data' => [
-                                            'name' => 'Groups list.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => null,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                    'Groups list.Delete' => [
-                                        'data' => [
-                                            'name' => 'Groups list.Delete',
+                                            'name' => 'Roles settings.Delete',
                                             'display_name' => 'Delete',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'important',
                                         ],
                                     ],
-                                    'Groups list.Add new' => [
+                                ],
+                            ],
+                            'GroupType List' => [
+                                'data' => [
+                                    'name' => 'GroupType List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 3,
+                                ],
+                                'list' => [
+                                    'GroupType list.Read' => [
                                         'data' => [
-                                            'name' => 'Groups list.Add new',
+                                            'name' => 'GroupType list.Read',
+                                            'display_name' => 'Read',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'GroupType list.Add new' => [
+                                        'data' => [
+                                            'name' => 'GroupType list.Add new',
                                             'display_name' => 'Add New',
                                             'guard_name' => 'api',
                                             'order' => null,
@@ -622,30 +606,39 @@ class PermissionsSeeder extends Seeder
                                     ],
                                 ],
                             ],
-                            'Groups Settings' => [
+                            'GroupType Settings' => [
                                 'data' => [
-                                    'name' => 'Groups Settings',
+                                    'name' => 'GroupType Settings',
                                     'type' => 'member',
                                     'separator' => null,
                                     'order' => 4,
                                 ],
                                 'list' => [
-                                    'Groups settings.Read' => [
+                                    'GroupType settings.Read' => [
                                         'data' => [
-                                            'name' => 'Groups settings.Read',
+                                            'name' => 'GroupType settings.Read',
                                             'display_name' => 'Read',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Groups settings.Edit' => [
+                                    'GroupType settings.Edit' => [
                                         'data' => [
-                                            'name' => 'Groups settings.Edit',
+                                            'name' => 'GroupType settings.Edit',
                                             'display_name' => 'Edit',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'edit',
+                                        ],
+                                    ],
+                                    'GroupType settings.Delete' => [
+                                        'data' => [
+                                            'name' => 'GroupType settings.Delete',
+                                            'display_name' => 'Delete',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'important',
                                         ],
                                     ],
                                 ],
@@ -704,6 +697,7 @@ class PermissionsSeeder extends Seeder
                 'data' => [
                     'name' => 'Administration Module',
                     'is_active' => true,
+                    'order' => 3,
                 ],
                 'list' => [
                     'member' => [
@@ -1242,6 +1236,7 @@ class PermissionsSeeder extends Seeder
                 'data' => [
                     'name' => 'Banking Module',
                     'is_active' => true,
+                    'order' => 4,
                 ],
                 'list' => [
                     'member' => [
@@ -1350,6 +1345,51 @@ class PermissionsSeeder extends Seeder
                                         'data' => [
                                             'name' => 'Account Details.Limits',
                                             'display_name' => 'Limits',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Pending' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Pending',
+                                            'display_name' => 'Status: Pending',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Active' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Active',
+                                            'display_name' => 'Status: Active',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Waiting for IBAN Activation' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Waiting for IBAN Activation',
+                                            'display_name' => 'Waiting for IBAN Activation',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Closed' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Closed',
+                                            'display_name' => 'Status: Closed',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Suspended' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Suspended',
+                                            'display_name' => 'Status: Suspended',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',
@@ -2051,6 +2091,51 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'info',
                                         ],
                                     ],
+                                    'Account Details.Status: Pending' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Pending',
+                                            'display_name' => 'Status: Pending',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Active' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Active',
+                                            'display_name' => 'Status: Active',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Waiting for IBAN Activation' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Waiting for IBAN Activation',
+                                            'display_name' => 'Waiting for IBAN Activation',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Closed' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Closed',
+                                            'display_name' => 'Status: Closed',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Suspended' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Suspended',
+                                            'display_name' => 'Status: Suspended',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
                                 ],
                             ],
                             'makePayments' => [
@@ -2553,6 +2638,51 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'info',
                                         ],
                                     ],
+                                    'Account Details.Status: Pending' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Pending',
+                                            'display_name' => 'Status: Pending',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Active' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Active',
+                                            'display_name' => 'Status: Active',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Waiting for IBAN Activation' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Waiting for IBAN Activation',
+                                            'display_name' => 'Waiting for IBAN Activation',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Closed' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Closed',
+                                            'display_name' => 'Status: Closed',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Status: Suspended' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Status: Suspended',
+                                            'display_name' => 'Status: Suspended',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
                                 ],
                             ],
                             'makePayments' => [
@@ -2997,7 +3127,12 @@ class PermissionsSeeder extends Seeder
         ];
 
         foreach ($allPermissions as $moduleValue) {
+            $order = $moduleValue['data']['order'];
+            unset($moduleValue['data']['order']);
             $category = PermissionCategory::firstOrCreate($moduleValue['data']);
+            $category->order = $order;
+            $category->save();
+
             foreach ($moduleValue['list'] as $listValue) {
                 foreach ($listValue as $lists) {
                     foreach ($lists as $list) {
@@ -3013,7 +3148,11 @@ class PermissionsSeeder extends Seeder
 
                         foreach ($list['list'] as $permission) {
                             $permission['data']['permission_list_id'] = $l->id;
-                            Permissions::firstOrCreate($permission['data']);
+                            $order = $permission['data']['order'];
+                            unset($permission['data']['order']);
+                            $p = Permissions::firstOrCreate($permission['data']);
+                            $p->order = $order;
+                            $p->save();
                         }
                     }
                 }
@@ -3475,46 +3614,46 @@ class PermissionsSeeder extends Seeder
             [
                 'name' => 'getUsers',
                 'referer' => 'settings/manager-roles/list',
-                'binds' => ['Role list.Read', 'Role list.Edit'],
+                'binds' => ['Role list.Read'],
             ],
             [
                 'name' => 'GetRolesName',
                 'referer' => 'settings/manager-roles/list',
-                'binds' => ['Role list.Read', 'Role list.Edit'],
+                'binds' => ['Role list.Read'],
             ],
             [
                 'name' => 'GetManagerRoleList',
                 'referer' => 'settings/manager-roles/list',
-                'binds' => ['Role list.Read', 'Role list.Edit'],
+                'binds' => ['Role list.Read'],
             ],
             [
                 'name' => 'GET_ALL_COMPANIES',
                 'referer' => 'settings/manager-roles/list',
-                'binds' => ['Role list.Read', 'Role list.Edit'],
+                'binds' => ['Role list.Read'],
             ],
             [
                 'name' => 'GetRolesByFilter',
                 'referer' => 'settings/manager-roles/new',
                 'binds' => ['Role list.Add new'],
-                'parents' => ['Role list.Read', 'Role list.Edit'],
+                'parents' => ['Role list.Read'],
             ],
             [
                 'name' => 'GetAllPermissions',
                 'referer' => 'settings/manager-roles/new',
                 'binds' => ['Role list.Add new'],
-                'parents' => ['Role list.Read', 'Role list.Edit'],
+                'parents' => ['Role list.Read'],
             ],
             [
                 'name' => 'GetGroupsName',
                 'referer' => 'settings/manager-roles/new',
                 'binds' => ['Role list.Add new'],
-                'parents' => ['Role list.Read', 'Role list.Edit'],
+                'parents' => ['Role list.Read'],
             ],
             [
                 'name' => 'CreateManagerRole',
                 'referer' => 'settings/manager-roles/new',
                 'binds' => ['Role list.Add new'],
-                'parents' => ['Role list.Read', 'Role list.Edit'],
+                'parents' => ['Role list.Read'],
             ],
             [
                 'name' => 'GetRolesByFilter',
@@ -3544,66 +3683,66 @@ class PermissionsSeeder extends Seeder
             [
                 'name' => 'getGroupSelects',
                 'referer' => 'settings/manager-groups/list',
-                'binds' => ['Groups list.Read', 'Groups list.Edit'],
+                'binds' => ['GroupType list.Read'],
             ],
             [
                 'name' => 'GetGroups',
                 'referer' => 'settings/manager-groups/list',
-                'binds' => ['Groups list.Read', 'Groups list.Edit'],
+                'binds' => ['GroupType list.Read'],
             ],
             [
                 'name' => 'GetGroupsTableSelects',
                 'referer' => 'settings/manager-groups/list',
-                'binds' => ['Groups list.Read', 'Groups list.Edit'],
+                'binds' => ['GroupType list.Read'],
             ],
             [
                 'name' => 'GetRolesByFilter',
                 'referer' => 'settings/manager-groups/new-group',
-                'binds' => ['Groups list.Add new'],
-                'parents' => ['Groups list.Read', 'Groups list.Edit'],
+                'binds' => ['GroupType list.Add new'],
+                'parents' => ['GroupType list.Read'],
             ],
             [
                 'name' => 'getGroupSelects',
                 'referer' => 'settings/manager-groups/new-group',
-                'binds' => ['Groups list.Add new'],
-                'parents' => ['Groups list.Read', 'Groups list.Edit'],
+                'binds' => ['GroupType list.Add new'],
+                'parents' => ['GroupType list.Read'],
             ],
             [
                 'name' => 'CreateGroupSetting',
                 'referer' => 'settings/manager-groups/new-group',
-                'binds' => ['Groups list.Add new'],
-                'parents' => ['Groups list.Read', 'Groups list.Edit'],
+                'binds' => ['GroupType list.Add new'],
+                'parents' => ['GroupType list.Read'],
             ],
             [
                 'name' => 'CheckGroups',
                 'referer' => 'settings/manager-groups/new-group',
-                'binds' => ['Groups list.Add new'],
-                'parents' => ['Groups list.Read', 'Groups list.Edit'],
+                'binds' => ['GroupType list.Add new'],
+                'parents' => ['GroupType list.Read'],
             ],
             [
                 'name' => 'GetRolesByFilter',
                 'referer' => 'settings/manager-groups/settings',
-                'binds' => ['Groups settings.Read', 'Groups settings.Edit'],
+                'binds' => ['GroupType settings.Read', 'GroupType settings.Edit'],
             ],
             [
                 'name' => 'getGroupSelects',
                 'referer' => 'settings/manager-groups/settings',
-                'binds' => ['Groups settings.Read', 'Groups settings.Edit'],
+                'binds' => ['GroupType settings.Read', 'GroupType settings.Edit'],
             ],
             [
                 'name' => 'GetGroupsTableSelects',
                 'referer' => 'settings/manager-groups/settings',
-                'binds' => ['Groups settings.Read', 'Groups settings.Edit'],
+                'binds' => ['GroupType settings.Read', 'GroupType settings.Edit'],
             ],
             [
                 'name' => 'UpdateGroupSetting',
                 'referer' => 'settings/manager-groups/settings',
-                'binds' => ['Groups settings.Edit'],
+                'binds' => ['GroupType settings.Edit'],
             ],
             [
                 'name' => 'CheckGroups',
                 'referer' => 'settings/manager-groups/settings',
-                'binds' => ['Groups settings.Edit'],
+                'binds' => ['GroupType settings.Edit'],
             ],
             [
                 'name' => 'GetPaymentsList',
@@ -3941,7 +4080,7 @@ class PermissionsSeeder extends Seeder
             [
                 'name' => 'GetGroups',
                 'referer' => 'settings/manager-groups/settings',
-                'binds' => ['Groups settings.Read', 'Groups settings.Edit'],
+                'binds' => ['GroupType settings.Read', 'GroupType settings.Edit'],
             ],
             [
                 'name' => 'GetMemberFullName',

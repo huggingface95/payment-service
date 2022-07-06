@@ -8,14 +8,21 @@ enum GroupsEntities {
     Individual @enum(value: Individual)
 }
 
+
 "Группы"
+type GroupType{
+    id: ID!
+    "Название группы"
+    name: GroupsEntities!
+}
+
 type Groups {
     id: ID!
     "Название группы"
     name: GroupsEntities!
-    "Связанные группы"
-    groups: [GroupRole] @hasMany(relation: "groups")
+    groups: [GroupRole] @hasMany(relation: "groups") @deprecated
 }
+
 
 type GroupRole {
     id: ID!
@@ -30,7 +37,7 @@ type GroupRole {
     "Активная и не активная группа"
     is_active: Boolean
     "Получить тип группы"
-    group_type: Groups @belongsTo(relation: "groupType")
+    group_type: GroupType @belongsTo(relation: "groupType")
     "Получить связанную роль"
     role: Role @belongsTo(relation: "role")
     "Получить связанный платежный провайдер"
@@ -43,9 +50,9 @@ type GroupRole {
 
 extend type Query @guard {
     "Получить группу по ID"
-    group_type(id: ID @eq): Groups   @find
+    group_type(id: ID @eq): GroupType   @find
     "Получить список типов групп"
-    group_types: [Groups!]!   @paginate(defaultCount: 10)
+    group_types(mode: GroupTypeMode): [GroupType!]!  @field(resolver:"GroupsQuery@get") @orderBy(column: "id", direction: ASC)
     """
     Получить список групп с ролями
     orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
@@ -58,7 +65,28 @@ extend type Query @guard {
         hasRole: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["id","group_type_id", "name","role_id", "payment_provider_id", "commission_template_id", "is_active","company_id"]),
         orderBy: _ @orderBy(columns: ["id","is_active","description"],
+        )): [GroupRole!]!   @paginate(defaultCount: 10) @deprecated
+
+    groupList(
+        query: QueryGroupCondition
+        orderBy: _ @orderBy(columns: ["id","is_active","name"],
         )): [GroupRole!]!   @paginate(defaultCount: 10)
+}
+
+input QueryGroupCondition {
+    id: ID @eq
+    company_id: ID @eq
+    payment_provider_id: ID @eq
+    name: String @like
+    role_id: ID @eq
+    group_type_id: ID @eq
+    commission_template_id: ID @eq
+    is_active: Boolean @eq
+}
+
+enum GroupTypeMode {
+    CLIENTS @enum(value: "clients")
+    ALL @enum(value: "all")
 }
 
 extend type Mutation @guard {

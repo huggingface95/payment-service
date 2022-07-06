@@ -4,10 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Groups extends BaseModel
+class GroupType extends BaseModel
 {
-    protected $table = 'group_types';
-
     const MEMBER = 'Member';
 
     const COMPANY = 'Company';

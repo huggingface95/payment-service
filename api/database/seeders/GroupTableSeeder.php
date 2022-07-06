@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Groups;
+use App\Models\GroupType;
 use Illuminate\Database\Seeder;
 
 class GroupTableSeeder extends Seeder
@@ -14,17 +14,17 @@ class GroupTableSeeder extends Seeder
      */
     public function run()
     {
-        Groups::create([
+        GroupType::create([
             'id'        => 1,
             'name'     => 'Member',
         ]);
 
-        Groups::create([
+        GroupType::create([
             'id'        => 2,
             'name'     => 'Company',
         ]);
 
-        Groups::create([
+        GroupType::create([
             'id'        => 3,
             'name'     => 'Individual',
         ]);

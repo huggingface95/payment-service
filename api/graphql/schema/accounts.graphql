@@ -20,11 +20,11 @@ type Accounts {
     "Получить связанный шаблон комиссии"
     commission_template_id: CommissionTemplate @belongsTo(relation:"commissionTemplate")
     "Получить групроле"
-    group_role: GroupRole @belongsTo(relation:"groupRole")
+    group: GroupRole @belongsTo(relation:"groupRole")
     "Получить тип группы"
-    group: Groups @belongsTo(relation:"group")
+    group_type: GroupType @belongsTo(relation:"group")
     "Получить или индивидуала или компании"
-    client: Client @morphOne(relation:"clientable")
+    client: Client @belongsTo(relation:"clientable")
     "Состояние аккаунта"
     account_state: AccountState @belongsTo(relation:"accountState")
     "Компания которой принадлежит аккаунт"
@@ -68,9 +68,22 @@ extend type Query @guard {
         created_at: DateRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id", "client_id"])
     ): [Accounts!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+
+    """
+    Получить список account states
+    """
+    accountStates(
+        orderBy: _ @orderBy(columns: ["id", "name"])
+    ): [AccountState!]!   @all @orderBy(column: "id", direction: ASC)
+
+    """
+    Получить список клиентов
+    """
+    clientList(group_type: ID! @eq): [Client!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
 }
 
 input QueryAccountCondition {
+    client_id: ID @eq
     company_id: ID @eq
     payment_provider_id: ID @eq
     owner_id: ID @eq
@@ -81,7 +94,6 @@ input QueryAccountCondition {
     member_id: ID @eq
     is_primary: Boolean @eq
     commission_template_id: ID @eq
-    currency_id: ID @eq
     account_type: String @eq
     account_state_id: ID @eq
     account_name: String @like
@@ -116,9 +128,9 @@ input InputAccount{
     "ID владельца"
     owner_id: ID!
     "Номер аккаунта"
-    account_number: String!
+    account_number: String
     "Тип аккаунта"
-    account_type: AccountType!
+    account_type: AccountType
     "ID провайдера"
     payment_provider_id: ID!
     "ID шаблона комиссии"
@@ -135,6 +147,8 @@ input InputAccount{
     group_type_id: ID!
     "ID платежной системы"
     payment_system_id: ID!
+    "ID банка"
+    payment_bank_id: ID
 }
 
 extend type Mutation @guard {

@@ -8,7 +8,6 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * Class Accounts
@@ -55,6 +54,8 @@ class Accounts extends BaseModel
         'group_type_id',
         'group_role_id',
         'payment_system_id',
+        'client_id',
+        'payment_bank_id',
     ];
 
     public static self $clone;
@@ -122,6 +123,11 @@ class Accounts extends BaseModel
         return $this->belongsTo(PaymentSystem::class, 'payment_system_id');
     }
 
+    public function paymentBank(): BelongsTo
+    {
+        return $this->belongsTo(PaymentBank::class, 'payment_bank_id');
+    }
+
     /**
      * Get relation Payment Provider
      *
@@ -139,7 +145,7 @@ class Accounts extends BaseModel
 
     public function group(): BelongsTo
     {
-        return $this->belongsTo(Groups::class, 'group_type_id');
+        return $this->belongsTo(GroupType::class, 'group_type_id');
     }
 
     public function setAccountIdAttribute()
@@ -152,7 +158,7 @@ class Accounts extends BaseModel
         return $this->hasOne(AccountIndividualCompany::class, 'account_id', 'id');
     }
 
-    public function clientable(): \Ankurk91\Eloquent\Relations\MorphToOne
+    public function clientable()
     {
         /** @var Accounts $model */
         try {
@@ -168,14 +174,14 @@ class Accounts extends BaseModel
         }
     }
 
-    public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
+    public function applicantIndividual()
     {
-        return $this->morphedByOne(ApplicantIndividual::class, 'client', AccountIndividualCompany::class, 'account_id');
+        return $this->belongsTo(ApplicantIndividual::class, 'client_id');
     }
 
-    public function applicantCompany(): \Ankurk91\Eloquent\Relations\MorphToOne
+    public function applicantCompany()
     {
-        return $this->morphedByOne(ApplicantCompany::class, 'client', 'account_individuals_companies', 'account_id');
+        return $this->belongsTo(ApplicantCompany::class, 'client_id');
     }
 
     public function limits(): HasMany

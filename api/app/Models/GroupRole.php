@@ -48,7 +48,7 @@ class GroupRole extends BaseModel
 
     public function groupType(): BelongsTo
     {
-        return $this->belongsTo(Groups::class, 'group_type_id');
+        return $this->belongsTo(GroupType::class, 'group_type_id');
     }
 
     public function role(): BelongsTo
