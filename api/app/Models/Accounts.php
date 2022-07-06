@@ -172,16 +172,17 @@ class Accounts extends BaseModel
         } else {
             return $this->applicantIndividual();
         }
+
     }
 
     public function applicantIndividual()
     {
-        return $this->belongsTo(ApplicantIndividual::class, 'client_id');
+        return $this->morphedByOne(ApplicantIndividual::class, 'client', AccountIndividualCompany::class, 'account_id');
     }
 
     public function applicantCompany()
     {
-        return $this->belongsTo(ApplicantCompany::class, 'client_id');
+        return $this->morphedByOne(ApplicantCompany::class, 'client', AccountIndividualCompany::class, 'account_id');
     }
 
     public function limits(): HasMany
