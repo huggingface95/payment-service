@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PaymentSystem extends BaseModel
 {
@@ -32,10 +33,5 @@ class PaymentSystem extends BaseModel
     public function providers(): BelongsToMany
     {
         return $this->belongsToMany(PaymentProvider::class, 'payment_provider_payment_system', 'payment_system_id', 'payment_provider_id');
-    }
-
-    public function banks(): BelongsToMany
-    {
-        return $this->belongsToMany(PaymentBank::class, 'payment_system_banks', 'payment_system_id', 'payment_bank_id');
     }
 }

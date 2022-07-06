@@ -17,7 +17,7 @@ class PaymentBank extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'country_id', 'name', 'address', 'bank_code', 'payment_system_code',
+        'country_id', 'name', 'address', 'bank_code', 'payment_system_code', 'payment_provider_id', 'payment_system_id',
     ];
 
     public function country(): BelongsTo
@@ -25,8 +25,13 @@ class PaymentBank extends BaseModel
         return $this->belongsTo(Country::class, 'country_id');
     }
 
-    public function paymentSystems(): BelongsToMany
+    public function paymentSystem(): BelongsTo
     {
-        return $this->belongsToMany(PaymentSystem::class, 'payment_system_banks', 'payment_bank_id', 'payment_system_id');
+        return $this->belongsTo(PaymentSystem::class, 'payment_system_id');
+    }
+
+    public function paymentProvider(): BelongsTo
+    {
+        return $this->belongsTo(PaymentProvider::class, 'payment_provider_id');
     }
 }

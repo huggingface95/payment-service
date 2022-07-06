@@ -14,8 +14,6 @@ type PaymentSystem {
     currencies: [Currencies] @belongsToMany(relation:"currencies")
     "Получить Платежные провайдеры"
     providers: [PaymentProvider] @belongsToMany(relation:"providers")
-    "Получить банков"
-    banks: [PaymentBank] @belongsToMany(relation:"banks")
 }
 
 extend type Query @guard {
@@ -26,7 +24,6 @@ extend type Query @guard {
         hasCountries: _ @whereHasConditions(columns: ["name", "id"]),
         hasCurrencies: _ @whereHasConditions(columns: ["name", "id"]),
         hasProviders: _ @whereHasConditions(columns: ["name", "id"]),
-        hasBanks: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
     ): [PaymentSystem!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
@@ -45,8 +42,6 @@ extend type Mutation @guard {
         currencies: [ID]
         "массив ID провайдеров"
         providers: [ID]
-        "массив ID банков"
-        banks: [ID]
     ): PaymentSystem   @create
 
     "Обновить поля платежной системы"
@@ -63,8 +58,6 @@ extend type Mutation @guard {
         currencies: [ID]
         "массив ID провайдеров"
         providers: [ID]
-        "массив ID банков"
-        banks: [ID]
     ): PaymentSystem   @update
 
     "Удалить платежную систему"
