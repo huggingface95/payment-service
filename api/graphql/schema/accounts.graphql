@@ -147,6 +147,8 @@ input InputAccount{
     group_type_id: ID!
     "ID платежной системы"
     payment_system_id: ID!
+    "ID банка"
+    payment_bank_id: ID
 }
 
 extend type Mutation @guard {
