@@ -137,6 +137,7 @@ $app->register(App\Providers\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
 $app->register(\App\Providers\MailServiceProvider::class);
+$app->register(Jenssegers\Agent\AgentServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -155,6 +156,7 @@ $app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('Google2FA', \PragmaRX\Google2FALaravel\Facade::class);
 $app->alias('Notification', Illuminate\Support\Facades\Notification::class);
+$app->alias('Agent',  Jenssegers\Agent\Facades\Agent::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

@@ -3612,7 +3612,7 @@ class PermissionsSeeder extends Seeder
                 'parents' => ['Company Profile:Settings.Edit'],
             ],
             [
-                'name' => 'getUsers',
+                'name' => 'GetUsers',
                 'referer' => 'settings/manager-roles/list',
                 'binds' => ['Role list.Read'],
             ],

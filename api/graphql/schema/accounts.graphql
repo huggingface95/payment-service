@@ -24,7 +24,7 @@ type Accounts {
     "Получить тип группы"
     group_type: GroupType @belongsTo(relation:"group")
     "Получить или индивидуала или компании"
-    client: Client @belongsTo(relation:"clientable")
+    client: Client @morphTo(relation:"clientable")
     "Состояние аккаунта"
     account_state: AccountState @belongsTo(relation:"accountState")
     "Компания которой принадлежит аккаунт"
@@ -44,6 +44,11 @@ type Accounts {
     created_at: DateTime
     updated_at: DateTime
     activated_at : DateTime
+}
+
+type AccountIndividualCompany {
+    id: ID!
+    client: Client @morphTo(relation:"client")
 }
 
 type AccountState {
@@ -79,7 +84,7 @@ extend type Query @guard {
     """
     Получить список клиентов
     """
-    clientList(group_type: ID! @eq): [Client!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
+    clientList(group_type: ID @eq): [AccountIndividualCompany!]! @all @orderBy(column: "id", direction: ASC)
 }
 
 input QueryAccountCondition {
@@ -136,7 +141,7 @@ input InputAccount{
     "ID шаблона комиссии"
     commission_template_id: ID!
     "Состояние аккаунта"
-    account_state_id: ID!
+    account_state_id: ID
     "Имя аккаунта"
     account_name: String!
     "Основной или нет"
