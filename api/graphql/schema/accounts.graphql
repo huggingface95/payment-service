@@ -46,7 +46,7 @@ type Accounts {
     activated_at : DateTime
 }
 
-type AccountIndividualCompany {
+type AccountClient {
     id: ID!
     client: Client @morphTo(relation:"client")
 }
@@ -84,7 +84,7 @@ extend type Query @guard {
     """
     Получить список клиентов
     """
-    clientList(group_type: ID @eq): [AccountIndividualCompany!]! @all @orderBy(column: "id", direction: ASC)
+    clientList(group_type: ID @eq): [AccountClient!]! @all @orderBy(column: "id", direction: ASC)
 }
 
 input QueryAccountCondition {
