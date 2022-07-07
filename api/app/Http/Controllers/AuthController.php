@@ -66,8 +66,8 @@ class AuthController extends Controller
             }
         }
 
-        $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'login', 'created_at' => now()]);
-        $log->save();
+        //$log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'login', 'created_at' => now()]);
+        //$log->save();
 
         $get_ip_address = $user->ipAddress()->pluck('ip_address')->toArray();
         if ($get_ip_address) {
