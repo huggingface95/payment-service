@@ -84,7 +84,7 @@ extend type Query @guard {
     """
     Получить список клиентов
     """
-    clientList(group_type: ID @eq): [AccountClient!]! @all @orderBy(column: "id", direction: ASC)
+    clientList(group_type: ID @eq): [AccountClient!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
 }
 
 input QueryAccountCondition {
