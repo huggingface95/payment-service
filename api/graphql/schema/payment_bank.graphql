@@ -14,8 +14,10 @@ type PaymentBank {
     payment_system_code: String
     "Страна"
     country: Country @belongsTo(relation:"country")
-    "Платежные системы"
-    payment_systems: [PaymentSystem] @belongsToMany(relation:"paymentSystems")
+    "Платежная провидер"
+    payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
+    "Платежная система"
+    payment_system: PaymentSystem @belongsTo(relation:"paymentSystem")
 }
 
 extend type Query @guard {
@@ -23,7 +25,6 @@ extend type Query @guard {
     paymentBank(id: ID @eq): PaymentBank @find
     "Получить список банков"
     paymentBanks(
-        hasPaymentSystems: _ @whereHasConditions(columns: ["name", "id", "is_active"]),
         query: QueryPaymentBankCondition
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
     ): [PaymentBank!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
@@ -35,6 +36,8 @@ input QueryPaymentBankCondition {
     address: String @like
     bank_code: String @eq
     payment_system_code: String @eq
+    payment_provider_id: ID! @eq
+    payment_system_id: ID! @eq
 }
 
 enum QueryPaymentBankWhereColumn {
@@ -43,6 +46,8 @@ enum QueryPaymentBankWhereColumn {
     ADDRESS @enum(value: "address")
     BANK_CODE @enum(value: "bank_code")
     PAYMENT_SYSTEM_CODE @enum(value: "payment_system_code")
+    PAYMENT_PROVIDER_ID @enum(value: "payment_provider_id")
+    PAYMENT_SYSTEM_ID @enum(value: "payment_system_id")
 }
 
 input InputPaymentBank{
@@ -56,8 +61,10 @@ input InputPaymentBank{
     payment_system_code: String
     "ID страны"
     country_id: ID!
-    "ID платежных систем"
-    payment_systems: [ID!]
+    "ID платежного системы"
+    payment_system_id: ID!
+    "ID платежного провидера"
+    payment_provider_id: ID!
 }
 
 extend type Mutation @guard {

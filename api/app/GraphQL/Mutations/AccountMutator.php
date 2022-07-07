@@ -14,6 +14,7 @@ class AccountMutator
         $args['member_id'] = Auth::user()->id;
         /** @var Accounts $account */
         $args['account_type'] = $this->setAccountType($args['input']['group_type_id']);
+
         return Accounts::create($args);
     }
 
