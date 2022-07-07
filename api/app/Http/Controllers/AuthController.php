@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clickhouse\ActivityLog;
+use App\Models\Clickhouse\AuthenticationLog;
 use App\Models\Members;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Jenssegers\Agent\Facades\Agent;
 use PragmaRX\Google2FALaravel\Facade as Google2FA;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -35,6 +39,36 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
+
+        if(env('CHECK_IP') == true) {
+
+            if (request('proceed')) {
+                $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'logout', 'created_at' => now()]);
+                $log->save();
+                auth()->invalidate();
+                return $this->respondWithToken(auth()->attempt($credentials));
+            }
+
+            if (request('cancel')) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            if ($this->getAuthUser($user->email) == 'login') {
+                return response()->json(['error' => 'This ID is currently in use on another device.'], 403);
+            }
+
+            if ($this->getAuthUserIp($user->email) != request()->ip()) {
+                return response()->json(['error' => 'Your IP address was changed. You will be logged out'], 403);
+            }
+
+            if ($this->getAuthUserBrowser($user->email) != Agent::browser()) {
+                return response()->json(['error' => 'Your Browser was changed. You will be logged out'], 403);
+            }
+        }
+
+        $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'login', 'created_at' => now()]);
+        $log->save();
+
         $get_ip_address = $user->ipAddress()->pluck('ip_address')->toArray();
         if ($get_ip_address) {
             if (! in_array(request()->ip(), $get_ip_address)) {
@@ -70,8 +104,10 @@ class AuthController extends Controller
      */
     public function logout()
     {
+        $user = auth()->user();
+        $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'logout', 'created_at' => now()]);
+        $log->save();
         auth()->logout();
-
         return response()->json(['message' => 'Successfully logged out']);
     }
 
@@ -274,4 +310,75 @@ class AuthController extends Controller
 
         return $code;
     }
+
+    public function getAuthUserIp($email)
+    {
+        $user = auth()->user();
+        $getIp = AuthenticationLog::select('*')->
+            where('member', '=', (string)$email)->
+            where('status', '=', 'login')->
+            orderByDesc('created_at')->
+            limit(1)->
+            getRows();
+            if ($getIp) {
+                return $getIp[0]['ip'];
+            } else {
+                $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'login', 'created_at' => now()]);
+                $log->save();
+                $getIp = AuthenticationLog::select('*')->
+                where('member', '=', (string)$email)->
+                where('status', '=', 'login')->
+                orderByDesc('created_at')->
+                limit(1)->
+                getRows();
+                return $getIp[0]['ip'];
+            }
+    }
+
+    public function getAuthUser($email)
+    {
+        $user = auth()->user();
+        $getStatus = AuthenticationLog::select('*')->
+        where('member', '=', (string)$email)->
+        orderByDesc('created_at')->
+        limit(1)->
+        getRows();
+        if ($getStatus) {
+            return $getStatus[0]['status'];
+        } else {
+            $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'logout', 'created_at' => now()]);
+            $log->save();
+            $getStatus = AuthenticationLog::select('*')->
+            where('member', '=', (string)$email)->
+            orderByDesc('created_at')->
+            limit(1)->
+            getRows();
+            return $getStatus[0]['status'];
+        }
+
+    }
+
+    public function getAuthUserBrowser($email)
+    {
+        $user = auth()->user();
+        $getBrowser = AuthenticationLog::select('*')->
+        where('member', '=', (string)$email)->
+        where('status', '=', 'login')->
+        orderByDesc('created_at')->
+        limit(1)->
+        getRows();
+        if ($getBrowser) {
+            return $getBrowser[0]['browser'];
+        } else {
+            $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'login', 'created_at' => now()]);
+            $log->save();
+            $getBrowser = AuthenticationLog::select('*')->
+            where('member', '=', (string)$email)->
+            where('status', '=', 'login')->
+            orderByDesc('created_at')->
+            limit(1)->
+            getRows();
+        }
+    }
+
 }
