@@ -65,7 +65,7 @@ class AuthController extends Controller
                 return response()->json(['error' => 'Your Browser was changed. You will be logged out'], 403);
             }
         }
-
+        //TODO Разобраться с записью лога в clickhouse при авторизации
         //$log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'login', 'created_at' => now()]);
         //$log->save();
 
