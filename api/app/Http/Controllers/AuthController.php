@@ -40,35 +40,33 @@ class AuthController extends Controller
 
         $user = auth()->user();
 
-//        if(env('CHECK_IP') === true) {
-//
-//            if (request('proceed')) {
-//                $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'logout', 'created_at' => now()]);
-//                $log->save();
-//                auth()->invalidate();
-//                return $this->respondWithToken(auth()->attempt($credentials));
-//            }
-//
-//            if (request('cancel')) {
-//                return response()->json(['error' => 'Unauthorized'], 401);
-//            }
-//
-//            if ($this->getAuthUser($user->email) == 'login') {
-//                return response()->json(['error' => 'This ID is currently in use on another device.'], 403);
-//            }
-//
-//            if ($this->getAuthUserIp($user->email) != request()->ip()) {
-//                return response()->json(['error' => 'Your IP address was changed. You will be logged out'], 403);
-//            }
-//
-//            if ($this->getAuthUserBrowser($user->email) != Agent::browser()) {
-//                return response()->json(['error' => 'Your Browser was changed. You will be logged out'], 403);
-//            }
-//        }
+        if(env('CHECK_IP') === true) {
 
-        //TODO Разобраться с записью лога в clickhouse при авторизации
-        //$log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'login', 'created_at' => now()]);
-        //$log->save();
+            if (request('proceed')) {
+                $this->writeToAuthLog('logout');
+                auth()->invalidate();
+                return $this->respondWithToken(auth()->attempt($credentials));
+            }
+
+            if (request('cancel')) {
+                return response()->json(['error' => 'Unauthorized'], 401);
+            }
+
+            if ($this->getAuthUser($user->email) == 'login') {
+                return response()->json(['error' => 'This ID is currently in use on another device.'], 403);
+            }
+
+            if ($this->getAuthUserIp($user->email) != request()->ip()) {
+                return response()->json(['error' => 'Your IP address was changed. You will be logged out'], 403);
+            }
+
+            if ($this->getAuthUserBrowser($user->email) != Agent::browser()) {
+                return response()->json(['error' => 'Your Browser was changed. You will be logged out'], 403);
+            }
+        }
+
+
+        $this->writeToAuthLog('login');
 
         $get_ip_address = $user->ipAddress()->pluck('ip_address')->toArray();
         if ($get_ip_address) {
@@ -106,8 +104,7 @@ class AuthController extends Controller
     public function logout()
     {
         $user = auth()->user();
-        $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser(), 'platform' => Agent::platform(), 'device_type' => Agent::device(), 'ip' => request()->ip(), 'status' => 'logout', 'created_at' => now()]);
-        $log->save();
+        $this->writeToAuthLog('logout');
         auth()->logout();
         return response()->json(['message' => 'Successfully logged out']);
     }
@@ -382,4 +379,9 @@ class AuthController extends Controller
         }
     }
 
+    public function writeToAuthLog($status){
+        $user = auth()->user();
+        $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => request()->ip(), 'status' => $status, 'created_at' => now()]);
+        $log->save();
+    }
 }
