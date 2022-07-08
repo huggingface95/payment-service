@@ -31,5 +31,6 @@ class DatabaseSeeder extends Seeder
         $this->call(FeeTypeSeeder::class);
         $this->call(FeePeriodSeeder::class);
         $this->call(OperationTypeSeeder::class);
+        $this->call(AccountStatesTableSeeder::class);
     }
 }

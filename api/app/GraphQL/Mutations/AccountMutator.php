@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Accounts;
+use App\Models\AccountState;
 use App\Models\GroupRole;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,6 +17,12 @@ class AccountMutator
 
         /** @var Accounts $account */
         $args['account_type'] = $this->setAccountType($args['group_type_id']);
+        if (!isset($args['account_number']))
+        {
+            $args['account_state_id'] = AccountState::WAITING_FOR_ACCOUNT_GENERATION;
+        } else {
+            $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
+        }
 
         return Accounts::create($args);
     }
@@ -35,6 +42,8 @@ class AccountMutator
     public function generate($root, array $args): void
     {
         $account = Accounts::find($args['id']);
+        $account->account_state_id = AccountState::AWAITING_ACCOUNT;
+        $account->save();
 
         dispatch(new IbanIndividualActivationJob($account));
     }

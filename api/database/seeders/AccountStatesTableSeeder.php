@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\AccountStates;
+use App\Models\AccountState;
 use Illuminate\Database\Seeder;
 
 class AccountStatesTableSeeder extends Seeder
@@ -14,29 +14,10 @@ class AccountStatesTableSeeder extends Seeder
      */
     public function run()
     {
-        AccountStates::create([
-            'id'        => 1,
-            'name'     => 'Active',
-        ]);
-
-        AccountStates::create([
-            'id'        => 2,
-            'name'     => 'Suspended',
-        ]);
-
-        AccountStates::create([
-            'id'        => 3,
-            'name'     => 'Blocked',
-        ]);
-
-        AccountStates::create([
-            'id'        => 4,
-            'name'     => 'Pending',
-        ]);
-
-        AccountStates::create([
-            'id'        => 5,
-            'name'     => 'Closed',
-        ]);
+        $accountStates = ['Waiting for approval','Waiting for Account# Generation','Awaiting Account#','Active','Closed','Suspended','Rejected'];
+        foreach ($accountStates as $accountState)
+        {
+            AccountState::firstOrCreate(['name'=>$accountState]);
+        }
     }
 }

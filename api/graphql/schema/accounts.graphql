@@ -17,6 +17,8 @@ type Accounts {
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Получить связанного Пеймент систем"
     payment_system: PaymentSystem @belongsTo(relation:"paymentSystem")
+    "Получить банк"
+    payment_bank: PaymentBank @belongsTo(relation:"paymentBank")
     "Получить связанный шаблон комиссии"
     commission_template: CommissionTemplate @belongsTo(relation:"commissionTemplate")
     "Получить групроле"

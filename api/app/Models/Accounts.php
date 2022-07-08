@@ -26,8 +26,6 @@ class Accounts extends BaseModel
 
     const BUSINESS = 'Business';
 
-    public $timestamps = false;
-
     protected $table = 'accounts';
 
     /**
