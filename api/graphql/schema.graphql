@@ -54,6 +54,10 @@ input AdditionalFieldInput {
     field_type: FieldTypes
 }
 
+input PivotTable {
+    sync: [ID]
+}
+
 #import schema/*.graphql
 
 

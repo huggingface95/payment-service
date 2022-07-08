@@ -20,18 +20,18 @@ input InputRegion{
     "Название региона"
     name: String!
     "Массив стран"
-    countries: [ID]
+    countries: PivotTable
 }
 
 extend type Mutation @guard {
     createRegion(
-        input: InputRegion!
+        input: InputRegion! @spread
     ): Region @create
 
     updateRegion(
         "ID региона"
         id: ID!
-        input: InputRegion!
+        input: InputRegion! @spread
     ): Region @update
 
     deleteRegion(
