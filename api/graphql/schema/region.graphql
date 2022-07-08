@@ -1,0 +1,41 @@
+"Регион"
+type Region {
+    id: ID!
+    "Название региона"
+    name: String!
+    "Получать страны"
+    countries: [Country] @belongsToMany(relation: "countries")
+}
+
+extend type Query @guard {
+    region(id: ID @eq): Region @find
+    """
+    Получить список регионов
+    """
+    regions(hasCountries: _ @whereHasConditions(columns: ["name", "id"])
+    ): [Region!]!   @paginate(defaultCount: 10) @orderBy(column: "name", direction: ASC)
+}
+
+input InputRegion{
+    "Название региона"
+    name: String!
+    "Массив стран"
+    countries: [ID]
+}
+
+extend type Mutation @guard {
+    createRegion(
+        input: InputRegion!
+    ): Region @create
+
+    updateRegion(
+        "ID региона"
+        id: ID!
+        input: InputRegion!
+    ): Region @update
+
+    deleteRegion(
+        "ID региона"
+        id: ID!
+    ): Role   @delete
+}

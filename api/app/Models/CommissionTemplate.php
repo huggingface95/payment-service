@@ -52,9 +52,9 @@ class CommissionTemplate extends BaseModel
      *
      * @return BelongsToMany
      */
-    public function countries(): BelongsToMany
+    public function regions(): BelongsToMany
     {
-        return $this->belongsToMany(Country::class, 'commission_template_country', 'commission_template_id', 'country_id');
+        return $this->belongsToMany(Region::class, 'commission_template_regions', 'commission_template_id', 'region_id');
     }
 
     /**

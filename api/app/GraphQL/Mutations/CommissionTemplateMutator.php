@@ -41,10 +41,10 @@ class CommissionTemplateMutator
             $commissionTemplate->currencies()->attach($args['currency_id']);
             unset($args['currency_id']);
         }
-        if (isset($args['country_id'])) {
-            $commissionTemplate->countries()->detach();
-            $commissionTemplate->countries()->attach($args['country_id']);
-            unset($args['country_id']);
+        if (isset($args['region_id'])) {
+            $commissionTemplate->regions()->detach();
+            $commissionTemplate->regions()->attach($args['region_id']);
+            unset($args['region_id']);
         }
         $commissionTemplate->update($args);
 
