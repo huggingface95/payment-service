@@ -8,8 +8,8 @@ type PaymentSystem {
     name: String!
     "Активна или нет"
     is_active: Boolean
-    "Получить связанные страны"
-    countries: [Country] @belongsToMany(relation:"countries")
+    "Получить связанные регионы"
+    regions: [Country] @belongsToMany(relation:"regions")
     "Получить связанные валюты"
     currencies: [Currencies] @belongsToMany(relation:"currencies")
     "Получить Платежные провайдеры"
@@ -21,7 +21,7 @@ extend type Query @guard {
     paymentSystem(id: ID @eq): PaymentSystem   @find
     "Получить список платежных систем"
     paymentSystems(
-        hasCountries: _ @whereHasConditions(columns: ["name", "id"]),
+        hasRegions: _ @whereHasConditions(columns: ["name", "id"]),
         hasCurrencies: _ @whereHasConditions(columns: ["name", "id"]),
         hasProviders: _ @whereHasConditions(columns: ["name", "id"]),
         where: _ @whereConditions(columns: ["name"]),
@@ -37,7 +37,7 @@ extend type Mutation @guard {
         "Активный не активный (true/false)"
         is_active: Boolean
         "массив ID стран"
-        countries: [ID]
+        regions: [ID]
         "массив ID валют"
         currencies: [ID]
         "массив ID провайдеров"
@@ -53,7 +53,7 @@ extend type Mutation @guard {
         "Активный не активный (true/false)"
         is_active: Boolean
         "массив ID стран"
-        countries: [ID]
+        regions: [ID]
         "массив ID валют"
         currencies: [ID]
         "массив ID провайдеров"

@@ -24,9 +24,9 @@ class PaymentSystem extends BaseModel
         return $this->belongsToMany(Currencies::class, 'payment_system_currencies', 'payment_system_id', 'currency_id');
     }
 
-    public function countries(): BelongsToMany
+    public function regions(): BelongsToMany
     {
-        return $this->belongsToMany(Country::class, 'payment_system_countries', 'payment_system_id', 'country_id');
+        return $this->belongsToMany(Region::class, 'payment_system_regions', 'payment_system_id', 'region_id');
     }
 
     public function providers(): BelongsToMany

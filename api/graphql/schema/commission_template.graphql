@@ -24,7 +24,7 @@ type CommissionTemplate {
     account: Accounts @belongsTo(relation: "account")
     "Получить компанию"
     company: [ApplicantCompany] @belongsToMany(relation: "company")
-    countries: [Country] @belongsToMany(relation: "countries")
+    regions: [Region] @belongsToMany(relation: "regions")
     currencies: [Currencies] @belongsToMany(relation: "currencies")
     commission_template_limits: [CommissionTemplateLimit] @hasMany(relation: "commissionTemplateLimits")
 }
@@ -79,8 +79,8 @@ extend type Mutation @guard {
         payment_provider_id: ID
         "массив ID бизнесов"
         business_activity: [ID]
-        "массив ID стран"
-        country_id: [ID]
+        "массив ID регионов"
+        region_id: [ID]
         "массив ID валют"
         currency_id: [ID]
         "массив ID лимитов"
