@@ -9,20 +9,23 @@ use Illuminate\Support\Facades\Auth;
 
 class AccountMutator
 {
-    public function create($root, array &$args): Accounts
+    public function create($root, array $args): Accounts
     {
+        $args = $args['input'];
         $args['member_id'] = Auth::user()->id;
+
         /** @var Accounts $account */
-        $args['account_type'] = $this->setAccountType($args['input']['group_type_id']);
+        $args['account_type'] = $this->setAccountType($args['group_type_id']);
 
         return Accounts::create($args);
     }
 
     public function update($root, array $args): Accounts
     {
+        $args = $args['input'];
         /** @var Accounts $account */
         $account = Accounts::find($args['id']);
-        $args['account_type'] = $this->setAccountType($args['input']['group_type_id']);
+        $args['account_type'] = $this->setAccountType($args['group_type_id']);
 
         $account->update($args);
 
