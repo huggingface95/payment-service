@@ -177,12 +177,12 @@ class Accounts extends BaseModel
 
     public function applicantIndividual()
     {
-        return $this->morphedByOne(ApplicantIndividual::class, 'client', AccountIndividualCompany::class, 'account_id');
+        return $this->morphedByOne(ApplicantIndividual::class, 'client', AccountClient::class, 'client_id');
     }
 
     public function applicantCompany()
     {
-        return $this->morphedByOne(ApplicantCompany::class, 'client', AccountIndividualCompany::class, 'account_id');
+        return $this->morphedByOne(ApplicantCompany::class, 'client', AccountClient::class, 'client_id');
     }
 
     public function limits(): HasMany
