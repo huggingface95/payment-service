@@ -10,15 +10,15 @@ type Accounts {
     "Получить связанного владельца"
     owner: ApplicantIndividual @belongsTo(relation:"owner")
     "Номер аккаунта"
-    account_number: String!
+    account_number: String
     "Тип аккаунта"
     account_type: AccountType
     "Получить связанного платежного провайдера"
-    payment_provider_id: PaymentProvider @belongsTo(relation:"paymentProvider")
+    payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Получить связанного Пеймент систем"
     payment_system: PaymentSystem @belongsTo(relation:"paymentSystem")
     "Получить связанный шаблон комиссии"
-    commission_template_id: CommissionTemplate @belongsTo(relation:"commissionTemplate")
+    commission_template: CommissionTemplate @belongsTo(relation:"commissionTemplate")
     "Получить групроле"
     group: GroupRole @belongsTo(relation:"groupRole")
     "Получить тип группы"
@@ -36,11 +36,11 @@ type Accounts {
     "Основной или нет"
     is_primary: Boolean
     "Текущий баланс"
-    current_balance: Int!
+    current_balance: Int
     "Текущий баланс"
-    reserved_balance: Int!
+    reserved_balance: Int
     "Текущий баланс"
-    available_balance: Int!
+    available_balance: Int
     created_at: DateTime
     updated_at: DateTime
     activated_at : DateTime
