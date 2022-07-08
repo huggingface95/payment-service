@@ -88,7 +88,6 @@ extend type Query @guard {
 }
 
 input QueryAccountCondition {
-    client_id: ID @eq
     company_id: ID @eq
     payment_provider_id: ID @eq
     owner_id: ID @eq
@@ -102,6 +101,10 @@ input QueryAccountCondition {
     account_type: String @eq
     account_state_id: ID @eq
     account_name: String @like
+}
+
+input QueryClientCondition {
+    id: ID!
 }
 
 enum QueryAccountWhereColumn {
