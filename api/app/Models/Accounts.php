@@ -54,7 +54,6 @@ class Accounts extends BaseModel
         'group_type_id',
         'group_role_id',
         'payment_system_id',
-        'client_id',
         'payment_bank_id',
     ];
 
@@ -72,6 +71,7 @@ class Accounts extends BaseModel
 
         return parent::load($relations);
     }
+
 
     public function member(): BelongsTo
     {
@@ -175,14 +175,15 @@ class Accounts extends BaseModel
 
     }
 
+
     public function applicantIndividual()
     {
-        return $this->morphedByOne(ApplicantIndividual::class, 'client', AccountClient::class, 'client_id');
+        return $this->morphedByOne(ApplicantIndividual::class, 'client', AccountIndividualCompany::class, 'account_id');
     }
 
     public function applicantCompany()
     {
-        return $this->morphedByOne(ApplicantCompany::class, 'client', AccountClient::class, 'client_id');
+        return $this->morphedByOne(ApplicantCompany::class, 'client', AccountIndividualCompany::class, 'account_id');
     }
 
     public function limits(): HasMany
