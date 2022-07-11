@@ -76,11 +76,8 @@ class AuthController extends Controller
         }
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
-            if ($this->verify2FA(request())->getData()->data == 'success') {
-                return $this->respondWithToken2Fa($token);
-            } else {
-                return response()->json(['data' => 'Unable to verify your code'], 401);
-            }
+            DB::table('oauth_auth_codes')->insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+            return $this->respondWithToken2Fa($token);
         } else {
             return $this->respondWithToken($token);
         }
@@ -210,6 +207,12 @@ class AuthController extends Controller
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
+        }
+
+        $expires = DB::table('oauth_auth_codes')->select('*')->where('user_id', $user->id)->orderByDesc('expires_at')->limit(1)->get();
+        if (strtotime($expires[0]->expires_at) < strtotime(now())){
+            auth()->invalidate();
+            return response()->json(['error' => 'Token has expired'], 403);
         }
 
         $token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
