@@ -70,11 +70,10 @@ extend type Query @guard {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     accounts(
-        hasClientable: _ @whereHasConditions(columns: ["id"]),
         query: QueryAccountCondition
         created_at: DateRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id","created_at"])
-    ): [Account!]!   @paginate( defaultCount: 10) @orderBy(column: "id", direction: DESC)
+    ): [Account!]!   @paginateWithConditions(defaultCount: 10) @orderBy(column: "id", direction: DESC)
 
     """
     Получить список accounts для accountDetails
@@ -97,6 +96,7 @@ extend type Query @guard {
 }
 
 input QueryAccountCondition {
+    client: String @like
     company: String @like
     payment_provider: String @eq
     owner: String @eq
@@ -104,12 +104,10 @@ input QueryAccountCondition {
     currency_id: ID @eq
     group_role: String @like
     group_type_id: ID @eq
-    member_id: ID @eq
+    member: String @like
     is_primary: Boolean @eq
-    commission_template: String @eq
-    account_type: AccountType @eq
+    commission_template: String @like
     account_state_id: ID @eq
-    account_name: String @like
 }
 input QueryAccountDetailsCondition {
     account_name: String @like
@@ -127,25 +125,6 @@ input FilterAccountDetails {
 input QueryClientCondition {
     id: ID!
 }
-
-enum QueryAccountWhereColumn {
-    ACCOUNT_NUMBER @enum(value: "account_number")
-    ACCOUNT_TYPE @enum(value: "account_type")
-    ACCOUNT_STATE_ID @enum(value: "account_state_id")
-    CLIENT_ID @enum(value: "client_id")
-    OWNER_ID @enum(value: "owner_id")
-    ACCOUNT_NAME @enum(value: "account_name")
-    CURRENCY_ID @enum(value: "currency_id")
-    PAYMENT_PROVIDER_ID @enum(value: "payment_provider_id")
-    COMPANY_ID @enum(value: "company_id")
-    GROUP_ROLE_ID @enum(value: "group_role_id")
-    GROUP_TYPE_ID @enum(value: "group_type_id")
-    MEMBER_ID @enum(value: "member_id")
-    ACCOUNT_NUMBER @enum(value: "account_number")
-    IS_PRIMARY @enum(value: "is_primary")
-    COMMISSION_TEMPLATE_ID @enum(value: "commission_template_id")
-}
-
 
 input InputAccount{
     "ID компании",
@@ -178,13 +157,15 @@ input InputAccount{
     payment_system_id: ID!
     "ID банка"
     payment_bank_id: ID
+    "фильтр"
+    query: QueryAccountCondition
 }
 
 extend type Mutation @guard {
     "Создать аккаунт"
     createAccount(
         input: InputAccount!
-    ):Account @field(resolver:"AccountMutator@create")
+    ):[Account!]! @field(resolver:"AccountMutator@create")
 
     "Редактирование аккаунта"
     updateAccount(
