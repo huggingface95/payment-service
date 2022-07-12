@@ -13,7 +13,7 @@ type CommissionPriceList {
     "Получить компанию"
     company: [ApplicantCompany] @belongsToMany(relation: "company")
     "Получить связанный аккаунт"
-    account: Accounts @hasOne(relation: "account")
+    account: Account @hasOne(relation: "account")
     "Получить связанную платежную систему"
     payment_system: PaymentSystem @belongsTo(relation:"PaymentSystem")
 	"Получить связанный платежный шаблон"

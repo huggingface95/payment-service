@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property CommissionTemplateLimitPeriod $commissionTemplateLimitPeriod
  * @property CommissionTemplateLimitActionType $commissionTemplateLimitActionType
  * @property Currencies $currency
- * @property Accounts $account
+ * @property Account $account
  */
 class AccountLimit extends BaseModel
 {
@@ -45,7 +45,7 @@ class AccountLimit extends BaseModel
 
     public function account(): BelongsTo
     {
-        return $this->belongsTo(Accounts::class, 'account_id');
+        return $this->belongsTo(Account::class, 'account_id');
     }
 
     public function commissionTemplateLimitType(): BelongsTo

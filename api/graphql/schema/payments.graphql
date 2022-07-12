@@ -39,7 +39,7 @@ type Payments {
     "Получить связанный провайдер"
     payment_provider: PaymentProvider @belongsTo(relation:"PaymentProvider")
     "Получить связанный аккаунт"
-    account: Accounts @belongsTo(relation:"Accounts")
+    account: Account @belongsTo(relation:"Account")
     "Получить связанную компанию"
     company: Companies @belongsTo(relation:"Companies")
     "Номер платежа"

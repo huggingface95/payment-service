@@ -3,19 +3,19 @@
 namespace App\GraphQL\Mutations;
 
 use App\Jobs\Redis\IbanIndividualActivationJob;
-use App\Models\Accounts;
+use App\Models\Account;
 use App\Models\AccountState;
 use App\Models\GroupRole;
 use Illuminate\Support\Facades\Auth;
 
 class AccountMutator
 {
-    public function create($root, array $args): Accounts
+    public function create($root, array $args): Account
     {
         $args = $args['input'];
         $args['member_id'] = Auth::user()->id;
 
-        /** @var Accounts $account */
+        /** @var Account $account */
         $args['account_type'] = $this->setAccountType($args['group_type_id']);
         if (!isset($args['account_number']))
         {
@@ -24,14 +24,14 @@ class AccountMutator
             $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
         }
 
-        return Accounts::create($args);
+        return Account::create($args);
     }
 
-    public function update($root, array $args): Accounts
+    public function update($root, array $args): Account
     {
         $args = $args['input'];
-        /** @var Accounts $account */
-        $account = Accounts::find($args['id']);
+        /** @var Account $account */
+        $account = Account::find($args['id']);
         $args['account_type'] = $this->setAccountType($args['group_type_id']);
 
         $account->update($args);
@@ -41,7 +41,7 @@ class AccountMutator
 
     public function generate($root, array $args): void
     {
-        $account = Accounts::find($args['id']);
+        $account = Account::find($args['id']);
         $account->account_state_id = AccountState::AWAITING_ACCOUNT;
         $account->save();
 
@@ -51,9 +51,9 @@ class AccountMutator
     protected function setAccountType(int $groupId)
     {
         if ($groupId == GroupRole::INDIVIDUAL) {
-            return Accounts::PRIVATE;
+            return Account::PRIVATE;
         } elseif ($groupId == GroupRole::COMPANY) {
-            return Accounts::BUSINESS;
+            return Account::BUSINESS;
         }
     }
 }
