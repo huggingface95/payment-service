@@ -6,11 +6,12 @@ use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Account;
 use App\Models\AccountState;
 use App\Models\GroupRole;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class AccountMutator
 {
-    public function create($root, array $args): Account
+    public function create($root, array $args)
     {
         $args = $args['input'];
         $args['member_id'] = Auth::user()->id;
@@ -23,8 +24,12 @@ class AccountMutator
         } else {
             $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
         }
-
-        return Account::create($args);
+        Account::create($args);
+        if (isset($args['query'])) {
+            return Account::getAccountFilter($args['query'])->paginate(env('PAGINATE_DEFAULT_COUNT'));
+        } else {
+            return Account::paginate(env('PAGINATE_DEFAULT_COUNT'));
+        }
     }
 
     public function update($root, array $args): Account
