@@ -1,13 +1,13 @@
 """
 Реквизиты
-Banking -> Accounts -> Requisites
+Banking -> Account -> Requisites
 """
 type Requisites {
     id: ID!
     created_at: DateTime
     updated_at: DateTime
     "Получить связанный аккаунт"
-    account_id: Accounts @belongsTo(relation:"Accounts")
+    account_id: Account @belongsTo(relation:"Account")
     "Получатель"
     recipient: String!
     "Registration Number"

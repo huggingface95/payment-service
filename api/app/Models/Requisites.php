@@ -32,7 +32,7 @@ class Requisites extends BaseModel
      */
     public function Accounts()
     {
-        return $this->belongsTo(Accounts::class, 'account_id', 'id');
+        return $this->belongsTo(Account::class, 'account_id', 'id');
     }
 
     public static function PDFTable($account_id)

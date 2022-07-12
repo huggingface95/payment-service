@@ -21,7 +21,7 @@ type CommissionTemplate {
     "Получить связанного мембера"
     owner: [ApplicantIndividual] @belongsToMany(relation: "owner")
     "Получить связанный аккаунт"
-    account: Accounts @belongsTo(relation: "account")
+    account: Account @belongsTo(relation: "account")
     "Получить компанию"
     company: [ApplicantCompany] @belongsToMany(relation: "company")
     regions: [Region] @belongsToMany(relation: "regions")

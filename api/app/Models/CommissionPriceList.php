@@ -95,6 +95,6 @@ class CommissionPriceList extends BaseModel
 
     public function account(): HasOneThrough
     {
-        return $this->hasOneThrough(Accounts::class, CommissionTemplate::class, 'id', 'commission_template_id', 'commission_template_id', 'id', );
+        return $this->hasOneThrough(Account::class, CommissionTemplate::class, 'id', 'commission_template_id', 'commission_template_id', 'id', );
     }
 }

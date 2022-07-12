@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property int $operation_type_id
  * @property ApplicantIndividual $applicantIndividual
  * @property CommissionPriceList $commissionPriceList
- * @property Accounts $Accounts
+ * @property Account $Account
  * @property OperationType $PaymentOperation
  * @property Currencies $Currencies
  */
@@ -106,7 +106,7 @@ class Payments extends BaseModel
      */
     public function Accounts(): BelongsTo
     {
-        return $this->belongsTo(Accounts::class, 'account_id');
+        return $this->belongsTo(Account::class, 'account_id');
     }
 
     /**

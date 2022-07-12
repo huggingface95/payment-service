@@ -18,8 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string limit_currency
  * @property int period
  * @property float amount
-
- * @property Accounts $account
+ * @property Account $account
  */
 class AccountReachedLimit extends BaseModel
 {
@@ -36,6 +35,6 @@ class AccountReachedLimit extends BaseModel
 
     public function account(): BelongsTo
     {
-        return $this->belongsTo(Accounts::class, 'account_id');
+        return $this->belongsTo(Account::class, 'account_id');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\DTO\Account\IbanRequestDTO;
 use App\DTO\TransformerDTO;
-use App\Models\Accounts;
+use App\Models\Account;
 use App\Models\AccountState;
 use GuzzleHttp\Client;
 
@@ -15,11 +15,11 @@ class IbanCompanyActivationJob extends Job
      *
      * @return void
      */
-    protected Accounts $account;
+    protected Account $account;
 
     protected IbanRequestDTO $ibanRequest;
 
-    public function __construct(Accounts $account)
+    public function __construct(Account $account)
     {
         $this->account = $account;
         $this->ibanRequest = TransformerDTO::transform(IbanRequestDTO::class, $account);
