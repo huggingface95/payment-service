@@ -184,11 +184,11 @@ class AuthController extends Controller
         $user->google2fa_secret =
             str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), config('lumen2fa.string_pad', 'X'));
         $user->save();
+        OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
 
         if ($this->verify2FA($request)->getData()->data == 'success') {
             $user->createToken($user->fullname)->accessToken;
             $user->two_factor_auth_setting_id = 2;
-            OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
             $user->save();
 
             return response()->json(['data' => '2fa activated']);
