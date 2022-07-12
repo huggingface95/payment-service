@@ -41,6 +41,9 @@ class AuthController extends Controller
 
         $user = auth()->user();
 
+        //dump(AuthenticationLog::select('*')->orderByDesc('created_at')->getRows());
+        //dump(AuthenticationLog::where('member', 'test@test.com')->delete());
+
         if(env('CHECK_IP') === true) {
 
             if (request('proceed')) {
@@ -66,9 +69,6 @@ class AuthController extends Controller
             }
         }
 
-
-        $this->writeToAuthLog('login');
-
         $get_ip_address = $user->ipAddress()->pluck('ip_address')->toArray();
         if ($get_ip_address) {
             if (! in_array(request()->ip(), $get_ip_address)) {
@@ -77,9 +77,11 @@ class AuthController extends Controller
         }
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
+            $this->writeToAuthLog('login');
             OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
             return $this->respondWithToken2Fa($token);
         } else {
+            $this->writeToAuthLog('login');
             return $this->respondWithToken($token);
         }
     }
