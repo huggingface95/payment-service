@@ -9,7 +9,7 @@ type PaymentSystem {
     "Активна или нет"
     is_active: Boolean
     "Получить связанные регионы"
-    regions: [Country] @belongsToMany(relation:"regions")
+    regions: [Region] @belongsToMany(relation:"regions")
     "Получить связанные валюты"
     currencies: [Currencies] @belongsToMany(relation:"currencies")
     "Получить Платежные провайдеры"
@@ -37,11 +37,11 @@ extend type Mutation @guard {
         "Активный не активный (true/false)"
         is_active: Boolean
         "массив ID стран"
-        regions: [ID]
+        regions: PivotTable
         "массив ID валют"
-        currencies: [ID]
+        currencies: PivotTable
         "массив ID провайдеров"
-        providers: [ID]
+        providers: PivotTable
     ): PaymentSystem   @create
 
     "Обновить поля платежной системы"
@@ -53,11 +53,11 @@ extend type Mutation @guard {
         "Активный не активный (true/false)"
         is_active: Boolean
         "массив ID стран"
-        regions: [ID]
+        regions: PivotTable
         "массив ID валют"
-        currencies: [ID]
+        currencies: PivotTable
         "массив ID провайдеров"
-        providers: [ID]
+        providers: PivotTable
     ): PaymentSystem   @update
 
     "Удалить платежную систему"
