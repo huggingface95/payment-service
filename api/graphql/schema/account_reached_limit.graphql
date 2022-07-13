@@ -1,13 +1,13 @@
 """
 AccountReachedLimit
-Banking -> Accounts -> Account Limit
+Banking -> Account -> Account Limit
 """
 type AccountReachedLimit {
     id: ID!
     "ID account"
     account_id: ID!
     "Получить Account"
-    account: Accounts @belongsTo(relation:"account")
+    account: Account @belongsTo(relation:"account")
     "Тип"
     group_type: String!
     "Имя аппликанта"

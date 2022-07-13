@@ -1,6 +1,6 @@
 """
 Аккаунты
-Banking -> Accounts -> Account Limit
+Banking -> Account -> Account Limit
 """
 type AccountLimit {
     id: ID!
@@ -29,7 +29,7 @@ type AccountLimit {
     "Получить события лимита"
     commission_template_limit_action_type: CommissionTemplateLimitActionType @belongsTo(relation:"commissionTemplateLimitActionType")
     "Получить Account"
-    account: Accounts @belongsTo(relation:"account")
+    account: Account @belongsTo(relation:"account")
 
 }
 

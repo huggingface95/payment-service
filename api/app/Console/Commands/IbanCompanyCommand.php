@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Jobs\IbanCompanyActivationJob;
-use App\Models\Accounts;
+use App\Models\Account;
 use App\Models\AccountState;
 use Illuminate\Console\Command;
 
@@ -36,12 +36,12 @@ class IbanCompanyCommand extends Command
      */
     public function handle()
     {
-        $companyIbanActivateAccounts = Accounts::query()
+        $companyIbanActivateAccounts = Account::query()
             ->where('status', AccountState::WAITING_IBAN_ACTIVATION)
             ->whereHas('applicantCompany')
             ->get();
 
-        /** @var Accounts $account */
+        /** @var Account $account */
         foreach ($companyIbanActivateAccounts as $account) {
             dispatch(new IbanCompanyActivationJob($account));
         }
