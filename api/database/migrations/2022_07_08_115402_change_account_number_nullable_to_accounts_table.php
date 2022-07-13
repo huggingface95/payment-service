@@ -19,7 +19,7 @@ class ChangeAccountNumberNullableToAccountsTable extends Migration
             $table->dropUnique('accounts_account_name_unique');
         });
 
-        DB::statement("CREATE UNIQUE INDEX accounts_name_number_unique ON accounts (account_name, (account_number IS NULL)) WHERE account_number IS NULL;");
+        DB::statement('CREATE UNIQUE INDEX accounts_name_number_unique ON accounts (account_name, (account_number IS NULL)) WHERE account_number IS NULL;');
     }
 
     /**

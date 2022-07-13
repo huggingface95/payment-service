@@ -14,9 +14,8 @@ class AccountStatesTableSeeder extends Seeder
      */
     public function run()
     {
-        $accountStates = ['Waiting for approval','Waiting for Account# Generation','Awaiting Account#','Active','Closed','Suspended','Rejected'];
-        foreach ($accountStates as $accountState)
-        {
+        $accountStates = ['Waiting for approval', 'Waiting for Account# Generation', 'Awaiting Account#', 'Active', 'Closed', 'Suspended', 'Rejected'];
+        foreach ($accountStates as $accountState) {
             AccountState::firstOrCreate(['name'=>$accountState]);
         }
     }

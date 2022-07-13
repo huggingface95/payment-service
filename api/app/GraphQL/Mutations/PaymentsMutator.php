@@ -4,8 +4,8 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\PaymentJob;
-use App\Models\AccountLimit;
 use App\Models\Account;
+use App\Models\AccountLimit;
 use App\Models\ApplicantBankingAccess;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;

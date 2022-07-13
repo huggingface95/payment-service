@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Builder;
 
 interface BaseModelInterface
 {
-    public static function getAccountFilter($filter):Builder;
+    public static function getAccountFilter($filter): Builder;
 }

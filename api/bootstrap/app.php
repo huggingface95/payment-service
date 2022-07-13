@@ -156,7 +156,7 @@ $app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
 $app->alias('mailer', Illuminate\Mail\Mailer::class);
 $app->alias('Google2FA', \PragmaRX\Google2FALaravel\Facade::class);
 $app->alias('Notification', Illuminate\Support\Facades\Notification::class);
-$app->alias('Agent',  Jenssegers\Agent\Facades\Agent::class);
+$app->alias('Agent', Jenssegers\Agent\Facades\Agent::class);
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',

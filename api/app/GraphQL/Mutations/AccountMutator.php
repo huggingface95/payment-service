@@ -6,7 +6,6 @@ use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Account;
 use App\Models\AccountState;
 use App\Models\GroupRole;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class AccountMutator
@@ -18,8 +17,7 @@ class AccountMutator
 
         /** @var Account $account */
         $args['account_type'] = $this->setAccountType($args['group_type_id']);
-        if (!isset($args['account_number']))
-        {
+        if (! isset($args['account_number'])) {
             $args['account_state_id'] = AccountState::WAITING_FOR_ACCOUNT_GENERATION;
         } else {
             $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
