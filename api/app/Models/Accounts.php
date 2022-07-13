@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Class Accounts
@@ -55,21 +57,12 @@ class Accounts extends BaseModel
         'payment_bank_id',
     ];
 
-    public static self $clone;
-
     protected static function booted()
     {
         parent::booted();
+        static::addGlobalScope(new AccountIndividualsCompaniesScope());
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
-
-    public function load($relations): self
-    {
-        self::$clone = $this->replicate();
-
-        return parent::load($relations);
-    }
-
 
     public function member(): BelongsTo
     {
@@ -156,30 +149,26 @@ class Accounts extends BaseModel
         return $this->hasOne(AccountIndividualCompany::class, 'account_id', 'id');
     }
 
-    public function clientable()
+    public function clientable(): MorphTo
     {
-        /** @var Accounts $model */
-        try {
-            $model = self::$clone;
-        } catch (\Error $ex) {
-            $model = $this;
-        }
+        return $this->morphTo('clientable', 'client_type', 'client_id');
+    }
 
-        if ($this->account_type === self::BUSINESS) {
+    public function clientableAttach(): \Ankurk91\Eloquent\Relations\MorphToOne
+    {
+        if ($this->account_type == self::BUSINESS) {
             return $this->applicantCompany();
         } else {
             return $this->applicantIndividual();
         }
-
     }
 
-
-    public function applicantIndividual()
+    public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
         return $this->morphedByOne(ApplicantIndividual::class, 'client', AccountIndividualCompany::class, 'account_id');
     }
 
-    public function applicantCompany()
+    public function applicantCompany(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
         return $this->morphedByOne(ApplicantCompany::class, 'client', AccountIndividualCompany::class, 'account_id');
     }

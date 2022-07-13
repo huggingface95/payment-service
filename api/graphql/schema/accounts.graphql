@@ -64,16 +64,15 @@ enum AccountType {
 
 extend type Query @guard {
     "Получить аккаунт по ID"
-    account(id: ID @eq): Accounts   @find
+    account(id: ID @eq): Accounts @find
     """
     Получить список аккаунтов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     accounts(
-        hasClientable: _ @whereHasConditions(columns: ["id"]),
-        query: QueryAccountCondition
+        query: QueryAccountCondition,
         created_at: DateRange @whereBetween,
-        orderBy: _ @orderBy(columns: ["id", "client_id"])
+        orderBy: _ @orderBy(columns: ["id"])
     ): [Accounts!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 
     """
@@ -103,7 +102,15 @@ input QueryAccountCondition {
     account_type: String @eq
     account_state_id: ID @eq
     account_name: String @like
+    client_id: ID @eq
+    client_type: AccountClientsType @eq
 }
+
+enum AccountClientsType {
+    INDIVIDUAL @enum(value: "App\\Models\\ApplicantIndividual")
+    COMPANY @enum(value: "App\\Models\\ApplicantCompany")
+}
+
 
 input QueryClientCondition {
     id: ID!
@@ -113,7 +120,6 @@ enum QueryAccountWhereColumn {
     ACCOUNT_NUMBER @enum(value: "account_number")
     ACCOUNT_TYPE @enum(value: "account_type")
     ACCOUNT_STATE_ID @enum(value: "account_state_id")
-    CLIENT_ID @enum(value: "client_id")
     OWNER_ID @enum(value: "owner_id")
     ACCOUNT_NAME @enum(value: "account_name")
     CURRENCY_ID @enum(value: "currency_id")
@@ -125,6 +131,8 @@ enum QueryAccountWhereColumn {
     ACCOUNT_NUMBER @enum(value: "account_number")
     IS_PRIMARY @enum(value: "is_primary")
     COMMISSION_TEMPLATE_ID @enum(value: "commission_template_id")
+    CLIENT_ID @enum(value: "client_id")
+    CLIENT_TYPE @enum(value: "client_type")
 }
 
 
@@ -133,8 +141,6 @@ input InputAccount{
     company_id :ID!
     "ID валюты"
     currency_id: ID!
-    "ID аппликанта"
-    client_id: ID!
     "ID владельца"
     owner_id: ID!
     "Номер аккаунта"
@@ -159,18 +165,20 @@ input InputAccount{
     payment_system_id: ID!
     "ID банка"
     payment_bank_id: ID
+    "clientable"
+    clientableAttach: PivotTable
 }
 
 extend type Mutation @guard {
     "Создать аккаунт"
     createAccount(
-        input: InputAccount!
+        input: InputAccount! @spread
     ):Accounts @field(resolver:"AccountMutator@create")
 
     "Редактирование аккаунта"
     updateAccount(
         id: ID!
-        input: InputAccount!
+        input: InputAccount! @spread
     ): Accounts   @field(resolver:"AccountMutator@update")
 
     "Удалить аккаунт"
