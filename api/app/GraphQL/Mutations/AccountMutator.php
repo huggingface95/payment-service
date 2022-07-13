@@ -12,7 +12,6 @@ class AccountMutator
 {
     public function create($root, array $args)
     {
-        $args = $args['input'];
         $args['member_id'] = Auth::user()->id;
 
         /** @var Account $account */
@@ -23,6 +22,7 @@ class AccountMutator
             $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
         }
         Account::create($args);
+
         if (isset($args['query'])) {
             return Account::getAccountFilter($args['query'])->paginate(env('PAGINATE_DEFAULT_COUNT'));
         } else {
@@ -32,7 +32,6 @@ class AccountMutator
 
     public function update($root, array $args): Account
     {
-        $args = $args['input'];
         /** @var Account $account */
         $account = Account::find($args['id']);
         $args['account_type'] = $this->setAccountType($args['group_type_id']);
