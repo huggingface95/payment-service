@@ -101,6 +101,7 @@ extend type Query @guard {
 }
 
 input QueryAccountCondition {
+    client: String @like
     company: String @like
     payment_provider: String @eq
     owner: String @eq
@@ -112,8 +113,8 @@ input QueryAccountCondition {
     is_primary: Boolean @eq
     commission_template: String @like
     account_state_id: ID @eq
-    client_id: ID @eq
-    client_type: AccountClientsType @eq
+    #client_id: ID @eq
+    #client_type: AccountClientsType @eq
 }
 input QueryAccountDetailsCondition {
     account_name: String @like
@@ -150,8 +151,8 @@ enum QueryAccountWhereColumn {
     ACCOUNT_NUMBER @enum(value: "account_number")
     IS_PRIMARY @enum(value: "is_primary")
     COMMISSION_TEMPLATE_ID @enum(value: "commission_template_id")
-    CLIENT_ID @enum(value: "client_id")
-    CLIENT_TYPE @enum(value: "client_type")
+    #CLIENT_ID @enum(value: "client_id")
+    #CLIENT_TYPE @enum(value: "client_type")
 }
 
 

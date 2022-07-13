@@ -5,7 +5,6 @@ namespace App\Models;
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Interfaces\BaseModelInterface;
-use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -62,7 +61,7 @@ class Account extends BaseModel implements BaseModelInterface
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new AccountIndividualsCompaniesScope());
+//        static::addGlobalScope(new AccountIndividualsCompaniesScope());
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
 
