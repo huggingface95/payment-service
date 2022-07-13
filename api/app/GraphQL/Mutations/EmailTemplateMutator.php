@@ -38,7 +38,7 @@ class EmailTemplateMutator extends BaseMutator
                 throw new GraphqlException('SMTP configuration for this company not found', 'Not found', '404');
             }
             $smtp->replay_to = $args['email'];
-            $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, (isset($args['content'])) ?? ' ', $args['subject']);
+            $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, $args['content'] ?? ' ', $args['subject']);
             $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
             dispatch(new SendMailJob($config, $data));
 

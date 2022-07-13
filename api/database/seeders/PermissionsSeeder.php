@@ -2444,26 +2444,26 @@ class PermissionsSeeder extends Seeder
                                     ],
                                 ],
                             ],
-                            'Settings:Accounts' => [
+                            'Settings:Account' => [
                                 'data' => [
-                                    'name' => 'Settings:Accounts',
+                                    'name' => 'Settings:Account',
                                     'type' => 'individual',
                                     'separator' => 'business',
                                     'order' => 14,
                                 ],
                                 'list' => [
-                                    'Settings:Accounts.Read' => [
+                                    'Settings:Account.Read' => [
                                         'data' => [
-                                            'name' => 'Settings:Accounts.Read',
+                                            'name' => 'Settings:Account.Read',
                                             'display_name' => 'Read',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Settings:Accounts.Edit' => [
+                                    'Settings:Account.Edit' => [
                                         'data' => [
-                                            'name' => 'Settings:Accounts.Edit',
+                                            'name' => 'Settings:Account.Edit',
                                             'display_name' => 'Edit',
                                             'guard_name' => 'api',
                                             'order' => null,
@@ -3064,26 +3064,26 @@ class PermissionsSeeder extends Seeder
                                     ],
                                 ],
                             ],
-                            'Settings:Accounts' => [
+                            'Settings:Account' => [
                                 'data' => [
-                                    'name' => 'Settings:Accounts',
+                                    'name' => 'Settings:Account',
                                     'type' => 'individual',
                                     'separator' => 'private',
                                     'order' => 14,
                                 ],
                                 'list' => [
-                                    'Settings:Accounts.Read' => [
+                                    'Settings:Account.Read' => [
                                         'data' => [
-                                            'name' => 'Settings:Accounts.Read',
+                                            'name' => 'Settings:Account.Read',
                                             'display_name' => 'Read',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Settings:Accounts.Edit' => [
+                                    'Settings:Account.Edit' => [
                                         'data' => [
-                                            'name' => 'Settings:Accounts.Edit',
+                                            'name' => 'Settings:Account.Edit',
                                             'display_name' => 'Edit',
                                             'guard_name' => 'api',
                                             'order' => null,

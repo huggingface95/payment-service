@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\Accounts;
+use App\Models\Account;
 
 class AccountsTest extends TestCase
 {
     /**
-     * Accounts Testing
+     * Account Testing
      *
      * @return void
      */
@@ -73,7 +73,7 @@ class AccountsTest extends TestCase
     public function testUpdateAccount()
     {
         $this->login();
-        $account = \App\Models\Accounts::orderBy('id', 'DESC')->take(1)->get();
+        $account = \App\Models\Account::orderBy('id', 'DESC')->take(1)->get();
         $this->graphQL('
             mutation UpdateAccount(
                 $id: ID!
@@ -132,7 +132,7 @@ class AccountsTest extends TestCase
     public function testQueryAccounts()
     {
         $this->login();
-        $accounts = Accounts::orderBy('id')->take(1)->get();
+        $accounts = Account::orderBy('id')->take(1)->get();
         ($this->graphQL('
             query Account($id:ID!){
                 account(id: $id) {
@@ -153,7 +153,7 @@ class AccountsTest extends TestCase
     public function testQueryAccountsOrderBy()
     {
         $this->login();
-        $account = \App\Models\Accounts::orderBy('id', 'DESC')->get();
+        $account = \App\Models\Account::orderBy('id', 'DESC')->get();
         $this->graphQL('
         query {
             accounts(orderBy: { column: ID, order: DESC }) {
@@ -171,7 +171,7 @@ class AccountsTest extends TestCase
     public function testQueryAccountsWhere()
     {
         $this->login();
-        $account = \App\Models\Accounts::where('owner_id', 2)->get();
+        $account = \App\Models\Account::where('owner_id', 2)->get();
         $this->graphQL('
         query {
             accounts(where: { column: OWNER_ID, value: 2}) {
@@ -189,7 +189,7 @@ class AccountsTest extends TestCase
     public function testDeleteApplicantIndividual()
     {
         $this->login();
-        $account = \App\Models\Accounts::orderBy('id', 'DESC')->take(1)->get();
+        $account = \App\Models\Account::orderBy('id', 'DESC')->take(1)->get();
         $this->graphQL('
             mutation DeleteAccount(
                 $id: ID!
