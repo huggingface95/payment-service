@@ -2,17 +2,13 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-
 
 /**
  * Class AccountClient
- *
  */
 class AccountClient extends BaseModel
 {
-
     protected $table = 'account_clients';
 
     protected $guard_name = 'api';
@@ -24,14 +20,11 @@ class AccountClient extends BaseModel
      */
     protected $fillable = [
         'client_id',
-        'client_type'
+        'client_type',
     ];
-
 
     public function client(): MorphTo
     {
         return $this->morphTo();
     }
-
-
 }

@@ -6,14 +6,11 @@ use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Interfaces\BaseModelInterface;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Builder;
-use GraphQL\Type\Definition\ResolveInfo;
-use Illuminate\Support\Facades\Log;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Class Account
@@ -61,21 +58,12 @@ class Account extends BaseModel implements BaseModelInterface
         'payment_bank_id',
     ];
 
-    public static self $clone;
-
     protected static function booted()
     {
         parent::booted();
+//        static::addGlobalScope(new AccountIndividualsCompaniesScope());
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
-
-    public function load($relations): self
-    {
-        self::$clone = $this->replicate();
-
-        return parent::load($relations);
-    }
-
 
     public function member(): BelongsTo
     {
@@ -162,30 +150,26 @@ class Account extends BaseModel implements BaseModelInterface
         return $this->hasOne(AccountIndividualCompany::class, 'account_id', 'id');
     }
 
-    public function clientable()
+    public function clientable(): MorphTo
     {
-        /** @var Account $model */
-        try {
-            $model = self::$clone;
-        } catch (\Error $ex) {
-            $model = $this;
-        }
+        return $this->morphTo('clientable', 'client_type', 'client_id');
+    }
 
-        if ($this->account_type === self::BUSINESS) {
+    public function clientableAttach(): \Ankurk91\Eloquent\Relations\MorphToOne
+    {
+        if ($this->account_type == self::BUSINESS) {
             return $this->applicantCompany();
         } else {
             return $this->applicantIndividual();
         }
-
     }
 
-
-    public function applicantIndividual()
+    public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
         return $this->morphedByOne(ApplicantIndividual::class, 'client', AccountIndividualCompany::class, 'account_id');
     }
 
-    public function applicantCompany()
+    public function applicantCompany(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
         return $this->morphedByOne(ApplicantCompany::class, 'client', AccountIndividualCompany::class, 'account_id');
     }
@@ -205,84 +189,81 @@ class Account extends BaseModel implements BaseModelInterface
         return $this->belongsTo(AccountState::class, 'account_state_id');
     }
 
-
-    public static function getAccountFilter($filter):Builder
+    public static function getAccountFilter($filter): Builder
     {
-        return Account::query()->join('companies','accounts.company_id','=','companies.id')
-            ->join('group_role','accounts.group_role_id','=','group_role.id')
-            ->join('applicant_individual','accounts.owner_id','=','applicant_individual.id')
-            ->leftJoin('account_individuals_companies','accounts.id','=','account_individuals_companies.account_id')
-            ->join('payment_provider','accounts.payment_provider_id','=','payment_provider.id')
-            ->join('commission_template','accounts.commission_template_id','=','commission_template.id')
-            ->join('members','accounts.member_id','=','members.id')
+        return self::query()->join('companies', 'accounts.company_id', '=', 'companies.id')
+            ->join('group_role', 'accounts.group_role_id', '=', 'group_role.id')
+            ->join('applicant_individual', 'accounts.owner_id', '=', 'applicant_individual.id')
+            ->leftJoin('account_individuals_companies', 'accounts.id', '=', 'account_individuals_companies.account_id')
+            ->join('payment_provider', 'accounts.payment_provider_id', '=', 'payment_provider.id')
+            ->join('commission_template', 'accounts.commission_template_id', '=', 'commission_template.id')
+            ->join('members', 'accounts.member_id', '=', 'members.id')
             //->select('accounts.*')
-            ->where(function($q) use ($filter) {
+            ->where(function ($q) use ($filter) {
                 $q->orWhere('accounts.account_number', 'like', $filter['account_number'] ?? '%')
                     ->orWhere('accounts.account_name', 'like', $filter['account_number'] ?? '%');
             })
-            ->where(function($q) use ($filter) {
-                $q->orWhere('companies.id','like', $filter['company'] ?? '%')
+            ->where(function ($q) use ($filter) {
+                $q->orWhere('companies.id', 'like', $filter['company'] ?? '%')
                     ->orWhere('companies.name', 'like', $filter['company'] ?? '%');
             })
-            ->where('accounts.group_type_id',isset($filter['group_type_id']) ? '=' : '!=',$filter['group_type_id'] ?? 0)
-            ->where('accounts.is_primary',isset($filter['is_primary']) ? '=' : '!=',$filter['is_primary'] ?? null)
-            ->where('accounts.account_type',isset($filter['account_type']) ? '=' : '!=',$filter['account_type'] ?? null)
-            ->where('accounts.account_state_id',isset($filter['account_state_id']) ? '=' : '!=',$filter['account_state_id'] ?? 0)
-            ->where(function($q) use ($filter) {
-                $q->orWhere('group_role.id','like', $filter['group_role'] ?? '%')
+            ->where('accounts.group_type_id', isset($filter['group_type_id']) ? '=' : '!=', $filter['group_type_id'] ?? 0)
+            ->where('accounts.is_primary', isset($filter['is_primary']) ? '=' : '!=', $filter['is_primary'] ?? null)
+            ->where('accounts.account_type', isset($filter['account_type']) ? '=' : '!=', $filter['account_type'] ?? null)
+            ->where('accounts.account_state_id', isset($filter['account_state_id']) ? '=' : '!=', $filter['account_state_id'] ?? 0)
+            ->where(function ($q) use ($filter) {
+                $q->orWhere('group_role.id', 'like', $filter['group_role'] ?? '%')
                     ->orWhere('group_role.name', 'like', $filter['group_role'] ?? '%');
             })
-            ->where(function($q) use ($filter) {
-                $q->orWhere('payment_provider.id','like', $filter['payment_provider'] ?? '%')
+            ->where(function ($q) use ($filter) {
+                $q->orWhere('payment_provider.id', 'like', $filter['payment_provider'] ?? '%')
                     ->orWhere('payment_provider.name', 'like', $filter['payment_provider'] ?? '%');
             })
-            ->where(function($q) use ($filter) {
-                $q->orWhere('commission_template.id','like', $filter['commission_template'] ?? '%')
+            ->where(function ($q) use ($filter) {
+                $q->orWhere('commission_template.id', 'like', $filter['commission_template'] ?? '%')
                     ->orWhere('commission_template.name', 'like', $filter['commission_template'] ?? '%');
             })
-            ->where(function($q) use ($filter) {
-                $q->orWhere('applicant_individual.id','like', $filter['owner'] ?? '%')
+            ->where(function ($q) use ($filter) {
+                $q->orWhere('applicant_individual.id', 'like', $filter['owner'] ?? '%')
                     ->orWhere('applicant_individual.fullname', 'like', $filter['owner'] ?? '%');
             })
-            ->where(function($q) use ($filter) {
-                $q->orWhere('members.id','like', $filter['member'] ?? '%')
+            ->where(function ($q) use ($filter) {
+                $q->orWhere('members.id', 'like', $filter['member'] ?? '%')
                     ->orWhere('members.fullname', 'like', $filter['member'] ?? '%');
             })
-            ->where(function($q) use ($filter) {
-                $q->orWhere('account_individuals_companies.client_id','like', $filter['client'] ?? '%')
+            ->where(function ($q) use ($filter) {
+                $q->orWhere('account_individuals_companies.client_id', 'like', $filter['client'] ?? '%')
                     ->orWhere('applicant_individual.fullname', 'like', $filter['client'] ?? '%');
-            })
-            ;
+            });
     }
 
     public static function getAccountDetailsFilter($query, $filter)
     {
-        return Account::join('companies','accounts.company_id','=','companies.id')
-            ->join('group_role','accounts.group_role_id','=','group_role.id')
-            ->join('applicant_individual','accounts.owner_id','=','applicant_individual.id')
-            ->join('payment_provider','accounts.payment_provider_id','=','payment_provider.id')
+        return self::join('companies', 'accounts.company_id', '=', 'companies.id')
+            ->join('group_role', 'accounts.group_role_id', '=', 'group_role.id')
+            ->join('applicant_individual', 'accounts.owner_id', '=', 'applicant_individual.id')
+            ->join('payment_provider', 'accounts.payment_provider_id', '=', 'payment_provider.id')
             ->select('accounts.*')
-            ->where(function($q) use ($query) {
+            ->where(function ($q) use ($query) {
                 $q->orWhere('accounts.id', 'like', $query['account_name'])
                     ->orWhere('accounts.account_name', 'like', $query['account_name']);
             })
-            ->where(function($q) use ($filter) {
-                $q->orWhere('companies.id','like', $filter['company'] ?? '')
+            ->where(function ($q) use ($filter) {
+                $q->orWhere('companies.id', 'like', $filter['company'] ?? '')
                     ->orWhere('companies.name', 'like', $filter['company'] ?? '');
             })
-            ->where('accounts.group_type_id','=',$filter['group_type_id'] ?? null)
-            ->where(function($q) use ($filter) {
-                $q->orWhere('group_role.id','like', $filter['group_role'] ?? '%')
+            ->where('accounts.group_type_id', '=', $filter['group_type_id'] ?? null)
+            ->where(function ($q) use ($filter) {
+                $q->orWhere('group_role.id', 'like', $filter['group_role'] ?? '%')
                     ->orWhere('group_role.name', 'like', $filter['group_role'] ?? '%');
             })
-            ->where(function($q) use ($filter) {
-                $q->orWhere('payment_provider.id','like', $filter['payment_provider'] ?? '%')
+            ->where(function ($q) use ($filter) {
+                $q->orWhere('payment_provider.id', 'like', $filter['payment_provider'] ?? '%')
                     ->orWhere('payment_provider.name', 'like', $filter['payment_provider'] ?? '%');
             })
-            ->where(function($q) use ($filter) {
-                $q->orWhere('applicant_individual.id','like', $filter['owner'] ?? '%')
+            ->where(function ($q) use ($filter) {
+                $q->orWhere('applicant_individual.id', 'like', $filter['owner'] ?? '%')
                     ->orWhere('applicant_individual.fullname', 'like', $filter['owner'] ?? '%');
             });
     }
-
 }

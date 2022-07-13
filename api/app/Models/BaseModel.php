@@ -17,6 +17,9 @@ class BaseModel extends Model
         self::creating(function ($model) {
             return self::filterByPermissionFilters('creating', $model);
         });
+        self::saving(function ($model) {
+            return self::filterByPermissionFilters('saving', $model);
+        });
         self::updating(function ($model) {
             return self::filterByPermissionFilters('updating', $model);
         });

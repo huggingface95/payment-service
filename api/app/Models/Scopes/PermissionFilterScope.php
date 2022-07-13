@@ -37,7 +37,7 @@ class PermissionFilterScope implements Scope
     private static function getEloquentSqlWithBindings(Builder $builder): array
     {
         $wheres = $builder->withoutGlobalScope(self::class)->getQuery()->wheres;
-
-        return count($wheres) ? collect($wheres[0]['query']->wheres)->pluck('value', 'column')->toArray() : [];
+        // are of two types $wheres
+        return count($wheres) ? collect($wheres[0]['query']->wheres ?? $wheres)->pluck('value', 'column')->toArray() : [];
     }
 }

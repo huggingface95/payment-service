@@ -2,12 +2,10 @@
 
 namespace App\GraphQL\Directives;
 
-
 use GraphQL\Language\AST\FieldDefinitionNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Pagination\PaginateDirective;
 use Nuwave\Lighthouse\Pagination\PaginationArgs;
@@ -107,8 +105,7 @@ GRAPHQL;
     public function resolveField(FieldValue $fieldValue): FieldValue
     {
         $fieldValue->setResolver(function ($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Paginator {
-
-            $model = 'App\\Models\\'. Str::studly(strtolower(Str::singular($resolveInfo->fieldName)));
+            $model = 'App\\Models\\'.Str::studly(strtolower(Str::singular($resolveInfo->fieldName)));
 
             $query = isset($args['query']) ? $model::getAccountFilter($args['query']) : $this->getModelClass()::query();
 
@@ -118,7 +115,4 @@ GRAPHQL;
 
         return $fieldValue;
     }
-
-
-
 }

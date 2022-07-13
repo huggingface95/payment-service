@@ -24,6 +24,8 @@ class PermissionFilter extends BaseModel
 
     const EVENT_CREATING = 'creating';
 
+    const EVENT_SAVING = 'saving';
+
     const EVENT_UPDATING = 'updating';
 
     const EVENT_DELETING = 'deleting';
@@ -57,6 +59,7 @@ class PermissionFilter extends BaseModel
             self::EVENT_CREATING,
             self::EVENT_DELETING,
             self::EVENT_UPDATING,
+            self::EVENT_SAVING,
         ];
     }
 
