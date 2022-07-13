@@ -64,7 +64,7 @@ enum AccountType {
 
 extend type Query @guard {
     "Получить аккаунт по ID"
-    account(id: ID @eq): Account @find
+    account(id: ID! @eq): Account @find
     """
     Получить список аккаунтов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
