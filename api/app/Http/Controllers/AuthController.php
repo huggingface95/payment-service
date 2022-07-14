@@ -7,8 +7,10 @@ use App\Models\Clickhouse\AuthenticationLog;
 use App\Models\Members;
 use App\Models\OauthCodes;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Facades\Agent;
 use PragmaRX\Google2FALaravel\Facade as Google2FA;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -41,15 +43,18 @@ class AuthController extends Controller
 
         $user = auth()->user();
 
-        //dump(AuthenticationLog::select('*')->orderByDesc('created_at')->getRows());
-        //dump(AuthenticationLog::where('member', 'test@test.com')->delete());
-
         if(env('CHECK_IP') === true) {
-
             if (request('proceed')) {
-                $this->writeToAuthLog('logout');
-                auth()->invalidate();
-                return $this->respondWithToken(auth()->attempt($credentials));
+                if (Cache::get('auth_user:' . $user->id)) {
+                    JWTAuth::setToken(Cache::get('auth_user:' . $user->id))->invalidate();
+                    $this->writeToAuthLog('logout');
+                } else {
+                    $this->writeToAuthLog('logout');
+                }
+
+                Cache::put('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
+                $this->writeToAuthLog('login');
+                return $this->respondWithToken($token);
             }
 
             if (request('cancel')) {
@@ -64,7 +69,7 @@ class AuthController extends Controller
                 return response()->json(['error' => 'Your IP address was changed. You will be logged out'], 403);
             }
 
-            if ($this->getAuthUserBrowser($user->email) != Agent::browser()?Agent::browser():'unknown') {
+            if ($this->getAuthUserBrowser($user->email) != Agent::browser()) {
                 return response()->json(['error' => 'Your Browser was changed. You will be logged out'], 403);
             }
         }
@@ -79,9 +84,19 @@ class AuthController extends Controller
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
             $this->writeToAuthLog('login');
             OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+            if (Cache::get('auth_user:' . $user->id)) {
+                Cache::put('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
+            } else {
+                Cache::add('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
+            }
             return $this->respondWithToken2Fa($token);
         } else {
             $this->writeToAuthLog('login');
+            if (Cache::get('auth_user:' . $user->id)) {
+                Cache::put('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
+            } else {
+                Cache::add('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
+            }
             return $this->respondWithToken($token);
         }
     }
