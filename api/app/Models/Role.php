@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GuardEnum;
+use App\Models\Scopes\OrderByLowerScope;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Role as SpatieRole;
@@ -20,6 +21,12 @@ class Role extends SpatieRole
     ];
 
     protected $guard_name = GuardEnum::GUARD_NAME;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new OrderByLowerScope());
+    }
 
     public function groupType()
     {
