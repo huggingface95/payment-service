@@ -17,7 +17,6 @@ class Region extends BaseModel
 
     public $timestamps = false;
 
-
     public function countries(): BelongsToMany
     {
         return $this->belongsToMany(Country::class, 'region_countries', 'region_id', 'country_id');

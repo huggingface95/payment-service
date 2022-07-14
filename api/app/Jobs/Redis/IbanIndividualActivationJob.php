@@ -5,7 +5,7 @@ namespace App\Jobs\Redis;
 use App\DTO\Account\IbanRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Jobs\Job;
-use App\Models\Accounts;
+use App\Models\Account;
 use Illuminate\Support\Facades\Redis;
 
 class IbanIndividualActivationJob extends Job
@@ -17,7 +17,7 @@ class IbanIndividualActivationJob extends Job
      */
     protected IbanRequestDTO $ibanRequest;
 
-    public function __construct(Accounts $account)
+    public function __construct(Account $account)
     {
         $this->ibanRequest = TransformerDTO::transform(IbanRequestDTO::class, $account);
     }

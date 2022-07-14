@@ -1,9 +1,9 @@
 union Client = ApplicantIndividual | ApplicantCompany
 """
 Аккаунты
-Banking -> Accounts -> Accounts List
+Banking -> Account -> Account List
 """
-type Accounts {
+type Account {
     id: ID!
     "Получить связанный код валюты"
     currency: Currencies @belongsTo(relation:"currencies")
@@ -62,19 +62,30 @@ enum AccountType {
     Business @enum(value: "Business")
 }
 
+enum AccountClientsType {
+    INDIVIDUAL @enum(value: "App\\Models\\ApplicantIndividual")
+    COMPANY @enum(value: "App\\Models\\ApplicantCompany")
+}
+
 extend type Query @guard {
     "Получить аккаунт по ID"
-    account(id: ID @eq): Accounts   @find
+    account(id: ID! @eq): Account @find
     """
     Получить список аккаунтов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     accounts(
-        hasClientable: _ @whereHasConditions(columns: ["id"]),
         query: QueryAccountCondition
         created_at: DateRange @whereBetween,
-        orderBy: _ @orderBy(columns: ["id", "client_id"])
-    ): [Accounts!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        orderBy: _ @orderBy(columns: ["id","created_at"])
+    ): [Account!]!   @paginateWithConditions(defaultCount: 10) @orderBy(column: "id", direction: DESC)
+
+    """
+    Получить список accounts для accountDetails
+    """
+    accountDetailsList(
+        query: QueryAccountDetailsCondition
+    ): [Account!]!   @field(resolver:"AccountsQuery@clientDetailsList") @orderBy(column: "id", direction: ASC)
 
     """
     Получить список account states
@@ -90,20 +101,36 @@ extend type Query @guard {
 }
 
 input QueryAccountCondition {
-    company_id: ID @eq
-    payment_provider_id: ID @eq
-    owner_id: ID @eq
+    client: String @like
+    company: String @like
+    payment_provider: String @eq
+    owner: String @eq
     account_number: String @like
     currency_id: ID @eq
-    group_role_id: ID @eq
+    group_role: String @like
     group_type_id: ID @eq
-    member_id: ID @eq
+    member: String @like
     is_primary: Boolean @eq
-    commission_template_id: ID @eq
-    account_type: String @eq
+    commission_template: String @like
     account_state_id: ID @eq
-    account_name: String @like
+    #client_id: ID @eq
+    #client_type: AccountClientsType @eq
 }
+input QueryAccountDetailsCondition {
+    account_name: String @like
+    filter: FilterAccountDetails
+}
+
+input FilterAccountDetails {
+    company: String @like
+    group_type_id: ID @eq
+    group_role: String @like
+    owner: String @like
+    payment_provider: String @like
+}
+
+
+
 
 input QueryClientCondition {
     id: ID!
@@ -113,7 +140,6 @@ enum QueryAccountWhereColumn {
     ACCOUNT_NUMBER @enum(value: "account_number")
     ACCOUNT_TYPE @enum(value: "account_type")
     ACCOUNT_STATE_ID @enum(value: "account_state_id")
-    CLIENT_ID @enum(value: "client_id")
     OWNER_ID @enum(value: "owner_id")
     ACCOUNT_NAME @enum(value: "account_name")
     CURRENCY_ID @enum(value: "currency_id")
@@ -125,6 +151,8 @@ enum QueryAccountWhereColumn {
     ACCOUNT_NUMBER @enum(value: "account_number")
     IS_PRIMARY @enum(value: "is_primary")
     COMMISSION_TEMPLATE_ID @enum(value: "commission_template_id")
+    #CLIENT_ID @enum(value: "client_id")
+    #CLIENT_TYPE @enum(value: "client_type")
 }
 
 
@@ -133,8 +161,6 @@ input InputAccount{
     company_id :ID!
     "ID валюты"
     currency_id: ID!
-    "ID аппликанта"
-    client_id: ID!
     "ID владельца"
     owner_id: ID!
     "Номер аккаунта"
@@ -159,27 +185,31 @@ input InputAccount{
     payment_system_id: ID!
     "ID банка"
     payment_bank_id: ID
+    "clientable"
+    clientableAttach: PivotTable
+    "фильтр"
+    query: QueryAccountCondition
 }
 
 extend type Mutation @guard {
     "Создать аккаунт"
     createAccount(
-        input: InputAccount!
-    ):Accounts @field(resolver:"AccountMutator@create")
+        input: InputAccount! @spread
+    ):[Account!]! @field(resolver:"AccountMutator@create")
 
     "Редактирование аккаунта"
     updateAccount(
         id: ID!
-        input: InputAccount!
-    ): Accounts   @field(resolver:"AccountMutator@update")
+        input: InputAccount! @spread
+    ): Account   @field(resolver:"AccountMutator@update")
 
     "Удалить аккаунт"
     deleteAccount(
         id: ID!
-    ): Accounts   @delete
+    ): Account  @delete
 
     "Создать аккаунт"
     generateIban(
         id: ID!
-    ):Accounts   @field(resolver: "AccountMutator@generate")
+    ):Account  @field(resolver: "AccountMutator@generate")
 }

@@ -185,7 +185,7 @@ class ApplicantIndividual extends BaseModel
 
     public function account(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
-        return $this->morphToOne(Accounts::class, 'client', AccountIndividualCompany::class, 'client_id', 'account_id');
+        return $this->morphToOne(Account::class, 'client', AccountIndividualCompany::class, 'client_id', 'account_id');
     }
 
     public function groupRole(): \Ankurk91\Eloquent\Relations\MorphToOne

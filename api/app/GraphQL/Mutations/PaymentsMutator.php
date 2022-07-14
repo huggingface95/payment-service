@@ -4,8 +4,8 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\PaymentJob;
+use App\Models\Account;
 use App\Models\AccountLimit;
-use App\Models\Accounts;
 use App\Models\ApplicantBankingAccess;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
@@ -62,7 +62,7 @@ class PaymentsMutator
         return $payment;
     }
 
-    private function checkLimit(Accounts $account, Collection $allLimits, Collection $allProcessedAmount, $paymentAmount): bool
+    private function checkLimit(Account $account, Collection $allLimits, Collection $allProcessedAmount, $paymentAmount): bool
     {
         foreach ($allLimits->flatten(1)->filter(function ($l) {
             return $l;
@@ -157,7 +157,7 @@ class PaymentsMutator
         return true;
     }
 
-    private function createReachedLimit(Accounts $account, $limit)
+    private function createReachedLimit(Account $account, $limit)
     {
         $account->reachedLimits()->create([
             'group_type' => $account->clientable instanceof ApplicantIndividual ? GroupType::INDIVIDUAL : GroupType::COMPANY,
@@ -195,7 +195,7 @@ class PaymentsMutator
 
     private function getAllLimits(Payments $payment): Collection
     {
-        /** @var Accounts $account */
+        /** @var Account $account */
         $account = $payment->Accounts()->with(['clientable', 'limits', 'commissionTemplate.commissionTemplateLimits'])->first();
         $allLimits = collect([$account->limits, $account->commissionTemplate->commissionTemplateLimits]);
         if ($account->clientable instanceof ApplicantCompany) {
