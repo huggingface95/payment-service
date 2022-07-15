@@ -165,8 +165,6 @@ input InputAccount{
     owner_id: ID!
     "Номер аккаунта"
     account_number: String
-    "Тип аккаунта"
-    account_type: AccountType
     "ID провайдера"
     payment_provider_id: ID!
     "ID шаблона комиссии"
@@ -200,8 +198,13 @@ extend type Mutation @guard {
     "Редактирование аккаунта"
     updateAccount(
         id: ID!
-        input: InputAccount! @spread
-    ): Account   @field(resolver:"AccountMutator@update")
+        "Имя аккаунта"
+        account_name: String!
+        "Состояние аккаунта"
+        account_state_id: ID!
+        "Основной или нет"
+        is_primary: Boolean!
+    ): Account   @update
 
     "Удалить аккаунт"
     deleteAccount(
