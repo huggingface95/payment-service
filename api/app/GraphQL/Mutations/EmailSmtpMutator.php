@@ -56,17 +56,23 @@ class EmailSmtpMutator extends BaseMutator
 
     public function sendEmail($root, array $args)
     {
-        if (! $this->validEmail($args['email'])) {
-            throw new GraphqlException('Email not correct', 'Bad Request', 400);
+        $emails = array_map(function ($email){
+            return trim($email);
+        }, explode(',', $args['email']));
+
+        foreach ($emails as $email){
+            if (! $this->validEmail($email)) {
+                throw new GraphqlException("Email {$email} not correct", 'Bad Request', 400);
+            }
         }
         /** @var EmailSmtp $smtp */
         $smtp = new EmailSmtp();
-        $smtp->replay_to = (isset($args['reply_to'])) ? $args['reply_to'] : $args['email'];
+        $smtp->replay_to = (isset($args['reply_to'])) ? $args['reply_to'] : $emails;
         $smtp->security = ($args['security']) ?? 'No';
         $smtp->host_name = $args['host_name'];
         $smtp->username = $args['username'];
         $smtp->password = $args['password'];
-        $smtp->from_email = (isset($args['from_email'])) ? $args['from_email'] : $args['email'];
+        $smtp->from_email = (isset($args['from_email'])) ? $args['from_email'] : $emails;
         $smtp->from_name = (isset($args['from_name'])) ? $args['from_name'] : 'Test Name';
         $smtp->port = $args['port'];
 
