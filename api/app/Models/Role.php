@@ -22,11 +22,11 @@ class Role extends SpatieRole
 
     protected $guard_name = GuardEnum::GUARD_NAME;
 
-    protected static function booted()
-    {
-        parent::booted();
-        static::addGlobalScope(new OrderByLowerScope());
-    }
+//    protected static function booted()
+//    {
+//        parent::booted();
+//        static::addGlobalScope(new OrderByLowerScope());
+//    }
 
     public function groupType()
     {
