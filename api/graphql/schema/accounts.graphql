@@ -165,8 +165,6 @@ input InputAccount{
     owner_id: ID!
     "Номер аккаунта"
     account_number: String
-    "Тип аккаунта"
-    account_type: AccountType
     "ID провайдера"
     payment_provider_id: ID!
     "ID шаблона комиссии"
