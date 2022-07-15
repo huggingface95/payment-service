@@ -198,8 +198,13 @@ extend type Mutation @guard {
     "Редактирование аккаунта"
     updateAccount(
         id: ID!
-        input: InputAccount! @spread
-    ): Account   @field(resolver:"AccountMutator@update")
+        "Имя аккаунта"
+        account_name: String!
+        "Состояние аккаунта"
+        account_state_id: ID!
+        "Основной или нет"
+        is_primary: Boolean!
+    ): Account   @update
 
     "Удалить аккаунт"
     deleteAccount(
