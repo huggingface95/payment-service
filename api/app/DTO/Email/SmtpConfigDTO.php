@@ -18,7 +18,7 @@ class SmtpConfigDTO
 
     public string $subject;
 
-    public string $from;
+    public string|array $from;
 
     public static function transform(EmailSmtp $smtp): self
     {

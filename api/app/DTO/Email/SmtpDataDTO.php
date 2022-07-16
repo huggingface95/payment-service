@@ -6,7 +6,7 @@ use App\Models\EmailSmtp;
 
 class SmtpDataDTO
 {
-    public string $to;
+    public string|array $to;
 
     public string $body;
 
