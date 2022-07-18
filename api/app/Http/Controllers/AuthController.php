@@ -65,7 +65,7 @@ class AuthController extends Controller
                 return response()->json(['error' => 'This ID is currently in use on another device.'], 403);
             }
 
-            if ($this->getAuthUserIp($user->email) != request()->ip()) {
+            if ($this->getAuthUserIp($user->email) != $this->getIp()) {
                 return response()->json(['error' => 'Your IP address was changed. You will be logged out'], 403);
             }
 
@@ -118,9 +118,8 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        $user = auth()->user();
-        $this->writeToAuthLog('logout');
         auth()->logout();
+        $this->writeToAuthLog('logout');
         return response()->json(['message' => 'Successfully logged out']);
     }
 
@@ -336,9 +335,7 @@ class AuthController extends Controller
             if (array_key_exists($key, $_SERVER) === true){
                 foreach (explode(',', $_SERVER[$key]) as $ip){
                     $ip = trim($ip);
-                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
-                        return $ip;
-                    }
+                    return $ip;
                 }
             }
         }
@@ -357,7 +354,7 @@ class AuthController extends Controller
         if ($getIp) {
             return $getIp[0]['ip'];
         } else {
-            $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => request()->ip(), 'status' => 'login', 'created_at' => now()]);
+            $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => $this->getIp(), 'status' => 'login', 'created_at' => now()]);
             $log->save();
             $getIp = AuthenticationLog::select('*')->
             where('member', '=', (string)$email)->
@@ -380,7 +377,7 @@ class AuthController extends Controller
         if ($getStatus) {
             return $getStatus[0]['status'];
         } else {
-            $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => request()->ip(), 'status' => 'logout', 'created_at' => now()]);
+            $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => $this->getIp(), 'status' => 'logout', 'created_at' => now()]);
             $log->save();
             $getStatus = AuthenticationLog::select('*')->
             where('member', '=', (string)$email)->
@@ -404,7 +401,7 @@ class AuthController extends Controller
         if ($getBrowser) {
             return $getBrowser[0]['browser'];
         } else {
-            $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => request()->ip(), 'status' => 'login', 'created_at' => now()]);
+            $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => $this->getIp(), 'status' => 'login', 'created_at' => now()]);
             $log->save();
             $getBrowser = AuthenticationLog::select('*')->
             where('member', '=', (string)$email)->
@@ -417,7 +414,7 @@ class AuthController extends Controller
 
     public function writeToAuthLog($status){
         $user = auth()->user();
-        $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => request()->ip(), 'status' => $status, 'created_at' => now()]);
+        $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => $this->getIp(), 'status' => $status, 'created_at' => now()]);
         $log->save();
     }
 }
