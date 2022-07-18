@@ -61,10 +61,6 @@ class AuthController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
-            if ($this->getAuthUser($user->email) == 'login') {
-                return response()->json(['error' => 'This ID is currently in use on another device.'], 403);
-            }
-
             if ($this->getAuthUserIp($user->email) != $this->getIp()) {
                 return response()->json(['error' => 'Your IP address was changed. You will be logged out'], 403);
             }
@@ -72,6 +68,11 @@ class AuthController extends Controller
             if ($this->getAuthUserBrowser($user->email) != Agent::browser()) {
                 return response()->json(['error' => 'Your Browser was changed. You will be logged out'], 403);
             }
+
+            if ($this->getAuthUser($user->email) == 'login') {
+                return response()->json(['error' => 'This ID is currently in use on another device.'], 403);
+            }
+
         }
 
         $get_ip_address = $user->ipAddress()->pluck('ip_address')->toArray();
