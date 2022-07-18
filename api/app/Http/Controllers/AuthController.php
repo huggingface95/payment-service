@@ -62,15 +62,15 @@ class AuthController extends Controller
             }
 
             if ($this->getAuthUserIp($user->email) != $this->getIp()) {
-                return response()->json(['error' => 'Your IP address was changed. You will be logged out'], 403);
+                return response()->json(['error' => 'This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users.'], 403);
             }
 
             if ($this->getAuthUserBrowser($user->email) != Agent::browser()) {
-                return response()->json(['error' => 'Your Browser was changed. You will be logged out'], 403);
+                return response()->json(['error' => 'This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users.'], 403);
             }
 
             if ($this->getAuthUser($user->email) == 'login') {
-                return response()->json(['error' => 'This ID is currently in use on another device.'], 403);
+                return response()->json(['error' => 'This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users.'], 403);
             }
 
         }
