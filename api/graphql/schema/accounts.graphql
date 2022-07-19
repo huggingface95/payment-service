@@ -40,11 +40,11 @@ type Account {
     "Основной или нет"
     is_primary: Boolean
     "Текущий баланс"
-    current_balance: Int
+    current_balance: Decimal
     "Текущий баланс"
-    reserved_balance: Int
+    reserved_balance: Decimal
     "Текущий баланс"
-    available_balance: Int
+    available_balance: Decimal
     created_at: DateTime
     updated_at: DateTime
     activated_at : DateTime
@@ -61,15 +61,15 @@ type AccountState {
 }
 
 type ClientAccountsDetails{
-    id: ID
+    id: ID!
     "Текущий баланс"
-    current_balance: Int
+    current_balance: Decimal!
     "Текущий баланс"
-    reserved_balance: Int
+    reserved_balance: Decimal!
     "Текущий баланс"
-    available_balance: Int
+    available_balance: Decimal!
     "Получить связанный код валюты"
-    code: String
+    currency: Currencies!
 }
 
 enum AccountType {
