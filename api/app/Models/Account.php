@@ -214,10 +214,10 @@ class Account extends BaseModel implements BaseModelInterface
             ->join('payment_provider', 'accounts.payment_provider_id', '=', 'payment_provider.id')
             ->join('commission_template', 'accounts.commission_template_id', '=', 'commission_template.id')
             ->join('members', 'accounts.member_id', '=', 'members.id')
-            //->select('accounts.*')
+            ->select('accounts.*')
             ->where(function ($q) use ($filter) {
-                $q->orWhere('accounts.account_number', 'like', isset($filter['account_number']) ?? '%')
-                    ->orWhere('accounts.account_name', 'like', isset($filter['account_number']) ?? '%');
+                $q->orWhere('accounts.account_number', 'like', $filter['account_number'] ?? '%')
+                    ->orWhere('accounts.account_name', 'like', $filter['account_number'] ?? '%');
             })
             ->where(function ($q) use ($filter) {
                 $q->orWhere('companies.id', 'like', $filter['company'] ?? '%')
