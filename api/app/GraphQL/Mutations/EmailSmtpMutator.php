@@ -76,7 +76,7 @@ class EmailSmtpMutator extends BaseMutator
         $smtp->from_name = (isset($args['from_name'])) ? $args['from_name'] : 'Test Name';
         $smtp->port = $args['port'];
 
-        $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, 'Testnaaaaaa', 'Subjectnaaaaa');
+        $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, '<p><strong>Success</strong></p><p><strong>SMTP works correctly</strong></p>', 'Test Email no reply');
         $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
         dispatch(new SendMailJob($config, $data));
 
