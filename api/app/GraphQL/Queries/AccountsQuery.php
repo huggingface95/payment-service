@@ -6,6 +6,7 @@ use App\Models\Account;
 use App\Models\AccountClient;
 use App\Models\GroupRole;
 use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Support\Facades\Log;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class AccountsQuery
@@ -44,16 +45,17 @@ class AccountsQuery
      */
     public function clientDetailsList($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
+
         if (isset($args['query'])) {
             $query = $args['query'];
-            if (isset($query['filter'])) {
+            if (count($query['filter']) > 0) {
                 $filter = $query['filter'];
-                return Account::getAccountDetailsFilter($query, $filter)->paginate(env('PAGINATE_DEFAULT_COUNT'));
+                $account = Account::getAccountDetailsFilter($query, $filter);
             } else {
-                return Account::orWhere('id', 'like', $query['account_name'])->orWhere('account_name', 'like', $query['account_name'])->paginate(env('PAGINATE_DEFAULT_COUNT'));
+                $account = Account::orWhere('id', 'like', $query['account_name'])->orWhere('account_name', 'like', $query['account_name']);
             }
         }
 
-        return Account::paginate(env('PAGINATE_DEFAULT_COUNT'));
+        return $account->paginate(env('PAGINATE_DEFAULT_COUNT'));
     }
 }
