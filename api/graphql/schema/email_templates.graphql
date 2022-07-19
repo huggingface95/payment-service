@@ -79,7 +79,7 @@ extend type Mutation @guard {
         footer: String
         "Ид компании"
         company_id: ID!
-    ): [EmailTemplate] @field(resolver: "EmailTemplateMutator@create")
+    ): [EmailTemplate!]! @field(resolver: "EmailTemplateMutator@create")
 
     "Обновить данные компании"
     updateEmailTemplate(
