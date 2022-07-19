@@ -48,7 +48,6 @@ class AccountsQuery
             $query = $args['query'];
             if (isset($query['filter'])) {
                 $filter = $query['filter'];
-
                 return Account::getAccountDetailsFilter($query, $filter)->paginate(env('PAGINATE_DEFAULT_COUNT'));
             } else {
                 return Account::orWhere('id', 'like', $query['account_name'])->orWhere('account_name', 'like', $query['account_name'])->paginate(env('PAGINATE_DEFAULT_COUNT'));

@@ -261,12 +261,12 @@ class Account extends BaseModel implements BaseModelInterface
             ->join('payment_provider', 'accounts.payment_provider_id', '=', 'payment_provider.id')
             ->select('accounts.*')
             ->where(function ($q) use ($query) {
-                $q->orWhere('accounts.id', 'like', $query['account_name'])
-                    ->orWhere('accounts.account_name', 'like', $query['account_name']);
+                $q->orWhere('accounts.id', 'like', $query['account_name'] ?? '%')
+                    ->orWhere('accounts.account_name', 'like', $query['account_name'] ?? '%');
             })
             ->where(function ($q) use ($filter) {
-                $q->orWhere('companies.id', 'like', $filter['company'] ?? '')
-                    ->orWhere('companies.name', 'like', $filter['company'] ?? '');
+                $q->orWhere('companies.id', 'like', $filter['company'] ?? '%')
+                    ->orWhere('companies.name', 'like', $filter['company'] ?? '%');
             })
             ->where('accounts.group_type_id', '=', $filter['group_type_id'] ?? null)
             ->where(function ($q) use ($filter) {
