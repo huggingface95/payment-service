@@ -67,18 +67,27 @@ class Account extends BaseModel implements BaseModelInterface
 
     public function getClientAccountsAttribute(): array
     {
-        return AccountIndividualCompany::query()
-            ->leftJoin('account_individuals_companies as aic', function($join)
-            {
+        return Account::query()->with('currencies')
+            ->join('account_individuals_companies', 'account_individuals_companies.account_id', '=', 'accounts.id')
+            ->join('account_individuals_companies as aic', function ($join) {
                 $join->on('aic.client_id', '=', 'account_individuals_companies.client_id');
                 $join->on('aic.client_type', '=', 'account_individuals_companies.client_type');
             })
-            ->leftJoin('accounts as a', 'a.id', '=', 'aic.account_id')
-            ->leftJoin('currencies as c', 'c.id', '=', 'a.currency_id')
-            ->where('aic.account_id', '<>', $this->id)
-            ->where('account_individuals_companies.account_id', '=', $this->id)
-            ->select('a.id', 'a.current_balance', 'a.reserved_balance', 'a.available_balance', 'c.code')
-            ->get()->toArray();
+            ->join('accounts as a', 'a.id', '=', 'aic.account_id')
+            ->where('a.id', '<>', $this->id)
+            ->where('accounts.id', '=', $this->id)
+            ->select('a.id', 'a.current_balance', 'a.reserved_balance', 'a.available_balance', 'a.currency_id')
+            ->get()
+            ->map(function ($account) {
+                $account->relations['currency'] = $account->relations['currencies'];
+                unset($account->currency_id);
+                unset($account->relations['currencies']);
+
+                return $account;
+            })
+            ->toArray();
+
+
     }
 
     public function member(): BelongsTo
