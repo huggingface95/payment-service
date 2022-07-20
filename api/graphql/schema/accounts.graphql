@@ -39,12 +39,6 @@ type Account {
     account_name: String!
     "Основной или нет"
     is_primary: Boolean
-    "Текущий баланс"
-    current_balance: Decimal
-    "Текущий баланс"
-    reserved_balance: Decimal
-    "Текущий баланс"
-    available_balance: Decimal
     created_at: DateTime
     updated_at: DateTime
     activated_at : DateTime
