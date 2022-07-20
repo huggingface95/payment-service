@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Clickhouse\ActivityLog;
 use App\Models\Clickhouse\AuthenticationLog;
 use App\Models\Members;
 use App\Models\OauthCodes;
@@ -10,11 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Str;
 use Jenssegers\Agent\Facades\Agent;
 use PragmaRX\Google2FALaravel\Facade as Google2FA;
-use Ramsey\Uuid\Uuid;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
