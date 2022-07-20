@@ -232,18 +232,22 @@ class AuthController extends Controller
             return response()->json(['error' => 'Token has expired'], 403);
         }
 
-        $codes = json_decode($user->backup_codes);
+        $codes = $user->backup_codes['backup_codes'];
+        $data = '';
         if (request('backup_code')) {
-            foreach ($codes->backup_codes as $code) {
-                if ($code[1] == 'true'){
+            foreach ($codes as $code) {
+                /*if ($code[1] == 'true'){
                     return response()->json(['error' => 'This code has been already used'], 403);
+                }*/
+                if ($code == request('backup_code')){
+                    $data = true;
                 }
-                if ($code[0] == request('backup_code')){
-                    return response()->json(['data' => 'success']);
-                }
-                else {
-                    return response()->json(['error' => 'No such code'], 403);
-                }
+            }
+            if ($data == true) {
+                return response()->json(['message' => 'success']);
+            }
+            else {
+                return response()->json(['error' => 'No such code'], 403);
             }
         }
 
