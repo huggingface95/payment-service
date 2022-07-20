@@ -34,7 +34,7 @@ type Account {
     "Получить менеджера"
     member: Members @belongsTo(relation:"member")
     "Все аккаунты клиента"
-    client_accounts: [ClientAccountsDetails]
+    client_accounts: [ClientAccountsDetails!]!
     "Имя аккаунта"
     account_name: String!
     "Основной или нет"
