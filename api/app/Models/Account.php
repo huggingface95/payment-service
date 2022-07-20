@@ -67,18 +67,27 @@ class Account extends BaseModel implements BaseModelInterface
 
     public function getClientAccountsAttribute(): array
     {
-        return AccountIndividualCompany::query()
-            ->leftJoin('account_individuals_companies as aic', function($join)
-            {
+        return Account::query()->with('currencies')
+            ->join('account_individuals_companies', 'account_individuals_companies.account_id', '=', 'accounts.id')
+            ->join('account_individuals_companies as aic', function ($join) {
                 $join->on('aic.client_id', '=', 'account_individuals_companies.client_id');
                 $join->on('aic.client_type', '=', 'account_individuals_companies.client_type');
             })
-            ->leftJoin('accounts as a', 'a.id', '=', 'aic.account_id')
-            ->leftJoin('currencies as c', 'c.id', '=', 'a.currency_id')
-            ->where('aic.account_id', '<>', $this->id)
-            ->where('account_individuals_companies.account_id', '=', $this->id)
-            ->select('a.id', 'a.current_balance', 'a.reserved_balance', 'a.available_balance', 'c.code')
-            ->get()->toArray();
+            ->join('accounts as a', 'a.id', '=', 'aic.account_id')
+            ->where('a.id', '<>', $this->id)
+            ->where('accounts.id', '=', $this->id)
+            ->select('a.id', 'a.current_balance', 'a.reserved_balance', 'a.available_balance', 'a.currency_id')
+            ->get()
+            ->map(function ($account) {
+                $account->relations['currency'] = $account->relations['currencies'];
+                unset($account->currency_id);
+                unset($account->relations['currencies']);
+
+                return $account;
+            })
+            ->toArray();
+
+
     }
 
     public function member(): BelongsTo
@@ -214,7 +223,7 @@ class Account extends BaseModel implements BaseModelInterface
             ->join('payment_provider', 'accounts.payment_provider_id', '=', 'payment_provider.id')
             ->join('commission_template', 'accounts.commission_template_id', '=', 'commission_template.id')
             ->join('members', 'accounts.member_id', '=', 'members.id')
-            //->select('accounts.*')
+            ->select('accounts.*')
             ->where(function ($q) use ($filter) {
                 $q->orWhere('accounts.account_number', 'like', $filter['account_number'] ?? '%')
                     ->orWhere('accounts.account_name', 'like', $filter['account_number'] ?? '%');
@@ -261,12 +270,12 @@ class Account extends BaseModel implements BaseModelInterface
             ->join('payment_provider', 'accounts.payment_provider_id', '=', 'payment_provider.id')
             ->select('accounts.*')
             ->where(function ($q) use ($query) {
-                $q->orWhere('accounts.id', 'like', $query['account_name'])
-                    ->orWhere('accounts.account_name', 'like', $query['account_name']);
+                $q->orWhere('accounts.id', 'like', $query['account_name'] ?? '%')
+                    ->orWhere('accounts.account_name', 'like', $query['account_name'] ?? '%');
             })
             ->where(function ($q) use ($filter) {
-                $q->orWhere('companies.id', 'like', $filter['company'] ?? '')
-                    ->orWhere('companies.name', 'like', $filter['company'] ?? '');
+                $q->orWhere('companies.id', 'like', $filter['company'] ?? '%')
+                    ->orWhere('companies.name', 'like', $filter['company'] ?? '%');
             })
             ->where('accounts.group_type_id', '=', $filter['group_type_id'] ?? null)
             ->where(function ($q) use ($filter) {
