@@ -84,27 +84,6 @@ class AuthController extends Controller
         }
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
-            $codes = json_decode($user->backup_codes);
-            if (request('backup_code')) {
-                foreach ($codes->backup_codes as $code) {
-                    if ($code[1] == 'true'){
-                        return response()->json(['error' => 'This code has been already used'], 403);
-                    }
-                    if ($code[0] == request('backup_code')){
-                         $this->writeToAuthLog('login');
-                        OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
-                        if (Cache::get('auth_user:' . $user->id)) {
-                            Cache::put('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
-                        } else {
-                            Cache::add('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
-                        }
-                        return $this->respondWithToken2Fa($token);
-                    }
-                    else {
-                        return response()->json(['error' => 'No such code'], 403);
-                    }
-                }
-            }
             $this->writeToAuthLog('login');
             OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
             if (Cache::get('auth_user:' . $user->id)) {
@@ -255,6 +234,21 @@ class AuthController extends Controller
         if (strtotime($expires[0]->expires_at) < strtotime(now())){
             auth()->invalidate();
             return response()->json(['error' => 'Token has expired'], 403);
+        }
+
+        $codes = json_decode($user->backup_codes);
+        if (request('backup_code')) {
+            foreach ($codes->backup_codes as $code) {
+                if ($code[1] == 'true'){
+                    return response()->json(['error' => 'This code has been already used'], 403);
+                }
+                if ($code[0] == request('backup_code')){
+                    return response()->json(['data' => 'success']);
+                }
+                else {
+                    return response()->json(['error' => 'No such code'], 403);
+                }
+            }
         }
 
         $token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
