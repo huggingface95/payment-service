@@ -74,7 +74,6 @@ class Account extends BaseModel implements BaseModelInterface
                 $join->on('aic.client_type', '=', 'account_individuals_companies.client_type');
             })
             ->join('accounts as a', 'a.id', '=', 'aic.account_id')
-            ->where('a.id', '<>', $this->id)
             ->where('accounts.id', '=', $this->id)
             ->select('a.id', 'a.current_balance', 'a.reserved_balance', 'a.available_balance', 'a.currency_id')
             ->get()
