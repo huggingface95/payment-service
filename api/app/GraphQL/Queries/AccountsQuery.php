@@ -46,7 +46,7 @@ class AccountsQuery
     public function clientDetailsList($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
 
-        if (isset($args['query'])) {
+        if (count($args['query']) > 0) {
             $query = $args['query'];
             if (count($query['filter']) > 0) {
                 $filter = $query['filter'];
