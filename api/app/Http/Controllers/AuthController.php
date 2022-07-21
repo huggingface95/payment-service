@@ -234,7 +234,7 @@ class AuthController extends Controller
 
         $codes = $user->backup_codes['backup_codes'];
         $data = '';
-        if (request('backup_code')) {
+        if (request('backup_code') != null) {
             foreach ($codes as $code) {
                 /*if ($code[1] == 'true'){
                     return response()->json(['error' => 'This code has been already used'], 403);
