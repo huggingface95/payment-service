@@ -244,7 +244,7 @@ class AuthController extends Controller
                 }
             }
             if ($data == true) {
-                return response()->json(['message' => 'success']);
+                return response()->json(['data' => 'success']);
             }
             else {
                 return response()->json(['error' => 'No such code'], 403);
