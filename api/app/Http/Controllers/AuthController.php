@@ -268,7 +268,6 @@ class AuthController extends Controller
             } else {
                 Cache::add('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1, env('JWT_TTL', 3600));
             }
-            dump(Cache::get('mfa_attempt:'. $user->id));
             return response()->json(['data' => 'Unable to verify your code']);
         }
         $token->update(['twofactor_verified' => true]);
