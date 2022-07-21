@@ -45,7 +45,7 @@ class AccountsQuery
      */
     public function clientDetailsList($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-
+        $account = Account::query();
         if (count($args['query']) > 0) {
             $query = $args['query'];
             if (count($query['filter']) > 0) {
