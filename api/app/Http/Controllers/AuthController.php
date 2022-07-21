@@ -232,9 +232,17 @@ class AuthController extends Controller
             return response()->json(['error' => 'Token has expired'], 403);
         }
 
-        $codes = $user->backup_codes['backup_codes'];
-        $data = '';
-        if (request('backup_code')) {
+        if (Cache::get('mfa_attempt:'. $user->id)) {
+            if (Cache::get('mfa_attempt:'. $user->id) >= env('MFA_ATTEMPTS','5') ) {
+                $user->is_active = false;
+                $user->save();
+                return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
+            }
+        }
+
+        if (request('backup_code') != null) {
+            $codes = $user->backup_codes['backup_codes'];
+            $data = '';
             foreach ($codes as $code) {
                 /*if ($code[1] == 'true'){
                     return response()->json(['error' => 'This code has been already used'], 403);
@@ -244,7 +252,7 @@ class AuthController extends Controller
                 }
             }
             if ($data == true) {
-                return response()->json(['message' => 'success']);
+                return response()->json(['data' => 'success']);
             }
             else {
                 return response()->json(['error' => 'No such code'], 403);
@@ -255,11 +263,17 @@ class AuthController extends Controller
         $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
         if (! $valid) {
             $token->update(['twofactor_verified' => false]);
-
+            if (Cache::get('mfa_attempt:'. $user->id)) {
+                Cache::put('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1, env('JWT_TTL', 3600));
+            } else {
+                Cache::add('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1, env('JWT_TTL', 3600));
+            }
             return response()->json(['data' => 'Unable to verify your code']);
         }
         $token->update(['twofactor_verified' => true]);
-
+        if (Cache::get('mfa_attempt:'. $user->id)) {
+            Cache::forget('mfa_attempt:'. $user->id);
+        }
         return response()->json(['data' => 'success']);
     }
 
