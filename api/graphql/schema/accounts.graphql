@@ -95,7 +95,7 @@ extend type Query @guard {
     accountDetailsList(
         query: QueryAccountDetailsCondition
         orderBy: _ @orderBy(columns: ["id","created_at"])
-    ): [Account!]!   @field(resolver:"AccountsQuery@clientDetailsList") @orderBy(column: "id", direction: ASC)
+    ): [Account!]!  @field(resolver:"AccountsQuery@clientDetailsList") @orderBy(column: "id", direction: ASC)
 
     """
     Получить список account states
