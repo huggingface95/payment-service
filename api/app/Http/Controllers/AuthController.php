@@ -40,6 +40,11 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
+
+        if (Cache::get('block_account:'. $user->id)){
+            return response()->json(['error' => 'Your account temporary blocked. Try again later'], 403);
+        }
+
         if(env('CHECK_IP') === true) {
             if (request('proceed')) {
                 if (Cache::get('auth_user:' . $user->id)) {
@@ -233,9 +238,17 @@ class AuthController extends Controller
         }
 
         if (Cache::get('mfa_attempt:'. $user->id)) {
-            if (Cache::get('mfa_attempt:'. $user->id) >= env('MFA_ATTEMPTS','5') ) {
+            if (Cache::get('mfa_attempt:'. $user->id) == env('MFA_ATTEMPTS','5')) {
+                Cache::add('block_account:'. $user->id, 1, env('BLOCK_ACCOUNT_TTL', 100));
+                JWTAuth::setToken(Cache::get('auth_user:' . $user->id))->invalidate();
+                Cache::put('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1);
+                return response()->json(['error' => 'Account is temporary blocked for '.env('BLOCK_ACCOUNT_TTL', 120)/60 .' minutes'], 403);
+            }
+            elseif (Cache::get('mfa_attempt:'. $user->id) >= env('MFA_ATTEMPTS','5')*2+1) {
                 $user->is_active = false;
-                $user->save();
+                $user->save();JWTAuth::setToken(Cache::get('auth_user:' . $user->id))->invalidate();
+                Cache::forget('mfa_attempt:'. $user->id);
+                JWTAuth::setToken(Cache::get('auth_user:' . $user->id))->invalidate();
                 return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
             }
         }
@@ -264,9 +277,9 @@ class AuthController extends Controller
         if (! $valid) {
             $token->update(['twofactor_verified' => false]);
             if (Cache::get('mfa_attempt:'. $user->id)) {
-                Cache::put('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1, env('JWT_TTL', 3600));
+                Cache::put('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1);
             } else {
-                Cache::add('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1, env('JWT_TTL', 3600));
+                Cache::add('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1);
             }
             return response()->json(['data' => 'Unable to verify your code']);
         }
