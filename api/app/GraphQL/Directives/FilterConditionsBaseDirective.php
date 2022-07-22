@@ -11,6 +11,7 @@ use GraphQL\Language\AST\InputValueDefinitionNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\Parser;
 use GraphQL\Type\Definition\EnumType;
+use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Exceptions\DefinitionException;
 use Nuwave\Lighthouse\Schema\AST\ASTHelper;
 use Nuwave\Lighthouse\Schema\AST\DocumentAST;
@@ -27,14 +28,31 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
 
     private array $columns = [];
 
+    private array $operators = [
+        'eq' => '=',
+        'neq' => '!=',
+        'gt' => '>',
+        'gte' => '>=',
+        'lt' => '<',
+        'lte' => '<=',
+        'like' => 'LIKE',
+        'not_like' => 'NOT_LIKE',
+        'in' => 'In',
+        'not_in' => 'NotIn',
+        'between' => 'Between',
+        'not_between' => 'NotBetween',
+        'is_null' => 'Null',
+        'is_not_null' => 'NotNull',
+    ];
+
     public function __construct(TypeRegistry $typeRegistry)
     {
         $this->typeRegistry = $typeRegistry;
     }
 
     /**
-     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder  $builder the builder used to resolve the field
-     * @param  array<string, mixed>  $value the client given value of the argument
+     * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $builder the builder used to resolve the field
+     * @param array<string, mixed> $value the client given value of the argument
      */
     protected function handle($builder, array $value): void
     {
@@ -46,13 +64,14 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
     }
 
     public function manipulateArgDefinition(
-        DocumentAST &$documentAST,
+        DocumentAST              &$documentAST,
         InputValueDefinitionNode &$argDefinition,
-        FieldDefinitionNode &$parentField,
+        FieldDefinitionNode      &$parentField,
         ObjectTypeDefinitionNode &$parentType
-    ): void {
+    ): void
+    {
         if ($this->hasStatic()) {
-            $restrictedWhereConditionsName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType).$this->generatedInputSuffix();
+            $restrictedWhereConditionsName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . $this->generatedInputSuffix();
             $argDefinition->type = Parser::namedType($restrictedWhereConditionsName);
             $allowedColumnsEnumName = $this->generateColumnsStatic($documentAST, $argDefinition, $parentField, $parentType);
             $documentAST
@@ -74,31 +93,64 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
     abstract protected function generatedInputSuffix(): string;
 
     /**
-     * @throws DefinitionException
+     * @throws Error
      */
-    protected function validate(array $whereConditions)
+    protected function validateRequired(array $whereConditions): bool
     {
         try {
             $this->columns = [];
             $this->loadColumns($whereConditions);
             /** @var EnumType $enum */
             preg_match('/(.*?)FilterConditions/', $this->definitionNode->type->name->value, $matches);
-            $enum = $this->typeRegistry->get($matches[1].'StaticRequired');
+            $enum = $this->typeRegistry->get($matches[1] . 'StaticRequired');
             $requiredColumns = array_map(function ($col) {
                 return $col->value;
             }, $enum->getValues());
         } catch (DefinitionException) {
-            throw new DefinitionException("Don't required enum type");
+            return true;
         }
 
         foreach ($requiredColumns as $requiredColumn) {
-            if (! in_array($requiredColumn, $this->columns)) {
+            if (!array_key_exists($requiredColumn, $this->columns)) {
                 throw new Error(
-                    "COLUMN {$requiredColumn} REQUIRED PARAMETER IN {$this->definitionNode->type->name->value}",
+                    "COLUMN " . strtoupper(Str::snake($requiredColumn)) . " REQUIRED PARAMETER IN {$this->definitionNode->type->name->value}",
                     $this->definitionNode
                 );
             }
         }
+        return true;
+    }
+
+    /**
+     * @throws Error
+     */
+    protected function validateOperator(array $whereConditions): bool
+    {
+        try {
+            $this->columns = [];
+            $this->loadColumns($whereConditions);
+            /** @var EnumType $enum */
+            preg_match('/(.*?)FilterConditions/', $this->definitionNode->type->name->value, $matches);
+            $enum = $this->typeRegistry->get($matches[1] . 'StaticOperator');
+
+            $operationColumns = collect($enum->getValues())->mapWithKeys(function ($col) {
+                return [$col->name => $col->value];
+            })->toArray();
+
+        } catch (DefinitionException) {
+            return true;
+        }
+
+
+        foreach ($this->columns as $column => $operator) {
+            if (array_key_exists($column, $operationColumns) && $operator != $operationColumns[$column]) {
+                throw new Error(
+                    "COLUMN " . strtoupper(Str::snake($column)) . " OPERATOR " . strtoupper(Str::snake($operator)) . " TYPE WRONG OPERATOR IN {$this->definitionNode->type->name->value}",
+                    $this->definitionNode
+                );
+            }
+        }
+        return true;
     }
 
     private function loadColumns(array $whereCondition)
@@ -116,7 +168,9 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
         }
 
         if (array_key_exists('column', $whereCondition)) {
-            $this->columns[] = $whereCondition['column'];
+            $operator = array_search($whereCondition['operator'], $this->operators);
+
+            $this->columns[$whereCondition['column']] = $operator;
         }
     }
 }
