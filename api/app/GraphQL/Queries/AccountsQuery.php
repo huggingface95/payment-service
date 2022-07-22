@@ -45,13 +45,13 @@ class AccountsQuery
      */
     public function clientDetailsList($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
-
-        if (isset($args['query'])) {
+        $account = Account::query();
+        if (count($args['query']) > 0) {
             $query = $args['query'];
             if (count($query['filter']) > 0) {
                 $filter = $query['filter'];
                 $account = Account::getAccountDetailsFilter($query, $filter);
-            } else {
+            } elseif(isset($query['account_name'])) {
                 $account = Account::orWhere('id', 'like', $query['account_name'])->orWhere('account_name', 'like', $query['account_name']);
             }
         }

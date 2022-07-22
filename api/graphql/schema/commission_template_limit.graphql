@@ -38,7 +38,7 @@ extend type Query @guard {
     """
     Получить список лимитов
     """
-    commissionTemplateLimits: [CommissionTemplateLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    commissionTemplateLimits(account_id: Int @scope(name:"AccountId")): [CommissionTemplateLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {

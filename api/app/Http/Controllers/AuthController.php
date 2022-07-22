@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Clickhouse\ActivityLog;
 use App\Models\Clickhouse\AuthenticationLog;
 use App\Models\Members;
 use App\Models\OauthCodes;
@@ -10,7 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Facades\Agent;
 use PragmaRX\Google2FALaravel\Facade as Google2FA;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -42,7 +40,6 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
-
         if(env('CHECK_IP') === true) {
             if (request('proceed')) {
                 if (Cache::get('auth_user:' . $user->id)) {
@@ -235,15 +232,48 @@ class AuthController extends Controller
             return response()->json(['error' => 'Token has expired'], 403);
         }
 
+        if (Cache::get('mfa_attempt:'. $user->id)) {
+            if (Cache::get('mfa_attempt:'. $user->id) >= env('MFA_ATTEMPTS','5') ) {
+                $user->is_active = false;
+                $user->save();
+                return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
+            }
+        }
+
+        if (request('backup_code') != null) {
+            $codes = $user->backup_codes['backup_codes'];
+            $data = '';
+            foreach ($codes as $code) {
+                /*if ($code[1] == 'true'){
+                    return response()->json(['error' => 'This code has been already used'], 403);
+                }*/
+                if ($code == request('backup_code')){
+                    $data = true;
+                }
+            }
+            if ($data == true) {
+                return response()->json(['data' => 'success']);
+            }
+            else {
+                return response()->json(['error' => 'No such code'], 403);
+            }
+        }
+
         $token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
         $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
         if (! $valid) {
             $token->update(['twofactor_verified' => false]);
-
+            if (Cache::get('mfa_attempt:'. $user->id)) {
+                Cache::put('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1, env('JWT_TTL', 3600));
+            } else {
+                Cache::add('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1, env('JWT_TTL', 3600));
+            }
             return response()->json(['data' => 'Unable to verify your code']);
         }
         $token->update(['twofactor_verified' => true]);
-
+        if (Cache::get('mfa_attempt:'. $user->id)) {
+            Cache::forget('mfa_attempt:'. $user->id);
+        }
         return response()->json(['data' => 'success']);
     }
 
@@ -319,7 +349,7 @@ class AuthController extends Controller
     {
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
         $charactersNumber = strlen($characters);
-        $codeLength = 16;
+        $codeLength = 6;
 
         $code = '';
 
@@ -344,6 +374,12 @@ class AuthController extends Controller
         return request()->ip();
     }
 
+    public function writeToAuthLog($status){
+        $user = auth()->user();
+        $log = AuthenticationLog::make(['id' => rand(0,4294967295), 'member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => $this->getIp(), 'status' => $status, 'created_at' => now()]);
+        $log->save();
+    }
+
     public function getAuthUserIp($email)
     {
         $user = auth()->user();
@@ -356,8 +392,7 @@ class AuthController extends Controller
         if ($getIp) {
             return $getIp[0]['ip'];
         } else {
-            $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => $this->getIp(), 'status' => 'login', 'created_at' => now()]);
-            $log->save();
+            $this->writeToAuthLog('login');
             $getIp = AuthenticationLog::select('*')->
             where('member', '=', (string)$email)->
             where('status', '=', 'login')->
@@ -379,8 +414,7 @@ class AuthController extends Controller
         if ($getStatus) {
             return $getStatus[0]['status'];
         } else {
-            $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => $this->getIp(), 'status' => 'logout', 'created_at' => now()]);
-            $log->save();
+            $this->writeToAuthLog('logout');
             $getStatus = AuthenticationLog::select('*')->
             where('member', '=', (string)$email)->
             orderByDesc('created_at')->
@@ -403,20 +437,15 @@ class AuthController extends Controller
         if ($getBrowser) {
             return $getBrowser[0]['browser'];
         } else {
-            $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => $this->getIp(), 'status' => 'login', 'created_at' => now()]);
-            $log->save();
+            $this->writeToAuthLog('login');
             $getBrowser = AuthenticationLog::select('*')->
             where('member', '=', (string)$email)->
             where('status', '=', 'login')->
             orderByDesc('created_at')->
             limit(1)->
             getRows();
+            return $getBrowser[0]['browser'];
         }
     }
 
-    public function writeToAuthLog($status){
-        $user = auth()->user();
-        $log = AuthenticationLog::make(['member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => $this->getIp(), 'status' => $status, 'created_at' => now()]);
-        $log->save();
-    }
 }

@@ -34,17 +34,11 @@ type Account {
     "Получить менеджера"
     member: Members @belongsTo(relation:"member")
     "Все аккаунты клиента"
-    client_accounts: [ClientAccountsDetails]
+    client_accounts: [ClientAccountsDetails!]!
     "Имя аккаунта"
     account_name: String!
     "Основной или нет"
     is_primary: Boolean
-    "Текущий баланс"
-    current_balance: Decimal
-    "Текущий баланс"
-    reserved_balance: Decimal
-    "Текущий баланс"
-    available_balance: Decimal
     created_at: DateTime
     updated_at: DateTime
     activated_at : DateTime
@@ -100,7 +94,8 @@ extend type Query @guard {
     """
     accountDetailsList(
         query: QueryAccountDetailsCondition
-    ): [Account!]!   @field(resolver:"AccountsQuery@clientDetailsList") @orderBy(column: "id", direction: ASC)
+        orderBy: _ @orderBy(columns: ["id","created_at"])
+    ): [Account!]!  @field(resolver:"AccountsQuery@clientDetailsList") @orderBy(column: "id", direction: ASC)
 
     """
     Получить список account states
