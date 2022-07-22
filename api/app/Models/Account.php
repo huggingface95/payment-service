@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Account
@@ -263,7 +264,8 @@ class Account extends BaseModel implements BaseModelInterface
 
     public static function getAccountDetailsFilter($query, $filter)
     {
-        return self::join('companies', 'accounts.company_id', '=', 'companies.id')
+
+         $sql = self::join('companies', 'accounts.company_id', '=', 'companies.id')
             ->join('group_role', 'accounts.group_role_id', '=', 'group_role.id')
             ->join('applicant_individual', 'accounts.owner_id', '=', 'applicant_individual.id')
             ->join('payment_provider', 'accounts.payment_provider_id', '=', 'payment_provider.id')
@@ -273,10 +275,9 @@ class Account extends BaseModel implements BaseModelInterface
                     ->orWhere('accounts.account_name', 'like', $query['account_name'] ?? '%');
             })
             ->where(function ($q) use ($filter) {
-                $q->orWhere('companies.id', 'like', $filter['company'] ?? '%')
+                $q->orWhere('accounts.company_id', 'like', $filter['company'] ?? '%')
                     ->orWhere('companies.name', 'like', $filter['company'] ?? '%');
             })
-            ->where('accounts.group_type_id', '=', $filter['group_type_id'] ?? null)
             ->where(function ($q) use ($filter) {
                 $q->orWhere('group_role.id', 'like', $filter['group_role'] ?? '%')
                     ->orWhere('group_role.name', 'like', $filter['group_role'] ?? '%');
@@ -288,6 +289,11 @@ class Account extends BaseModel implements BaseModelInterface
             ->where(function ($q) use ($filter) {
                 $q->orWhere('applicant_individual.id', 'like', $filter['owner'] ?? '%')
                     ->orWhere('applicant_individual.fullname', 'like', $filter['owner'] ?? '%');
-            });
+            })
+        ;
+         if (isset($filter['group_type_id'])) {
+             $sql = $sql->where('accounts.group_type_id', '=', $filter['group_type_id']);
+         }
+         return $sql;
     }
 }
