@@ -40,17 +40,18 @@ class AuthController extends Controller
         }
 
         $user = auth()->user();
-        if(env('CHECK_IP') === true) {
+        if (env('CHECK_IP') === true) {
             if (request('proceed')) {
-                if (Cache::get('auth_user:' . $user->id)) {
-                    JWTAuth::setToken(Cache::get('auth_user:' . $user->id))->invalidate();
+                if (Cache::get('auth_user:'.$user->id)) {
+                    JWTAuth::setToken(Cache::get('auth_user:'.$user->id))->invalidate();
                     $this->writeToAuthLog('logout');
                 } else {
                     $this->writeToAuthLog('logout');
                 }
 
-                Cache::put('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
+                Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
                 $this->writeToAuthLog('login');
+
                 return $this->respondWithToken($token);
             }
 
@@ -69,7 +70,6 @@ class AuthController extends Controller
             if ($this->getAuthUser($user->email) == 'login') {
                 return response()->json(['error' => 'This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users.'], 403);
             }
-
         }
 
         $get_ip_address = $user->ipAddress()->pluck('ip_address')->toArray();
@@ -82,19 +82,21 @@ class AuthController extends Controller
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
             $this->writeToAuthLog('login');
             OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
-            if (Cache::get('auth_user:' . $user->id)) {
-                Cache::put('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
+            if (Cache::get('auth_user:'.$user->id)) {
+                Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
             } else {
-                Cache::add('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
+                Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
             }
+
             return $this->respondWithToken2Fa($token);
         } else {
             $this->writeToAuthLog('login');
-            if (Cache::get('auth_user:' . $user->id)) {
-                Cache::put('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
+            if (Cache::get('auth_user:'.$user->id)) {
+                Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
             } else {
-                Cache::add('auth_user:' . $user->id, $token, env('JWT_TTL', 3600));
+                Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
             }
+
             return $this->respondWithToken($token);
         }
     }
@@ -119,6 +121,7 @@ class AuthController extends Controller
         $user = auth()->user();
         $this->writeToAuthLog('logout');
         auth()->logout();
+
         return response()->json(['message' => 'Successfully logged out']);
     }
 
@@ -227,15 +230,17 @@ class AuthController extends Controller
         }
 
         $expires = OauthCodes::select('*')->where('user_id', $user->id)->orderByDesc('expires_at')->limit(1)->get();
-        if (strtotime($expires[0]->expires_at) < strtotime(now())){
+        if (strtotime($expires[0]->expires_at) < strtotime(now())) {
             auth()->invalidate();
+
             return response()->json(['error' => 'Token has expired'], 403);
         }
 
-        if (Cache::get('mfa_attempt:'. $user->id)) {
-            if (Cache::get('mfa_attempt:'. $user->id) >= env('MFA_ATTEMPTS','5') ) {
+        if (Cache::get('mfa_attempt:'.$user->id)) {
+            if (Cache::get('mfa_attempt:'.$user->id) >= env('MFA_ATTEMPTS', '5')) {
                 $user->is_active = false;
                 $user->save();
+
                 return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
             }
         }
@@ -247,14 +252,13 @@ class AuthController extends Controller
                 /*if ($code[1] == 'true'){
                     return response()->json(['error' => 'This code has been already used'], 403);
                 }*/
-                if ($code == request('backup_code')){
+                if ($code == request('backup_code')) {
                     $data = true;
                 }
             }
             if ($data == true) {
                 return response()->json(['data' => 'success']);
-            }
-            else {
+            } else {
                 return response()->json(['error' => 'No such code'], 403);
             }
         }
@@ -263,17 +267,19 @@ class AuthController extends Controller
         $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
         if (! $valid) {
             $token->update(['twofactor_verified' => false]);
-            if (Cache::get('mfa_attempt:'. $user->id)) {
-                Cache::put('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1, env('JWT_TTL', 3600));
+            if (Cache::get('mfa_attempt:'.$user->id)) {
+                Cache::put('mfa_attempt:'.$user->id, Cache::get('mfa_attempt:'.$user->id) + 1, env('JWT_TTL', 3600));
             } else {
-                Cache::add('mfa_attempt:'. $user->id, Cache::get('mfa_attempt:'. $user->id)+1, env('JWT_TTL', 3600));
+                Cache::add('mfa_attempt:'.$user->id, Cache::get('mfa_attempt:'.$user->id) + 1, env('JWT_TTL', 3600));
             }
+
             return response()->json(['data' => 'Unable to verify your code']);
         }
         $token->update(['twofactor_verified' => true]);
-        if (Cache::get('mfa_attempt:'. $user->id)) {
-            Cache::forget('mfa_attempt:'. $user->id);
+        if (Cache::get('mfa_attempt:'.$user->id)) {
+            Cache::forget('mfa_attempt:'.$user->id);
         }
+
         return response()->json(['data' => 'success']);
     }
 
@@ -362,21 +368,25 @@ class AuthController extends Controller
         return $code;
     }
 
-    public function getIp(){
-        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR') as $key){
-            if (array_key_exists($key, $_SERVER) === true){
-                foreach (explode(',', $_SERVER[$key]) as $ip){
+    public function getIp()
+    {
+        foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR'] as $key) {
+            if (array_key_exists($key, $_SERVER) === true) {
+                foreach (explode(',', $_SERVER[$key]) as $ip) {
                     $ip = trim($ip);
+
                     return $ip;
                 }
             }
         }
+
         return request()->ip();
     }
 
-    public function writeToAuthLog($status){
+    public function writeToAuthLog($status)
+    {
         $user = auth()->user();
-        $log = AuthenticationLog::make(['id' => rand(0,4294967295), 'member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser()?Agent::browser():'unknown', 'platform' => Agent::platform()?Agent::platform():'unknown', 'device_type' => Agent::device()?Agent::device():'unknown', 'ip' => $this->getIp(), 'status' => $status, 'created_at' => now()]);
+        $log = AuthenticationLog::make(['id' => rand(0, 4294967295), 'member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser() ? Agent::browser() : 'unknown', 'platform' => Agent::platform() ? Agent::platform() : 'unknown', 'device_type' => Agent::device() ? Agent::device() : 'unknown', 'ip' => $this->getIp(), 'status' => $status, 'created_at' => now()]);
         $log->save();
     }
 
@@ -384,7 +394,7 @@ class AuthController extends Controller
     {
         $user = auth()->user();
         $getIp = AuthenticationLog::select('*')->
-        where('member', '=', (string)$email)->
+        where('member', '=', (string) $email)->
         where('status', '=', 'login')->
         orderByDesc('created_at')->
         limit(1)->
@@ -394,11 +404,12 @@ class AuthController extends Controller
         } else {
             $this->writeToAuthLog('login');
             $getIp = AuthenticationLog::select('*')->
-            where('member', '=', (string)$email)->
+            where('member', '=', (string) $email)->
             where('status', '=', 'login')->
             orderByDesc('created_at')->
             limit(1)->
             getRows();
+
             return $getIp[0]['ip'];
         }
     }
@@ -407,7 +418,7 @@ class AuthController extends Controller
     {
         $user = auth()->user();
         $getStatus = AuthenticationLog::select('*')->
-        where('member', '=', (string)$email)->
+        where('member', '=', (string) $email)->
         orderByDesc('created_at')->
         limit(1)->
         getRows();
@@ -416,20 +427,20 @@ class AuthController extends Controller
         } else {
             $this->writeToAuthLog('logout');
             $getStatus = AuthenticationLog::select('*')->
-            where('member', '=', (string)$email)->
+            where('member', '=', (string) $email)->
             orderByDesc('created_at')->
             limit(1)->
             getRows();
+
             return $getStatus[0]['status'];
         }
-
     }
 
     public function getAuthUserBrowser($email)
     {
         $user = auth()->user();
         $getBrowser = AuthenticationLog::select('*')->
-        where('member', '=', (string)$email)->
+        where('member', '=', (string) $email)->
         where('status', '=', 'login')->
         orderByDesc('created_at')->
         limit(1)->
@@ -439,13 +450,13 @@ class AuthController extends Controller
         } else {
             $this->writeToAuthLog('login');
             $getBrowser = AuthenticationLog::select('*')->
-            where('member', '=', (string)$email)->
+            where('member', '=', (string) $email)->
             where('status', '=', 'login')->
             orderByDesc('created_at')->
             limit(1)->
             getRows();
+
             return $getBrowser[0]['browser'];
         }
     }
-
 }

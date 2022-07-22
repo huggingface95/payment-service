@@ -67,7 +67,7 @@ class Account extends BaseModel implements BaseModelInterface
 
     public function getClientAccountsAttribute(): array
     {
-        return Account::query()->with('currencies')
+        return self::query()->with('currencies')
             ->join('account_individuals_companies', 'account_individuals_companies.account_id', '=', 'accounts.id')
             ->join('account_individuals_companies as aic', function ($join) {
                 $join->on('aic.client_id', '=', 'account_individuals_companies.client_id');
@@ -85,8 +85,6 @@ class Account extends BaseModel implements BaseModelInterface
                 return $account;
             })
             ->toArray();
-
-
     }
 
     public function member(): BelongsTo

@@ -32,7 +32,7 @@ GRAPHQL;
     }
 
     /**
-     * @param array<string, mixed>|null $value
+     * @param  array<string, mixed>|null  $value
      */
     public function handleBuilder($builder, $value): object
     {

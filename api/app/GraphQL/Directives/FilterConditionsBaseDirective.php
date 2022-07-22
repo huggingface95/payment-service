@@ -33,8 +33,8 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $builder the builder used to resolve the field
-     * @param array<string, mixed> $value the client given value of the argument
+     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder  $builder the builder used to resolve the field
+     * @param  array<string, mixed>  $value the client given value of the argument
      */
     protected function handle($builder, array $value): void
     {
@@ -46,14 +46,13 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
     }
 
     public function manipulateArgDefinition(
-        DocumentAST              &$documentAST,
+        DocumentAST &$documentAST,
         InputValueDefinitionNode &$argDefinition,
-        FieldDefinitionNode      &$parentField,
+        FieldDefinitionNode &$parentField,
         ObjectTypeDefinitionNode &$parentType
-    ): void
-    {
+    ): void {
         if ($this->hasStatic()) {
-            $restrictedWhereConditionsName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . $this->generatedInputSuffix();
+            $restrictedWhereConditionsName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType).$this->generatedInputSuffix();
             $argDefinition->type = Parser::namedType($restrictedWhereConditionsName);
             $allowedColumnsEnumName = $this->generateColumnsStatic($documentAST, $argDefinition, $parentField, $parentType);
             $documentAST
@@ -84,7 +83,7 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
             $this->loadColumns($whereConditions);
             /** @var EnumType $enum */
             preg_match('/(.*?)FilterConditions/', $this->definitionNode->type->name->value, $matches);
-            $enum = $this->typeRegistry->get($matches[1] . 'StaticRequired');
+            $enum = $this->typeRegistry->get($matches[1].'StaticRequired');
             $requiredColumns = array_map(function ($col) {
                 return $col->value;
             }, $enum->getValues());
@@ -93,7 +92,7 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
         }
 
         foreach ($requiredColumns as $requiredColumn) {
-            if (!in_array($requiredColumn, $this->columns)) {
+            if (! in_array($requiredColumn, $this->columns)) {
                 throw new Error(
                     "COLUMN {$requiredColumn} REQUIRED PARAMETER IN {$this->definitionNode->type->name->value}",
                     $this->definitionNode
