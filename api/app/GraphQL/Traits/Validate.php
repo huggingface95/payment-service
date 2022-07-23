@@ -15,7 +15,6 @@ use Nuwave\Lighthouse\Exceptions\DefinitionException;
  */
 trait Validate
 {
-
     /**
      * @throws Error
      */
@@ -52,15 +51,14 @@ trait Validate
     private function validateRequired(array $requestColumns, array $graphqlColumns): void
     {
         foreach ($graphqlColumns as $graphqlColumn) {
-            if (!array_key_exists($graphqlColumn, $requestColumns)) {
+            if (! array_key_exists($graphqlColumn, $requestColumns)) {
                 throw new Error(
-                    "COLUMN " . strtoupper(Str::snake($graphqlColumn)) . " REQUIRED PARAMETER IN {$this->definitionNode->type->name->value}",
+                    'COLUMN '.strtoupper(Str::snake($graphqlColumn))." REQUIRED PARAMETER IN {$this->definitionNode->type->name->value}",
                     $this->definitionNode
                 );
             }
         }
     }
-
 
     /**
      * @throws Error
@@ -70,7 +68,7 @@ trait Validate
         foreach ($requestColumns as $column => $columnData) {
             if (array_key_exists($column, $graphqlColumns) && $columnData['operator'] != $graphqlColumns[$column]) {
                 throw new Error(
-                    "COLUMN " . strtoupper(Str::snake($column)) . " OPERATOR " . strtoupper(Str::snake($columnData['operator'])) . " TYPE WRONG OPERATOR IN {$this->definitionNode->type->name->value}",
+                    'COLUMN '.strtoupper(Str::snake($column)).' OPERATOR '.strtoupper(Str::snake($columnData['operator']))." TYPE WRONG OPERATOR IN {$this->definitionNode->type->name->value}",
                     $this->definitionNode
                 );
             }
@@ -97,7 +95,6 @@ trait Validate
         return $this->types[$type]->parseValue($value);
     }
 
-
     private function formatForType(EnumType $enum, string $type): ?array
     {
         if ($type == self::REQUIRED_ENUM) {
@@ -113,12 +110,12 @@ trait Validate
         return null;
     }
 
-
     private function getEnumType(string $name): ?Type
     {
         try {
             preg_match('/(.*?)FilterConditions/', $this->definitionNode->type->name->value, $matches);
-            return $this->typeRegistry->get($matches[1] . $name);
+
+            return $this->typeRegistry->get($matches[1].$name);
         } catch (DefinitionException) {
             return null;
         }

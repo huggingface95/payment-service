@@ -13,10 +13,7 @@ use GraphQL\Language\AST\FieldDefinitionNode;
 use GraphQL\Language\AST\InputValueDefinitionNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\Parser;
-use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\Type;
-use Illuminate\Support\Str;
-use Nuwave\Lighthouse\Exceptions\DefinitionException;
 use Nuwave\Lighthouse\Schema\AST\ASTHelper;
 use Nuwave\Lighthouse\Schema\AST\DocumentAST;
 use Nuwave\Lighthouse\Schema\Directives\BaseDirective;
@@ -61,8 +58,8 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $builder the builder used to resolve the field
-     * @param array<string, mixed> $value the client given value of the argument
+     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder  $builder the builder used to resolve the field
+     * @param  array<string, mixed>  $value the client given value of the argument
      */
     protected function handle($builder, array $value): void
     {
@@ -74,14 +71,13 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
     }
 
     public function manipulateArgDefinition(
-        DocumentAST              &$documentAST,
+        DocumentAST &$documentAST,
         InputValueDefinitionNode &$argDefinition,
-        FieldDefinitionNode      &$parentField,
+        FieldDefinitionNode &$parentField,
         ObjectTypeDefinitionNode &$parentType
-    ): void
-    {
+    ): void {
         if ($this->hasStatic()) {
-            $restrictedWhereConditionsName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . $this->generatedInputSuffix();
+            $restrictedWhereConditionsName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType).$this->generatedInputSuffix();
             $argDefinition->type = Parser::namedType($restrictedWhereConditionsName);
             $allowedColumnsEnumName = $this->generateColumnsStatic($documentAST, $argDefinition, $parentField, $parentType);
             $documentAST
@@ -131,7 +127,7 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
 
             $this->columns[$whereCondition['column']] = [
                 'operator' => $operator,
-                'value' => $whereCondition['value']
+                'value' => $whereCondition['value'],
             ];
         }
     }

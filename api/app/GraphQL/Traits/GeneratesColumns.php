@@ -4,7 +4,6 @@ namespace App\GraphQL\Traits;
 
 use GraphQL\Language\AST\EnumTypeDefinitionNode;
 use GraphQL\Language\AST\FieldDefinitionNode;
-use GraphQL\Language\AST\InputObjectTypeDefinitionNode;
 use GraphQL\Language\AST\InputValueDefinitionNode;
 use GraphQL\Language\AST\NodeKind;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
@@ -23,7 +22,7 @@ trait GeneratesColumns
 {
     protected function hasStatic(): bool
     {
-        return (bool)$this->directiveArgValue('static');
+        return (bool) $this->directiveArgValue('static');
     }
 
     private function getDefinitionNode(DocumentAST $documentAST, $name): Collection
@@ -62,25 +61,23 @@ trait GeneratesColumns
     }
 
     protected function generateColumnsStatic(
-        DocumentAST              &$documentAST,
+        DocumentAST &$documentAST,
         InputValueDefinitionNode &$argDefinition,
-        FieldDefinitionNode      &$parentField,
+        FieldDefinitionNode &$parentField,
         ObjectTypeDefinitionNode &$parentType
-    ): string
-    {
+    ): string {
         $types = collect();
 
         $fullName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType);
 
-        $fields = $this->getDefinitionNode($documentAST, $fullName . self::ALLOWED_ENUM);
+        $fields = $this->getDefinitionNode($documentAST, $fullName.self::ALLOWED_ENUM);
 
         foreach ([
-                     self::ALLOWED_ENUM,
-                     self::REQUIRED_ENUM,
-                     self::OPERATOR_ENUM,
-                     self::TYPE_ENUM,
-                 ] as $type) {
-
+            self::ALLOWED_ENUM,
+            self::REQUIRED_ENUM,
+            self::OPERATOR_ENUM,
+            self::TYPE_ENUM,
+        ] as $type) {
             if ($type == self::ALLOWED_ENUM) {
                 $types->put($type, $this->getColumnsForAllowedEnum($fields));
             } elseif ($type == self::REQUIRED_ENUM) {
@@ -97,29 +94,27 @@ trait GeneratesColumns
         });
 
         foreach ($types as $type => $data) {
-            $enumColumnsDefinition = static::createColumnsEnum($argDefinition, $parentField, $parentType, $data, $type, $fullName . $type);
+            $enumColumnsDefinition = static::createColumnsEnum($argDefinition, $parentField, $parentType, $data, $type, $fullName.$type);
             $documentAST->setTypeDefinition($enumColumnsDefinition);
         }
 
-        return $fullName . self::ALLOWED_ENUM;
+        return $fullName.self::ALLOWED_ENUM;
     }
-
 
     protected function createColumnsEnum(
         InputValueDefinitionNode $argDefinition,
-        FieldDefinitionNode      $parentField,
+        FieldDefinitionNode $parentField,
         ObjectTypeDefinitionNode $parentType,
-        array                    $columns,
-        string                   $type,
-        string                   $ColumnsEnumName
-    ): ?EnumTypeDefinitionNode
-    {
+        array $columns,
+        string $type,
+        string $ColumnsEnumName
+    ): ?EnumTypeDefinitionNode {
         if ($type == self::REQUIRED_ENUM) {
             $enumValues = array_map(
                 function (string $columnName): string {
                     return
                         $columnName
-                        . ' @enum(value: "' . $columnName . '")';
+                        .' @enum(value: "'.$columnName.'")';
                 },
                 $columns
             );
@@ -128,7 +123,7 @@ trait GeneratesColumns
                 function (string $columnName, string $v): string {
                     return
                         $columnName
-                        . ' @enum(value: "' . $v . '")';
+                        .' @enum(value: "'.$v.'")';
                 },
                 array_keys($columns), $columns
             );
@@ -139,14 +134,13 @@ trait GeneratesColumns
                         strtoupper(
                             Str::snake($columnName)
                         )
-                        . ' @enum(value: "' . $columnName . '")';
+                        .' @enum(value: "'.$columnName.'")';
                 },
                 $columns
             );
         }
 
         $enumValuesString = implode("\n", $enumValues);
-
 
         return Parser::enumTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
 "Column names for {$parentType->name->value}.{$parentField->name->value}.{$argDefinition->name->value}."
@@ -156,5 +150,4 @@ enum $ColumnsEnumName {
 GRAPHQL
         );
     }
-
 }

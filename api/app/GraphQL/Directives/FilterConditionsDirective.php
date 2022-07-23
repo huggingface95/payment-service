@@ -31,7 +31,6 @@ directive @filterConditions(
 GRAPHQL;
     }
 
-
     /**
      * @throws Error
      */

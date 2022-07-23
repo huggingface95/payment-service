@@ -22,16 +22,15 @@ class FilterConditionsHandler
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $builder
-     * @param array<string, mixed> $whereConditions
+     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder  $builder
+     * @param  array<string, mixed>  $whereConditions
      */
     public function __invoke(
         object $builder,
-        array  $whereConditions,
-        Model  $model = null,
+        array $whereConditions,
+        Model $model = null,
         string $boolean = 'and'
-    ): void
-    {
+    ): void {
         if ($builder instanceof EloquentBuilder) {
             $model = $builder->getModel();
         }
@@ -68,7 +67,7 @@ class FilterConditionsHandler
                     'operator' => $whereConditions['operator'],
                 ];
             } elseif (preg_match('/^(.*?)Mixed(.*)/', $hasCondition[1], $hasConditionArguments)) {
-                if (strpos("Or", $hasConditionArguments[2]) != -1) {
+                if (strpos('Or', $hasConditionArguments[2]) != -1) {
                     $c = 'OR';
                     $columns = explode('Or', $hasConditionArguments[2]);
                 } else {
@@ -89,7 +88,6 @@ class FilterConditionsHandler
                 $relation = $hasCondition[1];
             }
 
-
             $nestedBuilder = $this->handleHasCondition(
                 $model,
                 $relation,
@@ -102,7 +100,7 @@ class FilterConditionsHandler
             $builder->addNestedWhereQuery($nestedBuilder, $boolean);
         }
 
-        if (!str_starts_with($whereConditions['column'] ?? 'null', 'has')) {
+        if (! str_starts_with($whereConditions['column'] ?? 'null', 'has')) {
             if ($column = $whereConditions['column'] ?? null) {
                 $this->assertValidColumnReference($column);
 
@@ -112,23 +110,22 @@ class FilterConditionsHandler
     }
 
     /**
-     * @param array<string, mixed>|null $condition
+     * @param  array<string, mixed>|null  $condition
      */
     public function handleHasCondition(
-        Model  $model,
+        Model $model,
         string $relation,
         string $operator,
-        int    $amount,
+        int $amount,
         ?array $condition = null
-    ): QueryBuilder
-    {
+    ): QueryBuilder {
         return $model
             ->newQuery()
             ->whereHas(
                 $relation,
                 $condition
                     ? function ($builder) use ($condition): void {
-                    $this->__invoke(
+                        $this->__invoke(
                         $builder,
                         $this->prefixConditionWithTableName(
                             $condition,
@@ -136,7 +133,7 @@ class FilterConditionsHandler
                         ),
                         $builder->getModel()
                     );
-                }
+                    }
                     : null,
                 $operator,
                 $amount
@@ -173,17 +170,17 @@ class FilterConditionsHandler
      * This is important for queries which can otherwise be ambiguous, for
      * example when multiple tables with a column "id" are involved.
      *
-     * @param array<string, mixed> $condition
+     * @param  array<string, mixed>  $condition
      * @return array<string, mixed>
      */
     protected function prefixConditionWithTableName(array $condition, Model $model): array
     {
         if (isset($condition['column'])) {
             dump($condition);
-            $condition['column'] = $model->getTable() . '.' . $condition['column'];
+            $condition['column'] = $model->getTable().'.'.$condition['column'];
         } elseif (isset($condition[0]['column'])) {
             foreach ($condition as &$item) {
-                $item['column'] = $model->getTable() . '.' . $item['column'];
+                $item['column'] = $model->getTable().'.'.$item['column'];
             }
         }
 

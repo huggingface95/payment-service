@@ -15,7 +15,6 @@ class MixedType extends Type
     /** @var string */
     public $description = 'The `MIXED` type  takes on different values';
 
-
     /**
      * @param $value
      * @return mixed
@@ -24,7 +23,6 @@ class MixedType extends Type
     {
         return $value;
     }
-
 
     /**
      * @param $value
@@ -35,10 +33,9 @@ class MixedType extends Type
         return $value;
     }
 
-
     /**
-     * @param Node $valueNode
-     * @param array|null $variables
+     * @param  Node  $valueNode
+     * @param  array|null  $variables
      * @return mixed
      */
     public function parseLiteral(Node $valueNode, ?array $variables = null): mixed
