@@ -3,7 +3,9 @@
 namespace App\GraphQL\Directives;
 
 use App\GraphQL\Handlers\FilterConditionsHandler;
+use App\GraphQL\Interfaces\ValidateInterface;
 use App\GraphQL\Traits\GeneratesColumns;
+use App\GraphQL\Traits\Validate;
 use App\GraphQL\Types\MixedType;
 use App\Providers\FilterConditionsServiceProvider;
 use GraphQL\Error\Error;
@@ -22,11 +24,13 @@ use Nuwave\Lighthouse\Schema\TypeRegistry;
 use Nuwave\Lighthouse\Support\Contracts\ArgBuilderDirective;
 use Nuwave\Lighthouse\Support\Contracts\ArgManipulator;
 
-abstract class FilterConditionsBaseDirective extends BaseDirective implements ArgBuilderDirective, ArgManipulator
+abstract class FilterConditionsBaseDirective extends BaseDirective implements ArgBuilderDirective, ArgManipulator, ValidateInterface
 {
-    use GeneratesColumns;
+    use GeneratesColumns, Validate;
 
     private TypeRegistry $typeRegistry;
+
+    private array $enums = [self::REQUIRED_ENUM, self::OPERATOR_ENUM, self::TYPE_ENUM];
 
     private array $columns = [];
 
@@ -101,99 +105,11 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
     /**
      * @throws Error
      */
-    protected function validateRequired(array $whereConditions): bool
+    protected function validation($value)
     {
-        try {
-            $this->columns = [];
-            $this->loadColumns($whereConditions);
-            /** @var EnumType $enum */
-            preg_match('/(.*?)FilterConditions/', $this->definitionNode->type->name->value, $matches);
-            $enum = $this->typeRegistry->get($matches[1] . 'StaticRequired');
-            $requiredColumns = array_map(function ($col) {
-                return $col->value;
-            }, $enum->getValues());
-        } catch (DefinitionException) {
-            return true;
-        }
-
-        foreach ($requiredColumns as $requiredColumn) {
-            if (!array_key_exists($requiredColumn, $this->columns)) {
-                throw new Error(
-                    "COLUMN " . strtoupper(Str::snake($requiredColumn)) . " REQUIRED PARAMETER IN {$this->definitionNode->type->name->value}",
-                    $this->definitionNode
-                );
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @throws Error
-     */
-    protected function validateOperator(array $whereConditions): bool
-    {
-        try {
-            $this->columns = [];
-            $this->loadColumns($whereConditions);
-            /** @var EnumType $enum */
-            preg_match('/(.*?)FilterConditions/', $this->definitionNode->type->name->value, $matches);
-            $enum = $this->typeRegistry->get($matches[1] . 'StaticOperator');
-
-            $operationColumns = collect($enum->getValues())->mapWithKeys(function ($col) {
-                return [$col->name => $col->value];
-            })->toArray();
-
-        } catch (DefinitionException) {
-            return true;
-        }
-
-        foreach ($this->columns as $column => $data) {
-            if (array_key_exists($column, $operationColumns) && $data['operator'] != $operationColumns[$column]) {
-                throw new Error(
-                    "COLUMN " . strtoupper(Str::snake($column)) . " OPERATOR " . strtoupper(Str::snake($data['operator'])) . " TYPE WRONG OPERATOR IN {$this->definitionNode->type->name->value}",
-                    $this->definitionNode
-                );
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @throws Error
-     */
-    protected function validateType(array $whereConditions): bool
-    {
-        try {
-            $this->columns = [];
-            $this->loadColumns($whereConditions);
-            /** @var EnumType $enum */
-            preg_match('/(.*?)FilterConditions/', $this->definitionNode->type->name->value, $matches);
-            $enum = $this->typeRegistry->get($matches[1] . 'StaticType');
-
-            $typeColumns = collect($enum->getValues())->mapWithKeys(function ($col) {
-                return [$col->name => $col->value];
-            })->toArray();
-
-        } catch (DefinitionException) {
-            return true;
-        }
-
-
-        foreach ($this->columns as $column => $data) {
-            if (array_key_exists($column, $typeColumns)) {
-                $this->checkValueAndType($typeColumns[$column], $data['value']);
-            }
-        }
-        return true;
-    }
-
-
-    /**
-     * @throws Error
-     */
-    private function checkValueAndType(string $type, $value)
-    {
-        return $this->types[$type]->parseValue($value);
+        $this->loadColumns($value);
+        $columns = $this->getColumns();
+        $this->validate($columns);
     }
 
     private function loadColumns(array $whereCondition)
@@ -218,5 +134,10 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
                 'value' => $whereCondition['value']
             ];
         }
+    }
+
+    private function getColumns(): array
+    {
+        return $this->columns;
     }
 }

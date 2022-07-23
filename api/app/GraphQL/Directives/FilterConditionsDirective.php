@@ -2,6 +2,8 @@
 
 namespace App\GraphQL\Directives;
 
+use GraphQL\Error\Error;
+
 class FilterConditionsDirective extends FilterConditionsBaseDirective
 {
     public static function definition(): string
@@ -29,18 +31,13 @@ directive @filterConditions(
 GRAPHQL;
     }
 
+
     /**
-     * @param array<string, mixed>|null $value
-     * @throws \Nuwave\Lighthouse\Exceptions\DefinitionException
-     * @throws \GraphQL\Error\Error
+     * @throws Error
      */
     public function handleBuilder($builder, $value): object
     {
-        $this->validateRequired($value);
-
-        $this->validateOperator($value);
-
-        $this->validateType($value);
+        $this->validation($value);
 
         if (null === $value) {
             return $builder;
