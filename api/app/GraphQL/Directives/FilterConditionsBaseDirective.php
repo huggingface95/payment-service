@@ -4,6 +4,7 @@ namespace App\GraphQL\Directives;
 
 use App\GraphQL\Handlers\FilterConditionsHandler;
 use App\GraphQL\Traits\GeneratesColumns;
+use App\GraphQL\Types\MixedType;
 use App\Providers\FilterConditionsServiceProvider;
 use GraphQL\Error\Error;
 use GraphQL\Language\AST\FieldDefinitionNode;
@@ -11,6 +12,7 @@ use GraphQL\Language\AST\InputValueDefinitionNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\Parser;
 use GraphQL\Type\Definition\EnumType;
+use GraphQL\Type\Definition\Type;
 use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Exceptions\DefinitionException;
 use Nuwave\Lighthouse\Schema\AST\ASTHelper;
@@ -45,9 +47,13 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
         'is_not_null' => 'NotNull',
     ];
 
+    private array $types;
+
     public function __construct(TypeRegistry $typeRegistry)
     {
         $this->typeRegistry = $typeRegistry;
+        $this->types = Type::getStandardTypes();
+        $this->types['Mixed'] = new MixedType();
     }
 
     /**
@@ -141,16 +147,53 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
             return true;
         }
 
-
-        foreach ($this->columns as $column => $operator) {
-            if (array_key_exists($column, $operationColumns) && $operator != $operationColumns[$column]) {
+        foreach ($this->columns as $column => $data) {
+            if (array_key_exists($column, $operationColumns) && $data['operator'] != $operationColumns[$column]) {
                 throw new Error(
-                    "COLUMN " . strtoupper(Str::snake($column)) . " OPERATOR " . strtoupper(Str::snake($operator)) . " TYPE WRONG OPERATOR IN {$this->definitionNode->type->name->value}",
+                    "COLUMN " . strtoupper(Str::snake($column)) . " OPERATOR " . strtoupper(Str::snake($data['operator'])) . " TYPE WRONG OPERATOR IN {$this->definitionNode->type->name->value}",
                     $this->definitionNode
                 );
             }
         }
         return true;
+    }
+
+    /**
+     * @throws Error
+     */
+    protected function validateType(array $whereConditions): bool
+    {
+        try {
+            $this->columns = [];
+            $this->loadColumns($whereConditions);
+            /** @var EnumType $enum */
+            preg_match('/(.*?)FilterConditions/', $this->definitionNode->type->name->value, $matches);
+            $enum = $this->typeRegistry->get($matches[1] . 'StaticType');
+
+            $typeColumns = collect($enum->getValues())->mapWithKeys(function ($col) {
+                return [$col->name => $col->value];
+            })->toArray();
+
+        } catch (DefinitionException) {
+            return true;
+        }
+
+
+        foreach ($this->columns as $column => $data) {
+            if (array_key_exists($column, $typeColumns)) {
+                $this->checkValueAndType($typeColumns[$column], $data['value']);
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * @throws Error
+     */
+    private function checkValueAndType(string $type, $value)
+    {
+        return $this->types[$type]->parseValue($value);
     }
 
     private function loadColumns(array $whereCondition)
@@ -170,7 +213,10 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
         if (array_key_exists('column', $whereCondition)) {
             $operator = array_search($whereCondition['operator'], $this->operators);
 
-            $this->columns[$whereCondition['column']] = $operator;
+            $this->columns[$whereCondition['column']] = [
+                'operator' => $operator,
+                'value' => $whereCondition['value']
+            ];
         }
     }
 }

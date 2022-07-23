@@ -40,7 +40,7 @@ GRAPHQL;
 
         $this->validateOperator($value);
 
-        //TODO add validation by type
+        $this->validateType($value);
 
         if (null === $value) {
             return $builder;

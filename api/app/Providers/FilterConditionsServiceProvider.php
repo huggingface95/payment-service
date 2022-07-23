@@ -94,38 +94,4 @@ class FilterConditionsServiceProvider extends ServiceProvider
 GRAPHQL
         );
     }
-
-    public static function createHasConditionsInputType(string $name, string $description): InputObjectTypeDefinitionNode
-    {
-        $hasRelationInputName = $name.self::DEFAULT_WHERE_RELATION_CONDITIONS;
-        $defaultHasAmount = self::DEFAULT_HAS_AMOUNT;
-
-        /** @var \Nuwave\Lighthouse\WhereConditions\Operator $operator */
-        $operator = app(Operator::class);
-
-        $operatorName = Parser::enumTypeDefinition(
-            $operator->enumDefinition()
-        )
-            ->name
-            ->value;
-        $operatorDefault = $operator->defaultHasOperator();
-
-        return Parser::inputObjectTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
-            "$description"
-            input $hasRelationInputName {
-                "The relation that is checked."
-                relation: String!
-
-                "The comparison operator to test against the amount."
-                operator: $operatorName = $operatorDefault
-
-                "The amount to test."
-                amount: Int = $defaultHasAmount
-
-                "Additional condition logic."
-                condition: $name
-            }
-GRAPHQL
-        );
-    }
 }

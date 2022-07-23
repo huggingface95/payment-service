@@ -41,6 +41,8 @@ trait GeneratesColumns
 
         $requiredColumnsStaticName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . 'StaticRequired';
 
+        $typesColumnsTypesStaticName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . 'StaticType';
+
         $operatorColumnsStaticName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . 'StaticOperator';
 
         /** @var InputObjectTypeDefinitionNode $esim */
@@ -56,6 +58,12 @@ trait GeneratesColumns
 
         $operators = $staticFields->pluck('directives', 'name.value')->map(function ($fieldDirective, $column) {
             return $fieldDirective[0]['name']['value'];
+        })->toArray();
+
+        $typeColumns = $staticFields->mapWithKeys(function ($field) {
+            return array_key_exists('name', $field['type'])
+                ? [$field['name']['value'] => $field['type']['name']['value']]
+                : [$field['name']['value'] => $field['type']['type']['name']['value']];
         })->toArray();
 
         $staticEnumAllowedColumnsDefinition = static::createAllowedColumnsEnum(
@@ -82,6 +90,16 @@ trait GeneratesColumns
             $operatorColumnsStaticName
         );
 
+
+        $staticEnumTypeColumnsDefinition = static::createTypeColumnsEnum(
+            $argDefinition,
+            $parentField,
+            $parentType,
+            $typeColumns,
+            $typesColumnsTypesStaticName
+        );
+
+
         if ($staticEnumAllowedColumnsDefinition) {
             $documentAST->setTypeDefinition($staticEnumAllowedColumnsDefinition);
         }
@@ -92,6 +110,10 @@ trait GeneratesColumns
 
         if ($staticEnumOperationColumnsDefinition) {
             $documentAST->setTypeDefinition($staticEnumOperationColumnsDefinition);
+        }
+
+        if ($staticEnumTypeColumnsDefinition) {
+            $documentAST->setTypeDefinition($staticEnumTypeColumnsDefinition);
         }
 
         return $allowedColumnsStaticName;
@@ -152,9 +174,7 @@ GRAPHQL
         $enumValues = array_map(
             function (string $columnName): string {
                 return
-                    strtoupper(
-                        Str::snake($columnName)
-                    )
+                    $columnName
                     . ' @enum(value: "' . $columnName . '")';
             },
             $requiredColumns
@@ -207,6 +227,44 @@ GRAPHQL
         return Parser::enumTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
 "Operator names for {$parentType->name->value}.{$parentField->name->value}.{$argDefinition->name->value}."
 enum $operationColumnsEnumName {
+    {$enumValuesString}
+}
+GRAPHQL
+        );
+    }
+
+    /**
+     * Create the Enum that holds the allowed columns.
+     *
+     * @param array<mixed, string> $allowedColumns
+     */
+    protected function createTypeColumnsEnum(
+        InputValueDefinitionNode &$argDefinition,
+        FieldDefinitionNode      &$parentField,
+        ObjectTypeDefinitionNode &$parentType,
+        array                    $typeColumns,
+        string                   $typeColumnsEnumName
+    ): ?EnumTypeDefinitionNode
+    {
+
+        $enumValues = array_map(
+            function (string $columnName, $type): string {
+                return
+                    $columnName
+                    . ' @enum(value: "' . $type . '")';
+            },
+            array_keys($typeColumns), $typeColumns
+        );
+
+        $enumValuesString = implode("\n", $enumValues);
+
+        if (!strlen($enumValuesString)) {
+            return null;
+        }
+
+        return Parser::enumTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
+"Column type names for {$parentType->name->value}.{$parentField->name->value}.{$argDefinition->name->value}."
+enum $typeColumnsEnumName {
     {$enumValuesString}
 }
 GRAPHQL
