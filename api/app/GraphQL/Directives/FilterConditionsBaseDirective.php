@@ -3,7 +3,7 @@
 namespace App\GraphQL\Directives;
 
 use App\GraphQL\Handlers\FilterConditionsHandler;
-use App\GraphQL\Interfaces\ValidateInterface;
+use App\GraphQL\Interfaces\FilterConditionsInterface;
 use App\GraphQL\Traits\GeneratesColumns;
 use App\GraphQL\Traits\Validate;
 use App\GraphQL\Types\MixedType;
@@ -24,7 +24,7 @@ use Nuwave\Lighthouse\Schema\TypeRegistry;
 use Nuwave\Lighthouse\Support\Contracts\ArgBuilderDirective;
 use Nuwave\Lighthouse\Support\Contracts\ArgManipulator;
 
-abstract class FilterConditionsBaseDirective extends BaseDirective implements ArgBuilderDirective, ArgManipulator, ValidateInterface
+abstract class FilterConditionsBaseDirective extends BaseDirective implements ArgBuilderDirective, ArgManipulator, FilterConditionsInterface
 {
     use GeneratesColumns, Validate;
 

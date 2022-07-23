@@ -9,6 +9,7 @@ use GraphQL\Language\AST\InputValueDefinitionNode;
 use GraphQL\Language\AST\NodeKind;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\Parser;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Schema\AST\ASTHelper;
 use Nuwave\Lighthouse\Schema\AST\DocumentAST;
@@ -25,9 +26,39 @@ trait GeneratesColumns
         return (bool)$this->directiveArgValue('static');
     }
 
-    protected function hasTree(): bool
+    private function getDefinitionNode(DocumentAST $documentAST, $name): Collection
     {
-        return (bool)$this->directiveArgValue('tree');
+        $staticDefinitionNode = $documentAST->types[$name];
+
+        return collect($staticDefinitionNode->toArray(true)['fields']);
+    }
+
+    private function getColumnsForAllowedEnum(Collection $fields): array
+    {
+        return $fields->pluck('name.value')->toArray();
+    }
+
+    private function getColumnsForRequiredEnum(Collection $fields): array
+    {
+        return $fields->pluck('type.kind', 'name.value')->filter(function ($t) {
+            return $t == NodeKind::NON_NULL_TYPE;
+        })->keys()->toArray();
+    }
+
+    private function getColumnsForOperatorEnum(Collection $fields): array
+    {
+        return $fields->pluck('directives', 'name.value')->map(function ($fieldDirective, $column) {
+            return $fieldDirective[0]['name']['value'];
+        })->toArray();
+    }
+
+    private function getColumnsForTypeEnum(Collection $fields): array
+    {
+        return $fields->mapWithKeys(function ($field) {
+            return array_key_exists('name', $field['type'])
+                ? [$field['name']['value'] => $field['type']['name']['value']]
+                : [$field['name']['value'] => $field['type']['type']['name']['value']];
+        })->toArray();
     }
 
     protected function generateColumnsStatic(
@@ -37,237 +68,93 @@ trait GeneratesColumns
         ObjectTypeDefinitionNode &$parentType
     ): string
     {
-        $allowedColumnsStaticName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . 'Static';
+        $types = collect();
 
-        $requiredColumnsStaticName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . 'StaticRequired';
+        $fullName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType);
 
-        $typesColumnsTypesStaticName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . 'StaticType';
+        $fields = $this->getDefinitionNode($documentAST, $fullName . self::ALLOWED_ENUM);
 
-        $operatorColumnsStaticName = ASTHelper::qualifiedArgType($argDefinition, $parentField, $parentType) . 'StaticOperator';
+        foreach ([
+                     self::ALLOWED_ENUM,
+                     self::REQUIRED_ENUM,
+                     self::OPERATOR_ENUM,
+                     self::TYPE_ENUM,
+                 ] as $type) {
 
-        /** @var InputObjectTypeDefinitionNode $esim */
-        $staticDefinitionNode = $documentAST->types[$allowedColumnsStaticName];
-
-        $staticFields = collect($staticDefinitionNode->toArray(true)['fields']);
-
-        $allowedColumns = $staticFields->pluck('name.value')->toArray();
-
-        $requiredColumns = $staticFields->pluck('type.kind', 'name.value')->filter(function ($t) {
-            return $t == NodeKind::NON_NULL_TYPE;
-        })->keys()->toArray();
-
-        $operators = $staticFields->pluck('directives', 'name.value')->map(function ($fieldDirective, $column) {
-            return $fieldDirective[0]['name']['value'];
-        })->toArray();
-
-        $typeColumns = $staticFields->mapWithKeys(function ($field) {
-            return array_key_exists('name', $field['type'])
-                ? [$field['name']['value'] => $field['type']['name']['value']]
-                : [$field['name']['value'] => $field['type']['type']['name']['value']];
-        })->toArray();
-
-        $staticEnumAllowedColumnsDefinition = static::createAllowedColumnsEnum(
-            $argDefinition,
-            $parentField,
-            $parentType,
-            $allowedColumns,
-            $allowedColumnsStaticName
-        );
-
-        $staticEnumRequiredColumnsDefinition = static::createRequiredColumnsEnum(
-            $argDefinition,
-            $parentField,
-            $parentType,
-            $requiredColumns,
-            $requiredColumnsStaticName
-        );
-
-        $staticEnumOperationColumnsDefinition = static::createOperationColumnsEnum(
-            $argDefinition,
-            $parentField,
-            $parentType,
-            $operators,
-            $operatorColumnsStaticName
-        );
-
-
-        $staticEnumTypeColumnsDefinition = static::createTypeColumnsEnum(
-            $argDefinition,
-            $parentField,
-            $parentType,
-            $typeColumns,
-            $typesColumnsTypesStaticName
-        );
-
-
-        if ($staticEnumAllowedColumnsDefinition) {
-            $documentAST->setTypeDefinition($staticEnumAllowedColumnsDefinition);
+            if ($type == self::ALLOWED_ENUM) {
+                $types->put($type, $this->getColumnsForAllowedEnum($fields));
+            } elseif ($type == self::REQUIRED_ENUM) {
+                $types->put($type, $this->getColumnsForRequiredEnum($fields));
+            } elseif ($type == self::OPERATOR_ENUM) {
+                $types->put($type, $this->getColumnsForOperatorEnum($fields));
+            } elseif ($type == self::TYPE_ENUM) {
+                $types->put($type, $this->getColumnsForTypeEnum($fields));
+            }
         }
 
-        if ($staticEnumRequiredColumnsDefinition) {
-            $documentAST->setTypeDefinition($staticEnumRequiredColumnsDefinition);
+        $types = $types->filter(function ($type) {
+            return count($type);
+        });
+
+        foreach ($types as $type => $data) {
+            $enumColumnsDefinition = static::createColumnsEnum($argDefinition, $parentField, $parentType, $data, $type, $fullName . $type);
+            $documentAST->setTypeDefinition($enumColumnsDefinition);
         }
 
-        if ($staticEnumOperationColumnsDefinition) {
-            $documentAST->setTypeDefinition($staticEnumOperationColumnsDefinition);
-        }
-
-        if ($staticEnumTypeColumnsDefinition) {
-            $documentAST->setTypeDefinition($staticEnumTypeColumnsDefinition);
-        }
-
-        return $allowedColumnsStaticName;
+        return $fullName . self::ALLOWED_ENUM;
     }
 
-    /**
-     * Create the Enum that holds the allowed columns.
-     *
-     * @param array<mixed, string> $allowedColumns
-     */
-    protected function createAllowedColumnsEnum(
-        InputValueDefinitionNode &$argDefinition,
-        FieldDefinitionNode      &$parentField,
-        ObjectTypeDefinitionNode &$parentType,
-        array                    $allowedColumns,
-        string                   $allowedColumnsEnumName
+
+    protected function createColumnsEnum(
+        InputValueDefinitionNode $argDefinition,
+        FieldDefinitionNode      $parentField,
+        ObjectTypeDefinitionNode $parentType,
+        array                    $columns,
+        string                   $type,
+        string                   $ColumnsEnumName
     ): ?EnumTypeDefinitionNode
     {
-        $enumValues = array_map(
-            function (string $columnName): string {
-                return
-                    strtoupper(
-                        Str::snake($columnName)
-                    )
-                    . ' @enum(value: "' . $columnName . '")';
-            },
-            $allowedColumns
-        );
+        if ($type == self::REQUIRED_ENUM) {
+            $enumValues = array_map(
+                function (string $columnName): string {
+                    return
+                        $columnName
+                        . ' @enum(value: "' . $columnName . '")';
+                },
+                $columns
+            );
+        } elseif ($type == self::OPERATOR_ENUM || $type == self::TYPE_ENUM) {
+            $enumValues = array_map(
+                function (string $columnName, string $v): string {
+                    return
+                        $columnName
+                        . ' @enum(value: "' . $v . '")';
+                },
+                array_keys($columns), $columns
+            );
+        } else {
+            $enumValues = array_map(
+                function (string $columnName): string {
+                    return
+                        strtoupper(
+                            Str::snake($columnName)
+                        )
+                        . ' @enum(value: "' . $columnName . '")';
+                },
+                $columns
+            );
+        }
 
         $enumValuesString = implode("\n", $enumValues);
 
-        if (!strlen($enumValuesString)) {
-            return null;
-        }
 
         return Parser::enumTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
-"Allowed column names for {$parentType->name->value}.{$parentField->name->value}.{$argDefinition->name->value}."
-enum $allowedColumnsEnumName {
+"Column names for {$parentType->name->value}.{$parentField->name->value}.{$argDefinition->name->value}."
+enum $ColumnsEnumName {
     {$enumValuesString}
 }
 GRAPHQL
         );
     }
 
-    /**
-     * Create the Enum that holds the allowed columns.
-     *
-     * @param array<mixed, string> $allowedColumns
-     */
-    protected function createRequiredColumnsEnum(
-        InputValueDefinitionNode &$argDefinition,
-        FieldDefinitionNode      &$parentField,
-        ObjectTypeDefinitionNode &$parentType,
-        array                    $requiredColumns,
-        string                   $requiredColumnsEnumName
-    ): ?EnumTypeDefinitionNode
-    {
-        $enumValues = array_map(
-            function (string $columnName): string {
-                return
-                    $columnName
-                    . ' @enum(value: "' . $columnName . '")';
-            },
-            $requiredColumns
-        );
-
-        $enumValuesString = implode("\n", $enumValues);
-
-        if (!strlen($enumValuesString)) {
-            return null;
-        }
-
-        return Parser::enumTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
-"Required column names for {$parentType->name->value}.{$parentField->name->value}.{$argDefinition->name->value}."
-enum $requiredColumnsEnumName {
-    {$enumValuesString}
-}
-GRAPHQL
-        );
-    }
-
-
-    /**
-     * Create the Enum that holds the allowed columns.
-     *
-     * @param array<mixed, string> $allowedColumns
-     */
-    protected function createOperationColumnsEnum(
-        InputValueDefinitionNode &$argDefinition,
-        FieldDefinitionNode      &$parentField,
-        ObjectTypeDefinitionNode &$parentType,
-        array                    $operationColumns,
-        string                   $operationColumnsEnumName
-    ): ?EnumTypeDefinitionNode
-    {
-        $enumValues = array_map(
-            function (string $columnName, string $operator): string {
-                return
-                    $columnName
-                    . ' @enum(value: "' . $operator . '")';
-            },
-            array_keys($operationColumns), $operationColumns
-        );
-
-        $enumValuesString = implode("\n", $enumValues);
-
-        if (!strlen($enumValuesString)) {
-            return null;
-        }
-
-        return Parser::enumTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
-"Operator names for {$parentType->name->value}.{$parentField->name->value}.{$argDefinition->name->value}."
-enum $operationColumnsEnumName {
-    {$enumValuesString}
-}
-GRAPHQL
-        );
-    }
-
-    /**
-     * Create the Enum that holds the allowed columns.
-     *
-     * @param array<mixed, string> $allowedColumns
-     */
-    protected function createTypeColumnsEnum(
-        InputValueDefinitionNode &$argDefinition,
-        FieldDefinitionNode      &$parentField,
-        ObjectTypeDefinitionNode &$parentType,
-        array                    $typeColumns,
-        string                   $typeColumnsEnumName
-    ): ?EnumTypeDefinitionNode
-    {
-
-        $enumValues = array_map(
-            function (string $columnName, $type): string {
-                return
-                    $columnName
-                    . ' @enum(value: "' . $type . '")';
-            },
-            array_keys($typeColumns), $typeColumns
-        );
-
-        $enumValuesString = implode("\n", $enumValues);
-
-        if (!strlen($enumValuesString)) {
-            return null;
-        }
-
-        return Parser::enumTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
-"Column type names for {$parentType->name->value}.{$parentField->name->value}.{$argDefinition->name->value}."
-enum $typeColumnsEnumName {
-    {$enumValuesString}
-}
-GRAPHQL
-        );
-    }
 }
