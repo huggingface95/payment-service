@@ -41,6 +41,10 @@ class AuthController extends Controller
 
         $user = auth()->user();
 
+        if ($user->is_active == false) {
+            return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
+        }
+
         if (Cache::get('block_account:'.$user->id)) {
             return response()->json(['error' => 'Your account temporary blocked. Try again later'], 403);
         }
