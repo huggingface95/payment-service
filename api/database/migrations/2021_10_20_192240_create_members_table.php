@@ -26,7 +26,7 @@ class CreateMembersTable extends Migration
             $table->unsignedBigInteger('member_group_role_id');
             $table->unsignedBigInteger('two_factor_auth_setting_id')->default(1);
             $table->unsignedBigInteger('department_position_id')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(false);
             $table->string('password_hash', 255);
             $table->string('password_salt', 255);
             $table->jsonb('additional_fields')->nullable();
