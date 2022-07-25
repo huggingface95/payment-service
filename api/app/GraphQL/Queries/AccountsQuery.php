@@ -6,7 +6,6 @@ use App\Models\Account;
 use App\Models\AccountClient;
 use App\Models\GroupRole;
 use GraphQL\Type\Definition\ResolveInfo;
-use Illuminate\Support\Facades\Log;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class AccountsQuery
@@ -51,7 +50,7 @@ class AccountsQuery
             if (count($query['filter']) > 0) {
                 $filter = $query['filter'];
                 $account = Account::getAccountDetailsFilter($query, $filter);
-            } elseif(isset($query['account_name'])) {
+            } elseif (isset($query['account_name'])) {
                 $account = Account::orWhere('id', 'like', $query['account_name'])->orWhere('account_name', 'like', $query['account_name']);
             }
         }

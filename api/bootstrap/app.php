@@ -120,6 +120,7 @@ $app->register(Spatie\Permission\PermissionServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\LighthouseServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\Pagination\PaginationServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\WhereConditions\WhereConditionsServiceProvider::class);
+$app->register(\App\Providers\FilterConditionsServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\OrderBy\OrderByServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\GlobalId\GlobalIdServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\Validation\ValidationServiceProvider::class);

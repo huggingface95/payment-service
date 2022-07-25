@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\DB;
 
 /**
  * Class CommissionTemplateLimit
@@ -74,7 +73,7 @@ class CommissionTemplateLimit extends BaseModel
 
     public function scopeAccountId(Builder $query, $accountId): Builder
     {
-        return $query->select('commission_template_limit.*')->join('accounts','accounts.commission_template_id','=','commission_template_limit.commission_template_id')
-            ->where('accounts.id','=',$accountId);
+        return $query->select('commission_template_limit.*')->join('accounts', 'accounts.commission_template_id', '=', 'commission_template_limit.commission_template_id')
+            ->where('accounts.id', '=', $accountId);
     }
 }
