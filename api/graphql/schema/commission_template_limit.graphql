@@ -21,7 +21,7 @@ type CommissionTemplateLimit {
     "Получить шаблон комиссии"
     commission_template: CommissionTemplate! @belongsTo(relation:"commissionTemplate")
     "Получить платежную систему"
-    payment_system: PaymentSystem! @belongsTo(relation:"paymentSystem")
+    payment_system: PaymentSystem!
     "Получить регион"
     region: Region! @belongsTo(relation: "region")
 }

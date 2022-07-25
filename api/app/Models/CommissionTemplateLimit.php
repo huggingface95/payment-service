@@ -76,4 +76,9 @@ class CommissionTemplateLimit extends BaseModel
         return $query->select('commission_template_limit.*')->join('accounts', 'accounts.commission_template_id', '=', 'commission_template_limit.commission_template_id')
             ->where('accounts.id', '=', $accountId);
     }
+
+    public function getPaymentSystemAttribute()
+    {
+        return PaymentSystem::first();
+    }
 }
