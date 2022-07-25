@@ -56,11 +56,11 @@ class EmailSmtpMutator extends BaseMutator
 
     public function sendEmail($root, array $args)
     {
-        $emails = array_map(function ($email){
+        $emails = array_map(function ($email) {
             return trim($email);
         }, explode(',', $args['email']));
 
-        foreach ($emails as $email){
+        foreach ($emails as $email) {
             if (! $this->validEmail($email)) {
                 throw new GraphqlException("Email {$email} not correct", 'Bad Request', 400);
             }

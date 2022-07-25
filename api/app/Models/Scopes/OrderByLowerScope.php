@@ -15,18 +15,16 @@ class OrderByLowerScope implements Scope
         $orders = $builder->getQuery()->orders;
         $builder->reorder();
 
-        foreach ($orders as $order){
+        foreach ($orders as $order) {
             try {
                 $type = Schema::getColumnType($model->getTable(), $order['column']);
                 if ($type == 'string') {
                     $builder->orderByRaw("lower({$order['column']})  {$order['direction']}");
                     $builder->orderByRaw("{$order['column']}  {$order['direction']}");
-                }
-                else {
+                } else {
                     throw new \Exception('Undefined column in table or other type column');
                 }
-            }
-            catch (\Throwable){
+            } catch (\Throwable) {
                 $builder->orderBy($order['column'], $order['direction']);
             }
         }
