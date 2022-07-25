@@ -81,4 +81,11 @@ class CommissionTemplateLimit extends BaseModel
     {
         return PaymentSystem::first();
     }
+
+    public function getRegionAttribute()
+    {
+        return Region::first();
+    }
+
+
 }
