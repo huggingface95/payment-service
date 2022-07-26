@@ -2,14 +2,10 @@
 
 namespace App\Models;
 
-
-use App\Models\Relationships\CustomBelongsTo;
 use App\Models\Relationships\CustomHasOne;
-use App\Models\Scopes\ApplicantFilterByMemberScope;
-use App\Models\Scopes\BelongsTo\CommissionTemplateLimitPaymentSystemScope;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 /**
  * Class CommissionTemplateLimit
  *
@@ -103,6 +99,4 @@ class CommissionTemplateLimit extends BaseModel
             $query
         );
     }
-
-
 }

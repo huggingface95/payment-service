@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class CustomHasOne extends HasOne
 {
     protected string $matchName;
+
     protected Builder $customQuery;
 
     public function __construct(Builder $query, Model $parent, $foreignKey, $localKey, $matchName, $customQuery)
@@ -18,7 +19,6 @@ class CustomHasOne extends HasOne
         $this->customQuery = $customQuery;
         parent::__construct($query, $parent, $foreignKey, $localKey);
     }
-
 
     public function match(array $models, Collection $results, $relation)
     {
@@ -30,10 +30,10 @@ class CustomHasOne extends HasOne
         return $this->matchOneOrMany($models, $results, $relation, 'one');
     }
 
-
     protected function buildDictionary(Collection $results)
     {
         $foreign = $this->matchName;
+
         return $results->mapToDictionary(function ($result) use ($foreign) {
             return [$this->getDictionaryKey($result->{$foreign}) => $result];
         })->all();
