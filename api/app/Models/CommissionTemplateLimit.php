@@ -2,9 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use App\Models\Relationships\CustomBelongsTo;
+use App\Models\Relationships\CustomHasOne;
+use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Scopes\BelongsTo\CommissionTemplateLimitPaymentSystemScope;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class CommissionTemplateLimit
  *
@@ -76,4 +81,24 @@ class CommissionTemplateLimit extends BaseModel
         return $query->select('commission_template_limit.*')->join('accounts', 'accounts.commission_template_id', '=', 'commission_template_limit.commission_template_id')
             ->where('accounts.id', '=', $accountId);
     }
+
+
+    public function paymentSystem(): CustomHasOne
+    {
+        $query = PaymentSystem::query()
+            ->leftJoin('payment_provider_payment_system', 'payment_provider_payment_system.payment_system_id', '=', 'payment_system.id')
+            ->leftJoin('commission_template', 'commission_template.payment_provider_id', '=', 'payment_provider_payment_system.payment_provider_id')
+            ->select('payment_system.*', 'commission_template.id as c_t_id');
+
+        return new CustomHasOne(
+            $query,
+            $this,
+            'commission_template.id',
+            'commission_template_id',
+                    'c_t_id',
+            $query
+        );
+    }
+
+
 }

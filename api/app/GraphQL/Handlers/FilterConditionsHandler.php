@@ -176,7 +176,6 @@ class FilterConditionsHandler
     protected function prefixConditionWithTableName(array $condition, Model $model): array
     {
         if (isset($condition['column'])) {
-            dump($condition);
             $condition['column'] = $model->getTable().'.'.$condition['column'];
         } elseif (isset($condition[0]['column'])) {
             foreach ($condition as &$item) {

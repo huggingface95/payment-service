@@ -21,7 +21,7 @@ type CommissionTemplateLimit {
     "Получить шаблон комиссии"
     commission_template: CommissionTemplate! @belongsTo(relation:"commissionTemplate")
     "Получить платежную систему"
-    payment_system: PaymentSystem! @belongsTo(relation:"paymentSystem")
+    payment_system: PaymentSystem! @hasOne(relation:"paymentSystem")
     "Получить регион"
     region: Region! @belongsTo(relation: "region")
 }
@@ -32,7 +32,15 @@ extend type Query @guard {
     """
     Получить список лимитов
     """
-    commissionTemplateLimits(account_id: Int @scope(name:"AccountId")): [CommissionTemplateLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    commissionTemplateLimits(
+        account_id: Int @scope(name:"AccountId"),
+        filter: _ @filterConditions(static: QueryCommissionTemplateLimitsFilterStatic)
+    ): [CommissionTemplateLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryCommissionTemplateLimitsFilterStatic @spread{
+    hasPaymentSystemFilterById: ID @eq
+    hasPaymentSystemFilterByName: String @like
 }
 
 extend type Mutation @guard {
