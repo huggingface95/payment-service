@@ -23,7 +23,7 @@ type CommissionTemplateLimit {
     "Получить платежную систему"
     payment_system: PaymentSystem! @hasOne(relation:"paymentSystem")
     "Получить регион"
-    region: Region! @belongsTo(relation: "region")
+    region: Region!
 }
 
 extend type Query @guard {

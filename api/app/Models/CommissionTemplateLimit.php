@@ -82,6 +82,10 @@ class CommissionTemplateLimit extends BaseModel
             ->where('accounts.id', '=', $accountId);
     }
 
+    public function getRegionAttribute()
+    {
+        return Region::first();
+    }
 
     public function paymentSystem(): CustomHasOne
     {
