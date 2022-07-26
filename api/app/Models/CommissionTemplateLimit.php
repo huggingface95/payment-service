@@ -94,7 +94,7 @@ class CommissionTemplateLimit extends BaseModel
         $query = Region::query()
             ->leftJoin('commission_template_regions', 'commission_template_regions.region_id', '=', 'regions.id')
             ->leftJoin('commission_template', 'commission_template.id', '=', 'commission_template_regions.commission_template_id')
-            ->select('commission_template_regions.*', 'commission_template.id as c_t_id');
+            ->select('regions.*', 'commission_template.id as c_t_id');
 
         return new CustomHasOne(
             $query,
