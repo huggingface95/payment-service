@@ -32,5 +32,6 @@ class DatabaseSeeder extends Seeder
         $this->call(FeePeriodSeeder::class);
         $this->call(OperationTypeSeeder::class);
         $this->call(AccountStatesTableSeeder::class);
+        $this->call(CommissionTemplateLimitTypeTableSeeder::class);
     }
 }
