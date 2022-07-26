@@ -33,16 +33,25 @@ extend type Query @guard {
     Получить список лимитов
     """
     commissionTemplateLimits(
-        account_id: Int @scope(name:"AccountId"),
         filter: _ @filterConditions(static: QueryCommissionTemplateLimitsFilterStatic)
     ): [CommissionTemplateLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 input QueryCommissionTemplateLimitsFilterStatic @spread{
+    commission_template_id: ID! @eq
+    hasAccountsFilterById: ID @eq
     hasPaymentSystemFilterById: ID @eq
-    hasPaymentSystemFilterByName: String @like
     hasRegionFilterById: ID @eq
-    hasRegionFilterByName: String @like
+    hasCommissionTemplateLimitTransferDirectionFilterById: ID @eq
+    hasCommissionTemplateLimitPeriodFilterById: ID @eq
+    hasCurrencyFilterById: ID @eq
+    hasCurrencyFilterByName: String @like
+    hasCurrencyFilterByCode: String @like
+    hasCommissionTemplateLimitActionTypeFilterById: ID @eq
+    hasCommissionTemplateLimitActionTypeFilterById: ID @eq
+    hasCommissionTemplateLimitTypeFilterById: ID @eq
+    amount: Float @eq
+    period_count: Int @eq
 }
 
 extend type Mutation @guard {

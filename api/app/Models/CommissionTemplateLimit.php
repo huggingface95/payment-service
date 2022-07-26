@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Relationships\CustomHasMany;
 use App\Models\Relationships\CustomHasOne;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -72,10 +73,20 @@ class CommissionTemplateLimit extends BaseModel
         return $this->belongsTo(CommissionTemplate::class, 'commission_template_id');
     }
 
-    public function scopeAccountId(Builder $query, $accountId): Builder
+    public function accounts(): CustomHasMany
     {
-        return $query->select('commission_template_limit.*')->join('accounts', 'accounts.commission_template_id', '=', 'commission_template_limit.commission_template_id')
-            ->where('accounts.id', '=', $accountId);
+        $query = Account::query()
+            ->leftJoin('commission_template', 'commission_template.id', '=', 'accounts.commission_template_id')
+            ->select('accounts.*', 'commission_template.id as c_t_id');
+
+        return new CustomHasMany(
+            $query,
+            $this,
+            'commission_template.id',
+            'commission_template_id',
+            'c_t_id',
+            $query
+        );
     }
 
     public function region(): CustomHasOne
