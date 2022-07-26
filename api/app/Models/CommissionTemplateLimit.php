@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Relationships\CustomHasOne;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property CommissionTemplateLimitActionType $commissionTemplateLimitActionType
  * @property Currencies $currency
  *
- *@method static whereIn(string $string, mixed $commission_template_limit_id)
+ * @method static whereIn(string $string, mixed $commission_template_limit_id)
  */
 class CommissionTemplateLimit extends BaseModel
 {
@@ -77,15 +78,37 @@ class CommissionTemplateLimit extends BaseModel
             ->where('accounts.id', '=', $accountId);
     }
 
-    public function getPaymentSystemAttribute()
+    public function region(): CustomHasOne
     {
-        return PaymentSystem::first();
+        $query = Region::query()
+            ->leftJoin('commission_template_regions', 'commission_template_regions.region_id', '=', 'regions.id')
+            ->leftJoin('commission_template', 'commission_template.id', '=', 'commission_template_regions.commission_template_id')
+            ->select('commission_template_regions.*', 'commission_template.id as c_t_id');
+
+        return new CustomHasOne(
+            $query,
+            $this,
+            'commission_template.id',
+            'commission_template_id',
+            'c_t_id',
+            $query
+        );
     }
 
-    public function getRegionAttribute()
+    public function paymentSystem(): CustomHasOne
     {
-        return Region::first();
+        $query = PaymentSystem::query()
+            ->leftJoin('payment_provider_payment_system', 'payment_provider_payment_system.payment_system_id', '=', 'payment_system.id')
+            ->leftJoin('commission_template', 'commission_template.payment_provider_id', '=', 'payment_provider_payment_system.payment_provider_id')
+            ->select('payment_system.*', 'commission_template.id as c_t_id');
+
+        return new CustomHasOne(
+            $query,
+            $this,
+            'commission_template.id',
+            'commission_template_id',
+            'c_t_id',
+            $query
+        );
     }
-
-
 }
