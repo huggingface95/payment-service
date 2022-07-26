@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CustomHasMany extends HasMany
 {
@@ -20,7 +19,6 @@ class CustomHasMany extends HasMany
         $this->customQuery = $customQuery;
         parent::__construct($query, $parent, $foreignKey, $localKey);
     }
-
 
     public function match(array $models, Collection $results, $relation)
     {

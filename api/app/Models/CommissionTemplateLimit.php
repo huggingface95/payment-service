@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Relationships\CustomHasMany;
 use App\Models\Relationships\CustomHasOne;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
