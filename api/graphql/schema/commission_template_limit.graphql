@@ -23,7 +23,7 @@ type CommissionTemplateLimit {
     "Получить платежную систему"
     payment_system: PaymentSystem! @hasOne(relation:"paymentSystem")
     "Получить регион"
-    region: Region!
+    region: Region! @hasOne(relation:"region")
 }
 
 extend type Query @guard {
@@ -41,6 +41,8 @@ extend type Query @guard {
 input QueryCommissionTemplateLimitsFilterStatic @spread{
     hasPaymentSystemFilterById: ID @eq
     hasPaymentSystemFilterByName: String @like
+    hasRegionFilterById: ID @eq
+    hasRegionFilterByName: String @like
 }
 
 extend type Mutation @guard {
