@@ -58,10 +58,22 @@ class AuthController extends Controller
                     $this->writeToAuthLog('logout');
                 }
 
-                Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
-                $this->writeToAuthLog('login');
 
-                return $this->respondWithToken($token);
+                if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
+                    OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+                    if (Cache::get('auth_user:'.$user->id)) {
+                        Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    } else {
+                        Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    }
+
+                    return $this->respondWithToken2Fa($token);
+                } else {
+                    Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    $this->writeToAuthLog('login');
+                    
+                    return $this->respondWithToken($token);
+                }
             }
 
             if (request('cancel')) {
@@ -90,6 +102,7 @@ class AuthController extends Controller
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
             $this->writeToAuthLog('login');
+            dump($user);
             OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
             if (Cache::get('auth_user:'.$user->id)) {
                 Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
