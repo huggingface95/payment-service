@@ -33,23 +33,20 @@ extend type Query @guard {
     Получить список лимитов
     """
     commissionTemplateLimits(
-        filter: _ @filterConditions(static: QueryCommissionTemplateLimitsFilterStatic)
-    ): [CommissionTemplateLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        filter: QueryCommissionTemplateLimitsFilterStatic
+    ): [CommissionTemplateLimit!]!   @paginateConditions(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 input QueryCommissionTemplateLimitsFilterStatic @spread{
-    commission_template_id: ID! @eq
-    hasAccountsFilterById: ID @eq
-    hasPaymentSystemFilterById: ID @eq
-    hasRegionFilterById: ID @eq
-    hasCommissionTemplateLimitTransferDirectionFilterById: ID @eq
-    hasCommissionTemplateLimitPeriodFilterById: ID @eq
-    hasCurrencyFilterById: ID @eq
-    hasCurrencyFilterByName: String @like
-    hasCurrencyFilterByCode: String @like
-    hasCommissionTemplateLimitActionTypeFilterById: ID @eq
-    hasCommissionTemplateLimitActionTypeFilterById: ID @eq
-    hasCommissionTemplateLimitTypeFilterById: ID @eq
+    commission_template_id: ID @eq
+    account_id: ID @eq
+    payment_system_id: ID @eq
+    region_id: ID @eq
+    commission_template_limit_action_type_id: ID @eq
+    commission_template_limit_type_id: ID @eq
+    commission_template_limit_transfer_direction_id: ID @eq
+    commission_template_limit_period_id: ID @eq
+    currency_id: ID @eq
     amount: Decimal @eq
     period_count: Int @eq
 }
