@@ -50,7 +50,7 @@ input QueryCommissionTemplateLimitsFilterStatic @spread{
     hasCommissionTemplateLimitActionTypeFilterById: ID @eq
     hasCommissionTemplateLimitActionTypeFilterById: ID @eq
     hasCommissionTemplateLimitTypeFilterById: ID @eq
-    amount: Float @eq
+    amount: Decimal @eq
     period_count: Int @eq
 }
 
