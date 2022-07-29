@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Clickhouse\AuthenticationLog;
 use App\Models\Members;
 use App\Models\OauthCodes;
+use App\Models\OauthTokens;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ class AuthController extends Controller
     public function __construct()
     {
 //        $this->middleware('auth:api', ['except' => ['login']]);
-        $this->middleware('jwt.auth', ['except' => ['login']]);
+        $this->middleware('jwt.auth', ['except' => ['login', 'verify2FA']]);
     }
 
     /**
@@ -67,7 +68,8 @@ class AuthController extends Controller
                         Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
                     }
 
-                    return $this->respondWithToken2Fa($token);
+                    $auth_token = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('created_at')->limit(1)->get();
+                    return response()->json(['two_factor' => 'true', 'auth_token' => $auth_token[0]->id]);
                 } else {
                     Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
                     $this->writeToAuthLog('login');
@@ -108,8 +110,8 @@ class AuthController extends Controller
             } else {
                 Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
             }
-
-            return $this->respondWithToken2Fa($token);
+            $auth_token = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('created_at')->limit(1)->get();
+            return response()->json(['two_factor' => 'true', 'auth_token' => $auth_token[0]->id]);
         } else {
             $this->writeToAuthLog('login');
             if (Cache::get('auth_user:'.$user->id)) {
@@ -232,7 +234,7 @@ class AuthController extends Controller
 
             return response()->json(['data' => '2fa activated']);
         } else {
-            return response()->json(['data' => 'Unable to verify your code'], 401);
+            return response()->json(['data' => 'Unable to verify your code'], 403);
         }
     }
 
@@ -241,8 +243,12 @@ class AuthController extends Controller
         $this->validate($request, [
             'code' => 'required',
         ]);
-        $user = auth()->user();
-
+        if ($request->auth_token) {
+            $user_id = OauthTokens::select('user_id')->where('id', $request->auth_token)->orderByDesc('created_at')->limit(1)->get();
+            $user = Members::find($user_id[0]->user_id);
+        } else {
+            $user = auth()->user();
+        }
         if ($request->member_id) {
             $user = Members::find($request->member_id);
             if (! $user) {
@@ -252,8 +258,6 @@ class AuthController extends Controller
 
         $expires = OauthCodes::select('*')->where('user_id', $user->id)->orderByDesc('expires_at')->limit(1)->get();
         if (strtotime($expires[0]->expires_at) < strtotime(now())) {
-            auth()->invalidate();
-
             return response()->json(['error' => 'Token has expired'], 403);
         }
 
@@ -278,11 +282,11 @@ class AuthController extends Controller
         if (request('backup_code') != null) {
             $codes = $user->backup_codes['backup_codes'];
             $data = '';
-            foreach ($codes as $code) {
-                /*if ($code[1] == 'true'){
+            foreach ($codes as $key => $code) {
+                if ($codes[$key]['use'] == 'true'){
                     return response()->json(['error' => 'This code has been already used'], 403);
-                }*/
-                if ($code == request('backup_code')) {
+                }
+                if ($code['code'] == request('backup_code')) {
                     $data = true;
                 }
             }
@@ -303,7 +307,7 @@ class AuthController extends Controller
                 Cache::add('mfa_attempt:'.$user->id, Cache::get('mfa_attempt:'.$user->id) + 1);
             }
 
-            return response()->json(['data' => 'Unable to verify your code']);
+            return response()->json(['data' => 'Unable to verify your code'], 403);
         }
         $token->update(['twofactor_verified' => true]);
         if (Cache::get('mfa_attempt:'.$user->id)) {
@@ -432,15 +436,7 @@ class AuthController extends Controller
         if ($getIp) {
             return $getIp[0]['ip'];
         } else {
-            $this->writeToAuthLog('login');
-            $getIp = AuthenticationLog::select('*')->
-            where('member', '=', (string) $email)->
-            where('status', '=', 'login')->
-            orderByDesc('created_at')->
-            limit(1)->
-            getRows();
-
-            return $getIp[0]['ip'];
+            return $this->getIp();
         }
     }
 
@@ -461,7 +457,6 @@ class AuthController extends Controller
             orderByDesc('created_at')->
             limit(1)->
             getRows();
-
             return $getStatus[0]['status'];
         }
     }
@@ -478,15 +473,7 @@ class AuthController extends Controller
         if ($getBrowser) {
             return $getBrowser[0]['browser'];
         } else {
-            $this->writeToAuthLog('login');
-            $getBrowser = AuthenticationLog::select('*')->
-            where('member', '=', (string) $email)->
-            where('status', '=', 'login')->
-            orderByDesc('created_at')->
-            limit(1)->
-            getRows();
-
-            return $getBrowser[0]['browser'];
+            return Agent::browser();
         }
     }
 }
