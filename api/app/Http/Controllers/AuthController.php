@@ -283,13 +283,18 @@ class AuthController extends Controller
             $codes = $user->backup_codes['backup_codes'];
             $data = '';
             foreach ($codes as $key => $code) {
-                if ($codes[$key]['use'] == 'true'){
+                if ($code['code'] == request('backup_code') && $codes[$key]['use'] == 'true'){
                     return response()->json(['error' => 'This code has been already used'], 403);
                 }
                 if ($code['code'] == request('backup_code')) {
+                    $codes[$key]['use'] = 'true';
                     $data = true;
                 }
             }
+            $user->backup_codes = [
+                'backup_codes' => $codes
+            ];
+            $user->save();
             if ($data == true) {
                 return response()->json(['data' => 'success']);
             } else {
@@ -297,10 +302,10 @@ class AuthController extends Controller
             }
         }
 
-        $token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
+        $access_token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
         $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
         if (! $valid) {
-            $token->update(['twofactor_verified' => false]);
+            $access_token->update(['twofactor_verified' => false]);
             if (Cache::get('mfa_attempt:'.$user->id)) {
                 Cache::put('mfa_attempt:'.$user->id, Cache::get('mfa_attempt:'.$user->id) + 1);
             } else {
@@ -309,11 +314,12 @@ class AuthController extends Controller
 
             return response()->json(['data' => 'Unable to verify your code'], 403);
         }
-        $token->update(['twofactor_verified' => true]);
+        $access_token->update(['twofactor_verified' => true]);
         if (Cache::get('mfa_attempt:'.$user->id)) {
             Cache::forget('mfa_attempt:'.$user->id);
         }
-
+        $token = JWTAuth::getToken();
+        dump(auth()->user());
         return response()->json(['data' => 'success']);
     }
 
