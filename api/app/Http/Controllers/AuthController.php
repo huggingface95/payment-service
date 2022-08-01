@@ -319,7 +319,6 @@ class AuthController extends Controller
             Cache::forget('mfa_attempt:'.$user->id);
         }
         $token = JWTAuth::getToken();
-        dump(auth()->user());
         return response()->json(['data' => 'success']);
     }
 
