@@ -262,6 +262,11 @@ class AuthController extends Controller
             return response()->json(['error' => 'Token has expired'], 403);
         }
 
+        $expiresPersonalToken = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('expires_at')->limit(1)->get();
+        if (strtotime($expiresPersonalToken[0]->expires_at) < strtotime(now())) {
+            return response()->json(['error' => 'Your Personal Access Token has expired'], 403);
+        }
+
         if (Cache::get('mfa_attempt:'.$user->id)) {
             if (Cache::get('mfa_attempt:'.$user->id) == env('MFA_ATTEMPTS', '5')) {
                 Cache::add('block_account:'.$user->id, 1, env('BLOCK_ACCOUNT_TTL', 100));
@@ -319,9 +324,9 @@ class AuthController extends Controller
         if (Cache::get('mfa_attempt:'.$user->id)) {
             Cache::forget('mfa_attempt:'.$user->id);
         }
-        $token = JWTAuth::getToken();
+        $token = JWTAuth::fromUser($user);
 
-        return response()->json(['data' => 'success']);
+        return response()->json(['data' => 'success', 'token' => $token]);
     }
 
     public function disable2FA(Request $request)
