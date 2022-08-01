@@ -60,12 +60,6 @@ class AuthController extends Controller
                 }
 
                 if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
-                    if($expires = OauthCodes::select('*')->where('user_id', $user->id)->orderByDesc('expires_at')->limit(1)->get()) {
-                        if (strtotime($expires[0]->expires_at) < strtotime(now())) {
-                            return response()->json(['error' => 'Token has expired'], 403);
-                        }
-                    }
-
                     OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
                     if (Cache::get('auth_user:'.$user->id)) {
                         Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
@@ -233,9 +227,8 @@ class AuthController extends Controller
             str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), config('lumen2fa.string_pad', 'X'));
         $user->save();
         OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
-
+        $user->createToken($user->fullname)->accessToken;
         if ($this->verify2FA($request)->getData()->data == 'success') {
-            $user->createToken($user->fullname)->accessToken;
             $user->two_factor_auth_setting_id = 2;
             $user->save();
 
