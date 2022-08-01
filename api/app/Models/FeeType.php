@@ -12,7 +12,7 @@ class FeeType extends BaseModel
 
     public $timestamps = false;
 
-    const FEES = 'Fees';
+    public const FEES = 'Fees';
 
-    const SERVICE_FEE = 'Service fee';
+    public const SERVICE_FEE = 'Service fee';
 }

@@ -24,13 +24,13 @@ use Illuminate\Support\Carbon;
  */
 class PriceListFee extends BaseModel
 {
-    const RANGE = 'range';
+    public const RANGE = 'range';
 
-    const FIX = 'fix';
+    public const FIX = 'fix';
 
-    const RANGE_COLUMNS = ['amount_from', 'amount_to', 'mode'];
+    public const RANGE_COLUMNS = ['amount_from', 'amount_to', 'mode'];
 
-    const FIX_COLUMNS = ['fee', 'currency', 'mode'];
+    public const FIX_COLUMNS = ['fee', 'currency', 'mode'];
 
     /**
      * The attributes that are mass assignable.

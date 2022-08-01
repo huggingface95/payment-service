@@ -21,7 +21,7 @@ class ApplicantRiskLevelHistory extends BaseModel
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new MemberScope);
+        static::addGlobalScope(new MemberScope());
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
 

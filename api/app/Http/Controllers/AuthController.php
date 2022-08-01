@@ -59,7 +59,6 @@ class AuthController extends Controller
                     $this->writeToAuthLog('logout');
                 }
 
-
                 if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
                     OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
                     if (Cache::get('auth_user:'.$user->id)) {
@@ -69,6 +68,7 @@ class AuthController extends Controller
                     }
 
                     $auth_token = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('created_at')->limit(1)->get();
+
                     return response()->json(['two_factor' => 'true', 'auth_token' => $auth_token[0]->id]);
                 } else {
                     Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
@@ -111,6 +111,7 @@ class AuthController extends Controller
                 Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
             }
             $auth_token = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('created_at')->limit(1)->get();
+
             return response()->json(['two_factor' => 'true', 'auth_token' => $auth_token[0]->id]);
         } else {
             $this->writeToAuthLog('login');
@@ -283,7 +284,7 @@ class AuthController extends Controller
             $codes = $user->backup_codes['backup_codes'];
             $data = '';
             foreach ($codes as $key => $code) {
-                if ($code['code'] == request('backup_code') && $codes[$key]['use'] == 'true'){
+                if ($code['code'] == request('backup_code') && $codes[$key]['use'] == 'true') {
                     return response()->json(['error' => 'This code has been already used'], 403);
                 }
                 if ($code['code'] == request('backup_code')) {
@@ -292,7 +293,7 @@ class AuthController extends Controller
                 }
             }
             $user->backup_codes = [
-                'backup_codes' => $codes
+                'backup_codes' => $codes,
             ];
             $user->save();
             if ($data == true) {
@@ -319,6 +320,7 @@ class AuthController extends Controller
             Cache::forget('mfa_attempt:'.$user->id);
         }
         $token = JWTAuth::getToken();
+
         return response()->json(['data' => 'success']);
     }
 
@@ -462,6 +464,7 @@ class AuthController extends Controller
             orderByDesc('created_at')->
             limit(1)->
             getRows();
+
             return $getStatus[0]['status'];
         }
     }

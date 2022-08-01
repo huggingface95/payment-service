@@ -8,11 +8,11 @@ class Groups extends BaseModel
 {
     protected $table = 'group_types';
 
-    const MEMBER = 'Member';
+    public const MEMBER = 'Member';
 
-    const COMPANY = 'Company';
+    public const COMPANY = 'Company';
 
-    const INDIVIDUAL = 'Individual';
+    public const INDIVIDUAL = 'Individual';
 
     protected $fillable = [
         'name',

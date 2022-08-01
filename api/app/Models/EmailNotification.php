@@ -23,13 +23,13 @@ class EmailNotification extends BaseModel
 {
     use MorphToOne;
 
-    const ADMINISTRATION = 'administration';
+    public const ADMINISTRATION = 'administration';
 
-    const CLIENT = 'client';
+    public const CLIENT = 'client';
 
-    const RECIPIENT_PERSON = 'person';
+    public const RECIPIENT_PERSON = 'person';
 
-    const RECIPIENT_GROUP = 'group';
+    public const RECIPIENT_GROUP = 'group';
 
     /**
      * The attributes that are mass assignable.

@@ -15,7 +15,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  */
 class ApplicantIndividual extends BaseModel
 {
-    use MorphToOne, BelongsToOne;
+    use MorphToOne;
+    use BelongsToOne;
 
     protected $table = 'applicant_individual';
 

@@ -4,11 +4,11 @@ namespace App\GraphQL\Interfaces;
 
 interface FilterConditionsInterface
 {
-    const REQUIRED_ENUM = 'StaticRequired';
+    public const REQUIRED_ENUM = 'StaticRequired';
 
-    const OPERATOR_ENUM = 'StaticOperator';
+    public const OPERATOR_ENUM = 'StaticOperator';
 
-    const TYPE_ENUM = 'StaticType';
+    public const TYPE_ENUM = 'StaticType';
 
-    const ALLOWED_ENUM = 'Static';
+    public const ALLOWED_ENUM = 'Static';
 }

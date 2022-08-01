@@ -4,9 +4,9 @@ namespace App\Models;
 
 class PaymentStatus extends BaseModel
 {
-    const PENDING_ID = 1;
+    public const PENDING_ID = 1;
 
-    const COMPLETED_ID = 2;
+    public const COMPLETED_ID = 2;
 
     protected $table = 'payment_status';
 

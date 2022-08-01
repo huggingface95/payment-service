@@ -69,10 +69,12 @@ class PaymentsMutator
         }) as $limit) {
             if ($limit instanceof ApplicantBankingAccess) {
                 if ($limit->daily_limit < $allProcessedAmount->whereBetween(
-                        'created_at', [Carbon::now()->startOfDay()->format('Y-m-d H:i:s'), Carbon::now()->endOfDay()->format('Y-m-d H:i:s')]
-                    )->sum('amount')
+                    'created_at',
+                    [Carbon::now()->startOfDay()->format('Y-m-d H:i:s'), Carbon::now()->endOfDay()->format('Y-m-d H:i:s')]
+                )->sum('amount')
                     || $limit->monthly_limit < $allProcessedAmount->whereBetween(
-                        'created_at', [Carbon::now()->startOfMonth()->format('Y-m-d H:i:s'), Carbon::now()->endOfMonth()->format('Y-m-d H:i:s')]
+                        'created_at',
+                        [Carbon::now()->startOfMonth()->format('Y-m-d H:i:s'), Carbon::now()->endOfMonth()->format('Y-m-d H:i:s')]
                     )->sum('amount')
                     || $limit->operation_limit < $paymentAmount
                     || $limit->used_limit < $allProcessedAmount->sum('amount')
@@ -86,28 +88,32 @@ class PaymentsMutator
                     ->when($limit->commissionTemplateLimitPeriod->name, function ($q, $name) {
                         if ($name == CommissionTemplateLimitPeriod::YEARLY) {
                             return $q->whereBetween(
-                                'created_at', [
+                                'created_at',
+                                [
                                     Carbon::now()->startOfYear()->format('Y-m-d H:i:s'),
                                     Carbon::now()->endOfYear()->format('Y-m-d H:i:s'),
                                 ]
                             );
                         } elseif ($name == CommissionTemplateLimitPeriod::MONTHLY) {
                             return $q->whereBetween(
-                                'created_at', [
+                                'created_at',
+                                [
                                     Carbon::now()->startOfMonth()->format('Y-m-d H:i:s'),
                                     Carbon::now()->endOfMonth()->format('Y-m-d H:i:s'),
                                 ]
                             );
                         } elseif ($name == CommissionTemplateLimitPeriod::WEEKLY) {
                             return $q->whereBetween(
-                                'created_at', [
+                                'created_at',
+                                [
                                     Carbon::now()->startOfWeek()->format('Y-m-d H:i:s'),
                                     Carbon::now()->endOfWeek()->format('Y-m-d H:i:s'),
                                 ]
                             );
                         } elseif ($name == CommissionTemplateLimitPeriod::DAILY) {
                             return $q->whereBetween(
-                                'created_at', [
+                                'created_at',
+                                [
                                     Carbon::now()->startOfDay()->format('Y-m-d H:i:s'),
                                     Carbon::now()->endOfDay()->format('Y-m-d H:i:s'),
                                 ]

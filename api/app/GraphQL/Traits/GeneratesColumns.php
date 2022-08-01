@@ -125,7 +125,8 @@ trait GeneratesColumns
                         $columnName
                         .' @enum(value: "'.$v.'")';
                 },
-                array_keys($columns), $columns
+                array_keys($columns),
+                $columns
             );
         } else {
             $enumValues = array_map(

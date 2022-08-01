@@ -33,7 +33,7 @@ class CommissionTemplate extends BaseModel
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new MemberScope);
+        static::addGlobalScope(new MemberScope());
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
 
@@ -88,7 +88,8 @@ class CommissionTemplate extends BaseModel
             DB::raw('(SELECT id, name as payment_provider_name FROM "payment_provider") p'),
             function ($join) {
                 $join->on('p.id', '=', 'commission_template.payment_provider_id');
-            })
+            }
+        )
             ->orderBy('p.payment_provider_name', $sort)
             ->selectRaw('commission_template.*');
     }

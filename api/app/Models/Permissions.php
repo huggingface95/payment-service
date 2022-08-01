@@ -16,21 +16,21 @@ use Spatie\Permission\Models\Role;
  */
 class Permissions extends SpatiePermission
 {
-    const TYPE_ADD = 'add';
+    public const TYPE_ADD = 'add';
 
-    const TYPE_INFO = 'info';
+    public const TYPE_INFO = 'info';
 
-    const TYPE_EXPORT = 'export';
+    public const TYPE_EXPORT = 'export';
 
-    const TYPE_EDIT = 'edit';
+    public const TYPE_EDIT = 'edit';
 
-    const TYPE_IMPORTANT = 'important';
+    public const TYPE_IMPORTANT = 'important';
 
-    const TYPE_READ = 'read';
+    public const TYPE_READ = 'read';
 
-    const TYPE_REQUIRED = 'required';
+    public const TYPE_REQUIRED = 'required';
 
-    const TYPE_NO_REQUIRED = 'no_required';
+    public const TYPE_NO_REQUIRED = 'no_required';
 
     protected $fillable = [
         'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'order',
@@ -40,7 +40,7 @@ class Permissions extends SpatiePermission
 
     protected static function booted()
     {
-        static::addGlobalScope(new PermissionOrderScope);
+        static::addGlobalScope(new PermissionOrderScope());
         parent::booted();
     }
 

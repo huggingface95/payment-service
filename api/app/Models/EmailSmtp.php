@@ -25,11 +25,11 @@ use Illuminate\Support\Carbon;
  */
 class EmailSmtp extends BaseModel
 {
-    const SECURITY_AUTO = 'auto';
+    public const SECURITY_AUTO = 'auto';
 
-    const SECURITY_SSL = 'ssl';
+    public const SECURITY_SSL = 'ssl';
 
-    const SECURITY_STARTTLS = 'starttls';
+    public const SECURITY_STARTTLS = 'starttls';
 
     /**
      * The attributes that are mass assignable.

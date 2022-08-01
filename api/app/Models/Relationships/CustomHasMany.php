@@ -40,7 +40,8 @@ class CustomHasMany extends HasMany
         foreach ($models as $model) {
             if (isset($dictionary[$key = $this->getDictionaryKey($model->getAttribute($this->localKey))])) {
                 $model->setRelation(
-                    $relation, $this->getRelationValue($dictionary, $key, $type)
+                    $relation,
+                    $this->getRelationValue($dictionary, $key, $type)
                 );
             }
         }

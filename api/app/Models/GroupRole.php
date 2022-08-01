@@ -17,11 +17,11 @@ class GroupRole extends BaseModel
 {
     use SoftDeletes;
 
-    const INDIVIDUAL = '3';
+    public const INDIVIDUAL = '3';
 
-    const COMPANY = '2';
+    public const COMPANY = '2';
 
-    const MEMBER = '1';
+    public const MEMBER = '1';
 
     public $timestamps = false;
 

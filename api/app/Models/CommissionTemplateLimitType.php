@@ -4,13 +4,13 @@ namespace App\Models;
 
 class CommissionTemplateLimitType extends BaseModel
 {
-    const ALL = 'All Transaction Amount';
+    public const ALL = 'All Transaction Amount';
 
-    const TRANSACTION_AMOUNT = 'Single Transaction Amount';
+    public const TRANSACTION_AMOUNT = 'Single Transaction Amount';
 
-    const TRANSACTION_COUNT = 'Transaction Count';
+    public const TRANSACTION_COUNT = 'Transaction Count';
 
-    const TRANSFER_COUNT = 'Transfer Count';
+    public const TRANSFER_COUNT = 'Transfer Count';
 
     public $timestamps = false;
 

@@ -10,7 +10,7 @@ class BaseModel extends Model
 {
     use PermissionFilterData;
 
-    const DEFAULT_MEMBER_ID = 2;
+    public const DEFAULT_MEMBER_ID = 2;
 
     protected static function booting()
     {

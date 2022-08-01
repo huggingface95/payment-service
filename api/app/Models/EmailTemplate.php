@@ -24,17 +24,17 @@ use Illuminate\Support\Carbon;
  */
 class EmailTemplate extends BaseModel
 {
-    const ADMINISTRATION = 'administration';
+    public const ADMINISTRATION = 'administration';
 
-    const CLIENT = 'client';
+    public const CLIENT = 'client';
 
-    const BANKING = 'banking';
+    public const BANKING = 'banking';
 
-    const COMMON = 'common';
+    public const COMMON = 'common';
 
-    const SYSTEM = 'system';
+    public const SYSTEM = 'system';
 
-    const ADMIN = 'admin notify';
+    public const ADMIN = 'admin notify';
 
     /**
      * The attributes that are mass assignable.
@@ -48,7 +48,7 @@ class EmailTemplate extends BaseModel
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new PermissionFilterScope);
+        static::addGlobalScope(new PermissionFilterScope());
     }
 
     public function getHtml(): string
