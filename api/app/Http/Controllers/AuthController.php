@@ -227,9 +227,8 @@ class AuthController extends Controller
             str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), config('lumen2fa.string_pad', 'X'));
         $user->save();
         OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
-
+        $user->createToken($user->fullname)->accessToken;
         if ($this->verify2FA($request)->getData()->data == 'success') {
-            $user->createToken($user->fullname)->accessToken;
             $user->two_factor_auth_setting_id = 2;
             $user->save();
 
@@ -261,6 +260,11 @@ class AuthController extends Controller
         if (strtotime($expires[0]->expires_at) < strtotime(now())) {
             return response()->json(['error' => 'Token has expired'], 403);
         }
+
+        /*$expiresPersonalToken = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('expires_at')->limit(1)->get();
+        if (strtotime($expiresPersonalToken[0]->expires_at) < strtotime(now())) {
+            return response()->json(['error' => 'Your Personal Access Token has expired'], 403);
+        }*/
 
         if (Cache::get('mfa_attempt:'.$user->id)) {
             if (Cache::get('mfa_attempt:'.$user->id) == env('MFA_ATTEMPTS', '5')) {
@@ -319,9 +323,9 @@ class AuthController extends Controller
         if (Cache::get('mfa_attempt:'.$user->id)) {
             Cache::forget('mfa_attempt:'.$user->id);
         }
-        $token = JWTAuth::getToken();
+        $token = JWTAuth::fromUser($user);
 
-        return response()->json(['data' => 'success']);
+        return response()->json(['data' => 'success', 'token' => $token]);
     }
 
     public function disable2FA(Request $request)
