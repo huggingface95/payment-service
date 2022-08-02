@@ -52,10 +52,11 @@ extend type Mutation  {
     Обновить ограничение доступа
     """
     updateMemberAccessLimitation(
+        id: ID!
         "ID Мембера"
-        member_id: ID!
+        member_id: ID
         "ID Груп Роль"
-        group_role_id: ID!
+        group_role_id: ID
         "ID платежный шаблон"
         commission_template_id: ID
     ): MemberAccessLimitation @update
