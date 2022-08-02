@@ -108,6 +108,9 @@ GRAPHQL;
             $model = 'App\\Models\\'.Str::studly(strtolower(Str::singular($resolveInfo->fieldName)));
 
             $query = isset($args['query']) ? $model::getAccountFilter($args['query']) : $this->getModelClass()::query();
+            if (isset($args['created_at'])) {
+                $query = $query->whereBetween($resolveInfo->fieldName.'.created_at',[$args['created_at']['from'], $args['created_at']['to'] ]);
+            }
 
             return PaginationArgs::extractArgs($args, $this->optimalPaginationType($resolveInfo), $this->paginateMaxCount())
                 ->applyToBuilder($query);
