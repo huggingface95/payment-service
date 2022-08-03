@@ -43,7 +43,7 @@ extend type Query @guard {
     hasCompany: {column:NAME,operator:GTE,value:CompanyName} фильтр по имени компании
     """
     commissionTemplates(
-        filter: _ @filterConditions(static: QueryCommissionTemplateFilterStatic),
+        filter: _ @filterConditions(static: QueryCommissionTemplatesFilterStatic),
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
         orderBy: _ @orderBy(columns: ["id","name","is_active","description"]),
     ): [CommissionTemplate!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
