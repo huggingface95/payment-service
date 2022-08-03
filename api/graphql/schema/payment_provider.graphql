@@ -29,12 +29,12 @@ extend type Query @guard {
     hasPaymentSystems: {column:NAME,operator:GTE,value:PaymentSystemName} фильтр по платежным системам
     """
     paymentProviders(
-        filter: _ @filterConditions(static: QueryPaymentProviderFilterStatic),
+        filter: _ @filterConditions(static: QueryPaymentProvidersFilterStatic),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
     ): [PaymentProvider!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-input QueryPaymentProviderFilterStatic @spread{
+input QueryPaymentProvidersFilterStatic @spread{
     name: String @like
     hasPaymentSystemsFilterById: ID @eq
 }
