@@ -25,23 +25,6 @@ class AccountsQuery
      * @param  null  $_
      * @param  array<string, mixed>  $args
      */
-    public function clientList($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
-    {
-        if (isset($args['group_type'])) {
-            if ($args['group_type'] == GroupRole::INDIVIDUAL) {
-                return AccountClient::join('applicant_individual', 'account_clients.client_id', '=', 'applicant_individual.id')->get('account_clients.*');
-            } else {
-                return AccountClient::join('applicant_companies', 'account_clients.client_id', '=', 'applicant_companies.id')->get('account_clients.*');
-            }
-        }
-
-        return AccountClient::all();
-    }
-
-    /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
-     */
     public function clientDetailsList($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
     {
         $account = Account::query();
