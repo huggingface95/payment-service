@@ -21,7 +21,7 @@ class PermissionCategory extends BaseModel
 
     protected static function booted()
     {
-        static::addGlobalScope(new PermissionOrderScope);
+        static::addGlobalScope(new PermissionOrderScope());
         parent::booted();
     }
 

@@ -17,10 +17,11 @@ class CountryTableSeeder extends Seeder
         $path = base_path().'/data/country_iso.csv';
         $dataCsv = array_map('str_getcsv', file($path));
         foreach ($dataCsv as $item) {
-            Country::create([
-                'name' => $item[0],
-                'iso' => $item[1],
-            ]
+            Country::create(
+                [
+                    'name' => $item[0],
+                    'iso' => $item[1],
+                ]
             );
         }
     }

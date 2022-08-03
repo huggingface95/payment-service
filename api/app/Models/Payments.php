@@ -68,7 +68,7 @@ class Payments extends BaseModel
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new MemberScope);
+        static::addGlobalScope(new MemberScope());
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
         self::creating(function ($model) {
             $model->fee = CommissionTemplateLimit::query()

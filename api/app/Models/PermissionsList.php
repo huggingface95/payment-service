@@ -12,9 +12,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class PermissionsList extends BaseModel
 {
-    const PRIVATE = 'private';
+    public const PRIVATE = 'private';
 
-    const BUSINESS = 'business';
+    public const BUSINESS = 'business';
 
     protected $table = 'permissions_list';
 

@@ -126,13 +126,13 @@ class FilterConditionsHandler
                 $condition
                     ? function ($builder) use ($condition): void {
                         $this->__invoke(
-                        $builder,
-                        $this->prefixConditionWithTableName(
+                            $builder,
+                            $this->prefixConditionWithTableName(
                             $condition,
                             $builder->getModel()
                         ),
-                        $builder->getModel()
-                    );
+                            $builder->getModel()
+                        );
                     }
                     : null,
                 $operator,

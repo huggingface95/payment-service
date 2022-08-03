@@ -21,7 +21,7 @@ class ApplicantIndividualLabel extends BaseModel
 
     protected static function booted()
     {
-        static::addGlobalScope(new MemberScope);
+        static::addGlobalScope(new MemberScope());
         parent::booted();
     }
 

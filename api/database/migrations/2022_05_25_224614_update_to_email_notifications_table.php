@@ -16,8 +16,10 @@ class UpdateToEmailNotificationsTable extends Migration
     {
         Schema::table('email_notifications', function (Blueprint $table) {
             $table->dropColumn(['member_id', 'group_id']);
-            $table->enum('recipient_type',
-                [EmailNotification::RECIPIENT_GROUP, EmailNotification::RECIPIENT_PERSON])
+            $table->enum(
+                'recipient_type',
+                [EmailNotification::RECIPIENT_GROUP, EmailNotification::RECIPIENT_PERSON]
+            )
                 ->default(EmailNotification::RECIPIENT_GROUP);
         });
     }

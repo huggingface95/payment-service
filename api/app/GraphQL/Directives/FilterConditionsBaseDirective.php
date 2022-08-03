@@ -23,7 +23,8 @@ use Nuwave\Lighthouse\Support\Contracts\ArgManipulator;
 
 abstract class FilterConditionsBaseDirective extends BaseDirective implements ArgBuilderDirective, ArgManipulator, FilterConditionsInterface
 {
-    use GeneratesColumns, Validate;
+    use GeneratesColumns;
+    use Validate;
 
     private TypeRegistry $typeRegistry;
 

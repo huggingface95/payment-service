@@ -46,6 +46,8 @@ type Members {
     is_show_owner_applicants: Boolean
     "Security PIN"
     security_pin: String
+    "Google Secret"
+    google2fa_secret: String
     "Member Backup Codes"
     backup_codes: JSON
     "Подписывать или нет транзакцию"

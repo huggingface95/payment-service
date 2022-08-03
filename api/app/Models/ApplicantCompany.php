@@ -15,7 +15,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class ApplicantCompany extends BaseModel
 {
-    use MorphToOne,BelongsToOne;
+    use MorphToOne;
+    use BelongsToOne;
 
     protected $table = 'applicant_companies';
 

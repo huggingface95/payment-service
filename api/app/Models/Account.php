@@ -23,11 +23,12 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  */
 class Account extends BaseModel implements BaseModelInterface
 {
-    use MorphToOne, BelongsToOne;
+    use MorphToOne;
+    use BelongsToOne;
 
-    const PRIVATE = 'Private';
+    public const PRIVATE = 'Private';
 
-    const BUSINESS = 'Business';
+    public const BUSINESS = 'Business';
 
     protected $table = 'accounts';
 
@@ -109,7 +110,7 @@ class Account extends BaseModel implements BaseModelInterface
      */
     public function owner(): BelongsTo
     {
-        return $this->belongsTo(ApplicantIndividual::class, 'owner_id', 'id');
+        return $this->belongsTo(ApplicantIndividual::class, 'owner_id');
     }
 
     /**

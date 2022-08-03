@@ -14,7 +14,7 @@ use Nuwave\Lighthouse\Schema\AST\DocumentAST;
 use Nuwave\Lighthouse\Schema\Values\FieldValue;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
-class PaginateWithConditionsDirective extends PaginateDirective
+class PaginateConditionsDirective extends PaginateDirective
 {
     public static function definition(): string
     {
@@ -22,7 +22,7 @@ class PaginateWithConditionsDirective extends PaginateDirective
 """
 Query multiple model entries as a paginated list.
 """
-directive @paginateWithConditions(
+directive @paginateConditions(
   """
   Which pagination style should be used.
   """
@@ -107,10 +107,7 @@ GRAPHQL;
         $fieldValue->setResolver(function ($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Paginator {
             $model = 'App\\Models\\'.Str::studly(strtolower(Str::singular($resolveInfo->fieldName)));
 
-            $query = isset($args['query']) ? $model::getAccountFilter($args['query']) : $this->getModelClass()::query();
-            if (isset($args['created_at'])) {
-                $query = $query->whereBetween($resolveInfo->fieldName.'.created_at',[$args['created_at']['from'], $args['created_at']['to'] ]);
-            }
+            $query = isset($args['query']) ? $model::getFilter($args['filter']) : $this->getModelClass()::query();
 
             return PaginationArgs::extractArgs($args, $this->optimalPaginationType($resolveInfo), $this->paginateMaxCount())
                 ->applyToBuilder($query);

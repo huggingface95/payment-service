@@ -29,14 +29,20 @@ class PermissionOperation extends BaseModel
     public function parents(): BelongsToMany
     {
         return $this->belongsToMany(
-            Permissions::class, 'permission_operations_parents', 'permission_operations_id', 'permission_id'
+            Permissions::class,
+            'permission_operations_parents',
+            'permission_operations_id',
+            'permission_id'
         );
     }
 
     public function binds(): BelongsToMany
     {
         return $this->belongsToMany(
-            Permissions::class, 'permission_operations_binds', 'permission_operations_id', 'permission_id'
+            Permissions::class,
+            'permission_operations_binds',
+            'permission_operations_id',
+            'permission_id'
         );
     }
 }

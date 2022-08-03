@@ -23,7 +23,7 @@ class ApplicantCompanyLabel extends BaseModel
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new MemberScope);
+        static::addGlobalScope(new MemberScope());
         static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
     }
 
@@ -39,8 +39,10 @@ class ApplicantCompanyLabel extends BaseModel
 
     public function scopeIsActive(Builder $query, int $company_id = null): Builder
     {
-        $query->select('applicant_company_labels.*',
-            DB::raw('applicant_company_label_relation.applicant_company_id = '.$company_id.'  AS is_active'))
+        $query->select(
+            'applicant_company_labels.*',
+            DB::raw('applicant_company_label_relation.applicant_company_id = '.$company_id.'  AS is_active')
+        )
         ->leftJoin('applicant_company_label_relation', 'applicant_company_labels.id', '=', 'applicant_company_label_relation.applicant_company_label_id');
 
         return $query;

@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GroupType extends BaseModel
 {
-    const MEMBER = 'Member';
+    public const MEMBER = 'Member';
 
-    const COMPANY = 'Company';
+    public const COMPANY = 'Company';
 
-    const INDIVIDUAL = 'Individual';
+    public const INDIVIDUAL = 'Individual';
 
     protected $fillable = [
         'name',

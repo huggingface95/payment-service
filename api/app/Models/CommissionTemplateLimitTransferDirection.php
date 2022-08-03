@@ -4,11 +4,11 @@ namespace App\Models;
 
 class CommissionTemplateLimitTransferDirection extends BaseModel
 {
-    const ALL = 'All';
+    public const ALL = 'All';
 
-    const INCOMING = 'Incoming';
+    public const INCOMING = 'Incoming';
 
-    const OUTGOING = 'Outgoing';
+    public const OUTGOING = 'Outgoing';
 
     public $timestamps = false;
 

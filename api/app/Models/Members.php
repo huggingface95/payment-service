@@ -43,7 +43,14 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  */
 class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
 {
-    use SoftDeletes, Authorizable, Authenticatable, UserPermission, HasApiTokens, CanResetPassword, Notifiable, MorphToOne;
+    use SoftDeletes;
+    use Authorizable;
+    use Authenticatable;
+    use UserPermission;
+    use HasApiTokens;
+    use CanResetPassword;
+    use Notifiable;
+    use MorphToOne;
 
     public $password_confirmation;
 

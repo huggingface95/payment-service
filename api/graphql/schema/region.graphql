@@ -37,5 +37,5 @@ extend type Mutation @guard {
     deleteRegion(
         "ID региона"
         id: ID!
-    ): Role   @delete
+    ): Region  @delete
 }

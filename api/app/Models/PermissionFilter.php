@@ -18,17 +18,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class PermissionFilter extends BaseModel
 {
-    const SCOPE_MODE = 'scope';
+    public const SCOPE_MODE = 'scope';
 
-    const EVENT_MODE = 'event';
+    public const EVENT_MODE = 'event';
 
-    const EVENT_CREATING = 'creating';
+    public const EVENT_CREATING = 'creating';
 
-    const EVENT_SAVING = 'saving';
+    public const EVENT_SAVING = 'saving';
 
-    const EVENT_UPDATING = 'updating';
+    public const EVENT_UPDATING = 'updating';
 
-    const EVENT_DELETING = 'deleting';
+    public const EVENT_DELETING = 'deleting';
 
     /**
      * The attributes that are mass assignable.
@@ -66,7 +66,10 @@ class PermissionFilter extends BaseModel
     public function binds(): BelongsToMany
     {
         return $this->belongsToMany(
-            Permissions::class, 'permission_filters_binds', 'permission_filters_id', 'permission_id'
+            Permissions::class,
+            'permission_filters_binds',
+            'permission_filters_id',
+            'permission_id'
         );
     }
 }

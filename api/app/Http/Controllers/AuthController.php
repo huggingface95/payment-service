@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Clickhouse\AuthenticationLog;
 use App\Models\Members;
 use App\Models\OauthCodes;
+use App\Models\OauthTokens;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -23,7 +24,7 @@ class AuthController extends Controller
     public function __construct()
     {
 //        $this->middleware('auth:api', ['except' => ['login']]);
-        $this->middleware('jwt.auth', ['except' => ['login']]);
+        $this->middleware('jwt.auth', ['except' => ['login', 'verify2FA']]);
     }
 
     /**
@@ -58,10 +59,23 @@ class AuthController extends Controller
                     $this->writeToAuthLog('logout');
                 }
 
-                Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
-                $this->writeToAuthLog('login');
+                if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
+                    OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+                    if (Cache::get('auth_user:'.$user->id)) {
+                        Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    } else {
+                        Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    }
 
-                return $this->respondWithToken($token);
+                    $auth_token = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('created_at')->limit(1)->get();
+
+                    return response()->json(['two_factor' => 'true', 'auth_token' => $auth_token[0]->id]);
+                } else {
+                    Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    $this->writeToAuthLog('login');
+
+                    return $this->respondWithToken($token);
+                }
             }
 
             if (request('cancel')) {
@@ -96,8 +110,9 @@ class AuthController extends Controller
             } else {
                 Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
             }
+            $auth_token = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('created_at')->limit(1)->get();
 
-            return $this->respondWithToken2Fa($token);
+            return response()->json(['two_factor' => 'true', 'auth_token' => $auth_token[0]->id]);
         } else {
             $this->writeToAuthLog('login');
             if (Cache::get('auth_user:'.$user->id)) {
@@ -212,15 +227,14 @@ class AuthController extends Controller
             str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), config('lumen2fa.string_pad', 'X'));
         $user->save();
         OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
-
+        $user->createToken($user->fullname)->accessToken;
         if ($this->verify2FA($request)->getData()->data == 'success') {
-            $user->createToken($user->fullname)->accessToken;
             $user->two_factor_auth_setting_id = 2;
             $user->save();
 
             return response()->json(['data' => '2fa activated']);
         } else {
-            return response()->json(['data' => 'Unable to verify your code'], 401);
+            return response()->json(['data' => 'Unable to verify your code'], 403);
         }
     }
 
@@ -229,8 +243,12 @@ class AuthController extends Controller
         $this->validate($request, [
             'code' => 'required',
         ]);
-        $user = auth()->user();
-
+        if ($request->auth_token) {
+            $user_id = OauthTokens::select('user_id')->where('id', $request->auth_token)->orderByDesc('created_at')->limit(1)->get();
+            $user = Members::find($user_id[0]->user_id);
+        } else {
+            $user = auth()->user();
+        }
         if ($request->member_id) {
             $user = Members::find($request->member_id);
             if (! $user) {
@@ -240,10 +258,13 @@ class AuthController extends Controller
 
         $expires = OauthCodes::select('*')->where('user_id', $user->id)->orderByDesc('expires_at')->limit(1)->get();
         if (strtotime($expires[0]->expires_at) < strtotime(now())) {
-            auth()->invalidate();
-
             return response()->json(['error' => 'Token has expired'], 403);
         }
+
+        /*$expiresPersonalToken = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('expires_at')->limit(1)->get();
+        if (strtotime($expiresPersonalToken[0]->expires_at) < strtotime(now())) {
+            return response()->json(['error' => 'Your Personal Access Token has expired'], 403);
+        }*/
 
         if (Cache::get('mfa_attempt:'.$user->id)) {
             if (Cache::get('mfa_attempt:'.$user->id) == env('MFA_ATTEMPTS', '5')) {
@@ -266,39 +287,46 @@ class AuthController extends Controller
         if (request('backup_code') != null) {
             $codes = $user->backup_codes['backup_codes'];
             $data = '';
-            foreach ($codes as $code) {
-                /*if ($code[1] == 'true'){
+            foreach ($codes as $key => $code) {
+                if ($code['code'] == request('backup_code') && $codes[$key]['use'] == 'true') {
                     return response()->json(['error' => 'This code has been already used'], 403);
-                }*/
-                if ($code == request('backup_code')) {
+                }
+                if ($code['code'] == request('backup_code')) {
+                    $codes[$key]['use'] = 'true';
                     $data = true;
                 }
             }
+            $user->backup_codes = [
+                'backup_codes' => $codes,
+            ];
+            $user->save();
             if ($data == true) {
-                return response()->json(['data' => 'success']);
+                $token = JWTAuth::fromUser($user);
+                return response()->json(['data' => 'success', 'token' => $token]);
             } else {
                 return response()->json(['error' => 'No such code'], 403);
             }
         }
 
-        $token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
+        $access_token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
         $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
         if (! $valid) {
-            $token->update(['twofactor_verified' => false]);
+            $access_token->update(['twofactor_verified' => false]);
             if (Cache::get('mfa_attempt:'.$user->id)) {
                 Cache::put('mfa_attempt:'.$user->id, Cache::get('mfa_attempt:'.$user->id) + 1);
             } else {
                 Cache::add('mfa_attempt:'.$user->id, Cache::get('mfa_attempt:'.$user->id) + 1);
             }
 
-            return response()->json(['data' => 'Unable to verify your code']);
+            return response()->json(['data' => 'Unable to verify your code'], 403);
         }
-        $token->update(['twofactor_verified' => true]);
+        $access_token->update(['twofactor_verified' => true]);
         if (Cache::get('mfa_attempt:'.$user->id)) {
             Cache::forget('mfa_attempt:'.$user->id);
         }
+        $token = JWTAuth::fromUser($user);
 
-        return response()->json(['data' => 'success']);
+        return response()->json(['data' => 'success', 'token' => $token]);
     }
 
     public function disable2FA(Request $request)
@@ -420,15 +448,7 @@ class AuthController extends Controller
         if ($getIp) {
             return $getIp[0]['ip'];
         } else {
-            $this->writeToAuthLog('login');
-            $getIp = AuthenticationLog::select('*')->
-            where('member', '=', (string) $email)->
-            where('status', '=', 'login')->
-            orderByDesc('created_at')->
-            limit(1)->
-            getRows();
-
-            return $getIp[0]['ip'];
+            return $this->getIp();
         }
     }
 
@@ -466,15 +486,7 @@ class AuthController extends Controller
         if ($getBrowser) {
             return $getBrowser[0]['browser'];
         } else {
-            $this->writeToAuthLog('login');
-            $getBrowser = AuthenticationLog::select('*')->
-            where('member', '=', (string) $email)->
-            where('status', '=', 'login')->
-            orderByDesc('created_at')->
-            limit(1)->
-            getRows();
-
-            return $getBrowser[0]['browser'];
+            return Agent::browser();
         }
     }
 }
