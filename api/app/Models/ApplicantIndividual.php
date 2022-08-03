@@ -5,6 +5,7 @@ namespace App\Models;
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
@@ -230,5 +231,15 @@ class ApplicantIndividual extends BaseModel
     public function applicantBankingAccess(): \Ankurk91\Eloquent\Relations\BelongsToOne
     {
         return $this->belongsToOne(ApplicantBankingAccess::class, ApplicantIndividualCompany::class, 'applicant_individual_id', 'applicant_company_id', 'id', 'applicant_company_id');
+    }
+
+    public function scopeGetGroup(Builder $query, $groupId)
+    {
+        return $query->join('group_role_members_individuals','applicant_individual.id','=','group_role_members_individuals.user_id')
+            ->join('group_role','group_role_members_individuals.group_role_id','=','group_role.id')
+            ->where('group_role_members_individuals.user_type','=',ApplicantIndividual::class)
+            ->where('group_role.id','=',$groupId)
+            ->select('applicant_individual.*')
+            ;
     }
 }
