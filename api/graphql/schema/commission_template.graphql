@@ -49,7 +49,7 @@ extend type Query @guard {
     ): [CommissionTemplate!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
-input QueryCommissionTemplateFilterStatic @spread{
+input QueryCommissionTemplatesFilterStatic @spread{
     id: ID @eq
     name: String @like
     is_active: Boolean @eq
