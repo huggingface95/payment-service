@@ -110,7 +110,7 @@ class Account extends BaseModel implements BaseModelInterface
      */
     public function owner(): BelongsTo
     {
-        return $this->belongsTo(ApplicantIndividual::class, 'owner_id', 'id');
+        return $this->belongsTo(ApplicantIndividual::class, 'owner_id');
     }
 
     /**
