@@ -4,6 +4,8 @@ namespace App\GraphQL\Queries;
 
 use App\Models\Account;
 use App\Models\AccountClient;
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
 use App\Models\GroupRole;
 use GraphQL\Type\Definition\ResolveInfo;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
@@ -29,9 +31,9 @@ class AccountsQuery
     {
         if (isset($args['group_type'])) {
             if ($args['group_type'] == GroupRole::INDIVIDUAL) {
-                return AccountClient::join('applicant_individual', 'account_clients.client_id', '=', 'applicant_individual.id')->get('account_clients.*');
+                return AccountClient::where('client_type',ApplicantIndividual::class)->get();
             } else {
-                return AccountClient::join('applicant_companies', 'account_clients.client_id', '=', 'applicant_companies.id')->get('account_clients.*');
+                return AccountClient::where('client_type',ApplicantCompany::class)->get();
             }
         }
 
