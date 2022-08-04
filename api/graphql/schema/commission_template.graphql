@@ -43,15 +43,19 @@ extend type Query @guard {
     hasCompany: {column:NAME,operator:GTE,value:CompanyName} фильтр по имени компании
     """
     commissionTemplates(
-        hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
-        hasBusinessActivity: _ @whereHasConditions(columns: ["name", "id"]),
-        hasOwner: _ @whereHasConditions(columns: ["fullname"]),
-        hasAccount: _ @whereHasConditions(columns: ["account_name"]),
-        hasCompany: _ @whereHasConditions(columns: ["name"]),
+        filter: _ @filterConditions(static: QueryCommissionTemplatesFilterStatic),
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
-        where: _ @whereConditions(columns: ["id","name","is_active"]),
         orderBy: _ @orderBy(columns: ["id","name","is_active","description"]),
     ): [CommissionTemplate!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryCommissionTemplatesFilterStatic @spread{
+    id: ID @eq
+    name: String @like
+    is_active: Boolean @eq
+    hasCompanyFilterById: ID @eq
+    hasPaymentProviderFilterById: ID @eq
+    hasBusinessActivityFilterById: ID @eq
 }
 
 extend type Mutation @guard {
