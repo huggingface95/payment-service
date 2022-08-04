@@ -12,6 +12,9 @@ class BaseModel extends Model
 
     public const DEFAULT_MEMBER_ID = 2;
 
+    //Access limitation applicant ids
+    public static ?array $applicantIds = null;
+
     protected static function booting()
     {
         self::creating(function ($model) {
@@ -38,40 +41,6 @@ class BaseModel extends Model
     protected function getArrayAttribute($value)
     {
         return json_decode(str_replace(['{', '}'], ['[', ']'], $value));
-    }
-
-    protected static function getApplicantIdsByAuthMember(): ?array
-    {
-        /** @var Members $member */
-        if (($member = Auth::user()) && $member->accessLimitations()->count()) {
-            $ids = $member->accessLimitations()->get()
-                ->map(function ($limitation) {
-                    return $limitation->groupRole->users()->get();
-                })
-                ->flatten(1)
-                ->groupBy(function ($v) {
-                    return $v->getTable();
-                })
-                ->when($member->IsShowOwnerApplicants(), function ($col) use ($member) {
-                    return $col->map(function ($records, $type) use ($member) {
-                        if ($type == 'applicant_individual') {
-                            return $records->pluck('id')->intersect($member->accountManagerApplicantIndividuals()->get()->pluck('id'));
-                        } elseif ($type == 'applicant_companies') {
-                            return $records->pluck('id')->intersect($member->accountManagerApplicantCompanies()->get()->pluck('id'));
-                        }
-
-                        return collect();
-                    });
-                })
-                ->toArray();
-
-            return [
-                'applicant_individual' => $ids['applicant_individual'] ?? [],
-                'applicant_companies' => $ids['applicant_companies'] ?? [],
-            ];
-        }
-
-        return null;
     }
 
     protected static function filterByPermissionFilters($action, Model $model): bool

@@ -45,7 +45,7 @@ class EmailNotification extends BaseModel
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+        static::addGlobalScope(new ApplicantFilterByMemberScope);
     }
 
     private function isAdministrator(): bool
