@@ -52,6 +52,7 @@ type AccountClient {
 type AccountState {
     id: ID!
     name: String!
+    active: Boolean!
 }
 
 type ClientAccountsDetails{
