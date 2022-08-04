@@ -14,7 +14,7 @@ class AddActiveAccountStateTable extends Migration
     public function up()
     {
         Schema::table('account_states', function (Blueprint $table) {
-            $table->boolean('active')->default('true')->change();
+            $table->boolean('active')->default('true');
         });
     }
 
