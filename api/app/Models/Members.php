@@ -94,7 +94,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+        static::addGlobalScope(new ApplicantFilterByMemberScope);
     }
 
     public function getTwoFactorAttribute()

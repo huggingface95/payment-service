@@ -63,7 +63,7 @@ class Account extends BaseModel implements BaseModelInterface
     {
         parent::booted();
 //        static::addGlobalScope(new AccountIndividualsCompaniesScope());
-        static::addGlobalScope(new ApplicantFilterByMemberScope(parent::getApplicantIdsByAuthMember()));
+        static::addGlobalScope(new ApplicantFilterByMemberScope);
     }
 
     public function getClientAccountsAttribute(): array
