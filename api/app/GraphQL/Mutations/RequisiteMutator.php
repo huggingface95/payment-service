@@ -10,6 +10,7 @@ use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
 use App\Models\Account;
 use App\Models\EmailSmtp;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RequisiteMutator extends BaseMutator
 {
@@ -19,7 +20,7 @@ class RequisiteMutator extends BaseMutator
      */
     public function sendEmail($root, array $args): array
     {
-        if (! $this->validEmail($args['email'])) {
+        if (!$this->validEmail($args['email'])) {
             throw new GraphqlException('Email not correct', 'Bad Request', 400);
         }
 
@@ -43,6 +44,18 @@ class RequisiteMutator extends BaseMutator
         } catch (\Throwable $e) {
             throw new GraphqlException($e->getMessage(), 'Internal', $e->getCode());
         }
+    }
+
+    public function download($root, array $args)
+    {
+        $RequisiteSendEmailDTO = TransformerDTO::transform(RequisiteSendEmailDTO::class, $args);
+
+        $pdf = Pdf::loadHTML($RequisiteSendEmailDTO->content, 'UTF-8');
+
+        header("Content-type: application/pdf");
+        header("Content-Disposition: inline; filename=requisite.pdf");
+        echo $pdf->output();
+        exit();
     }
 
 }

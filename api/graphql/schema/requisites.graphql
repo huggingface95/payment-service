@@ -62,8 +62,33 @@ input MutationRequisitesSendEmail{
     email: String!
 }
 
+input MutationRequisitesDownload{
+    "Бенефициар"
+    beneficiary: String!
+    "Адрес"
+    address: String!
+    "Страна"
+    country: String!
+    "Банк"
+    bank_name: String!
+    "ибан"
+    iban: String!
+    "Свифт код"
+    swift_code: String!
+    "Адрес банка"
+    bank_address: String!
+    "Страна банка"
+    bank_country: String!
+    "Валюта"
+    currency: String!
+}
+
 extend type Mutation @guard {
     sendRequisiteDetails(
         input: MutationRequisitesSendEmail! @spread
     ):StatusType @field(resolver: "RequisiteMutator@sendEmail")
+
+    downloadRequisiteDetails(
+        input: MutationRequisitesDownload! @spread
+    ):Mixed @field(resolver: "RequisiteMutator@download")
 }
