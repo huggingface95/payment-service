@@ -4,6 +4,7 @@ namespace App\GraphQL\Traits;
 
 use GraphQL\Language\AST\EnumTypeDefinitionNode;
 use GraphQL\Language\AST\FieldDefinitionNode;
+use GraphQL\Language\AST\InputObjectTypeDefinitionNode;
 use GraphQL\Language\AST\InputValueDefinitionNode;
 use GraphQL\Language\AST\NodeKind;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
@@ -60,6 +61,23 @@ trait GeneratesColumns
         })->toArray();
     }
 
+    private function getColumnsForTypeInput(Collection $fields): array
+    {
+        return $fields->mapWithKeys(function ($field) {
+            $value = array_key_exists('name', $field['type'])
+                ? $field['type']['name']['value']
+                : $field['type']['type']['name']['value'];
+
+            return [$field['name']['value'] => [
+                    'value' => $value,
+                    'required' => $field['type']['kind'] == 'NonNullType' ? '!' : '',
+                    'operator' => $field['directives'][0]['name']['value'],
+                ]
+            ];
+        })->toArray();
+    }
+
+
     protected function generateColumnsStatic(
         DocumentAST &$documentAST,
         InputValueDefinitionNode &$argDefinition,
@@ -77,6 +95,7 @@ trait GeneratesColumns
             self::REQUIRED_ENUM,
             self::OPERATOR_ENUM,
             self::TYPE_ENUM,
+            self::ALLOWED_INPUT,
         ] as $type) {
             if ($type == self::ALLOWED_ENUM) {
                 $types->put($type, $this->getColumnsForAllowedEnum($fields));
@@ -87,6 +106,9 @@ trait GeneratesColumns
             } elseif ($type == self::TYPE_ENUM) {
                 $types->put($type, $this->getColumnsForTypeEnum($fields));
             }
+            elseif ($type == self::ALLOWED_INPUT) {
+                $types->put($type, $this->getColumnsForTypeInput($fields));
+            }
         }
 
         $types = $types->filter(function ($type) {
@@ -94,7 +116,12 @@ trait GeneratesColumns
         });
 
         foreach ($types as $type => $data) {
-            $enumColumnsDefinition = static::createColumnsEnum($argDefinition, $parentField, $parentType, $data, $type, $fullName.$type);
+            if ($type != self::ALLOWED_INPUT) {
+                $enumColumnsDefinition = static::createColumnsEnum($argDefinition, $parentField, $parentType, $data, $type, $fullName . $type);
+            }
+            else{
+                $enumColumnsDefinition = static::createColumnsInput($argDefinition, $parentField, $parentType, $data, $type, $fullName . $type);
+            }
             $documentAST->setTypeDefinition($enumColumnsDefinition);
         }
 
@@ -147,6 +174,35 @@ trait GeneratesColumns
 "Column names for {$parentType->name->value}.{$parentField->name->value}.{$argDefinition->name->value}."
 enum $ColumnsEnumName {
     {$enumValuesString}
+}
+GRAPHQL
+        );
+    }
+
+    protected function createColumnsInput(
+        InputValueDefinitionNode $argDefinition,
+        FieldDefinitionNode $parentField,
+        ObjectTypeDefinitionNode $parentType,
+        array $columns,
+        string $type,
+        string $ColumnsInputName
+    ): ?InputObjectTypeDefinitionNode
+    {
+        $inputValues = array_map(
+            function (string $column, array $data): string {
+                return "{$column}: {$data['value']}{$data['required']} @{$data['operator']}";
+            },
+            array_keys($columns),
+            $columns
+        );
+
+        $inputValuesString = implode("\n", $inputValues);
+
+
+        return Parser::inputObjectTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
+"Input column names for {$parentType->name->value}.{$parentField->name->value}.{$argDefinition->name->value}."
+input $ColumnsInputName {
+    {$inputValuesString}
 }
 GRAPHQL
         );

@@ -10,6 +10,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Auth\Authorizable;
 use Laravel\Passport\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -232,5 +234,15 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function scopeCompanySort($query, $sort)
     {
         return $query->join('companies', 'companies.id', '=', 'members.company_id')->orderBy('companies.name', $sort)->select('members.*');
+    }
+
+    public function scopeGetGroup(Builder $query, $groupId)
+    {
+        return $query->join('group_role_members_individuals','members.id','=','group_role_members_individuals.user_id')
+            ->join('group_role','group_role_members_individuals.group_role_id','=','group_role.id')
+            ->where('group_role_members_individuals.user_type','=',Members::class)
+            ->where('group_role.id','=',$groupId)
+            ->select('members.*')
+            ;
     }
 }
