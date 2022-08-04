@@ -18,7 +18,7 @@ class CommissionTemplateLimitTypeTableSeeder extends Seeder
             1 => CommissionTemplateLimitType::ALL,
             2 => CommissionTemplateLimitType::TRANSACTION_AMOUNT,
             3 => CommissionTemplateLimitType::TRANSACTION_COUNT,
-            4 => CommissionTemplateLimitType::TRANSACTION_COUNT,
+            4 => CommissionTemplateLimitType::TRANSFER_COUNT,
         ] as $id => $name) {
             /** @var CommissionTemplateLimitType $commissionTemplateType */
             if ($commissionTemplateType = CommissionTemplateLimitType::find($id)) {

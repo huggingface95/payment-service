@@ -2,114 +2,93 @@
 Реквизиты
 Banking -> Account -> Requisites
 """
-type Requisites {
-    id: ID!
-    created_at: DateTime
-    updated_at: DateTime
-    "Получить связанный аккаунт"
-    account_id: Account @belongsTo(relation:"Account")
-    "Получатель"
-    recipient: String!
-    "Registration Number"
-    registration_number: Int!
-    "Адрес"
-    address: String!
-    "Получить связанную страну"
-    country_id: Country @belongsTo(relation:"Country")
-    "Название банка"
-    bank_name: String!
-    "Адрес банка"
-    bank_address: String!
-    "Получить связанную страну банка"
-    bank_country_id: Country @belongsTo(relation:"Country")
+type Requisite {
+    "ACCOUNT ID"
+    id: ID
+    "Создатель"
+    owner: ApplicantIndividual @belongsTo(relation:"owner")
+    "Связанный банк"
+    bank: PaymentBank @belongsTo(relation:"paymentBank")
     "IBAN"
-    iban: String!
-    "Номер аккаунта"
-    account_no: String!
-    "SWIFT"
-    swift: String!
-    "Банк корреспондент"
-    bank_correspondent: JSON
+    account_number: String
+    "Currency"
+    currency: Currencies @belongsTo(relation:"currencies")
 }
 
 
 extend type Query @guard {
     "Получить реквизиты по ID"
-    requisite(id: ID @eq): Requisites   @find
+    requisite(account_number: String @eq): Requisite @find(model: "\\App\\Models\\Account")
     """
     Получить список реквизитов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     requisites(
-            where: _ @whereConditions(columns: ["account_id","bank_name","account_no"]),
-            orderBy: _ @orderBy(columns: ["id"])
-        ): [Requisites!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        filter: _ @filterConditions(static: QueryRequisitesFilterStatic)
+        ): [Requisite!]! @all(model: "\\App\\Models\\Account")
+}
+
+input QueryRequisitesFilterStatic @spread{
+    company_id: ID @eq
+    payment_provider_id: ID @eq
+    payment_system_id: ID @eq
+    payment_bank_id: ID @eq
+    account_number: String @eq
+}
+
+
+input MutationRequisitesSendEmail{
+    "Ид аккаунта"
+    account_id: ID!
+    "Бенефициар"
+    beneficiary: String!
+    "Адрес"
+    address: String!
+    "Страна"
+    country: String!
+    "Банк"
+    bank_name: String!
+    "ибан"
+    iban: String!
+    "Свифт код"
+    swift_code: String!
+    "Адрес банка"
+    bank_address: String!
+    "Страна банка"
+    bank_country: String!
+    "Валюта"
+    currency: String!
+    "Почта"
+    email: String!
+}
+
+input MutationRequisitesDownload{
+    "Бенефициар"
+    beneficiary: String!
+    "Адрес"
+    address: String!
+    "Страна"
+    country: String!
+    "Банк"
+    bank_name: String!
+    "ибан"
+    iban: String!
+    "Свифт код"
+    swift_code: String!
+    "Адрес банка"
+    bank_address: String!
+    "Страна банка"
+    bank_country: String!
+    "Валюта"
+    currency: String!
 }
 
 extend type Mutation @guard {
-    "Создать реквизиты"
-    createRequisites(
-        "Получить связанный аккаунт"
-        account_id: ID!
-        "Получатель"
-        recipient: String!
-        "Registration Number"
-        registration_number: Int!
-        "Адрес"
-        address: String!
-        "Получить связанную страну"
-        country_id: ID!
-        "Название банка"
-        bank_name: String!
-        "Адрес банка"
-        bank_address: String!
-        "Получить связанную страну банка"
-        bank_country_id: ID!
-        "IBAN"
-        iban: String!
-        "Номер аккаунта"
-        account_no: String!
-        "SWIFT"
-        swift: String!
-        "Банк корреспондент"
-        bank_correspondent: JSON
-        created_at: DateTime
-        updated_at: DateTime
-    ): Requisites   @create
+    sendRequisiteDetails(
+        input: MutationRequisitesSendEmail! @spread
+    ):StatusType @field(resolver: "RequisiteMutator@sendEmail")
 
-    "Редактировать реквизиты"
-        updateRequisites(
-            id: ID!
-            "Получить связанный аккаунт"
-            account_id: ID
-            "Получатель"
-            recipient: String
-            "Registration Number"
-            registration_number: Int
-            "Адрес"
-            address: String
-            "Получить связанную страну"
-            country_id: ID
-            "Название банка"
-            bank_name: String
-            "Адрес банка"
-            bank_address: String
-            "Получить связанную страну банка"
-            bank_country_id: ID
-            "IBAN"
-            iban: String
-            "Номер аккаунта"
-            account_no: String
-            "SWIFT"
-            swift: String
-            "Банк корреспондент"
-            bank_correspondent: JSON
-            created_at: DateTime
-            updated_at: DateTime
-        ): Requisites   @update
-
-        "Удалить реквизиты"
-            deleteRequisites(
-                id: ID!
-            ): Requisites   @delete
+    downloadRequisiteDetails(
+        input: MutationRequisitesDownload! @spread
+    ):Mixed @field(resolver: "RequisiteMutator@download")
 }
