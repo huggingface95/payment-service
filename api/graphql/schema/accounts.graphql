@@ -86,7 +86,7 @@ extend type Query @guard {
     """
     accounts(
         query: QueryAccountCondition
-        created_at: DateRange @whereBetween,
+        created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id","created_at"])
     ): [Account!]!   @paginateWithConditions(defaultCount: 10) @orderBy(column: "id", direction: DESC)
 
