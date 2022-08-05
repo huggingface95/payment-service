@@ -84,8 +84,6 @@ extend type Mutation @guard {
     "Обновить данные компании"
     updateEmailTemplate(
         id: ID!
-        "Название"
-        name: String
         "Тема"
         subject: String
         "Взять layout"
