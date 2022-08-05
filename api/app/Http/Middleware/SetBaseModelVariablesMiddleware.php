@@ -34,12 +34,17 @@ class SetBaseModelVariablesMiddleware
                 ->groupBy(function ($v) {
                     return $v->getTable();
                 })
+                ->map(function ($v) {
+                    return $v->pluck('id');
+                })
                 ->when($member->IsShowOwnerApplicants(), function ($col) use ($member) {
                     return $col->map(function ($records, $type) use ($member) {
                         if ($type == 'applicant_individual') {
-                            return $records->pluck('id')->intersect($member->accountManagerApplicantIndividuals()->get()->pluck('id'));
+                            return $records->intersect($member->accountManagerApplicantIndividuals()->get()->pluck('id'));
                         } elseif ($type == 'applicant_companies') {
-                            return $records->pluck('id')->intersect($member->accountManagerApplicantCompanies()->get()->pluck('id'));
+                            return $records->intersect($member->accountManagerApplicantCompanies()->get()->pluck('id'));
+                        } elseif ($type == 'members') {
+                            return $records->intersect($member->accountManagerMembers()->get()->pluck('id'));
                         }
 
                         return collect();
@@ -50,6 +55,7 @@ class SetBaseModelVariablesMiddleware
             return [
                 'applicant_individual' => $ids['applicant_individual'] ?? [],
                 'applicant_companies' => $ids['applicant_companies'] ?? [],
+                'members' => $ids['members'] ?? [],
             ];
         }
         return null;
