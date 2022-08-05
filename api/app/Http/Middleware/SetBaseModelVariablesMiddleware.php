@@ -10,9 +10,9 @@ use Illuminate\Http\Request;
 class SetBaseModelVariablesMiddleware
 {
     /**
-     * @param Request $request
-     * @param Closure $next
-     * @param string|null $guard
+     * @param  Request  $request
+     * @param  Closure  $next
+     * @param  string|null  $guard
      * @return mixed
      */
     public function handle(Request $request, Closure $next, string $guard = null): mixed
@@ -21,7 +21,6 @@ class SetBaseModelVariablesMiddleware
 
         return $next($request);
     }
-
 
     protected function getApplicantIdsByAuthMember(Members $member): ?array
     {
@@ -52,6 +51,7 @@ class SetBaseModelVariablesMiddleware
                 'applicant_companies' => $ids['applicant_companies'] ?? [],
             ];
         }
+
         return null;
     }
 }

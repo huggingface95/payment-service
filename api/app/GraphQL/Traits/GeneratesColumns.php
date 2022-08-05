@@ -69,14 +69,13 @@ trait GeneratesColumns
                 : $field['type']['type']['name']['value'];
 
             return [$field['name']['value'] => [
-                    'value' => $value,
-                    'required' => $field['type']['kind'] == 'NonNullType' ? '!' : '',
-                    'operator' => $field['directives'][0]['name']['value'],
-                ]
+                'value' => $value,
+                'required' => $field['type']['kind'] == 'NonNullType' ? '!' : '',
+                'operator' => $field['directives'][0]['name']['value'],
+            ],
             ];
         })->toArray();
     }
-
 
     protected function generateColumnsStatic(
         DocumentAST &$documentAST,
@@ -105,8 +104,7 @@ trait GeneratesColumns
                 $types->put($type, $this->getColumnsForOperatorEnum($fields));
             } elseif ($type == self::TYPE_ENUM) {
                 $types->put($type, $this->getColumnsForTypeEnum($fields));
-            }
-            elseif ($type == self::ALLOWED_INPUT) {
+            } elseif ($type == self::ALLOWED_INPUT) {
                 $types->put($type, $this->getColumnsForTypeInput($fields));
             }
         }
@@ -117,10 +115,9 @@ trait GeneratesColumns
 
         foreach ($types as $type => $data) {
             if ($type != self::ALLOWED_INPUT) {
-                $enumColumnsDefinition = static::createColumnsEnum($argDefinition, $parentField, $parentType, $data, $type, $fullName . $type);
-            }
-            else{
-                $enumColumnsDefinition = static::createColumnsInput($argDefinition, $parentField, $parentType, $data, $type, $fullName . $type);
+                $enumColumnsDefinition = static::createColumnsEnum($argDefinition, $parentField, $parentType, $data, $type, $fullName.$type);
+            } else {
+                $enumColumnsDefinition = static::createColumnsInput($argDefinition, $parentField, $parentType, $data, $type, $fullName.$type);
             }
             $documentAST->setTypeDefinition($enumColumnsDefinition);
         }
@@ -186,8 +183,7 @@ GRAPHQL
         array $columns,
         string $type,
         string $ColumnsInputName
-    ): ?InputObjectTypeDefinitionNode
-    {
+    ): ?InputObjectTypeDefinitionNode {
         $inputValues = array_map(
             function (string $column, array $data): string {
                 return "{$column}: {$data['value']}{$data['required']} @{$data['operator']}";
@@ -197,7 +193,6 @@ GRAPHQL
         );
 
         $inputValuesString = implode("\n", $inputValues);
-
 
         return Parser::inputObjectTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
 "Input column names for {$parentType->name->value}.{$parentField->name->value}.{$argDefinition->name->value}."

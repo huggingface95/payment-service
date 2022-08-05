@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Scope;
 
 class ApplicantFilterByMemberScope implements Scope
 {
-
     public function apply(Builder $builder, Model $model)
     {
         if (BaseModel::$applicantIds && preg_match('/^(SELECT|select)/', $builder->getQuery()->toSql())) {

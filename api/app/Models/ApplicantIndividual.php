@@ -235,11 +235,10 @@ class ApplicantIndividual extends BaseModel
 
     public function scopeGetGroup(Builder $query, $groupId)
     {
-        return $query->join('group_role_members_individuals','applicant_individual.id','=','group_role_members_individuals.user_id')
-            ->join('group_role','group_role_members_individuals.group_role_id','=','group_role.id')
-            ->where('group_role_members_individuals.user_type','=',ApplicantIndividual::class)
-            ->where('group_role.id','=',$groupId)
-            ->select('applicant_individual.*')
-            ;
+        return $query->join('group_role_members_individuals', 'applicant_individual.id', '=', 'group_role_members_individuals.user_id')
+            ->join('group_role', 'group_role_members_individuals.group_role_id', '=', 'group_role.id')
+            ->where('group_role_members_individuals.user_type', '=', self::class)
+            ->where('group_role.id', '=', $groupId)
+            ->select('applicant_individual.*');
     }
 }

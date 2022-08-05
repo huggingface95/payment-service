@@ -13,7 +13,6 @@ use App\Models\AccountState;
 use App\Models\EmailSmtp;
 use App\Models\EmailTemplate;
 use App\Models\GroupRole;
-use App\Models\Members;
 use App\Traits\ReplaceRegularExpressions;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -97,8 +96,8 @@ class AccountMutator
     /**
      * @throws GraphqlException
      */
-    protected function getSmtp(Account $account): EmailSmtp{
-
+    protected function getSmtp(Account $account): EmailSmtp
+    {
         $smtp = EmailSmtp::where('member_id', $account->member_id)->where('company_id', $account->company_id)->first();
 
         if (! $smtp) {
@@ -107,8 +106,7 @@ class AccountMutator
 
         try {
             $smtp->replay_to = $account->owner->email;
-        }
-        catch (\Throwable){
+        } catch (\Throwable) {
             throw new GraphqlException('Проблема может быть связан с Member Access Limitation', 'Not found', '404');
         }
 
@@ -126,7 +124,7 @@ class AccountMutator
             $emailTemplate = EmailTemplate::query()
                 ->where('member_id', $account->member_id)
                 ->where('company_id', $account->company_id)
-                ->whereRaw("lower(subject) LIKE  '%". strtolower($account->accountState->name) ."%'  ")
+                ->whereRaw("lower(subject) LIKE  '%".strtolower($account->accountState->name)."%'  ")
                 ->first();
 
             $content = $this->replaceObjectData($emailTemplate->getHtml(), $account, '/\{(.*?)}/');
@@ -134,10 +132,9 @@ class AccountMutator
 
             return [
                 'subject' => $subject,
-                'content' => $content
+                'content' => $content,
             ];
-        }
-        catch (\Throwable){
+        } catch (\Throwable) {
             throw new GraphqlException('Email template error', '404');
         }
     }
@@ -151,8 +148,7 @@ class AccountMutator
             $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, $data['content'], $data['subject']);
             $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
             dispatch(new SendMailJob($config, $data));
-        }
-        catch (\Throwable){
+        } catch (\Throwable) {
             throw new GraphqlException('Don\'t send email', '404');
         }
     }

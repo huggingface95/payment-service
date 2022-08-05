@@ -14,13 +14,12 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class RequisiteMutator extends BaseMutator
 {
-
     /**
      * @throws GraphqlException
      */
     public function sendEmail($root, array $args): array
     {
-        if (!$this->validEmail($args['email'])) {
+        if (! $this->validEmail($args['email'])) {
             throw new GraphqlException('Email not correct', 'Bad Request', 400);
         }
 
@@ -28,13 +27,11 @@ class RequisiteMutator extends BaseMutator
             $RequisiteSendEmailDTO = TransformerDTO::transform(RequisiteSendEmailDTO::class, $args);
             $account = Account::findOrFail($args['account_id']);
 
-
             /** @var EmailSmtp $smtp */
-            if (!$smtp = EmailSmtp::where('member_id', $account->member->id)->where('company_id', $account->company_id)->first()) {
+            if (! $smtp = EmailSmtp::where('member_id', $account->member->id)->where('company_id', $account->company_id)->first()) {
                 throw new GraphqlException('SMTP configuration for this company not found', 'Not found', '404');
             }
             $smtp->replay_to = $args['email'];
-
 
             $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, $RequisiteSendEmailDTO->content, 'Requisite details');
             $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
@@ -52,10 +49,9 @@ class RequisiteMutator extends BaseMutator
 
         $pdf = Pdf::loadHTML($RequisiteSendEmailDTO->content, 'UTF-8');
 
-        header("Content-type: application/pdf");
-        header("Content-Disposition: inline; filename=requisite.pdf");
+        header('Content-type: application/pdf');
+        header('Content-Disposition: inline; filename=requisite.pdf');
         echo $pdf->output();
         exit();
     }
-
 }

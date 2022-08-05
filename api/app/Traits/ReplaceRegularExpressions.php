@@ -15,9 +15,10 @@ trait ReplaceRegularExpressions
             if (isset($m[1]) && count(($e = explode('.', $m[1]))) > 1) {
                 return $d[$e[0]][$e[1]];
             }
-            if (isset($d[$m[1]]) && is_string($d[$m[1]])){
+            if (isset($d[$m[1]]) && is_string($d[$m[1]])) {
                 return $d[$m[1]];
             }
+
             return $m[0];
         }, $content);
     }
