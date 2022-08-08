@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\AccountCreatedEvent;
+use App\Events\AccountUpdatedEvent;
+use App\Listeners\AccountCreatedListener;
+use App\Listeners\AccountUpdatedListener;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -12,8 +16,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        \App\Events\ExampleEvent::class => [
-            \App\Listeners\ExampleListener::class,
+        AccountUpdatedEvent::class => [
+            AccountUpdatedListener::class
+        ],
+        AccountCreatedEvent::class => [
+            AccountCreatedListener::class
         ],
     ];
 }
