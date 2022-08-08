@@ -302,6 +302,7 @@ class AuthController extends Controller
             $user->save();
             if ($data == true) {
                 $token = JWTAuth::fromUser($user);
+
                 return response()->json(['data' => 'success', 'token' => $token]);
             } else {
                 return response()->json(['error' => 'No such code'], 403);
