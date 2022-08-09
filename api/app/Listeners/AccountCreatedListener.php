@@ -24,8 +24,8 @@ class AccountCreatedListener
             'accountState', 'paymentBank', 'paymentSystem', 'currencies', 'groupRole'
         );
 
-        $smtp = $this->getSmtp($account);
         $messageData = $this->getTemplateContentAndSubject($account);
+        $smtp = $this->getSmtp($account, $messageData['emails']);
         $this->sendEmail($smtp, $messageData);
     }
 }
