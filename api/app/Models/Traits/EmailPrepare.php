@@ -20,7 +20,7 @@ trait EmailPrepare
      */
     public function getSmtp(Account $account, array $emails): EmailSmtp
     {
-        $smtp = EmailSmtp::where('member_id', $account->member_id)->where('company_id', $account->company_id)->first();
+        $smtp = EmailSmtp::where('company_id', $account->company_id)->first();
 
         if (!$smtp) {
             throw new GraphqlException('SMTP configuration for this company not found', 'Not found', '404');
@@ -38,7 +38,6 @@ trait EmailPrepare
         try {
             /** @var EmailTemplate $emailTemplate */
             $emailTemplate = EmailTemplate::query()
-                ->where('member_id', $account->member_id)
                 ->where('company_id', $account->company_id)
                 ->whereRaw("lower(subject) LIKE  '%" . strtolower($account->accountState->name) . "%'  ")
                 ->first();
