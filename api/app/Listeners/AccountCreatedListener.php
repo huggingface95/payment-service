@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\AccountUpdatedEvent;
+use App\Events\AccountCreatedEvent;
 use App\Exceptions\GraphqlException;
 use App\Models\Traits\EmailPrepare;
 use App\Traits\ReplaceRegularExpressions;
@@ -16,7 +16,7 @@ class AccountCreatedListener
     /**
      * @throws GraphqlException
      */
-    public function handle(AccountUpdatedEvent $event): void
+    public function handle(AccountCreatedEvent $event): void
     {
         $account = $event->account;
 
