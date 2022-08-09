@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -11,6 +12,8 @@ use Illuminate\Support\Facades\DB;
  */
 class PaymentProvider extends BaseModel
 {
+    use SoftDeletes;
+
     public $timestamps = false;
 
     protected $table = 'payment_provider';
