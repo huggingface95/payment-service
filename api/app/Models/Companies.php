@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 class Companies extends BaseModel
 {
     /**
@@ -41,6 +43,11 @@ class Companies extends BaseModel
     public function companySettings()
     {
         return $this->hasOne(CompanySettings::class, 'company_id', 'id');
+    }
+
+    public function paymentProviders(): BelongsToMany
+    {
+        return $this->belongsToMany(PaymentProvider::class, 'payment_provider_companies', 'company_id', 'payment_provider_id');
     }
 
     public function scopeMemberSort($query, $sort)
