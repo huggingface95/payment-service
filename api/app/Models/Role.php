@@ -53,7 +53,7 @@ class Role extends SpatieRole
             config('permission.table_names.role_has_permissions'),
             PermissionRegistrar::$pivotRole,
             PermissionRegistrar::$pivotPermission
-        );
+        )->where('is_super_admin', false);
     }
 
     public function permissionCategories()

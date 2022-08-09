@@ -33,7 +33,7 @@ class Permissions extends SpatiePermission
     public const TYPE_NO_REQUIRED = 'no_required';
 
     protected $fillable = [
-        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'order',
+        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'order', 'is_super_admin',
     ];
 
     protected $guard_name = GuardEnum::GUARD_NAME;
@@ -50,7 +50,7 @@ class Permissions extends SpatiePermission
             $role = Role::find($roleId);
             $permissions = $role->permissions;
         } else {
-            $permissions = self::query()->get();
+            $permissions = self::query()->where('is_super_admin', false)->get();
         }
 
         $permData = [];
