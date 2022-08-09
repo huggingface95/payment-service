@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Events\AccountCreatedEvent;
+use App\Events\AccountUpdatedEvent;
 use App\Models\Interfaces\BaseModelInterface;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,6 +33,11 @@ class Account extends BaseModel implements BaseModelInterface
     public const BUSINESS = 'Business';
 
     protected $table = 'accounts';
+
+    protected $dispatchesEvents = [
+        'updated' => AccountUpdatedEvent::class,
+        'created' => AccountCreatedEvent::class,
+    ];
 
     /**
      * The attributes that are mass assignable.
