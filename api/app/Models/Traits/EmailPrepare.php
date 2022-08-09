@@ -8,6 +8,7 @@ use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
 use App\Models\Account;
+use App\Models\EmailNotification;
 use App\Models\EmailSmtp;
 use App\Models\EmailTemplate;
 
@@ -17,19 +18,14 @@ trait EmailPrepare
     /**
      * @throws GraphqlException
      */
-    public function getSmtp(Account $account): EmailSmtp
+    public function getSmtp(Account $account, array $emails): EmailSmtp
     {
         $smtp = EmailSmtp::where('member_id', $account->member_id)->where('company_id', $account->company_id)->first();
 
         if (!$smtp) {
             throw new GraphqlException('SMTP configuration for this company not found', 'Not found', '404');
         }
-
-        try {
-            $smtp->replay_to = $account->owner->email;
-        } catch (\Throwable) {
-            throw new GraphqlException('Проблема может быть связан с Member Access Limitation', 'Not found', '404');
-        }
+        $smtp->replay_to = $emails;
 
         return $smtp;
     }
@@ -47,12 +43,22 @@ trait EmailPrepare
                 ->whereRaw("lower(subject) LIKE  '%" . strtolower($account->accountState->name) . "%'  ")
                 ->first();
 
+            $notification = EmailNotification::query()
+                ->where('company_id', $account->company_id)
+                ->whereHas('templates', function($q) use ($emailTemplate){
+                    return $q->where('email_template_id', '=', $emailTemplate->id);
+                })
+                ->first();
+
+            $emails = $notification->groupRole->users->pluck('email')->toArray();
+
             $content = $this->replaceObjectData($emailTemplate->getHtml(), $account, '/\{(.*?)}/');
             $subject = $this->replaceObjectData($emailTemplate->subject, $account, '/\{(.*?)}/');
 
             return [
                 'subject' => $subject,
                 'content' => $content,
+                'emails' => $emails
             ];
         } catch (\Throwable) {
             throw new GraphqlException('Email template error', '404');
