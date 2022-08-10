@@ -85,7 +85,8 @@ extend type Query @guard {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     accounts(
-        query: QueryAccountCondition
+        filter: _ @filterConditions(static: QueryCommissionTemplatesFilterStatic),
+        query: QueryAccountCondition,
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id","created_at"])
     ): [Account!]!   @paginateWithConditions(defaultCount: 10) @orderBy(column: "id", direction: DESC)
@@ -94,6 +95,7 @@ extend type Query @guard {
     Получить список accounts для accountDetails
     """
     accountDetailsList(
+        filter: _ @filterConditions(static: QueryAccountDetailsListFilterStatic),
         query: QueryAccountDetailsCondition
         orderBy: _ @orderBy(columns: ["id","created_at"])
     ): [Account!]!  @field(resolver:"AccountsQuery@clientDetailsList") @orderBy(column: "id", direction: ASC)
@@ -110,6 +112,32 @@ extend type Query @guard {
     """
     clientList(group_type: ID @eq): [AccountClient!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
 }
+
+input QueryAccountsFilterStatic @spread{
+    hasCompanyMixedIdOrName: Mixed @eq
+    hasPaymentProviderMixedIdOrName: Mixed @eq
+    hasOwnerMixedIdOrFullname: Mixed @eq
+    MixedAccountNumberOrAccountName: String @like
+    currency_id: ID @eq
+    hasGroupRoleMixedIdOrName: Mixed @eq
+    group_type_id: ID @eq
+    hasMemberMixedIdOrFullname: Mixed @eq
+    is_primary: Boolean @eq
+    hasCommissionTemplateMixedIdOrFullname: Mixed @eq
+    account_state_id: ID @eq
+}
+
+input QueryAccountDetailsListFilterStatic @spread{
+    account_name: String @like
+    hasCompanyMixedIdOrName: Mixed @eq
+    group_type_id: ID @eq
+    hasGroupRoleMixedIdOrName: Mixed @eq
+    hasOwnerMixedIdOrFullname: Mixed @eq
+    hasPaymentProviderMixedIdOrName: Mixed @eq
+}
+
+#todo
+#client: String  - поиск по id клиента или по fullname
 
 input QueryAccountCondition {
     client: String @like
