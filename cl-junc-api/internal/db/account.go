@@ -12,8 +12,8 @@ type Account struct {
 	CurrentBalance   float64        `bun:"current_balance"`
 	ReservedBalance  float64        `bun:"reserved_balance"`
 	Payee            []*Payee       `bun:"m2m:account_individuals_companies,join:Account=Payee"`
-	AccountState     AccountStateDb `bun:"account_state"`
-	State            *AccountState  `bun:"rel:belongs-to,join:account_state=id"`
+	AccountState     AccountStateDb `bun:"account_state_id"`
+	State            *AccountState  `bun:"rel:belongs-to,join:account_state_id=id"`
 }
 
 func (a *Account) GetPayee() *Payee {
