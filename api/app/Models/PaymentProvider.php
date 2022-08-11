@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -40,6 +41,11 @@ class PaymentProvider extends BaseModel
     public function commissionPriceList(): HasOne
     {
         return $this->hasOne(CommissionPriceList::class, 'provider_id', 'id');
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Companies::class, 'company_id');
     }
 
     public function scopePaymentProviderCountry($query, $countryId)
