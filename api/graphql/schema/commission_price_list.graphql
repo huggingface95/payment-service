@@ -20,6 +20,8 @@ type CommissionPriceList {
     commission_template: CommissionTemplate @belongsTo(relation:"CommissionTemplate")
     "Получить связанные цены"
     fees: [PriceListFee] @hasMany(relation:"fees")
+    "Получить связанные Регионы"
+    regions: [Region] @belongsToMany(relation: "regions")
 }
 
 extend type Query @guard {
@@ -30,16 +32,19 @@ extend type Query @guard {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     commissionPriceLists(
-        hasPaymentSystem: _ @whereHasConditions(columns: ["name", "id"]),
-        hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
-        hasOwner: _ @whereHasConditions(columns: ["name", "id"]),
-        hasCompany: _ @whereHasConditions(columns: ["name", "id"]),
-        hasAccount: _ @whereHasConditions(columns: ["account_number"]),
-        hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
+        filter: _ @filterConditions(static: QueryCommissionPriceListsFilterStatic),
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
-            where: _ @whereConditions(columns: ["name","payment_system_id","commission_template_id", "provider_id"]),
-            orderBy: _ @orderBy(columns: ["id", "name"])
+        orderBy: _ @orderBy(columns: ["id", "name"])
         ): [CommissionPriceList!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryCommissionPriceListsFilterStatic @spread{
+    hasCompanyFilterById: ID @eq
+    hasPaymentProviderFilterById: ID @eq
+    hasCommissionTemplateFilterById: ID @eq
+    id: ID @eq
+    hasPaymentSystemFilterById: ID @eq
+    hasRegionsFilterById: ID @eq
 }
 
 extend type Mutation @guard {

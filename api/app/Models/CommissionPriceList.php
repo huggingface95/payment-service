@@ -98,4 +98,9 @@ class CommissionPriceList extends BaseModel
     {
         return $this->hasOneThrough(Account::class, CommissionTemplate::class, 'id', 'commission_template_id', 'commission_template_id', 'id', );
     }
+
+    public function regions(): BelongsToMany
+    {
+        return $this->belongsToMany(Region::class, 'commission_template_regions', 'commission_template_id', 'region_id', 'commission_template_id');
+    }
 }
