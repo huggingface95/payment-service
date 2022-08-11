@@ -10,8 +10,6 @@ type CommissionPriceList {
     provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Получить связанного мембера"
     owner: [ApplicantIndividual] @belongsToMany(relation: "owner")
-    "Получить компанию"
-    company: [ApplicantCompany] @belongsToMany(relation: "company")
     "Получить связанный аккаунт"
     account: Account @hasOne(relation: "account")
     "Получить связанную платежную систему"
@@ -20,6 +18,10 @@ type CommissionPriceList {
     commission_template: CommissionTemplate @belongsTo(relation:"CommissionTemplate")
     "Получить связанные цены"
     fees: [PriceListFee] @hasMany(relation:"fees")
+    "Получить Регион"
+    region: Region @belongsTo(relation: "region")
+    "Получить компанию"
+    company: Companies @belongsTo(relation: "company")
 }
 
 extend type Query @guard {
@@ -30,16 +32,20 @@ extend type Query @guard {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     commissionPriceLists(
-        hasPaymentSystem: _ @whereHasConditions(columns: ["name", "id"]),
-        hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
-        hasOwner: _ @whereHasConditions(columns: ["name", "id"]),
-        hasCompany: _ @whereHasConditions(columns: ["name", "id"]),
-        hasAccount: _ @whereHasConditions(columns: ["account_number"]),
-        hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
+        filter: _ @filterConditions(static: QueryCommissionPriceListsFilterStatic),
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
-            where: _ @whereConditions(columns: ["name","payment_system_id","commission_template_id", "provider_id"]),
-            orderBy: _ @orderBy(columns: ["id", "name"])
+        orderBy: _ @orderBy(columns: ["id", "name"])
         ): [CommissionPriceList!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryCommissionPriceListsFilterStatic @spread{
+    hasCompanyFilterById: ID @eq
+    hasPaymentProviderFilterById: ID @eq
+    hasCommissionTemplateFilterById: ID @eq
+    hasPaymentSystemFilterById: ID @eq
+    id: ID @eq
+    company_id: ID @eq
+    region_id: ID @eq
 }
 
 extend type Mutation @guard {
@@ -53,19 +59,27 @@ extend type Mutation @guard {
         payment_system_id: ID!
         "ID платежного шаблона"
         commission_template_id: ID!
+        "ID Региона"
+        region_id: ID!
+        "ID Компании"
+        company_id: ID!
     ):CommissionPriceList   @create
 
     "Редактирование частного пользователя"
     updateCommissionPriceList(
         id: ID!
        "Название шаблона"
-		name: String!
+		name: String
         "ID платежного провайдера"
-        provider_id: ID!
+        provider_id: ID
 		"ID платежной системы"
-        payment_system_id: ID!
+        payment_system_id: ID
 		"ID платежного шаблона"
-        commission_template_id: ID!
+        commission_template_id: ID
+        "ID Региона"
+        region_id: ID
+        "ID Компании"
+        company_id: ID
     ): CommissionPriceList   @update
 
 
