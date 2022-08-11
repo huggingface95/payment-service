@@ -42,12 +42,20 @@ trait EmailPrepare
                 ->whereRaw("lower(subject) LIKE  '%" . strtolower($account->accountState->name) . "%'  ")
                 ->first();
 
+            if (!$emailTemplate){
+                throw new GraphqlException('Email template not found', '404');
+            }
+
             $notification = EmailNotification::query()
                 ->where('company_id', $account->company_id)
                 ->whereHas('templates', function($q) use ($emailTemplate){
                     return $q->where('email_template_id', '=', $emailTemplate->id);
                 })
                 ->first();
+
+            if (!$notification){
+                throw new GraphqlException('Email Notification not found', '404');
+            }
 
             $emails = $notification->groupRole->users->pluck('email')->toArray();
 
