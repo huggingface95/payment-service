@@ -5,6 +5,8 @@ type Region {
     name: String!
     "Получать страны"
     countries: [Country] @belongsToMany(relation: "countries")
+    "Получать компанию"
+    company: Companies @belongsTo(relation: "company")
 }
 
 extend type Query @guard {
@@ -12,8 +14,15 @@ extend type Query @guard {
     """
     Получить список регионов
     """
-    regions(hasCountries: _ @whereHasConditions(columns: ["name", "id"])
+    regions(
+        filter: _ @filterConditions(static: QueryRegionsFilterStatic)
     ): [Region!]!   @paginate(defaultCount: 10) @orderBy(column: "name", direction: ASC)
+}
+
+input QueryRegionsFilterStatic @spread{
+    company_id: ID @eq
+    hasCountriesFilterById: ID @eq
+    hasCountriesFilterByName: String @like
 }
 
 input InputRegion{
@@ -21,6 +30,8 @@ input InputRegion{
     name: String!
     "Массив стран"
     countries: PivotTable
+    "ID компании"
+    company_id: ID!
 }
 
 extend type Mutation @guard {
