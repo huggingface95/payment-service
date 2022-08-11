@@ -52,6 +52,8 @@ extend type Mutation @guard {
         logo_key: String
         "Активен или нет"
         is_active: Boolean
+        "Ид компании"
+        company_id: ID!
         "массив ID платежных систем"
         payment_systems: [ID]
     ):PaymentProvider   @field(resolver: "PaymentProviderMutator@create")
@@ -67,6 +69,8 @@ extend type Mutation @guard {
         logo_key: String
         "Активен или нет"
         is_active: Boolean
+        "Ид компании"
+        company_id: ID
         "массив ID платежных систем"
         payment_systems: [ID]
     ):PaymentProvider   @field(resolver: "PaymentProviderMutator@update")
