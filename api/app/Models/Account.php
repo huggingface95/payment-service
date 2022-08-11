@@ -233,6 +233,7 @@ class Account extends BaseModel implements BaseModelInterface
                 $q->orWhere('accounts.account_number', 'ilike', $filter['account_number'] ?? '%')
                     ->orWhere('accounts.account_name', 'ilike', $filter['account_number'] ?? '%');
             })
+            ->where('accounts.account_name', 'ilike', $filter['account_name'] ?? '%')
             ->where(function ($q) use ($filter) {
                 $q->orWhere('companies.id', 'like', $filter['company'] ?? '%')
                     ->orWhere('companies.name', 'like', $filter['company'] ?? '%');

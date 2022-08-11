@@ -145,6 +145,7 @@ input QueryAccountCondition {
     payment_provider: String @eq
     owner: String @eq
     account_number: String @like
+    account_name: String @like
     currency_id: ID @eq
     group_role: String @like
     group_type_id: ID @eq
