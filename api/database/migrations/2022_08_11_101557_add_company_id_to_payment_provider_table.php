@@ -14,7 +14,7 @@ class AddCompanyIdToPaymentProviderTable extends Migration
     public function up()
     {
         Schema::table('payment_provider', function (Blueprint $table) {
-            $table->unsignedBigInteger('company_id')->nullable();
+            $table->unsignedBigInteger('company_id');
 
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade')->onUpdate('cascade');
         });
