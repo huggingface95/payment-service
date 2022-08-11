@@ -230,10 +230,10 @@ class Account extends BaseModel implements BaseModelInterface
             ->join('members', 'accounts.member_id', '=', 'members.id')
             ->select('accounts.*')
             ->where(function ($q) use ($filter) {
-                $q->orWhere('accounts.account_number', 'ilike', $filter['account_number'] ?? '%')
-                    ->orWhere('accounts.account_name', 'ilike', $filter['account_number'] ?? '%');
+                $q->orWhere('accounts.account_number', 'ilike', '%'.$filter['account_number'].'%' ?? '%')
+                    ->orWhere('accounts.account_name', 'ilike', '%'.$filter['account_number'].'%' ?? '%');
             })
-            ->where('accounts.account_name', 'ilike', $filter['account_name'] ?? '%')
+            ->where('accounts.account_name', 'ilike', '%'.$filter['account_name'].'%' ?? '%')
             ->where(function ($q) use ($filter) {
                 $q->orWhere('companies.id', 'like', $filter['company'] ?? '%')
                     ->orWhere('companies.name', 'like', $filter['company'] ?? '%');
