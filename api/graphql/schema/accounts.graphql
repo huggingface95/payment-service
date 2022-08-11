@@ -208,8 +208,6 @@ input InputAccount{
     payment_provider_id: ID!
     "ID шаблона комиссии"
     commission_template_id: ID!
-    "Состояние аккаунта"
-    account_state_id: ID
     "Имя аккаунта"
     account_name: String!
     "Основной или нет"
