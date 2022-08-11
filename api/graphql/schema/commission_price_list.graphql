@@ -10,8 +10,6 @@ type CommissionPriceList {
     provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Получить связанного мембера"
     owner: [ApplicantIndividual] @belongsToMany(relation: "owner")
-    "Получить компанию"
-    company: [ApplicantCompany] @belongsToMany(relation: "company")
     "Получить связанный аккаунт"
     account: Account @hasOne(relation: "account")
     "Получить связанную платежную систему"
@@ -21,7 +19,9 @@ type CommissionPriceList {
     "Получить связанные цены"
     fees: [PriceListFee] @hasMany(relation:"fees")
     "Получить связанные Регионы"
-    regions: [Region] @belongsToMany(relation: "regions")
+    region: Region @belongsTo(relation: "region")
+    "Получить компанию"
+    company: Companies @belongsTo(relation: "company")
 }
 
 extend type Query @guard {
@@ -42,9 +42,10 @@ input QueryCommissionPriceListsFilterStatic @spread{
     hasCompanyFilterById: ID @eq
     hasPaymentProviderFilterById: ID @eq
     hasCommissionTemplateFilterById: ID @eq
-    id: ID @eq
     hasPaymentSystemFilterById: ID @eq
-    hasRegionsFilterById: ID @eq
+    id: ID @eq
+    company_id: ID @eq
+    region_id: ID @eq
 }
 
 extend type Mutation @guard {
@@ -58,19 +59,27 @@ extend type Mutation @guard {
         payment_system_id: ID!
         "ID платежного шаблона"
         commission_template_id: ID!
+        "ID Региона"
+        region_id: ID!
+        "ID Компании"
+        company_id: ID!
     ):CommissionPriceList   @create
 
     "Редактирование частного пользователя"
     updateCommissionPriceList(
         id: ID!
        "Название шаблона"
-		name: String!
+		name: String
         "ID платежного провайдера"
-        provider_id: ID!
+        provider_id: ID
 		"ID платежной системы"
-        payment_system_id: ID!
+        payment_system_id: ID
 		"ID платежного шаблона"
-        commission_template_id: ID!
+        commission_template_id: ID
+        "ID Региона"
+        region_id: ID
+        "ID Компании"
+        company_id: ID
     ): CommissionPriceList   @update
 
 
