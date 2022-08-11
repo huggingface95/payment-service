@@ -18,7 +18,7 @@ type CommissionPriceList {
     commission_template: CommissionTemplate @belongsTo(relation:"CommissionTemplate")
     "Получить связанные цены"
     fees: [PriceListFee] @hasMany(relation:"fees")
-    "Получить связанные Регионы"
+    "Получить Регион"
     region: Region @belongsTo(relation: "region")
     "Получить компанию"
     company: Companies @belongsTo(relation: "company")
