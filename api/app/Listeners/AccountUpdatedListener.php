@@ -25,8 +25,8 @@ class AccountUpdatedListener
         );
 
         if (array_key_exists('account_state_id', $account->getChanges())) {
-            $smtp = $this->getSmtp($account);
             $messageData = $this->getTemplateContentAndSubject($account);
+            $smtp = $this->getSmtp($account, $messageData['emails']);
             $this->sendEmail($smtp, $messageData);
         }
     }

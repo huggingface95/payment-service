@@ -26,16 +26,16 @@ func (c OperationTypeDb) GetTypeName() string {
 	case DEPOSIT:
 		return "Deposit"
 	}
-	return "Outgoing"
+	return "Outgoing Transfer"
 }
 
 func GetType(name string) OperationTypeDb {
 	switch name {
-	case "Incoming":
+	case "Incoming Transfer":
 		return INCOMING
-	case "Outgoing":
+	case "Outgoing Transfer":
 		return OUTGOING
-	case "Fee":
+	case "Deposit":
 		return DEPOSIT
 	}
 

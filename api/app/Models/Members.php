@@ -232,7 +232,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function accountManagerMembers(): HasMany
     {
-        return $this->hasMany(Members::class, 'company_id', 'company_id');
+        return $this->hasMany(self::class, 'company_id', 'company_id');
     }
 
     public function scopeCompanySort($query, $sort)

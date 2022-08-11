@@ -23,16 +23,18 @@ class IbanIndividualActivationJob extends Job
     }
 
     /**
-     * Execute the job.
-     *
-     * @return void
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return bool
      */
-    public function handle()
+    public function handle(): bool
     {
-        $redis = Redis::connection();
+        try {
+            $redis = Redis::connection();
+            $redis->rpush(config('payment.redis.iban.individual'), json_encode($this->ibanRequest));
 
-        $redis->rpush(config('payment.redis.iban.individual'), json_encode($this->ibanRequest));
+            return true;
+        }
+        catch (\Throwable){
+            return false;
+        }
     }
 }
