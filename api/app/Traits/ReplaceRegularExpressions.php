@@ -33,7 +33,14 @@ trait ReplaceRegularExpressions
                 return $m[0];
             }
             catch (\Throwable){
-                throw new GraphqlException("PARAMETER ".$m[1]." NOT FOUND IN THIS (".implode(',', array_keys($d)).")  LIST", 'not found', 403);
+                $implodeData = collect($d)->map(function ($v, $k){
+                    return is_array($v)
+                        ? collect($v)->keys()->crossJoin($k)->map(function ($v){
+                            return $v[1]. '.'. $v[0];
+                        })
+                        : $k;
+                })->flatten(1)->implode(',');
+                throw new GraphqlException("PARAMETER ".$m[1]." NOT FOUND IN THIS (".$implodeData.")  LIST", 'not found', 403);
             }
 
         }, $content);
