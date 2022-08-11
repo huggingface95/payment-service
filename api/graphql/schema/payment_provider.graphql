@@ -15,7 +15,7 @@ type PaymentProvider {
     "Получить связанные платежные системы"
     payment_systems: [PaymentSystem] @belongsToMany(relation:"paymentSystems")
     commission_price_list: CommissionPriceList @hasOne(relation:"commissionPriceList")
-    companies: [Companies] @belongsToMany(relation:"companies")
+    company: Companies @belongsTo(relation:"company")
 }
 
 extend type Query @guard {
@@ -38,7 +38,7 @@ extend type Query @guard {
 input QueryPaymentProvidersFilterStatic @spread{
     name: String @like
     hasPaymentSystemsFilterById: ID @eq
-    hasCompaniesFilterById: ID @eq
+    company_id: ID @eq
 }
 
 extend type Mutation @guard {
