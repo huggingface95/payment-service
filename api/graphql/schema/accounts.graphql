@@ -91,7 +91,7 @@ extend type Query @guard {
     ): [Account!]!   @paginateWithConditions(defaultCount: 10) @orderBy(column: "id", direction: DESC)
 
     accountList(
-        filter: _ @filterConditions(static: QueryAccountsFilterStatic),
+        filter: _ @filterConditions(static: QueryAccountListFilterStatic),
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id","created_at"])
     ): [Account!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
@@ -118,7 +118,7 @@ extend type Query @guard {
     clientList(group_type: ID @eq): [AccountClient!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
 }
 
-input QueryAccountsFilterStatic @spread{
+input QueryAccountListFilterStatic @spread{
     hasCompanyMixedIdOrName: Mixed @eq
     hasPaymentProviderMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
