@@ -91,6 +91,12 @@ extend type Query @guard {
         orderBy: _ @orderBy(columns: ["id","created_at"])
     ): [Account!]!   @paginateWithConditions(defaultCount: 10) @orderBy(column: "id", direction: DESC)
 
+    accountList(
+        filter: _ @filterConditions(static: QueryCommissionTemplatesFilterStatic),
+        created_at: DateTimeRange @whereBetween,
+        orderBy: _ @orderBy(columns: ["id","created_at"])
+    ): [Account!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
+
     """
     Получить список accounts для accountDetails
     """
