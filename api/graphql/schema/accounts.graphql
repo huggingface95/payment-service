@@ -122,7 +122,7 @@ input QueryAccountListFilterStatic @spread{
     hasCompanyMixedIdOrName: Mixed @eq
     hasPaymentProviderMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
-    MixedAccountNumberOrAccountName: String @like
+    MixedAccountNumberOrAccountName: String @ilike
     currency_id: ID @eq
     hasGroupRoleMixedIdOrName: Mixed @eq
     group_type_id: ID @eq
@@ -133,7 +133,7 @@ input QueryAccountListFilterStatic @spread{
 }
 
 input QueryAccountDetailsListFilterStatic @spread{
-    account_name: String @like
+    account_name: String @ilike
     hasCompanyMixedIdOrName: Mixed @eq
     group_type_id: ID @eq
     hasGroupRoleMixedIdOrName: Mixed @eq

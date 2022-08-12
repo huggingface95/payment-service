@@ -40,6 +40,7 @@ abstract class FilterConditionsBaseDirective extends BaseDirective implements Ar
         'lt' => '<',
         'lte' => '<=',
         'like' => 'LIKE',
+        'ilike' => 'ILIKE',
         'not_like' => 'NOT_LIKE',
         'in' => 'In',
         'not_in' => 'NotIn',
