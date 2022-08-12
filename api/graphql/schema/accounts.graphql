@@ -85,14 +85,13 @@ extend type Query @guard {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     accounts(
-        filter: _ @filterConditions(static: QueryCommissionTemplatesFilterStatic),
         query: QueryAccountCondition,
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id","created_at"])
     ): [Account!]!   @paginateWithConditions(defaultCount: 10) @orderBy(column: "id", direction: DESC)
 
     accountList(
-        filter: _ @filterConditions(static: QueryCommissionTemplatesFilterStatic),
+        filter: _ @filterConditions(static: QueryAccountsFilterStatic),
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id","created_at"])
     ): [Account!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
