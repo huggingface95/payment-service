@@ -17,7 +17,7 @@ class ChangeGroupTypeColumnToEmailNotificationsTable extends Migration
             $table->dropColumn('group_type');
             $table->unsignedBigInteger('group_type_id')->nullable();
 
-            $table->foreign('group_type_id')->references('id')->on('groups')
+            $table->foreign('group_type_id')->references('id')->on('group_types')
                 ->onUpdate('cascade')->onDelete('cascade');
         });
     }

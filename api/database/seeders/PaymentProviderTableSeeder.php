@@ -24,10 +24,11 @@ class PaymentProviderTableSeeder extends Seeder
                     'name'     => 'PaymentProvider'.$i,
                     'description' => $faker->text(100),
                     'is_active' => true,
+                    'company_id' => $i,
                 ]
             );
-            $paymentProvider->countries()->attach([$faker->numberBetween(1, 100)]);
-            $paymentProvider->currencies()->attach([$faker->numberBetween(1, 100)]);
+            //$paymentProvider->countries()->attach([$faker->numberBetween(1, 100)]);
+            //$paymentProvider->currencies()->attach([$faker->numberBetween(1, 100)]);
             $paymentProvider->paymentSystems()->attach([$faker->numberBetween(1, 10)]);
         }
     }

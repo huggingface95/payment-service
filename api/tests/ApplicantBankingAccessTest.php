@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 class ApplicantBankingAccessTest extends TestCase
 {
     /**
@@ -55,7 +57,7 @@ class ApplicantBankingAccessTest extends TestCase
     public function testUpdateBankingAccess()
     {
         $this->login();
-        $access = \App\Models\ApplicantBankingAccess::orderBy('id', 'DESC')->take(1)->get();
+        $access = DB::connection('pgsql_test')->table('applicant_banking_access')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation UpdateApplicantBankingAccess(
                 $id: ID!
@@ -69,12 +71,12 @@ class ApplicantBankingAccessTest extends TestCase
                     applicant_individual_id: $applicant_individual_id
                     applicant_company_id: $applicant_company_id
                     member_id: $member_id
-                    daily_limit: 100.000
-                    monthly_limit: 500.000
-                    operation_limit: 5.000
+                    daily_limit: 1000.000
+                    monthly_limit: 5000.000
+                    operation_limit: 50.000
                     contact_administrator: false
                     can_sign_payment: false
-                    can_create_payment: true
+                    can_create_payment: false
                 )
                 {
                     id
@@ -84,7 +86,7 @@ class ApplicantBankingAccessTest extends TestCase
             'id' => strval($access[0]->id),
             'applicant_individual_id' =>  1,
             'applicant_company_id' => 1,
-            'member_id' => 1,
+            'member_id' => 2,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -99,7 +101,7 @@ class ApplicantBankingAccessTest extends TestCase
     public function testQueryBankingAccessOrderBy()
     {
         $this->login();
-        $access = \App\Models\ApplicantBankingAccess::orderBy('id', 'DESC')->get();
+        $access = DB::connection('pgsql_test')->table('applicant_banking_access')->orderBy('id', 'DESC')->get();
         $this->graphQL('
         query {
             applicantBankingAccess(orderBy: { column: ID, order: DESC }) {
@@ -117,7 +119,7 @@ class ApplicantBankingAccessTest extends TestCase
     public function testQueryBankingAccessWhere()
     {
         $this->login();
-        $access = \App\Models\ApplicantBankingAccess::where('member_id', 2)->get();
+        $access = DB::connection('pgsql_test')->table('applicant_banking_access')->orderBy('id', 'DESC')->get();
         $this->graphQL('
         query {
             applicantBankingAccess(where: { column: MEMBER_ID, value: 2}) {
@@ -135,7 +137,7 @@ class ApplicantBankingAccessTest extends TestCase
     public function testDeleteBankingAccess()
     {
         $this->login();
-        $access = \App\Models\ApplicantBankingAccess::orderBy('id', 'DESC')->take(1)->get();
+        $access = DB::connection('pgsql_test')->table('applicant_banking_access')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation DeleteApplicantBankingAccess(
                 $id: ID!

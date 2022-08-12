@@ -17,7 +17,7 @@ class AddFieldsRoleTable extends Migration
             $table->unsignedBigInteger('company_id')->nullable();
             $table->unsignedBigInteger('group_type_id')->nullable();
             $table->foreign('company_id')->references('id')->on('companies');
-            $table->foreign('group_type_id')->references('id')->on('groups');
+            $table->foreign('group_type_id')->references('id')->on('group_types');
         });
     }
 

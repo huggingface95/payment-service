@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\GroupRole;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -33,5 +34,18 @@ class DatabaseSeeder extends Seeder
         $this->call(OperationTypeSeeder::class);
         $this->call(AccountStatesTableSeeder::class);
         $this->call(CommissionTemplateLimitTypeTableSeeder::class);
+        $this->call(CommissionTemplateTableSeeder::class);
+        $this->call(MembersTableSeeder::class);
+        $this->call(RolesTableSeeder::class);
+        $this->call(GroupRoleTableSeeder::class);
+        $this->call(GroupRoleMembersIndividualsTableSeeder::class);
+        $this->call(ApplicantIndividualTableSeeder::class);
+        $this->call(ApplicantCompaniesTableSeeder::class);
+        $this->call(EmailSmtpsTableSeeder::class);
+        $this->call(EmailTemplatesTableSeeder::class);
+        $this->call(ApplicantIndividualCompanyTableSeeder::class);
+        $this->call(EmailNotificationsTableSeeder::class);
+        $this->call(EmailNotificationTemplatesTableSeeder::class);
+        $this->call(RegionsTableSeeder::class);
     }
 }
