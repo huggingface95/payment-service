@@ -11,14 +11,10 @@ class AccountIndividualsCompaniesScope implements Scope
 {
     public function apply(Builder $builder, Model $model): Builder
     {
-        $request = request()->request->all();
-        if (array_key_exists('operationName', $request) && in_array($request['operationName'], ['UpdateAccount', 'CreateAccount'])){
-            return $builder;
-        }
-        return $builder->fromSub(
-            DB::table('accounts')->leftJoin('account_individuals_companies', 'account_individuals_companies.account_id', '=', 'accounts.id')
-                ->select(['accounts.*', 'account_individuals_companies.client_id', 'account_individuals_companies.client_type']),
-            'accounts'
-        );
+        return $builder
+            ->select(
+                'accounts.*',
+                DB::raw("(SELECT client_type FROM account_individuals_companies where account_individuals_companies.account_id = accounts.id) AS client_type"),
+                DB::raw("(SELECT client_id FROM account_individuals_companies where account_individuals_companies.account_id = accounts.id) AS client_id"));
     }
 }
