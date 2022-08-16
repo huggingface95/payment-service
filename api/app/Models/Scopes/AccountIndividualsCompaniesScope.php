@@ -5,12 +5,16 @@ namespace App\Models\Scopes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
+use Illuminate\Support\Facades\DB;
 
 class AccountIndividualsCompaniesScope implements Scope
 {
-    public function apply(Builder $builder, Model $model)
+    public function apply(Builder $builder, Model $model): Builder
     {
-        return $builder->leftJoin('account_individuals_companies', 'account_individuals_companies.account_id', '=', 'accounts.id')
-            ->select(['accounts.*', 'account_individuals_companies.client_id', 'account_individuals_companies.client_type']);
+        return $builder
+            ->select(
+                'accounts.*',
+                DB::raw("(SELECT client_type FROM account_individuals_companies where account_individuals_companies.account_id = accounts.id) AS client_type"),
+                DB::raw("(SELECT client_id FROM account_individuals_companies where account_individuals_companies.account_id = accounts.id) AS client_id"));
     }
 }

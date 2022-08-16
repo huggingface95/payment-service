@@ -22,7 +22,7 @@ extend type Query @guard {
 input QueryRegionsFilterStatic @spread{
     company_id: ID @eq
     hasCountriesFilterById: ID @eq
-    hasCountriesFilterByName: String @like
+    hasCountriesFilterByName: String @ilike
 }
 
 input InputRegion{
