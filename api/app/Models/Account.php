@@ -7,6 +7,7 @@ use Ankurk91\Eloquent\MorphToOne;
 use App\Events\AccountCreatedEvent;
 use App\Events\AccountUpdatedEvent;
 use App\Models\Interfaces\BaseModelInterface;
+use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -64,13 +65,22 @@ class Account extends BaseModel implements BaseModelInterface
         'group_role_id',
         'payment_system_id',
         'payment_bank_id',
+        'client_id',
+        'client_type',
     ];
 
     protected static function booted()
     {
         parent::booted();
-//        static::addGlobalScope(new AccountIndividualsCompaniesScope());
+        static::addGlobalScope(new AccountIndividualsCompaniesScope);
         static::addGlobalScope(new ApplicantFilterByMemberScope);
+    }
+
+    public function newModelQuery(): Builder|Account
+    {
+        return $this->newEloquentBuilder(
+            $this->newBaseQueryBuilder()
+        )->withGlobalScope(AccountIndividualsCompaniesScope::class, new AccountIndividualsCompaniesScope)->setModel($this);
     }
 
     public function getClientAccountsAttribute(): array

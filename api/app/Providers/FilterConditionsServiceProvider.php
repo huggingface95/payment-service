@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\GraphQL\SQLOperator;
 use GraphQL\Language\AST\InputObjectTypeDefinitionNode;
 use GraphQL\Language\Parser;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -9,7 +10,6 @@ use Illuminate\Support\ServiceProvider;
 use Nuwave\Lighthouse\Events\ManipulateAST;
 use Nuwave\Lighthouse\Events\RegisterDirectiveNamespaces;
 use Nuwave\Lighthouse\WhereConditions\Operator;
-use Nuwave\Lighthouse\WhereConditions\SQLOperator;
 
 class FilterConditionsServiceProvider extends ServiceProvider
 {
