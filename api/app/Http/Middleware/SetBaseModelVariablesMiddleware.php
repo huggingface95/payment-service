@@ -22,9 +22,9 @@ class SetBaseModelVariablesMiddleware
         return $next($request);
     }
 
-    protected function getApplicantIdsByAuthMember(Members $member): ?array
+    protected function getApplicantIdsByAuthMember(?Members $member): ?array
     {
-        if ($member->accessLimitations()->count()) {
+        if ($member && $member->accessLimitations()->count()) {
             $ids = $member->accessLimitations()->get()
                 ->map(function ($limitation) {
                     return $limitation->groupRole->users()->get();
