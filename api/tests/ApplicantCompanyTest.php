@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 class ApplicantCompanyTest extends TestCase
 {
     /**
@@ -15,6 +17,8 @@ class ApplicantCompanyTest extends TestCase
     public function testCreateApplicantCompany()
     {
         $this->login();
+        $seq = DB::table('applicant_companies')->max('id') + 1;
+        DB::select('ALTER SEQUENCE applicant_companies_id_seq RESTART WITH ' . $seq);
         $this->graphQL('
             mutation CreateApplicantCompany(
                 $name: String!
@@ -82,7 +86,7 @@ class ApplicantCompanyTest extends TestCase
     public function testUpdateApplicantCompany()
     {
         $this->login();
-        $applicant = \App\Models\ApplicantCompany::orderBy('id', 'DESC')->take(1)->get();
+        $applicant = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation UpdateApplicantCompany(
                 $id: ID!
@@ -116,7 +120,7 @@ class ApplicantCompanyTest extends TestCase
     public function testQueryApplicantCompany()
     {
         $this->login();
-        $applicant = \App\Models\ApplicantCompany::orderBy('id', 'DESC')->take(1)->get();
+        $applicant = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             query ApplicantCompany($id:ID!){
                 applicantCompany(id: $id) {
@@ -137,7 +141,7 @@ class ApplicantCompanyTest extends TestCase
     public function testQueryApplicantCompanyOrderBy()
     {
         $this->login();
-        $applicant = \App\Models\ApplicantCompany::orderBy('id', 'DESC')->get();
+        $applicant = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
         $this->graphQL('
         query {
             applicantCompanies(orderBy: { column: ID, order: DESC }) {
@@ -155,7 +159,7 @@ class ApplicantCompanyTest extends TestCase
     public function testQueryApplicantCompanyWhere()
     {
         $this->login();
-        $applicant = \App\Models\ApplicantCompany::where('id', 1)->get();
+        $applicant = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'ASC')->get();
         $this->graphQL('
         query {
             applicantCompanies(where: { column: ID, value: 1}) {
@@ -173,7 +177,7 @@ class ApplicantCompanyTest extends TestCase
     public function testQueryGetMatchedUsers()
     {
         $this->login();
-        $applicant = \App\Models\ApplicantCompany::orderBy('id', 'ASC')->take(1)->get();
+        $applicant = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'ASC')->get();
         $this->graphQL('
             query GetMatchedUsers($applicant_company_id:ID!){
                 getMatchedUsers(applicant_company_id: $applicant_company_id) {
@@ -194,7 +198,7 @@ class ApplicantCompanyTest extends TestCase
     public function testDeleteApplicantCompany()
     {
         $this->login();
-        $applicant = \App\Models\ApplicantCompany::orderBy('id', 'DESC')->take(1)->get();
+        $applicant = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation DeleteApplicantCompany(
                 $id: ID!
@@ -220,40 +224,4 @@ class ApplicantCompanyTest extends TestCase
         ]);
     }
 
-    /*public function testCreateApplicantIndividualCompany()
-    {
-        $this->login();
-        $this->graphQL('
-            mutation CreateApplicantIndividualCompany(
-                $applicant_individual_id: ID!
-                $applicant_company_id: ID!
-                $applicant_individual_company_relation_id: ID!
-                $applicant_individual_company_position_id: ID!
-            )
-            {
-                createApplicantIndividualCompany (
-                    applicant_individual_id: $applicant_individual_id
-                    applicant_company_id: $applicant_company_id
-                    applicant_individual_company_relation_id: $applicant_individual_company_relation_id
-                    applicant_individual_company_position_id: $applicant_individual_company_position_id
-                )
-                {
-                    applicant_individual_id
-                }
-            }
-        ', [
-            'applicant_individual_id' => 1,
-            'applicant_company_id' => 1,
-            'applicant_individual_company_relation_id' => 1,
-            'applicant_individual_company_position_id' => 1
-        ]);
-        $id = json_decode($this->response->getContent(), true);
-        $this->seeJson([
-            'data' => [
-                'createApplicantIndividualCompany' => [
-                    'applicant_individual_id' => $id['data']['createApplicantIndividualCompany']['applicant_individual_id']
-                ],
-            ],
-        ]);
-    }*/
 }

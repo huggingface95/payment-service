@@ -38,10 +38,6 @@ trait ResetsPasswords
         $token = Password::getRepository()->create($user);
         $response = $user->sendPasswordResetNotification($token);
 
-        $f = fopen('data.txt', 'w');
-        fwrite($f, json_encode($response));
-        fclose($f);
-
         switch ($response) {
             case Password::RESET_LINK_SENT:
                 return $this->getSendResetLinkEmailSuccessResponse($response);

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 class CommissionTemplateTest extends TestCase
 {
     public function login()
@@ -15,6 +17,8 @@ class CommissionTemplateTest extends TestCase
     public function testCreateCommissionTemplate()
     {
         $this->login();
+        $seq = DB::table('commission_template')->max('id') + 1;
+        DB::select('ALTER SEQUENCE commission_template_id_seq RESTART WITH ' . $seq);
         $this->graphQL('
             mutation CreateCommissionTemplate(
                 $name: String!
@@ -48,7 +52,7 @@ class CommissionTemplateTest extends TestCase
     public function testUpdateCommissionTemplate()
     {
         $this->login();
-        $template = \App\Models\CommissionTemplate::orderBy('id', 'DESC')->take(1)->get();
+        $template = DB::connection('pgsql_test')->table('commission_template')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation UpdateCommissionTemplate(
                 $id: ID!
@@ -83,7 +87,7 @@ class CommissionTemplateTest extends TestCase
     public function testQueryCommissionTemplatesFirst()
     {
         $this->login();
-        $getRecord = \App\Models\CommissionTemplate::orderBy('id')->take(1)->get();
+        $getRecord = DB::connection('pgsql_test')->table('commission_template')->orderBy('id', 'DESC')->get();
         $data =
             [
                 'data' => [
@@ -113,7 +117,7 @@ class CommissionTemplateTest extends TestCase
     public function testQueryCommissionTemplate()
     {
         $this->login();
-        $getRecord = \App\Models\CommissionTemplate::orderBy('id', 'DESC')->take(1)->get();
+        $getRecord = DB::connection('pgsql_test')->table('commission_template')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             query CommissionTemplate($id:ID!)
             {
@@ -138,37 +142,10 @@ class CommissionTemplateTest extends TestCase
         ]);
     }
 
-    public function testQueryWithWhereCommissionPriceLists()
-    {
-        $this->login();
-        $getRecord = \App\Models\CommissionTemplate::where(['is_active' => true])->get();
-        $data =
-            [
-                [
-                    'id' => strval($getRecord[0]->id),
-                    'name' => $getRecord[0]->name,
-                    'description' => $getRecord[0]->description,
-
-                ],
-            ];
-
-        $this->graphQL('
-        {
-             commissionTemplates(where: { column: IS_ACTIVE, value: true }) {
-                data {
-                    id
-                    name
-                    description
-                }
-             }
-        }
-        ')->seeJsonContains($data);
-    }
-
     public function testQueryOrderByCommissionTemplate()
     {
         $this->login();
-        $getRecord = \App\Models\CommissionTemplate::orderBy('id', 'DESC')->get();
+        $getRecord = DB::connection('pgsql_test')->table('commission_template')->orderBy('id', 'DESC')->get();
         $data =
             [
                 [
@@ -195,7 +172,7 @@ class CommissionTemplateTest extends TestCase
     public function testDeleteCommissionTemplate()
     {
         $this->login();
-        $getRecord = \App\Models\CommissionTemplate::orderBy('id', 'DESC')->take(1)->get();
+        $getRecord = DB::connection('pgsql_test')->table('commission_template')->orderBy('id', 'DESC')->get();
 
         $this->graphQL('
             mutation DeleteCommissionTemplate(
