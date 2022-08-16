@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\DTO\Email\SmtpConfigDTO;
 use App\DTO\Email\SmtpDataDTO;
+use App\DTO\GraphQLResponse\EmailTemplateOnCompanyResponse;
 use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 class EmailTemplateMutator extends BaseMutator
 {
-    public function create($root, array $args): Collection|array
+    public function create($root, array $args): EmailTemplateOnCompanyResponse
     {
         /** @var Members $member */
         $member = Auth::user();
@@ -23,10 +24,16 @@ class EmailTemplateMutator extends BaseMutator
 
         $emailTemplate = EmailTemplate::create($args);
 
-        return EmailTemplate::query()
-            ->where('company_id', $emailTemplate->company_id)
-            ->where('type', $emailTemplate->type)
-            ->get();
+        return TransformerDTO::transform(EmailTemplateOnCompanyResponse::class, $emailTemplate);
+    }
+
+    public function update($root, array $args): EmailTemplateOnCompanyResponse
+    {
+        $emailTemplate = EmailTemplate::find($args['id']);
+
+        $emailTemplate->update($args);
+
+        return TransformerDTO::transform(EmailTemplateOnCompanyResponse::class, $emailTemplate);
     }
 
     public function sendEmailWithData($root, array $args): array

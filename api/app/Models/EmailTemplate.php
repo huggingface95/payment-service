@@ -21,6 +21,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon updated_at
  * @property Members $member
  * @property Companies $company
+ * @property EmailTemplateLayout $layout
  */
 class EmailTemplate extends BaseModel
 {
@@ -42,7 +43,7 @@ class EmailTemplate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'type', 'service_type', 'use_layout', 'subject', 'content', 'header', 'footer', 'member_id', 'company_id', 'name',
+        'type', 'service_type', 'use_layout', 'subject', 'content', 'member_id', 'company_id', 'name',
     ];
 
     protected static function booted()
@@ -53,7 +54,9 @@ class EmailTemplate extends BaseModel
 
     public function getHtml(): string
     {
-        return $this->attributes['header'].$this->attributes['content'].$this->attributes['footer'];
+        return $this->useLayout()
+            ? $this->layout->header.$this->attributes['content'].$this->layout->footer
+            : $this->attributes['content'];
     }
 
     public function useLayout(): bool
@@ -87,5 +90,10 @@ class EmailTemplate extends BaseModel
     public function company(): BelongsTo
     {
         return $this->belongsTo(Companies::class, 'company_id');
+    }
+
+    public function layout(): BelongsTo
+    {
+        return $this->belongsTo(EmailTemplateLayout::class, 'company_id', 'company_id');
     }
 }

@@ -10,7 +10,7 @@ type Region {
 }
 
 extend type Query @guard {
-    region(id: ID @eq): Region @find
+    region(id: ID! @eq): Region! @find
     """
     Получить список регионов
     """
