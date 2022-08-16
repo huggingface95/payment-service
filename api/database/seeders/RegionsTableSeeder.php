@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\FeeType;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
-class FeeTypeSeeder extends Seeder
+class RegionsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,9 +15,6 @@ class FeeTypeSeeder extends Seeder
      */
     public function run()
     {
-        $feeType = ['Fees', 'Service fee'];
-        foreach ($feeType as $item) {
-            FeeType::firstOrCreate(['name'=>$item]);
-        }
+        DB::table('regions')->insert(['name' => 'TestRegion', 'company_id' => 1]);
     }
 }

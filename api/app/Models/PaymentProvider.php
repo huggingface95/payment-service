@@ -25,7 +25,7 @@ class PaymentProvider extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'is_active', 'description', 'logo_key',
+        'name', 'is_active', 'description', 'logo_key', 'company_id',
     ];
 
     /**

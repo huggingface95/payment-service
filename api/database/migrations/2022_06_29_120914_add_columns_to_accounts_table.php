@@ -18,7 +18,7 @@ class AddColumnsToAccountsTable extends Migration
             $table->unsignedBigInteger('group_role_id');
             $table->unsignedBigInteger('payment_system_id');
 
-            $table->foreign('group_type_id')->references('id')->on('groups')->onUpdate('cascade');
+            $table->foreign('group_type_id')->references('id')->on('group_types')->onUpdate('cascade');
             $table->foreign('group_role_id')->references('id')->on('group_role')->onUpdate('cascade');
             $table->foreign('payment_system_id')->references('id')->on('payment_system')->onUpdate('cascade');
         });

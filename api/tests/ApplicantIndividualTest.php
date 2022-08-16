@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 class ApplicantIndividualTest extends TestCase
 {
     /**
@@ -15,6 +17,8 @@ class ApplicantIndividualTest extends TestCase
     public function testCreateApplicantIndividual()
     {
         $this->login();
+        $seq = DB::table('applicant_individual')->max('id') + 1;
+        DB::select('ALTER SEQUENCE applicant_individual_id_seq RESTART WITH ' . $seq);
         $this->graphQL('
             mutation CreateApplicantIndividual(
                 $first_name: String!
@@ -31,7 +35,6 @@ class ApplicantIndividualTest extends TestCase
                 $sex: Sex!
                 $applicant_state_id: ID!
                 $account_manager_member_id: ID!
-                $role_id: [ID]!
             )
             {
                 createApplicantIndividual (
@@ -49,7 +52,6 @@ class ApplicantIndividualTest extends TestCase
                     sex: $sex
                     applicant_state_id: $applicant_state_id
                     account_manager_member_id: $account_manager_member_id
-                    role_id: $role_id
                 )
                 {
                     id
@@ -70,7 +72,6 @@ class ApplicantIndividualTest extends TestCase
             'sex' => 'Male',
             'applicant_state_id' => 1,
             'account_manager_member_id' => 2,
-            'role_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -82,31 +83,10 @@ class ApplicantIndividualTest extends TestCase
         ]);
     }
 
-    public function testQueryApplicantIndividual()
-    {
-        $this->login();
-        $applicant = \App\Models\ApplicantIndividual::orderBy('id', 'DESC')->take(1)->get();
-        $this->graphQL('
-            query ApplicantIndividual($id:ID!){
-                applicantIndividual(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($applicant[0]->id),
-        ])->seeJson([
-            'data' => [
-                'applicantIndividual' => [
-                    'id' => strval($applicant[0]->id),
-                ],
-            ],
-        ]);
-    }
-
     public function testUpdateApplicantIndividual()
     {
         $this->login();
-        $applicant = \App\Models\ApplicantIndividual::orderBy('id', 'DESC')->take(1)->get();
+        $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation UpdateApplicantIndividual(
                 $id: ID!
@@ -137,10 +117,31 @@ class ApplicantIndividualTest extends TestCase
         ]);
     }
 
+    public function testQueryApplicantIndividual()
+    {
+        $this->login();
+        $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderBy('id', 'DESC')->get();
+        $this->graphQL('
+            query ApplicantIndividual($id:ID!){
+                applicantIndividual(id: $id) {
+                    id
+                }
+            }
+        ', [
+            'id' => strval($applicant[0]->id),
+        ])->seeJson([
+            'data' => [
+                'applicantIndividual' => [
+                    'id' => strval($applicant[0]->id),
+                ],
+            ],
+        ]);
+    }
+
     public function testSetApplicantIndividualPassword()
     {
         $this->login();
-        $applicant = \App\Models\ApplicantIndividual::orderBy('id', 'DESC')->take(1)->get();
+        $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation SetApplicantIndividualPassword(
                 $id: ID!
@@ -175,7 +176,7 @@ class ApplicantIndividualTest extends TestCase
     public function testQueryApplicantIndividualOrderBy()
     {
         $this->login();
-        $applicant = \App\Models\ApplicantIndividual::orderBy('id', 'DESC')->get();
+        $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderBy('id', 'DESC')->get();
         $this->graphQL('
         query {
             applicantIndividuals(orderBy: { column: ID, order: DESC }) {
@@ -193,10 +194,10 @@ class ApplicantIndividualTest extends TestCase
     public function testQueryApplicantIndividualWhere()
     {
         $this->login();
-        $applicant = \App\Models\ApplicantIndividual::where('id', 1)->get();
+        $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderBy('id', 'DESC')->get();
         $this->graphQL('
         query {
-            applicantIndividuals(where: { column: ID, value: 1}) {
+            applicantIndividuals(where: { column: ID, value: 2}) {
                 data {
                     id
                 }
@@ -211,7 +212,7 @@ class ApplicantIndividualTest extends TestCase
     public function testDeleteApplicantIndividual()
     {
         $this->login();
-        $applicant = \App\Models\ApplicantIndividual::orderBy('id', 'DESC')->take(1)->get();
+        $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderByDesc('id')->get();
         $this->graphQL('
             mutation DeleteApplicantIndividual(
                 $id: ID!

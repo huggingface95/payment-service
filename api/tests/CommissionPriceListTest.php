@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\CommissionPriceList;
+use Illuminate\Support\Facades\DB;
 
 class CommissionPriceListTest extends TestCase
 {
@@ -23,12 +24,16 @@ class CommissionPriceListTest extends TestCase
                 $provider_id: ID!
                 $payment_system_id: ID!
                 $commission_template_id: ID!
+                $company_id: ID!
+                $region_id: ID!
             ) {
             createCommissionPriceList(
                 name: $name
                 provider_id: $provider_id
                 payment_system_id: $payment_system_id
                 commission_template_id: $commission_template_id
+                company_id: $company_id
+                region_id: $region_id
             ) {
                 id
             }
@@ -38,6 +43,8 @@ class CommissionPriceListTest extends TestCase
             'provider_id' => 1,
             'payment_system_id' => 1,
             'commission_template_id' => 1,
+            'company_id' => 1,
+            'region_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -52,7 +59,7 @@ class CommissionPriceListTest extends TestCase
     public function testUpdateCommissionPriceList()
     {
         $this->login();
-        $getRecord = CommissionPriceList::orderBy('id', 'DESC')->take(1)->get();
+        $getRecord = DB::connection('pgsql_test')->table('commission_price_list')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation (
                 $id: ID!
@@ -93,7 +100,7 @@ class CommissionPriceListTest extends TestCase
     public function testQueryCommissionPriceLists()
     {
         $this->login();
-        $getRecord = CommissionPriceList::orderBy('id')->take(1)->get();
+        $getRecord = DB::connection('pgsql_test')->table('commission_price_list')->orderBy('id', 'DESC')->get();
         $data =
             [
                 'data' => [
@@ -106,15 +113,11 @@ class CommissionPriceListTest extends TestCase
                             ],
                             'payment_system' => [
                                 'id' => strval($getRecord[0]->payment_system_id),
-                            ],
-                            'commission_template' => [
-                                'id' => strval($getRecord[0]->commission_template_id),
-                            ],
+                            ]
                         ]],
                     ],
                 ],
             ];
-
         $this->graphQL('
         {
             commissionPriceLists(first: 1) {
@@ -127,9 +130,6 @@ class CommissionPriceListTest extends TestCase
                     payment_system {
                       id
                     }
-                    commission_template {
-                      id
-                    }
                 }
             }
         }
@@ -139,7 +139,7 @@ class CommissionPriceListTest extends TestCase
     public function testQueryCommissionPriceList()
     {
         $this->login();
-        $getRecord = CommissionPriceList::orderBy('id', 'DESC')->take(1)->get();
+        $getRecord = DB::connection('pgsql_test')->table('commission_price_list')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             query CommissionPriceList($id:ID!)
             {
@@ -153,9 +153,7 @@ class CommissionPriceListTest extends TestCase
                     payment_system {
                         id
                     }
-                    commission_template {
-                        id
-                    }
+
                 }
             }
         ', [
@@ -170,10 +168,7 @@ class CommissionPriceListTest extends TestCase
                     ],
                     'payment_system' => [
                         'id' => strval($getRecord[0]->payment_system_id),
-                    ],
-                    'commission_template' => [
-                        'id' => strval($getRecord[0]->commission_template_id),
-                    ],
+                    ]
                 ],
             ],
         ]);
@@ -182,7 +177,7 @@ class CommissionPriceListTest extends TestCase
     public function testQueryWithWhereCommissionPriceLists()
     {
         $this->login();
-        $getRecord = CommissionPriceList::where(['payment_system_id' => 1])->get();
+        $getRecord = DB::connection('pgsql_test')->table('commission_price_list')->orderBy('id', 'DESC')->get();
         $data =
             [
                 [
@@ -193,16 +188,13 @@ class CommissionPriceListTest extends TestCase
                     ],
                     'payment_system' => [
                         'id' => strval($getRecord[0]->payment_system_id),
-                    ],
-                    'commission_template' => [
-                        'id' => strval($getRecord[0]->commission_template_id),
-                    ],
+                    ]
                 ],
             ];
 
         $this->graphQL('
         {
-             commissionPriceLists(where: { column: PAYMENT_SYSTEM_ID, value: 1 }) {
+             commissionPriceLists(filter: { column: COMPANY_ID, value: 1 }) {
                 data {
                     id
                     name
@@ -210,9 +202,6 @@ class CommissionPriceListTest extends TestCase
                         id
                     }
                     payment_system {
-                        id
-                    }
-                    commission_template {
                         id
                     }
                 }
@@ -224,7 +213,7 @@ class CommissionPriceListTest extends TestCase
     public function testDeleteCommissionPriceList()
     {
         $this->login();
-        $getRecord = CommissionPriceList::orderBy('id', 'DESC')->take(1)->get();
+        $getRecord = DB::connection('pgsql_test')->table('commission_price_list')->orderBy('id', 'DESC')->get();
 
         $this->graphQL('
             mutation (
