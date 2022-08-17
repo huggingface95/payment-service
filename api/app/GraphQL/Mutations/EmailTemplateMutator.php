@@ -10,6 +10,7 @@ use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
 use App\Models\EmailSmtp;
 use App\Models\EmailTemplate;
+use App\Models\EmailTemplateLayout;
 use App\Models\Members;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -22,16 +23,26 @@ class EmailTemplateMutator extends BaseMutator
         $member = Auth::user();
         $args['member_id'] = $member->id;
 
+        /** @var EmailTemplate $emailTemplate */
         $emailTemplate = EmailTemplate::create($args);
+
+        if ($emailTemplate->useLayout() && $emailTemplate->layout){
+            $this->compareLayoutHeaderAndFooter($emailTemplate->layout, $args['header'] ?? null, $args['footer'] ?? null);
+        }
 
         return TransformerDTO::transform(EmailTemplateOnCompanyResponse::class, $emailTemplate);
     }
 
     public function update($root, array $args): EmailTemplateOnCompanyResponse
     {
+        /** @var EmailTemplate $emailTemplate */
         $emailTemplate = EmailTemplate::find($args['id']);
 
         $emailTemplate->update($args);
+
+        if ($emailTemplate->useLayout() && $emailTemplate->layout){
+            $this->compareLayoutHeaderAndFooter($emailTemplate->layout, $args['header'] ?? null, $args['footer'] ?? null);
+        }
 
         return TransformerDTO::transform(EmailTemplateOnCompanyResponse::class, $emailTemplate);
     }
@@ -64,6 +75,15 @@ class EmailTemplateMutator extends BaseMutator
             return ['status' => 'OK', 'message' => 'Email sent for processing'];
         } catch (\Throwable $e) {
             throw new GraphqlException($e->getMessage(), 'Internal', $e->getCode());
+        }
+    }
+
+    private function compareLayoutHeaderAndFooter(EmailTemplateLayout $layout, string $header = null, string $footer = null){
+        if ($header && $header != $layout->header){
+            $layout->update(['header' => $header]);
+        }
+        if ($footer && $footer != $layout->footer){
+            $layout->update(['footer' => $footer]);
         }
     }
 }

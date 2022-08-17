@@ -76,6 +76,10 @@ extend type Mutation @guard {
         service_type: ServiceType!
         "Контент электронной почты"
         content: String!
+        "Header"
+        header: String
+        "Footer"
+        footer: String
         "Ид компании"
         company_id: ID!
     ): EmailTemplateOnCompanyResponse @field(resolver: "EmailTemplateMutator@create")
@@ -93,6 +97,10 @@ extend type Mutation @guard {
         service_type: ServiceType
         "Контент электронной почты"
         content: String
+        "Header"
+        header: String
+        "Footer"
+        footer: String
         "Ид компании"
         company_id: ID
     ): EmailTemplateOnCompanyResponse @field(resolver: "EmailTemplateMutator@update")
