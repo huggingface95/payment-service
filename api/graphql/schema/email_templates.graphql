@@ -44,7 +44,6 @@ extend type Query @guard {
     orderBy: [
     {column: ID, order: DESC},
     ] сортировка по ID
-    where:{column: SUBJECT, operator: LIKE, value: ""} фильтр по имени
     """
     emailTemplates(
         hasCompany: _ @whereHasConditions(columns: ["name"]),
