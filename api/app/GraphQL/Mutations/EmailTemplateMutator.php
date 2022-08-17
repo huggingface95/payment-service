@@ -40,7 +40,7 @@ class EmailTemplateMutator extends BaseMutator
 
         $emailTemplate->update($args);
 
-        if ($emailTemplate->useLayout() && $emailTemplate->layout){
+        if ($emailTemplate->useLayout()){
             $this->compareLayoutHeaderAndFooter($emailTemplate, $args['header'] ?? null, $args['footer'] ?? null);
         }
 
