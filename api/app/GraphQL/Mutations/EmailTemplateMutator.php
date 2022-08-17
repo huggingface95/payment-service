@@ -26,8 +26,8 @@ class EmailTemplateMutator extends BaseMutator
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = EmailTemplate::create($args);
 
-        if ($emailTemplate->useLayout() && $emailTemplate->layout){
-            $this->compareLayoutHeaderAndFooter($emailTemplate->layout, $args['header'] ?? null, $args['footer'] ?? null);
+        if ($emailTemplate->useLayout()){
+            $this->compareLayoutHeaderAndFooter($emailTemplate, $args['header'] ?? null, $args['footer'] ?? null);
         }
 
         return TransformerDTO::transform(EmailTemplateOnCompanyResponse::class, $emailTemplate);
@@ -41,7 +41,7 @@ class EmailTemplateMutator extends BaseMutator
         $emailTemplate->update($args);
 
         if ($emailTemplate->useLayout() && $emailTemplate->layout){
-            $this->compareLayoutHeaderAndFooter($emailTemplate->layout, $args['header'] ?? null, $args['footer'] ?? null);
+            $this->compareLayoutHeaderAndFooter($emailTemplate, $args['header'] ?? null, $args['footer'] ?? null);
         }
 
         return TransformerDTO::transform(EmailTemplateOnCompanyResponse::class, $emailTemplate);
@@ -78,7 +78,8 @@ class EmailTemplateMutator extends BaseMutator
         }
     }
 
-    private function compareLayoutHeaderAndFooter(EmailTemplateLayout $layout, string $header = null, string $footer = null){
+    private function compareLayoutHeaderAndFooter(EmailTemplate $emailTemplate, string $header = null, string $footer = null){
+        $layout = EmailTemplateLayout::firstOrCreate(['company_id' => $emailTemplate->company_id]);
         if ($header && $header != $layout->header){
             $layout->update(['header' => $header]);
         }
