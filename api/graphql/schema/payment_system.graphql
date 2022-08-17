@@ -23,7 +23,7 @@ extend type Query @guard {
     paymentSystems(
         filter: _ @filterConditions(static: QueryPaymentSystemsFilterStatic),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
-    ): [PaymentSystem!]! @all @orderBy(column: "id", direction: ASC)
+    ): [PaymentSystem!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 input QueryPaymentSystemsFilterStatic @spread{
