@@ -51,7 +51,7 @@ trait UserPermission
         return false;
     }
 
-    private function loadRolesAndPermissionsRelations()
+    private function loadRolesAndPermissionsRelations(): void
     {
         $this->load('groupRole.role.permissions');
     }
