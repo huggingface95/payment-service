@@ -9,6 +9,7 @@ use App\Models\AccountLimit;
 use App\Models\ApplicantBankingAccess;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
+use App\Models\BaseModel;
 use App\Models\CommissionTemplateLimit;
 use App\Models\CommissionTemplateLimitPeriod;
 use App\Models\CommissionTemplateLimitTransferDirection;
@@ -23,15 +24,13 @@ use Illuminate\Support\Collection;
 
 class PaymentsMutator
 {
+
     /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
-     *
      * @throws GraphqlException
      */
-    public function create($root, array $args)
+    public function create($_, array $args): Payments
     {
-        $memberId = Payments::DEFAULT_MEMBER_ID;
+        $memberId = BaseModel::DEFAULT_MEMBER_ID;
         $args['member_id'] = $memberId;
         $args['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
         $payment = new Payments($args);
@@ -39,7 +38,7 @@ class PaymentsMutator
         $allAmount = $this->getAllProcessedAmount($payment);
         $allLimits = $this->getAllLimits($payment);
 
-        if (false === $this->checkLimit($payment->Accounts, $allLimits, $allAmount, $payment->amount)) {
+        if (false === $this->checkLimit($payment->account, $allLimits, $allAmount, $payment->amount)) {
             throw new GraphqlException('limit is exceeded', 'use');
         }
 
@@ -55,7 +54,7 @@ class PaymentsMutator
     public function update($_, array $args)
     {
         $payment = Payments::find($args['id']);
-        $memberId = Payments::DEFAULT_MEMBER_ID;
+        $memberId = BaseModel::DEFAULT_MEMBER_ID;
         $args['member_id'] = $memberId;
         $payment->update($args);
 
@@ -69,9 +68,9 @@ class PaymentsMutator
         }) as $limit) {
             if ($limit instanceof ApplicantBankingAccess) {
                 if ($limit->daily_limit < $allProcessedAmount->whereBetween(
-                    'created_at',
-                    [Carbon::now()->startOfDay()->format('Y-m-d H:i:s'), Carbon::now()->endOfDay()->format('Y-m-d H:i:s')]
-                )->sum('amount')
+                        'created_at',
+                        [Carbon::now()->startOfDay()->format('Y-m-d H:i:s'), Carbon::now()->endOfDay()->format('Y-m-d H:i:s')]
+                    )->sum('amount')
                     || $limit->monthly_limit < $allProcessedAmount->whereBetween(
                         'created_at',
                         [Carbon::now()->startOfMonth()->format('Y-m-d H:i:s'), Carbon::now()->endOfMonth()->format('Y-m-d H:i:s')]
@@ -163,7 +162,7 @@ class PaymentsMutator
         return true;
     }
 
-    private function createReachedLimit(Account $account, $limit)
+    private function createReachedLimit(Account $account, $limit): void
     {
         $account->reachedLimits()->create([
             'group_type' => $account->clientable instanceof ApplicantIndividual ? GroupType::INDIVIDUAL : GroupType::COMPANY,
@@ -178,7 +177,7 @@ class PaymentsMutator
         ]);
     }
 
-    private function commissionCalculation(Payments $payment)
+    private function commissionCalculation(Payments $payment): void
     {
         $commissionPriceList = $payment->commissionPriceList;
         $priceListFees = $commissionPriceList->fees()->with(['feeType', 'feePeriod', 'operationType', 'fees'])->get();
@@ -188,11 +187,11 @@ class PaymentsMutator
             if ($listFee->type_id == $payment->fee_type_id
                 && $listFee->operation_type_id == $payment->operation_type_id
             ) {
-                $payment->fee = self::getFee($listFee->fees()->get(), $payment->amount, $payment->Currencies->code);
+                $payment->fee = self::getFee($listFee->fees()->get(), $payment->amount, $payment->currency->code);
 
                 if ($payment->PaymentOperation->name == OperationType::INCOMING_TRANSFER) {
                     $payment->amount_real = $payment->amount - $payment->fee;
-                } elseif ($payment->PaymentOperation->name == OperationType::OUTGOING_TRANSFER) {
+                } elseif ($payment->paymentOperation->name == OperationType::OUTGOING_TRANSFER) {
                     $payment->amount_real = $payment->amount + $payment->fee;
                 }
             }
@@ -202,7 +201,7 @@ class PaymentsMutator
     private function getAllLimits(Payments $payment): Collection
     {
         /** @var Account $account */
-        $account = $payment->Accounts()->with(['clientable', 'limits', 'commissionTemplate.commissionTemplateLimits'])->first();
+        $account = $payment->account()->with(['clientable', 'limits', 'commissionTemplate.commissionTemplateLimits'])->first();
         $allLimits = collect([$account->limits, $account->commissionTemplate->commissionTemplateLimits]);
         if ($account->clientable instanceof ApplicantCompany) {
             $allLimits = $allLimits->prepend($payment->applicantIndividual->applicantBankingAccess);

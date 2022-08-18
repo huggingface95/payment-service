@@ -11,7 +11,7 @@ type Payments {
     fee: Float
     fee_type: FeeType @belongsTo(relation: "feeType")
     "Получить связанную валюту"
-    currency: Currencies @belongsTo(relation:"Currencies")
+    currency: Currencies @belongsTo(relation:"currency")
     "Статус"
     status: PaymentStatus @belongsTo(relation:"paymentStatus")
     "Имя отправителя"
@@ -25,23 +25,23 @@ type Payments {
     "Имя банка отправителя"
     sender_bank_name: String
     "Страна банка отправителя"
-    sender_bank_country: Country @belongsTo(relation:"Country")
+    sender_bank_country: Country @belongsTo(relation:"country")
     "Адрес банка отправителя"
     sender_bank_address: String
     "Страна отправителя"
-    sender_country_id: Country @belongsTo(relation:"Country")
+    sender_country_id: Country @belongsTo(relation:"country")
     "Адрес отправителя"
     sender_address: String
     "Получить связанныую срочность"
-    payment_urgency: PaymentUrgency @belongsTo(relation:"PaymentUrgency")
+    payment_urgency: PaymentUrgency @belongsTo(relation:"paymentUrgency")
     "Получить связанный тип"
-    payment_operation_type: OperationType @belongsTo(relation:"PaymentOperation")
+    payment_operation_type: OperationType @belongsTo(relation:"paymentOperation")
     "Получить связанный провайдер"
-    payment_provider: PaymentProvider @belongsTo(relation:"PaymentProvider")
+    payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Получить связанный аккаунт"
-    account: Account @belongsTo(relation:"Account")
+    account: Account @belongsTo(relation:"account")
     "Получить связанную компанию"
-    company: Companies @belongsTo(relation:"Companies")
+    company: Companies @belongsTo(relation:"company")
     "Номер платежа"
     payment_number: String
     created_at: DateTime
@@ -50,8 +50,6 @@ type Payments {
     member: Members @belongsTo(relation: "member")
     "Получить владельца"
     owner: [ApplicantIndividual] @belongsToMany(relation: "applicantIndividual")
-    #    "Получить компанию ownera"
-    #    company: [ApplicantCompany] @belongsToMany(relation: "company")
     received_at: DateTime
     error: String
     sender_additional_fields: JSON
@@ -76,20 +74,23 @@ extend type Query @guard {
     hasOwner: {column:NAME,operator:GTE,value:MemberName} фильтр по владельцу
     """
     payments(
-        hasCompanies: _ @whereHasConditions(columns: ["name"]),
-        hasPaymentProvider: _ @whereHasConditions(columns: ["name"]),
-        hasAccounts: _ @whereHasConditions(columns: ["account_id"]),
-        hasOwner: _ @whereHasConditions(columns: ["fullname"]),
-        hasPaymentOperation: _ @whereHasConditions(columns: ["name"]),
-        hasPaymentUrgency: _ @whereHasConditions(columns: ["name"]),
-        hasPaymentStatus: _ @whereHasConditions(columns: ["name"]),
+        filter: _ @filterConditions(static: QueryPaymentsFilterStatic),
         AccountNumber: Sort @scope(name:"AccountNumber"),
         created_at: DateRange @whereBetween,
-        where: _ @whereConditions(columns: ["sender_bank_account","type_id","urgency_id", "status", "payment_provider_id", "company_id", "account_id", "payment_number", "sender_name"]),
         orderBy: _ @orderBy(columns: ["id", "created_at", "amount", "fee", "payment_number"])
     ): [Payments!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
+input QueryPaymentsFilterStatic @spread{
+    id: ID @eq
+    company_id: ID @eq
+    payment_provider_id: ID @eq
+    operation_type_id: ID @eq
+    urgency_id: ID @eq
+    status_id: ID @eq
+    sender_name: String @ilike
+    hasAccountFilterByAccountNumber: String @ilike
+}
 
 
 extend type Mutation @guard {
