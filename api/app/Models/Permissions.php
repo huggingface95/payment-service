@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\GuardEnum;
 use App\Models\Scopes\PermissionOrderScope;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Permission\Exceptions\PermissionAlreadyExists;
 use Spatie\Permission\Guard;
 use Spatie\Permission\Models\Permission as SpatiePermission;
@@ -42,6 +43,11 @@ class Permissions extends SpatiePermission
     {
         static::addGlobalScope(new PermissionOrderScope());
         parent::booted();
+    }
+
+    public function permissionList(): BelongsTo
+    {
+        return $this->belongsTo(PermissionsList::class, 'permission_list_id');
     }
 
     public static function getTreePermissions($roleId = null): array
