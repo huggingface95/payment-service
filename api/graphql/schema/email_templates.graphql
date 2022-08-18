@@ -56,7 +56,7 @@ extend type Query @guard {
 }
 
 type EmailTemplateOnCompanyResponse{
-    layout: EmailTemplateLayout!
+    layout: EmailTemplateLayout
     data: [EmailTemplate!]!
 }
 
