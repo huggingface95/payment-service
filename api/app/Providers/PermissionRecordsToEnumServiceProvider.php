@@ -24,10 +24,10 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
                     return $permissions->pluck('display_name', 'id')->toArray();
                 });
 
-                $manipulateAST->documentAST
-                    ->setTypeDefinition(
-                        $this->createUnionType($permissions->keys()->toArray())
-                    );
+//                $manipulateAST->documentAST
+//                    ->setTypeDefinition(
+//                        $this->createUnionType($permissions->keys()->toArray())
+//                    );
 
                 foreach ($permissions as $listName => $records) {
                     $manipulateAST->documentAST
