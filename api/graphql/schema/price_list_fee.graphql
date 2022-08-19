@@ -14,8 +14,6 @@ type PriceListFee {
     period: FeePeriod @belongsTo(relation: "feePeriod")
     "Цены"
     fees_item: [PriceListFeesItem] @hasMany(relation: "fees")
-    "Получить Прайс лист комиссий"
-    list: CommissionPriceList @belongsTo(relation: "priceList")
     created_at: DateTime
     updated_at: DateTime
 }
@@ -50,10 +48,10 @@ input QueryPriceListFeesFilterStatic @spread{
 
 
 input Fee {
-    fee_from: StringInteger
-    fee_to: StringInteger
+    fee_from: Decimal
+    fee_to: Decimal
     mode: FeeMode
-    fee: StringInteger
+    fee: Decimal
     currency: [String]
 }
 
@@ -101,15 +99,5 @@ extend type Mutation @guard {
         "ID price list fee"
         id: ID!
     ): PriceListFee   @delete
-
-#    addFee(
-#        price_list_fees_id: ID!
-#        fee_item: [Fee]!
-#    ):PriceListFeesItem
-#
-#    updateFee(
-#        id: ID!
-#        fee_item: [Fee]
-#    ):PriceListFeesItem @field(resolver:"PriceListFeesMutator@update")
 
 }
