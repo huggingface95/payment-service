@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Permissions;
 use GraphQL\Language\AST\EnumTypeDefinitionNode;
+use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\AST\UnionTypeDefinitionNode;
 use GraphQL\Language\Parser;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -24,10 +25,10 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
                     return $permissions->pluck('display_name', 'id')->toArray();
                 });
 
-//                $manipulateAST->documentAST
-//                    ->setTypeDefinition(
-//                        $this->createUnionType($permissions->keys()->toArray())
-//                    );
+                $manipulateAST->documentAST
+                    ->setTypeDefinition(
+                        $this->createObjectType($permissions->keys()->toArray())
+                    );
 
                 foreach ($permissions as $listName => $records) {
                     $manipulateAST->documentAST
@@ -70,21 +71,23 @@ GRAPHQL
         );
     }
 
-    private function createUnionType(array $list): UnionTypeDefinitionNode
+    private function createObjectType(array $list): ObjectTypeDefinitionNode
     {
         $list = array_map(
             function (string $name): string {
-                return strtoupper(Str::snake(preg_replace("/(:)/", '', $name)));
+                $name = 'PERMISSION_' . strtoupper(Str::snake(preg_replace("/(:)/", '', $name)));
+                return $name .': '. $name;
             },
             $list
         );
 
-        $types = implode(" | ", $list);
+        $types = implode("\n", $list);
 
-
-        return Parser::unionTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
+        return Parser::objectTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
 "PermissionType"
-union PermissionType = {$types}
+type PermissionType {
+{$types}
+}
 GRAPHQL
         );
     }
