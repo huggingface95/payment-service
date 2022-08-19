@@ -44,7 +44,6 @@ extend type Query @guard {
     orderBy: [
     {column: ID, order: DESC},
     ] сортировка по ID
-    where:{column: SUBJECT, operator: LIKE, value: ""} фильтр по имени
     """
     emailTemplates(
         hasCompany: _ @whereHasConditions(columns: ["name"]),
@@ -57,7 +56,7 @@ extend type Query @guard {
 }
 
 type EmailTemplateOnCompanyResponse{
-    layout: EmailTemplateLayout!
+    layout: EmailTemplateLayout
     data: [EmailTemplate!]!
 }
 
@@ -76,6 +75,10 @@ extend type Mutation @guard {
         service_type: ServiceType!
         "Контент электронной почты"
         content: String!
+        "Header"
+        header: String
+        "Footer"
+        footer: String
         "Ид компании"
         company_id: ID!
     ): EmailTemplateOnCompanyResponse @field(resolver: "EmailTemplateMutator@create")
@@ -93,6 +96,10 @@ extend type Mutation @guard {
         service_type: ServiceType
         "Контент электронной почты"
         content: String
+        "Header"
+        header: String
+        "Footer"
+        footer: String
         "Ид компании"
         company_id: ID
     ): EmailTemplateOnCompanyResponse @field(resolver: "EmailTemplateMutator@update")

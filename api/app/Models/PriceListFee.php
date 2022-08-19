@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Carbon;
 
 /**
@@ -61,6 +62,54 @@ class PriceListFee extends BaseModel
     public function priceList(): BelongsTo
     {
         return $this->belongsTo(CommissionPriceList::class, 'price_list_id');
+    }
+
+    public function company(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            Companies::class,
+            CommissionPriceList::class,
+            'id',
+            'id',
+            'price_list_id',
+            'company_id',
+        );
+    }
+
+    public function paymentProvider(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            PaymentProvider::class,
+            CommissionPriceList::class,
+            'id',
+            'id',
+            'price_list_id',
+            'provider_id',
+        );
+    }
+
+    public function commissionTemplate(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            CommissionTemplate::class,
+            CommissionPriceList::class,
+            'id',
+            'id',
+            'price_list_id',
+            'commission_template_id',
+        );
+    }
+
+    public function paymentSystem(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            PaymentSystem::class,
+            CommissionPriceList::class,
+            'id',
+            'id',
+            'price_list_id',
+            'payment_system_id',
+        );
     }
 
     public function fees(): HasMany

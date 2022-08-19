@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Laravel\Lumen\Auth\Authorizable;
 use Laravel\Passport\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -101,37 +102,13 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         return ($this->google2fa_secret) ? true : false;
     }
 
-    public function getPermissionsAttribute()
+    public function getPermissionsAttribute(): array
     {
-        $permissions = collect();
-
-        $permissionsArray = $this->groupRole()
-            ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'group_role.role_id')
-            ->join('permissions', 'permissions.id', '=', 'role_has_permissions.permission_id')
-            ->join('permissions_list', 'permissions_list.id', 'permissions.permission_list_id')
-            ->select('permissions.id', 'permissions.display_name', 'permissions.permission_list_id', 'permissions_list.name as permission', 'permissions_list.id as list_id')
-            ->get();
-        $list = [];
-        foreach ($permissionsArray as $item) {
-            $list[] = $item->permission;
-        }
-        $lists = array_unique($list);
-
-        foreach ($lists as $listItem) {
-            $permission['permission'] = $listItem;
-            $actions = [];
-
-            foreach ($permissionsArray as $item) {
-                if ($item->permission != $listItem) {
-                    continue;
-                }
-                $actions[] = $item->display_name;
-            }
-            $permission['actions'] = $actions;
-            $permissions[] = $permission;
-        }
-
-        return $permissions;
+        return $this->getAllPermissions()->groupBy(['permission_list_id', function ($permission) {
+            return $permission->permissionList->name;
+        }])->collapse()->mapWithKeys(function ($permissions, $list) {
+            return [strtoupper(Str::snake(str_replace(':', '', $list))) => $permissions->pluck('id')->toArray()];
+        })->toArray();
     }
 
     public function getAuthPassword()
