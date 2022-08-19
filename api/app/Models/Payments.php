@@ -20,9 +20,10 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property int $operation_type_id
  * @property ApplicantIndividual $applicantIndividual
  * @property CommissionPriceList $commissionPriceList
- * @property Account $Account
- * @property OperationType $PaymentOperation
- * @property Currencies $Currencies
+ * @property Account $account
+ * @property OperationType $paymentOperation
+ * @property Currencies $currency
+ * @method static find(mixed $id)
  */
 class Payments extends BaseModel
 {
@@ -89,77 +90,42 @@ class Payments extends BaseModel
             ->selectRaw('payments.*');
     }
 
-    /**
-     * Get relation Country
-     *
-     * @return BelongsTo
-     */
-    public function Country()
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id', 'id');
     }
 
-    /**
-     * Get relation applicant Account
-     *
-     * @return BelongsTo
-     */
-    public function Accounts(): BelongsTo
+    public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class, 'account_id');
     }
 
-    /**
-     * Get relation Companies
-     *
-     * @return BelongsTo
-     */
-    public function Companies()
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Companies::class, 'company_id', 'id');
     }
 
-    /**
-     * Get relation payment_urgency
-     *
-     * @return BelongsTo
-     */
-    public function PaymentUrgency()
+    public function paymentUrgency(): BelongsTo
     {
         return $this->belongsTo(PaymentUrgency::class, 'urgency_id', 'id');
     }
 
-    /**
-     * Get relation OperationType
-     *
-     * @return BelongsTo
-     */
-    public function PaymentOperation(): BelongsTo
+    public function paymentOperation(): BelongsTo
     {
         return $this->belongsTo(OperationType::class, 'operation_type_id');
     }
 
-    /**
-     * Get relation PaymentProvider
-     *
-     * @return BelongsTo
-     */
-    public function PaymentProvider()
+    public function paymentProvider(): BelongsTo
     {
         return $this->belongsTo(PaymentProvider::class, 'payment_provider_id', 'id');
     }
 
-    /**
-     * Get relation Currencies
-     *
-     * @return BelongsTo
-     */
-    public function Currencies(): BelongsTo
+    public function currency(): BelongsTo
     {
         return $this->belongsTo(Currencies::class, 'currency_id', 'id');
     }
 
-    public function member()
+    public function member(): BelongsTo
     {
         return $this->belongsTo(Members::class, 'member_id', 'id');
     }
