@@ -14,7 +14,7 @@ class AccountIndividualsCompaniesScope implements Scope
         return $builder
             ->select(
                 'accounts.*',
-                DB::raw("(SELECT client_type FROM account_individuals_companies where account_individuals_companies.account_id = accounts.id) AS client_type"),
-                DB::raw("(SELECT client_id FROM account_individuals_companies where account_individuals_companies.account_id = accounts.id) AS client_id"));
+                DB::raw('(SELECT client_type FROM account_individuals_companies where account_individuals_companies.account_id = accounts.id) AS client_type'),
+                DB::raw('(SELECT client_id FROM account_individuals_companies where account_individuals_companies.account_id = accounts.id) AS client_id'));
     }
 }

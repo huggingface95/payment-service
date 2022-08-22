@@ -9,6 +9,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 class PaymentSystem extends BaseModel
 {
     use HasRelationships;
+
     public $timestamps = false;
 
     protected $table = 'payment_system';
@@ -50,7 +51,7 @@ class PaymentSystem extends BaseModel
             [
                 'id', // Local key on the "countries" table.
                 'payment_provider_id', // Local key on the "users" table.
-                'company_id'  // Local key on the "posts" table.
+                'company_id',  // Local key on the "posts" table.
             ]
         );
     }

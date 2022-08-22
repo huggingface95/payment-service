@@ -6,7 +6,6 @@ use App\Models\Account;
 
 class AccountCreatedEvent extends Event
 {
-
     public Account $account;
 
     /**
@@ -18,5 +17,4 @@ class AccountCreatedEvent extends Event
     {
         $this->account = $account;
     }
-
 }

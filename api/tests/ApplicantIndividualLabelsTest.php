@@ -14,7 +14,6 @@ class ApplicantIndividualLabelsTest extends TestCase
         auth()->attempt(['email' => 'test@test.com', 'password' => '1234567Qa']);
     }
 
-
     public function testCreateApplicantIndividualLabel()
     {
         $this->login();
@@ -174,5 +173,4 @@ class ApplicantIndividualLabelsTest extends TestCase
             ],
         ]);
     }
-
 }

@@ -67,8 +67,8 @@ class AccountsTest extends TestCase
             'data' => [
                 'createAccount' => [
                     [
-                    'id' => $id['data']['createAccount'][0]['id'],
-                    ]
+                        'id' => $id['data']['createAccount'][0]['id'],
+                    ],
                 ],
             ],
         ]);
@@ -164,8 +164,8 @@ class AccountsTest extends TestCase
                 }
                 }
 }', [
-        'owner' => strval(1)
-    ])->seeJsonContains([
+            'owner' => strval(1),
+        ])->seeJsonContains([
             [
                 'id' => strval($account[0]->id),
             ],

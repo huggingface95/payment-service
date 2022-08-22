@@ -6,7 +6,6 @@ use App\Models\Account;
 
 class AccountUpdatedEvent extends Event
 {
-
     public Account $account;
 
     /**
@@ -18,5 +17,4 @@ class AccountUpdatedEvent extends Event
     {
         $this->account = $account;
     }
-
 }

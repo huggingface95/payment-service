@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\FeeType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 

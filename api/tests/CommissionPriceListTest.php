@@ -113,7 +113,7 @@ class CommissionPriceListTest extends TestCase
                             ],
                             'payment_system' => [
                                 'id' => strval($getRecord[0]->payment_system_id),
-                            ]
+                            ],
                         ]],
                     ],
                 ],
@@ -168,7 +168,7 @@ class CommissionPriceListTest extends TestCase
                     ],
                     'payment_system' => [
                         'id' => strval($getRecord[0]->payment_system_id),
-                    ]
+                    ],
                 ],
             ],
         ]);
@@ -188,7 +188,7 @@ class CommissionPriceListTest extends TestCase
                     ],
                     'payment_system' => [
                         'id' => strval($getRecord[0]->payment_system_id),
-                    ]
+                    ],
                 ],
             ];
 

@@ -2,9 +2,9 @@
 
 namespace App\Console;
 
+use App\Console\Commands\DropTestTables;
 use App\Console\Commands\NotificationsCommand;
 use App\Console\Commands\SendEmailCommand;
-use App\Console\Commands\DropTestTables;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 

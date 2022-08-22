@@ -18,7 +18,7 @@ class ApplicantCompanyTest extends TestCase
     {
         $this->login();
         $seq = DB::table('applicant_companies')->max('id') + 1;
-        DB::select('ALTER SEQUENCE applicant_companies_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE applicant_companies_id_seq RESTART WITH '.$seq);
         $this->graphQL('
             mutation CreateApplicantCompany(
                 $name: String!
@@ -223,5 +223,4 @@ class ApplicantCompanyTest extends TestCase
             ],
         ]);
     }
-
 }

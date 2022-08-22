@@ -4,7 +4,6 @@ namespace App\GraphQL\Mutations;
 
 use App\Models\ApplicantIndividualLabel;
 use GraphQL\Exception\InvalidArgument;
-use Illuminate\Support\Facades\Auth;
 
 class ApplicantLabelMutator
 {
@@ -17,6 +16,7 @@ class ApplicantLabelMutator
     {
         $user = auth()->user();
         $args['member_id'] = $user->id;
+
         return ApplicantIndividualLabel::create($args);
     }
 

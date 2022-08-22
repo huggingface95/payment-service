@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property Account $account
  * @property OperationType $paymentOperation
  * @property Currencies $currency
+ *
  * @method static find(mixed $id)
  */
 class Payments extends BaseModel

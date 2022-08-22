@@ -1,4 +1,6 @@
-<?php namespace App\Console\Commands;
+<?php
+
+namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -47,4 +49,3 @@ class DropTestTables extends Command
         DB::connection('clickhouse_test')->statement('drop table if exists testdb.authentication_log');
     }
 }
-
