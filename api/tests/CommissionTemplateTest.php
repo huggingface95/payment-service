@@ -18,7 +18,7 @@ class CommissionTemplateTest extends TestCase
     {
         $this->login();
         $seq = DB::table('commission_template')->max('id') + 1;
-        DB::select('ALTER SEQUENCE commission_template_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE commission_template_id_seq RESTART WITH '.$seq);
         $this->graphQL('
             mutation CreateCommissionTemplate(
                 $name: String!

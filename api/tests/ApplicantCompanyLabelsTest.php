@@ -173,5 +173,4 @@ class ApplicantCompanyLabelsTest extends TestCase
             ],
         ]);
     }
-
 }

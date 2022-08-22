@@ -9,9 +9,7 @@ use App\Traits\ReplaceRegularExpressions;
 
 class AccountCreatedListener
 {
-
     use EmailPrepare, ReplaceRegularExpressions;
-
 
     /**
      * @throws GraphqlException

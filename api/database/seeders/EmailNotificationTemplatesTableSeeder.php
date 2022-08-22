@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\EmailNotification;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 

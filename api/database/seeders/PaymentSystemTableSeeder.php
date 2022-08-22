@@ -20,7 +20,7 @@ class PaymentSystemTableSeeder extends Seeder
         for ($i = 1; $i <= 10; $i++) {
             PaymentSystem::create([
                 'id'        => $i,
-                'name'     => $faker->company.'Pay',
+                'name'     => $faker->company().'Pay',
                 'is_active' => true,
             ]);
         }

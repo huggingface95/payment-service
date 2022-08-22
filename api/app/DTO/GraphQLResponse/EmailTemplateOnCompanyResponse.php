@@ -20,6 +20,7 @@ class EmailTemplateOnCompanyResponse
             ->where('company_id', $emailTemplate->company_id)
             ->where('type', $emailTemplate->type)
             ->get();
+
         return $dto;
     }
 }

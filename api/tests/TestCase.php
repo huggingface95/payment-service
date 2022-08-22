@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
 use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequestsLumen;
@@ -17,7 +16,7 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        if (!static::$setUpHasRunOnce) {
+        if (! static::$setUpHasRunOnce) {
             Artisan::call(
                 'migrate:droptables'
             );

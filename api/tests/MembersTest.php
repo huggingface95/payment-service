@@ -18,7 +18,7 @@ class MembersTest extends TestCase
     {
         $this->login();
         $seq = DB::table('members')->max('id') + 1;
-        DB::select('ALTER SEQUENCE members_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE members_id_seq RESTART WITH '.$seq);
         $this->graphQL('
             mutation CreateMember(
                 $first_name: String!

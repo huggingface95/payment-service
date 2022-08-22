@@ -24,7 +24,6 @@ use Illuminate\Support\Collection;
 
 class PaymentsMutator
 {
-
     /**
      * @throws GraphqlException
      */

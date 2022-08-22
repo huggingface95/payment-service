@@ -23,7 +23,7 @@ class MembersTableSeeder extends Seeder
             'password_hash' => Hash::make('1234567Qa'),
             'password_salt' => '4561654sd654f65d4f',
             'company_id' => 2,
-            'two_factor_auth_setting_id' => 1
+            'two_factor_auth_setting_id' => 1,
         ]);
     }
 }

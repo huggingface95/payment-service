@@ -14,7 +14,6 @@ use App\Models\EmailTemplate;
 
 trait EmailPrepare
 {
-
     /**
      * @throws GraphqlException
      */
@@ -22,7 +21,7 @@ trait EmailPrepare
     {
         $smtp = EmailSmtp::where('company_id', $account->company_id)->first();
 
-        if (!$smtp) {
+        if (! $smtp) {
             throw new GraphqlException('SMTP configuration for this company not found', 'Not found', '404');
         }
         $smtp->replay_to = $emails;
@@ -38,10 +37,10 @@ trait EmailPrepare
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = EmailTemplate::query()
             ->where('company_id', $account->company_id)
-            ->whereRaw("lower(subject) LIKE  '%" . strtolower($account->accountState->name) . "%'  ")
+            ->whereRaw("lower(subject) LIKE  '%".strtolower($account->accountState->name)."%'  ")
             ->first();
 
-        if (!$emailTemplate) {
+        if (! $emailTemplate) {
             throw new GraphqlException('Email template not found', '404');
         }
 
@@ -52,13 +51,13 @@ trait EmailPrepare
             })
             ->first();
 
-        if (!$notification) {
+        if (! $notification) {
             throw new GraphqlException('Email Notification not found', '404');
         }
 
         $emails = $notification->groupRole->users->pluck('email')->toArray();
 
-        if (!count($emails)) {
+        if (! count($emails)) {
             throw new GraphqlException('Email not found', '404');
         }
 
@@ -68,7 +67,7 @@ trait EmailPrepare
         return [
             'subject' => $subject,
             'content' => $content,
-            'emails' => $emails
+            'emails' => $emails,
         ];
     }
 
@@ -85,5 +84,4 @@ trait EmailPrepare
             throw new GraphqlException('Don\'t send email', '404');
         }
     }
-
 }

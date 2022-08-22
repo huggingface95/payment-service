@@ -5,7 +5,6 @@ namespace App\Providers;
 use App\Models\Permissions;
 use GraphQL\Language\AST\EnumTypeDefinitionNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
-use GraphQL\Language\AST\UnionTypeDefinitionNode;
 use GraphQL\Language\Parser;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
@@ -42,16 +41,15 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 
     private function createColumnsEnum(
         string $enumName,
-        array  $permissions
-    ): ?EnumTypeDefinitionNode
-    {
+        array $permissions
+    ): ?EnumTypeDefinitionNode {
         $enumValues = array_map(
             function (int $id, string $name): string {
                 return
                     strtoupper(
                         Str::snake(preg_replace("/(\/)|(&)|(\()|(\))|(:)/", '', $name))
                     )
-                    . ' @enum(value: "' . $id . '")';
+                    .' @enum(value: "'.$id.'")';
             },
             array_keys($permissions),
             $permissions
@@ -59,7 +57,7 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 
         $enumValuesString = implode("\n", $enumValues);
 
-        $pEnumName = 'PERMISSION_' . strtoupper(Str::snake(str_replace(':', '', $enumName)));
+        $pEnumName = 'PERMISSION_'.strtoupper(Str::snake(str_replace(':', '', $enumName)));
 
         return Parser::enumTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
 "Permission list name {$enumName}"
@@ -75,8 +73,9 @@ GRAPHQL
     {
         $list = array_map(
             function (string $name): string {
-                $name = 'PERMISSION_' . strtoupper(Str::snake(preg_replace("/(:)/", '', $name)));
-                return $name .': '. $name;
+                $name = 'PERMISSION_'.strtoupper(Str::snake(preg_replace('/(:)/', '', $name)));
+
+                return $name.': '.$name;
             },
             $list
         );
