@@ -20,7 +20,7 @@ class CommissionTemplateTableSeeder extends Seeder
             CommissionTemplate::create([
                 'id'        => $i,
                 'name'     => 'Template'.$i,
-                'description'    => $faker->name,
+                'description'    => $faker->name(),
                 'payment_provider_id' => $i,
                 'is_active' => true,
             ]);

@@ -32,8 +32,7 @@ class IbanIndividualActivationJob extends Job
             $redis->rpush(config('payment.redis.iban.individual'), json_encode($this->ibanRequest));
 
             return true;
-        }
-        catch (\Throwable){
+        } catch (\Throwable) {
             return false;
         }
     }

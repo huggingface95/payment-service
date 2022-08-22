@@ -76,7 +76,8 @@ class ApplicantCompany extends BaseModel
 
     protected $appends = ['fullname'];
 
-    public function getFullnameAttribute(){
+    public function getFullnameAttribute()
+    {
         return $this->name;
     }
 

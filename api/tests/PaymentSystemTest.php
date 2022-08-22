@@ -18,7 +18,7 @@ class PaymentSystemTest extends TestCase
     {
         $this->login();
         $seq = DB::table('payment_system')->max('id') + 1;
-        DB::select('ALTER SEQUENCE payment_system_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE payment_system_id_seq RESTART WITH '.$seq);
         $this->graphQL('
             mutation CreatePaymentSystem(
                 $name: String!
@@ -120,7 +120,7 @@ class PaymentSystemTest extends TestCase
             [
                 'id' => strval($payment_system[0]->id),
                 'name' => strval($payment_system[0]->name),
-                'is_active' => $payment_system[0]->is_active
+                'is_active' => $payment_system[0]->is_active,
             ],
         ]);
     }
@@ -142,7 +142,7 @@ class PaymentSystemTest extends TestCase
             [
                 'id' => strval($payment_system[0]->id),
                 'name' => strval($payment_system[0]->name),
-                'is_active' => $payment_system[0]->is_active
+                'is_active' => $payment_system[0]->is_active,
             ],
         ]);
     }
@@ -164,7 +164,7 @@ class PaymentSystemTest extends TestCase
             [
                 'id' => strval($payment_system[0]->id),
                 'name' => strval($payment_system[0]->name),
-                'is_active' => $payment_system[0]->is_active
+                'is_active' => $payment_system[0]->is_active,
             ],
         ]);
     }
@@ -186,7 +186,7 @@ class PaymentSystemTest extends TestCase
             [
                 'id' => strval($payment_system[0]->id),
                 'name' => strval($payment_system[0]->name),
-                'is_active' => $payment_system[0]->is_active
+                'is_active' => $payment_system[0]->is_active,
             ],
         ]);
     }

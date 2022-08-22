@@ -18,7 +18,7 @@ class PaymentProviderTest extends TestCase
     {
         $this->login();
         $seq = DB::table('payment_provider')->max('id') + 1;
-        DB::select('ALTER SEQUENCE payment_provider_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE payment_provider_id_seq RESTART WITH '.$seq);
         $this->graphQL('
             mutation CreatePaymentProvider(
                 $name: String!
@@ -127,7 +127,7 @@ class PaymentProviderTest extends TestCase
                 'id' => strval($payment_provider[0]->id),
                 'name' => strval($payment_provider[0]->name),
                 'description' => strval($payment_provider[0]->description),
-                'is_active' => $payment_provider[0]->is_active
+                'is_active' => $payment_provider[0]->is_active,
             ],
         ]);
     }

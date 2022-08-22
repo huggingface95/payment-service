@@ -63,12 +63,12 @@ class AccountsTest extends TestCase
             'payment_provider_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
-        $this->seeJson([
+       $this->seeJson([
             'data' => [
                 'createAccount' => [
                     [
-                    'id' => $id['data']['createAccount'][0]['id'],
-                    ]
+                        'id' => $id['data']['createAccount'][0]['id'],
+                    ],
                 ],
             ],
         ]);
@@ -164,8 +164,8 @@ class AccountsTest extends TestCase
                 }
                 }
 }', [
-        'owner' => strval(1)
-    ])->seeJsonContains([
+            'owner' => strval(1),
+        ])->seeJsonContains([
             [
                 'id' => strval($account[0]->id),
             ],

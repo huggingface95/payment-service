@@ -18,7 +18,7 @@ class ApplicantIndividualTest extends TestCase
     {
         $this->login();
         $seq = DB::table('applicant_individual')->max('id') + 1;
-        DB::select('ALTER SEQUENCE applicant_individual_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE applicant_individual_id_seq RESTART WITH '.$seq);
         $this->graphQL('
             mutation CreateApplicantIndividual(
                 $first_name: String!

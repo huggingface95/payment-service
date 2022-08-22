@@ -17,10 +17,10 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         AccountUpdatedEvent::class => [
-            AccountUpdatedListener::class
+            AccountUpdatedListener::class,
         ],
         AccountCreatedEvent::class => [
-            AccountCreatedListener::class
+            AccountCreatedListener::class,
         ],
     ];
 }

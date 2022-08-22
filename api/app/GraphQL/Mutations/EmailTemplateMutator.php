@@ -12,7 +12,6 @@ use App\Models\EmailSmtp;
 use App\Models\EmailTemplate;
 use App\Models\EmailTemplateLayout;
 use App\Models\Members;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class EmailTemplateMutator extends BaseMutator
@@ -26,7 +25,7 @@ class EmailTemplateMutator extends BaseMutator
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = EmailTemplate::create($args);
 
-        if ($emailTemplate->useLayout()){
+        if ($emailTemplate->useLayout()) {
             $this->compareLayoutHeaderAndFooter($emailTemplate, $args['header'] ?? null, $args['footer'] ?? null);
         }
 
@@ -40,7 +39,7 @@ class EmailTemplateMutator extends BaseMutator
 
         $emailTemplate->update($args);
 
-        if ($emailTemplate->useLayout()){
+        if ($emailTemplate->useLayout()) {
             $this->compareLayoutHeaderAndFooter($emailTemplate, $args['header'] ?? null, $args['footer'] ?? null);
         }
 
@@ -78,12 +77,13 @@ class EmailTemplateMutator extends BaseMutator
         }
     }
 
-    private function compareLayoutHeaderAndFooter(EmailTemplate $emailTemplate, string $header = null, string $footer = null){
+    private function compareLayoutHeaderAndFooter(EmailTemplate $emailTemplate, string $header = null, string $footer = null)
+    {
         $layout = EmailTemplateLayout::firstOrCreate(['company_id' => $emailTemplate->company_id]);
-        if ($header && $header != $layout->header){
+        if ($header && $header != $layout->header) {
             $layout->update(['header' => $header]);
         }
-        if ($footer && $footer != $layout->footer){
+        if ($footer && $footer != $layout->footer) {
             $layout->update(['footer' => $footer]);
         }
     }
