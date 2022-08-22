@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\PermissionCategory;
+use App\Models\PermissionsList;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -46,5 +48,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EmailNotificationsTableSeeder::class);
         $this->call(EmailNotificationTemplatesTableSeeder::class);
         $this->call(RegionsTableSeeder::class);
+        $this->call(PermissionsSeeder::class);
     }
 }
