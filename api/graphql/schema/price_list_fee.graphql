@@ -14,8 +14,6 @@ type PriceListFee {
     period: FeePeriod @belongsTo(relation: "feePeriod")
     "Цены"
     fees_item: [PriceListFeesItem] @hasMany(relation: "fees")
-    "Получить Прайс лист комиссий"
-    list: CommissionPriceList @belongsTo(relation: "priceList")
     created_at: DateTime
     updated_at: DateTime
 }
@@ -32,18 +30,28 @@ extend type Query @guard {
     where:{column: NAME, operator: LIKE, value: ""} фильтр по имени, тип, тип операции, период
     """
     priceListFees(
-        hasList: _ @whereHasConditions(columns: ["name"]),
-        price_list_id: ID @eq,
-        where: _ @whereConditions(columns: ["name", "type_id", "operation_type_id", "period_id"])
+        filter: _ @filterConditions(static: QueryPriceListFeesFilterStatic)
     ): [PriceListFee!]!   @orderBy(column: "id", direction: ASC) @all
+}
+
+input QueryPriceListFeesFilterStatic @spread{
+    id: ID @eq
+    price_list_id: ID @eq
+    type_id: ID @eq
+    operation_type_id: ID @eq
+    period_id: ID @eq
+    hasCompanyFilterById: ID @eq
+    hasPaymentProviderFilterById: ID @eq
+    hasPaymentSystemFilterById: ID @eq
+    hasFeesFilterById: ID @eq
 }
 
 
 input Fee {
-    fee_from: StringInteger
-    fee_to: StringInteger
+    fee_from: Decimal
+    fee_to: Decimal
     mode: FeeMode
-    fee: StringInteger
+    fee: Decimal
     currency: [String]
 }
 
@@ -91,15 +99,5 @@ extend type Mutation @guard {
         "ID price list fee"
         id: ID!
     ): PriceListFee   @delete
-
-#    addFee(
-#        price_list_fees_id: ID!
-#        fee_item: [Fee]!
-#    ):PriceListFeesItem
-#
-#    updateFee(
-#        id: ID!
-#        fee_item: [Fee]
-#    ):PriceListFeesItem @field(resolver:"PriceListFeesMutator@update")
 
 }

@@ -1,18 +1,36 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
 use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequestsLumen;
 
 abstract class TestCase extends BaseTestCase
 {
-    use MakesGraphQLRequestsLumen;
-    use ClearsSchemaCache;
+    use MakesGraphQLRequestsLumen,
+    ClearsSchemaCache;
+
+    protected static $setUpHasRunOnce = false;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->bootClearsSchemaCache();
+        if (!static::$setUpHasRunOnce) {
+            Artisan::call(
+                'migrate:droptables'
+            );
+            Artisan::call(
+                'migrate', ['--database' => 'pgsql_test']
+            );
+            Artisan::call(
+                'db:seed', ['--database' => 'pgsql_test']
+            );
+            DB::connection('pgsql_test')->statement("alter table members add column fullname varchar(255) GENERATED ALWAYS AS (first_name || ' '|| last_name) STORED");
+            DB::connection('pgsql_test')->statement("alter table applicant_individual add column fullname varchar(255) GENERATED ALWAYS AS (first_name || ' '|| last_name) STORED");
+            static::$setUpHasRunOnce = true;
+        }
     }
 
     /**

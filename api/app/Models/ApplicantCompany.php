@@ -74,6 +74,12 @@ class ApplicantCompany extends BaseModel
         static::addGlobalScope(new ApplicantFilterByMemberScope);
     }
 
+    protected $appends = ['fullname'];
+
+    public function getFullnameAttribute(){
+        return $this->name;
+    }
+
     /**
      * @return BelongsToMany
      */

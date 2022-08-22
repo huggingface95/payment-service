@@ -21,12 +21,15 @@ extend type Query @guard {
     paymentSystem(id: ID @eq): PaymentSystem   @find
     "Получить список платежных систем"
     paymentSystems(
-        hasRegions: _ @whereHasConditions(columns: ["name", "id"]),
-        hasCurrencies: _ @whereHasConditions(columns: ["name", "id"]),
-        hasProviders: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["name"]),
+        filter: _ @filterConditions(static: QueryPaymentSystemsFilterStatic),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
-    ): [PaymentSystem!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [PaymentSystem!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryPaymentSystemsFilterStatic @spread{
+    id: ID @eq
+    hasProvidersFilterById: ID @eq
+    hasCompaniesFilterById: ID @eq
 }
 
 extend type Mutation @guard {

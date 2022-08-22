@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Account;
+use Illuminate\Support\Facades\DB;
 
 class AccountsTest extends TestCase
 {
@@ -18,53 +19,56 @@ class AccountsTest extends TestCase
     {
         $this->login();
         $this->graphQL('
-            mutation (
-                $currency_id:ID!
-                $client_id:ID!
-                $owner_id:ID!
-                $account_number:String!
-                $account_type:String!
-                $payment_provider_id:ID!
-                $commission_template_id:ID!
-                $account_state:String!
-                $account_name:String!
-                $client_type:String!
-            )
-            {
-                createAccount (
+            mutation CreateAccount(
+                    $company_id: ID!
+                    $currency_id: ID!
+                    $commission_template_id: ID!
+                    $owner_id: ID!
+                    $account_number: String
+                    $account_name: String!
+                    $payment_provider_id: ID!
+                    $payment_system_id: ID!
+                    $group_type_id: ID!
+                    $group_role_id: ID!
+                ) {
+                createAccount(
+                  input:{
+                    company_id: $company_id
                     currency_id: $currency_id
-                    client_id: $client_id
                     owner_id: $owner_id
                     account_number: $account_number
-                    account_type: $account_type
-                    payment_provider_id: $payment_provider_id
                     commission_template_id: $commission_template_id
-                    account_state: $account_state
                     account_name: $account_name
+                    group_type_id: $group_type_id
+                    group_role_id: $group_role_id
+                    payment_system_id: $payment_system_id
+                    payment_provider_id: $payment_provider_id
                     is_primary: true
-                    client_type: $client_type
+                  }
                 )
-                {
-                    id
-                }
-            }
+              {
+                 id
+              }
+           }
         ', [
-            'currency_id' =>  2,
-            'client_id' => 1,
-            'owner_id' => 2,
+            'company_id' => 1,
+            'currency_id' =>  1,
+            'owner_id' => 1,
             'account_number' => '2566'.str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
-            'account_type' => 'Business',
-            'payment_provider_id' => 1,
             'commission_template_id' => 1,
-            'account_state' => '1',
             'account_name' => 'Test_'.\Illuminate\Support\Str::random(3),
-            'client_type' => 'Individual',
+            'group_type_id' => 2,
+            'group_role_id' => 1,
+            'payment_system_id' => 1,
+            'payment_provider_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
             'data' => [
                 'createAccount' => [
-                    'id' => $id['data']['createAccount']['id'],
+                    [
+                    'id' => $id['data']['createAccount'][0]['id'],
+                    ]
                 ],
             ],
         ]);
@@ -73,33 +77,19 @@ class AccountsTest extends TestCase
     public function testUpdateAccount()
     {
         $this->login();
-        $account = \App\Models\Account::orderBy('id', 'DESC')->take(1)->get();
+        $account = DB::connection('pgsql_test')->table('accounts')->orderBy('id', 'DESC')->take(1)->get();
         $this->graphQL('
             mutation UpdateAccount(
                 $id: ID!
-                $currency_id: ID!
-                $client_id: ID!
-                $client_type: String!
-                $owner_id: ID!
-                $account_type: String!
-                $payment_provider_id: ID!
-                $commission_template_id: ID!
-                $account_state: String!
+                $account_state_id: ID!
                 $account_name: String!
             )
             {
                 updateAccount (
                     id: $id
-                    currency_id: $currency_id
-                    client_id: $client_id
-                    client_type: $client_type
-                    owner_id: $owner_id
-                    account_type: $account_type
-                    payment_provider_id: $payment_provider_id
-                    commission_template_id: $commission_template_id
-                    account_state: $account_state
+                    account_state_id: $account_state_id
                     account_name: $account_name
-                    is_primary: true
+                    is_primary: false
                 )
                 {
                     id
@@ -108,15 +98,8 @@ class AccountsTest extends TestCase
             }
         ', [
             'id' => strval($account[0]->id),
-            'currency_id' =>  2,
-            'client_id' => 1,
-            'client_type' => 'Individual',
-            'owner_id' => 2,
-            'account_type' => 'Business',
-            'payment_provider_id' => 1,
-            'commission_template_id' => 1,
-            'account_state' => '1',
-            'account_name' => 'Test_'.\Illuminate\Support\Str::random(3),
+            'account_state_id' => '1',
+            'account_name' => 'Test_update_'.\Illuminate\Support\Str::random(3),
         ]);
         $id = json_decode($this->response->getContent(), true);
         $this->seeJson([
@@ -132,7 +115,7 @@ class AccountsTest extends TestCase
     public function testQueryAccounts()
     {
         $this->login();
-        $accounts = Account::orderBy('id')->take(1)->get();
+        $accounts = DB::connection('pgsql_test')->table('accounts')->orderBy('id', 'DESC')->take(1)->get();
         ($this->graphQL('
             query Account($id:ID!){
                 account(id: $id) {
@@ -153,7 +136,7 @@ class AccountsTest extends TestCase
     public function testQueryAccountsOrderBy()
     {
         $this->login();
-        $account = \App\Models\Account::orderBy('id', 'DESC')->get();
+        $account = DB::connection('pgsql_test')->table('accounts')->orderBy('id', 'DESC')->take(1)->get();
         $this->graphQL('
         query {
             accounts(orderBy: { column: ID, order: DESC }) {
@@ -171,15 +154,18 @@ class AccountsTest extends TestCase
     public function testQueryAccountsWhere()
     {
         $this->login();
-        $account = \App\Models\Account::where('owner_id', 2)->get();
+        $account = DB::connection('pgsql_test')->table('accounts')->orderBy('id', 'DESC')->take(1)->get();
         $this->graphQL('
-        query {
-            accounts(where: { column: OWNER_ID, value: 2}) {
-                data {
+        query Accounts($owner: String) {
+            accounts (query:{owner:$owner})
+                {
+                data{
                     id
                 }
                 }
-        }')->seeJsonContains([
+}', [
+        'owner' => strval(1)
+    ])->seeJsonContains([
             [
                 'id' => strval($account[0]->id),
             ],

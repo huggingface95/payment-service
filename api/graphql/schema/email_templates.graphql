@@ -14,12 +14,10 @@ type EmailTemplate {
     service_type: ServiceType!
     "Контент"
     content: String!
-    "Header"
-    header: String
-    "Footer"
-    footer: String
     "Получить Компанию"
     company: Companies @belongsTo(relation: "company")
+    "Получить Компанию"
+    layout: EmailTemplateLayout @hasOne(relation: "layout")
     created_at: DateTime
     updated_at: DateTime
     use_layout: Boolean
@@ -46,7 +44,6 @@ extend type Query @guard {
     orderBy: [
     {column: ID, order: DESC},
     ] сортировка по ID
-    where:{column: SUBJECT, operator: LIKE, value: ""} фильтр по имени
     """
     emailTemplates(
         hasCompany: _ @whereHasConditions(columns: ["name"]),
@@ -55,7 +52,12 @@ extend type Query @guard {
         orderBy: _ @orderBy(
             columns: ["id"]
         )
-    ): [EmailTemplate!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [EmailTemplate!]! @all @orderBy(column: "id", direction: ASC)
+}
+
+type EmailTemplateOnCompanyResponse{
+    layout: EmailTemplateLayout
+    data: [EmailTemplate!]!
 }
 
 extend type Mutation @guard {
@@ -73,13 +75,13 @@ extend type Mutation @guard {
         service_type: ServiceType!
         "Контент электронной почты"
         content: String!
-        "Header электронной почты"
+        "Header"
         header: String
-        "Footer электронной почты"
+        "Footer"
         footer: String
         "Ид компании"
         company_id: ID!
-    ): [EmailTemplate!]! @field(resolver: "EmailTemplateMutator@create")
+    ): EmailTemplateOnCompanyResponse @field(resolver: "EmailTemplateMutator@create")
 
     "Обновить данные компании"
     updateEmailTemplate(
@@ -94,13 +96,13 @@ extend type Mutation @guard {
         service_type: ServiceType
         "Контент электронной почты"
         content: String
-        "Header электронной почты"
+        "Header"
         header: String
-        "Footer электронной почты"
+        "Footer"
         footer: String
         "Ид компании"
         company_id: ID
-    ): EmailTemplate   @update
+    ): EmailTemplateOnCompanyResponse @field(resolver: "EmailTemplateMutator@update")
 
     "Удалить запись"
     deleteEmailTemplate(

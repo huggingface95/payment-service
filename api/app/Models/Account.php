@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Events\AccountCreatedEvent;
+use App\Events\AccountUpdatedEvent;
 use App\Models\Interfaces\BaseModelInterface;
+use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,6 +35,11 @@ class Account extends BaseModel implements BaseModelInterface
 
     protected $table = 'accounts';
 
+    protected $dispatchesEvents = [
+        'updated' => AccountUpdatedEvent::class,
+        'created' => AccountCreatedEvent::class,
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -57,13 +65,22 @@ class Account extends BaseModel implements BaseModelInterface
         'group_role_id',
         'payment_system_id',
         'payment_bank_id',
+        'client_id',
+        'client_type',
     ];
 
     protected static function booted()
     {
         parent::booted();
-//        static::addGlobalScope(new AccountIndividualsCompaniesScope());
+        static::addGlobalScope(new AccountIndividualsCompaniesScope);
         static::addGlobalScope(new ApplicantFilterByMemberScope);
+    }
+
+    public function newModelQuery(): Builder|Account
+    {
+        return $this->newEloquentBuilder(
+            $this->newBaseQueryBuilder()
+        )->withGlobalScope(AccountIndividualsCompaniesScope::class, new AccountIndividualsCompaniesScope)->setModel($this);
     }
 
     public function getClientAccountsAttribute(): array
@@ -223,9 +240,10 @@ class Account extends BaseModel implements BaseModelInterface
             ->join('members', 'accounts.member_id', '=', 'members.id')
             ->select('accounts.*')
             ->where(function ($q) use ($filter) {
-                $q->orWhere('accounts.account_number', 'like', $filter['account_number'] ?? '%')
-                    ->orWhere('accounts.account_name', 'like', $filter['account_number'] ?? '%');
+                $q->orWhere('accounts.account_number', 'ilike', $filter['account_number'] ?? '%')
+                    ->orWhere('accounts.account_name', 'ilike', $filter['account_number'] ?? '%');
             })
+            ->where('accounts.account_name', 'ilike', $filter['account_name'] ?? '%')
             ->where(function ($q) use ($filter) {
                 $q->orWhere('companies.id', 'like', $filter['company'] ?? '%')
                     ->orWhere('companies.name', 'like', $filter['company'] ?? '%');

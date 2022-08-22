@@ -4,29 +4,47 @@ namespace App\GraphQL\Mutations;
 
 use App\DTO\Email\SmtpConfigDTO;
 use App\DTO\Email\SmtpDataDTO;
+use App\DTO\GraphQLResponse\EmailTemplateOnCompanyResponse;
 use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
 use App\Models\EmailSmtp;
 use App\Models\EmailTemplate;
+use App\Models\EmailTemplateLayout;
 use App\Models\Members;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class EmailTemplateMutator extends BaseMutator
 {
-    public function create($root, array $args): Collection|array
+    public function create($root, array $args): EmailTemplateOnCompanyResponse
     {
         /** @var Members $member */
         $member = Auth::user();
         $args['member_id'] = $member->id;
 
+        /** @var EmailTemplate $emailTemplate */
         $emailTemplate = EmailTemplate::create($args);
 
-        return EmailTemplate::query()
-            ->where('company_id', $emailTemplate->company_id)
-            ->where('type', $emailTemplate->type)
-            ->get();
+        if ($emailTemplate->useLayout()){
+            $this->compareLayoutHeaderAndFooter($emailTemplate, $args['header'] ?? null, $args['footer'] ?? null);
+        }
+
+        return TransformerDTO::transform(EmailTemplateOnCompanyResponse::class, $emailTemplate);
+    }
+
+    public function update($root, array $args): EmailTemplateOnCompanyResponse
+    {
+        /** @var EmailTemplate $emailTemplate */
+        $emailTemplate = EmailTemplate::find($args['id']);
+
+        $emailTemplate->update($args);
+
+        if ($emailTemplate->useLayout()){
+            $this->compareLayoutHeaderAndFooter($emailTemplate, $args['header'] ?? null, $args['footer'] ?? null);
+        }
+
+        return TransformerDTO::transform(EmailTemplateOnCompanyResponse::class, $emailTemplate);
     }
 
     public function sendEmailWithData($root, array $args): array
@@ -57,6 +75,16 @@ class EmailTemplateMutator extends BaseMutator
             return ['status' => 'OK', 'message' => 'Email sent for processing'];
         } catch (\Throwable $e) {
             throw new GraphqlException($e->getMessage(), 'Internal', $e->getCode());
+        }
+    }
+
+    private function compareLayoutHeaderAndFooter(EmailTemplate $emailTemplate, string $header = null, string $footer = null){
+        $layout = EmailTemplateLayout::firstOrCreate(['company_id' => $emailTemplate->company_id]);
+        if ($header && $header != $layout->header){
+            $layout->update(['header' => $header]);
+        }
+        if ($footer && $footer != $layout->footer){
+            $layout->update(['footer' => $footer]);
         }
     }
 }

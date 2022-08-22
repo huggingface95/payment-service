@@ -6,6 +6,8 @@ use GraphQL\Error\Error;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Nuwave\Lighthouse\WhereConditions\Operator;
 
@@ -24,6 +26,8 @@ class FilterConditionsHandler
     /**
      * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder  $builder
      * @param  array<string, mixed>  $whereConditions
+     *
+     * @throws Error
      */
     public function __invoke(
         object $builder,
@@ -67,23 +71,9 @@ class FilterConditionsHandler
                     'operator' => $whereConditions['operator'],
                 ];
             } elseif (preg_match('/^(.*?)Mixed(.*)/', $hasCondition[1], $hasConditionArguments)) {
-                if (strpos('Or', $hasConditionArguments[2]) != -1) {
-                    $c = 'OR';
-                    $columns = explode('Or', $hasConditionArguments[2]);
-                } else {
-                    $c = 'AND';
-                    $columns = explode('And', $hasConditionArguments[2]);
-                }
-
                 $relation = $hasConditionArguments[1];
-
-                foreach ($columns as $column) {
-                    $condition[$c][] = [
-                        'column' => strtolower(Str::snake($column)),
-                        'value' => $whereConditions['value'],
-                        'operator' => $whereConditions['operator'],
-                    ];
-                }
+                $relationshipTableName = $model->$relation()->getRelated()->getTable();
+                $condition = $this->getMixedColumns($hasConditionArguments[2], $whereConditions, $relationshipTableName);
             } else {
                 $relation = $hasCondition[1];
             }
@@ -100,7 +90,12 @@ class FilterConditionsHandler
             $builder->addNestedWhereQuery($nestedBuilder, $boolean);
         }
 
-        if (! str_starts_with($whereConditions['column'] ?? 'null', 'has')) {
+        if (isset($whereConditions['column']) && preg_match('/^Mixed(.*)/', $whereConditions['column'], $mixedColumns)) {
+            $condition = $this->getMixedColumns($mixedColumns[1], $whereConditions, $model->getTable());
+            $this->__invoke($builder, $condition, $model);
+        }
+
+        if (! preg_match('/^(has)|(Mixed)/', $whereConditions['column'] ?? 'null')) {
             if ($column = $whereConditions['column'] ?? null) {
                 $this->assertValidColumnReference($column);
 
@@ -126,13 +121,13 @@ class FilterConditionsHandler
                 $condition
                     ? function ($builder) use ($condition): void {
                         $this->__invoke(
-                            $builder,
-                            $this->prefixConditionWithTableName(
+                        $builder,
+                        $this->prefixConditionWithTableName(
                             $condition,
                             $builder->getModel()
                         ),
-                            $builder->getModel()
-                        );
+                        $builder->getModel()
+                    );
                     }
                     : null,
                 $operator,
@@ -181,6 +176,35 @@ class FilterConditionsHandler
             foreach ($condition as &$item) {
                 $item['column'] = $model->getTable().'.'.$item['column'];
             }
+        }
+
+        return $condition;
+    }
+
+    private function getMixedColumns(string $column, array $whereConditions, string $table): ?array
+    {
+        $condition = null;
+
+        if (strpos('Or', $column) != -1) {
+            $c = 'OR';
+            $columns = explode('Or', $column);
+        } else {
+            $c = 'AND';
+            $columns = explode('And', $column);
+        }
+
+        foreach ($columns as $column) {
+            $column = strtolower(Str::snake($column));
+            try {
+                DB::table($table)->where($column, $whereConditions['operator'], $whereConditions['value'])->get();
+            } catch (QueryException) {
+                continue;
+            }
+            $condition[$c][] = [
+                'column' => $column,
+                'value' => $whereConditions['value'],
+                'operator' => $whereConditions['operator'],
+            ];
         }
 
         return $condition;

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 class MembersTest extends TestCase
 {
     /**
@@ -15,6 +17,8 @@ class MembersTest extends TestCase
     public function testCreateMember()
     {
         $this->login();
+        $seq = DB::table('members')->max('id') + 1;
+        DB::select('ALTER SEQUENCE members_id_seq RESTART WITH ' . $seq);
         $this->graphQL('
             mutation CreateMember(
                 $first_name: String!
@@ -64,7 +68,7 @@ class MembersTest extends TestCase
     public function testQueryMember()
     {
         $this->login();
-        $member = \App\Models\Members::orderBy('id', 'DESC')->take(1)->get();
+        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
         ($this->graphQL('
             query Member($id:ID!){
                 member(id: $id) {
@@ -85,7 +89,7 @@ class MembersTest extends TestCase
     public function testUpdateMember()
     {
         $this->login();
-        $member = \App\Models\Members::orderBy('id', 'DESC')->take(1)->get();
+        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation UpdateMember(
                 $id: ID!
@@ -119,7 +123,7 @@ class MembersTest extends TestCase
     public function testSetMemberPassword()
     {
         $this->login();
-        $member = \App\Models\Members::orderBy('id', 'DESC')->take(1)->get();
+        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation SetMemberPassword(
                 $id: ID!
@@ -154,7 +158,7 @@ class MembersTest extends TestCase
     public function testSetMemberSecurityPin()
     {
         $this->login();
-        $member = \App\Models\Members::orderBy('id', 'DESC')->take(1)->get();
+        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation SetMemberSecurityPin(
                 $id: ID!
@@ -183,7 +187,7 @@ class MembersTest extends TestCase
     public function testQueryMembersOrderBy()
     {
         $this->login();
-        $member = \App\Models\Members::orderBy('id', 'DESC')->get();
+        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
         $this->graphQL('
         query {
             members(orderBy: { column: ID, order: DESC }) {
@@ -201,7 +205,7 @@ class MembersTest extends TestCase
     public function testQueryMembersWhere()
     {
         $this->login();
-        $member = \App\Models\Members::where('id', 2)->get();
+        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'ASC')->get();
         $this->graphQL('
         query {
             members(where: { column: ID, value: 2}) {
@@ -219,7 +223,7 @@ class MembersTest extends TestCase
     public function testDeleteMember()
     {
         $this->login();
-        $member = \App\Models\Members::orderBy('id', 'DESC')->take(1)->get();
+        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation DeleteMember(
                 $id: ID!

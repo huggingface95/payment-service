@@ -113,10 +113,10 @@ $app->register(App\Providers\AppServiceProvider::class);
 $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(\Illuminate\Auth\Passwords\PasswordResetServiceProvider::class);
 //$app->register(Spatie\Permission\PermissionServiceProvider::class);
- //$app->register(Wimil\LighthouseGraphqlJwtAuth\LighthouseGraphqlJwtAuthServiceProvider::class);
+//$app->register(Wimil\LighthouseGraphqlJwtAuth\LighthouseGraphqlJwtAuthServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 $app->register(Spatie\Permission\PermissionServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\LighthouseServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\Pagination\PaginationServiceProvider::class);
 $app->register(\Nuwave\Lighthouse\WhereConditions\WhereConditionsServiceProvider::class);
@@ -139,6 +139,7 @@ $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
 $app->register(\App\Providers\MailServiceProvider::class);
 $app->register(Jenssegers\Agent\AgentServiceProvider::class);
+$app->register(\App\Providers\PermissionRecordsToEnumServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

@@ -15,6 +15,7 @@ type PaymentProvider {
     "Получить связанные платежные системы"
     payment_systems: [PaymentSystem] @belongsToMany(relation:"paymentSystems")
     commission_price_list: CommissionPriceList @hasOne(relation:"commissionPriceList")
+    company: Companies @belongsTo(relation:"company")
 }
 
 extend type Query @guard {
@@ -35,8 +36,9 @@ extend type Query @guard {
 }
 
 input QueryPaymentProvidersFilterStatic @spread{
-    name: String @like
+    name: String @ilike
     hasPaymentSystemsFilterById: ID @eq
+    company_id: ID @eq
 }
 
 extend type Mutation @guard {
@@ -50,6 +52,8 @@ extend type Mutation @guard {
         logo_key: String
         "Активен или нет"
         is_active: Boolean
+        "Ид компании"
+        company_id: ID!
         "массив ID платежных систем"
         payment_systems: [ID]
     ):PaymentProvider   @field(resolver: "PaymentProviderMutator@create")
@@ -65,6 +69,8 @@ extend type Mutation @guard {
         logo_key: String
         "Активен или нет"
         is_active: Boolean
+        "Ид компании"
+        company_id: ID
         "массив ID платежных систем"
         payment_systems: [ID]
     ):PaymentProvider   @field(resolver: "PaymentProviderMutator@update")

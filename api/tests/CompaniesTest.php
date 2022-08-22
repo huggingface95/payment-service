@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
+
 class CompaniesTest extends TestCase
 {
     /**
@@ -15,6 +17,8 @@ class CompaniesTest extends TestCase
     public function testCreateCompany()
     {
         $this->login();
+        $seq = DB::table('companies')->max('id') + 1;
+        DB::select('ALTER SEQUENCE companies_id_seq RESTART WITH ' . $seq);
         $this->graphQL('
             mutation CreateCompany(
                 $name: String!
@@ -64,7 +68,7 @@ class CompaniesTest extends TestCase
     public function testUpdateCompany()
     {
         $this->login();
-        $company = \App\Models\Companies::orderBy('id', 'DESC')->take(1)->get();
+        $company = DB::connection('pgsql_test')->table('companies')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation UpdateCompany(
                 $id: ID!
@@ -98,7 +102,7 @@ class CompaniesTest extends TestCase
     public function testQueryCompany()
     {
         $this->login();
-        $company = \App\Models\Companies::orderBy('id', 'DESC')->take(1)->get();
+        $company = DB::connection('pgsql_test')->table('companies')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             query Company($id:ID!){
                 company(id: $id) {
@@ -119,7 +123,7 @@ class CompaniesTest extends TestCase
     public function testCompaniesOrderBy()
     {
         $this->login();
-        $applicant = \App\Models\Companies::orderBy('id', 'DESC')->get();
+        $applicant = DB::connection('pgsql_test')->table('companies')->orderBy('id', 'DESC')->get();
         $this->graphQL('
         query {
             companies(orderBy: { column: ID, order: DESC }) {
@@ -137,7 +141,7 @@ class CompaniesTest extends TestCase
     public function testDeleteCompany()
     {
         $this->login();
-        $company = \App\Models\Companies::orderBy('id', 'DESC')->take(1)->get();
+        $company = DB::connection('pgsql_test')->table('companies')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation DeleteCompany(
                 $id: ID!

@@ -28,7 +28,7 @@ class CommissionPriceList extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'provider_id', 'payment_system_id', 'commission_template_id',
+        'name', 'provider_id', 'payment_system_id', 'commission_template_id', 'region_id', 'company_id',
     ];
 
     protected static function booted()
@@ -89,13 +89,18 @@ class CommissionPriceList extends BaseModel
         return $this->belongsToMany(ApplicantIndividual::class, 'accounts', 'commission_template_id', 'client_id', 'commission_template_id', 'id');
     }
 
-    public function company(): BelongsToMany
-    {
-        return $this->belongsToMany(ApplicantCompany::class, 'accounts', 'commission_template_id', 'client_id', 'commission_template_id', 'owner_id');
-    }
-
     public function account(): HasOneThrough
     {
         return $this->hasOneThrough(Account::class, CommissionTemplate::class, 'id', 'commission_template_id', 'commission_template_id', 'id', );
+    }
+
+    public function region(): BelongsTo
+    {
+        return $this->belongsTo(Region::class, 'region_id');
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Companies::class, 'company_id');
     }
 }
