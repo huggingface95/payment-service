@@ -18,6 +18,15 @@ type Users {
     fullname: String
 }
 
+type userAuthResponse{
+    data: Users
+    permissions: [userAuthPermissions!]
+}
+type userAuthPermissions {
+    name: String
+    list: [Permissions!]
+}
+
 extend type Query @guard {
     """
     Получить список пользователей системы
@@ -28,6 +37,8 @@ extend type Query @guard {
         where: _ @whereConditions(columnsEnum: "UsersColumn"),
         orderBy: _ @orderBy(columns: ["id","email","fullname"],
     )): [Users!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+
+    userAuthData: userAuthResponse! @field(resolver:"UsersQuery@userAuthData")
 }
 
 enum UsersColumn {
