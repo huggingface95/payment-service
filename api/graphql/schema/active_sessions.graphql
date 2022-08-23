@@ -1,0 +1,55 @@
+type ActiveSession {
+    "ID"
+    id: ID!
+    "Название компании"
+    company: String!
+    "Группа"
+    member: String!
+    "Группа"
+    group: String!
+    "Домен"
+    domain: String!
+    "IP"
+    ip: String
+    "Страна"
+    country: String
+    "Город"
+    city: String
+    "Платформа"
+    platform: String
+    "Браузер"
+    browser: String
+    "Устройство"
+    device_type: String
+    "Модель"
+    model: String
+    "Дата истечения"
+    expired_at: DateTime
+    "Дата создания"
+    created_at: DateTime!
+}
+
+type ActiveSessions {
+    data: [ActiveSession!]
+    paginatorInfo: PaginatorInfo
+}
+
+extend type Query @guard {
+    """
+    Получить список сессий
+    query: {column: COMPANY, value: "", column: MEMBER, value: "", column: GROUP, value: "", column: CREATED_AT, value: "2021-10-12"} фильтр по company, member, group, created_at
+    """
+    activeSessions(
+        page: Int = 1,
+        count: Int = 15,
+        query: QueryActiveSessionsStatic
+    ): ActiveSessions
+        @field(resolver:"ActiveSessionsQuery@get")
+}
+
+input QueryActiveSessionsStatic @spread {
+    company: String @eq
+    member: String @eq
+    group: String @eq
+    created_at: Date @like
+}

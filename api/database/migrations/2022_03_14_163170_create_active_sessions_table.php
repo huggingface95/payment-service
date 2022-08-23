@@ -1,6 +1,7 @@
 <?php
 
-use PhpClickHouseLaravel\Migration;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateActiveSessionsTable extends Migration
 {
@@ -11,7 +12,7 @@ class CreateActiveSessionsTable extends Migration
      */
     public function up()
     {
-        static::write('
+        DB::connection('clickhouse')->unprepared('
             CREATE TABLE active_sessions (
                 id UInt32,
                 company String,
@@ -40,6 +41,6 @@ class CreateActiveSessionsTable extends Migration
      */
     public function down()
     {
-        static::write('DROP TABLE active_sessions');
+        DB::connection('clickhouse')->unprepared('DROP TABLE active_sessions');
     }
 }

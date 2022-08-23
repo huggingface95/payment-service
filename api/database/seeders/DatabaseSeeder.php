@@ -49,5 +49,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EmailNotificationTemplatesTableSeeder::class);
         $this->call(RegionsTableSeeder::class);
         $this->call(PermissionsSeeder::class);
+        $this->call(ActiveSessionTableSeeder::class);
     }
 }
