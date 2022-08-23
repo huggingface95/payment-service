@@ -4,9 +4,11 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
 use App\Models\GroupRole;
+use App\Models\Members;
 use App\Models\PermissionCategory;
 use App\Models\Permissions;
 use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class RoleMutator
 {
@@ -20,7 +22,10 @@ class RoleMutator
         if (isset($args['groups']) && $args['groups'][0] == '2') {
             throw new GraphqlException('Role is not be used for this group', 'internal', 500);
         }
+        /** @var Members $member */
+        $member = Auth::user();
 
+        /** @var Role $role */
         $role = Role::create($args);
         if (isset($args['permissions'])) {
             $this->syncPermissions($role, $args['permissions']);
@@ -28,7 +33,7 @@ class RoleMutator
         if (isset($args['groups'])) {
             $this->syncGroups($role, $args['groups']);
         }
-        if (isset($args['permission_category_all_member'])) {
+        if (isset($args['permission_category_all_member']) && $member->is_super_admin) {
             $role->permissionCategories()->attach($args['permission_category_all_member']);
         }
 
@@ -45,6 +50,8 @@ class RoleMutator
         if (isset($args['groups']) && $args['groups'][0] == '2') {
             throw new GraphqlException('Role is not be used for this group', 'internal', 500);
         }
+        /** @var Members $member */
+        $member = Auth::user();
 
         $role = Role::find($args['id']);
         if (isset($args['permissions'])) {
@@ -54,7 +61,7 @@ class RoleMutator
             $this->syncGroups($role, $args['groups']);
         }
 
-        if (isset($args['permission_category_all_member'])) {
+        if (isset($args['permission_category_all_member']) && $member->is_super_admin) {
             $role->permissionCategories()->detach();
             $role->permissionCategories()->attach($args['permission_category_all_member']);
         }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GuardEnum;
+use App\Models\Scopes\PermissionFilterSuperAdminScope;
 use App\Models\Scopes\PermissionOrderScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Permission\Exceptions\PermissionAlreadyExists;
@@ -14,6 +15,7 @@ use Spatie\Permission\Models\Role;
  * @method static firstOrCreate(mixed $data)
  *
  *@property int $id
+ *@property boolean is_super_admin
  */
 class Permissions extends SpatiePermission
 {
@@ -34,15 +36,16 @@ class Permissions extends SpatiePermission
     public const TYPE_NO_REQUIRED = 'no_required';
 
     protected $fillable = [
-        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'order',
+        'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'order', 'is_super_admin',
     ];
 
     protected $guard_name = GuardEnum::GUARD_NAME;
 
     protected static function booted()
     {
-        static::addGlobalScope(new PermissionOrderScope());
         parent::booted();
+        static::addGlobalScope(new PermissionOrderScope());
+        static::addGlobalScope(new PermissionFilterSuperAdminScope());
     }
 
     public function permissionList(): BelongsTo

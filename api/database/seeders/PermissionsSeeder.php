@@ -810,6 +810,16 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'info',
                                         ],
                                     ],
+                                    'Super Admin Email Template.Create' => [
+                                        'data' => [
+                                            'name' => 'Super Admin Email Template.Create',
+                                            'display_name' => 'Create',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'add',
+                                            'is_super_admin' => true,
+                                        ],
+                                    ],
                                 ],
                             ],
                             'Email Templates:Notifications' => [
@@ -3779,8 +3789,7 @@ class PermissionsSeeder extends Seeder
             [
                 'name' => 'CreateEmailTemplate',
                 'referer' => 'administration/email/email-template-settings',
-                'binds' => ['Email Templates:Settings.Add New'],
-                'parents' => ['Email Templates:Settings.Read', 'Email Templates:Settings.Edit'],
+                'binds' => ['Super Admin Email Template.Create'],
             ],
             [
                 'name' => 'GetCompanies',
