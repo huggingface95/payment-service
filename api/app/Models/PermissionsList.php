@@ -26,6 +26,6 @@ class PermissionsList extends BaseModel
 
     public function permissions(): HasMany
     {
-        return $this->hasMany(Permissions::class, 'permission_list_id')->where('is_super_admin', false);
+        return $this->hasMany(Permissions::class, 'permission_list_id');
     }
 }

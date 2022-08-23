@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GuardEnum;
+use App\Models\Scopes\PermissionFilterSuperAdminScope;
 use App\Models\Scopes\PermissionOrderScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\Permission\Exceptions\PermissionAlreadyExists;
@@ -14,6 +15,7 @@ use Spatie\Permission\Models\Role;
  * @method static firstOrCreate(mixed $data)
  *
  *@property int $id
+ *@property boolean is_super_admin
  */
 class Permissions extends SpatiePermission
 {
@@ -41,8 +43,9 @@ class Permissions extends SpatiePermission
 
     protected static function booted()
     {
-        static::addGlobalScope(new PermissionOrderScope());
         parent::booted();
+        static::addGlobalScope(new PermissionOrderScope());
+        static::addGlobalScope(new PermissionFilterSuperAdminScope());
     }
 
     public function permissionList(): BelongsTo
@@ -56,7 +59,7 @@ class Permissions extends SpatiePermission
             $role = Role::find($roleId);
             $permissions = $role->permissions;
         } else {
-            $permissions = self::query()->where('is_super_admin', false)->get();
+            $permissions = self::query()->get();
         }
 
         $permData = [];

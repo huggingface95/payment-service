@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\GuardEnum;
 use App\Models\Scopes\OrderByLowerScope;
+use App\Models\Scopes\RoleFilterSuperAdminScope;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Role as SpatieRole;
@@ -12,21 +13,31 @@ use Spatie\Permission\PermissionRegistrar;
 /**
  * Class Role
  *
+ * @property int id
+ *
  * @property Collection $permissions
  */
 class Role extends SpatieRole
 {
+    const SUPER_ADMIN_ID = 1;
+
     protected $fillable = [
         'name', 'guard_name', 'description', 'company_id', 'group_type_id',
     ];
 
     protected $guard_name = GuardEnum::GUARD_NAME;
 
-//    protected static function booted()
-//    {
-//        parent::booted();
-//        static::addGlobalScope(new OrderByLowerScope());
-//    }
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new OrderByLowerScope());
+        static::addGlobalScope(new RoleFilterSuperAdminScope());
+    }
+
+    public function IsSuperAdmin(): bool
+    {
+        return $this->id == self::SUPER_ADMIN_ID;
+    }
 
     public function groupType()
     {
@@ -53,7 +64,7 @@ class Role extends SpatieRole
             config('permission.table_names.role_has_permissions'),
             PermissionRegistrar::$pivotRole,
             PermissionRegistrar::$pivotPermission
-        )->where('is_super_admin', false);
+        );
     }
 
     public function permissionCategories()

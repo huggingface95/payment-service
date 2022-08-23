@@ -15,7 +15,8 @@ class SuperAdminSeeder extends Seeder
      */
     public function run()
     {
-        if ($role = Role::find(1)){
+        /** @var Role $role */
+        if ($role = Role::find(Role::SUPER_ADMIN_ID)){
             $role->update([
                 'name' => 'superadmin',
                 'description' => 'Superadmin role',
@@ -25,7 +26,7 @@ class SuperAdminSeeder extends Seeder
         }
         else{
             $role = Role::create([
-                'id' => 1,
+                'id' => Role::SUPER_ADMIN_ID,
                 'name' => 'superadmin',
                 'description' => 'Superadmin role',
                 'company_id' => null,

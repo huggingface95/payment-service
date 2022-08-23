@@ -42,6 +42,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property Collection groupRoles
  * @property GroupRole $groupRole
  * @property EmailSmtp $smtp
+ * @property boolean is_super_admin
+ * @method
  */
 class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
 {
@@ -89,7 +91,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['two_factor', 'permissions'];
+    protected $appends = ['two_factor', 'permissions', 'is_super_admin'];
 
     protected static function booted()
     {
@@ -129,6 +131,16 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function IsShowOwnerApplicants(): bool
     {
         return $this->is_show_owner_applicants;
+    }
+
+    public function getIsSuperAdminAttribute(): bool
+    {
+        try {
+            return $this->groupRole->role->IsSuperAdmin();
+        }
+        catch (\Throwable){
+            return false;
+        }
     }
 
     public function company(): BelongsTo
