@@ -15,7 +15,7 @@ class OrderByLowerScope implements Scope
         $orders = $builder->getQuery()->orders;
         $builder->reorder();
 
-        foreach ($orders as $order) {
+        foreach ($orders ?? [] as $order) {
             try {
                 $type = Schema::getColumnType($model->getTable(), $order['column']);
                 if ($type == 'string') {
