@@ -63,7 +63,7 @@ class AccountsTest extends TestCase
             'payment_provider_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
-       $this->seeJson([
+        $this->seeJson([
             'data' => [
                 'createAccount' => [
                     [
