@@ -14,7 +14,8 @@ use Spatie\Permission\Models\Role;
 /**
  * @method static firstOrCreate(mixed $data)
  *
- *@property int $id
+ *@property int id
+ *@property ?int order
  *@property boolean is_super_admin
  */
 class Permissions extends SpatiePermission
