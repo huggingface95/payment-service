@@ -554,27 +554,29 @@ class AuthController extends Controller
         DB::connection('clickhouse')
             ->table((new AuthenticationLog)->getTable())
             ->insert([
-            'id' => rand(0, 4294967295),
-            'member' => $user->email,
-            'domain' => request()->getHttpHost(),
-            'browser' => Agent::browser() ? Agent::browser() : 'unknown',
-            'platform' => Agent::platform() ? Agent::platform() : 'unknown',
-            'device_type' => Agent::device() ? Agent::device() : 'unknown',
-            'ip' => $this->getIp(),
-            'status' => $status,
-            'created_at' => now(),
-        ]);
+                'id' => rand(0, 4294967295),
+                'member' => $user->email,
+                'domain' => request()->getHttpHost(),
+                'browser' => Agent::browser() ? Agent::browser() : 'unknown',
+                'platform' => Agent::platform() ? Agent::platform() : 'unknown',
+                'device_type' => Agent::device() ? Agent::device() : 'unknown',
+                'ip' => $this->getIp(),
+                'status' => $status,
+                'created_at' => now(),
+            ]);
     }
 
-    public function getAuthUserIp($email)
+    public function getAuthUserIp(string $email): string
     {
-        $user = auth()->user();
-        $getIp = AuthenticationLog::select('*')->
-        where('member', '=', (string) $email)->
-        where('status', '=', 'login')->
-        orderByDesc('created_at')->
-        limit(1)->
-        getRows();
+        $getIp = DB::connection('clickhouse')
+            ->table((new AuthenticationLog)->getTable())
+            ->select(['ip'])
+            ->where('member', '=', (string) $email)
+            ->where('status', '=', 'login')
+            ->orderByDesc('created_at')
+            ->limit(1)
+            ->get();
+
         if ($getIp) {
             return $getIp[0]['ip'];
         } else {
@@ -582,37 +584,44 @@ class AuthController extends Controller
         }
     }
 
-    public function getAuthUser($email)
+    public function getAuthUser(string $email): string
     {
-        $user = auth()->user();
-        $getStatus = AuthenticationLog::select('*')->
-        where('member', '=', (string) $email)->
-        orderByDesc('created_at')->
-        limit(1)->
-        getRows();
+        $getStatus = DB::connection('clickhouse')
+            ->table((new AuthenticationLog)->getTable())
+            ->select(['status'])
+            ->where('member', '=', (string) $email)
+            ->orderByDesc('created_at')
+            ->limit(1)
+            ->get();
+
         if ($getStatus) {
             return $getStatus[0]['status'];
         } else {
             $this->writeToAuthLog('logout');
-            $getStatus = AuthenticationLog::select('*')->
-            where('member', '=', (string) $email)->
-            orderByDesc('created_at')->
-            limit(1)->
-            getRows();
+
+            $getStatus = DB::connection('clickhouse')
+                ->table((new AuthenticationLog)->getTable())
+                ->select(['status'])
+                ->where('member', '=', (string) $email)
+                ->orderByDesc('created_at')
+                ->limit(1)
+                ->get();
 
             return $getStatus[0]['status'];
         }
     }
 
-    public function getAuthUserBrowser($email)
+    public function getAuthUserBrowser(string $email)
     {
-        $user = auth()->user();
-        $getBrowser = AuthenticationLog::select('*')->
-        where('member', '=', (string) $email)->
-        where('status', '=', 'login')->
-        orderByDesc('created_at')->
-        limit(1)->
-        getRows();
+        $getBrowser = DB::connection('clickhouse')
+            ->table((new AuthenticationLog)->getTable())
+            ->select(['browser'])
+            ->where('member', '=', (string) $email)
+            ->where('status', '=', 'login')
+            ->orderByDesc('created_at')
+            ->limit(1)
+            ->get();
+
         if ($getBrowser) {
             return $getBrowser[0]['browser'];
         } else {
