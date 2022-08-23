@@ -781,6 +781,7 @@ class PermissionsSeeder extends Seeder
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'important',
+                                            'is_super_admin' => true,
                                         ],
                                     ],
                                     'Email Templates:Settings.Add New' => [
@@ -790,6 +791,7 @@ class PermissionsSeeder extends Seeder
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'add',
+                                            'is_super_admin' => true,
                                         ],
                                     ],
                                     'Email Templates:Settings.Type Notification: Admin' => [
@@ -3159,9 +3161,17 @@ class PermissionsSeeder extends Seeder
                         foreach ($list['list'] as $permission) {
                             $permission['data']['permission_list_id'] = $l->id;
                             $order = $permission['data']['order'];
+                            $superAdmin = false;
                             unset($permission['data']['order']);
+                            if(isset($permission['data']['is_super_admin'])){
+                                $superAdmin = $permission['data']['is_super_admin'];
+                                unset($permission['data']['is_super_admin']);
+                            }
+                            unset($permission['data']['order']);
+                            /** @var Permissions $p */
                             $p = Permissions::firstOrCreate($permission['data']);
                             $p->order = $order;
+                            $p->is_super_admin = $superAdmin;
                             $p->save();
                         }
                     }
