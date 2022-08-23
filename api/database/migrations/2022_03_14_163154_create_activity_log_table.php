@@ -1,6 +1,7 @@
 <?php
 
-use PhpClickHouseLaravel\Migration;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateActivityLogTable extends Migration
 {
@@ -11,7 +12,7 @@ class CreateActivityLogTable extends Migration
      */
     public function up()
     {
-        static::write('
+        DB::connection('clickhouse')->unprepared('
             CREATE TABLE activity_log (
                 id UInt32,
                 company String,
@@ -36,6 +37,6 @@ class CreateActivityLogTable extends Migration
      */
     public function down()
     {
-        static::write('DROP TABLE activity_log');
+        DB::connection('clickhouse')->unprepared('DROP TABLE activity_log');
     }
 }

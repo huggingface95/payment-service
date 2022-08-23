@@ -1,13 +1,11 @@
 <?php
 
+namespace Tests;
+
 use Illuminate\Support\Facades\DB;
 
 class CommissionTemplateTest extends TestCase
 {
-    public function login()
-    {
-        auth()->attempt(['email' => 'test@test.com', 'password' => '1234567Qa']);
-    }
 
     /**
      * CommissionTemplate Testing
