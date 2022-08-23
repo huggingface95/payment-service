@@ -1,14 +1,12 @@
 <?php
 
+namespace Tests;
+
 use App\Models\CommissionPriceList;
 use Illuminate\Support\Facades\DB;
 
 class CommissionPriceListTest extends TestCase
 {
-    public function login()
-    {
-        auth()->attempt(['email' => 'test@test.com', 'password' => '1234567Qa']);
-    }
 
     /**
      * CommissionPriceList Testing

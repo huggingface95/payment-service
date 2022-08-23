@@ -140,6 +140,7 @@ $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
 $app->register(\App\Providers\MailServiceProvider::class);
 $app->register(Jenssegers\Agent\AgentServiceProvider::class);
 $app->register(\App\Providers\PermissionRecordsToEnumServiceProvider::class);
+$app->register(\Tinderbox\ClickhouseBuilder\Integrations\Laravel\ClickhouseServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

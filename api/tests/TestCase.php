@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests;
+
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
@@ -40,5 +42,15 @@ abstract class TestCase extends BaseTestCase
     public function createApplication()
     {
         return require __DIR__.'/../bootstrap/app.php';
+    }
+
+    /**
+     * Login
+     *
+     * @return void
+     */
+    public function login(): void
+    {
+        auth()->attempt(['email' => 'test@test.com', 'password' => '1234567Qa']);
     }
 }
