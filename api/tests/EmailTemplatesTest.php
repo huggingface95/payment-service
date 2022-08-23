@@ -1,4 +1,5 @@
 <?php
+namespace Tests;
 
 use Illuminate\Support\Facades\DB;
 
@@ -9,10 +10,6 @@ class EmailTemplatesTest extends TestCase
      *
      * @return void
      */
-    public function login()
-    {
-        auth()->attempt(['email' => 'test@test.com', 'password' => '1234567Qa']);
-    }
 
     public function testCreateEmailTemplate()
     {
