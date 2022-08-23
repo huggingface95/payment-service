@@ -547,11 +547,23 @@ class AuthController extends Controller
         return request()->ip();
     }
 
-    public function writeToAuthLog($status)
+    public function writeToAuthLog($status): void
     {
         $user = auth()->user();
-        $log = AuthenticationLog::make(['id' => rand(0, 4294967295), 'member' => $user->email, 'domain' => request()->getHttpHost(), 'browser' => Agent::browser() ? Agent::browser() : 'unknown', 'platform' => Agent::platform() ? Agent::platform() : 'unknown', 'device_type' => Agent::device() ? Agent::device() : 'unknown', 'ip' => $this->getIp(), 'status' => $status, 'created_at' => now()]);
-        $log->save();
+
+        DB::connection('clickhouse')
+            ->table((new AuthenticationLog)->getTable())
+            ->insert([
+            'id' => rand(0, 4294967295),
+            'member' => $user->email,
+            'domain' => request()->getHttpHost(),
+            'browser' => Agent::browser() ? Agent::browser() : 'unknown',
+            'platform' => Agent::platform() ? Agent::platform() : 'unknown',
+            'device_type' => Agent::device() ? Agent::device() : 'unknown',
+            'ip' => $this->getIp(),
+            'status' => $status,
+            'created_at' => now(),
+        ]);
     }
 
     public function getAuthUserIp($email)
