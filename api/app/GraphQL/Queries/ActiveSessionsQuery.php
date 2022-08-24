@@ -39,9 +39,7 @@ final class ActiveSessionsQuery
                 });
             }
         }
-
-        //$query->orderBy('id', 'ASC');
-
+        
         $result = $query->paginate($args['page'] ?? 1, $args['count'] ?? env('PAGINATE_DEFAULT_COUNT'));
 
         return [
