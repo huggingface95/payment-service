@@ -20,12 +20,9 @@ type Users {
 
 type userAuthResponse{
     data: Users
-    permissions: [userAuthPermissions!]
+    permissions: Mixed
 }
-type userAuthPermissions {
-    name: String
-    list: [Permissions!]
-}
+
 
 extend type Query @guard {
     """
