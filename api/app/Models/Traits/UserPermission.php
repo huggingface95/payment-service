@@ -11,7 +11,7 @@ trait UserPermission
     {
         $this->loadRolesAndPermissionsRelations();
 
-        return $this->groupRole->role->permissions;
+        return $this->groupRole->role->permissions ?? collect([]);
     }
 
     public function hasPermission(string $name, string $url): bool
