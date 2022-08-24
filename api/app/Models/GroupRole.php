@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Scopes\RoleFilterSuperAdminScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -53,7 +54,7 @@ class GroupRole extends BaseModel
 
     public function role(): BelongsTo
     {
-        return $this->belongsTo(Role::class, 'role_id');
+        return $this->belongsTo(Role::class, 'role_id')->withoutGlobalScope(RoleFilterSuperAdminScope::class);
     }
 
     public function paymentProvider(): BelongsTo
