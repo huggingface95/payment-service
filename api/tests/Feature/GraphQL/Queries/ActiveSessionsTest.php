@@ -75,15 +75,15 @@ class ActiveSessionsTest extends TestCase
             ->limit(1)
             ->get();
 
-        $created_at = substr($active_session[0]['created_at'], 0, 10);
-
         $active_sessions = DB::connection('clickhouse')
             ->table((new ActiveSession)->getTable())
             ->where('company', $active_session[0]['company'])
             ->where('member', $active_session[0]['member'])
             ->where('group', $active_session[0]['group'])
-            ->where('created_at', $created_at)
+            ->where('created_at', $active_session[0]['created_at'])
             ->get();
+
+        $created_at = substr($active_session[0]['created_at'], 0, 10);
 
         $response = $this->graphQL('
         query($company: String!, $member: String!, $group: String!, $created_at: Date!) {
@@ -128,6 +128,43 @@ class ActiveSessionsTest extends TestCase
                 'company' => (string) $session['company'],
             ]);
         }
+    }
+
+    public function testActiveSessionsListPaginate(): void
+    {
+        $this->login();
+
+        $response = $this->graphQL('
+        {
+            activeSessions(page: 1, count: 3) {
+              data {
+                id
+                company
+              }
+              paginatorInfo {
+                count
+                currentPage
+                firstItem
+                hasMorePages
+                lastItem
+                lastPage
+                perPage
+                total
+              }
+            }
+        }
+        ');
+
+        $response->seeJson([
+            'count' => 3,
+            'currentPage' => 1,
+            'firstItem' => 1,
+            'hasMorePages' => true,
+            'lastItem' => 3,
+            'lastPage' => 10,
+            'perPage' => 3,
+            'total' => 30,
+        ]);
     }
 
 }

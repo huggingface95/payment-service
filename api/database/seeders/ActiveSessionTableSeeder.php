@@ -34,8 +34,8 @@ class ActiveSessionTableSeeder extends Seeder
                     'browser' => $faker->randomElement(['Opera', 'Chrome', 'Firefox']),
                     'device_type' => $faker->randomElement(['Desktop', 'Tablet']),
                     'model' => $faker->randomElement(['Android', 'iOS', 'Windows Desktop']),
-                    'expired_at' => $faker->dateTime,
-                    'created_at' => $faker->dateTime,
+                    'expired_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
+                    'created_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                 ]);
         }
     }
