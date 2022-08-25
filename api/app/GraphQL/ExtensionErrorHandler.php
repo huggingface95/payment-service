@@ -273,7 +273,21 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
-
+        if (strpos($error->getMessage(), 'NOT FOUND IN THIS ')) {
+            return $next(new Error(
+                strstr($error->getMessage(), ' IN THIS', true),
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 500,
+                    'systemMessage' => $error->getMessage(),
+                ]
+            ));
+        }
         if (strpos($error->getMessage(), 'non-nullable')) {
             return $next(new Error(
                 'Internal server error',
