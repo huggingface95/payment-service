@@ -55,4 +55,9 @@ class PaymentSystem extends BaseModel
             ]
         );
     }
+
+    public function banks(): BelongsToMany
+    {
+        return $this->belongsToMany(PaymentBank::class, 'payment_system_banks', 'payment_system_id', 'payment_bank_id');
+    }
 }
