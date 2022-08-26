@@ -14,7 +14,6 @@ type PaymentSystem {
     currencies: [Currencies] @belongsToMany(relation:"currencies")
     "Получить Платежные провайдеры"
     providers: [PaymentProvider] @belongsToMany(relation:"providers")
-    provider: PaymentProvider @belongsTo(relation:"provider")
     "Получить Реквизиты"
     banks: [PaymentBank] @belongsToMany(relation:"banks")
 }
