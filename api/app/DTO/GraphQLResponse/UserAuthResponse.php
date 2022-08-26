@@ -17,9 +17,9 @@ class UserAuthResponse
         $dto = new self();
         $dto->data = $member;
         $dto->permissions = $member->getAllPermissions()->groupBy(['permission_list_id', function ($permission) {
-            return strtoupper(Str::snake(str_replace(':', '', $permission->permissionList->name)));
+            return 'PERMISSION_'.strtoupper(Str::snake(str_replace(':', '', $permission->permissionList->name)));
         }])->collapse()->map(function ($permissions){
-            return $permissions->pluck('display_name');
+            return $permissions->pluck('upname');
         })->toArray();
 
         return $dto;
