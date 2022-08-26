@@ -2,10 +2,11 @@
 
 namespace App\GraphQL\Queries;
 
-use App\Models\Clickhouse\ActiveSession;
+use App\Models\Clickhouse\ActivityLog;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
-final class ActiveSessionsQuery
+final class ActivityLogsQuery
 {
 
     /**
@@ -14,12 +15,11 @@ final class ActiveSessionsQuery
      * @param  null  $_
      * @param  array<string, mixed>  $args
      */
-    public function get($_, array $args)
+    public function get($_, array $args): array
     {
         $query = DB::connection('clickhouse')
             ->query()
-            ->from((new ActiveSession)->getTable())
-            ->orderBy('id', 'DESC');
+            ->from((new ActivityLog)->getTable());
 
         if (isset($args['query']) && count($args['query']) > 0) {
             $fields = $args['query'];
@@ -39,7 +39,17 @@ final class ActiveSessionsQuery
                 });
             }
         }
-        
+
+        if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
+            $fields = $args['orderBy'];
+
+            foreach ($fields as $field) {
+                $query->orderBy(Str::lower($field['column']), $field['order']);
+            }
+        } else {
+            $query->orderBy('id', 'DESC');
+        }
+
         $result = $query->paginate($args['page'] ?? 1, $args['count'] ?? env('PAGINATE_DEFAULT_COUNT'));
 
         return [

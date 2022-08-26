@@ -2,10 +2,11 @@
 
 namespace App\GraphQL\Queries;
 
-use App\Models\Clickhouse\ActiveSession;
+use App\Models\Clickhouse\AuthenticationLog;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
-final class ActiveSessionsQuery
+final class AuthenticationLogsQuery
 {
 
     /**
@@ -18,12 +19,17 @@ final class ActiveSessionsQuery
     {
         $query = DB::connection('clickhouse')
             ->query()
-            ->from((new ActiveSession)->getTable())
-            ->orderBy('id', 'DESC');
+            ->from((new AuthenticationLog)->getTable());
 
         if (isset($args['query']) && count($args['query']) > 0) {
             $fields = $args['query'];
 
+            if (isset($fields['expired_at'])) {
+                $value = substr($fields['expired_at'], 0, 10);
+                $query->whereBetween('expired_at', [$value . ' 00:00:00', $value . ' 23:59:59']);
+
+                unset($fields['expired_at']);
+            }
             if (isset($fields['created_at'])) {
                 $value = substr($fields['created_at'], 0, 10);
                 $query->whereBetween('created_at', [$value . ' 00:00:00', $value . ' 23:59:59']);
@@ -39,7 +45,17 @@ final class ActiveSessionsQuery
                 });
             }
         }
-        
+
+        if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
+            $fields = $args['orderBy'];
+
+            foreach ($fields as $field) {
+                $query->orderBy(Str::lower($field['column']), $field['order']);
+            }
+        } else {
+            $query->orderBy('id', 'DESC');
+        }
+
         $result = $query->paginate($args['page'] ?? 1, $args['count'] ?? env('PAGINATE_DEFAULT_COUNT'));
 
         return [

@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Clickhouse\ActiveSession;
+use App\Models\Clickhouse\AuthenticationLog;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ActiveSessionTableSeeder extends Seeder
+class AuthenticationLogTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,7 +20,7 @@ class ActiveSessionTableSeeder extends Seeder
 
         for ($i = 1; $i <= 30; $i++) {
             DB::connection('clickhouse')
-                ->table((new ActiveSession)->getTable())
+                ->table((new AuthenticationLog)->getTable())
                 ->insert([
                     'id' => $i,
                     'company' => $faker->randomElement(['Nginx', 'Apple', 'Nike']),
@@ -34,6 +34,8 @@ class ActiveSessionTableSeeder extends Seeder
                     'browser' => $faker->randomElement(['Opera', 'Chrome', 'Firefox']),
                     'device_type' => $faker->randomElement(['Desktop', 'Tablet']),
                     'model' => $faker->randomElement(['Android', 'iOS', 'Windows Desktop']),
+                    'status' => $faker->randomElement(['login', 'logout']),
+                    'info' => $faker->randomElement(['info 1', 'info 2']),
                     'expired_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                     'created_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                 ]);

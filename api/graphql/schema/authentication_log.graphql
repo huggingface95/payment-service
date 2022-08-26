@@ -1,0 +1,101 @@
+type AuthenticationLog {
+    "ID"
+    id: ID!
+    "Название компании"
+    company: String!
+    "Группа"
+    member: String!
+    "Группа"
+    group: String!
+    "Домен"
+    domain: String!
+    "IP"
+    ip: String
+    "Страна"
+    country: String
+    "Город"
+    city: String
+    "Платформа"
+    platform: String
+    "Браузер"
+    browser: String
+    "Устройство"
+    device_type: String
+    "Модель"
+    model: String
+    "Статус"
+    status: String
+    "Инфо"
+    info: String
+    "Дата истечения"
+    expired_at: DateTime
+    "Дата создания"
+    created_at: DateTime!
+}
+
+type AuthenticationLogs {
+    data: [AuthenticationLog!]
+    paginatorInfo: PaginatorInfo
+}
+
+extend type Query @guard {
+    """
+    Получить список логов аутентификации 
+    query: {
+        column: COMPANY, value: "", 
+        column: MEMBER, value: "", 
+        column: GROUP, value: "", 
+        column: DOMAIN, value: "", 
+        column: IP, value: "", 
+        column: COUNTRY, value: "", 
+        column: CITY, value: "", 
+        column: PLATFORM, value: "", 
+        column: BROWSER, value: "", 
+        column: DEVICE_TYPE, value: "", 
+        column: MODEL, value: "", 
+        column: STATUS, value: "", 
+        column: EXPIRED_AT, value: "2021-10-12",
+        column: CREATED_AT, value: "2021-10-12"
+    } фильтр по company, member, group, domain, ip, country, city, platform, browser, device_type, model, status, expired_at, created_at
+    orderBy: [{ column: EXPIRED_AT, order: DESC }] сортировка по expired_at, created_at
+    """
+    authenticationLogs(
+        page: Int = 1,
+        count: Int = 15,
+        query: QueryAuthenticationLogsStatic
+        orderBy: [OrderBy!]
+    ): AuthenticationLogs
+        @field(resolver:"AuthenticationLogsQuery@get")
+}
+
+input QueryAuthenticationLogsStatic @spread {
+    company: String @eq
+    member: String @eq
+    group: String @eq
+    domain: String @eq
+    ip: String @eq
+    country: String @eq
+    city: String @eq
+    platform: String @eq
+    browser: String @eq
+    device_type: String @eq
+    model: String @eq
+    status: String @eq
+    expired_at: Date @like
+    created_at: Date @like
+}
+
+input OrderBy @spread {
+    column: Column!
+    order: Order!
+}
+
+enum Column {
+    EXPIRED_AT
+    CREATED_AT
+}
+
+enum Order {
+    ASC
+    DESC
+}
