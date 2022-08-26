@@ -38,6 +38,11 @@ class PaymentSystem extends BaseModel
         return $this->belongsToMany(PaymentProvider::class, 'payment_provider_payment_system', 'payment_system_id', 'payment_provider_id');
     }
 
+    public function provider(): BelongsTo
+    {
+        return $this->belongsTo(PaymentProvider::class, 'payment_provider_payment_system', 'payment_system_id', 'payment_provider_id');
+    }
+
     public function companies(): HasManyDeep
     {
         return $this->hasManyDeep(

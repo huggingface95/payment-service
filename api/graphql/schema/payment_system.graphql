@@ -14,6 +14,7 @@ type PaymentSystem {
     currencies: [Currencies] @belongsToMany(relation:"currencies")
     "Получить Платежные провайдеры"
     providers: [PaymentProvider] @belongsToMany(relation:"providers")
+    provider: PaymentProvider @belongsTo(relation:"provider")
     "Получить Реквизиты"
     banks: [PaymentBank] @belongsToMany(relation:"banks")
 }
@@ -33,40 +34,31 @@ input QueryPaymentSystemsFilterStatic @spread{
     hasProvidersFilterById: ID @eq
     hasCompaniesFilterById: ID @eq
 }
-
+input InputPaymentSystem {
+    "Название платежной системы"
+    name: String!
+    "Активный не активный (true/false)"
+    is_active: Boolean
+    "массив ID стран"
+    regions: PivotTable
+    "массив ID валют"
+    currencies: PivotTable
+    "массив ID провайдеров"
+    providers: PivotTable
+    "массив ID Реквизитов"
+    banks: PivotTable
+}
 extend type Mutation @guard {
     "Создать платежную систему"
     createPaymentSystem(
-        "Название платежной системы"
-        name: String!
-        "Активный не активный (true/false)"
-        is_active: Boolean
-        "массив ID стран"
-        regions: PivotTable
-        "массив ID валют"
-        currencies: PivotTable
-        "массив ID провайдеров"
-        providers: PivotTable
-        "массив ID Реквизитов"
-        banks: PivotTable
+        input: InputPaymentSystem! @spread
     ): PaymentSystem   @create
 
     "Обновить поля платежной системы"
     updatePaymentSystem(
         "ID платежной системы"
         id: ID!
-        "Название платежной системы"
-        name: String
-        "Активный не активный (true/false)"
-        is_active: Boolean
-        "массив ID стран"
-        regions: PivotTable
-        "массив ID валют"
-        currencies: PivotTable
-        "массив ID провайдеров"
-        providers: PivotTable
-        "массив ID Реквизитов"
-        banks: PivotTable
+        input: InputPaymentSystem! @spread
     ): PaymentSystem   @update
 
     "Удалить платежную систему"
