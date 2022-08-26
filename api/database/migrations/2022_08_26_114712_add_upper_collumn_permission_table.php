@@ -14,7 +14,7 @@ class AddUpperCollumnPermissionTable extends Migration
      */
     public function up()
     {
-        DB::raw("alter table permissions add column upname varchar(100) GENERATED ALWAYS AS (UPPER(display_name)) STORED");
+        DB::raw("alter table permissions add column upname varchar(100) GENERATED ALWAYS AS (REPLACE(UPPER(display_name),' ','_')) STORED");
     }
 
     /**
