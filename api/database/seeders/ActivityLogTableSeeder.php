@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Clickhouse\ActiveSession;
+use App\Models\Clickhouse\ActivityLog;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ActiveSessionTableSeeder extends Seeder
+class ActivityLogTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,21 +20,15 @@ class ActiveSessionTableSeeder extends Seeder
 
         for ($i = 1; $i <= 30; $i++) {
             DB::connection('clickhouse')
-                ->table((new ActiveSession)->getTable())
+                ->table((new ActivityLog)->getTable())
                 ->insert([
                     'id' => $i,
                     'company' => $faker->randomElement(['Nginx', 'Apple', 'Nike']),
                     'member' => $faker->randomElement(['feder@gmail.com', 'jover@gmail.com', 'dan@gmail.com']),
                     'group' => $faker->randomElement(['Member', 'Admin']),
-                    'domain' => $faker->domainName,
-                    'ip' => $faker->ipv4,
-                    'country' => $faker->country,
-                    'city' => $faker->city,
-                    'platform' => $faker->randomElement(['Windows', 'iOS', 'macOS']),
-                    'browser' => $faker->randomElement(['Opera', 'Chrome', 'Firefox']),
-                    'device_type' => $faker->randomElement(['Desktop', 'Tablet']),
-                    'model' => $faker->randomElement(['Android', 'iOS', 'Windows Desktop']),
-                    'expired_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
+                    'domain' => $faker->randomElement(['CRM', 'KYC']),
+                    'description' => $faker->paragraph(),
+                    'changes' => $faker->paragraph(),
                     'created_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                 ]);
         }

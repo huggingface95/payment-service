@@ -50,5 +50,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RegionsTableSeeder::class);
         $this->call(PermissionsSeeder::class);
         $this->call(ActiveSessionTableSeeder::class);
+        $this->call(AuthenticationLogTableSeeder::class);
+        $this->call(ActivityLogTableSeeder::class);
     }
 }
