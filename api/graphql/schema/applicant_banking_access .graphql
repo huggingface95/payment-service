@@ -33,11 +33,16 @@ extend type Query @guard {
     where:{column: APPLICANT_INDIVIDUAL_ID, value: ""} фильтр по applicant_individual_id
     """
     applicantBankingAccess(
-        where: _ @whereConditions(
-        columns: ["applicant_individual_id","applicant_company_id","member_id"]),
+        filter: _ @filterConditions(static: QueryApplicantBankingAccessFilterStatic),
         orderBy: _ @orderBy(
         columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
     )): [ApplicantBankingAccess!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryApplicantBankingAccessFilterStatic @spread{
+    applicant_individual_id: ID @eq
+    applicant_company_id: ID @eq
+    member_id: ID @eq
 }
 
 extend type Mutation @guard {
