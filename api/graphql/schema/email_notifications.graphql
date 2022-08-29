@@ -40,18 +40,24 @@ extend type Query @guard {
     where:{column: TYPE, operator: EQ, value: ""} фильтр по типу нотификаций
     """
     emailNotifications(
-        hasApplicantIndividual: _ @whereHasConditions(columns: ["id", "fullname"]),
-        hasApplicantCompany: _ @whereHasConditions(columns: ["id", "name"]),
-        hasGroupRole: _ @whereHasConditions(columns: ["id", "name"]),
-        hasMember: _ @whereHasConditions(columns: ["id", "fullname"]),
-        hasGroupType: _ @whereHasConditions(columns: ["id", "name"]),
-        hasTemplates: _ @whereHasConditions(columns: ["subject"]),
+        filter: _ @filterConditions(static: QueryEmailNotificationsFilterStatic),
         created_at: DateRange @whereBetween,
-        where: _ @whereConditions(columns: ["type", "company_id", "recipient_type", "group_type"]),
         orderBy: _ @orderBy(
             columns: ["id"]
         )
     ): [EmailNotification!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+#todo hasApplicantCompanyMixedIdOrName  and hasApplicantIndividualMixedIdOrFullname change to clientable
+input QueryEmailNotificationsFilterStatic @spread{
+    company_id: ID @eq
+    type: NotifyType @eq
+    recipient_type: RecipientType @eq
+    hasApplicantIndividualMixedIdOrFullname: Mixed @eq
+    hasApplicantCompanyMixedIdOrName: Mixed @eq
+    hasGroupRoleMixedIdOrName: Mixed @eq
+    hasMemberMixedIdOrFullname: Mixed @eq
+    hasGroupTypeMixedIdOrName: Mixed @eq
+    hasTemplatesFilterBySubject: String @ilike
 }
 
 enum NotifyType {

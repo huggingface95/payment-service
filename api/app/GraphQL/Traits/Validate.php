@@ -92,7 +92,20 @@ trait Validate
      */
     private function checkValueAndType(string $type, $value)
     {
-        return $this->types[$type]->parseValue($value);
+        if (array_key_exists($type, $this->types)){
+            return $this->types[$type]->parseValue($value);
+        }
+        else{
+            $enum = $this->getEnumScalarType($type);
+
+            $enumColumns = $this->formatForType($enum, self::REQUIRED_ENUM);
+
+            if (!in_array($value, $enumColumns)){
+                throw new \Error("VALUE {$value} not located in {$type} ENUM ");
+            }
+
+            return $value;
+        }
     }
 
     private function formatForType(EnumType $enum, string $type): ?array
@@ -116,6 +129,17 @@ trait Validate
             preg_match('/(.*?)FilterConditions/', $this->definitionNode->type->name->value, $matches);
 
             return $this->typeRegistry->get($matches[1].$name);
+        } catch (DefinitionException) {
+            return null;
+        }
+    }
+
+    private function getEnumScalarType(string $name): ?Type
+    {
+        try {
+            preg_match('/(^Query.*?Filter)/', $this->definitionNode->type->name->value, $matches);
+
+            return $this->typeRegistry->get($matches[1] . self::ENUMS . $name);
         } catch (DefinitionException) {
             return null;
         }
