@@ -36,11 +36,16 @@ extend type Query @guard {
     where: {column: name, operator: LIKE, value: "Name"}
     """
     roles(groups_sort: Sort @scope(name:"GroupsSort"),
-        hasGroupTypes: _ @whereHasConditions(columns: ["name", "id"]),
-        hasGroups: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["name","group_type_id","company_id"]), orderBy: _ @orderBy(
-        columns: ["id","name","description"],
-    )): [Role!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        filter: _ @filterConditions(static: QueryRolesFilterStatic),
+        orderBy: _ @orderBy(columns: ["id","name","description"])
+    ): [Role!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryRolesFilterStatic @spread{
+    name: String @ilike
+    company_id: ID @eq
+    hasGroupTypeMixedIdOrName: Mixed @eq
+    hasGroupsMixedIdOrName: Mixed @eq
 }
 
 extend type Mutation @guard {
