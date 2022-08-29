@@ -33,7 +33,10 @@ extend type Query @guard {
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
     hasCompany: {column:ID,operator:EQ,value:1} фильтр по id компании
     """
-    departments( hasCompany: _ @whereHasConditions(columns: ["id"]), where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(columns: ["id","name"])): [Departments!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    departments(
+        filter: _ @filterConditions(static: QueryDepartmentsFilterStatic),
+        orderBy: _ @orderBy(columns: ["id","name"])
+    ): [Departments!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
     "Получить должность по ID"
     departmentPosition(id: ID @eq): DepartmentPosition   @find
     """
@@ -42,7 +45,21 @@ extend type Query @guard {
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию, по полю is_active
     hasDepartment: {column:ID,operator:EQ,value:1} фильтр по id департамента
     """
-    departmentPositions(hasDepartment: _ @whereHasConditions(columns: ["id"]), where: _ @whereConditions(columns: ["name","is_active"]), orderBy: _ @orderBy(columns: ["id","name","is_active"])): [DepartmentPosition!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    departmentPositions(
+        filter: _ @filterConditions(static: QueryDepartmentPositionsFilterStatic),
+        orderBy: _ @orderBy(columns: ["id","name","is_active"])
+    ): [DepartmentPosition!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryDepartmentsFilterStatic @spread{
+    hasCompanyFilterById: ID @eq
+    name: String @ilike
+}
+
+input QueryDepartmentPositionsFilterStatic @spread{
+    hasDepartmentFilterById: ID @eq
+    name: String @ilike
+    is_active: Boolean @eq
 }
 
 extend type Mutation @guard {
