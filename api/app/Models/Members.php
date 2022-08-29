@@ -169,6 +169,18 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
             ->join('departments', 'departments.id', '=', 'department_position.department_id')->select('departments.*')->first();
     }
 
+//    public function department(): HasOneThrough
+//    {
+//        return $this->hasOneThrough(
+//            Departments::class,
+//            DepartmentPositionRelation::class,
+//            'aaa_id',
+//            'bbb_id',
+//            'ccc_id',
+//            'position_id'
+//        );
+//    }
+
     public function twoFactor(): BelongsTo
     {
         return $this->belongsTo(TwoFactorAuthSettings::class, 'two_factor_auth_setting_id');
