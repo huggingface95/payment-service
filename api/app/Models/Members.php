@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -76,6 +77,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'is_show_owner_applicants',
         'is_sign_transaction',
         'groupRoles',
+        'department_position_id',
     ];
 
     protected $hidden = [
@@ -163,23 +165,17 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         return $this->belongsTo(DepartmentPosition::class, 'department_position_id');
     }
 
-    public function getDepartmentAttribute()
+    public function department(): HasOneThrough
     {
-        return $this->position()
-            ->join('departments', 'departments.id', '=', 'department_position.department_id')->select('departments.*')->first();
+        return $this->hasOneThrough(
+            Departments::class,
+            DepartmentPositionRelation::class,
+            'position_id',
+            'id',
+            'department_position_id',
+            'department_id'
+        );
     }
-
-//    public function department(): HasOneThrough
-//    {
-//        return $this->hasOneThrough(
-//            Departments::class,
-//            DepartmentPositionRelation::class,
-//            'aaa_id',
-//            'bbb_id',
-//            'ccc_id',
-//            'position_id'
-//        );
-//    }
 
     public function twoFactor(): BelongsTo
     {
