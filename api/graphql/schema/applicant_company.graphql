@@ -101,14 +101,9 @@ extend type Query @guard{
     where:{column: EMAIL, operator: LIKE, value: ""} фильтр по имени, фамилии, Email
     """
     applicantCompanies(
-        hasGroupRole: _ @whereHasConditions(columns: ["name", "id"]),
-        hasRiskLevel: _ @whereHasConditions(columns: ["name", "id"]),
-        hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
-        hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
-        hasBusinessType: _ @whereHasConditions(columns: ["name", "id"]),
-        hasOwner: _ @whereHasConditions(columns: ["fullname", "id"]),
-        hasKycLevel: _ @whereHasConditions(columns: ["name", "id"]),
-        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"), where: _ @whereConditions(columns: ["id","account_manager_member_id","applicant_state_id","applicant_state_reason_id","name","url" ,"email","created_at","group_id","company_id"]), orderBy: _ @orderBy(
+        filter: _ @filterConditions(static: QueryApplicantCompaniesFilterStatic),
+        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"),
+        orderBy: _ @orderBy(
         columns: ["id","name", "email","created_at","url","owner_id","company_id"],
     )): [ApplicantCompany!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
     """
@@ -119,6 +114,22 @@ extend type Query @guard{
     getMatchedUsers(applicant_company_id: ID! @eq, orderBy: _ @orderBy(
         columns: ["id"],
     )): [ApplicantIndividualCompany!]!   @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
+}
+
+input QueryApplicantCompaniesFilterStatic @spread{
+    id: ID @eq
+    company_id: ID @eq
+    account_manager_member_id: ID @eq
+    hasStateReasonMixedIdOrName: Mixed @eq
+    hasGroupRoleMixedIdOrName: Mixed @eq
+    hasRiskLevelMixedIdOrName: Mixed @eq
+    hasStatusMixedIdOrName: Mixed @eq
+    hasBusinessTypeMixedIdOrName: Mixed @eq
+    hasOwnerMixedIdOrFullname: Mixed @eq
+    hasKycLevelMixedIdOrName: Mixed @eq
+    name: String @ilike
+    url: String @ilike
+    email: String @ilike
 }
 
 extend type Mutation @guard {
