@@ -35,8 +35,17 @@ extend type Query @guard {
     Получить список лимитов
     """
     accountReachedLimits(
-        hasAccount: _ @whereHasConditions(columns: ["id","name"]),
-        where: _ @whereConditions(columns: ["account_id", "group_type", "client_name", "client_type", "transfer_direction", "limit_type", "limit_value", "limit_currency", "period", "amount"]),
+        filter: _ @filterConditions(static: QueryAccountReachedLimitsFilterStatic),
         orderBy: _ @orderBy(columns: ["id"])
     ): [AccountReachedLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryAccountReachedLimitsFilterStatic @spread{
+    account_id: ID @eq
+    limit_currency: String @ilike
+    limit_type: String @ilike
+    limit_value: String @ilike
+    transfer_direction: String @ilike
+    period: Int @eq
+    amount: Float @eq
 }
