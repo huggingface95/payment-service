@@ -41,6 +41,13 @@ extend type Query @guard {
     """
     emailNotifications(
         filter: _ @filterConditions(static: QueryEmailNotificationsFilterStatic),
+        hasApplicantIndividual: _ @whereHasConditions(columns: ["id", "fullname"]),
+        hasApplicantCompany: _ @whereHasConditions(columns: ["id", "name"]),
+        hasGroupRole: _ @whereHasConditions(columns: ["id", "name"]),
+        hasMember: _ @whereHasConditions(columns: ["id", "fullname"]),
+        hasGroupType: _ @whereHasConditions(columns: ["id", "name"]),
+        hasTemplates: _ @whereHasConditions(columns: ["subject"]),
+        where: _ @whereConditions(columns: ["type", "company_id", "recipient_type", "group_type"]),
         created_at: DateRange @whereBetween,
         orderBy: _ @orderBy(
             columns: ["id"]
