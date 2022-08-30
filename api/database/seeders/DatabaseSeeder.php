@@ -48,6 +48,7 @@ class DatabaseSeeder extends Seeder
         $this->call(EmailNotificationsTableSeeder::class);
         $this->call(EmailNotificationTemplatesTableSeeder::class);
         $this->call(RegionsTableSeeder::class);
+        $this->call(RegionCountriesTableSeeder::class);
         $this->call(PermissionsSeeder::class);
         $this->call(ActiveSessionTableSeeder::class);
         $this->call(AuthenticationLogTableSeeder::class);
