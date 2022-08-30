@@ -20,6 +20,7 @@ extend type Query @guard {
     """
     applicantIndividualModules(
         filter: _ @filterConditions(static: QueryApplicantIndividualModulesFilterStatic),
+        where: _ @whereConditions(columns: ["applicant_individual_id"]),
         orderBy: _ @orderBy(columns: ["applicant_individual_id"])
     ): [ApplicantIndividualModules!]!    @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
 }
