@@ -34,6 +34,7 @@ extend type Query @guard {
     """
     applicantBankingAccess(
         filter: _ @filterConditions(static: QueryApplicantBankingAccessFilterStatic),
+        where: _ @whereConditions(columns: ["applicant_individual_id","applicant_company_id","member_id"]),
         orderBy: _ @orderBy(
         columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
     )): [ApplicantBankingAccess!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
