@@ -16,9 +16,9 @@ class RegionMutator
         Region::create($args);
 
         if (isset($args['query'])) {
-            return Region::getAccountFilter($args['query'])->get();
+            return Region::getAccountFilter($args['query'])->paginate(env('PAGINATE_DEFAULT_COUNT'));
         } else {
-            return Region::get();
+            return Region::paginate(env('PAGINATE_DEFAULT_COUNT'));
         }
     }
 }
