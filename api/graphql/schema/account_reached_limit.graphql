@@ -36,6 +36,8 @@ extend type Query @guard {
     """
     accountReachedLimits(
         filter: _ @filterConditions(static: QueryAccountReachedLimitsFilterStatic),
+        hasAccount: _ @whereHasConditions(columns: ["id","name"]),
+        where: _ @whereConditions(columns: ["account_id", "group_type", "client_name", "client_type", "transfer_direction", "limit_type", "limit_value", "limit_currency", "period", "amount"]),
         orderBy: _ @orderBy(columns: ["id"])
     ): [AccountReachedLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
