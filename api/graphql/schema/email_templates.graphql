@@ -47,6 +47,8 @@ extend type Query @guard {
     """
     emailTemplates(
         filter: _ @filterConditions(static: QueryEmailTemplatesFilterStatic),
+        hasCompany: _ @whereHasConditions(columns: ["name"]),
+        where: _ @whereConditions(columns: ["name", "company_id", "type", "service_type"]),
         created_at: DateRange @whereBetween,
         orderBy: _ @orderBy(
             columns: ["id"]
