@@ -15,21 +15,21 @@ class PaymentSystemTest extends TestCase
     public function testCreatePaymentSystem()
     {
         $this->login();
+
         $seq = DB::table('payment_system')->max('id') + 1;
         DB::select('ALTER SEQUENCE payment_system_id_seq RESTART WITH '.$seq);
+
         $this->graphQL('
-            mutation CreatePaymentSystem(
-                $name: String!
-            )
-            {
-                createPaymentSystem (
-                    name: $name
-		            is_active: true
-                    regions: {sync:1}
-                    currencies: {sync:1}
-                    providers: {sync:1}
-                )
-                {
+            mutation CreatePaymentSystem($name: String!) {
+                createPaymentSystem(
+                    input: {
+                        name: $name
+                        is_active: true
+                        regions: { sync: 1 }
+                        currencies: { sync: 1 }
+                        providers: { sync: 1 }
+                    }
+                ) {
                     id
                 }
             }
@@ -37,6 +37,7 @@ class PaymentSystemTest extends TestCase
             'name' =>  'PaymentSystem_'.\Illuminate\Support\Str::random(3),
         ]);
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'createPaymentSystem' => [
@@ -49,18 +50,15 @@ class PaymentSystemTest extends TestCase
     public function testUpdatePaymentSystem()
     {
         $this->login();
-        $payment_system = DB::connection('pgsql_test')->table('payment_system')->orderBy('id', 'DESC')->get();
+
+        $payment_system = DB::connection('pgsql_test')
+            ->table('payment_system')
+            ->orderBy('id', 'DESC')
+            ->get();
+
         $this->graphQL('
-            mutation UpdatePaymentSystem(
-                $id: ID!
-                $name: String
-            )
-            {
-                updatePaymentSystem (
-                    id: $id
-                    name: $name
-                )
-                {
+            mutation UpdatePaymentSystem($id: ID!, $name: String!) {
+                updatePaymentSystem(id: $id, input: { name: $name, is_active: false }) {
                     id
                     name
                 }
@@ -70,6 +68,7 @@ class PaymentSystemTest extends TestCase
             'name' => 'PaymentSystem_Updated_'.\Illuminate\Support\Str::random(3),
         ]);
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'updatePaymentSystem' => [
@@ -83,7 +82,13 @@ class PaymentSystemTest extends TestCase
     public function testQueryPaymentSystem()
     {
         $this->login();
-        $payment_system = DB::connection('pgsql_test')->table('payment_system')->orderBy('id')->latest('id')->first();
+
+        $payment_system = DB::connection('pgsql_test')
+            ->table('payment_system')
+            ->orderBy('id')->
+            latest('id')
+            ->first();
+
         $this->graphQL('
             query PaymentSystem($id:ID!){
                 paymentSystem(id: $id) {
@@ -104,7 +109,13 @@ class PaymentSystemTest extends TestCase
     public function testQueryPaymentSystemsList()
     {
         $this->login();
-        $payment_system = DB::connection('pgsql_test')->table('payment_system')->select('*')->orderBy('id', 'DESC')->get();
+
+        $payment_system = DB::connection('pgsql_test')
+            ->table('payment_system')
+            ->select('*')
+            ->orderBy('id', 'DESC')
+            ->get();
+
         $this->graphQL('
         query {
             paymentSystems (orderBy: { column: ID, order: DESC }) {
@@ -126,7 +137,13 @@ class PaymentSystemTest extends TestCase
     public function testQueryPaymentSystemsFilterById()
     {
         $this->login();
-        $payment_system = DB::connection('pgsql_test')->table('payment_system')->select('*')->orderBy('id', 'DESC')->get();
+
+        $payment_system = DB::connection('pgsql_test')
+            ->table('payment_system')
+            ->select('*')
+            ->orderBy('id', 'DESC')
+            ->get();
+
         $this->graphQL('
         query {
             paymentSystems (filter:{column:ID, value:11}) {
@@ -148,7 +165,12 @@ class PaymentSystemTest extends TestCase
     public function testQueryPaymentSystemsFilterHasProvider()
     {
         $this->login();
-        $payment_system = DB::connection('pgsql_test')->table('payment_system')->select('*')->orderBy('id', 'DESC')->get();
+        $payment_system = DB::connection('pgsql_test')
+            ->table('payment_system')
+            ->select('*')
+            ->orderBy('id', 'DESC')
+            ->get();
+
         $this->graphQL('
         query {
             paymentSystems (filter:{column:HAS_PROVIDERS_FILTER_BY_ID, value:1}) {
@@ -170,7 +192,13 @@ class PaymentSystemTest extends TestCase
     public function testQueryPaymentSystemsFilterHasCompany()
     {
         $this->login();
-        $payment_system = DB::connection('pgsql_test')->table('payment_system')->select('*')->orderBy('id', 'DESC')->get();
+
+        $payment_system = DB::connection('pgsql_test')
+            ->table('payment_system')
+            ->select('*')
+            ->orderBy('id', 'DESC')
+            ->get();
+
         $this->graphQL('
         query {
             paymentSystems (filter:{column:HAS_COMPANIES_FILTER_BY_ID, value:1}) {
@@ -192,7 +220,12 @@ class PaymentSystemTest extends TestCase
     public function testDeletePaymentSystem()
     {
         $this->login();
-        $payment_system = DB::connection('pgsql_test')->table('payment_system')->orderBy('id', 'DESC')->get();
+
+        $payment_system = DB::connection('pgsql_test')
+            ->table('payment_system')
+            ->orderBy('id', 'DESC')
+            ->get();
+
         $this->graphQL('
             mutation DeletePaymentSystem(
                 $id: ID!
