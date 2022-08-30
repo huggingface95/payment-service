@@ -54,6 +54,7 @@ extend type Query @guard {
     """
     companies(
         filter: _ @filterConditions(static: QueryCompaniesFilterStatic),
+        where: _ @whereConditions(columns: ["name", "email","url","created_at"]),
         created_at: DateRange @whereBetween,
         country: Sort @scope(name:"CountrySort"), member_count: Sort @scope(name:"MemberSort"),
         orderBy: _ @orderBy(columns: ["id","created_at","name","email","url"])
