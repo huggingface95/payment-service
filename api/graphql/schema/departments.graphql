@@ -35,6 +35,8 @@ extend type Query @guard {
     """
     departments(
         filter: _ @filterConditions(static: QueryDepartmentsFilterStatic),
+        hasCompany: _ @whereHasConditions(columns: ["id"]),
+        where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id","name"])
     ): [Departments!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
     "Получить должность по ID"
@@ -47,6 +49,8 @@ extend type Query @guard {
     """
     departmentPositions(
         filter: _ @filterConditions(static: QueryDepartmentPositionsFilterStatic),
+        hasDepartment: _ @whereHasConditions(columns: ["id"]),
+        where: _ @whereConditions(columns: ["name","is_active"]),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
     ): [DepartmentPosition!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
