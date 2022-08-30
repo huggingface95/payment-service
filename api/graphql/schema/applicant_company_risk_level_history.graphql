@@ -24,6 +24,8 @@ extend type Query @guard {
     """
     applicantCompanyRiskLevelHistory(
         filter: _ @filterConditions(static: QueryApplicantCompanyRiskLevelHistoryFilterStatic),
+        applicant_company_id: ID! @eq,
+        where: _ @whereConditions(columns: ["risk_level_id"]),
         orderBy: _ @orderBy(columns: ["id"])
     ): [ApplicantCompanyRiskLevelHistory!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
