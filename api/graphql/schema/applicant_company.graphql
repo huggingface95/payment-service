@@ -102,6 +102,14 @@ extend type Query @guard{
     """
     applicantCompanies(
         filter: _ @filterConditions(static: QueryApplicantCompaniesFilterStatic),
+        where: _ @whereConditions(columns: ["id","account_manager_member_id","applicant_state_id","applicant_state_reason_id","name","url" ,"email","created_at","group_id","company_id"]),
+        hasGroupRole: _ @whereHasConditions(columns: ["name", "id"]),
+        hasRiskLevel: _ @whereHasConditions(columns: ["name", "id"]),
+        hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
+        hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
+        hasBusinessType: _ @whereHasConditions(columns: ["name", "id"]),
+        hasOwner: _ @whereHasConditions(columns: ["fullname", "id"]),
+        hasKycLevel: _ @whereHasConditions(columns: ["name", "id"]),
         created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"),
         orderBy: _ @orderBy(
         columns: ["id","name", "email","created_at","url","owner_id","company_id"],
