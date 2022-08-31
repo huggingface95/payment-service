@@ -50,6 +50,10 @@ input InputPaymentSystem {
     providers: PivotTable
     "массив ID Реквизитов"
     banks: PivotTable
+    "Описание"
+    description: String
+    "Лого"
+    logo: PivotTable
 }
 extend type Mutation @guard {
     "Создать платежную систему"
