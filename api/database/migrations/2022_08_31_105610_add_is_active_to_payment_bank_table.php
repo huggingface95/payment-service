@@ -13,7 +13,7 @@ class AddIsActiveToPaymentBankTable extends Migration
      */
     public function up()
     {
-        Schema::table('payment_bank', function (Blueprint $table) {
+        Schema::table('payment_banks', function (Blueprint $table) {
             $table->boolean('is_active')->default('false');
         });
     }
@@ -25,7 +25,7 @@ class AddIsActiveToPaymentBankTable extends Migration
      */
     public function down()
     {
-        Schema::table('payment_bank', function (Blueprint $table) {
+        Schema::table('payment_banks', function (Blueprint $table) {
             $table->dropColumn('is_active');
         });
     }
