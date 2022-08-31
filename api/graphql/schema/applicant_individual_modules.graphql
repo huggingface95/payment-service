@@ -18,9 +18,15 @@ extend type Query @guard {
     Получить список всех модулей аппликанта
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    applicantIndividualModules(where: _ @whereConditions(columns: ["applicant_individual_id"]), orderBy: _ @orderBy(
-        columns: ["applicant_individual_id"],
-    )): [ApplicantIndividualModules!]!    @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
+    applicantIndividualModules(
+        filter: _ @filterConditions(static: QueryApplicantIndividualModulesFilterStatic),
+        where: _ @whereConditions(columns: ["applicant_individual_id"]),
+        orderBy: _ @orderBy(columns: ["applicant_individual_id"])
+    ): [ApplicantIndividualModules!]!    @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
+}
+
+input QueryApplicantIndividualModulesFilterStatic @spread{
+    applicant_individual_id: ID @eq
 }
 
 extend type Mutation @guard {
