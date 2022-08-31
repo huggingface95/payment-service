@@ -51,6 +51,7 @@ input QueryRolesFilterStatic @spread{
     hasGroupsMixedIdOrName: Mixed @eq
 }
 
+
 extend type Mutation @guard {
     createRole(
         "Название роли"

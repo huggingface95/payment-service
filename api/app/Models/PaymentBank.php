@@ -16,7 +16,7 @@ class PaymentBank extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'country_id', 'name', 'address', 'bank_code', 'payment_system_code', 'payment_provider_id', 'payment_system_id',
+        'country_id', 'name', 'address', 'bank_code', 'payment_system_code', 'payment_provider_id', 'payment_system_id', 'is_active'
     ];
 
     public function country(): BelongsTo
