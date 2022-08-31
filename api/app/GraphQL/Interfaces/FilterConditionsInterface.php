@@ -13,4 +13,6 @@ interface FilterConditionsInterface
     public const ALLOWED_ENUM = 'Static';
 
     public const ALLOWED_INPUT = 'StaticInput';
+
+    public const ENUMS = 'StaticEnum';
 }

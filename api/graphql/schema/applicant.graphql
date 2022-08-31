@@ -101,13 +101,14 @@ extend type Query @guard {
     where:{column: EMAIL, operator: LIKE, value: ""} фильтр по имени, фамилии, Email
     """
     applicantIndividuals(
+        filter: _ @filterConditions(static: QueryApplicantIndividualsFilterStatic),
         hasRiskLevel: _ @whereHasConditions(columns: ["name", "id"]),
         hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
         hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
         hasGroupRole: _ @whereHasConditions(columns: ["group_type_id","role_id","id"]),
+        where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"]),
         group: Int @scope(name:"GetGroup"),
         created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"),
-        where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"]),
         orderBy: _ @orderBy(columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"])
     ): [ApplicantIndividual!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 
@@ -115,6 +116,17 @@ extend type Query @guard {
     owners(
         orderBy: _ @orderBy(columns: ["id","email","created_at","fullname"])
     ): [ApplicantIndividual!]!  @field(resolver:"ApplicantIndividualQuery@owners") @orderBy(column: "id", direction: ASC)
+}
+
+input QueryApplicantIndividualsFilterStatic @spread{
+    id: ID @eq
+    fullname: String @ilike
+    email: String @ilike
+    company_id: ID @eq
+    hasRiskLevelFilterById: ID @eq
+    hasStateReasonFilterById: ID @eq
+    hasStatusFilterById: ID @eq
+    hasGroupRoleMixedGroupTypeIdOrRoleIdORId: ID @eq
 }
 
 extend type Mutation @guard {

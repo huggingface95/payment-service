@@ -130,7 +130,7 @@ input QueryAccountListFilterStatic @spread{
     is_primary: Boolean @eq
     hasCommissionTemplateMixedIdOrFullname: Mixed @eq
     account_state_id: ID @eq
-    hasClientableFilterByIdOrFullname: Mixed @eq
+    hasClientableMixedIdOrFullname: Mixed @eq
 }
 
 input QueryAccountDetailsListFilterStatic @spread{

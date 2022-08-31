@@ -29,7 +29,7 @@ type Members {
     "Получить должность"
     position: DepartmentPosition @belongsTo(relation: "position")
     "Получить департамент"
-    department: Departments
+    department: Departments @belongsTo(relation: "department")
     "ID настройки двухфактороной авторизации"
     two_factor_auth_setting_id: ID
     "Получить настройки двухфакторной авторизации"
@@ -66,7 +66,8 @@ extend type Query @guard {
     hasPosition: {column: DEPARTMENT_ID, operator:EQ, value: 8} поиск по id департамента
     """
     members(
-        hasDepartment: _ @whereHasConditions(columns: ["department_id"]),
+        filter: _ @filterConditions(static: QueryMembersFilterStatic),
+        hasDepartment: _ @whereHasConditions(columns: ["id"]),
         hasGroupRole: _ @whereHasConditions(columns: ["group_type_id","role_id","id"]),
         where: _ @whereConditions(columnsEnum: "MembersColumn"),
         companyName: Sort @scope(name:"CompanyNameSort"),
@@ -84,6 +85,19 @@ enum MembersColumn {
     IS_ACTIVE @enum(value: "is_active")
     LAST_LOGIN_AT @enum(value: "last_login_at")
     IS_SHOW_OWNER_APPLICANTS @enum(value: "is_show_owner_applicants")
+}
+
+input QueryMembersFilterStatic @spread{
+    hasGroupRoleMixedGroupTypeIdOrRoleIdOrId: ID @eq
+    hasDepartmentFilterById: ID @eq
+    id: ID @eq
+    fullname: String @ilike
+    company_id: ID @eq
+    email: String @ilike
+    department_position_id: ID @eq
+    is_active: Boolean @eq
+    last_login_at: String @gte
+    is_show_owner_applicants: Boolean @eq
 }
 
 extend type Mutation  {
