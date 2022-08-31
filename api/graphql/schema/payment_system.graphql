@@ -16,6 +16,10 @@ type PaymentSystem {
     providers: [PaymentProvider] @belongsToMany(relation:"providers")
     "Получить Реквизиты"
     banks: [PaymentBank] @belongsToMany(relation:"banks")
+    "Описание"
+    description: String
+    "Лого"
+    logo: Files @belongsTo(relation: "logo")
 }
 
 extend type Query @guard {
