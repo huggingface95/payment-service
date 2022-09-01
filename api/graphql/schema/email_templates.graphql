@@ -46,13 +46,22 @@ extend type Query @guard {
     ] сортировка по ID
     """
     emailTemplates(
+        filter: _ @filterConditions(static: QueryEmailTemplatesFilterStatic),
         hasCompany: _ @whereHasConditions(columns: ["name"]),
-        created_at: DateRange @whereBetween,
         where: _ @whereConditions(columns: ["name", "company_id", "type", "service_type"]),
+        created_at: DateRange @whereBetween,
         orderBy: _ @orderBy(
             columns: ["id"]
         )
     ): [EmailTemplate!]! @all @orderBy(column: "id", direction: ASC)
+}
+
+input QueryEmailTemplatesFilterStatic @spread{
+    hasCompanyFilterByName: String @ilike
+    name: String @ilike
+    company_id: ID @eq
+    type: ClientType @eq
+    service_type: ServiceType @eq
 }
 
 type EmailTemplateOnCompanyResponse{

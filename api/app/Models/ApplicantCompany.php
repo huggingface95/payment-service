@@ -5,7 +5,9 @@ namespace App\Models;
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class ApplicantCompany
@@ -84,117 +86,117 @@ class ApplicantCompany extends BaseModel
     /**
      * @return BelongsToMany
      */
-    public function labels()
+    public function labels(): BelongsToMany
     {
         return $this->belongsToMany(ApplicantCompanyLabel::class, 'applicant_company_label_relation', 'applicant_company_id', 'applicant_company_label_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function status()
+    public function status(): BelongsTo
     {
         return $this->belongsTo(ApplicantStatus::class, 'applicant_status_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function state()
+    public function state(): BelongsTo
     {
         return $this->belongsTo(ApplicantState::class, 'applicant_state_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function stateReason()
+    public function stateReason(): BelongsTo
     {
         return $this->belongsTo(ApplicantStateReason::class, 'applicant_state_reason_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function riskLevel()
+    public function riskLevel(): BelongsTo
     {
         return $this->belongsTo(ApplicantRiskLevel::class, 'applicant_risk_level_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function kycLevel()
+    public function kycLevel(): BelongsTo
     {
         return $this->belongsTo(ApplicantKycLevel::class, 'applicant_kyc_level_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function manager()
+    public function manager(): BelongsTo
     {
         return $this->belongsTo(Members::class, 'account_manager_member_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function owner()
+    public function owner(): BelongsTo
     {
         return $this->belongsTo(ApplicantIndividual::class, 'owner_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function country()
+    public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function businessType()
+    public function businessType(): BelongsTo
     {
         return $this->belongsTo(ApplicantCompanyBusinessType::class, 'applicant_company_business_type_id');
     }
 
-    public function modules()
+    public function modules(): HasMany
     {
         return $this->hasMany(ApplicantCompanyModules::class, 'applicant_company_id', 'id');
     }
 
-    public function notes()
+    public function notes(): HasMany
     {
         return$this->hasMany(ApplicantCompanyNotes::class, 'applicant_company_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function language()
+    public function language(): BelongsTo
     {
         return $this->belongsTo(Languages::class, 'language_id');
     }
 
-    public function ApplicantCompany()
+    public function ApplicantCompany(): BelongsTo
     {
         return $this->belongsTo(self::class, 'applicant_company_id', 'id');
     }
 
-    public function applicantIndividualCompany()
+    public function applicantIndividualCompany(): BelongsTo
     {
         return $this->belongsTo(ApplicantIndividualCompany::class, 'id', 'applicant_company_id');
     }
 
-    public function ownerRelation()
+    public function ownerRelation(): BelongsTo
     {
         return $this->belongsTo(ApplicantIndividualCompany::class, 'owner_id', 'applicant_individual_id', 'applicant_individual_company_relation_id');
     }
 
-    public function ownerPosition()
+    public function ownerPosition(): BelongsTo
     {
         return $this->belongsTo(ApplicantIndividualCompany::class, 'owner_id', 'applicant_individual_id', 'applicant_individual_company_position_id');
     }
@@ -204,7 +206,7 @@ class ApplicantCompany extends BaseModel
         return $this->belongsToMany(ApplicantIndividual::class, ApplicantIndividualCompany::class, 'applicant_company_id', 'applicant_individual_id');
     }
 
-    public function company()
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Companies::class);
     }

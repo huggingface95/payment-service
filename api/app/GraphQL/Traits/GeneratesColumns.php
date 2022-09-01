@@ -77,6 +77,28 @@ trait GeneratesColumns
         })->toArray();
     }
 
+    private function getEnums(DocumentAST $documentAST, Collection $fields): array
+    {
+        $types = $fields->map(function ($field) {
+            return array_key_exists('name', $field['type'])
+                ? $field['type']['name']['value']
+                : $field['type']['type']['name']['value'];
+        })->toArray();
+
+        $enums = [];
+
+        foreach (array_diff($types, array_keys($this->types)) as $enum){
+            /** @var EnumTypeDefinitionNode $enumData */
+            $enumData = $documentAST->types[$enum];
+            $values = array_map(function ($d){
+                return $d['directives'][0]['arguments'][0]['value']['value'];
+            }, $enumData->toArray(true)['values']);
+            $enums[$enum] = $values;
+        }
+
+        return $enums;
+    }
+
     protected function generateColumnsStatic(
         DocumentAST &$documentAST,
         InputValueDefinitionNode &$argDefinition,
@@ -107,6 +129,10 @@ trait GeneratesColumns
             } elseif ($type == self::ALLOWED_INPUT) {
                 $types->put($type, $this->getColumnsForTypeInput($fields));
             }
+        }
+
+        foreach ($this->getEnums($documentAST, $fields) as $k => $v){
+            $types->put(self::ENUMS . $k, $v);
         }
 
         $types = $types->filter(function ($type) {

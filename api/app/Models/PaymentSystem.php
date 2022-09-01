@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
@@ -20,7 +21,10 @@ class PaymentSystem extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'is_active',
+        'name',
+        'is_active',
+        'description',
+        'logo_id',
     ];
 
     public function currencies(): BelongsToMany
@@ -59,5 +63,10 @@ class PaymentSystem extends BaseModel
     public function banks(): BelongsToMany
     {
         return $this->belongsToMany(PaymentBank::class, 'payment_system_banks', 'payment_system_id', 'payment_bank_id');
+    }
+
+    public function logo(): BelongsTo
+    {
+        return $this->belongsTo(Files::class, 'logo_id');
     }
 }

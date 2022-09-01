@@ -16,6 +16,10 @@ type PaymentSystem {
     providers: [PaymentProvider] @belongsToMany(relation:"providers")
     "Получить Реквизиты"
     banks: [PaymentBank] @belongsToMany(relation:"banks")
+    "Описание"
+    description: String
+    "Лого"
+    logo: Files @belongsTo(relation: "logo")
 }
 
 extend type Query @guard {
@@ -46,6 +50,10 @@ input InputPaymentSystem {
     providers: PivotTable
     "массив ID Реквизитов"
     banks: PivotTable
+    "Описание"
+    description: String
+    "Лого"
+    logo: PivotTable
 }
 extend type Mutation @guard {
     "Создать платежную систему"

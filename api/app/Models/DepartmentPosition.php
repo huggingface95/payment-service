@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class DepartmentPosition extends BaseModel
 {
     public $timestamps = false;
@@ -17,22 +20,22 @@ class DepartmentPosition extends BaseModel
         'name', 'department_id', 'company_id',
     ];
 
-    public function department()
+    public function department(): BelongsTo
     {
         return $this->belongsTo(Departments::class, 'department_id');
     }
 
-    public function members()
+    public function members(): HasMany
     {
         return $this->hasMany(Members::class);
     }
 
-    public function company()
+    public function company(): BelongsTo
     {
         return $this->belongsTo(Companies::class, 'company_id');
     }
 
-    public static function getPositionsIdByDepartment(int $departementId)
+    public static function getPositionsIdByDepartment(int $departementId): array
     {
         $positions = collect(self::where('department_id', $departementId)->get(['id']));
 

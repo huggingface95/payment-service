@@ -18,6 +18,8 @@ type PaymentBank {
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Платежная система"
     payment_system: PaymentSystem @belongsTo(relation:"paymentSystem")
+    "Активный не активный (true/false)"
+    is_active: Boolean
 }
 
 extend type Query @guard {
@@ -65,6 +67,8 @@ input InputPaymentBank @spread{
     payment_system_id: ID!
     "ID платежного провидера"
     payment_provider_id: ID!
+    "Активный не активный (true/false)"
+    is_active: Boolean
 }
 
 extend type Mutation @guard {
