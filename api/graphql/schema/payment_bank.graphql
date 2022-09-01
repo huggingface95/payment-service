@@ -50,7 +50,7 @@ enum QueryPaymentBankWhereColumn {
     PAYMENT_SYSTEM_ID @enum(value: "payment_system_id")
 }
 
-input InputPaymentBank{
+input InputPaymentBank @spread{
     "Название банка"
     name: String!
     "Адрес банка"
