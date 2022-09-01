@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\PermissionCategory;
-use App\Models\PermissionsList;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -56,5 +54,9 @@ class DatabaseSeeder extends Seeder
         $this->call(ActiveSessionTableSeeder::class);
         $this->call(AuthenticationLogTableSeeder::class);
         $this->call(ActivityLogTableSeeder::class);
+        $this->call(FeeModesSeeder::class);
+        $this->call(CommissionPriceListTableSeeder::class);
+        $this->call(PriceListFeesTableSeeder::class);
+        $this->call(PriceListFeesItemsTableSeeder::class);
     }
 }
