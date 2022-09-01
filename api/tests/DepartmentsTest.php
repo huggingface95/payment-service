@@ -12,7 +12,7 @@ class DepartmentsTest extends TestCase
      * @return void
      */
 
-    public function testCreateDepartment()
+    public function testCreateDepartment(): void
     {
         $this->login();
 
@@ -51,7 +51,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testCreateDepartmentPosition()
+    public function testCreateDepartmentPosition(): void
     {
         $this->login();
 
@@ -84,7 +84,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testUpdateDepartment()
+    public function testUpdateDepartment(): void
     {
         $this->login();
 
@@ -116,7 +116,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testQueryDepartmentById()
+    public function testQueryDepartmentById(): void
     {
         $this->login();
 
@@ -143,7 +143,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testQueryDepartmentOrderBy()
+    public function testQueryDepartmentOrderBy(): void
     {
         $this->login();
 
@@ -170,7 +170,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testQueryDepartmentsByName()
+    public function testQueryDepartmentsByName(): void
     {
         $this->login();
 
@@ -201,7 +201,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testQueryDepartmentsByCompanyId()
+    public function testQueryDepartmentsByCompanyId(): void
     {
         $this->login();
         $department = DB::connection('pgsql_test')
@@ -229,7 +229,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testQueryDepartmentPositionById()
+    public function testQueryDepartmentPositionById(): void
     {
         $this->login();
 
@@ -255,7 +255,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testQueryDepartmentPositionsOrderBy()
+    public function testQueryDepartmentPositionsOrderBy(): void
     {
         $this->login();
 
@@ -282,7 +282,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testQueryDepartmentPositionsHasDepartment()
+    public function testQueryDepartmentPositionsHasDepartment(): void
     {
         $this->login();
 
@@ -309,7 +309,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testQueryDepartmentPositionsIsActive()
+    public function testQueryDepartmentPositionsIsActive(): void
     {
         $this->login();
 
@@ -336,7 +336,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testDeleteDepartment()
+    public function testDeleteDepartment(): void
     {
         $this->login();
 
@@ -370,7 +370,7 @@ class DepartmentsTest extends TestCase
         ]);
     }
 
-    public function testDeleteDepartmentPosition()
+    public function testDeleteDepartmentPosition(): void
     {
         $this->login();
 
