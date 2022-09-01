@@ -98,7 +98,7 @@ class CommissionPriceListTest extends TestCase
     public function testQueryCommissionPriceLists()
     {
         $this->login();
-        $getRecord = DB::connection('pgsql_test')->table('commission_price_list')->orderBy('id', 'DESC')->get();
+        $getRecord = DB::connection('pgsql_test')->table('commission_price_list')->orderBy('id', 'ASC')->get();
         $data =
             [
                 'data' => [

@@ -1,0 +1,13 @@
+type FeeMode {
+    "ID"
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query @guard {
+    """
+    Получить список
+    """
+   feeModes: [FeeMode!]! @all
+}

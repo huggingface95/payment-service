@@ -13,16 +13,19 @@ type PriceListFee {
     "Период"
     period: FeePeriod @belongsTo(relation: "feePeriod")
     "Цены"
-    fees_item: [PriceListFeesItem] @hasMany(relation: "fees")
+    fees: [PriceListFeesItem] @hasMany(relation: "fees")
     created_at: DateTime
     updated_at: DateTime
 }
 
 type PriceListFeesItem {
     id: ID
-    fee_item: JSON
+    currency_id: ID
+    fee_mode_id: ID
+    fee: Int
+    fee_from: Int
+    fee_to: Int
 }
-
 
 extend type Query @guard {
     """
@@ -46,37 +49,40 @@ input QueryPriceListFeesFilterStatic @spread{
     hasFeesFilterById: ID @eq
 }
 
+input Fees {
+    currency_id: ID
+    fee_modes: [Fee]
+}
 
 input Fee {
-    fee_from: Decimal
-    fee_to: Decimal
-    mode: FeeMode
-    fee: Decimal
-    currency: [String]
+    fee_mode_id: ID
+    fee: Int
+    fee_from: Int
+    fee_to: Int
 }
 
-enum FeeMode {
-    Fix @enum(value: "fix")
-    Range @enum(value: "range")
-    Percent @enum(value: "%")
+input priceList {
+    payment_system_id: ID
+    commission_template_id: ID
+    payment_provider_id: ID
+    company_id: ID
 }
-
 
 extend type Mutation @guard {
     "Создать Цен"
     createPriceListFees(
         "Название"
-        name: String
+        name: String @rules(apply: ["unique:price_list_fees"])
         "Тип"
-        type_id: Int
+        type_id: ID
         "Тип операции"
-        operation_type_id: Int
+        operation_type_id: ID
         "Период"
-        period_id: Int
+        period_id: ID
         "ID Прайс лист"
-        price_list_id: Int!
-        fee: [[Fee]]
-    ): PriceListFee   @field(resolver:"PriceListFeesMutator@create")
+        price_list_id: ID!
+        fees: [[Fees]]
+    ): PriceListFee   @field(resolver:"PriceListFeesMutator@create") @validator
 
     "Обновить данные Цен"
     updatePriceListFees(
@@ -84,12 +90,16 @@ extend type Mutation @guard {
         "Название"
         name: String
         "Тип"
-        type_id: Int
+        type_id: ID
         "Тип операции"
-        operation_type_id: Int
+        operation_type_id: ID
         "Период"
-        period_id: Int
-        fee: [[Fee]]
+        period_id: ID
+        "ID Прайс лист"
+        price_list_id: ID!
+        "Настройки коммисии"
+        commission_price_list: [priceList]
+        fees: [[Fees]]
     ): PriceListFee   @field(resolver:"PriceListFeesMutator@update")
 
     """
@@ -99,5 +109,4 @@ extend type Mutation @guard {
         "ID price list fee"
         id: ID!
     ): PriceListFee   @delete
-
 }
