@@ -52,7 +52,7 @@ enum QueryPaymentBankWhereColumn {
     PAYMENT_SYSTEM_ID @enum(value: "payment_system_id")
 }
 
-input InputPaymentBank @spread{
+input InputPaymentBank {
     "Название банка"
     name: String!
     "Адрес банка"
@@ -74,13 +74,13 @@ input InputPaymentBank @spread{
 extend type Mutation @guard {
     "Создать банк"
     createPaymentBank(
-        input: InputPaymentBank!
+        input: InputPaymentBank! @spread
     ): PaymentBank   @create
 
     "Обновить поля банка"
     updatePaymentBank(
         id: ID!
-        input: InputPaymentBank!
+        input: InputPaymentBank! @spread
     ): PaymentBank   @update
 
     "Удалить платежную систему"
