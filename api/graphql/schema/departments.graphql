@@ -21,7 +21,7 @@ type DepartmentPosition {
     "Получить компанию"
     company: Companies @belongsTo(relation: "company")
     "Получить департамент"
-    department: Departments @belongsTo(relation: "department")
+    department: [Departments] @BelongsToMany(relation: "department")
 }
 
 extend type Query @guard {
@@ -81,6 +81,8 @@ extend type Mutation @guard {
     updateDepartment(
         "ID департамента"
         id: ID!
+        "Название департамента"
+        name: String
         "ID активных должностей"
         active_department_positions_id: [ID]
     ): Departments   @field(resolver:"DepartmentMutator@update")
