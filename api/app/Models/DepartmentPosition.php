@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DepartmentPosition extends BaseModel
@@ -17,12 +18,12 @@ class DepartmentPosition extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'department_id', 'company_id',
+        'name', 'company_id',
     ];
 
-    public function department(): BelongsTo
+    public function department(): BelongsToMany
     {
-        return $this->belongsTo(Departments::class, 'department_id');
+        return $this->belongsToMany(Departments::class, 'department_position_relation', 'position_id', 'department_id');
     }
 
     public function members(): HasMany

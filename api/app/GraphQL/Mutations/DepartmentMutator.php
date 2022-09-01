@@ -23,7 +23,7 @@ class DepartmentMutator extends BaseMutator
             foreach ($args['department_positions_name'] as $position) {
                 DepartmentPosition::create([
                     'name'=> $position,
-                    'department_id' => $department->id,
+                    'company_id' => $department->company_id,
                 ]);
             }
         }
