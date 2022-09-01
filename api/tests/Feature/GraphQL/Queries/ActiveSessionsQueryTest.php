@@ -2,18 +2,18 @@
 
 namespace Tests\Feature\GraphQL\Queries;
 
-use App\Models\Clickhouse\ActivityLog;
+use App\Models\Clickhouse\ActiveSession;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class ActivityLogsTest extends TestCase
+class ActiveSessionsQueryTest extends TestCase
 {
 
-    public function testActivityLogsNoAuth(): void
+    public function testActiveSessionsNoAuth(): void
     {
         $this->graphQL('
             {
-                activityLogs {
+                activeSessions {
                     data {
                         id
                         company
@@ -25,12 +25,12 @@ class ActivityLogsTest extends TestCase
         ]);
     }
 
-    public function testActivityLogsList(): void
+    public function testActiveSessionsList(): void
     {
         $this->login();
 
-        $activity_logs = DB::connection('clickhouse')
-            ->table((new ActivityLog)->getTable())
+        $active_sessions = DB::connection('clickhouse')
+            ->table((new ActiveSession)->getTable())
             ->select(['id', 'company'])
             ->limit(10)
             ->orderBy('id', 'DESC')
@@ -38,7 +38,7 @@ class ActivityLogsTest extends TestCase
 
         $response = $this->graphQL('
             {
-                activityLogs {
+                activeSessions {
                     data {
                         id
                         company
@@ -57,44 +57,41 @@ class ActivityLogsTest extends TestCase
             }
         ');
 
-        foreach ($activity_logs as $activity_log) {
+        foreach ($active_sessions as $session) {
             $response->seeJson([
-                'id' => (string) $activity_log['id'],
-                'company' => (string) $activity_log['company'],
+                'id' => (string) $session['id'],
+                'company' => (string) $session['company'],
             ]);
         }
+
     }
 
-    public function testActivityLogsListWithQuery(): void
+    public function testActiveSessionsListWithQuery(): void
     {
         $this->login();
 
-        $activity_log = DB::connection('clickhouse')
-            ->table((new ActivityLog)->getTable())
+        $active_session = DB::connection('clickhouse')
+            ->table((new ActiveSession)->getTable())
             ->limit(1)
-            ->first();
-
-        $activity_logs = DB::connection('clickhouse')
-            ->table((new ActivityLog)->getTable())
-            ->where('company', $activity_log['company'])
-            ->where('member', $activity_log['member'])
-            ->where('group', $activity_log['group'])
-            ->where('domain', $activity_log['domain'])
-            ->where('created_at', $activity_log['created_at'])
             ->get();
 
-        $created_at = substr($activity_log['created_at'], 0, 10);
+        $active_sessions = DB::connection('clickhouse')
+            ->table((new ActiveSession)->getTable())
+            ->where('company', $active_session[0]['company'])
+            ->where('member', $active_session[0]['member'])
+            ->where('group', $active_session[0]['group'])
+            ->where('created_at', $active_session[0]['created_at'])
+            ->get();
+
+        $created_at = substr($active_session[0]['created_at'], 0, 10);
 
         $response = $this->graphQL('
-        query(
-            $company: String!, $member: String!, $group: String!, $domain: String!, $created_at: Date!
-        ) {
-            activityLogs(
+        query($company: String!, $member: String!, $group: String!, $created_at: Date!) {
+            activeSessions(
                 query: {
                     company: $company
                     member: $member
                     group: $group
-                    domain: $domain
                     created_at: $created_at
                 }
             ) {
@@ -118,28 +115,28 @@ class ActivityLogsTest extends TestCase
             }
         }
         ', [
-            'company' => $activity_log['company'],
-            'member' => $activity_log['member'],
-            'group' => $activity_log['group'],
-            'domain' => $activity_log['domain'],
+            'company' => $active_session[0]['company'],
+            'member' => $active_session[0]['member'],
+            'group' => $active_session[0]['group'],
             'created_at' => $created_at,
+
         ]);
 
-        foreach ($activity_logs as $activity_log) {
+        foreach ($active_sessions as $session) {
             $response->seeJson([
-                'id' => (string) $activity_log['id'],
-                'company' => (string) $activity_log['company'],
+                'id' => (string) $session['id'],
+                'company' => (string) $session['company'],
             ]);
         }
     }
 
-    public function testActivityLogsListPaginate(): void
+    public function testActiveSessionsListPaginate(): void
     {
         $this->login();
 
         $response = $this->graphQL('
         {
-            activityLogs(page: 1, count: 3) {
+            activeSessions(page: 1, count: 3) {
               data {
                 id
                 company

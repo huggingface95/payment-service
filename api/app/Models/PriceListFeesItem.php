@@ -8,18 +8,12 @@ class PriceListFeesItem extends BaseModel
 
     protected $fillable = [
         'price_list_fees_id',
-        'fee_item',
+        'fee_mode_id',
+        'fee',
+        'fee_from',
+        'fee_to',
+        'currency_id',
     ];
 
     public $timestamps = false;
-
-    protected function getFeeItemAttribute($value)
-    {
-        return json_decode($value, true);
-    }
-
-    protected function setFeeItemAttribute($input)
-    {
-        $this->attributes['fee_item'] = json_encode($input);
-    }
 }

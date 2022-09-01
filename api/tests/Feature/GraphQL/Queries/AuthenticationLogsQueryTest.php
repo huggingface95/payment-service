@@ -6,7 +6,7 @@ use App\Models\Clickhouse\AuthenticationLog;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-class AuthenticationLogsTest extends TestCase
+class AuthenticationLogsQueryTest extends TestCase
 {
 
     public function testAuthenticationLogsNoAuth(): void
