@@ -15,9 +15,9 @@ class PriceListFeesMutator
     {
         $priceListFee = PriceListFee::create($args);
 
-        if (isset($args['fees'])) {
-            $this->createFeeModes($args['fees'], $priceListFee);
-        }
+//        if (isset($args['fees'])) {
+//            $this->createFeeModes($args['fees'], $priceListFee);
+//        }
 
         return $priceListFee;
     }
@@ -44,11 +44,11 @@ class PriceListFeesMutator
                 ]);
             }
 
-            if (isset($args['fees'])) {
-                $priceListFee->fees()->delete();
-
-                $this->createFeeModes($args['fees'], $priceListFee);
-            }
+//            if (isset($args['fees'])) {
+//                $priceListFee->fees()->delete();
+//
+//                $this->createFeeModes($args['fees'], $priceListFee);
+//            }
         }
 
         return $priceListFee;

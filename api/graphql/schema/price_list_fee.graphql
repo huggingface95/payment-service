@@ -13,19 +13,19 @@ type PriceListFee {
     "Период"
     period: FeePeriod @belongsTo(relation: "feePeriod")
     "Цены"
-    fees: [PriceListFeesItem] @hasMany(relation: "fees")
+    fees: JSON
     created_at: DateTime
     updated_at: DateTime
 }
 
-type PriceListFeesItem {
-    id: ID
-    currency_id: ID
-    fee_mode_id: ID
-    fee: Int
-    fee_from: Int
-    fee_to: Int
-}
+#type PriceListFeesItem {
+#    id: ID
+#    currency_id: ID
+#    fee_mode_id: ID
+#    fee: Int
+#    fee_from: Int
+#    fee_to: Int
+#}
 
 extend type Query @guard {
     """
@@ -49,17 +49,17 @@ input QueryPriceListFeesFilterStatic @spread{
     hasFeesFilterById: ID @eq
 }
 
-input Fees {
-    currency_id: ID
-    fee_modes: [Fee]
-}
+#input Fees {
+#    currency_id: ID
+#    fee_modes: [Fee]
+#}
 
-input Fee {
-    fee_mode_id: ID
-    fee: Int
-    fee_from: Int
-    fee_to: Int
-}
+#input Fee {
+#    fee_mode_id: ID
+#    fee: Int
+#    fee_from: Int
+#    fee_to: Int
+#}
 
 input priceList {
     payment_system_id: ID
@@ -68,38 +68,27 @@ input priceList {
     company_id: ID
 }
 
+input PriceListFeeInput @spread{
+    name: String!
+    type_id: ID!
+    operation_type_id: ID!
+    period_id: ID!
+    price_list_id: ID!
+    fees: JSON!
+}
+
+
 extend type Mutation @guard {
     "Создать Цен"
     createPriceListFees(
-        "Название"
-        name: String @rules(apply: ["unique:price_list_fees"])
-        "Тип"
-        type_id: ID
-        "Тип операции"
-        operation_type_id: ID
-        "Период"
-        period_id: ID
-        "ID Прайс лист"
-        price_list_id: ID!
-        fees: [[Fees]]
+        input: PriceListFeeInput
     ): PriceListFee   @field(resolver:"PriceListFeesMutator@create") @validator
 
     "Обновить данные Цен"
     updatePriceListFees(
         id: ID!
-        "Название"
-        name: String
-        "Тип"
-        type_id: ID
-        "Тип операции"
-        operation_type_id: ID
-        "Период"
-        period_id: ID
-        "ID Прайс лист"
-        price_list_id: ID!
-        "Настройки коммисии"
         commission_price_list: [priceList]
-        fees: [[Fees]]
+        input: PriceListFeeInput
     ): PriceListFee   @field(resolver:"PriceListFeesMutator@update")
 
     """

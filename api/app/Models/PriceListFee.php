@@ -38,7 +38,7 @@ class PriceListFee extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['name', 'price_list_id', 'type_id', 'operation_type_id', 'period_id'];
+    protected $fillable = ['name', 'price_list_id', 'type_id', 'operation_type_id', 'period_id','fees'];
 
 //    protected function getFeeAttribute($value)
 //    {
