@@ -14,6 +14,7 @@ type Account struct {
 	Payee            []*Payee       `bun:"m2m:account_individuals_companies,join:Account=Payee"`
 	AccountState     AccountStateDb `bun:"account_state_id"`
 	State            *AccountState  `bun:"rel:belongs-to,join:account_state_id=id"`
+	Provider         *Provider      `bun:"rel:belongs-to,join:payment_provider_id=id"`
 }
 
 func (a *Account) GetPayee() *Payee {
