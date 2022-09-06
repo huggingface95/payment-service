@@ -62,7 +62,7 @@ services:
       - run
       - cmd/main.go
     ports:
-      - "2490:2490"
+      - "2490:8080"
     networks:
       - backend
 
