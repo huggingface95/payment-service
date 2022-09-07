@@ -2,7 +2,7 @@
   "app": {
     "title": "Tranzbase",
     "url": "http://cl-junc-apicore:2490",
-    "public_url": "https://dev.api.docudots.com/",
+    "public_url": "https://dev.api.docudots.com",
     "is_production": false,
     "tech_email" : "test@test.com",
     "mail": {
