@@ -68,6 +68,7 @@ func NewIbanRequest(account *db.Account, wallet string, baseUrl string) IbanCrea
 		ClientOrder: time.Now().Unix(),
 		WalletUUID:  wallet,
 		PostbackURL: baseUrl + "/clearjunction/iban/postback",
+		IbanCountry: "IT",
 		Registrant: Registrant{
 			ClientCustomerID: strconv.FormatUint(account.Id, 10),
 			Individual: PayInPayoutRequestPayeePayerIndividual{
