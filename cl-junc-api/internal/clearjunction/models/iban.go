@@ -68,7 +68,7 @@ func NewIbanRequest(account *db.Account, wallet string, baseUrl string) IbanCrea
 		ClientOrder: time.Now().Unix(),
 		WalletUUID:  wallet,
 		PostbackURL: baseUrl + "/clearjunction/iban/postback",
-		IbanCountry: "IT",
+		IbanCountry: "GB",
 		Registrant: Registrant{
 			ClientCustomerID: strconv.FormatUint(account.Id, 10),
 			Individual: PayInPayoutRequestPayeePayerIndividual{
@@ -81,12 +81,12 @@ func NewIbanRequest(account *db.Account, wallet string, baseUrl string) IbanCrea
 					IssuedDate:        "15-26-2017",
 					Type:              "passport",
 					Number:            "45454",
-					IssuedCountryCode: "ru",
+					IssuedCountryCode: "GB",
 					IssuedBy:          "01-01-2020",
 					ExpirationDate:    "15-26-2017",
 				},
 				Address: Address{
-					Country: "AM",
+					Country: "GB",
 					Zip:     "084",
 					State:   "erevan",
 					City:    "erevan",
