@@ -14,10 +14,13 @@ func Web() {
 	r := gin.Default()
 
 	r.GET("/", index)
-	r.GET("/clearjunction/iban-compnay/check", api.IbanCompanyCheck)
+	r.GET("/clearjunction/iban-company/check", api.IbanCompanyCheck)
 	r.POST("/clearjunction/postback", api.CljPostback)
 	r.POST("/clearjunction/iban/postback", api.IbanPostback)
-	r.Run(":8080")
+	err := r.Run(":2490")
+	if err != nil {
+		return
+	}
 }
 
 func index(c *gin.Context) {

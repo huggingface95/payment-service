@@ -34,10 +34,10 @@ class IbanCompanyActivationJob extends Job
      */
     public function handle(Client $client)
     {
-        $response = $client->get('cl-junc-apicore:8080/clearjunction/iban-compnay/check?'.http_build_query(['clientCustomerId' => $this->ibanRequest->id]));
+        $response = $client->get('cl-junc-apicore:2490/clearjunction/iban-company/check?'.http_build_query(['clientCustomerId' => $this->ibanRequest->id]));
 
         if ($response->getStatusCode() == 200) {
-            $this->account->account_state = AccountState::WAITING_IBAN_ACTIVATION;
+            $this->account->account_state = AccountState::WAITING_FOR_ACCOUNT_GENERATION;
             $this->account->save();
         }
     }
