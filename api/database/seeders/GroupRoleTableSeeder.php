@@ -15,9 +15,17 @@ class GroupRoleTableSeeder extends Seeder
     public function run()
     {
         GroupRole::insert([
-            'group_type_id' => 1,
-            'role_id' => 2,
-            'company_id' => 1,
+            [
+                'name' => 'TestGroup',
+                'group_type_id' => 1,
+                'role_id' => 2,
+                'company_id' => 1,
+            ], [
+                'name' => 'Test',
+                'group_type_id' => 1,
+                'role_id' => 3,
+                'company_id' => 1,
+            ],
         ]);
     }
 }
