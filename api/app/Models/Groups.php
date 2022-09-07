@@ -4,6 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+
+/**
+ * Class Groups
+ *
+ * @property string name
+ *
+ *
+ */
 class Groups extends BaseModel
 {
     protected $table = 'group_types';

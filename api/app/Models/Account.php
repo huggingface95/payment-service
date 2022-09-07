@@ -18,7 +18,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 /**
  * Class Account
  *
- *
+ * @property string account_number
+ * @property int account_state_id
+ * @property int group_type_id
+ * @property AccountState $accountState
+ * @property Groups $group
  * @property CommissionTemplate $commissionTemplate
  * @property AccountLimit $limits
  * @property AccountReachedLimit $reachedLimits

@@ -22,7 +22,7 @@ func ProcessIbanIndGenerateQueue() {
 
 func createIndividualIban(request *models2.IbanRequest) {
 
-	dbAccount := app.Get.GetAccountWithRelations(&db.Account{Id: request.AccountId}, []string{"State", "Provider"}, "id")
+	dbAccount := app.Get.GetAccountWithRelations(&db.Account{Id: request.AccountId}, []string{"State", "Provider", "Payee"}, "id")
 	if dbAccount.Provider.Name == db.CLEARJUNCTION {
 		response := app.Get.Wire.Iban(dbAccount)
 		if response == nil {

@@ -2,11 +2,14 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\DTO\GraphQLResponse\AccountGenerateIbanResponse;
+use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Account;
 use App\Models\AccountState;
 use App\Models\GroupRole;
+use App\Models\Groups;
 use App\Traits\ReplaceRegularExpressions;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +26,7 @@ class AccountMutator
         $args['member_id'] = Auth::user()->id;
 
         $args['account_type'] = $this->setAccountType($args['group_type_id']);
-        if (! isset($args['account_number'])) {
+        if (!isset($args['account_number'])) {
             $args['account_state_id'] = AccountState::WAITING_FOR_ACCOUNT_GENERATION;
         } else {
             $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
@@ -38,13 +41,21 @@ class AccountMutator
         }
     }
 
-    public function generate($root, array $args): void
+    public function generate($root, array $args)
     {
+        /** @var Account $account */
         $account = Account::find($args['id']);
-        $account->account_state_id = AccountState::AWAITING_ACCOUNT;
-        $account->save();
 
-        dispatch(new IbanIndividualActivationJob($account));
+        if ($account->group->name == Groups::INDIVIDUAL) {
+            $account->account_state_id = AccountState::AWAITING_ACCOUNT;
+            $account->save();
+
+            dispatch(new IbanIndividualActivationJob($account));
+
+            return TransformerDTO::transform(AccountGenerateIbanResponse::class, true);
+        }
+
+        return TransformerDTO::transform(AccountGenerateIbanResponse::class);
     }
 
     protected function setAccountType(int $groupId)

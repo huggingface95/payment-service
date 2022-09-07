@@ -37,7 +37,7 @@ class IbanCompanyCommand extends Command
     public function handle()
     {
         $companyIbanActivateAccounts = Account::query()
-            ->where('status', AccountState::WAITING_IBAN_ACTIVATION)
+            ->where('account_state_id', AccountState::WAITING_FOR_ACCOUNT_GENERATION)
             ->whereHas('applicantCompany')
             ->get();
 
