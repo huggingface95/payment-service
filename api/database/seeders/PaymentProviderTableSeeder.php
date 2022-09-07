@@ -29,7 +29,7 @@ class PaymentProviderTableSeeder extends Seeder
             );
             //$paymentProvider->countries()->attach([$faker->numberBetween(1, 100)]);
             //$paymentProvider->currencies()->attach([$faker->numberBetween(1, 100)]);
-            $paymentProvider->paymentSystems()->attach([$faker->numberBetween(1, 10)]);
+            $paymentProvider->paymentSystems()->attach($i);
         }
     }
 }

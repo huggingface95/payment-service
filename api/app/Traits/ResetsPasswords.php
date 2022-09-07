@@ -134,9 +134,7 @@ trait ResetsPasswords
             'password_confirmation',
             'token'
         );
-        $f = fopen('data2.txt', 'w');
-        fwrite($f, json_encode($credentials));
-        fclose($f);
+
         $broker = $this->getBroker();
 
         $response = Password::broker($broker)->reset($credentials, function ($user, $password) {

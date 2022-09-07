@@ -4,17 +4,18 @@ namespace Tests;
 
 use Illuminate\Support\Facades\DB;
 
-class ApplicantIndividualLabelsTest extends TestCase
+class ApplicantIndividualLabelsMutationTest extends TestCase
 {
     /**
-     * ApplicantIndividualLabels Testing
+     * ApplicantIndividualLabels Mutation Testing
      *
      * @return void
      */
 
-    public function testCreateApplicantIndividualLabel()
+    public function testCreateApplicantIndividualLabel(): void
     {
         $this->login();
+
         $this->graphQL('
             mutation CreateApplicantIndividualLabel(
                 $name: String!
@@ -33,7 +34,9 @@ class ApplicantIndividualLabelsTest extends TestCase
             'name' => 'Label_'.\Illuminate\Support\Str::random(5),
             'hex_color_code' => '#'.mt_rand(100000, 999999),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'createApplicantIndividualLabel' => [
@@ -43,10 +46,12 @@ class ApplicantIndividualLabelsTest extends TestCase
         ]);
     }
 
-    public function testUpdateApplicantIndividualLabel()
+    public function testUpdateApplicantIndividualLabel(): void
     {
         $this->login();
+
         $label = DB::connection('pgsql_test')->table('applicant_individual_labels')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation UpdateApplicantIndividualLabel(
                 $id: ID!
@@ -66,7 +71,9 @@ class ApplicantIndividualLabelsTest extends TestCase
             'id' => strval($label[0]->id),
             'name' => 'Label_'.\Illuminate\Support\Str::random(5),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'updateApplicantIndividualLabel' => [
@@ -77,11 +84,13 @@ class ApplicantIndividualLabelsTest extends TestCase
         ]);
     }
 
-    public function testAttachApplicantIndividualLabel()
+    public function testAttachApplicantIndividualLabel(): void
     {
         $this->login();
+
         $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderBy('id', 'DESC')->get();
         $label = DB::connection('pgsql_test')->table('applicant_individual_labels')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation AttachApplicantIndividualLabel(
                 $applicant_individual_id: ID!
@@ -100,7 +109,9 @@ class ApplicantIndividualLabelsTest extends TestCase
             'applicant_individual_id' => strval($applicant[0]->id),
             'applicant_individual_label_id' => strval($label[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'attachApplicantIndividualLabel' => [
@@ -110,11 +121,13 @@ class ApplicantIndividualLabelsTest extends TestCase
         ]);
     }
 
-    public function testDetachApplicantIndividualLabel()
+    public function testDetachApplicantIndividualLabel(): void
     {
         $this->login();
+
         $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderBy('id', 'DESC')->get();
         $label = DB::connection('pgsql_test')->table('applicant_individual_labels')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation DetachApplicantIndividualLabel(
                 $applicant_individual_id: ID!
@@ -133,7 +146,9 @@ class ApplicantIndividualLabelsTest extends TestCase
             'applicant_individual_id' => strval($applicant[0]->id),
             'applicant_individual_label_id' => strval($label[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'detachApplicantIndividualLabel' => [
@@ -143,10 +158,12 @@ class ApplicantIndividualLabelsTest extends TestCase
         ]);
     }
 
-    public function testDeleteApplicantIndividualLabel()
+    public function testDeleteApplicantIndividualLabel(): void
     {
         $this->login();
+
         $label = DB::connection('pgsql_test')->table('applicant_individual_labels')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation DeleteApplicantIndividualLabel(
                 $id: ID!
@@ -162,7 +179,9 @@ class ApplicantIndividualLabelsTest extends TestCase
         ', [
             'id' => strval($label[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'deleteApplicantIndividualLabel' => [

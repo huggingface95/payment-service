@@ -4,19 +4,21 @@ namespace Tests;
 
 use Illuminate\Support\Facades\DB;
 
-class MembersTest extends TestCase
+class MembersMutationTest extends TestCase
 {
     /**
-     * Members Testing
+     * Members Mutation Testing
      *
      * @return void
      */
 
-    public function testCreateMember()
+    public function testCreateMember(): void
     {
         $this->login();
+
         $seq = DB::table('members')->max('id') + 1;
         DB::select('ALTER SEQUENCE members_id_seq RESTART WITH '.$seq);
+
         $this->graphQL('
             mutation CreateMember(
                 $first_name: String!
@@ -53,7 +55,9 @@ class MembersTest extends TestCase
             'group_id' => 1,
             'two_factor_auth_setting_id' => 1,
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'createMember' => [
@@ -63,31 +67,12 @@ class MembersTest extends TestCase
         ]);
     }
 
-    public function testQueryMember()
+    public function testUpdateMember(): void
     {
         $this->login();
-        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
-        ($this->graphQL('
-            query Member($id:ID!){
-                member(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($member[0]->id),
-        ]))->seeJson([
-            'data' => [
-                'member' => [
-                    'id' => strval($member[0]->id),
-                ],
-            ],
-        ]);
-    }
 
-    public function testUpdateMember()
-    {
-        $this->login();
         $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation UpdateMember(
                 $id: ID!
@@ -107,7 +92,9 @@ class MembersTest extends TestCase
             'id' => strval($member[0]->id),
             'email' => 'test'.str_pad(mt_rand(1, 9), 2, '0', STR_PAD_LEFT).'@test.com',
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'updateMember' => [
@@ -118,10 +105,12 @@ class MembersTest extends TestCase
         ]);
     }
 
-    public function testSetMemberPassword()
+    public function testSetMemberPassword(): void
     {
         $this->login();
+
         $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation SetMemberPassword(
                 $id: ID!
@@ -143,7 +132,9 @@ class MembersTest extends TestCase
             'password' => '1234567Za',
             'password_confirmation' => '1234567Za',
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'setMemberPassword' => [
@@ -153,10 +144,12 @@ class MembersTest extends TestCase
         ]);
     }
 
-    public function testSetMemberSecurityPin()
+    public function testSetMemberSecurityPin(): void
     {
         $this->login();
+
         $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation SetMemberSecurityPin(
                 $id: ID!
@@ -172,7 +165,9 @@ class MembersTest extends TestCase
         ', [
             'id' => strval($member[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'setMemberSecurityPin' => [
@@ -182,46 +177,12 @@ class MembersTest extends TestCase
         ]);
     }
 
-    public function testQueryMembersOrderBy()
+    public function testDeleteMember(): void
     {
         $this->login();
-        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
-        $this->graphQL('
-        query {
-            members(orderBy: { column: ID, order: DESC }) {
-                data {
-                    id
-                }
-                }
-        }')->seeJsonContains([
-            [
-                'id' => strval($member[0]->id),
-            ],
-        ]);
-    }
 
-    public function testQueryMembersWhere()
-    {
-        $this->login();
-        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'ASC')->get();
-        $this->graphQL('
-        query {
-            members(where: { column: ID, value: 2}) {
-                data {
-                    id
-                }
-                }
-        }')->seeJsonContains([
-            [
-                'id' => strval($member[0]->id),
-            ],
-        ]);
-    }
-
-    public function testDeleteMember()
-    {
-        $this->login();
         $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation DeleteMember(
                 $id: ID!
@@ -237,7 +198,9 @@ class MembersTest extends TestCase
         ', [
             'id' => strval($member[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'deleteMember' => [

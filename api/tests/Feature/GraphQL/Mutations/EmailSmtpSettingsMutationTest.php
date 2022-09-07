@@ -3,18 +3,20 @@ namespace Tests;
 
 use Illuminate\Support\Facades\DB;
 
-class EmailSmtpSettingsTest extends TestCase
+class EmailSmtpSettingsMutationTest extends TestCase
 {
     /**
-     * Email SMTP Settings Testing
+     * Email SMTP Settings Mutation Testing
      *
      * @return void
      */
-    public function testCreateEmailSmtpSettings()
+    public function testCreateEmailSmtpSettings(): void
     {
         $this->login();
+
         $seq = DB::table('email_smtps')->max('id') + 1;
         DB::select('ALTER SEQUENCE email_smtps_id_seq RESTART WITH '.$seq);
+
         $this->graphQL('
             mutation CreateEmailSmtp(
                       $name: String!
@@ -53,7 +55,9 @@ class EmailSmtpSettingsTest extends TestCase
             'replay_to' => 'test@lavachange.com',
             'company_id' => 1,
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'createEmailSmtp' => [
@@ -63,10 +67,12 @@ class EmailSmtpSettingsTest extends TestCase
         ]);
     }
 
-    public function testUpdateEmailSmtpSettings()
+    public function testUpdateEmailSmtpSettings(): void
     {
         $this->login();
+
         $smtp_settings = DB::connection('pgsql_test')->table('email_smtps')->orderBy('id', 'DESC')->take(1)->get();
+
         $this->graphQL('
             mutation UpdateEmailSmtp(
                   $id: ID!
@@ -114,49 +120,10 @@ class EmailSmtpSettingsTest extends TestCase
         ]);
     }
 
-    public function testQueryEmailSmtpSettingsById()
+    public function testSendEmail(): void
     {
         $this->login();
-        $smtp_settings = DB::connection('pgsql_test')->table('email_smtps')->orderBy('id', 'DESC')->take(1)->get();
-        ($this->graphQL('
-            query EmailSmtp($id: ID!) {
-                emailSmtp(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($smtp_settings[0]->id),
-        ]))->seeJson([
-            'data' => [
-                'emailSmtp' => [
-                    'id' => strval($smtp_settings[0]->id),
-                ],
-            ],
-        ]);
-    }
 
-    public function testQueryEmailSmtpSettingsByCompany()
-    {
-        $this->login();
-        $smtp_settings = DB::connection('pgsql_test')->table('email_smtps')->orderBy('id', 'DESC')->take(1)->get();
-        $this->graphQL('
-            query EmailSmtps($company_id: ID!) {
-                emailSmtps(company_id: $company_id) {
-                    id
-                }
-            }
-            ', [
-            'company_id' => 1,
-        ])->seeJsonContains([
-            [
-                'id' => strval($smtp_settings[0]->id),
-            ],
-        ]);
-    }
-
-    public function testSendEmail()
-    {
-        $this->login();
         $this->graphQL('
             mutation SendEmail(
                       $host_name: String!
@@ -190,7 +157,9 @@ class EmailSmtpSettingsTest extends TestCase
             'password' => 'test@test@123',
             'email' => 'test@lavachange.com',
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'sendEmail' => [
