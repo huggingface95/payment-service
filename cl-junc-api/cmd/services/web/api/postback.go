@@ -100,7 +100,7 @@ func IbanPostback(c *gin.Context) {
 			OrderReference: response.OrderReference,
 			Iban:           response.Iban,
 			AccountState:   db.GetAccountState(response.Status),
-		}, "order_reference", "account_state", "iban")
+		}, "order_reference", "account_state_id", "iban")
 
 		c.Data(200, "text/plain", []byte(response.OrderReference))
 	}
