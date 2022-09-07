@@ -95,7 +95,7 @@ func IbanPostback(c *gin.Context) {
 		return
 	}
 
-	if response.Status == models2.Accepted {
+	if response.Status == models2.Allocated {
 		app.Get.UpdateAccount(&db.Account{
 			OrderReference: response.OrderReference,
 			Iban:           response.Iban,
