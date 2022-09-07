@@ -13,6 +13,7 @@ type Account struct {
 	ReservedBalance  float64        `bun:"reserved_balance"`
 	Payee            []*Payee       `bun:"m2m:account_individuals_companies,join:Account=Payee"`
 	AccountState     AccountStateDb `bun:"account_state_id"`
+	ProviderId       ProviderDb     `bun:"payment_provider_id"`
 	State            *AccountState  `bun:"rel:belongs-to,join:account_state_id=id"`
 	Provider         *Provider      `bun:"rel:belongs-to,join:payment_provider_id=id"`
 }
