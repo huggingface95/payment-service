@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 class CommissionPriceListTest extends TestCase
 {
-
     /**
      * CommissionPriceList Testing
      *

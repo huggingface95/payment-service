@@ -2,11 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enums\GuardEnum;
 use App\Models\DepartmentPosition;
-use App\Models\DepartmentPositionRelation;
-use App\Models\Departments;
-use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class DepartmentPositionSeeder extends Seeder

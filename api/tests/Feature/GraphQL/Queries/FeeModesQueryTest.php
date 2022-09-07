@@ -7,7 +7,6 @@ use Tests\TestCase;
 
 class FeeModesQueryTest extends TestCase
 {
-
     public function testQueryFeeModesNoAuth(): void
     {
         $this->graphQL('
@@ -50,5 +49,4 @@ class FeeModesQueryTest extends TestCase
             }
         ')->seeJson($expect);
     }
-
 }

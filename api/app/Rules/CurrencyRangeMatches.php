@@ -23,7 +23,7 @@ class CurrencyRangeMatches implements ImplicitRule
         $currencyRanges = $this->getCurrencyRanges($value);
 
         foreach ($currencyRanges as $currency) {
-            return !$this->isRangesIntersection($currency);
+            return ! $this->isRangesIntersection($currency);
         }
 
         return true;
@@ -89,5 +89,4 @@ class CurrencyRangeMatches implements ImplicitRule
 
         return false;
     }
-
 }

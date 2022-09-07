@@ -11,7 +11,6 @@ class ApplicantCompanyModulesTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateApplicantCompanyModule()
     {
         $this->login();

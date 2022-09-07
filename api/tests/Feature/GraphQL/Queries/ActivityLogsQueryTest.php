@@ -8,7 +8,6 @@ use Tests\TestCase;
 
 class ActivityLogsQueryTest extends TestCase
 {
-
     public function testActivityLogsNoAuth(): void
     {
         $this->graphQL('
@@ -169,5 +168,4 @@ class ActivityLogsQueryTest extends TestCase
             'total' => 30,
         ]);
     }
-
 }

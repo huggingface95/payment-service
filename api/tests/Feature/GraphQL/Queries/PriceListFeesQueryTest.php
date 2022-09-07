@@ -7,7 +7,6 @@ use Tests\TestCase;
 
 class PriceListFeesQueryTest extends TestCase
 {
-
     public function testQueryPriceListFeesNoAuth(): void
     {
         $this->graphQL('
@@ -62,5 +61,4 @@ class PriceListFeesQueryTest extends TestCase
         }
         ')->seeJson($expect);
     }
-
 }

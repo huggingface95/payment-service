@@ -11,7 +11,6 @@ class DepartmentsTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateDepartment(): void
     {
         $this->login();
@@ -37,7 +36,7 @@ class DepartmentsTest extends TestCase
                 'Director',
                 'Manager',
                 'Programmer',
-            ]
+            ],
         ]);
         $id = json_decode($this->response->getContent(), true);
 
@@ -192,7 +191,7 @@ class DepartmentsTest extends TestCase
                 }
             }
     ', [
-        'name' => 'Updated Department',
+            'name' => 'Updated Department',
         ])->seeJsonContains([
             [
                 'id' => strval($department[0]->id),

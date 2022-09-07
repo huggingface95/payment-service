@@ -11,7 +11,6 @@ class ApplicantIndividualLabelsTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateApplicantIndividualLabel()
     {
         $this->login();

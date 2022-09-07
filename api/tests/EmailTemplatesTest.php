@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,6 @@ class EmailTemplatesTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateEmailTemplate()
     {
         $this->login();
@@ -48,7 +48,7 @@ class EmailTemplatesTest extends TestCase
         $this->seeJson([
             'data' => [
                 'createEmailTemplate' => [
-                   'data' => $id['data']['createEmailTemplate']['data'],
+                    'data' => $id['data']['createEmailTemplate']['data'],
                 ],
             ],
         ]);
@@ -167,5 +167,4 @@ class EmailTemplatesTest extends TestCase
             ],
         ]);
     }
-
 }

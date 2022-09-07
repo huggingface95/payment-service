@@ -3163,7 +3163,7 @@ class PermissionsSeeder extends Seeder
                             $order = $permission['data']['order'];
                             $superAdmin = false;
                             unset($permission['data']['order']);
-                            if(isset($permission['data']['is_super_admin'])){
+                            if (isset($permission['data']['is_super_admin'])) {
                                 $superAdmin = $permission['data']['is_super_admin'];
                                 unset($permission['data']['is_super_admin']);
                             }

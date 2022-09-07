@@ -6,7 +6,6 @@ namespace App\Models;
  * Class AccountState
  *
  * @property string name
- *
  */
 class AccountState extends BaseModel
 {

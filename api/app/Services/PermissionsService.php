@@ -7,7 +7,6 @@ use Illuminate\Support\Str;
 
 class PermissionsService extends AbstractService
 {
-
     public const PREFIX = 'PERMISSION_';
 
     /**
@@ -21,7 +20,7 @@ class PermissionsService extends AbstractService
         $result = [];
 
         foreach ($arrs as $arr) {
-            $permissionWithRights = self::PREFIX . strtoupper(Str::snake(str_replace(':', '', $arr['name'])));
+            $permissionWithRights = self::PREFIX.strtoupper(Str::snake(str_replace(':', '', $arr['name'])));
 
             $result[] = $permissionWithRights;
         }
@@ -30,5 +29,4 @@ class PermissionsService extends AbstractService
 
         return $result;
     }
-
 }

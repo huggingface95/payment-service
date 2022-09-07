@@ -11,7 +11,6 @@ class ApplicantIndividualModulesTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateApplicantIndividualModule()
     {
         $this->login();

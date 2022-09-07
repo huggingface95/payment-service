@@ -7,11 +7,10 @@ use Tests\TestCase;
 
 class PriceListFeesMutationTest extends TestCase
 {
-
     public function testCreatePriceListFeesNoAuth(): void
     {
         $data = [
-            'name' => 'Test 1-' . time(),
+            'name' => 'Test 1-'.time(),
             'type_id' => 1,
             'period_id' => 1,
             'operation_type_id' => 1,
@@ -46,7 +45,7 @@ class PriceListFeesMutationTest extends TestCase
         $this->login();
 
         $data = [
-            'name' => 'Test 1-' . time(),
+            'name' => 'Test 1-'.time(),
             'type_id' => 1,
             'period_id' => 1,
             'operation_type_id' => 1,
@@ -147,7 +146,7 @@ class PriceListFeesMutationTest extends TestCase
 
         $data = [
             'id' => $priceListFee->id,
-            'name' => 'Test 2-' . time(),
+            'name' => 'Test 2-'.time(),
             'type_id' => 2,
             'period_id' => 2,
             'operation_type_id' => 2,
@@ -225,13 +224,12 @@ class PriceListFeesMutationTest extends TestCase
         ]);
     }
 
-
     public function testCreatePriceListFeesValidationFail(): void
     {
         $this->login();
 
         $data = [
-            'name' => 'Test 1-' . time(),
+            'name' => 'Test 1-'.time(),
             'type_id' => 1,
             'period_id' => 1,
             'operation_type_id' => 1,
@@ -302,5 +300,4 @@ class PriceListFeesMutationTest extends TestCase
             ],
         ]);
     }
-
 }

@@ -11,7 +11,6 @@ class PaymentSystemTest extends TestCase
      *
      * @return void
      */
-
     public function testCreatePaymentSystem()
     {
         $this->login();

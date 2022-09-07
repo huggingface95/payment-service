@@ -11,7 +11,6 @@ class CompaniesTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateCompany()
     {
         $this->login();

@@ -12,7 +12,6 @@ use Tests\TestCase;
 
 class UsersQueryTest extends TestCase
 {
-
     public function testUserAuthData(): void
     {
         $member = Members::find(3);
@@ -32,7 +31,7 @@ class UsersQueryTest extends TestCase
                         fullname
                     }
                     permissions {
-                        ' . $data['permissionsList'] . '
+                        '.$data['permissionsList'].'
                     }
                 }
             }
@@ -59,11 +58,11 @@ class UsersQueryTest extends TestCase
 
         $permissionsList = '';
         foreach ($allPermissions as $permission) {
-            $permissionsList .= $permission . PHP_EOL;
+            $permissionsList .= $permission.PHP_EOL;
         }
 
         $permissions = $member->getAllPermissions()->groupBy(['permission_list_id', function ($permission) {
-            return 'PERMISSION_' . strtoupper(Str::snake(str_replace(':', '', $permission->permissionList->name)));
+            return 'PERMISSION_'.strtoupper(Str::snake(str_replace(':', '', $permission->permissionList->name)));
         }])->collapse()->map(function ($permissions) {
             return $permissions->pluck('display_name', 'id')->toArray() ?? [];
         })->toArray() ?? [];
@@ -91,5 +90,4 @@ class UsersQueryTest extends TestCase
             'permissionsList' => $permissionsList,
         ];
     }
-
 }

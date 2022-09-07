@@ -11,7 +11,6 @@ class ApplicantIndividualTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateApplicantIndividual()
     {
         $this->login();
