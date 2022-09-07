@@ -6,7 +6,6 @@ use App\Models\PriceListFee;
 
 class PriceListFeesMutator
 {
-
     /**
      * @param  null  $_
      * @param  array<string, mixed>  $args

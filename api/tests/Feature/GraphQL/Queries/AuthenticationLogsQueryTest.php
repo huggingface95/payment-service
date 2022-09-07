@@ -8,7 +8,6 @@ use Tests\TestCase;
 
 class AuthenticationLogsQueryTest extends TestCase
 {
-
     public function testAuthenticationLogsNoAuth(): void
     {
         $this->graphQL('
@@ -193,5 +192,4 @@ class AuthenticationLogsQueryTest extends TestCase
             'total' => 30,
         ]);
     }
-
 }

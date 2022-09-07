@@ -11,7 +11,6 @@ class ApplicantBankingAccessTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateBankingAccess()
     {
         $this->login();

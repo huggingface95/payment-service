@@ -43,7 +43,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property Collection groupRoles
  * @property GroupRole $groupRole
  * @property EmailSmtp $smtp
- * @property boolean is_super_admin
+ * @property bool is_super_admin
+ *
  * @method
  */
 class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
@@ -139,8 +140,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     {
         try {
             return $this->groupRole->role->IsSuperAdmin();
-        }
-        catch (\Throwable){
+        } catch (\Throwable) {
             return false;
         }
     }

@@ -16,7 +16,7 @@ use Spatie\Permission\Models\Role;
  *
  *@property int id
  *@property ?int order
- *@property boolean is_super_admin
+ *@property bool is_super_admin
  */
 class Permissions extends SpatiePermission
 {

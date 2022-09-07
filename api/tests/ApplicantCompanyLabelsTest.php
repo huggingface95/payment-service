@@ -11,7 +11,6 @@ class ApplicantCompanyLabelsTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateApplicantCompanyLabel()
     {
         $this->login();

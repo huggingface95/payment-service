@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -57,7 +58,7 @@ class EmailSmtpSettingsTest extends TestCase
         $this->seeJson([
             'data' => [
                 'createEmailSmtp' => [
-                   'id' => $id['data']['createEmailSmtp']['id'],
+                    'id' => $id['data']['createEmailSmtp']['id'],
                 ],
             ],
         ]);
@@ -199,5 +200,4 @@ class EmailSmtpSettingsTest extends TestCase
             ],
         ]);
     }
-
 }

@@ -67,6 +67,11 @@ type ClientAccountsDetails{
     currency: Currencies!
 }
 
+type AccountGenerateIbanResponse{
+    status: string!
+    message: string!
+}
+
 enum AccountType {
     Private @enum(value: "Private")
     Business @enum(value: "Business")
@@ -255,8 +260,8 @@ extend type Mutation @guard {
         id: ID!
     ): Account  @delete
 
-    "Создать аккаунт"
+    "Генерация iban individual"
     generateIban(
         id: ID!
-    ):Account  @field(resolver: "AccountMutator@generate")
+    ):AccountGenerateIbanResponse! @field(resolver: "AccountMutator@generate")
 }

@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 
 final class ActiveSessionsQuery
 {
-
     /**
      * Get data with pagination and filteration
      *
@@ -26,7 +25,7 @@ final class ActiveSessionsQuery
 
             if (isset($fields['created_at'])) {
                 $value = substr($fields['created_at'], 0, 10);
-                $query->whereBetween('created_at', [$value . ' 00:00:00', $value . ' 23:59:59']);
+                $query->whereBetween('created_at', [$value.' 00:00:00', $value.' 23:59:59']);
 
                 unset($fields['created_at']);
             }
@@ -39,7 +38,7 @@ final class ActiveSessionsQuery
                 });
             }
         }
-        
+
         $result = $query->paginate($args['page'] ?? 1, $args['count'] ?? env('PAGINATE_DEFAULT_COUNT'));
 
         return [
@@ -56,5 +55,4 @@ final class ActiveSessionsQuery
             ],
         ];
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,6 @@ class RegionsTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateRegion(): void
     {
         $this->login();
@@ -31,7 +31,7 @@ class RegionsTest extends TestCase
         $id = json_decode($this->response->getContent(), true);
         $this->seeJsonContains([
             [
-                   'id' => $id['data']['createRegion'][0]['id'],
+                'id' => $id['data']['createRegion'][0]['id'],
             ],
         ]);
     }
@@ -172,7 +172,7 @@ class RegionsTest extends TestCase
                 }
             }
             ', [
-               'name' => "Afghanistan",
+            'name' => 'Afghanistan',
         ])->seeJsonContains([
             [
                 'id' => strval($region[0]->id),
@@ -208,5 +208,4 @@ class RegionsTest extends TestCase
             ],
         ]);
     }
-
 }

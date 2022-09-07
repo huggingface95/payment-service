@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,6 @@ class RolesTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateRole(): void
     {
         $this->login();
@@ -89,7 +89,7 @@ class RolesTest extends TestCase
     {
         $this->login();
 
-        $role= DB::connection('pgsql_test')
+        $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'DESC')
             ->take(1)
@@ -118,7 +118,7 @@ class RolesTest extends TestCase
     {
         $this->login();
 
-        $role= DB::connection('pgsql_test')
+        $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'DESC')
             ->take(1)
@@ -149,7 +149,7 @@ class RolesTest extends TestCase
     {
         $this->login();
 
-        $role= DB::connection('pgsql_test')
+        $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'DESC')
             ->take(1)
@@ -165,8 +165,8 @@ class RolesTest extends TestCase
                 }
             }
         '))->seeJsonContains([
-           'id' => strval($role[0]->id),
-           'name' => strval($role[0]->name),
+            'id' => strval($role[0]->id),
+            'name' => strval($role[0]->name),
         ]);
     }
 
@@ -174,7 +174,7 @@ class RolesTest extends TestCase
     {
         $this->login();
 
-        $role= DB::connection('pgsql_test')
+        $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'ASC')
             ->take(1)
@@ -207,7 +207,7 @@ class RolesTest extends TestCase
     {
         $this->login();
 
-        $role= DB::connection('pgsql_test')
+        $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'DESC')
             ->take(1)
@@ -263,5 +263,4 @@ class RolesTest extends TestCase
             ],
         ]);
     }
-
 }

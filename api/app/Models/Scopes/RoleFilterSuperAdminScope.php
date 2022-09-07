@@ -10,15 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class RoleFilterSuperAdminScope implements Scope
 {
-
     public function apply(Builder $builder, Model $model)
     {
         /** @var Members $member */
         $member = Auth::user();
 
-        if ($member && !$member->is_super_admin){
+        if ($member && ! $member->is_super_admin) {
             $builder->where('id', '<>', 1);
         }
     }
-
 }

@@ -15,7 +15,7 @@ use Nuwave\Lighthouse\Events\ManipulateAST;
 
 class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 {
-    protected $permissionsService;
+    protected PermissionsService $permissionsService;
 
     public function __construct()
     {
@@ -66,7 +66,7 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
                     strtoupper(
                         Str::snake(preg_replace("/(\/)|(&)|(\()|(\))|(:)/", '', $name))
                     )
-                    . ' @enum(value: "' . $id . '")';
+                    .' @enum(value: "'.$id.'")';
             },
             array_keys($permissions),
             $permissions
@@ -74,7 +74,7 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 
         $enumValuesString = implode("\n", $enumValues);
 
-        $pEnumName = 'PERMISSION_' . strtoupper(Str::snake(str_replace(':', '', $enumName)));
+        $pEnumName = 'PERMISSION_'.strtoupper(Str::snake(str_replace(':', '', $enumName)));
 
         return Parser::enumTypeDefinition(/** @lang GraphQL */<<<GRAPHQL
 "Permission list name {$enumName}"
@@ -91,16 +91,16 @@ GRAPHQL
         if ($typeName === 'PermissionAuth') {
             $list = array_map(
                 function (string $name): string {
-                    return $name . ': [' . $name . '!]!';
+                    return $name.': ['.$name.'!]!';
                 },
                 $list
             );
         } else {
             $list = array_map(
                 function (string $name): string {
-                    $name = 'PERMISSION_' . strtoupper(Str::snake(preg_replace('/(:)/', '', $name)));
+                    $name = 'PERMISSION_'.strtoupper(Str::snake(preg_replace('/(:)/', '', $name)));
 
-                    return $name . ': ' . $name;
+                    return $name.': '.$name;
                 },
                 $list
             );
@@ -116,5 +116,4 @@ type $typeName {
 GRAPHQL
         );
     }
-
 }

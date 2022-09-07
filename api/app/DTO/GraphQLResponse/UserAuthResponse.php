@@ -7,7 +7,6 @@ use App\Models\PermissionsList;
 use App\Services\PermissionsService;
 use Illuminate\Support\Str;
 
-
 class UserAuthResponse
 {
     public Members $data;
@@ -20,7 +19,7 @@ class UserAuthResponse
         $dto->data = $member;
 
         $userPermissions = $member->getAllPermissions()->groupBy(['permission_list_id', function ($permission) {
-            return 'PERMISSION_' . strtoupper(Str::snake(str_replace(':', '', $permission->permissionList->name)));
+            return 'PERMISSION_'.strtoupper(Str::snake(str_replace(':', '', $permission->permissionList->name)));
         }])->collapse()->map(function ($permissions) {
             return $permissions->pluck('id')->toArray() ?? [];
         })->toArray() ?? [];
@@ -29,7 +28,7 @@ class UserAuthResponse
         $permissionsList = (new PermissionsService)->getPermissionsList($permissions);
 
         $basePermissions = [];
-        foreach($permissionsList as $permission) {
+        foreach ($permissionsList as $permission) {
             $basePermissions[$permission] = [];
         }
 
@@ -40,5 +39,4 @@ class UserAuthResponse
 
         return $dto;
     }
-
 }

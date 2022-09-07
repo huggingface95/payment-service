@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 class CommissionTemplateTest extends TestCase
 {
-
     /**
      * CommissionTemplate Testing
      *

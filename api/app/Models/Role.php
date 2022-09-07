@@ -14,7 +14,6 @@ use Spatie\Permission\PermissionRegistrar;
  * Class Role
  *
  * @property int id
- *
  * @property Collection $permissions
  */
 class Role extends SpatieRole

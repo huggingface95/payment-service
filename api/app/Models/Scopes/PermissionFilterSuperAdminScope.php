@@ -10,13 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class PermissionFilterSuperAdminScope implements Scope
 {
-
     public function apply(Builder $builder, Model $model)
     {
         /** @var Members $member */
         $member = Auth::user();
 
-        if ($member && !$member->is_super_admin){
+        if ($member && ! $member->is_super_admin) {
             $builder->where('is_super_admin', '=', false);
         }
     }

@@ -10,7 +10,7 @@ enum FeeModeEnum: int
 
     public function toString(): string
     {
-        return match($this) {
+        return match ($this) {
             self::RANGE => 'range',
             self::FIX => 'fix',
             self::PERCENT => '%',

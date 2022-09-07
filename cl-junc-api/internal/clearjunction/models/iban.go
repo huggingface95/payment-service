@@ -72,10 +72,10 @@ func NewIbanRequest(account *db.Account, wallet string, baseUrl string) IbanCrea
 		Registrant: Registrant{
 			ClientCustomerID: strconv.FormatUint(account.Id, 10),
 			Individual: PayInPayoutRequestPayeePayerIndividual{
-				Email:     "aa@mail.ru",
-				Phone:     "+37491728062",
-				LastName:  "Gevorgyan",
-				FirstName: "Artur",
+				Email:     account.GetPayee().Email,
+				Phone:     account.GetPayee().Phone,
+				LastName:  account.GetPayee().LastName,
+				FirstName: account.GetPayee().FirstName,
 				BirthDate: "2017-01-01",
 				Document: Document{
 					IssuedDate:        "15-26-2017",
@@ -87,9 +87,9 @@ func NewIbanRequest(account *db.Account, wallet string, baseUrl string) IbanCrea
 				},
 				Address: Address{
 					Country: "GB",
-					Zip:     "084",
-					State:   "erevan",
-					City:    "erevan",
+					Zip:     account.GetPayee().Zip,
+					State:   account.GetPayee().State,
+					City:    account.GetPayee().City,
 					Street:  "sheram",
 				},
 			},

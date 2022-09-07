@@ -11,7 +11,6 @@ class MembersTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateMember()
     {
         $this->login();

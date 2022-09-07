@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -40,7 +41,7 @@ class EmailNotificationsTest extends TestCase
         $this->seeJson([
             'data' => [
                 'createEmailNotification' => [
-                   'id' => $id['data']['createEmailNotification']['id'],
+                    'id' => $id['data']['createEmailNotification']['id'],
                 ],
             ],
         ]);
@@ -134,5 +135,4 @@ class EmailNotificationsTest extends TestCase
             ],
         ]);
     }
-
 }
