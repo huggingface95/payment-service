@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Permissions;
+use App\Models\PermissionsList;
+use App\Services\PermissionsService;
 use GraphQL\Language\AST\EnumTypeDefinitionNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\Parser;
@@ -13,11 +15,20 @@ use Nuwave\Lighthouse\Events\ManipulateAST;
 
 class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 {
+    protected $permissionsService;
+
+    public function __construct()
+    {
+        $this->permissionsService = new PermissionsService;
+    }
+
     public function boot(Dispatcher $dispatcher): void
     {
         $dispatcher->listen(
             ManipulateAST::class,
             function (ManipulateAST $manipulateAST): void {
+
+                // PermissionType
                 $permissions = Permissions::with('permissionList')->get()->groupBy(['permission_list_id', function ($permission) {
                     return $permission->permissionList->name;
                 }])->collapse()->map(function ($permissions) {
@@ -35,6 +46,12 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
                             $this->createColumnsEnum($listName, $records)
                         );
                 }
+
+                // PermissionAuth
+                $list = $this->permissionsService->getPermissionsList(PermissionsList::get());
+                $manipulateAST->documentAST->setTypeDefinition(
+                    $this->createObjectType($list, 'PermissionAuth')
+                );
             }
         );
     }
@@ -49,7 +66,7 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
                     strtoupper(
                         Str::snake(preg_replace("/(\/)|(&)|(\()|(\))|(:)/", '', $name))
                     )
-                    .' @enum(value: "'.$id.'")';
+                    . ' @enum(value: "' . $id . '")';
             },
             array_keys($permissions),
             $permissions
@@ -57,9 +74,9 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 
         $enumValuesString = implode("\n", $enumValues);
 
-        $pEnumName = 'PERMISSION_'.strtoupper(Str::snake(str_replace(':', '', $enumName)));
+        $pEnumName = 'PERMISSION_' . strtoupper(Str::snake(str_replace(':', '', $enumName)));
 
-        return Parser::enumTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
+        return Parser::enumTypeDefinition(/** @lang GraphQL */<<<GRAPHQL
 "Permission list name {$enumName}"
 enum $pEnumName
 {
@@ -69,25 +86,35 @@ GRAPHQL
         );
     }
 
-    private function createObjectType(array $list): ObjectTypeDefinitionNode
+    private function createObjectType(array $list, $typeName = 'PermissionType'): ObjectTypeDefinitionNode
     {
-        $list = array_map(
-            function (string $name): string {
-                $name = 'PERMISSION_'.strtoupper(Str::snake(preg_replace('/(:)/', '', $name)));
+        if ($typeName === 'PermissionAuth') {
+            $list = array_map(
+                function (string $name): string {
+                    return $name . ': [' . $name . '!]!';
+                },
+                $list
+            );
+        } else {
+            $list = array_map(
+                function (string $name): string {
+                    $name = 'PERMISSION_' . strtoupper(Str::snake(preg_replace('/(:)/', '', $name)));
 
-                return $name.': '.$name;
-            },
-            $list
-        );
+                    return $name . ': ' . $name;
+                },
+                $list
+            );
+        }
 
         $types = implode("\n", $list);
 
-        return Parser::objectTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
-"PermissionType"
-type PermissionType {
+        return Parser::objectTypeDefinition(/** @lang GraphQL */<<<GRAPHQL
+"$typeName"
+type $typeName {
 {$types}
 }
 GRAPHQL
         );
     }
+
 }

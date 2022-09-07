@@ -41,16 +41,32 @@ abstract class TestCase extends BaseTestCase
      */
     public function createApplication()
     {
-        return require __DIR__.'/../bootstrap/app.php';
+        return require __DIR__ . '/../bootstrap/app.php';
     }
 
     /**
      * Login
      *
+     * @param  array  $data
+     * @return string
+     */
+    public function login(array $data = []): string
+    {
+        if (empty($data)) {
+            $data = ['email' => 'test@test.com', 'password' => '1234567Qa'];
+        }
+
+        return auth()->attempt($data);
+    }
+
+    /**
+     * Logout
+     *
+     * @param  string  $token
      * @return void
      */
-    public function login(): void
+    public function logout(string $token): void
     {
-        auth()->attempt(['email' => 'test@test.com', 'password' => '1234567Qa']);
+        auth()->logout(['token' => $token]);
     }
 }

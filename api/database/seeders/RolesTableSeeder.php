@@ -16,11 +16,19 @@ class RolesTableSeeder extends Seeder
     public function run()
     {
         Role::insert([
-            'id'=>2,
-            'name' => 'Super Role',
-            'guard_name' => GuardEnum::GUARD_NAME,
-            'description' => 'api role',
-            'company_id' => 1,
+            [
+                'id' => 2,
+                'name' => 'Super Role',
+                'guard_name' => GuardEnum::GUARD_NAME,
+                'description' => 'api role',
+                'company_id' => 1,
+            ], [
+                'id' => 3,
+                'name' => 'Test Role',
+                'guard_name' => GuardEnum::GUARD_NAME,
+                'description' => 'api role',
+                'company_id' => 1,
+            ],
         ]);
     }
 }
