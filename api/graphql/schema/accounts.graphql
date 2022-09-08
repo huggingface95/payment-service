@@ -68,8 +68,8 @@ type ClientAccountsDetails{
 }
 
 type AccountGenerateIbanResponse{
-    status: string!
-    message: string!
+    status: String!
+    message: String!
 }
 
 enum AccountType {
