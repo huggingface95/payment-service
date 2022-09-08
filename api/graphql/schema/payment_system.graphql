@@ -11,7 +11,7 @@ type PaymentSystem {
     "Получить связанные регионы"
     regions: [Region] @belongsToMany(relation:"regions")
     "Получить связанную компанию"
-    company: Company @hasOne(relation:"company")
+    company: Companies @hasOne(relation:"company")
     "Получить связанные валюты"
     currencies: [Currencies] @belongsToMany(relation:"currencies")
     "Получить Платежные провайдеры"
@@ -22,42 +22,6 @@ type PaymentSystem {
     description: String
     "Лого"
     logo: Files @belongsTo(relation: "logo")
-}
-
-type Company {
-    id: ID!
-    "Название компании"
-    name: String!
-    "URL компании"
-    url: String
-    "E-mail компании"
-    email: EMAIL!
-    "Регистрационный номер компании"
-    company_number: String
-    "Контактное лицо"
-    contact_name: String
-    "Страна"
-    country: Country @belongsTo(relation: "country")
-    "Индекс"
-    zip: String
-    "Город"
-    city: String
-    "Адресс"
-    address: String
-    "Участники компании"
-    members: [Members] @hasMany(relation: "members")
-    "Количество участников в компании"
-    members_count: Int
-    "Департаменты компании"
-    departments: [Departments] @hasMany(relation: "departments")
-    "Должности компании"
-    positions: [DepartmentPosition] @hasMany(relation: "positions")
-    "Получить настройки компании"
-    company_settings: CompanySettings  @hasOne(relation: "companySettings")
-    "Дополнительные поля"
-    additional_fields: JSON
-    created_at: DateTime!
-    updated_at: DateTime!
 }
 
 extend type Query @guard {
