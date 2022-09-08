@@ -95,12 +95,12 @@ func IbanPostback(c *gin.Context) {
 		return
 	}
 
-	if response.Status == models2.Accepted {
+	if response.Status == models2.Allocated {
 		app.Get.UpdateAccount(&db.Account{
 			OrderReference: response.OrderReference,
 			Iban:           response.Iban,
 			AccountState:   db.GetAccountState(response.Status),
-		}, "order_reference", "account_state", "iban")
+		}, "order_reference", "account_state_id", "account_number")
 
 		c.Data(200, "text/plain", []byte(response.OrderReference))
 	}

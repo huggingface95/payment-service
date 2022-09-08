@@ -11,7 +11,6 @@ class ApplicantIndividualLabelsMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateApplicantIndividualLabel(): void
     {
         $this->login();

@@ -7,6 +7,11 @@ use Tests\TestCase;
 
 class AccountsMutationTest extends TestCase
 {
+    /**
+     * Account Mutation Testing
+     *
+     * @return void
+     */
 
     public function testCreateAccount(): void
     {
@@ -48,9 +53,9 @@ class AccountsMutationTest extends TestCase
             'company_id' => 1,
             'currency_id' => 1,
             'owner_id' => 1,
-            'account_number' => '2566' . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
+            'account_number' => '2566'.str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
             'commission_template_id' => 1,
-            'account_name' => 'Test_' . \Illuminate\Support\Str::random(3),
+            'account_name' => 'Test_'.\Illuminate\Support\Str::random(3),
             'group_type_id' => 2,
             'group_role_id' => 1,
             'payment_system_id' => 1,
@@ -93,7 +98,7 @@ class AccountsMutationTest extends TestCase
         ', [
             'id' => strval($account[0]->id),
             'account_state_id' => '1',
-            'account_name' => 'Test_update_' . \Illuminate\Support\Str::random(3),
+            'account_name' => 'Test_update_'.\Illuminate\Support\Str::random(3),
         ]);
 
         $id = json_decode($this->response->getContent(), true);

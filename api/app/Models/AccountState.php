@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+/**
+ * Class AccountState
+ *
+ * @property string name
+ */
 class AccountState extends BaseModel
 {
     public const WAITING_FOR_APPROVAL = 1;

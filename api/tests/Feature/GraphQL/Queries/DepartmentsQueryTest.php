@@ -88,7 +88,7 @@ class DepartmentsQueryTest extends TestCase
                 }
             }
     ', [
-        'name' => $department[0]->name,
+            'name' => $department[0]->name,
         ])->seeJsonContains([
             [
                 'id' => strval($department[0]->id),

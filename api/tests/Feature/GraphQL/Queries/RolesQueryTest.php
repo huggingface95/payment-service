@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,7 @@ class RolesQueryTest extends TestCase
     {
         $this->login();
 
-        $role= DB::connection('pgsql_test')
+        $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'DESC')
             ->take(1)
@@ -44,7 +45,7 @@ class RolesQueryTest extends TestCase
     {
         $this->login();
 
-        $role= DB::connection('pgsql_test')
+        $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'DESC')
             ->take(1)
@@ -75,7 +76,7 @@ class RolesQueryTest extends TestCase
     {
         $this->login();
 
-        $role= DB::connection('pgsql_test')
+        $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'DESC')
             ->take(1)
@@ -91,8 +92,8 @@ class RolesQueryTest extends TestCase
                 }
             }
         ')->seeJsonContains([
-           'id' => strval($role[0]->id),
-           'name' => strval($role[0]->name),
+            'id' => strval($role[0]->id),
+            'name' => strval($role[0]->name),
         ]);
     }
 
@@ -100,7 +101,7 @@ class RolesQueryTest extends TestCase
     {
         $this->login();
 
-        $role= DB::connection('pgsql_test')
+        $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'ASC')
             ->take(1)
@@ -133,7 +134,7 @@ class RolesQueryTest extends TestCase
     {
         $this->login();
 
-        $role= DB::connection('pgsql_test')
+        $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'DESC')
             ->take(1)

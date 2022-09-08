@@ -8,7 +8,6 @@ use Tests\TestCase;
 
 class ActiveSessionsQueryTest extends TestCase
 {
-
     public function testActiveSessionsNoAuth(): void
     {
         $this->graphQL('
@@ -63,7 +62,6 @@ class ActiveSessionsQueryTest extends TestCase
                 'company' => (string) $session['company'],
             ]);
         }
-
     }
 
     public function testActiveSessionsListWithQuery(): void
@@ -166,5 +164,4 @@ class ActiveSessionsQueryTest extends TestCase
             'total' => 30,
         ]);
     }
-
 }

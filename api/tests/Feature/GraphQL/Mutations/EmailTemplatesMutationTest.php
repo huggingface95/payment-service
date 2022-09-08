@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,6 @@ class EmailTemplatesMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateEmailTemplate(): void
     {
         $this->login();
@@ -52,7 +52,7 @@ class EmailTemplatesMutationTest extends TestCase
         $this->seeJson([
             'data' => [
                 'createEmailTemplate' => [
-                   'data' => $id['data']['createEmailTemplate']['data'],
+                    'data' => $id['data']['createEmailTemplate']['data'],
                 ],
             ],
         ]);

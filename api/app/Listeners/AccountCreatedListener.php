@@ -4,6 +4,8 @@ namespace App\Listeners;
 
 use App\Events\AccountCreatedEvent;
 use App\Exceptions\GraphqlException;
+use App\Jobs\Redis\IbanIndividualActivationJob;
+use App\Models\Groups;
 use App\Models\Traits\EmailPrepare;
 use App\Traits\ReplaceRegularExpressions;
 
@@ -21,6 +23,10 @@ class AccountCreatedListener
         $account->load('group', 'company', 'paymentProvider', 'clientable', 'owner',
             'accountState', 'paymentBank', 'paymentSystem', 'currencies', 'groupRole'
         );
+
+        if ($account->account_number == null && $account->group->name == Groups::INDIVIDUAL) {
+            dispatch(new IbanIndividualActivationJob($account));
+        }
 
         $messageData = $this->getTemplateContentAndSubject($account);
         $smtp = $this->getSmtp($account, $messageData['emails']);

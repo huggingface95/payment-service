@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -116,7 +117,7 @@ class RegionsQueryTest extends TestCase
                 }
             }
             ', [
-               'name' => "Afghanistan",
+            'name' => 'Afghanistan',
         ])->seeJsonContains([
             [
                 'id' => strval($region[0]->id),

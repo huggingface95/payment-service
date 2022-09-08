@@ -38,7 +38,7 @@ class AuthController extends Controller
 
         if (Cache::get('login_attempt:'.request('email'))) {
             $user = Members::select('*')->where('email', request('email'))->first();
-            if (!$user) {
+            if (! $user) {
                 return response()->json(['error' => 'No such user'], 403);
             }
             if ($user->is_active == false) {
@@ -90,7 +90,7 @@ class AuthController extends Controller
                     $this->writeToAuthLog('logout');
                 }
 
-                if ($user->two_factor_auth_setting_id == 2 && !($user->google2fa_secret)) {
+                if ($user->two_factor_auth_setting_id == 2 && ! ($user->google2fa_secret)) {
                     $this->writeToAuthLog('login');
                     $user->createToken($user->fullname)->accessToken;
                     OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
@@ -153,7 +153,7 @@ class AuthController extends Controller
             }
         }
 
-        if ($user->two_factor_auth_setting_id == 2 && !($user->google2fa_secret)) {
+        if ($user->two_factor_auth_setting_id == 2 && ! ($user->google2fa_secret)) {
             $this->writeToAuthLog('login');
             $user->createToken($user->fullname)->accessToken;
             OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
@@ -512,6 +512,7 @@ class AuthController extends Controller
         $user->backup_codes = $request->backup_codes;
         $user->save();
         $token = JWTAuth::fromUser($user);
+
         return response()->json(['data' => 'Backup Codes stored success for user id '.$user->id, 'access_token' => $token]);
     }
 

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\DB;
 
 class CommissionTemplateMutationTest extends TestCase
 {
-
     /**
      * CommissionTemplate Mutation Testing
      *

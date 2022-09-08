@@ -17,7 +17,7 @@ type Config struct {
 }
 
 func (c *Config) PostBackUrl() string {
-	return c.App.Url + "postback/"
+	return c.App.PublicUrl + "postback/"
 }
 
 func (c *Config) Load() *Config {
@@ -30,6 +30,9 @@ func (c *Config) Load() *Config {
 		os.Exit(1)
 	}
 
-	json.Unmarshal(data, c)
+	err = json.Unmarshal(data, c)
+	if err != nil {
+		return nil
+	}
 	return c
 }

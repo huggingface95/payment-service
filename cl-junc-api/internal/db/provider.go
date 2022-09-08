@@ -2,11 +2,13 @@ package db
 
 import "github.com/uptrace/bun"
 
-const CLEARJUNCTION = "Clearjection"
+const CLEARJUNCTION = "Clearjunction"
 
 type Provider struct {
 	bun.BaseModel `bun:"table:payment_provider"`
 
-	Id   uint64 `bun:"id,pk,autoincrement"`
-	Name string `bun:"name"`
+	Id   ProviderDb `bun:"id,pk,autoincrement"`
+	Name string     `bun:"name"`
 }
+
+type ProviderDb uint64
