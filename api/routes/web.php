@@ -28,6 +28,13 @@ $router->group([
     $router->post('2facodes', 'AuthController@storeBackupCodes');
 });
 
+$router->group([
+    'prefix' => 'vv',
+    'namespace' => 'Vv',
+], function () use ($router){
+    $router->post('postback', 'VvController@postback');
+});
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
