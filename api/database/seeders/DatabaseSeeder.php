@@ -32,9 +32,9 @@ class DatabaseSeeder extends Seeder
         $this->call(FeePeriodSeeder::class);
         $this->call(OperationTypeSeeder::class);
         $this->call(AccountStatesTableSeeder::class);
+        $this->call(MembersTableSeeder::class);
         $this->call(CommissionTemplateLimitTypeTableSeeder::class);
         $this->call(CommissionTemplateTableSeeder::class);
-        $this->call(MembersTableSeeder::class);
         $this->call(RolesTableSeeder::class);
         $this->call(GroupRoleTableSeeder::class);
         $this->call(GroupRoleMembersIndividualsTableSeeder::class);
@@ -58,5 +58,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CommissionPriceListTableSeeder::class);
         $this->call(PriceListFeesTableSeeder::class);
         $this->call(PriceListFeesItemsTableSeeder::class);
+        $this->call(AccountTableSeeder::class);
+        $this->call(ApplicantBankingAccessTableSeeder::class);
     }
 }

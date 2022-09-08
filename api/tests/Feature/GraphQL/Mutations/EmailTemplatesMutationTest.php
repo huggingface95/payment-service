@@ -4,18 +4,20 @@ namespace Tests;
 
 use Illuminate\Support\Facades\DB;
 
-class EmailTemplatesTest extends TestCase
+class EmailTemplatesMutationTest extends TestCase
 {
     /**
-     * Email Templates Testing
+     * Email Templates Mutation Testing
      *
      * @return void
      */
-    public function testCreateEmailTemplate()
+    public function testCreateEmailTemplate(): void
     {
         $this->login();
+
         $seq = DB::table('email_templates')->max('id') + 1;
         DB::select('ALTER SEQUENCE email_templates_id_seq RESTART WITH '.$seq);
+
         $this->graphQL('
             mutation CreateEmailTemplate(
                       $name: String!
@@ -44,7 +46,9 @@ class EmailTemplatesTest extends TestCase
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'company_id' => 1,
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'createEmailTemplate' => [
@@ -54,10 +58,12 @@ class EmailTemplatesTest extends TestCase
         ]);
     }
 
-    public function testUpdateEmailSmtpSettings()
+    public function testUpdateEmailSmtpSettings(): void
     {
         $this->login();
+
         $email_template = DB::connection('pgsql_test')->table('email_smtps')->orderBy('id', 'DESC')->take(1)->get();
+
         $this->graphQL('
             mutation UpdateEmailTemplate(
                   $id: ID!
@@ -87,7 +93,9 @@ class EmailTemplatesTest extends TestCase
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'company_id' => 1,
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'updateEmailTemplate' => [
@@ -97,47 +105,10 @@ class EmailTemplatesTest extends TestCase
         ]);
     }
 
-    public function testQueryEmailTemplateById()
+    public function testSendEmailWithTemplate(): void
     {
         $this->login();
-        $email_template = DB::connection('pgsql_test')->table('email_templates')->orderBy('id', 'DESC')->take(1)->get();
-        ($this->graphQL('
-            query EmailTemplate($id: ID!) {
-                emailTemplate(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($email_template[0]->id),
-        ]))->seeJson([
-            'data' => [
-                'emailTemplate' => [
-                    'id' => strval($email_template[0]->id),
-                ],
-            ],
-        ]);
-    }
 
-    public function testQueryEmailSmtpSettingsByCompany()
-    {
-        $this->login();
-        $email_template = DB::connection('pgsql_test')->table('email_smtps')->orderBy('id', 'DESC')->take(1)->get();
-        $this->graphQL('
-            query {
-                emailTemplates(where: { column: COMPANY_ID, value: 1 }) {
-                    id
-                }
-            }
-            ')->seeJsonContains([
-            [
-                'id' => strval($email_template[0]->id),
-            ],
-        ]);
-    }
-
-    public function testSendEmailWithTemplate()
-    {
-        $this->login();
         $this->graphQL('
             mutation SendEmailWithTemplate(
                       $email: String!
@@ -158,7 +129,9 @@ class EmailTemplatesTest extends TestCase
             'company_id' => 1,
             'subject' => 'SendEmailWithTemplate',
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'sendEmailWithTemplate' => [

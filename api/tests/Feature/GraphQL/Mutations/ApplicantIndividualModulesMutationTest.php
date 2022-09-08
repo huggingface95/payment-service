@@ -4,16 +4,18 @@ namespace Tests;
 
 use Illuminate\Support\Facades\DB;
 
-class ApplicantCompanyModulesTest extends TestCase
+class ApplicantIndividualModulesMutationTest extends TestCase
 {
     /**
-     * ApplicantCompanyModules Testing
+     * ApplicantIndividualModules Mutation Testing
      *
      * @return void
      */
-    public function testCreateApplicantCompanyModule()
+
+    public function testCreateApplicantIndividualModule(): void
     {
         $this->login();
+
         $this->graphQL('
             mutation CreateApplicantModule(
                 $name: String!
@@ -29,7 +31,9 @@ class ApplicantCompanyModulesTest extends TestCase
         ', [
             'name' => 'Module_'.\Illuminate\Support\Str::random(7),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'createApplicantModule' => [
@@ -39,19 +43,21 @@ class ApplicantCompanyModulesTest extends TestCase
         ]);
     }
 
-    public function testAttachApplicantCompanyModule()
+    public function testAttachApplicantIndividualModule(): void
     {
         $this->login();
-        $applicant_company = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
+
+        $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderBy('id', 'DESC')->get();
         $module = DB::connection('pgsql_test')->table('applicant_modules')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
-            mutation CreateApplicantCompanyModule(
-                $applicant_company_id: ID!
+            mutation CreateApplicantIndividualModule(
+                $applicant_individual_id: ID!
                 $applicant_module_id: [ID]
             )
             {
-                createApplicantCompanyModule (
-                    applicant_company_id: $applicant_company_id
+                createApplicantIndividualModule (
+                    applicant_individual_id: $applicant_individual_id
                     applicant_module_id: $applicant_module_id
                     is_active: true
                 )
@@ -60,32 +66,36 @@ class ApplicantCompanyModulesTest extends TestCase
                 }
             }
         ', [
-            'applicant_company_id' => strval($applicant_company[0]->id),
+            'applicant_individual_id' => strval($applicant[0]->id),
             'applicant_module_id' => strval($module[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
-                'createApplicantCompanyModule' => [
-                    'id' => $id['data']['createApplicantCompanyModule']['id'],
+                'createApplicantIndividualModule' => [
+                    'id' => $id['data']['createApplicantIndividualModule']['id'],
                 ],
             ],
         ]);
     }
 
-    public function testDetachApplicantCompanyModule()
+    public function testDetachApplicantIndividualModule(): void
     {
         $this->login();
-        $applicant_company = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
+
+        $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderBy('id', 'DESC')->get();
         $module = DB::connection('pgsql_test')->table('applicant_modules')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
-            mutation DeleteApplicantCompanyModule(
-                $applicant_company_id: ID!
+            mutation DeleteApplicantIndividualModule(
+                $applicant_individual_id: ID!
                 $applicant_module_id: [ID]
             )
             {
-                deleteApplicantCompanyModule (
-                    applicant_company_id: $applicant_company_id
+                deleteApplicantIndividualModule (
+                    applicant_individual_id: $applicant_individual_id
                     applicant_module_id: $applicant_module_id
                 )
                 {
@@ -93,14 +103,16 @@ class ApplicantCompanyModulesTest extends TestCase
                 }
             }
         ', [
-            'applicant_company_id' => strval($applicant_company[0]->id),
+            'applicant_individual_id' => strval($applicant[0]->id),
             'applicant_module_id' => strval($module[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
-                'deleteApplicantCompanyModule' => [
-                    'id' => $id['data']['deleteApplicantCompanyModule']['id'],
+                'deleteApplicantIndividualModule' => [
+                    'id' => $id['data']['deleteApplicantIndividualModule']['id'],
                 ],
             ],
         ]);

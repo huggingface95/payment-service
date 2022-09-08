@@ -1,20 +1,22 @@
 <?php
 
-namespace Tests;
+namespace Tests\Feature\GraphQL\Mutations;
 
-use App\Models\Account;
 use Illuminate\Support\Facades\DB;
+use Tests\TestCase;
 
-class AccountsTest extends TestCase
+class AccountsMutationTest extends TestCase
 {
     /**
-     * Account Testing
+     * Account Mutation Testing
      *
      * @return void
      */
-    public function testCreateAccount()
+
+    public function testCreateAccount(): void
     {
         $this->login();
+
         $this->graphQL('
             mutation CreateAccount(
                     $company_id: ID!
@@ -59,22 +61,22 @@ class AccountsTest extends TestCase
             'payment_system_id' => 1,
             'payment_provider_id' => 1,
         ]);
+
         $id = json_decode($this->response->getContent(), true);
-        $this->seeJson([
-            'data' => [
-                'createAccount' => [
-                    [
-                        'id' => $id['data']['createAccount'][0]['id'],
-                    ],
-                ],
+
+        $this->seeJsonContains([
+            [
+                'id' => $id['data']['createAccount'][0]['id'],
             ],
         ]);
     }
 
-    public function testUpdateAccount()
+    public function testUpdateAccount(): void
     {
         $this->login();
+
         $account = DB::connection('pgsql_test')->table('accounts')->orderBy('id', 'DESC')->take(1)->get();
+
         $this->graphQL('
             mutation UpdateAccount(
                 $id: ID!
@@ -98,7 +100,9 @@ class AccountsTest extends TestCase
             'account_state_id' => '1',
             'account_name' => 'Test_update_'.\Illuminate\Support\Str::random(3),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'updateAccount' => [
@@ -109,70 +113,12 @@ class AccountsTest extends TestCase
         ]);
     }
 
-    public function testQueryAccounts()
+    public function testDeleteAccount(): void
     {
         $this->login();
-        $accounts = DB::connection('pgsql_test')->table('accounts')->orderBy('id', 'DESC')->take(1)->get();
-        ($this->graphQL('
-            query Account($id:ID!){
-                account(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($accounts[0]->id),
-        ]))->seeJson([
-            'data' => [
-                'account' => [
-                    'id' => strval($accounts[0]->id),
-                ],
-            ],
-        ]);
-    }
 
-    public function testQueryAccountsOrderBy()
-    {
-        $this->login();
         $account = DB::connection('pgsql_test')->table('accounts')->orderBy('id', 'DESC')->take(1)->get();
-        $this->graphQL('
-        query {
-            accounts(orderBy: { column: ID, order: DESC }) {
-                data {
-                    id
-                }
-                }
-        }')->seeJsonContains([
-            [
-                'id' => strval($account[0]->id),
-            ],
-        ]);
-    }
 
-    public function testQueryAccountsWhere()
-    {
-        $this->login();
-        $account = DB::connection('pgsql_test')->table('accounts')->orderBy('id', 'DESC')->take(1)->get();
-        $this->graphQL('
-        query Accounts($owner: String) {
-            accounts (query:{owner:$owner})
-                {
-                data{
-                    id
-                }
-                }
-}', [
-            'owner' => strval(1),
-        ])->seeJsonContains([
-            [
-                'id' => strval($account[0]->id),
-            ],
-        ]);
-    }
-
-    public function testDeleteApplicantIndividual()
-    {
-        $this->login();
-        $account = \App\Models\Account::orderBy('id', 'DESC')->take(1)->get();
         $this->graphQL('
             mutation DeleteAccount(
                 $id: ID!
@@ -188,7 +134,9 @@ class AccountsTest extends TestCase
         ', [
             'id' => strval($account[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'deleteAccount' => [
@@ -197,4 +145,5 @@ class AccountsTest extends TestCase
             ],
         ]);
     }
+
 }

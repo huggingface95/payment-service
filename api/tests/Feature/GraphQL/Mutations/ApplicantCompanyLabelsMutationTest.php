@@ -4,16 +4,18 @@ namespace Tests;
 
 use Illuminate\Support\Facades\DB;
 
-class ApplicantCompanyLabelsTest extends TestCase
+class ApplicantCompanyLabelsMutationTest extends TestCase
 {
     /**
-     * ApplicantCompanyLabels Testing
+     * ApplicantCompanyLabels Mutation Testing
      *
      * @return void
      */
-    public function testCreateApplicantCompanyLabel()
+
+    public function testCreateApplicantCompanyLabel(): void
     {
         $this->login();
+
         $this->graphQL('
             mutation CreateApplicantCompanyLabel(
                 $name: String!
@@ -32,7 +34,9 @@ class ApplicantCompanyLabelsTest extends TestCase
             'name' => 'Label_'.\Illuminate\Support\Str::random(5),
             'hex_color_code' => '#'.mt_rand(100000, 999999),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'createApplicantCompanyLabel' => [
@@ -42,10 +46,12 @@ class ApplicantCompanyLabelsTest extends TestCase
         ]);
     }
 
-    public function testUpdateApplicantCompanyLabel()
+    public function testUpdateApplicantCompanyLabel(): void
     {
         $this->login();
+
         $label = DB::connection('pgsql_test')->table('applicant_company_labels')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation UpdateApplicantCompanyLabel(
                 $id: ID!
@@ -76,11 +82,13 @@ class ApplicantCompanyLabelsTest extends TestCase
         ]);
     }
 
-    public function testAttachApplicantCompanyLabel()
+    public function testAttachApplicantCompanyLabel(): void
     {
         $this->login();
+
         $applicant_company = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
         $label = DB::connection('pgsql_test')->table('applicant_company_labels')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation AttachApplicantCompanyLabel(
                 $applicant_company_id: ID!
@@ -99,7 +107,9 @@ class ApplicantCompanyLabelsTest extends TestCase
             'applicant_company_id' => strval($applicant_company[0]->id),
             'applicant_company_label_id' => strval($label[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'attachApplicantCompanyLabel' => [
@@ -109,11 +119,13 @@ class ApplicantCompanyLabelsTest extends TestCase
         ]);
     }
 
-    public function testDetachApplicantCompanyLabel()
+    public function testDetachApplicantCompanyLabel():void
     {
         $this->login();
+
         $applicant_company = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
         $label = DB::connection('pgsql_test')->table('applicant_company_labels')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation DetachApplicantCompanyLabel(
                 $applicant_company_id: ID!
@@ -132,7 +144,9 @@ class ApplicantCompanyLabelsTest extends TestCase
             'applicant_company_id' => strval($applicant_company[0]->id),
             'applicant_company_label_id' => strval($label[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'detachApplicantCompanyLabel' => [
@@ -142,10 +156,12 @@ class ApplicantCompanyLabelsTest extends TestCase
         ]);
     }
 
-    public function testDeleteApplicantCompanyLabel()
+    public function testDeleteApplicantCompanyLabel(): void
     {
         $this->login();
+
         $label = DB::connection('pgsql_test')->table('applicant_company_labels')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation DeleteApplicantCompanyLabel(
                 $id: ID!
@@ -161,7 +177,9 @@ class ApplicantCompanyLabelsTest extends TestCase
         ', [
             'id' => strval($label[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'deleteApplicantCompanyLabel' => [

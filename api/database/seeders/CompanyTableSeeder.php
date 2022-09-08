@@ -26,6 +26,8 @@ class CompanyTableSeeder extends Seeder
                 'address' => $faker->address(),
                 'city' => $faker->city(),
                 'country_id' => $i,
+                'contact_name' => $faker->name,
+                'url' => $faker->url,
             ]);
         }
     }

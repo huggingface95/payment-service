@@ -4,16 +4,18 @@ namespace Tests;
 
 use Illuminate\Support\Facades\DB;
 
-class ApplicantBankingAccessTest extends TestCase
+class ApplicantBankingAccessMutationTest extends TestCase
 {
     /**
-     * Applicant Banking Access Testing
+     * Applicant Banking Access Mutation Testing
      *
      * @return void
      */
-    public function testCreateBankingAccess()
+
+    public function testCreateBankingAccess(): void
     {
         $this->login();
+
         $this->graphQL('
             mutation CreateApplicantBankingAccess(
                 $applicant_individual_id: ID!
@@ -41,7 +43,9 @@ class ApplicantBankingAccessTest extends TestCase
             'applicant_company_id' => 1,
             'member_id' => 2,
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'createApplicantBankingAccess' => [
@@ -51,10 +55,12 @@ class ApplicantBankingAccessTest extends TestCase
         ]);
     }
 
-    public function testUpdateBankingAccess()
+    public function testUpdateBankingAccess(): void
     {
         $this->login();
+
         $access = DB::connection('pgsql_test')->table('applicant_banking_access')->orderBy('id', 'DESC')->get();
+
         $this->graphQL('
             mutation UpdateApplicantBankingAccess(
                 $id: ID!
@@ -85,7 +91,9 @@ class ApplicantBankingAccessTest extends TestCase
             'applicant_company_id' => 1,
             'member_id' => 2,
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'updateApplicantBankingAccess' => [
@@ -95,46 +103,12 @@ class ApplicantBankingAccessTest extends TestCase
         ]);
     }
 
-    public function testQueryBankingAccessOrderBy()
+    public function testDeleteBankingAccess(): void
     {
         $this->login();
-        $access = DB::connection('pgsql_test')->table('applicant_banking_access')->orderBy('id', 'DESC')->get();
-        $this->graphQL('
-        query {
-            applicantBankingAccess(orderBy: { column: ID, order: DESC }) {
-                data {
-                    id
-                }
-                }
-        }')->seeJsonContains([
-            [
-                'id' => strval($access[0]->id),
-            ],
-        ]);
-    }
 
-    public function testQueryBankingAccessWhere()
-    {
-        $this->login();
         $access = DB::connection('pgsql_test')->table('applicant_banking_access')->orderBy('id', 'DESC')->get();
-        $this->graphQL('
-        query {
-            applicantBankingAccess(where: { column: MEMBER_ID, value: 2}) {
-                data {
-                    id
-                }
-                }
-        }')->seeJsonContains([
-            [
-                'id' => strval($access[0]->id),
-            ],
-        ]);
-    }
 
-    public function testDeleteBankingAccess()
-    {
-        $this->login();
-        $access = DB::connection('pgsql_test')->table('applicant_banking_access')->orderBy('id', 'DESC')->get();
         $this->graphQL('
             mutation DeleteApplicantBankingAccess(
                 $id: ID!
@@ -150,7 +124,9 @@ class ApplicantBankingAccessTest extends TestCase
         ', [
             'id' => strval($access[0]->id),
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'deleteApplicantBankingAccess' => [

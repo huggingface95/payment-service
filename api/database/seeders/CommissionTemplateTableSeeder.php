@@ -23,6 +23,7 @@ class CommissionTemplateTableSeeder extends Seeder
                 'description'    => $faker->name(),
                 'payment_provider_id' => $i,
                 'is_active' => true,
+                'member_id' => 2,
             ]);
         }
     }
