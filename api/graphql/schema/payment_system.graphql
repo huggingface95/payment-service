@@ -10,8 +10,8 @@ type PaymentSystem {
     is_active: Boolean
     "Получить связанные регионы"
     regions: [Region] @belongsToMany(relation:"regions")
-    "Получить связанные компании"
-    companies: [Companies] @belongsToMany(relation:"companies")
+    "Получить связанную компанию"
+    company: Companies @hasOne(relation:"company")
     "Получить связанные валюты"
     currencies: [Currencies] @belongsToMany(relation:"currencies")
     "Получить Платежные провайдеры"
