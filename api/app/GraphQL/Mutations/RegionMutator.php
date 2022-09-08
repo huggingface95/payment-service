@@ -4,14 +4,16 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
 use App\Models\Region;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class RegionMutator
 {
     /**
-     * @throws GraphqlException
+     * @param $root
+     * @param array $args
+     * @return Region
      */
-    public function create($root, array $args): LengthAwarePaginator
+    public function create($root, array $args): Collection
     {
         Region::create($args);
 
