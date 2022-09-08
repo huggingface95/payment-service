@@ -47,9 +47,7 @@ class RolesQueryTest extends TestCase
 
         $role = DB::connection('pgsql_test')
             ->table('roles')
-            ->orderBy('id', 'DESC')
-            ->take(1)
-            ->get();
+            ->first();
 
         $this->graphQL('
             query {
@@ -64,8 +62,8 @@ class RolesQueryTest extends TestCase
             'data' => [
                 'roles' => [
                     'data' => [[
-                        'id' => strval($role[0]->id),
-                        'name' => strval($role[0]->name),
+                        'id' => strval($role->id),
+                        'name' => strval($role->name),
                     ]],
                 ],
             ],
@@ -78,9 +76,7 @@ class RolesQueryTest extends TestCase
 
         $role = DB::connection('pgsql_test')
             ->table('roles')
-            ->orderBy('id', 'DESC')
-            ->take(1)
-            ->get();
+            ->first();
 
         $this->graphQL('
             query {
@@ -92,8 +88,8 @@ class RolesQueryTest extends TestCase
                 }
             }
         ')->seeJsonContains([
-            'id' => strval($role[0]->id),
-            'name' => strval($role[0]->name),
+            'id' => strval($role->id),
+            'name' => strval($role->name),
         ]);
     }
 
@@ -136,9 +132,7 @@ class RolesQueryTest extends TestCase
 
         $role = DB::connection('pgsql_test')
             ->table('roles')
-            ->orderBy('id', 'DESC')
-            ->take(1)
-            ->get();
+            ->first();
 
         $this->graphQL('
             query {
@@ -149,14 +143,12 @@ class RolesQueryTest extends TestCase
                     }
                 }
             }
-        ', [
-            'id' => strval($role[0]->id),
-        ])->seeJson([
+        ')->seeJson([
             'data' => [
                 'roles' => [
                     'data' => [[
-                        'id' => strval($role[0]->id),
-                        'name' => strval($role[0]->name),
+                        'id' => strval($role->id),
+                        'name' => strval($role->name),
                     ]],
                 ],
             ],

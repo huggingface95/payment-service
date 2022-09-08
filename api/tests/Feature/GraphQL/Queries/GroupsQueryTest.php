@@ -91,16 +91,10 @@ class GroupsQueryTest extends TestCase
             }
         ', [
             'id' => strval($group->id),
-        ])->seeJson([
-            'data' => [
-                'groupList' => [
-                    'data' => [[
-                        'id' => strval($group->id),
-                        'name' => strval($group->name),
-                        'description' => strval($group->description),
-                    ]],
-                ],
-            ],
+        ])->seeJsonContains([
+           'id' => strval($group->id),
+           'name' => strval($group->name),
+           'description' => strval($group->description),
         ]);
     }
 
@@ -124,16 +118,10 @@ class GroupsQueryTest extends TestCase
             }
         ', [
             'id' => strval($group->id),
-        ])->seeJson([
-            'data' => [
-                'groupList' => [
-                    'data' => [[
-                        'id' => strval($group->id),
-                        'name' => strval($group->name),
-                        'description' => strval($group->description),
-                    ]],
-                ],
-            ],
+        ])->seeJsonContains([
+            'id' => strval($group->id),
+            'name' => strval($group->name),
+            'description' => strval($group->description),
         ]);
     }
 
