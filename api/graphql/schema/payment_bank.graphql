@@ -27,7 +27,8 @@ extend type Query @guard {
     paymentBank(id: ID @eq): PaymentBank @find
     "Получить список банков"
     paymentBanks(
-        query: QueryPaymentBankCondition
+        filter: _ @filterConditions(static: QueryPaymentBanksFilterStatic),
+        query: QueryPaymentBankCondition,
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
     ): [PaymentBank!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -40,6 +41,16 @@ input QueryPaymentBankCondition {
     payment_system_code: String @eq
     payment_provider_id: ID! @eq
     payment_system_id: ID! @eq
+}
+
+input QueryPaymentBanksFilterStatic @spread{
+    country_id: ID @eq
+    payment_system_id: ID @eq
+    payment_provider_id: ID @eq
+    name: String @ilike
+    address: String @ilike
+    bank_code: String @ilike
+    payment_system_code: String @ilike
 }
 
 enum QueryPaymentBankWhereColumn {
