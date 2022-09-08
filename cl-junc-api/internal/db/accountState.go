@@ -11,49 +11,56 @@ type AccountState struct {
 	Name string         `bun:"name"`
 }
 
-type AccountStateDb int64
+type AccountStateDb uint64
 
 const (
-	StateActive    AccountStateDb = 1
-	StateSuspended AccountStateDb = 2
-	StateBlocked   AccountStateDb = 3
-	StatePending   AccountStateDb = 4
-	StateClosed    AccountStateDb = 5
-	StateWaiting   AccountStateDb = 6
+	StateWaitingForApproval              AccountStateDb = 1
+	StateWaitingForAccountIbanGeneration AccountStateDb = 2
+	StateAwaitingAccount                 AccountStateDb = 3
+	StateActive                          AccountStateDb = 4
+	StateClosed                          AccountStateDb = 5
+	StateSuspended                       AccountStateDb = 6
+	StateRejected                        AccountStateDb = 7
 )
 
 func (a AccountStateDb) GetAccountStateName() string {
 	switch a {
+	case StateWaitingForApproval:
+		return "Waiting for approval"
+	case StateWaitingForAccountIbanGeneration:
+		return "Waiting for Account# Generation"
+	case StateAwaitingAccount:
+		return "Awaiting Account#"
 	case StateActive:
 		return "Active"
-	case StateSuspended:
-		return "Suspended"
-	case StateBlocked:
-		return "Blocked"
-	case StatePending:
-		return "Pending"
 	case StateClosed:
 		return "Closed"
-	case StateWaiting:
-		return "Waiting"
+	case StateSuspended:
+		return "Suspended"
+	case StateRejected:
+		return "Rejected"
 	}
 
-	return "error"
+	return ""
 }
 
 func GetAccountState(name string) AccountStateDb {
 	switch name {
-	case "active":
+	case "Waiting for approval":
+		return StateWaitingForApproval
+	case "Waiting for Account# Generation":
+		return StateWaitingForAccountIbanGeneration
+	case "Awaiting Account#":
+		return StateAwaitingAccount
+	case "Active":
 		return StateActive
-	case "suspended":
-		return StateSuspended
-	case "blocked":
-		return StateBlocked
-	case "pending":
-		return StateWaiting
-	case "closed":
+	case "Closed":
 		return StateClosed
+	case "Suspended":
+		return StateSuspended
+	case "Rejected":
+		return StateRejected
 	}
 
-	return StateBlocked
+	return 0
 }
