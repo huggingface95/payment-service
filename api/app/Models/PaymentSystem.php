@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class PaymentSystem extends BaseModel
@@ -56,6 +57,24 @@ class PaymentSystem extends BaseModel
                 'id', // Local key on the "countries" table.
                 'payment_provider_id', // Local key on the "users" table.
                 'company_id',  // Local key on the "posts" table.
+            ]
+        );
+    }
+
+    public function company(): HasOneDeep
+    {
+        return $this->hasOneDeep(
+            Companies::class,
+            [PaymentProviderPaymentSystem::class, PaymentProvider::class],
+            [
+                'payment_system_id',
+                'id',
+                'id',
+            ],
+            [
+                'id',
+                'payment_provider_id',
+                'company_id',
             ]
         );
     }
