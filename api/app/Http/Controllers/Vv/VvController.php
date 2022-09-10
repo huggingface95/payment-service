@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Vv;
 use App\DTO\TransformerDTO;
 use App\DTO\Vv\VvPostBackResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Middleware\VvTokenMiddleware;
+use App\Models\Companies;
 use App\Services\VvService;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -17,7 +18,8 @@ class VvController extends Controller
 
     public function __construct(VvService $vvService)
     {
-        $this->middleware(VvTokenMiddleware::class);
+        //TODO enable middeleware
+//        $this->middleware(VvTokenMiddleware::class);
 
         $this->vvService = $vvService;
     }
@@ -35,5 +37,19 @@ class VvController extends Controller
         $this->vvService->savePostBackData($vvDto);
     }
 
+    /** Example register move to graphql
+     * @throws GuzzleException
+     */
+    public function register(){
+        $this->vvService->registerCompany(Companies::find(3));
+    }
+
+    /** Example getLink move to graphql
+     * @throws GuzzleException
+     */
+    public function getLink(){
+        echo $this->vvService->getLink(Companies::find(3), "detection");
+        exit();
+    }
 
 }

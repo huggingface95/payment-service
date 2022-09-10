@@ -3,7 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * Class Companies
+ *
+ * @property int id
+ *
+ * @property CompanySettings $companySettings
+ */
 class Companies extends BaseModel
 {
     /**
@@ -40,7 +48,7 @@ class Companies extends BaseModel
         return $this->hasMany(DepartmentPosition::class, 'company_id');
     }
 
-    public function companySettings()
+    public function companySettings(): HasOne
     {
         return $this->hasOne(CompanySettings::class, 'company_id', 'id');
     }

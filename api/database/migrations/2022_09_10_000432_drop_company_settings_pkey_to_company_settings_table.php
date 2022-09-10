@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddVvTokenToApplicantIndividualTable extends Migration
+class DropCompanySettingsPkeyToCompanySettingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class AddVvTokenToApplicantIndividualTable extends Migration
      */
     public function up()
     {
-        Schema::table('applicant_individual', function (Blueprint $table) {
-            $table->string('vv_token', 32)->nullable();
+        Schema::table('company_settings', function (Blueprint $table) {
+            $table->dropPrimary('company_settings_pkey');
         });
     }
 
@@ -25,8 +25,8 @@ class AddVvTokenToApplicantIndividualTable extends Migration
      */
     public function down()
     {
-        Schema::table('applicant_individual', function (Blueprint $table) {
-            $table->dropColumn('vv_token');
+        Schema::table('company_settings', function (Blueprint $table) {
+            $table->primary('company_id', 'company_settings_pkey');
         });
     }
 }
