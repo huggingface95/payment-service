@@ -44,6 +44,7 @@ input QueryPaymentBankCondition {
 }
 
 input QueryPaymentBanksFilterStatic @spread{
+    id: ID @eq
     country_id: ID @eq
     payment_system_id: ID @eq
     payment_provider_id: ID @eq
