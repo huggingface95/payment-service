@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers\Vv;
 
-use App\DTO\TransformerDTO;
-use App\DTO\Vv\VvPostBackResponse;
 use App\Http\Controllers\Controller;
-use App\Models\Companies;
 use App\Services\VvService;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
@@ -24,31 +21,26 @@ class VvController extends Controller
         $this->vvService = $vvService;
     }
 
-
     /**
      * @throws ValidationException
      */
     public function postback(Request $request)
     {
-        $this->vvService->validationPostBack($request);
-
-        $vvDto = TransformerDTO::transform(VvPostBackResponse::class, $request->all(), $request->header('token'));
-
-        $this->vvService->savePostBackData($vvDto);
+        $this->vvService->savePostBackData($request);
     }
 
     /** Example register move to graphql
      * @throws GuzzleException
      */
     public function register(){
-        $this->vvService->registerCompany(Companies::find(3));
+        $this->vvService->registerCompany(3);
     }
 
     /** Example getLink move to graphql
      * @throws GuzzleException
      */
     public function getLink(){
-        echo $this->vvService->getLink(Companies::find(3), "detection");
+        echo $this->vvService->getLink(3, "detection");
         exit();
     }
 

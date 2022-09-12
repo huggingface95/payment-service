@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
  * Class ApplicantIndividual
  *
  * @property ApplicantBankingAccess $applicantBankingAccess
+ * @method static find(mixed $client_id)
  */
 class ApplicantIndividual extends BaseModel
 {

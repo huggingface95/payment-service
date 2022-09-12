@@ -49,4 +49,9 @@ abstract class Repository
 
         return $model;
     }
+
+    public function find(array $conditions): Model|Builder|null
+    {
+        return $this->query->where($conditions)->first();
+    }
 }

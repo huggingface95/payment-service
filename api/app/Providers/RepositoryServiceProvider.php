@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\FileRepository;
+use App\Repositories\Interfaces\FileRepositoryInterface;
 use App\Repositories\Interfaces\VvRepositoryInterface;
 use App\Repositories\VvRepository;
 use Illuminate\Support\ServiceProvider;
@@ -18,6 +20,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             VvRepositoryInterface::class,
             VvRepository::class
+        );
+
+        $this->app->bind(
+            FileRepositoryInterface::class,
+            FileRepository::class
         );
     }
 }

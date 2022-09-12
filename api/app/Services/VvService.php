@@ -9,8 +9,8 @@ use App\DTO\Vv\Response\VvGetLinkResponse;
 use App\DTO\Vv\Response\VvRegisterResponse;
 use App\DTO\Vv\VvConfig;
 use App\DTO\Vv\VvPostBackResponse;
-use App\Models\Companies;
 use App\Models\Files;
+use App\Repositories\Interfaces\FileRepositoryInterface;
 use App\Repositories\Interfaces\VvRepositoryInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Routing\ProvidesConvenienceMethods;
-use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\RequestException;
 
 class VvService
@@ -30,17 +29,17 @@ class VvService
 
     protected VvRepositoryInterface $vvRepository;
 
-    protected Files $file;
+    protected FileRepositoryInterface $fileRepository;
 
     protected Client $client;
 
     private VvConfig $config;
 
-    public function __construct(VvRepositoryInterface $vvRepository, Files $file, Client $client)
+    public function __construct(VvRepositoryInterface $vvRepository, FileRepositoryInterface $fileRepository, Client $client)
     {
         $this->loadConfig();
         $this->vvRepository = $vvRepository;
-        $this->file = $file;
+        $this->fileRepository = $fileRepository;
         $this->client = $client;
     }
 
@@ -52,38 +51,42 @@ class VvService
     /**
      * @throws GuzzleException
      */
-    public function sendRegisterRequest(VvRegisterRequest $registerRequest): ResponseInterface
+    public function sendRegisterRequest(VvRegisterRequest $registerRequest): VvRegisterResponse
     {
         try {
-            return $this->client->get($registerRequest->url, ['headers' => $registerRequest->headers]);
+            $response = $this->client->get($registerRequest->url, ['headers' => $registerRequest->headers]);
         } catch (RequestException $e) {
-            return $e->getResponse();
+            $response = $e->getResponse();
         }
+
+        return TransformerDTO::transform(VvRegisterResponse::class, $response);
     }
 
     /**
      * @throws GuzzleException
      */
-    public function sendGetLinkRequest(VvGetLinkRequest $getLinkRequest): ResponseInterface
+    public function sendGetLinkRequest(VvGetLinkRequest $getLinkRequest): VvGetLinkResponse
     {
         try {
-            return $this->client->post($getLinkRequest->url, [
+            $response = $this->client->post($getLinkRequest->url, [
                 'headers' => $getLinkRequest->headers,
                 'json' => $getLinkRequest->inputs,
             ]);
         } catch (RequestException $e) {
-            return $e->getResponse();
+            $response = $e->getResponse();
         }
+
+        return TransformerDTO::transform(VvGetLinkResponse::class, $response);
     }
 
     /**
      * @throws GuzzleException
      */
-    public function getLink(Companies $company, string $action): string
+    public function getLink(int $id, string $action): string
     {
-        $request = TransformerDTO::transform(VvGetLinkRequest::class, $this->config, $company, $action);
+        $request = $this->vvRepository->getDtoGetLinkRequest($id, $action, $this->config);
 
-        $response = TransformerDTO::transform(VvGetLinkResponse::class, $this->sendGetLinkRequest($request));
+        $response = $this->sendGetLinkRequest($request);
 
         if ($response->status == 200) {
             return $response->url;
@@ -96,14 +99,13 @@ class VvService
     /**
      * @throws GuzzleException
      */
-    public function registerCompany(Companies $company): bool
+    public function registerCompany(int $id): bool
     {
-        $request = TransformerDTO::transform(VvRegisterRequest::class, $this->config, $company);
-
-        $response = TransformerDTO::transform(VvRegisterResponse::class, $this->sendRegisterRequest($request));
+        $request = $this->vvRepository->getDtoRegisterCompanyRequest($id, $this->config);
+        $response = $this->sendRegisterRequest($request);
 
         if ($response->status == 200) {
-            return $this->vvRepository->saveToken($company->id, $response->token);
+            return $this->vvRepository->saveToken($id, $response->token);
         }
 
         return false;
@@ -136,22 +138,20 @@ class VvService
         ]);
     }
 
-    public function savePostBackData(VvPostBackResponse $vvPostBackResponse): void
+    /**
+     * @throws ValidationException
+     */
+    public function savePostBackData(Request $request): void
     {
-        if ($vvPostBackResponse->action == self::RECORDING) {
-            $client = $this->vvRepository->findByToken($vvPostBackResponse->token);
+        $this->validationPostBack($request);
 
-            $this->file->save([
-                'file_name' => $vvPostBackResponse->data->file_name,
-                'mime_type' => $vvPostBackResponse->data->mime_type,
-                'size' => $vvPostBackResponse->data->size,
-                'entity_type' => "file",
-                'author_id' => $client->id,
-                'storage_path' => $vvPostBackResponse->data->storage_path,
-                'storage_name' => $vvPostBackResponse->data->storage_name,
-                'link' => 'https://dev.storage.docudots.com/' . $vvPostBackResponse->data->full_name,
-            ]);
-        } elseif ($vvPostBackResponse->action == self::DETECTION) {
+        $response = TransformerDTO::transform(VvPostBackResponse::class, $request->all());
+
+        if ($response->action == self::RECORDING) {
+
+            $this->fileRepository->saveFile($response);
+
+        } elseif ($response->action == self::DETECTION) {
             //TODO Save if detection true
         }
 
