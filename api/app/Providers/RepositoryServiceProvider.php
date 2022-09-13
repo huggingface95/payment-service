@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Repositories\EmailRepository;
 use App\Repositories\FileRepository;
+use App\Repositories\Interfaces\EmailRepositoryInterface;
 use App\Repositories\Interfaces\FileRepositoryInterface;
 use App\Repositories\Interfaces\VvRepositoryInterface;
 use App\Repositories\VvRepository;
@@ -25,6 +27,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             FileRepositoryInterface::class,
             FileRepository::class
+        );
+
+        $this->app->bind(
+            EmailRepositoryInterface::class,
+            EmailRepository::class
         );
     }
 }

@@ -99,7 +99,7 @@ func IbanPostback(c *gin.Context) {
 		app.Get.UpdateAccount(&db.Account{
 			OrderReference: response.OrderReference,
 			Iban:           response.Iban,
-			AccountState:   db.StateActive,
+			AccountState:   db.StateWaitingForApproval,
 		}, "order_reference", "account_state_id", "account_number")
 
 		c.Data(200, "text/plain", []byte(response.OrderReference))

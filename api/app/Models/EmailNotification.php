@@ -17,7 +17,8 @@ use Illuminate\Support\Carbon;
  * @property string group_type
  * @property Carbon created_at
  * @property Carbon updated_at
- * @property int $group_type_id
+ * @property int group_type_id
+ * @property GroupRole groupRole
  */
 class EmailNotification extends BaseModel
 {
