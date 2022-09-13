@@ -87,6 +87,7 @@ $app->configure('dompdf');
 $app->configure('mail');
 $app->configure('queue');
 $app->configure('payment');
+$app->configure('vv');
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -141,6 +142,7 @@ $app->register(\App\Providers\MailServiceProvider::class);
 $app->register(Jenssegers\Agent\AgentServiceProvider::class);
 $app->register(\App\Providers\PermissionRecordsToEnumServiceProvider::class);
 $app->register(\Tinderbox\ClickhouseBuilder\Integrations\Laravel\ClickhouseServiceProvider::class);
+$app->register(App\Providers\RepositoryServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

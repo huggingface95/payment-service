@@ -28,6 +28,16 @@ $router->group([
     $router->post('2facodes', 'AuthController@storeBackupCodes');
 });
 
+$router->group([
+    'prefix' => 'vv',
+    'namespace' => 'Vv',
+], function () use ($router){
+    //Example routes register, get-link
+    $router->get('register', 'VvController@register');
+    $router->get('get-link', 'VvController@getLink');
+    $router->post('postback', 'VvController@postback');
+});
+
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });

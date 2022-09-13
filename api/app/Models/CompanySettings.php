@@ -2,6 +2,14 @@
 
 namespace App\Models;
 
+
+/**
+ * Class CompanySettings
+ *
+ * @property int company_id
+ * @property string vv_token
+ *
+ */
 class CompanySettings extends BaseModel
 {
     /**
@@ -10,10 +18,10 @@ class CompanySettings extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'email_url', 'email_jwt', 'email_from', 'logo_object_key', 'show_own_logo',
+        'email_url', 'email_jwt', 'email_from', 'logo_object_key', 'show_own_logo', 'vv_token', 'company_id'
     ];
 
-    public $primaryKey = 'company_id';
+    public $primaryKey = 'id';
 
     public $timestamps = false;
 
