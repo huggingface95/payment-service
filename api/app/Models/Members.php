@@ -22,6 +22,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Lumen\Auth\Authorizable;
 use Laravel\Passport\HasApiTokens;
+use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -57,6 +59,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     use CanResetPassword;
     use Notifiable;
     use MorphToOne;
+    use HasRelationships;
 
     public $password_confirmation;
 
@@ -195,6 +198,24 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function groupRole(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
         return $this->morphToOne(GroupRole::class, 'user', GroupRoleUser::class, 'user_id', 'group_role_id');
+    }
+
+    public function role(): HasOneDeep
+    {
+        return $this->hasOneDeep(
+            Role::class,
+            [GroupRoleUser::class, GroupRole::class],
+            [
+                'user_id',
+                'id',
+                'id',
+            ],
+            [
+                'id',
+                'group_role_id',
+                'role_id',
+            ]
+        )->where('user_type', self::class);
     }
 
     public function groupRoles(): MorphToMany
