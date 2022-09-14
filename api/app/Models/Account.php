@@ -283,6 +283,9 @@ class Account extends BaseModel implements BaseModelInterface
             ->where(function ($q) use ($filter) {
                 $q->orWhere('account_individuals_companies.client_id', 'like', $filter['client'] ?? '%')
                     ->orWhere('applicant_individual.fullname', 'like', $filter['client'] ?? '%');
+            })
+            ->when(isset($filter['currency_id']), function ($q) use($filter){
+                return $q->where('currency_id', $filter['currency_id']);
             });
     }
 
