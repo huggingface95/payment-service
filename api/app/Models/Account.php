@@ -205,10 +205,11 @@ class Account extends BaseModel implements BaseModelInterface
     public function clientableAttach(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
         if ($this->account_type == self::BUSINESS) {
+
             return $this->applicantCompany();
-        } else {
-            return $this->applicantIndividual();
         }
+
+        return $this->applicantIndividual();
     }
 
     public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
