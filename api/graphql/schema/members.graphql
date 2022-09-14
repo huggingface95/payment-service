@@ -16,8 +16,6 @@ type Members {
     is_active: Boolean
     "Последняя авторизация"
     last_login_at: DateTime
-    "ID компании"
-    company_id: ID
     "получить компанию участника"
     company: Companies! @belongsTo(relation: "company")
     "получить страну участника"
