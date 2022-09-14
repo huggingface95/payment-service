@@ -18,15 +18,18 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 /**
  * Class Account
  *
+ * @property int id
  * @property string account_number
  * @property int account_state_id
  * @property int group_type_id
+ * @property int company_id
  * @property AccountState $accountState
  * @property Groups $group
  * @property CommissionTemplate $commissionTemplate
  * @property AccountLimit $limits
  * @property AccountReachedLimit $reachedLimits
  * @property ApplicantIndividual | ApplicantCompany $clientable
+ * @method static find(int $id)
  */
 class Account extends BaseModel implements BaseModelInterface
 {

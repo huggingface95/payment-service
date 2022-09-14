@@ -3,6 +3,8 @@
 namespace App\Console;
 
 use App\Console\Commands\DropTestTables;
+use App\Console\Commands\IbanCompanyCommand;
+use App\Console\Commands\IbanIndividualStatusCommand;
 use App\Console\Commands\NotificationsCommand;
 use App\Console\Commands\SendEmailCommand;
 use Illuminate\Console\Scheduling\Schedule;
@@ -19,6 +21,8 @@ class Kernel extends ConsoleKernel
         NotificationsCommand::class,
         SendEmailCommand::class,
         DropTestTables::class,
+        IbanCompanyCommand::class,
+        IbanIndividualStatusCommand::class,
     ];
 
     /**
@@ -30,6 +34,6 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
 //        $schedule->command('notifications:send')->everyFiveMinutes();
-//        $schedule->command('notifications:send')->everyMinute();
+        $schedule->command('iban:individual:approval:email')->everyMinute();
     }
 }

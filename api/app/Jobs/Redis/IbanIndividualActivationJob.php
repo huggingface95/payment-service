@@ -4,8 +4,10 @@ namespace App\Jobs\Redis;
 
 use App\DTO\Account\IbanRequestDTO;
 use App\DTO\TransformerDTO;
+use App\Exceptions\GraphqlException;
 use App\Jobs\Job;
 use App\Models\Account;
+use App\Services\EmailService;
 use Illuminate\Support\Facades\Redis;
 
 class IbanIndividualActivationJob extends Job
@@ -23,17 +25,15 @@ class IbanIndividualActivationJob extends Job
     }
 
     /**
-     * @return bool
+     * @throws GraphqlException
      */
-    public function handle(): bool
+    public function handle(EmailService $emailService)
     {
-        try {
-            $redis = Redis::connection();
-            $redis->rpush(config('payment.redis.iban.individual'), json_encode($this->ibanRequest));
+        $redis = Redis::connection();
+        $redis->rpush(config('payment.redis.iban.individual'), json_encode($this->ibanRequest));
 
-            return true;
-        } catch (\Throwable) {
-            return false;
-        }
+        $account = Account::find($this->ibanRequest->id);
+
+        $emailService->sendAccountStatusEmail($account);
     }
 }

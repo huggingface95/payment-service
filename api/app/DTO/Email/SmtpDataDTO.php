@@ -12,10 +12,10 @@ class SmtpDataDTO
 
     public string $subject;
 
-    public static function transform(EmailSmtp $smtp, string $content, string $subject): self
+    public static function transform(string|array $emails, string $content, string $subject): self
     {
         $dto = new self();
-        $dto->to = $smtp->replay_to;
+        $dto->to = $emails;
         $dto->body = $content;
         $dto->subject = $subject;
 
