@@ -32,7 +32,11 @@ class AccountMutator
             $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
         }
 
-        Account::create($args);
+        $account = Account::create($args);
+
+        if (isset($args['clientableAttach'])){
+            $account->clientableAttach()->sync($args['clientableAttach']['sync']);
+        }
 
         if (isset($args['query'])) {
             return Account::getAccountFilter($args['query'])->paginate(env('PAGINATE_DEFAULT_COUNT'));
