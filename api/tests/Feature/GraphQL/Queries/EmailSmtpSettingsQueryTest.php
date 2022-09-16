@@ -15,7 +15,11 @@ class EmailSmtpSettingsQueryTest extends TestCase
     {
         $this->login();
 
-        $smtp_settings = DB::connection('pgsql_test')->table('email_smtps')->orderBy('id', 'DESC')->take(1)->get();
+        $smtp_settings = DB::connection('pgsql_test')
+            ->table('email_smtps')
+            ->orderBy('id', 'DESC')
+            ->take(1)
+            ->get();
 
         $this->graphQL('
             query EmailSmtp($id: ID!) {
@@ -38,7 +42,11 @@ class EmailSmtpSettingsQueryTest extends TestCase
     {
         $this->login();
 
-        $smtp_settings = DB::connection('pgsql_test')->table('email_smtps')->orderBy('id', 'DESC')->take(1)->get();
+        $smtp_settings = DB::connection('pgsql_test')
+            ->table('email_smtps')
+            ->orderBy('id', 'DESC')
+            ->take(1)
+            ->get();
 
         $this->graphQL('
             query EmailSmtps($company_id: ID!) {
@@ -47,7 +55,7 @@ class EmailSmtpSettingsQueryTest extends TestCase
                 }
             }
             ', [
-            'company_id' => 1,
+            'company_id' => $smtp_settings[0]->company_id,
         ])->seeJsonContains([
             [
                 'id' => strval($smtp_settings[0]->id),

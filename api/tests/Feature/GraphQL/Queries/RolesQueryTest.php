@@ -113,7 +113,7 @@ class RolesQueryTest extends TestCase
                 }
             }
         ', [
-            'name' => 'Super Role',
+            'name' => (string) $role[0]->name,
         ])->seeJson([
             'data' => [
                 'roles' => [
@@ -135,15 +135,17 @@ class RolesQueryTest extends TestCase
             ->first();
 
         $this->graphQL('
-            query {
-                roles(where:{column:GROUP_TYPE_ID, value: 1 }) {
+            query Roles($id:Mixed){
+                roles(where:{column:GROUP_TYPE_ID, value: $id}) {
                     data {
                         id
                         name
                     }
                 }
             }
-        ')->seeJson([
+            ', [
+                'id' => $role->group_type_id,
+        ])->seeJson([
             'data' => [
                 'roles' => [
                     'data' => [[

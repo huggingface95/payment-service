@@ -52,20 +52,22 @@ class RegionsQueryTest extends TestCase
             ->get();
 
         $this->graphQL('
-            query {
-                regions(filter: { column: COMPANY_ID, value: 1 }) {
+            query Regions ($id: Mixed){
+                regions(filter: { column: COMPANY_ID, value: $id }) {
                     data {
                         id
                         name
                     }
                 }
             }
-            ')->seeJsonContains([
-            [
-                'id' => strval($region[0]->id),
-                'name' => strval($region[0]->name),
-            ],
-        ]);
+            ', [
+                'id' => $region[0]->company_id
+            ])->seeJsonContains([
+                [
+                    'id' => strval($region[0]->id),
+                    'name' => strval($region[0]->name),
+                ],
+            ]);
     }
 
     public function testQueryRegionsByCountryId(): void
@@ -78,20 +80,26 @@ class RegionsQueryTest extends TestCase
             ->take(1)
             ->get();
 
+        $country = DB::connection('pgsql_test')
+            ->table('region_countries')
+            ->first();
+
         $this->graphQL('
-            query {
-                regions(filter: { column: , HAS_COUNTRIES_FILTER_BY_ID, value: 1 }) {
+            query Region ($id: Mixed) {
+                regions(filter: { column: , HAS_COUNTRIES_FILTER_BY_ID, value: $id }) {
                     data {
                         id
                         name
                     }
                 }
             }
-            ')->seeJsonContains([
-            [
-                'id' => strval($region[0]->id),
-                'name' => strval($region[0]->name),
-            ],
+            ', [
+                'id' => $country->country_id
+            ])->seeJsonContains([
+                [
+                    'id' => strval($region[0]->id),
+                    'name' => strval($region[0]->name),
+                ],
         ]);
     }
 

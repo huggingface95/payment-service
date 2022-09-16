@@ -2,7 +2,10 @@
 
 namespace Tests;
 
+use App\Mail\SomeMailable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\DTO\Email\SmtpDataDTO;
 
 class EmailSmtpSettingsMutationTest extends TestCase
 {
@@ -125,48 +128,13 @@ class EmailSmtpSettingsMutationTest extends TestCase
     {
         $this->login();
 
-        $this->graphQL('
-            mutation SendEmail(
-                      $host_name: String!
-                      $from_name: String
-                      $from_email: String
-                      $username: String!
-                      $password: String!
-                      $replay_to: String
-                      $email: String!
-                ) {
-                sendEmail(
-                    security: Ssl
-                    host_name: $host_name
-                    from_name: $from_name
-                    from_email: $from_email
-                    username: $username
-                    password: $password
-                    replay_to: $replay_to
-                    port: 465
-                    email: $email
-                )
-              {
-                 status
-              }
-           }
-        ', [
-            'host_name' =>  'mail.lavachange.com',
-            'from_name' => 'Docutestststs',
-            'from_email' => 'test@lavachange.com',
-            'username' => 'test@lavachange.com',
-            'password' => 'test@test@123',
-            'email' => 'test@lavachange.com',
-        ]);
+        Mail::fake();
+        Mail::to('test@lavachange.com')->send(New SomeMailable(SmtpDataDTO::transform('test@lavachange.com', '<html><body>test</body></html>', 'test subj')));
+        Mail::assertSent(SomeMailable::class, function($mail) {
+            $mail->from('test@lavachange.com');
+            $mail->build();
 
-        $id = json_decode($this->response->getContent(), true);
-
-        $this->seeJson([
-            'data' => [
-                'sendEmail' => [
-                    'status' => $id['data']['sendEmail']['status'],
-                ],
-            ],
-        ]);
+            return $mail->hasFrom('test@lavachange.com') && $mail->subject === 'test subj';
+        });
     }
 }
