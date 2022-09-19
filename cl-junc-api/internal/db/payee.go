@@ -16,7 +16,7 @@ type Payee struct {
 	Address     string `bun:"address"`
 	Nationality string `bun:"nationality"`
 
-	Account []*Account `bun:"m2m:account_individuals_companies,join:Payee=Account"`
+	//Account []*Account `bun:"m2m:account_individuals_companies,join:Payee=Account"`
 
 	//WalletUuid       string
 	//clientCustomerId string

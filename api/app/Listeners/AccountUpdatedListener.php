@@ -9,8 +9,6 @@ use App\Traits\ReplaceRegularExpressions;
 
 class AccountUpdatedListener
 {
-    use ReplaceRegularExpressions;
-
     protected EmailService $emailService;
 
     public function __construct(EmailService $emailService)

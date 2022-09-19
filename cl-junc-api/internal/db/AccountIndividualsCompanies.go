@@ -5,8 +5,8 @@ import "github.com/uptrace/bun"
 type AccountIndividualsCompanies struct {
 	bun.BaseModel `bun:"table:account_individuals_companies"`
 
-	AccountID uint64   `bun:"account_id,pk"`
+	AccountId uint64   `bun:",pk"`
 	Account   *Account `bun:"rel:belongs-to,join:account_id=id"`
-	ClientId  uint64   `bun:"client_id,pk"`
+	ClientId  uint64   `bun:",pk"`
 	Payee     *Payee   `bun:"rel:belongs-to,join:client_id=id"`
 }
