@@ -17,7 +17,10 @@ class CommissionTemplateQueryTest extends TestCase
     {
         $this->login();
 
-        $getRecord = DB::connection('pgsql_test')->table('commission_template')->orderBy('id', 'ASC')->get();
+        $getRecord = DB::connection('pgsql_test')
+            ->table('commission_template')
+            ->orderBy('id', 'ASC')
+            ->get();
 
         $data =
             [
@@ -49,7 +52,10 @@ class CommissionTemplateQueryTest extends TestCase
     {
         $this->login();
 
-        $getRecord = DB::connection('pgsql_test')->table('commission_template')->orderBy('id', 'DESC')->get();
+        $getRecord = DB::connection('pgsql_test')
+            ->table('commission_template')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
             query CommissionTemplate($id:ID!)
@@ -79,7 +85,10 @@ class CommissionTemplateQueryTest extends TestCase
     {
         $this->login();
 
-        $getRecord = DB::connection('pgsql_test')->table('commission_template')->orderBy('id', 'DESC')->get();
+        $getRecord = DB::connection('pgsql_test')
+            ->table('commission_template')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $data =
             [
@@ -102,5 +111,121 @@ class CommissionTemplateQueryTest extends TestCase
              }
         }
         ')->seeJsonContains($data);
+    }
+
+    public function testQueryCommissionTemplateById(): void
+    {
+        $this->login();
+
+        $list = DB::connection('pgsql_test')
+            ->table('commission_template')
+            ->first();
+
+        $this->graphQL('
+            query CommissionTemplate($id: Mixed) {
+                commissionTemplates(filter: { column: ID, value: $id }) {
+                    data {
+                        id
+                        name
+                        description
+                    }
+                }
+            }
+        ', [
+            'id' => $list->id
+        ])->seeJsonContains([
+            'id' => strval($list->id),
+            'name' => strval($list->name),
+            'description' => strval($list->description),
+        ]);
+    }
+
+    public function testQueryCommissionTemplateByName(): void
+    {
+        $this->login();
+
+        $list = DB::connection('pgsql_test')
+            ->table('commission_template')
+            ->first();
+
+        $this->graphQL('
+            query CommissionTemplate($name: Mixed) {
+                commissionTemplates(filter: { column: NAME, operator: LIKE, value: $name }) {
+                    data {
+                        id
+                        name
+                        description
+                    }
+                }
+            }
+        ', [
+            'name' => $list->name
+        ])->seeJsonContains([
+            'id' => strval($list->id),
+            'name' => strval($list->name),
+            'description' => strval($list->description),
+        ]);
+    }
+
+    public function testQueryCommissionTemplateByPaymentProvider(): void
+    {
+        $this->login();
+
+        $list = DB::connection('pgsql_test')
+            ->table('commission_template')
+            ->first();
+
+        $this->graphQL('
+            query CommissionTemplate($id: Mixed) {
+                commissionTemplates(
+                    filter: { column: HAS_PAYMENT_PROVIDER_FILTER_BY_ID, value: $id }
+                ) {
+                    data {
+                        id
+                        name
+                        description
+                    }
+                }
+            }
+        ', [
+            'id' => $list->payment_provider_id
+        ])->seeJsonContains([
+            'id' => strval($list->id),
+            'name' => strval($list->name),
+            'description' => strval($list->description),
+        ]);
+    }
+
+    public function testQueryCommissionTemplateByBusinessActivity(): void
+    {
+        $this->login();
+
+        $list = DB::connection('pgsql_test')
+            ->table('commission_template')
+            ->first();
+
+        $activity = DB::connection('pgsql_test')
+            ->table('commission_template_business_activity')
+            ->first();
+
+        $this->graphQL('
+            query CommissionTemplate($id: Mixed) {
+                commissionTemplates(
+                    filter: { column: HAS_BUSINESS_ACTIVITY_FILTER_BY_ID, value: $id }
+                ) {
+                    data {
+                        id
+                        name
+                        description
+                    }
+                }
+            }
+        ', [
+            'id' => $activity->commission_template_id
+        ])->seeJsonContains([
+            'id' => strval($list->id),
+            'name' => strval($list->name),
+            'description' => strval($list->description),
+        ]);
     }
 }

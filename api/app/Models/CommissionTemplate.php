@@ -96,7 +96,7 @@ class CommissionTemplate extends BaseModel
 
     public function owner(): BelongsToMany
     {
-        return $this->belongsToMany(ApplicantIndividual::class, 'accounts', 'commission_template_id', 'client_id', 'id');
+        return $this->belongsToMany(ApplicantIndividual::class, 'accounts', 'commission_template_id', 'owner_id', 'id');
     }
 
     public function account(): BelongsTo
@@ -106,6 +106,6 @@ class CommissionTemplate extends BaseModel
 
     public function company(): BelongsToMany
     {
-        return $this->belongsToMany(ApplicantCompany::class, 'accounts', 'commission_template_id', 'client_id', 'id', 'owner_id');
+        return $this->belongsToMany(ApplicantCompany::class, 'accounts', 'commission_template_id', 'owner_id', 'id', 'owner_id');
     }
 }

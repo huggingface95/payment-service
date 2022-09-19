@@ -18,7 +18,10 @@ class CommissionPriceListQueryTest extends TestCase
     {
         $this->login();
 
-        $getRecord = DB::connection('pgsql_test')->table('commission_price_list')->orderBy('id', 'ASC')->get();
+        $getRecord = DB::connection('pgsql_test')
+            ->table('commission_price_list')
+            ->orderBy('id', 'ASC')
+            ->get();
 
         $data =
             [
@@ -59,7 +62,10 @@ class CommissionPriceListQueryTest extends TestCase
     {
         $this->login();
 
-        $getRecord = DB::connection('pgsql_test')->table('commission_price_list')->orderBy('id', 'DESC')->get();
+        $getRecord = DB::connection('pgsql_test')
+            ->table('commission_price_list')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
             query CommissionPriceList($id:ID!)
@@ -99,7 +105,10 @@ class CommissionPriceListQueryTest extends TestCase
     {
         $this->login();
 
-        $getRecord = DB::connection('pgsql_test')->table('commission_price_list')->orderBy('id', 'DESC')->get();
+        $getRecord = DB::connection('pgsql_test')
+            ->table('commission_price_list')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $data =
             [
@@ -131,5 +140,167 @@ class CommissionPriceListQueryTest extends TestCase
              }
         }
         ')->seeJsonContains($data);
+    }
+
+    public function testQueryCommissionPriceListByCompany(): void
+    {
+        $this->login();
+
+        $list = DB::connection('pgsql_test')
+            ->table('commission_price_list')
+            ->first();
+
+        $this->graphQL('
+            query CommissionPriceList($id: Mixed) {
+                commissionPriceLists(
+                    filter: { column: HAS_COMPANY_FILTER_BY_ID, value: $id }
+                ) {
+                    data {
+                        id
+                        name
+                    }
+                }
+            }
+        ', [
+            'id' => $list->company_id
+        ])->seeJsonContains([
+            'id' => strval($list->id),
+            'name' => strval($list->name),
+        ]);
+    }
+
+    public function testQueryCommissionPriceListByPaymentProvider(): void
+    {
+        $this->login();
+
+        $list = DB::connection('pgsql_test')
+            ->table('commission_price_list')
+            ->first();
+
+        $this->graphQL('
+            query CommissionPriceList($id: Mixed) {
+                commissionPriceLists(
+                    filter: { column: HAS_PAYMENT_PROVIDER_FILTER_BY_ID, value: $id }
+                ) {
+                    data {
+                        id
+                        name
+                    }
+                }
+            }
+        ', [
+            'id' => $list->provider_id
+        ])->seeJsonContains([
+            'id' => strval($list->id),
+            'name' => strval($list->name),
+        ]);
+    }
+
+    public function testQueryCommissionPriceListByCommissionTemplate(): void
+    {
+        $this->login();
+
+        $list = DB::connection('pgsql_test')
+            ->table('commission_price_list')
+            ->first();
+
+        $this->graphQL('
+            query CommissionPriceList($id: Mixed) {
+                commissionPriceLists(
+                    filter: { column: HAS_COMMISSION_TEMPLATE_FILTER_BY_ID, value: $id }
+                ) {
+                    data {
+                        id
+                        name
+                    }
+                }
+            }
+        ', [
+            'id' => $list->commission_template_id
+        ])->seeJsonContains([
+            'id' => strval($list->id),
+            'name' => strval($list->name),
+        ]);
+    }
+
+    public function testQueryCommissionPriceListByPaymentSystem(): void
+    {
+        $this->login();
+
+        $list = DB::connection('pgsql_test')
+            ->table('commission_price_list')
+            ->first();
+
+        $this->graphQL('
+            query CommissionPriceList($id: Mixed) {
+                commissionPriceLists(
+                    filter: { column: HAS_PAYMENT_SYSTEM_FILTER_BY_ID, value: $id }
+                ) {
+                    data {
+                        id
+                        name
+                    }
+                }
+            }
+        ', [
+            'id' => $list->payment_system_id
+        ])->seeJsonContains([
+            'id' => strval($list->id),
+            'name' => strval($list->name),
+        ]);
+    }
+
+    public function testQueryCommissionPriceListById(): void
+    {
+        $this->login();
+
+        $list = DB::connection('pgsql_test')
+            ->table('commission_price_list')
+            ->first();
+
+        $this->graphQL('
+            query CommissionPriceList($id: Mixed) {
+                commissionPriceLists(
+                    filter: { column: ID, value: $id }
+                ) {
+                    data {
+                        id
+                        name
+                    }
+                }
+            }
+        ', [
+            'id' => $list->id
+        ])->seeJsonContains([
+            'id' => strval($list->id),
+            'name' => strval($list->name),
+        ]);
+    }
+
+    public function testQueryCommissionPriceListByRegionId(): void
+    {
+        $this->login();
+
+        $list = DB::connection('pgsql_test')
+            ->table('commission_price_list')
+            ->first();
+
+        $this->graphQL('
+            query CommissionPriceList($id: Mixed) {
+                commissionPriceLists(
+                    filter: { column: REGION_ID, value: $id }
+                ) {
+                    data {
+                        id
+                        name
+                    }
+                }
+            }
+        ', [
+            'id' => $list->region_id
+        ])->seeJsonContains([
+            'id' => strval($list->id),
+            'name' => strval($list->name),
+        ]);
     }
 }

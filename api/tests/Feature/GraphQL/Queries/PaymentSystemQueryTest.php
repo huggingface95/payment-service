@@ -18,8 +18,7 @@ class PaymentSystemQueryTest extends TestCase
 
         $payment_system = DB::connection('pgsql_test')
             ->table('payment_system')
-            ->orderBy('id')->
-            latest('id')
+            ->orderBy('id')
             ->first();
 
         $this->graphQL('

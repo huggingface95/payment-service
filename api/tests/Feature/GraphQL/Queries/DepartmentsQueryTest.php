@@ -100,6 +100,7 @@ class DepartmentsQueryTest extends TestCase
     public function testQueryDepartmentsByCompanyId(): void
     {
         $this->login();
+
         $department = DB::connection('pgsql_test')
             ->table('departments')
             ->select('*')

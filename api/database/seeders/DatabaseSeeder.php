@@ -32,6 +32,9 @@ class DatabaseSeeder extends Seeder
         $this->call(FeePeriodSeeder::class);
         $this->call(OperationTypeSeeder::class);
         $this->call(AccountStatesTableSeeder::class);
+        $this->call(DepartmentSeeder::class);
+        $this->call(DepartmentPositionTableSeeder::class);
+        $this->call(DepartmentPositionRelationSeeder::class);
         $this->call(MembersTableSeeder::class);
         $this->call(CommissionTemplateLimitTypeTableSeeder::class);
         $this->call(CommissionTemplateTableSeeder::class);
@@ -48,9 +51,6 @@ class DatabaseSeeder extends Seeder
         $this->call(RegionsTableSeeder::class);
         $this->call(RegionCountriesTableSeeder::class);
         $this->call(PermissionsSeeder::class);
-        $this->call(DepartmentSeeder::class);
-        $this->call(DepartmentPositionSeeder::class);
-        $this->call(DepartmentPositionRelationSeeder::class);
         $this->call(ActiveSessionTableSeeder::class);
         $this->call(AuthenticationLogTableSeeder::class);
         $this->call(ActivityLogTableSeeder::class);
@@ -60,5 +60,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PriceListFeesItemsTableSeeder::class);
         $this->call(AccountTableSeeder::class);
         $this->call(ApplicantBankingAccessTableSeeder::class);
+        $this->call(CommissionTemplateBusinessActivityTableSeeder::class);
     }
 }

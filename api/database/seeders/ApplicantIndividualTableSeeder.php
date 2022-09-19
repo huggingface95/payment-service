@@ -20,6 +20,7 @@ class ApplicantIndividualTableSeeder extends Seeder
             'first_name' => 'Applicant_test',
             'last_name' => 'Test',
             'email' => 'applicant@test.com',
+            'url' => 'applicant.com',
             'phone' => '+000000000000',
             'password_hash' => Hash::make('1234567Qa'),
             'password_salt' => '4561654sd654f65d4f',
@@ -32,6 +33,8 @@ class ApplicantIndividualTableSeeder extends Seeder
             'sex' => 1,
             'applicant_state_id' => 1,
             'account_manager_member_id' => 2,
+            'applicant_risk_level_id' => 1,
+            'applicant_state_reason_id' => 1,
         ]);
     }
 }

@@ -2,7 +2,11 @@
 
 namespace Tests;
 
+use App\DTO\Email\SmtpDataDTO;
+use App\Mail\SomeMailable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Mockery;
 
 class EmailTemplatesMutationTest extends TestCase
 {
@@ -105,39 +109,17 @@ class EmailTemplatesMutationTest extends TestCase
         ]);
     }
 
-    public function testSendEmailWithTemplate(): void
+    public function testSendEmail(): void
     {
         $this->login();
 
-        $this->graphQL('
-            mutation SendEmailWithTemplate(
-                      $email: String!
-                      $company_id: ID!
-                      $subject: String!
-                ) {
-                sendEmailWithTemplate(
-                    company_id: $company_id
-                    email: $email
-                    subject: $subject
-                )
-              {
-                 status
-              }
-           }
-        ', [
-            'email' => 'test@lavachange.com',
-            'company_id' => 1,
-            'subject' => 'SendEmailWithTemplate',
-        ]);
+        Mail::fake();
+        Mail::to('test@lavachange.com')->send(New SomeMailable(SmtpDataDTO::transform('test@lavachange.com', '<html><body>test</body></html>', 'test subj')));
+        Mail::assertSent(SomeMailable::class, function($mail) {
+            $mail->from('test@lavachange.com');
+            $mail->build();
 
-        $id = json_decode($this->response->getContent(), true);
-
-        $this->seeJson([
-            'data' => [
-                'sendEmailWithTemplate' => [
-                    'status' => $id['data']['sendEmailWithTemplate']['status'],
-                ],
-            ],
-        ]);
+            return $mail->hasFrom('test@lavachange.com') && $mail->subject === 'test subj';
+        });
     }
 }

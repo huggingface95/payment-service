@@ -25,6 +25,7 @@ class MembersTableSeeder extends Seeder
                 'password_salt' => '4561654sd654f65d4f',
                 'company_id' => 2,
                 'two_factor_auth_setting_id' => 1,
+                'department_position_id' => 1,
             ], [
                 'id' => 3,
                 'first_name' => 'Member3',
@@ -34,6 +35,7 @@ class MembersTableSeeder extends Seeder
                 'password_salt' => '4561654sd654f65d4f',
                 'company_id' => 2,
                 'two_factor_auth_setting_id' => 1,
+                'department_position_id' => 1,
             ],
         ]);
     }

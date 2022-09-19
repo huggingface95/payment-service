@@ -4,7 +4,7 @@ namespace Tests;
 
 use Illuminate\Support\Facades\DB;
 
-class CompaniesQueryTestiesTest extends TestCase
+class CompaniesQueryTest extends TestCase
 {
     /**
      * Companies Query Testing
@@ -16,7 +16,9 @@ class CompaniesQueryTestiesTest extends TestCase
     {
         $this->login();
 
-        $company = DB::connection('pgsql_test')->table('companies')->first();
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->first();
 
         $this->graphQL('
             query Company($id:ID!){
@@ -55,7 +57,10 @@ class CompaniesQueryTestiesTest extends TestCase
     {
         $this->login();
 
-        $company = DB::connection('pgsql_test')->table('companies')->orderBy('id', 'DESC')->get();
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
         query {
@@ -91,7 +96,10 @@ class CompaniesQueryTestiesTest extends TestCase
     {
         $this->login();
 
-        $company = DB::connection('pgsql_test')->table('companies')->orderBy('id', 'DESC')->get();
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
         query Companies($name: Mixed) {
@@ -130,7 +138,10 @@ class CompaniesQueryTestiesTest extends TestCase
     {
         $this->login();
 
-        $company = DB::connection('pgsql_test')->table('companies')->orderBy('id', 'DESC')->get();
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
             query Companies($email: Mixed) {
@@ -169,7 +180,10 @@ class CompaniesQueryTestiesTest extends TestCase
     {
         $this->login();
 
-        $company = DB::connection('pgsql_test')->table('companies')->orderBy('id', 'DESC')->get();
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
             query Companies($url: Mixed) {

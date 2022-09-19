@@ -15,7 +15,11 @@ class EmailNotificationsQueryTest extends TestCase
     {
         $this->login();
 
-        $email_notification = DB::connection('pgsql_test')->table('email_notifications')->orderBy('id', 'ASC')->take(1)->get();
+        $email_notification = DB::connection('pgsql_test')
+            ->table('email_notifications')
+            ->orderBy('id', 'ASC')
+            ->take(1)
+            ->get();
 
         $this->graphQL('
             query EmailNotification(
@@ -48,7 +52,11 @@ class EmailNotificationsQueryTest extends TestCase
     {
         $this->login();
 
-        $email_notification = DB::connection('pgsql_test')->table('email_notifications')->orderBy('id', 'DESC')->take(1)->get();
+        $email_notification = DB::connection('pgsql_test')
+            ->table('email_notifications')
+            ->orderBy('id', 'DESC')
+            ->take(1)
+            ->get();
 
         $this->graphQL('
             query {
@@ -62,6 +70,159 @@ class EmailNotificationsQueryTest extends TestCase
             [
                 'id' => strval($email_notification[0]->id),
             ],
+        ]);
+    }
+
+    public function testQueryEmailNotificationsByCompanyId(): void
+    {
+        $this->login();
+
+        $email = DB::connection('pgsql_test')
+            ->table('email_notifications')
+            ->first();
+
+        $this->graphQL('
+            query EmailNotifications($id: Mixed) {
+                emailNotifications(
+                    filter: { column: COMPANY_ID, value: $id }
+                ) {
+                    data {
+                        id
+                        type
+                        recipient_type
+                    }
+                }
+            }
+        ', [
+            'id' => $email->company_id
+        ])->seeJsonContains([
+            'id' => strval($email->id),
+            'type' => strval(ucfirst($email->type)),
+            'recipient_type' => strval(strtoupper($email->recipient_type)),
+        ]);
+    }
+
+    public function testQueryEmailNotificationsByType(): void
+    {
+        $this->login();
+
+        $email = DB::connection('pgsql_test')
+            ->table('email_notifications')
+            ->first();
+
+        $this->graphQL('
+            query EmailNotifications($type: Mixed) {
+                emailNotifications(
+                    filter: { column: TYPE, value: $type }
+                ) {
+                    data {
+                    id
+                    type
+                    recipient_type
+                    }
+                }
+            }
+        ', [
+            'type' => $email->type
+        ])->seeJsonContains([
+            'id' => strval($email->id),
+            'type' => strval(ucfirst($email->type)),
+            'recipient_type' => strval(strtoupper($email->recipient_type)),
+        ]);
+    }
+
+    public function testQueryEmailNotificationsByGroupRole(): void
+    {
+        $this->login();
+
+        $email = DB::connection('pgsql_test')
+            ->table('email_notifications')
+            ->first();
+
+        $this->graphQL('
+            query EmailNotifications($id: Mixed) {
+                emailNotifications(
+                    filter: { column: HAS_GROUP_ROLE_MIXED_ID_OR_NAME, value: $id }
+                ) {
+                    data {
+                        id
+                        type
+                        recipient_type
+                    }
+                }
+            }
+        ', [
+            'id' => $email->group_role_id
+        ])->seeJsonContains([
+            'id' => strval($email->id),
+            'type' => strval(ucfirst($email->type)),
+            'recipient_type' => strval(strtoupper($email->recipient_type)),
+        ]);
+    }
+
+    public function testQueryEmailNotificationsByGroupType(): void
+    {
+        $this->login();
+
+        $email = DB::connection('pgsql_test')
+            ->table('email_notifications')
+            ->first();
+
+        $this->graphQL('
+            query EmailNotifications($id: Mixed) {
+                emailNotifications(
+                    filter: { column: HAS_GROUP_TYPE_MIXED_ID_OR_NAME, value: $id }
+                ) {
+                    data {
+                        id
+                        type
+                        recipient_type
+                    }
+                }
+            }
+        ', [
+            'id' => $email->group_type_id
+        ])->seeJsonContains([
+            'id' => strval($email->id),
+            'type' => strval(ucfirst($email->type)),
+            'recipient_type' => strval(strtoupper($email->recipient_type)),
+        ]);
+    }
+
+    public function testQueryEmailNotificationsBySubject(): void
+    {
+        $this->login();
+
+        $email = DB::connection('pgsql_test')
+            ->table('email_notifications')
+            ->first();
+
+        $subject = DB::connection('pgsql_test')
+            ->table('email_templates')
+            ->first();
+
+        $this->graphQL('
+            query EmailNotifications($subject: Mixed) {
+                emailNotifications(
+                    filter: {
+                        column: HAS_TEMPLATES_FILTER_BY_SUBJECT
+                        operator: ILIKE
+                        value: $subject
+                    }
+                ) {
+                    data {
+                        id
+                        type
+                        recipient_type
+                    }
+                }
+            }
+        ', [
+            'subject' => $subject->subject
+        ])->seeJsonContains([
+            'id' => strval($email->id),
+            'type' => strval(ucfirst($email->type)),
+            'recipient_type' => strval(strtoupper($email->recipient_type)),
         ]);
     }
 }
