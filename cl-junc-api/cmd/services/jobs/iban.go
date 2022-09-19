@@ -6,6 +6,7 @@ import (
 	"cl-junc-api/internal/redis/constants"
 	models2 "cl-junc-api/internal/redis/models"
 	"cl-junc-api/pkg/utils/log"
+	"fmt"
 )
 
 func ProcessIbanIndGenerateQueue() {
@@ -23,6 +24,9 @@ func ProcessIbanIndGenerateQueue() {
 func createIndividualIban(request *models2.IbanRequest) {
 
 	dbAccount := app.Get.GetAccountWithRelations(&db.Account{Id: request.AccountId}, []string{"State", "Provider", "Payee"}, "id")
+	fmt.Println(len(dbAccount.Payee))
+	fmt.Println("lengthhhhhhhhhhhhhh")
+	return
 	if dbAccount.Provider.Name == db.CLEARJUNCTION {
 		response := app.Get.Wire.Iban(dbAccount)
 		if response == nil {
