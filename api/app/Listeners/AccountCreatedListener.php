@@ -28,7 +28,5 @@ class AccountCreatedListener
         $account = $event->account;
 
         $this->emailService->sendAccountStatusEmail($account);
-
-        dump($account->account_state_id, "create");
     }
 }

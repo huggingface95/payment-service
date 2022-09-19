@@ -25,8 +25,6 @@ class AccountUpdatedListener
 
         if (array_key_exists('account_state_id', $account->getChanges())) {
             $this->emailService->sendAccountStatusEmail($account);
-
-            dump($account->account_state_id, "updated");
         }
     }
 }
