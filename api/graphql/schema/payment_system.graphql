@@ -55,7 +55,7 @@ input InputPaymentSystem {
     "Описание"
     description: String
     "Лого"
-    logo: PivotTable
+    logo_id: ID
 }
 extend type Mutation @guard {
     "Создать платежную систему"
