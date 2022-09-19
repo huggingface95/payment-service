@@ -12,7 +12,6 @@ use App\Traits\ReplaceRegularExpressions;
 
 class AccountCreatedListener
 {
-    use ReplaceRegularExpressions;
 
     protected EmailService $emailService;
 
@@ -30,12 +29,6 @@ class AccountCreatedListener
 
         $this->emailService->sendAccountStatusEmail($account);
 
-        if ($account->account_number == null && $account->group->name == Groups::INDIVIDUAL) {
-            dispatch(new IbanIndividualActivationJob($account));
-
-            $account->account_state_id = AccountState::AWAITING_ACCOUNT;
-            $account->save();
-            $this->emailService->sendAccountStatusEmail($account);
-        }
+        dump($account->account_state_id, "create");
     }
 }

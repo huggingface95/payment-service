@@ -32,10 +32,15 @@ class AccountMutator
             $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
         }
 
+        /** @var Account $account */
         $account = Account::create($args);
 
         if (isset($args['clientableAttach'])){
             $account->clientableAttach()->sync($args['clientableAttach']['sync']);
+        }
+
+        if ($account->account_number == null && $account->group->name == Groups::INDIVIDUAL){
+            dispatch(new IbanIndividualActivationJob($account));
         }
 
         if (isset($args['query'])) {

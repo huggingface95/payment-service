@@ -9,8 +9,6 @@ use App\Traits\ReplaceRegularExpressions;
 
 class AccountUpdatedListener
 {
-    use ReplaceRegularExpressions;
-
     protected EmailService $emailService;
 
     public function __construct(EmailService $emailService)
@@ -27,6 +25,8 @@ class AccountUpdatedListener
 
         if (array_key_exists('account_state_id', $account->getChanges())) {
             $this->emailService->sendAccountStatusEmail($account);
+
+            dump($account->account_state_id, "updated");
         }
     }
 }

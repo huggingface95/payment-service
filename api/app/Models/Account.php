@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property AccountReachedLimit $reachedLimits
  * @property ApplicantIndividual | ApplicantCompany $clientable
  * @method static find(int $id)
+ * @method static findOrFail(int $id)
  */
 class Account extends BaseModel implements BaseModelInterface
 {
