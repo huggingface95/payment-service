@@ -28,12 +28,14 @@ func createIndividualIban(request *models2.IbanRequest) {
 		response := app.Get.Wire.Iban(dbAccount)
 		if response == nil {
 			log.Info().Msg("Iban create error")
+			return
 		}
-		//statusResponse, err := app.Get.Wire.GetIbanStatus(response.OrderReference)
-		//if err != nil {
-		//	log.Error().Err(err)
-		//	return
-		//}
+		_, err := app.Get.Wire.GetIbanStatus(response.OrderReference)
+		if err != nil {
+			log.Info().Msg("GetIbanStatus error")
+			log.Error().Err(err)
+			return
+		}
 		//dbAccount.AccountState = db.GetAccountState(statusResponse.Status)
 		//dbAccount.OrderReference = statusResponse.OrderReference
 		//
