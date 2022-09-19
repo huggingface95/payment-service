@@ -27,19 +27,19 @@ func createIndividualIban(request *models2.IbanRequest) {
 	if dbAccount.Provider.Name == db.CLEARJUNCTION {
 		response := app.Get.Wire.Iban(dbAccount)
 		if response == nil {
-			return
+			log.Info().Msg("Iban create error")
 		}
-		statusResponse, err := app.Get.Wire.GetIbanStatus(response.OrderReference)
-		if err != nil {
-			log.Error().Err(err)
-			return
-		}
-		dbAccount.AccountState = db.GetAccountState(statusResponse.Status)
-		dbAccount.OrderReference = statusResponse.OrderReference
-
-		if len(statusResponse.Messages) == 0 {
-			app.Get.UpdateAccount(dbAccount, "id", "account_state_id", "order_reference")
-		}
+		//statusResponse, err := app.Get.Wire.GetIbanStatus(response.OrderReference)
+		//if err != nil {
+		//	log.Error().Err(err)
+		//	return
+		//}
+		//dbAccount.AccountState = db.GetAccountState(statusResponse.Status)
+		//dbAccount.OrderReference = statusResponse.OrderReference
+		//
+		//if len(statusResponse.Messages) == 0 {
+		//	app.Get.UpdateAccount(dbAccount, "id", "account_state_id", "order_reference")
+		//}
 	}
 
 	return
