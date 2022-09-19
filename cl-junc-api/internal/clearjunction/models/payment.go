@@ -90,14 +90,14 @@ func NewPayInPayoutRequest(payment *db.Payment, amount float64, currency string,
 		Currency:    currency,
 		Description: "Custom Description",
 		Payer: PayInPayoutRequestPayer{
-			ClientCustomerId: payment.Account.GetPayee().Id,
+			ClientCustomerId: payment.Account.Payee[0].Id,
 			WalletUuid:       wallet,
 
 			Individual: PayInPayoutRequestPayeePayerIndividual{
-				Email:     payment.Account.GetPayee().Email,
-				Phone:     payment.Account.GetPayee().Phone,
-				LastName:  payment.Account.GetPayee().LastName,
-				FirstName: payment.Account.GetPayee().FirstName,
+				Email:     payment.Account.Payee[0].Email,
+				Phone:     payment.Account.Payee[0].Phone,
+				LastName:  payment.Account.Payee[0].LastName,
+				FirstName: payment.Account.Payee[0].FirstName,
 				Address: Address{
 					Country: "AM",
 					Zip:     "084",
