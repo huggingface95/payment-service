@@ -39,6 +39,7 @@ input QueryPaymentProvidersFilterStatic @spread{
     name: String @ilike
     hasPaymentSystemsFilterById: ID @eq
     company_id: ID @eq
+    id: ID @eq
 }
 
 extend type Mutation @guard {
