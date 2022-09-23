@@ -119,7 +119,11 @@ class AuthController extends Controller
 
                     return response()->json(['two_factor' => 'true', 'auth_token' => $auth_token[0]->id]);
                 } else {
-                    Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    if (Cache::get('auth_user:'.$user->id)) {
+                        Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    } else {
+                        Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    }
                     if (Cache::get('login_attempt:'.$user->email)) {
                         Cache::forget('login_attempt:'.$user->email);
                     }
