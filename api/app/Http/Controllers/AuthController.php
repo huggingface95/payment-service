@@ -85,6 +85,7 @@ class AuthController extends Controller
             if (request('proceed')) {
                 if (Cache::get('auth_user:'.$user->id)) {
                     JWTAuth::setToken(Cache::get('auth_user:'.$user->id))->invalidate();
+                    Cache::forget('auth_user:'.$user->id);
                     $this->writeToAuthLog('logout');
                 } else {
                     $this->writeToAuthLog('logout');
