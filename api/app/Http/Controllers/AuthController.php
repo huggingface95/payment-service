@@ -563,7 +563,7 @@ class AuthController extends Controller
                 'device_type' => Agent::device() ? Agent::device() : 'unknown',
                 'ip' => $this->getIp(),
                 'status' => $status,
-                'created_at' => now(),
+                'created_at' => date('Y-m-d H:i:s'),
             ]);
     }
 
