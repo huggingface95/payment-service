@@ -105,6 +105,11 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         static::addGlobalScope(new ApplicantFilterByMemberScope);
     }
 
+    public function getFullnameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
     public function getTwoFactorAttribute()
     {
         return ($this->google2fa_secret) ? true : false;
