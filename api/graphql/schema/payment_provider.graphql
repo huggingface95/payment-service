@@ -60,7 +60,7 @@ input InputPaymentProvider {
 extend type Mutation @guard {
     "Создать платежный провайдер"
     createPaymentProvider(
-        input: InputPaymentBank! @spread
+        input: InputPaymentProvider! @spread
     ):PaymentProvider   @field(resolver: "PaymentProviderMutator@create")
 
     "Обновить поля платежного провайдера"
