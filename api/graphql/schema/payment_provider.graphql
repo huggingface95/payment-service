@@ -66,7 +66,7 @@ extend type Mutation @guard {
     "Обновить поля платежного провайдера"
     updatePaymentProvider(
         id: ID!
-        input: InputPaymentBank! @spread
+        input: InputPaymentProvider! @spread
     ):PaymentProvider   @field(resolver: "PaymentProviderMutator@update")
 
     "Удалить платежный провайдер"
