@@ -8,8 +8,8 @@ type PaymentProvider {
     name: String!
     "Описание провайдера"
     description: String
-    "ключ для получения изображения в Object Storage"
-    logo_key: String
+    "Лого"
+    logo: Files @belongsTo(relation: "logo")
     "Активен или нет"
     is_active: Boolean
     "Получить связанные платежные системы"
@@ -42,38 +42,31 @@ input QueryPaymentProvidersFilterStatic @spread{
     id: ID @eq
 }
 
+input InputPaymentProvider {
+    "Название провайдера"
+    name: String!
+    "Описание провайдера"
+    description: String
+    "Лого"
+    logo_id: ID
+    "Активен или нет"
+    is_active: Boolean
+    "Ид компании"
+    company_id: ID!
+    "массив ID платежных систем"
+    payment_systems: [ID]
+}
+
 extend type Mutation @guard {
     "Создать платежный провайдер"
     createPaymentProvider(
-        "Название провайдера"
-        name: String!
-        "Описание провайдера"
-        description: String
-        "ключ для получения изображения в Object Storage"
-        logo_key: String
-        "Активен или нет"
-        is_active: Boolean
-        "Ид компании"
-        company_id: ID!
-        "массив ID платежных систем"
-        payment_systems: [ID]
+        input: InputPaymentBank! @spread
     ):PaymentProvider   @field(resolver: "PaymentProviderMutator@create")
 
     "Обновить поля платежного провайдера"
     updatePaymentProvider(
         id: ID!
-        "Название провайдера"
-        name: String
-        "Описание провайдера"
-        description: String
-        "ключ для получения изображения в Object Storage"
-        logo_key: String
-        "Активен или нет"
-        is_active: Boolean
-        "Ид компании"
-        company_id: ID
-        "массив ID платежных систем"
-        payment_systems: [ID]
+        input: InputPaymentBank! @spread
     ):PaymentProvider   @field(resolver: "PaymentProviderMutator@update")
 
     "Удалить платежный провайдер"

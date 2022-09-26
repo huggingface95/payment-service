@@ -25,7 +25,7 @@ class PaymentProvider extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'is_active', 'description', 'logo_key', 'company_id',
+        'name', 'is_active', 'description', 'logo_id', 'company_id',
     ];
 
     /**
@@ -53,6 +53,11 @@ class PaymentProvider extends BaseModel
         $countries = implode(',', $countryId);
 
         return $query->where('country_id', '&&', DB::raw('ARRAY['.$countries.']::integer[]'));
+    }
+
+    public function logo(): BelongsTo
+    {
+        return $this->belongsTo(Files::class, 'logo_id');
     }
 
     public function scopePaymentProviderCurrency($query, $currencyId)
