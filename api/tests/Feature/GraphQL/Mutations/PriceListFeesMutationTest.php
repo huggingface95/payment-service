@@ -20,17 +20,25 @@ class PriceListFeesMutationTest extends TestCase
         $this->graphQL('
         mutation (
             $name: String!
-            $type_id: ID
-            $period_id: ID
-            $operation_type_id: ID
+            $type_id: ID!
+            $period_id: ID!
+            $operation_type_id: ID!
             $price_list_id: ID!
         ) {
             createPriceListFees(
-                name: $name
-                type_id: $type_id
-                period_id: $period_id
-                operation_type_id: $operation_type_id
-                price_list_id: $price_list_id
+                input: {
+                    name: $name
+                    type_id: $type_id
+                    period_id: $period_id
+                    operation_type_id: $operation_type_id
+                    price_list_id: $price_list_id
+                    fees: [
+                        {
+                            currency_id: 1
+                            fee: []
+                        }
+                    ]
+                }
             ) {
                 id
             }
@@ -50,76 +58,92 @@ class PriceListFeesMutationTest extends TestCase
             'period_id' => 1,
             'operation_type_id' => 1,
             'price_list_id' => 1,
+            'fix' => 'Fix',
+            'range' => 'Range',
+            'percent' => 'Percent',
         ];
 
         $fees = [
             [
                 'currency_id' => '1',
-                'fee_mode_id' => '1', 'fee' => 10, 'fee_from' => 100, 'fee_to' => 300,
-            ],
-            [
-                'currency_id' => '1',
-                'fee_mode_id' => '2', 'fee' => 15, 'fee_from' => null, 'fee_to' => null,
-            ],
-            [
-                'currency_id' => '2',
-                'fee_mode_id' => '1', 'fee' => 20, 'fee_from' => 120, 'fee_to' => 220,
+                'fee' => [
+                    ['mode' => 'Fix', 'fee' => 10, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
+                    ['mode' => 'Range', 'fee' => null, 'amount_from' => 100, 'amount_to' => 300, 'percent' => null],
+                    ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 15],
+                ]
             ],
             [
                 'currency_id' => '2',
-                'fee_mode_id' => '3', 'fee' => 12, 'fee_from' => null, 'fee_to' => null,
+                'fee' => [
+                    ['mode' => 'Fix', 'fee' => 5, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
+                    ['mode' => 'Range', 'fee' => null, 'amount_from' => 20, 'amount_to' => 200, 'percent' => null],
+                    ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 10],
+                ]
             ],
             [
-                'currency_id' => '3',
-                'fee_mode_id' => '3', 'fee' => 13, 'fee_from' => null, 'fee_to' => null,
+                'currency_id' => '2',
+                'fee' => [
+                    ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 5],
+                ]
             ],
         ];
 
         $this->graphQL('
         mutation (
             $name: String!
-            $type_id: ID
-            $period_id: ID
-            $operation_type_id: ID
+            $type_id: ID!
+            $period_id: ID!
+            $operation_type_id: ID!
             $price_list_id: ID!
+            $fix: String!
+            $range: String!
+            $percent: String!
         ) {
             createPriceListFees(
-                name: $name
-                type_id: $type_id
-                period_id: $period_id
-                operation_type_id: $operation_type_id
-                price_list_id: $price_list_id
-                fees: [
-                    {
-                        currency_id: 1
-                        fee_modes: [
-                            { fee_mode_id: 1, fee: 10, fee_from: 100, fee_to: 300 }
-                            { fee_mode_id: 2, fee: 15 }
-                        ]
-                    },
-                    {
-                        currency_id: 2
-                        fee_modes: [
-                            { fee_mode_id: 1, fee: 20, fee_from: 120, fee_to: 220 }
-                            { fee_mode_id: 3, fee: 12 }
-                        ]
-                    },
-                    {
-                        currency_id: 3
-                        fee_modes: [
-                            { fee_mode_id: 3, fee: 13 }
-                        ]
-                    }
-                ]
+                input: {
+                    name: $name
+                    type_id: $type_id
+                    period_id: $period_id
+                    operation_type_id: $operation_type_id
+                    price_list_id: $price_list_id
+                    fees: [
+                        {
+                            currency_id: 1
+                            fee: [
+                                [
+                                    { mode: $fix, fee: 10 }
+                                    { mode: $range, amount_to: 300, amount_from: 100 }
+                                    { mode: $percent, percent: 15 }
+                                ]
+                            ]
+                        },
+                        {
+                            currency_id: 2
+                            fee: [
+                                [
+                                    { mode: $fix, fee: 5 }
+                                    { mode: $range, amount_to: 200, amount_from: 20 }
+                                    { mode: $percent, percent: 10 }
+                                ],
+                                [
+                                    { mode: $percent, percent: 5 }
+                                ]
+                            ]
+                        }
+                    ]
+                }
             ) {
                 id
                 name
                 fees {
                     currency_id
-                    fee
-                    fee_from
-                    fee_mode_id
-                    fee_to
+                    fee {
+                        mode
+                        amount_from
+                        amount_to
+                        fee
+                        percent
+                    }
                 }
             }
         }
@@ -151,20 +175,33 @@ class PriceListFeesMutationTest extends TestCase
             'period_id' => 2,
             'operation_type_id' => 2,
             'price_list_id' => 1,
+            'fix' => 'Fix',
+            'range' => 'Range',
+            'percent' => 'Percent',
         ];
 
         $fees = [
             [
                 'currency_id' => '1',
-                'fee_mode_id' => '1', 'fee' => 15, 'fee_from' => 120, 'fee_to' => 320,
+                'fee' => [
+                    ['mode' => 'Fix', 'fee' => 13, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
+                    ['mode' => 'Range', 'fee' => null, 'amount_from' => 250, 'amount_to' => 550, 'percent' => null],
+                    ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 17],
+                ]
             ],
             [
-                'currency_id' => '1',
-                'fee_mode_id' => '2', 'fee' => 25, 'fee_from' => null, 'fee_to' => null,
+                'currency_id' => '2',
+                'fee' => [
+                    ['mode' => 'Fix', 'fee' => 3, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
+                    ['mode' => 'Range', 'fee' => null, 'amount_from' => 70, 'amount_to' => 700, 'percent' => null],
+                    ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 10],
+                ]
             ],
             [
-                'currency_id' => '3',
-                'fee_mode_id' => '3', 'fee' => 30, 'fee_from' => null, 'fee_to' => null,
+                'currency_id' => '2',
+                'fee' => [
+                    ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 7],
+                ]
             ],
         ];
 
@@ -172,42 +209,60 @@ class PriceListFeesMutationTest extends TestCase
         mutation (
             $id: ID!
             $name: String!
-            $type_id: ID
-            $period_id: ID
-            $operation_type_id: ID
+            $type_id: ID!
+            $period_id: ID!
+            $operation_type_id: ID!
             $price_list_id: ID!
+            $fix: String!
+            $range: String!
+            $percent: String!
         ) {
             updatePriceListFees(
                 id: $id
-                name: $name
-                type_id: $type_id
-                period_id: $period_id
-                operation_type_id: $operation_type_id
-                price_list_id: $price_list_id
-                fees: [
-                    {
-                        currency_id: 1
-                        fee_modes: [
-                            { fee_mode_id: 1, fee: 15, fee_from: 120, fee_to: 320 }
-                            { fee_mode_id: 2, fee: 25 }
-                        ]
-                    },
-                    {
-                        currency_id: 3
-                        fee_modes: [
-                            { fee_mode_id: 3, fee: 30 }
-                        ]
-                    }
-                ]
+                input: {
+                    name: $name
+                    type_id: $type_id
+                    period_id: $period_id
+                    operation_type_id: $operation_type_id
+                    price_list_id: $price_list_id
+                    fees: [
+                        {
+                            currency_id: 1
+                            fee: [
+                                [
+                                    { mode: $fix, fee: 13 }
+                                    { mode: $range, amount_to: 550, amount_from: 250 }
+                                    { mode: $percent, percent: 17 }
+                                ]
+                            ]
+                        },
+                        {
+                            currency_id: 2
+                            fee: [
+                                [
+                                    { mode: $fix, fee: 3 }
+                                    { mode: $range, amount_to: 700, amount_from: 70 }
+                                    { mode: $percent, percent: 10 }
+                                ],
+                                [
+                                    { mode: $percent, percent: 7 }
+                                ]
+                            ]
+                        }
+                    ]
+                }
             ) {
                 id
                 name
                 fees {
                     currency_id
-                    fee
-                    fee_from
-                    fee_mode_id
-                    fee_to
+                    fee {
+                        mode
+                        amount_from
+                        amount_to
+                        fee
+                        percent
+                    }
                 }
             }
         }
@@ -234,45 +289,63 @@ class PriceListFeesMutationTest extends TestCase
             'period_id' => 1,
             'operation_type_id' => 1,
             'price_list_id' => 1,
+            'fix' => 'Fix',
+            'range' => 'Range',
+            'percent' => 'Percent',
         ];
 
         $this->graphQL('
         mutation (
             $name: String!
-            $type_id: ID
-            $period_id: ID
-            $operation_type_id: ID
+            $type_id: ID!
+            $period_id: ID!
+            $operation_type_id: ID!
             $price_list_id: ID!
+            $fix: String!
+            $range: String!
+            $percent: String!
         ) {
             createPriceListFees(
-                name: $name
-                type_id: $type_id
-                period_id: $period_id
-                operation_type_id: $operation_type_id
-                price_list_id: $price_list_id
-                fees: [
-                    {
-                        currency_id: 1
-                        fee_modes: [
-                            { fee_mode_id: 1, fee: 10, fee_from: 100, fee_to: 300 }
-                            { fee_mode_id: 1, fee: 10, fee_from: 150, fee_to: 350 }
-                        ]
-                    }
-                ]
+                input: {
+                    name: $name
+                    type_id: $type_id
+                    period_id: $period_id
+                    operation_type_id: $operation_type_id
+                    price_list_id: $price_list_id
+                    fees: [
+                        {
+                            currency_id: 1
+                            fee: [
+                                [
+                                    { mode: $fix, fee: 13 }
+                                    { mode: $range, amount_to: 550, amount_from: 250 }
+                                    { mode: $percent, percent: 17 }
+                                ],
+                                [
+                                    { mode: $range, amount_to: 500, amount_from: 200 }
+                                    { mode: $percent, percent: 10 }
+                                ]
+                            ]
+                        }
+                    ]
+                }
             ) {
                 id
                 name
                 fees {
                     currency_id
-                    fee
-                    fee_from
-                    fee_mode_id
-                    fee_to
+                    fee {
+                        mode
+                        amount_from
+                        amount_to
+                        fee
+                        percent
+                    }
                 }
             }
         }
         ', $data)->seeJson([
-            'fees' => ['The fee_from and fee_to have an intersection range.'],
+            ['The amount_from and amount_to have an intersection range.'],
         ]);
     }
 

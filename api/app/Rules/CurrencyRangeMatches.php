@@ -36,21 +36,19 @@ class CurrencyRangeMatches implements ImplicitRule
      */
     public function message()
     {
-        return 'The fee_from and fee_to have an intersection range.';
+        return 'The amount_from and amount_to have an intersection range.';
     }
 
     private function getCurrencyRanges(array $value): array
     {
         $result = [];
+        $currency_id = $value['currency_id'];
 
-        foreach ($value as $val) {
-            $fee_modes = $val[0]['fee_modes'];
-            $currency_id = $val[0]['currency_id'];
-
-            foreach ($fee_modes as $fee_mode) {
-                if ((int) $fee_mode['fee_mode_id'] === FeeModeEnum::RANGE->value) {
-                    if (isset($fee_mode['fee_from']) && isset($fee_mode['fee_to'])) {
-                        $result[$currency_id][] = [$fee_mode['fee_from'], $fee_mode['fee_to']];
+        foreach ($value['fee'] as $feeModes) {
+            foreach ($feeModes as $feeMode) {
+                if ($feeMode['mode'] === FeeModeEnum::RANGE->toString()) {
+                    if (isset($feeMode['amount_from']) && isset($feeMode['amount_to'])) {
+                        $result[$currency_id][] = [$feeMode['amount_from'], $feeMode['amount_to']];
                     }
                 }
             }

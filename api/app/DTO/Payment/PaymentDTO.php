@@ -16,7 +16,7 @@ class PaymentDTO
     {
         $dto = new self();
         $dto->id = $payment->id;
-        $dto->currency = $payment->Currencies->code;
+        $dto->currency = $payment->currency->code;
         $dto->amount = $payment->amount;
 
         return $dto;

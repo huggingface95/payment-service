@@ -57,9 +57,11 @@ class DatabaseSeeder extends Seeder
         $this->call(FeeModesSeeder::class);
         $this->call(CommissionPriceListTableSeeder::class);
         $this->call(PriceListFeesTableSeeder::class);
-        $this->call(PriceListFeesItemsTableSeeder::class);
+        $this->call(PriceListFeeCurrencyTableSeeder::class);
         $this->call(AccountTableSeeder::class);
         $this->call(ApplicantBankingAccessTableSeeder::class);
+        $this->call(PaymentUrgencyTableSeeder::class);
+        $this->call(RespondentFeesTableSeeder::class);
         $this->call(CommissionTemplateBusinessActivityTableSeeder::class);
     }
 }

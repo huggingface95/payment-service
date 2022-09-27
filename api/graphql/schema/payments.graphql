@@ -1,60 +1,59 @@
+
+
+
+
 """
 Платежи
 Banking -> Payments List
 """
 type Payments {
     id: ID!
+    "Получить связанный аккаунт"
+    account: Account @belongsTo(relation:"account")
+    "Получить связанную валюту"
+    currency: Currencies @belongsTo(relation:"currency")
+    price_list_fees: PriceListFee @belongsTo(relation:"priceListFees")
+    "Номер счета или IBAN получателя"
+    recipient_account: String
+    recipient_bank_name: String
+    recipient_bank_address: String
+    recipient_bank_swift: String
+    recipient_bank_country: Country @belongsTo(relation:"recipientBankCountry")
+    beneficiary_name: String
+    beneficiary_state: String
+    beneficiary_country: Country @belongsTo(relation:"beneficiaryCountry")
+    beneficiary_address: String
+    beneficiary_city: String
+    beneficiary_zip: String
+    beneficiary_additional_data: JSON
     "Сумма"
     amount: Float!
     amount_real: Float!
     "Комиссия"
     fee: Float
     fee_type: FeeType @belongsTo(relation: "feeType")
-    "Получить связанную валюту"
-    currency: Currencies @belongsTo(relation:"currency")
-    "Статус"
-    status: PaymentStatus @belongsTo(relation:"paymentStatus")
-    "Имя отправителя"
-    sender_name: String
-    "Детали платежа"
-    payment_details: String
-    "Аккаунт банка отправителя"
-    sender_bank_account: String
-    "SWIFT отправителя"
-    sender_swift: String
-    "Имя банка отправителя"
-    sender_bank_name: String
-    "Страна банка отправителя"
-    sender_bank_country: Country @belongsTo(relation:"country")
-    "Адрес банка отправителя"
-    sender_bank_address: String
-    "Страна отправителя"
-    sender_country_id: Country @belongsTo(relation:"country")
-    "Адрес отправителя"
-    sender_address: String
+    "Получить связанного мембера"
+    member: Members @belongsTo(relation: "member")
+    "Получить связанную компанию"
+    company: Companies @belongsTo(relation:"company")
     "Получить связанныую срочность"
     payment_urgency: PaymentUrgency @belongsTo(relation:"paymentUrgency")
+    "Статус"
+    status: PaymentStatus @belongsTo(relation:"paymentStatus")
     "Получить связанный тип"
     payment_operation_type: OperationType @belongsTo(relation:"paymentOperation")
     "Получить связанный провайдер"
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
-    "Получить связанный аккаунт"
-    account: Account @belongsTo(relation:"account")
-    "Получить связанную компанию"
-    company: Companies @belongsTo(relation:"company")
     "Номер платежа"
     payment_number: String
+    received_at: DateTime
     created_at: DateTime
     updated_at: DateTime
-    "Получить связанного мембера"
-    member: Members @belongsTo(relation: "member")
-    "Получить владельца"
-    owner: [ApplicantIndividual] @belongsToMany(relation: "applicantIndividual")
-    received_at: DateTime
+    "Дата и время выполнения транзакции"
+    execution_at: DateTime
+    respondent_fee: RespondentFee @belongsTo(relation:"respondentFee")
     error: String
-    sender_additional_fields: JSON
 }
-
 
 type Sender {
     "Sender name"
@@ -92,101 +91,47 @@ input QueryPaymentsFilterStatic @spread{
     hasAccountFilterByAccountNumber: String @ilike
 }
 
-
 extend type Mutation @guard {
     "Создать платеж"
     createPayment(
-        "Сумма"
-        amount: Float!
-        "Сумма реального зачисления"
-        amount_real: Float
-        "Комиссия"
-        fee: Float
-        fee_type_id: ID!
+        "Аккаунт"
+        account_id: ID!
         "Валюта"
         currency_id: ID!
-        "Статус"
-        status_id: ID!
-        "Имя отправителя"
-        sender_name: String!
-        "Детали платежа"
-        payment_details: String!
-        "Аккаунт банка отправителя"
-        sender_bank_account: String!
-        "SWIFT отправителя"
-        sender_swift: String!
-        "Имя банка отправителя"
-        sender_bank_name: String!
-        "Страна банка отправителя"
-        sender_bank_country: ID!
-        "Адрес банка отправителя"
-        sender_bank_address: String!
-        "Страна отправителя"
-        sender_country_id: ID
-        "Адрес отправителя"
-        sender_address: String
+        price_list_fees_id: ID!
+        recipient_account: String!
+        recipient_bank_name: String!
+        recipient_bank_address: String!
+        recipient_bank_swift: String!
+        recipient_bank_country_id: ID!
+        beneficiary_name: String!
+        beneficiary_state: String!
+        beneficiary_country_id: ID!
+        beneficiary_address: String!
+        beneficiary_city: String!
+        beneficiary_zip: String!
+        beneficiary_additional_data: JSON
+        "Сумма"
+        amount: Float! @rules(apply: ["required", "gt:0"])
+        "Комиссия"
+        fee_type_id: ID!
         "Срочность"
         urgency_id: ID!
         "Тип"
         operation_type_id: ID!
         "Платежный ровайдер"
         payment_provider_id: ID!
-        "Аккаунт"
-        account_id: ID!
+        respondent_fees_id: ID!
         "Компания"
         company_id: ID!
-        "Кто делает пеймент"
-        owner_id: ID!
-        "Номер платежа"
-        payment_number: String!
-        "Error"
-        error: String
-        created_at: DateTime
-        updated_at: DateTime
-        received_at: DateTime
+        execution_at: DateTime
     ):Payments   @field(resolver: "PaymentsMutator@create")
 
     "Редактировать платеж"
     updatePayment(
         id: ID!
-        "Сумма"
-        amount: Float
-        "Комиссия"
-        fee: Float
-        "Валюта"
-        currency: ID
         "Статус"
-        status: Int
-        "Имя отправителя"
-        sender_name: String
-        "Детали платежа"
-        payment_details: String
-        "Аккаунт банка отправителя"
-        sender_bank_account: String
-        "SWIFT отправителя"
-        sender_swift: String
-        "Имя банка отправителя"
-        sender_bank_name: String
-        "Страна банка отправителя"
-        sender_bank_country: ID
-        "Адрес банка отправителя"
-        sender_bank_address: String
-        "Страна отправителя"
-        sender_country: ID
-        "Адрес отправителя"
-        sender_address: String
-        "Срочность"
-        urgency_id: ID!
-        "Тип"
-        operation_type_id: ID!
-        "Платежный ровайдер"
-        payment_provider_id: ID
-        "Аккаунт"
-        account_id: ID
-        "Компания"
-        company_id: ID
-        "Номер платежа"
-        payment_number: String
+        status_id: Int!
     ):Payments   @field(resolver: "PaymentsMutator@update")
 
     "Удалить платеж"

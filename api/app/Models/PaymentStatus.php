@@ -4,10 +4,6 @@ namespace App\Models;
 
 class PaymentStatus extends BaseModel
 {
-    public const PENDING_ID = 1;
-
-    public const COMPLETED_ID = 2;
-
     protected $table = 'payment_status';
 
     protected $fillable = [
