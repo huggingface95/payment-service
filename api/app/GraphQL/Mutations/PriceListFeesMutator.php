@@ -14,9 +14,9 @@ class PriceListFeesMutator
     {
         $priceListFee = PriceListFee::create($args);
 
-//        if (isset($args['fees'])) {
-//            $this->createFeeModes($args['fees'], $priceListFee);
-//        }
+        if (isset($args['fees'])) {
+            $this->createFeeModes($args['fees'], $priceListFee);
+        }
 
         return $priceListFee;
     }
@@ -43,26 +43,24 @@ class PriceListFeesMutator
                 ]);
             }
 
-//            if (isset($args['fees'])) {
-//                $priceListFee->fees()->delete();
-//
-//                $this->createFeeModes($args['fees'], $priceListFee);
-//            }
+            if (isset($args['fees'])) {
+                $priceListFee->fees()->delete();
+
+                $this->createFeeModes($args['fees'], $priceListFee);
+            }
         }
 
         return $priceListFee;
     }
 
-    private function createFeeModes(array $fees, PriceListFee $priceListFee): void
+    private function createFeeModes(array $currencies, PriceListFee $priceListFee): void
     {
-        foreach ($fees as $feeItem) {
-            foreach ($feeItem[0]['fee_modes'] as $feeMode) {
+        foreach ($currencies as $currency) {
+            foreach ($currency['fee'] as $fees) {
                 $priceListFee->fees()->create([
-                    'fee_mode_id' => $feeMode['fee_mode_id'],
-                    'fee' => $feeMode['fee'],
-                    'fee_from' => $feeMode['fee_from'] ?? null,
-                    'fee_to' => $feeMode['fee_to'] ?? null,
-                    'currency_id' => $feeItem[0]['currency_id'],
+                    'price_list_fee_id' => $priceListFee->id,
+                    'currency_id' => $currency['currency_id'],
+                    'fee' => $fees,
                 ]);
             }
         }

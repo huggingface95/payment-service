@@ -21,11 +21,9 @@ class CurrencyMode implements ImplicitRule
         }
 
         foreach ($value as $i => $val) {
-            $fee_modes = $val[0]['fee_modes'];
-
-            foreach ($fee_modes as $fee_mode) {
-                if ((int) $fee_mode['fee_mode_id'] === FeeModeEnum::RANGE->value) {
-                    if (! isset($fee_mode['fee_from']) && ! isset($fee_mode['fee_to'])) {
+            foreach ($val as $fee_mode) {
+                if ($fee_mode['mode'] === FeeModeEnum::RANGE->toString()) {
+                    if (! isset($fee_mode['amount_from']) && ! isset($fee_mode['amount_to'])) {
                         return false;
                     }
                 }

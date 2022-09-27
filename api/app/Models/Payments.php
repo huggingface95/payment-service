@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Events\PaymentCreatedEvent;
+use App\Events\PaymentUpdatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\MemberScope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
@@ -28,6 +31,8 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  */
 class Payments extends BaseModel
 {
+    use HasFactory;
+
     protected $table = 'payments';
 
     /**
@@ -42,34 +47,43 @@ class Payments extends BaseModel
         'fee_type_id',
         'currency_id',
         'status_id',
-        'sender_name',
         'payment_details',
-        'sender_bank_account',
-        'sender_swift',
-        'sender_bank_name',
-        'sender_bank_country',
-        'sender_bank_address',
-        'sender_country_id',
-        'sender_address',
-        'sender_email',
-        'sender_phone',
         'urgency_id',
         'operation_type_id',
         'payment_provider_id',
+        'price_list_fees_id',
+        'respondent_fees_id',
         'account_id',
         'company_id',
         'payment_number',
+        'recipient_account',
+        'recipient_bank_name',
+        'recipient_bank_address',
+        'recipient_bank_swift',
+        'recipient_bank_country_id',
+        'beneficiary_name',
+        'beneficiary_state',
+        'beneficiary_country_id',
+        'beneficiary_address',
+        'beneficiary_city',
+        'beneficiary_zip',
+        'beneficiary_additional_data',
         'error',
         'member_id',
-        'received_at',
-        'sender_additional_fields',
-        'owner_id',
         'created_at',
+        'received_at',
+        'execution_at',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => PaymentCreatedEvent::class,
+        'updated' => PaymentUpdatedEvent::class,
     ];
 
     protected static function booted()
     {
         parent::booted();
+
         static::addGlobalScope(new MemberScope());
         static::addGlobalScope(new ApplicantFilterByMemberScope);
         self::creating(function ($model) {
@@ -94,6 +108,16 @@ class Payments extends BaseModel
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id', 'id');
+    }
+
+    public function beneficiaryCountry(): BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'beneficiary_country_id', 'id');
+    }
+    
+    public function recipientBankCountry(): BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'recipient_bank_country_id', 'id');
     }
 
     public function account(): BelongsTo
@@ -121,6 +145,21 @@ class Payments extends BaseModel
         return $this->belongsTo(PaymentProvider::class, 'payment_provider_id', 'id');
     }
 
+    public function paymentStatus(): BelongsTo
+    {
+        return $this->belongsTo(PaymentStatus::class, 'status_id');
+    }
+
+    public function priceListFees(): BelongsTo
+    {
+        return $this->belongsTo(PriceListFee::class, 'price_list_fees_id', 'id');
+    }
+
+    public function respondentFee(): BelongsTo
+    {
+        return $this->belongsTo(RespondentFee::class, 'respondent_fees_id');
+    }
+
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currencies::class, 'currency_id', 'id');
@@ -144,11 +183,6 @@ class Payments extends BaseModel
     public function feeType(): BelongsTo
     {
         return $this->belongsTo(FeeType::class, 'fee_type_id');
-    }
-
-    public function paymentStatus(): BelongsTo
-    {
-        return $this->belongsTo(PaymentStatus::class, 'status_id');
     }
 
     public function commissionPriceList(): HasOneThrough

@@ -1,0 +1,12 @@
+type RespondentFee {
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query @guard{
+    """
+    Получить список
+    """
+    respondentFees: [RespondentFee!]!   @all
+}

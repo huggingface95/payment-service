@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PaymentStatusEnum;
 use App\Models\PaymentStatus;
 use Illuminate\Database\Seeder;
 
@@ -14,10 +15,12 @@ class PaymentStatusSeed extends Seeder
      */
     public function run()
     {
-        $statuses = ['Pending', 'Completed', 'Error', 'Canceled', 'Unsigned'];
-        foreach ($statuses as $item) {
+        $statuses = PaymentStatusEnum::cases();
+
+        foreach ($statuses as $status) {
             PaymentStatus::create([
-                'name' => $item,
+                'id' => $status->value,
+                'name' => $status->toString(),
             ]);
         }
     }

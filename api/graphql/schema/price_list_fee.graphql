@@ -1,3 +1,18 @@
+type FeeItem {
+   mode: String!
+   fee: Int
+   amount_from: Int
+   amount_to: Int
+   percent: Int
+}
+
+type PriceListFeeCurrency {
+    id: ID!
+    currency_id: ID!
+    price_list_fee_id: ID!
+    fee: [FeeItem]
+}
+
 """
 Цены прайс листа
 Banking -> Цены прайс листа
@@ -13,19 +28,12 @@ type PriceListFee {
     "Период"
     period: FeePeriod @belongsTo(relation: "feePeriod")
     "Цены"
-    fees: JSON
+    fees: [PriceListFeeCurrency] @belongsTo(relation: "fees")
     created_at: DateTime
     updated_at: DateTime
 }
 
-#type PriceListFeesItem {
-#    id: ID
-#    currency_id: ID
-#    fee_mode_id: ID
-#    fee: Int
-#    fee_from: Int
-#    fee_to: Int
-#}
+
 
 extend type Query @guard {
     """
@@ -49,17 +57,18 @@ input QueryPriceListFeesFilterStatic @spread{
     hasFeesFilterById: ID @eq
 }
 
-#input Fees {
-#    currency_id: ID
-#    fee_modes: [Fee]
-#}
+input PriceListFeesList {
+   currency_id: ID!
+   fee: [[PriceListFeeItem]!]!
+}
 
-#input Fee {
-#    fee_mode_id: ID
-#    fee: Int
-#    fee_from: Int
-#    fee_to: Int
-#}
+input PriceListFeeItem {
+   mode: String!
+   fee: Int
+   amount_from: Int
+   amount_to: Int
+   percent: Int
+}
 
 input priceList {
     payment_system_id: ID
@@ -68,27 +77,27 @@ input priceList {
     company_id: ID
 }
 
-input PriceListFeeInput @spread{
+input PriceListFeeInput {
     name: String!
     type_id: ID!
     operation_type_id: ID!
     period_id: ID!
     price_list_id: ID!
-    fees: JSON!
+    fees: [PriceListFeesList!]!
 }
 
 
 extend type Mutation @guard {
     "Создать Цен"
     createPriceListFees(
-        input: PriceListFeeInput
+        input: PriceListFeeInput @spread
     ): PriceListFee   @field(resolver:"PriceListFeesMutator@create") @validator
 
     "Обновить данные Цен"
     updatePriceListFees(
         id: ID!
         commission_price_list: [priceList]
-        input: PriceListFeeInput
+        input: PriceListFeeInput @spread
     ): PriceListFee   @field(resolver:"PriceListFeesMutator@update")
 
     """
