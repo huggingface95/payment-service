@@ -70,9 +70,9 @@ input InputPaymentBank {
     "Адрес банка"
     address: String!
     "Код банка"
-    bank_code: String!
+    bank_code: String
     "Код платежной системы"
-    payment_system_code: String!
+    payment_system_code: String
     "ID страны"
     country_id: ID!
     "ID платежного системы"
