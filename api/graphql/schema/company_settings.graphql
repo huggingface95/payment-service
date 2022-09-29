@@ -10,8 +10,8 @@ type CompanySettings {
     email_jwt: String
     "Email отправителя"
     email_from: EMAIL
-    "ID файла логотипа из хранилища"
-    logo_object_key: String
+    "Лого"
+    logo: Files @belongsTo(relation: "logo")
     "Данные о компании"
     company: Companies @belongsTo(relation: "company")
     "Показывать или нет лого"
@@ -34,6 +34,8 @@ extend type Mutation @guard {
         email_from: EMAIL
         "Показывать лого компании или нет"
         show_own_logo: Boolean
+        "ID лого"
+        logo_id: ID
         "ID компании"
         company_id: Int!
     ): CompanySettings   @create
@@ -48,9 +50,11 @@ extend type Mutation @guard {
         email_jwt: String
         "Email отправителя клиента"
         email_from: EMAIL
+        "ID лого"
+        logo_id: ID
         "Показывать лого компании или нет"
         show_own_logo: Boolean
-    ): CompanySettings   @update
+    ): CompanySettings   @field(resolver: "CompanyMutator@updateSettings")
 
 
 }

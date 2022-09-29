@@ -3,6 +3,8 @@
 namespace App\Models;
 
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 /**
  * Class CompanySettings
  *
@@ -18,7 +20,7 @@ class CompanySettings extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'email_url', 'email_jwt', 'email_from', 'logo_object_key', 'show_own_logo', 'vv_token', 'company_id'
+        'email_url', 'email_jwt', 'email_from', 'logo_id', 'show_own_logo', 'vv_token', 'company_id'
     ];
 
     public $primaryKey = 'id';
@@ -28,5 +30,10 @@ class CompanySettings extends BaseModel
     public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo('App\Models\Companies', 'company_id');
+    }
+
+    public function logo(): BelongsTo
+    {
+        return $this->belongsTo(Files::class, 'logo_id');
     }
 }

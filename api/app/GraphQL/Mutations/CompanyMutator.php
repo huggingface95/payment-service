@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\Companies;
+use App\Models\CompanySettings;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class CompanyMutator extends BaseMutator
@@ -34,5 +35,23 @@ class CompanyMutator extends BaseMutator
         $company->delete();
 
         return $company;
+    }
+
+    /**
+     * Return a value for the field.
+     *
+     * @param  @param  null  $root Always null, since this field has no parent.
+     * @param  array<string, mixed>  $args The field arguments passed by the client.
+     * @param  \Nuwave\Lighthouse\Support\Contracts\GraphQLContext  $context Shared between all fields.
+     * @param  \GraphQL\Type\Definition\ResolveInfo  $resolveInfo Metadata for advanced query resolution.
+     * @return mixed
+     */
+    public function updateSettings($root, array $args, GraphQLContext $context)
+    {
+        $companySettings = CompanySettings::where('company_id','=',$args['company_id'])->first();
+
+        $companySettings->update($args);
+
+        return $companySettings;
     }
 }
