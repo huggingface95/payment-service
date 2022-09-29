@@ -64,15 +64,15 @@ enum QueryPaymentBankWhereColumn {
     PAYMENT_SYSTEM_ID @enum(value: "payment_system_id")
 }
 
-input InputPaymentBank {
+input InputPaymentBank @validator {
     "Название банка"
     name: String!
     "Адрес банка"
     address: String!
     "Код банка"
-    bank_code: String!
+    bank_code: String
     "Код платежной системы"
-    payment_system_code: String!
+    payment_system_code: String
     "ID страны"
     country_id: ID!
     "ID платежного системы"
