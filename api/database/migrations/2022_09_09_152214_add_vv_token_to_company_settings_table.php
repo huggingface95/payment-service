@@ -14,7 +14,7 @@ class AddVvTokenToCompanySettingsTable extends Migration
     public function up()
     {
         Schema::table('company_settings', function (Blueprint $table) {
-            $table->string('vv_token', 64);
+            $table->string('vv_token', 64)->nullable();
         });
     }
 

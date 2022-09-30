@@ -20,7 +20,7 @@ class CompanySettings extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'email_url', 'email_jwt', 'email_from', 'logo_id', 'show_own_logo', 'vv_token', 'company_id'
+        'email_url', 'email_jwt', 'email_from', 'logo_id', 'show_own_logo', 'vv_token', 'company_id','vv_token'
     ];
 
 

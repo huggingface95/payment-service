@@ -10,6 +10,8 @@ type CompanySettings {
     email_jwt: String
     "Email отправителя"
     email_from: EMAIL
+    "Токен для видеоверификации"
+    vv_token: String
     "Лого"
     logo: Files @belongsTo(relation: "logo")
     "Данные о компании"
@@ -30,6 +32,8 @@ extend type Mutation @guard {
         email_url: String  @rules(apply: ["regex:!https?:\/\/!","regex:/[a-z0-9]/"])
         "JWT token"
         email_jwt: String
+        "Токен для видеоверификации"
+        vv_token: String
         "Email отправителя клиента"
         email_from: EMAIL
         "Показывать лого компании или нет"
@@ -52,6 +56,8 @@ extend type Mutation @guard {
         email_from: EMAIL
         "ID лого"
         logo_id: ID
+        "Токен для видеоверификации"
+        vv_token: String
         "Показывать лого компании или нет"
         show_own_logo: Boolean
     ): CompanySettings   @field(resolver: "CompanyMutator@updateSettings")
