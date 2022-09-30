@@ -49,7 +49,7 @@ class CompanyMutator extends BaseMutator
      */
     public function createSettings($root, array $args, GraphQLContext $context)
     {
-        $company = Companies::where('company_id','=',$args['company_id'])->first();
+        $company = Companies::where('id','=',$args['company_id'])->first();
         if (!$company) {
             throw new GraphqlException('Company not found', 'not found', 404);
         }
