@@ -38,7 +38,7 @@ extend type Mutation @guard {
         logo_id: ID
         "ID компании"
         company_id: Int!
-    ): CompanySettings   @create
+    ): CompanySettings   @field(resolver: "CompanyMutator@createSettings")
 
     "Обновление настроек компании"
     updateCompanySettings(

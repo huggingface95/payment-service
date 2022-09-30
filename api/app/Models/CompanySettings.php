@@ -23,7 +23,6 @@ class CompanySettings extends BaseModel
         'email_url', 'email_jwt', 'email_from', 'logo_id', 'show_own_logo', 'vv_token', 'company_id'
     ];
 
-    public $primaryKey = 'id';
 
     public $timestamps = false;
 
