@@ -71,8 +71,14 @@ class CompanyMutator extends BaseMutator
     public function updateSettings($root, array $args, GraphQLContext $context)
     {
         $companySettings = CompanySettings::where('company_id','=',$args['company_id'])->first();
+        if (!$companySettings) {
+            $companySettings = CompanySettings::create(
+                $args
+            );
+        } else {
+            $companySettings->update($args);
+        }
 
-        $companySettings->update($args);
 
         return $companySettings;
     }

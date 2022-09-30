@@ -26,23 +26,6 @@ extend type Query @guard {
 }
 
 extend type Mutation @guard {
-    "Добавить настройки к компании"
-    createCompanySettings(
-        "Client applicant URL в формате http://example.com"
-        email_url: String  @rules(apply: ["regex:!https?:\/\/!","regex:/[a-z0-9]/"])
-        "JWT token"
-        email_jwt: String
-        "Токен для видеоверификации"
-        vv_token: String
-        "Email отправителя клиента"
-        email_from: EMAIL
-        "Показывать лого компании или нет"
-        show_own_logo: Boolean
-        "ID лого"
-        logo_id: ID
-        "ID компании"
-        company_id: Int!
-    ): CompanySettings   @field(resolver: "CompanyMutator@createSettings")
 
     "Обновление настроек компании"
     updateCompanySettings(
