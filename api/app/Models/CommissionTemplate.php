@@ -27,7 +27,7 @@ class CommissionTemplate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'is_active', 'description', 'payment_provider_id', 'country_id', 'currency_id', 'commission_template_limit_id', 'member_id',
+        'name', 'is_active', 'description', 'payment_provider_id', 'country_id', 'currency_id', 'commission_template_limit_id', 'member_id','company_id'
     ];
 
     protected static function booted()
@@ -104,8 +104,8 @@ class CommissionTemplate extends BaseModel
         return $this->belongsTo(Account::class, 'id', 'commission_template_id');
     }
 
-    public function company(): BelongsToMany
+    public function company(): BelongsTo
     {
-        return $this->belongsToMany(ApplicantCompany::class, 'accounts', 'commission_template_id', 'owner_id', 'id', 'owner_id');
+        return $this->belongsTo(Companies::class,'company_id');
     }
 }

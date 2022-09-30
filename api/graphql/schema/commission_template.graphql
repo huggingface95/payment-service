@@ -23,7 +23,7 @@ type CommissionTemplate {
     "Получить связанный аккаунт"
     account: Account @belongsTo(relation: "account")
     "Получить компанию"
-    company: [ApplicantCompany] @belongsToMany(relation: "company")
+    company: Companies @belongsTo(relation: "company")
     regions: [Region] @belongsToMany(relation: "regions")
     currencies: [Currencies] @belongsToMany(relation: "currencies")
     commission_template_limits: [CommissionTemplateLimit] @hasMany(relation: "commissionTemplateLimits")
@@ -62,6 +62,8 @@ extend type Mutation @guard {
         description: String
         "ID платежного провайдера"
         payment_provider_id: ID!
+        "ID компании"
+        company_id: ID!
     ):CommissionTemplate   @field(resolver: "CommissionTemplateMutator@create")
 
     "Обновление полей шаблона комиссий"
@@ -84,6 +86,8 @@ extend type Mutation @guard {
         currency_id: [ID]
         "массив ID лимитов"
         commission_template_limit_id: [ID]
+        "ID компании"
+        company_id: ID
     ):CommissionTemplate   @field(resolver: "CommissionTemplateMutator@update")
 
     "Удалить шаблон"
