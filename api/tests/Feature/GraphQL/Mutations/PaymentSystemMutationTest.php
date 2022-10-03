@@ -27,7 +27,7 @@ class PaymentSystemMutationTest extends TestCase
                         is_active: true
                         regions: { sync: 1 }
                         currencies: { sync: 1 }
-                        providers: { sync: 1 }
+                        payment_provider_id: 1
                     }
                 ) {
                     id

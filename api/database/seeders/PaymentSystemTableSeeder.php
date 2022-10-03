@@ -22,6 +22,7 @@ class PaymentSystemTableSeeder extends Seeder
                 'id'        => $i,
                 'name'     => $faker->company().'Pay',
                 'is_active' => true,
+                'payment_provider_id' => $i,
             ]);
         }
     }

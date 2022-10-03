@@ -23,12 +23,13 @@ class CommissionTemplateMutationTest extends TestCase
                 $name: String!
                 $description: String
                 $payment_provider_id: ID!
-
+                $company_id: ID!
             ) {
             createCommissionTemplate(
                 name: $name
                 description: $description
                 payment_provider_id: $payment_provider_id
+                company_id: $company_id
             ) {
                 id
             }
@@ -37,6 +38,7 @@ class CommissionTemplateMutationTest extends TestCase
             'name' => 'TestCommissionTemplate_'.\Illuminate\Support\Str::random(5),
             'description' => 'TemplateDecs_'.\Illuminate\Support\Str::random(5),
             'payment_provider_id' => 1,
+            'company_id' => 1,
         ]);
 
         $id = json_decode($this->response->getContent(), true);

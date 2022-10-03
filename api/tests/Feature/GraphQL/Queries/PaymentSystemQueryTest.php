@@ -103,12 +103,6 @@ class PaymentSystemQueryTest extends TestCase
             ->select('*')
             ->first();
 
-        $payment_provider = DB::connection('pgsql_test')
-            ->table('payment_provider_payment_system')
-            ->select('*')
-            ->where('payment_provider_id', $payment_system->id)
-            ->first();
-
         $this->graphQL('
         query PaymentSystems($id: Mixed) {
             paymentSystems(filter: { column: HAS_PROVIDERS_FILTER_BY_ID, value: $id }) {
@@ -119,7 +113,7 @@ class PaymentSystemQueryTest extends TestCase
                 }
             }
         }', [
-                'id' => $payment_provider->payment_provider_id,
+                'id' => $payment_system->payment_provider_id,
         ])->seeJsonContains([
             [
                 'id' => strval($payment_system->id),
