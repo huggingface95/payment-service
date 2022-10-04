@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividual;
+use App\Models\ClientIpAddress;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -73,6 +75,25 @@ class ApplicantMutator extends BaseMutator
             $applicant->labels()->detach($args['labels']);
             $applicant->labels()->attach($args['labels']);
         }
+
+        if (isset($args['ip_address'])) {
+            $ip_address = str_replace(' ', '', explode(',', $args['ip_address']));
+            for ($i = 0; $i < count($ip_address); $i++) {
+                if (! filter_var($ip_address[$i], FILTER_VALIDATE_IP)) {
+                    throw new GraphqlException('Not a valid ip address. Address format xxx.xxx.xxx.xxx and must be comma separated', 'internal', 403);
+                }
+            }
+            if (count($ip_address) > 0) {
+                $applicant->ipAddress()->delete();
+            }
+            foreach ($ip_address as $ip) {
+                ClientIpAddress::create([
+                    'client_id' => $applicant->id,
+                    'ip_address' => $ip,
+                    'client_type' => 'App\Models\ApplicantIndividual',
+                ]);
+            }
+        }
         $applicant->update($args);
 
         if (isset($args['group_id'])) {
@@ -80,5 +101,12 @@ class ApplicantMutator extends BaseMutator
         }
 
         return $applicant;
+    }
+
+    public function setSecurityPin($_, array $args)
+    {
+        ApplicantIndividual::where('id', $args['id'])->update(['security_pin'=>str_pad(mt_rand(1, 99999999), 8, '0', STR_PAD_LEFT)]);
+
+        return $args;
     }
 }

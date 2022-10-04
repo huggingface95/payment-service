@@ -78,6 +78,14 @@ type ApplicantIndividual {
     group: GroupRole @morphOne(relation: "groupRole")
     "Получить two factor auth"
     two_factor_auth: TwoFactorAuthSettings @belongsTo (relation: "twoFactorAuth")
+    "Security PIN"
+    security_pin: String
+    "Google Secret"
+    google2fa_secret: String
+    "Backup Codes"
+    backup_codes: JSON
+    "IP адрес"
+    ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
 }
 
 
@@ -269,6 +277,8 @@ extend type Mutation @guard {
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
         password_confirmation: String
+        "IP адрес"
+        ip_address: String
     ): ApplicantIndividual   @field(resolver:"ApplicantMutator@update")
 
     """
@@ -281,6 +291,13 @@ extend type Mutation @guard {
         "подтверждение пароля"
         password_confirmation: String!
     ): ApplicantIndividual   @field(resolver: "ApplicantMutator@setPassword")
+
+    """
+    Установить PIN пользователю
+    """
+    setApplicantSecurityPin(
+        id: ID!
+    ): ApplicantIndividual   @field(resolver: "ApplicantMutator@setSecurityPin")
 
     "Удалит пользователя"
     deleteApplicantIndividual(

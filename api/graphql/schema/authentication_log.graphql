@@ -5,6 +5,8 @@ type AuthenticationLog {
     company: String!
     "Группа"
     member: String!
+    "Тип"
+    client_type: String!
     "Группа"
     group: String!
     "Домен"
@@ -44,6 +46,7 @@ extend type Query @guard {
     query: {
         column: COMPANY, value: "", 
         column: MEMBER, value: "", 
+        column: CLIENT_TYPE, value: "", 
         column: GROUP, value: "", 
         column: DOMAIN, value: "", 
         column: IP, value: "", 
@@ -71,6 +74,7 @@ extend type Query @guard {
 input QueryAuthenticationLogsStatic @spread {
     company: String @eq
     member: String @eq
+    client_type: String @eq
     group: String @eq
     domain: String @eq
     ip: String @eq
