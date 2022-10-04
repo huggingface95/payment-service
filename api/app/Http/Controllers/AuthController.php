@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApplicantIndividual;
 use App\Models\Clickhouse\AuthenticationLog;
 use App\Models\Members;
 use App\Models\OauthCodes;
 use App\Models\OauthTokens;
+use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -16,14 +18,17 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+
+    private string $guard = '';
+    
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(protected AuthService $authService)
     {
-//        $this->middleware('auth:api', ['except' => ['login']]);
+        //        $this->middleware('auth:api', ['except' => ['login']]);
         $this->middleware('jwt.auth', ['except' => ['login', 'verify2FA', 'show2FARegistrationInfo', 'activate2FA', 'generateBackupCodes', 'storeBackupCodes']]);
     }
 
@@ -32,101 +37,118 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function login(Request $request)
     {
-        $credentials = request(['email', 'password']);
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required',
+            'client_type' => 'nullable|string'
+        ]);
 
-        if (Cache::get('login_attempt:'.request('email'))) {
-            $user = Members::select('*')->where('email', request('email'))->first();
+        $this->guard = $this->authService->getGuardByClientType($request->client_type);
+        $credentials = [
+            'email' => $request->email, 
+            'password' => $request->password,
+        ];
+        $attemptCacheKey = 'login_attempt_'.$this->guard.':'.$request->email;
+
+        if (Cache::get($attemptCacheKey)) {
+            if ($this->guard == 'api') {
+                $user = Members::select('id', 'is_active')->where('email', $request->email)->first();
+            } else {
+                $user = ApplicantIndividual::select('id', 'is_active')->where('email', $request->email)->first();
+            }
             if (! $user) {
                 return response()->json(['error' => 'No such user'], 403);
             }
             if ($user->is_active == false) {
                 return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
             }
-            if (Cache::get('block_account:'.$user->id)) {
+            if (Cache::get('block_account_'.$this->guard.':'.$user->id)) {
                 return response()->json(['error' => 'Your account temporary blocked. Try again later'], 403);
             }
-            if (Cache::get('login_attempt:'.request('email')) == env('MFA_ATTEMPTS', '5')) {
-                Cache::add('block_account:'.$user->id, 1, env('BLOCK_ACCOUNT_TTL', 100));
-                Cache::put('login_attempt:'.request('email'), Cache::get('login_attempt:'.request('email')) + 1);
+            if (Cache::get($attemptCacheKey) == env('MFA_ATTEMPTS', '5')) {
+                Cache::add('block_account_'.$this->guard.':'.$user->id, 1, env('BLOCK_ACCOUNT_TTL', 100));
+                Cache::put($attemptCacheKey, Cache::get($attemptCacheKey) + 1);
 
                 return response()->json(['error' => 'Account is temporary blocked for '.env('BLOCK_ACCOUNT_TTL', 120) / 60 .' minutes'], 403);
-            } elseif (Cache::get('login_attempt:'.request('email')) >= env('MFA_ATTEMPTS', '5') * 2 + 1) {
+            } elseif (Cache::get($attemptCacheKey) >= env('MFA_ATTEMPTS', '5') * 2 + 1) {
                 $user->is_active = false;
                 $user->save();
-                Cache::forget('login_attempt:'.request('email'));
+                Cache::forget($attemptCacheKey);
 
                 return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
             }
         }
 
-        if (! $token = auth()->attempt($credentials)) {
-            if (Cache::get('login_attempt:'.request('email'))) {
-                Cache::put('login_attempt:'.request('email'), Cache::get('login_attempt:'.request('email')) + 1);
+        if (! $token = auth($this->guard)->attempt($credentials)) {
+            if (Cache::get($attemptCacheKey)) {
+                Cache::put($attemptCacheKey, Cache::get($attemptCacheKey) + 1);
             } else {
-                Cache::add('login_attempt:'.request('email'), Cache::get('login_attempt:'.request('email')) + 1);
+                Cache::add($attemptCacheKey, Cache::get($attemptCacheKey) + 1);
             }
 
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        $user = auth()->user();
+        $user = auth($this->guard)->user();
+        $clientId = $this->authService->getClientTypeIdByGuard($this->guard);
+        $authCacheKey = 'auth_user_'.$this->guard.':'.$user->id;
+        $loginAttemptCacheKey = 'login_attempt_'.$this->guard.':'.$user->email;
 
         if ($user->is_active == false) {
             return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
         }
 
-        if (Cache::get('block_account:'.$user->id)) {
+        if (Cache::get('block_account_'.$this->guard.':'.$user->id)) {
             return response()->json(['error' => 'Your account temporary blocked. Try again later'], 403);
         }
 
         if (env('CHECK_IP') === true) {
             if (request('proceed')) {
-                if (Cache::get('auth_user:'.$user->id)) {
-                    JWTAuth::setToken(Cache::get('auth_user:'.$user->id))->invalidate();
-                    Cache::forget('auth_user:'.$user->id);
-                    $this->writeToAuthLog('logout');
-                } else {
-                    $this->writeToAuthLog('logout');
+                if (Cache::get($authCacheKey)) {
+                    JWTAuth::setToken(Cache::get($authCacheKey))->invalidate();
+                    Cache::forget($authCacheKey);
                 }
+
+                $this->writeToAuthLog('logout');
 
                 if ($user->two_factor_auth_setting_id == 2 && ! ($user->google2fa_secret)) {
                     $this->writeToAuthLog('login');
                     $user->createToken($user->fullname)->accessToken;
-                    OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
-                    if (Cache::get('auth_user:'.$user->id)) {
-                        Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+                    if (Cache::get($authCacheKey)) {
+                        Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
                     } else {
-                        Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                        Cache::add($authCacheKey, $token, env('JWT_TTL', 3600));
                     }
-                    $auth_token = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('created_at')->limit(1)->get();
+                    $auth_token = OauthTokens::select('id')->where('user_id', $user->id)->where('client_id', $clientId)->orderByDesc('created_at')->limit(1)->get();
 
                     return response()->json(['2fa_token' => $auth_token[0]->id]);
                 }
 
                 if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
-                    OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
-                    if (Cache::get('auth_user:'.$user->id)) {
-                        Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+                    if (Cache::get($authCacheKey)) {
+                        Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
                     } else {
-                        Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                        Cache::add($authCacheKey, $token, env('JWT_TTL', 3600));
                     }
 
-                    $auth_token = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('created_at')->limit(1)->get();
-                    if (Cache::get('login_attempt:'.$user->email)) {
-                        Cache::forget('login_attempt:'.$user->email);
+                    $auth_token = OauthTokens::select('id')->where('user_id', $user->id)->where('client_id', $clientId)->orderByDesc('created_at')->limit(1)->get();
+                    if (Cache::get($loginAttemptCacheKey)) {
+                        Cache::forget($loginAttemptCacheKey);
                     }
 
                     return response()->json(['two_factor' => 'true', 'auth_token' => $auth_token[0]->id]);
                 } else {
-                    if (Cache::get('auth_user:'.$user->id)) {
-                        Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                    if (Cache::get($authCacheKey)) {
+                        Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
                     } else {
-                        Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                        Cache::add($authCacheKey, $token, env('JWT_TTL', 3600));
                     }
-                    if (Cache::get('login_attempt:'.$user->email)) {
-                        Cache::forget('login_attempt:'.$user->email);
+                    if (Cache::get($loginAttemptCacheKey)) {
+                        Cache::forget($loginAttemptCacheKey);
                     }
                     $this->writeToAuthLog('login');
 
@@ -161,15 +183,15 @@ class AuthController extends Controller
         if ($user->two_factor_auth_setting_id == 2 && ! ($user->google2fa_secret)) {
             $this->writeToAuthLog('login');
             $user->createToken($user->fullname)->accessToken;
-            OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
-            if (Cache::get('auth_user:'.$user->id)) {
-                Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+            OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+            if (Cache::get($authCacheKey)) {
+                Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
             } else {
-                Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                Cache::add($authCacheKey, $token, env('JWT_TTL', 3600));
             }
-            $auth_token = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('created_at')->limit(1)->get();
-            if (Cache::get('login_attempt:'.$user->email)) {
-                Cache::forget('login_attempt:'.$user->email);
+            $auth_token = OauthTokens::select('id')->where('user_id', $user->id)->where('client_id', $clientId)->orderByDesc('created_at')->limit(1)->get();
+            if (Cache::get($loginAttemptCacheKey)) {
+                Cache::forget($loginAttemptCacheKey);
             }
 
             return response()->json(['2fa_token' => $auth_token[0]->id]);
@@ -177,24 +199,24 @@ class AuthController extends Controller
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
             $this->writeToAuthLog('login');
-            OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
-            if (Cache::get('auth_user:'.$user->id)) {
-                Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+            OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+            if (Cache::get($authCacheKey)) {
+                Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
             } else {
-                Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                Cache::add($authCacheKey, $token, env('JWT_TTL', 3600));
             }
-            $auth_token = OauthTokens::select('*')->where('user_id', $user->id)->orderByDesc('created_at')->limit(1)->get();
+            $auth_token = OauthTokens::select('id')->where('user_id', $user->id)->where('client_id', $clientId)->orderByDesc('created_at')->limit(1)->get();
 
             return response()->json(['two_factor' => 'true', 'auth_token' => $auth_token[0]->id]);
         } else {
             $this->writeToAuthLog('login');
-            if (Cache::get('auth_user:'.$user->id)) {
-                Cache::put('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+            if (Cache::get($authCacheKey)) {
+                Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
             } else {
-                Cache::add('auth_user:'.$user->id, $token, env('JWT_TTL', 3600));
+                Cache::add($authCacheKey, $token, env('JWT_TTL', 3600));
             }
-            if (Cache::get('login_attempt:'.$user->email)) {
-                Cache::forget('login_attempt:'.$user->email);
+            if (Cache::get($loginAttemptCacheKey)) {
+                Cache::forget($loginAttemptCacheKey);
             }
 
             return $this->respondWithToken($token);
@@ -206,9 +228,11 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function me()
+    public function me(Request $request)
     {
-        return response()->json(auth()->user());
+        $guard = $this->authService->getGuardByClientType($request->client_type);
+
+        return response()->json(auth($guard)->user());
     }
 
     /**
@@ -216,11 +240,13 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function logout(Request $request)
     {
-        $user = auth()->user();
+        $guard = $this->authService->getGuardByClientType($request->client_type);
+
+        $user = auth($guard)->user();
         $this->writeToAuthLog('logout');
-        auth()->logout();
+        auth($guard)->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
     }
@@ -230,9 +256,11 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function refresh()
+    public function refresh(Request $request)
     {
-        return $this->respondWithToken(auth()->refresh());
+        $guard = $this->authService->getGuardByClientType($request->client_type);
+
+        return $this->respondWithToken(auth($guard)->refresh());
     }
 
     /**
@@ -246,7 +274,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
+            'expires_in' => auth($this->guard)->factory()->getTTL() * 60,
         ]);
     }
 
@@ -255,38 +283,42 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
+            'expires_in' => auth($this->guard)->factory()->getTTL() * 60,
             'two_factor' => 'true',
         ]);
     }
 
     public function show2FARegistrationInfo(Request $request)
     {
+        $this->guard = $this->authService->getGuardByClientType($request->client_type);
         $secret = Google2FA::generateSecretKey(config('lumen2fa.key_length', 32));
+
         if (request('2fa_token')) {
-            $access_token = OauthTokens::select('*')->where('id', request('2fa_token'))->orderByDesc('created_at')->limit(1)->get();
-            $user = Members::find($access_token[0]->user_id);
+            $access_token = OauthTokens::select('*')->where('id', request('2fa_token'))->orderByDesc('created_at')->first();
+            $user = $this->authService->getUserByClientId($access_token->client_id, $access_token->user_id);
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
         }
-        if (request('access_token')) {
-            $user = Members::find(JWTAuth::parseToken()->authenticate()->id);
+        if ($request->access_token) {
+            $user = $this->authService->getUserByGuard($this->guard, JWTAuth::parseToken()->authenticate()->id);
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
         }
         if ($request->member_id) {
-            $user = Members::find($request->member_id);
+            $user = $this->authService->getUserByGuard($this->guard, $request->member_id);
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
         }
+
         $QR_Image = Google2FA::getQRCodeInline(
             config('app.name'),
             $user->{config('lumen2fa.user_identified_field')},
             $secret
         );
+
         $data = [
             'image' => $QR_Image,
             'code'  => $secret,
@@ -302,8 +334,10 @@ class AuthController extends Controller
             'code' => 'required',
         ]);
 
-        if (request('access_token')) {
-            $user = Members::find(JWTAuth::parseToken()->authenticate()->id);
+        $this->guard = $this->authService->getGuardByClientType($request->client_type);
+
+        if ($request->access_token) {
+            $user = $this->authService->getUserByGuard($this->guard, JWTAuth::parseToken()->authenticate()->id);
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
@@ -311,23 +345,26 @@ class AuthController extends Controller
 
         if ($request->auth_token) {
             $user_id = OauthTokens::select('user_id')->where('id', $request->auth_token)->orderByDesc('created_at')->limit(1)->get();
-            $user = Members::find($user_id[0]->user_id);
+            $user = $this->authService->getUserByGuard($this->guard, $user_id[0]->user_id);
         } else {
-            $user = auth()->user();
+            $user = auth($this->guard)->user();
         }
 
         if ($request->member_id) {
-            $user = Members::find($request->member_id);
+            $user = $this->authService->getUserByGuard($this->guard, $request->member_id);
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
         }
+
+        $clientId = $this->authService->getClientTypeIdByGuard($this->guard);
         $secretKey = $request->secret;
         $user->google2fa_secret =
             str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), config('lumen2fa.string_pad', 'X'));
         $user->save();
-        OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => 1, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+        OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
         $user->createToken($user->fullname)->accessToken;
+
         if ($this->verify2FA($request)->getData()->data == 'success') {
             $user->two_factor_auth_setting_id = 2;
             $user->save();
@@ -343,18 +380,25 @@ class AuthController extends Controller
         $this->validate($request, [
             'code' => 'required',
         ]);
+
+        $this->guard = $this->authService->getGuardByClientType($request->client_type);
+
         if ($request->auth_token) {
             $user_id = OauthTokens::select('user_id')->where('id', $request->auth_token)->orderByDesc('created_at')->limit(1)->get();
-            $user = Members::find($user_id[0]->user_id);
+            $user = $this->authService->getUserByGuard($this->guard, $user_id[0]->user_id);
         } else {
-            $user = auth()->user();
+            $user = auth($this->guard)->user();
         }
+
         if ($request->member_id) {
-            $user = Members::find($request->member_id);
+            $user = $this->authService->getUserByGuard($this->guard, $request->member_id);
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
         }
+
+        $authCacheKey = 'auth_user:'.$user->id;
+        $mtaAttemptCacheKey = 'mfa_attempt:'.$user->id;
 
         $expires = OauthCodes::select('*')->where('user_id', $user->id)->orderByDesc('expires_at')->limit(1)->get();
         if (strtotime($expires[0]->expires_at) < strtotime(now())) {
@@ -366,19 +410,19 @@ class AuthController extends Controller
             return response()->json(['error' => 'Your Personal Access Token has expired'], 403);
         }*/
 
-        if (Cache::get('mfa_attempt:'.$user->id)) {
-            if (Cache::get('mfa_attempt:'.$user->id) == env('MFA_ATTEMPTS', '5')) {
+        if (Cache::get($mtaAttemptCacheKey)) {
+            if (Cache::get($mtaAttemptCacheKey) == env('MFA_ATTEMPTS', '5')) {
                 Cache::add('block_account:'.$user->id, 1, env('BLOCK_ACCOUNT_TTL', 100));
-                JWTAuth::setToken(Cache::get('auth_user:'.$user->id))->invalidate();
-                Cache::put('mfa_attempt:'.$user->id, Cache::get('mfa_attempt:'.$user->id) + 1);
+                JWTAuth::setToken(Cache::get($authCacheKey))->invalidate();
+                Cache::put($mtaAttemptCacheKey, Cache::get($mtaAttemptCacheKey) + 1);
 
                 return response()->json(['error' => 'Account is temporary blocked for '.env('BLOCK_ACCOUNT_TTL', 120) / 60 .' minutes'], 403);
-            } elseif (Cache::get('mfa_attempt:'.$user->id) >= env('MFA_ATTEMPTS', '5') * 2 + 1) {
+            } elseif (Cache::get($mtaAttemptCacheKey) >= env('MFA_ATTEMPTS', '5') * 2 + 1) {
                 $user->is_active = false;
                 $user->save();
-                JWTAuth::setToken(Cache::get('auth_user:'.$user->id))->invalidate();
-                Cache::forget('mfa_attempt:'.$user->id);
-                JWTAuth::setToken(Cache::get('auth_user:'.$user->id))->invalidate();
+                JWTAuth::setToken(Cache::get($authCacheKey))->invalidate();
+                Cache::forget($mtaAttemptCacheKey);
+                JWTAuth::setToken(Cache::get($authCacheKey))->invalidate();
 
                 return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
             }
@@ -413,17 +457,17 @@ class AuthController extends Controller
         $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
         if (! $valid) {
             $access_token->update(['twofactor_verified' => false]);
-            if (Cache::get('mfa_attempt:'.$user->id)) {
-                Cache::put('mfa_attempt:'.$user->id, Cache::get('mfa_attempt:'.$user->id) + 1);
+            if (Cache::get($mtaAttemptCacheKey)) {
+                Cache::put($mtaAttemptCacheKey, Cache::get($mtaAttemptCacheKey) + 1);
             } else {
-                Cache::add('mfa_attempt:'.$user->id, Cache::get('mfa_attempt:'.$user->id) + 1);
+                Cache::add($mtaAttemptCacheKey, Cache::get($mtaAttemptCacheKey) + 1);
             }
 
             return response()->json(['data' => 'Unable to verify your code'], 403);
         }
         $access_token->update(['twofactor_verified' => true]);
-        if (Cache::get('mfa_attempt:'.$user->id)) {
-            Cache::forget('mfa_attempt:'.$user->id);
+        if (Cache::get($mtaAttemptCacheKey)) {
+            Cache::forget($mtaAttemptCacheKey);
         }
         $token = JWTAuth::fromUser($user);
 
@@ -436,13 +480,16 @@ class AuthController extends Controller
             'code' => 'required',
             'password' => 'required',
         ]);
-        $user = auth()->user();
+
+        $this->guard = $this->authService->getGuardByClientType($request->client_type);
+
+        $user = auth($this->guard)->user();
         if (! Hash::check($request->password, $user->getAuthPassword())) {
             return response()->json(['data' => 'Password is not valid']);
         }
 
         if ($request->member_id) {
-            $user = Members::find($request->member_id);
+            $user = $this->authService->getUserByGuard($this->guard, $request->member_id);
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
@@ -464,20 +511,22 @@ class AuthController extends Controller
 
     public function generateBackupCodes(Request $request)
     {
+        $this->guard = $this->authService->getGuardByClientType($request->client_type);
+
         if ($request->auth_token) {
             $user_id = OauthTokens::select('user_id')->where('id', $request->auth_token)->orderByDesc('created_at')->limit(1)->get();
-            $user = Members::find($user_id[0]->user_id);
+            $user = $this->authService->getUserByGuard($this->guard, $user_id[0]->user_id);
         } else {
-            $user = auth()->user();
+            $user = auth($this->guard)->user();
         }
         if (request('access_token')) {
-            $user = Members::find(JWTAuth::parseToken()->authenticate()->id);
+            $user = $this->authService->getUserByGuard($this->guard, JWTAuth::parseToken()->authenticate()->id);
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
         }
         if ($request->member_id) {
-            $user = Members::find($request->member_id);
+            $user = $this->authService->getUserByGuard($this->guard, $request->member_id);
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
@@ -496,20 +545,22 @@ class AuthController extends Controller
             'backup_codes' => 'required',
         ]);
 
+        $this->guard = $this->authService->getGuardByClientType($request->client_type);
+
         if ($request->auth_token) {
             $user_id = OauthTokens::select('user_id')->where('id', $request->auth_token)->orderByDesc('created_at')->limit(1)->get();
-            $user = Members::find($user_id[0]->user_id);
+            $user = $this->authService->getUserByGuard($this->guard, $user_id[0]->user_id);
         } else {
-            $user = auth()->user();
+            $user = auth($this->guard)->user();
         }
         if (request('access_token')) {
-            $user = Members::find(JWTAuth::parseToken()->authenticate()->id);
+            $user = $this->authService->getUserByGuard($this->guard, JWTAuth::parseToken()->authenticate()->id);
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
         }
         if ($request->member_id) {
-            $user = Members::find($request->member_id);
+            $user = $this->authService->getUserByGuard($this->guard, $request->member_id);
             if (! $user) {
                 return response()->json(['data' => 'Member not found']);
             }
@@ -553,15 +604,16 @@ class AuthController extends Controller
         return request()->ip();
     }
 
-    public function writeToAuthLog($status): void
+    private function writeToAuthLog($status): void
     {
-        $user = auth()->user();
+        $user = auth($this->guard)->user();
 
         DB::connection('clickhouse')
             ->table((new AuthenticationLog)->getTable())
             ->insert([
                 'id' => rand(0, 4294967295),
                 'member' => $user->email,
+                'client_type' => $this->guard,
                 'domain' => request()->getHttpHost(),
                 'browser' => Agent::browser() ? Agent::browser() : 'unknown',
                 'platform' => Agent::platform() ? Agent::platform() : 'unknown',
@@ -572,12 +624,13 @@ class AuthController extends Controller
             ]);
     }
 
-    public function getAuthUserIp(string $email): string
+    private function getAuthUserIp(string $email): string
     {
         $getIp = DB::connection('clickhouse')
             ->table((new AuthenticationLog)->getTable())
             ->select(['ip'])
             ->where('member', '=', (string) $email)
+            ->where('client_type', '=', (string) $this->guard)
             ->where('status', '=', 'login')
             ->orderByDesc('created_at')
             ->limit(1)
@@ -590,12 +643,13 @@ class AuthController extends Controller
         }
     }
 
-    public function getAuthUser(string $email): string
+    private function getAuthUser(string $email): string
     {
         $getStatus = DB::connection('clickhouse')
             ->table((new AuthenticationLog)->getTable())
             ->select(['status'])
             ->where('member', '=', (string) $email)
+            ->where('client_type', '=', (string) $this->guard)
             ->orderByDesc('created_at')
             ->limit(1)
             ->get();
@@ -609,6 +663,7 @@ class AuthController extends Controller
                 ->table((new AuthenticationLog)->getTable())
                 ->select(['status'])
                 ->where('member', '=', (string) $email)
+                ->where('client_type', '=', (string) $this->guard)
                 ->orderByDesc('created_at')
                 ->limit(1)
                 ->get();
@@ -617,12 +672,13 @@ class AuthController extends Controller
         }
     }
 
-    public function getAuthUserBrowser(string $email)
+    private function getAuthUserBrowser(string $email)
     {
         $getBrowser = DB::connection('clickhouse')
             ->table((new AuthenticationLog)->getTable())
             ->select(['browser'])
             ->where('member', '=', (string) $email)
+            ->where('client_type', '=', (string) $this->guard)
             ->where('status', '=', 'login')
             ->orderByDesc('created_at')
             ->limit(1)
