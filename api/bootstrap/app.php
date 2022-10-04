@@ -99,6 +99,10 @@ $app->configure('vv');
 |
 */
 
+$app->routeMiddleware([
+    'access' => App\Http\Middleware\AccessByGuardMiddleware::class,
+]);
+
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
