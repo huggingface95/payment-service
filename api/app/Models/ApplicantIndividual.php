@@ -5,24 +5,39 @@ namespace App\Models;
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\UserPermission;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Laravel\Lumen\Auth\Authorizable;
+use Laravel\Passport\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * Class ApplicantIndividual
- *
+ * 
+ * @property int id
  * @property ApplicantBankingAccess $applicantBankingAccess
- * @method static find(mixed $client_id)
  */
-class ApplicantIndividual extends BaseModel
+class ApplicantIndividual extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
 {
+    use Authorizable;
+    use Authenticatable;
+    use UserPermission;
+    use HasApiTokens;
+    use CanResetPassword;
     use MorphToOne;
     use BelongsToOne;
 
     protected $table = 'applicant_individual';
 
-    protected $guard_name = 'api';
+    protected $guard = 'api_client';
 
     /**
      * The attributes that are mass assignable.
@@ -61,23 +76,50 @@ class ApplicantIndividual extends BaseModel
         'password_salt',
         'is_verification_phone',
         'company_id',
-        'two_factor_auth_id',
+        'two_factor_auth_setting_id',
     ];
 
     protected $hidden = [
         'password_hash',
         'password_salt',
+        'google2fa_secret',
+        'security_pin',
     ];
 
     protected $casts = [
         'personal_additional_fields' => 'array',
         'contacts_additional_fields' => 'array',
+        'backup_codes' => 'array',
+    ];
+
+    protected $appends = [
+        'two_factor'
     ];
 
     protected static function booted()
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope);
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        return [];
+    }
+
+    public function getTwoFactorAttribute(): bool
+    {
+        return ($this->google2fa_secret) ? true : false;
     }
 
     /**
@@ -206,12 +248,14 @@ class ApplicantIndividual extends BaseModel
         return $this->morphToMany(GroupRole::class, 'user', GroupRoleUser::class, 'user_id', 'group_role_id');
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function twoFactorAuth()
+    public function twoFactorAuth(): BelongsTo
     {
-        return $this->belongsTo(TwoFactorAuthSettings::class, 'two_factor_auth_id');
+        return $this->belongsTo(TwoFactorAuthSettings::class, 'two_factor_auth_setting_id');
+    }
+
+    public function ipAddress(): HasMany
+    {
+        return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', 'App\Models\ApplicantIndividual');
     }
 
     public function scopeGroupSort($query, $sort)

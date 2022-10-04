@@ -17,9 +17,15 @@ $router->group([
     'prefix' => 'auth',
 ], function () use ($router) {
     $router->post('login', 'AuthController@login');
-    $router->post('logout', 'AuthController@logout');
-    $router->post('refresh', 'AuthController@refresh');
+});
+
+$router->group([
+    'prefix' => 'auth',
+    'middleware' => 'access'
+], function () use ($router) {
     $router->post('me', 'AuthController@me');
+    $router->post('refresh', 'AuthController@refresh');
+    $router->post('logout', 'AuthController@logout');
     $router->get('2fareg', 'AuthController@show2FARegistrationInfo');
     $router->post('2fareg', 'AuthController@activate2FA');
     $router->post('2faverify', 'AuthController@verify2FA');
