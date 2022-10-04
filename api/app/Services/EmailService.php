@@ -24,6 +24,9 @@ class EmailService
      */
     public function sendAccountStatusEmail(Account $account): void
     {
+        //TODO make it so that after Account::Create work Global Scope "AccountIndividualsCompaniesScope"
+        $account =Account::find($account->id);
+
         $account->load('group', 'company', 'paymentProvider', 'clientable', 'owner',
             'accountState', 'paymentBank', 'paymentSystem', 'currencies', 'groupRole'
         );

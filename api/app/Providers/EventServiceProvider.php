@@ -2,11 +2,9 @@
 
 namespace App\Providers;
 
-use App\Events\AccountCreatedEvent;
 use App\Events\AccountUpdatedEvent;
 use App\Events\PaymentCreatedEvent;
 use App\Events\PaymentUpdatedEvent;
-use App\Listeners\AccountCreatedListener;
 use App\Listeners\AccountUpdatedListener;
 use App\Listeners\PaymentCreatedListener;
 use App\Listeners\PaymentUpdatedListener;
@@ -22,9 +20,6 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         AccountUpdatedEvent::class => [
             AccountUpdatedListener::class,
-        ],
-        AccountCreatedEvent::class => [
-            AccountCreatedListener::class,
         ],
         PaymentCreatedEvent::class => [
             PaymentCreatedListener::class,

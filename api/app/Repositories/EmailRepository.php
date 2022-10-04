@@ -80,8 +80,8 @@ class EmailRepository implements EmailRepositoryInterface
             throw new GraphqlException('Email not found', '404');
         }
 
-        $content = $this->replaceObjectData($emailTemplate->getHtml(), $account, '/\{(.*?)}/');
-        $subject = $this->replaceObjectData($emailTemplate->subject, $account, '/\{(.*?)}/');
+        $content = $this->replaceObjectData($emailTemplate->getHtml(), $account, '/\{(.*?)\}/');
+        $subject = $this->replaceObjectData($emailTemplate->subject, $account, '/\{(.*?)\}/');
 
         return TransformerDTO::transform(SmtpDataDTO::class, $emails, $content, $subject);
     }

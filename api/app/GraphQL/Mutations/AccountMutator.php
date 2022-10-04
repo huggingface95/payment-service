@@ -10,13 +10,18 @@ use App\Models\Account;
 use App\Models\AccountState;
 use App\Models\GroupRole;
 use App\Models\Groups;
-use App\Traits\ReplaceRegularExpressions;
+use App\Services\EmailService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 class AccountMutator
 {
-    use ReplaceRegularExpressions;
+    public EmailService $emailService;
+
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
 
     /**
      * @throws GraphqlException
@@ -33,11 +38,13 @@ class AccountMutator
         }
 
         /** @var Account $account */
-        $account = Account::create($args);
+        $account = Account::query()->create($args);
 
         if (isset($args['clientableAttach'])){
             $account->clientableAttach()->sync($args['clientableAttach']['sync']);
         }
+
+        $this->emailService->sendAccountStatusEmail($account);
 
         if ($account->account_number == null && $account->group->name == Groups::INDIVIDUAL){
             dispatch(new IbanIndividualActivationJob($account));
