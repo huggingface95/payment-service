@@ -11,7 +11,7 @@ class DepartmentMutator extends BaseMutator
     /**
      * Create department
      *
-     * @param $root
+     * @param  $root
      * @param  array  $args
      * @return mixed
      */
@@ -20,12 +20,16 @@ class DepartmentMutator extends BaseMutator
         $department = Departments::create($args);
 
         if (isset($args['department_positions_name'])) {
+            $departmentPositions = [];
+
             foreach ($args['department_positions_name'] as $position) {
-                DepartmentPosition::create([
-                    'name'=> $position,
+                $departmentPositions[] = DepartmentPosition::create([
+                    'name' => $position,
                     'company_id' => $department->company_id,
-                ]);
+                ])->id;
             }
+
+            $department->positions()->attach($departmentPositions);
         }
 
         return $department;
@@ -34,7 +38,7 @@ class DepartmentMutator extends BaseMutator
     /**
      * Update department
      *
-     * @param $root
+     * @param  $root
      * @param  array  $args
      * @return mixed
      */
@@ -63,7 +67,7 @@ class DepartmentMutator extends BaseMutator
     /**
      * Delete department
      *
-     * @param $root
+     * @param  $root
      * @param  array  $args
      * @return mixed
      */

@@ -11,11 +11,12 @@ type Departments {
     "Получить должность"
     positions: [DepartmentPosition] @hasMany(relation: "positions")
 }
+
 "Должности"
 type DepartmentPosition {
     id: ID!
     "Назварие должности"
-    name: String !
+    name: String!
     "Активен = true или не активный = false"
     is_active: Boolean
     "Получить компанию"

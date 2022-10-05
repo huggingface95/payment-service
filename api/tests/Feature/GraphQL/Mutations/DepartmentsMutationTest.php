@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\Departments;
 use Illuminate\Support\Facades\DB;
 
 class DepartmentsMutationTest extends TestCase
@@ -17,7 +18,7 @@ class DepartmentsMutationTest extends TestCase
         $this->login();
 
         $seq = DB::table('departments')->max('id') + 1;
-        DB::select('ALTER SEQUENCE departments_id_seq RESTART WITH '.$seq);
+        DB::select('ALTER SEQUENCE departments_id_seq RESTART WITH ' . $seq);
 
         $this->graphQL('
             mutation CreateDepartment($name: String!, $company_id: ID!, $dep_pos:[String]) {
@@ -28,24 +29,34 @@ class DepartmentsMutationTest extends TestCase
                 ) {
                     id
                     name
+                    positions {
+                        name
+                    }
                 }
             }
         ', [
-            'name' =>  'Test Department',
-            'company_id' =>  1,
+            'name' => 'Test Department',
+            'company_id' => 1,
             'dep_pos' => [
                 'Director',
                 'Manager',
                 'Programmer',
-            ]
+            ],
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
+        $department = Departments::latest('id')->first();
+        $departmens = $department->positions()->get()->map(function ($department) {
+            return $department->only(['name']);
+        });
 
         $this->seeJson([
             'data' => [
                 'createDepartment' => [
                     'id' => $id['data']['createDepartment']['id'],
                     'name' => $id['data']['createDepartment']['name'],
+                    'positions' => $departmens,
                 ],
             ],
         ]);
@@ -56,7 +67,7 @@ class DepartmentsMutationTest extends TestCase
         $this->login();
 
         $seq = DB::table('department_position')->max('id') + 1;
-        DB::select('ALTER SEQUENCE department_position_id_seq RESTART WITH '.$seq);
+        DB::select('ALTER SEQUENCE department_position_id_seq RESTART WITH ' . $seq);
 
         $this->graphQL('
             mutation CreateDepartmentPosition($name: String!, $company_id: ID!) {
@@ -69,8 +80,8 @@ class DepartmentsMutationTest extends TestCase
                 }
             }
         ', [
-            'name' =>  'Test Department Position',
-            'company_id' =>  1,
+            'name' => 'Test Department Position',
+            'company_id' => 1,
         ]);
         $id = json_decode($this->response->getContent(), true);
 
