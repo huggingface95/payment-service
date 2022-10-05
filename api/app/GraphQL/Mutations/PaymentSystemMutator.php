@@ -4,7 +4,6 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
 use App\Models\PaymentSystem;
-use Illuminate\Support\Facades\DB;
 
 class PaymentSystemMutator
 {
@@ -16,7 +15,6 @@ class PaymentSystemMutator
     {
         try {
             $paymentSystem = PaymentSystem::find($args['id']);
-            DB::table('payment_provider_payment_system')->where('payment_system_id', $args['id'])->delete();
             $paymentSystem->delete();
 
             return $paymentSystem;

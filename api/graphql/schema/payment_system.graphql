@@ -15,7 +15,7 @@ type PaymentSystem {
     "Получить связанные валюты"
     currencies: [Currencies] @belongsToMany(relation:"currencies")
     "Получить Платежные провайдеры"
-    providers: [PaymentProvider] @belongsToMany(relation:"providers")
+    providers: PaymentProvider @belongsTo(relation:"providers")
     "Получить Реквизиты"
     banks: [PaymentBank] @belongsToMany(relation:"banks")
     "Описание"
@@ -27,18 +27,22 @@ type PaymentSystem {
 extend type Query @guard {
     "Получить платежную систем по ID"
     paymentSystem(id: ID @eq): PaymentSystem   @find
+    "Получить уникальный список платежных систем"
+    paymentSystemsList: [PaymentSystem!]! @field(resolver:"PaymentSystemQuery@get")
     "Получить список платежных систем"
     paymentSystems(
         filter: _ @filterConditions(static: QueryPaymentSystemsFilterStatic),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
-    ): [PaymentSystem!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [PaymentSystem!]! @paginate(defaultCount: 100) @orderBy(column: "id", direction: ASC)
 }
 
 input QueryPaymentSystemsFilterStatic @spread{
     id: ID @eq
+    hasProvidersFilterByName: String @ilike
     hasProvidersFilterById: ID @eq
     hasCompaniesFilterById: ID @eq
 }
+
 input InputPaymentSystem {
     "Название платежной системы"
     name: String!
@@ -49,7 +53,7 @@ input InputPaymentSystem {
     "массив ID валют"
     currencies: PivotTable
     "массив ID провайдеров"
-    providers: PivotTable
+    payment_provider_id: ID
     "массив ID Реквизитов"
     banks: PivotTable
     "Описание"
@@ -57,6 +61,7 @@ input InputPaymentSystem {
     "Лого"
     logo_id: ID
 }
+
 extend type Mutation @guard {
     "Создать платежную систему"
     createPaymentSystem(
@@ -72,6 +77,5 @@ extend type Mutation @guard {
 
     "Удалить платежную систему"
     deletePaymentSystem(id: ID!): PaymentSystem   @field(resolver:"PaymentSystemMutator@delete")
-
 }
 

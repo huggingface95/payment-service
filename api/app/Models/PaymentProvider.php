@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
@@ -28,14 +28,9 @@ class PaymentProvider extends BaseModel
         'name', 'is_active', 'description', 'logo_id', 'company_id',
     ];
 
-    /**
-     * Get relation payment systems
-     *
-     * @return BelongsToMany
-     */
-    public function paymentSystems(): BelongsToMany
+    public function paymentSystems(): HasMany
     {
-        return $this->belongsToMany(PaymentSystem::class, 'payment_provider_payment_system', 'payment_provider_id', 'payment_system_id');
+        return $this->hasMany(PaymentSystem::class, 'payment_provider_id');
     }
 
     public function commissionPriceList(): HasOne
@@ -52,7 +47,7 @@ class PaymentProvider extends BaseModel
     {
         $countries = implode(',', $countryId);
 
-        return $query->where('country_id', '&&', DB::raw('ARRAY['.$countries.']::integer[]'));
+        return $query->where('country_id', '&&', DB::raw('ARRAY[' . $countries . ']::integer[]'));
     }
 
     public function logo(): BelongsTo
@@ -64,6 +59,6 @@ class PaymentProvider extends BaseModel
     {
         $currencies = implode(',', $currencyId);
 
-        return $query->where('country_id', '&&', DB::raw('ARRAY['.$currencies.']::integer[]'));
+        return $query->where('country_id', '&&', DB::raw('ARRAY[' . $currencies . ']::integer[]'));
     }
 }

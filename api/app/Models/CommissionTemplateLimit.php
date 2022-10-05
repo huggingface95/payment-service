@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Relationships\CustomHasMany;
 use App\Models\Relationships\CustomHasOne;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -109,8 +108,7 @@ class CommissionTemplateLimit extends BaseModel
     public function paymentSystem(): CustomHasOne
     {
         $query = PaymentSystem::query()
-            ->leftJoin('payment_provider_payment_system', 'payment_provider_payment_system.payment_system_id', '=', 'payment_system.id')
-            ->leftJoin('commission_template', 'commission_template.payment_provider_id', '=', 'payment_provider_payment_system.payment_provider_id')
+            ->leftJoin('commission_template', 'commission_template.payment_provider_id', '=', 'payment_system.payment_provider_id')
             ->select('payment_system.*', 'commission_template.id as c_t_id');
 
         return new CustomHasOne(
@@ -123,23 +121,23 @@ class CommissionTemplateLimit extends BaseModel
         );
     }
 
-    public static function getAccountFilter($filter): Builder
-    {
-        return self::query()
-            ->leftJoin('accounts', 'accounts.commission_template.id', '=', 'commission_template_limit.commission_template_id')
-            ->leftJoin('payment_provider_payment_system', 'payment_provider_payment_system.payment_provider_id', '=', 'commission_template.payment_provider_id')
-            ->leftJoin('payment_system', 'payment_system.id', '=', 'payment_provider_payment_system.payment_system_id')
-            ->leftJoin('commission_template_regions', 'commission_template_regions.commission_template_id', '=', 'commission_template_limit.commission_template_id')
-            ->where('commission_template.account_id', '=', $filter['account_id'])
-            ->orWhere('commission_template_limit.commission_template_id', '=', $filter['commission_template_id'])
-            ->orWhere('payment_system.id', '=', $filter['payment_system_id'])
-            ->orWhere('commission_template_limit.commission_template_limit_action_type_id', '=', $filter['commission_template_limit_action_type_id'])
-            ->orWhere('commission_template_limit.commission_template_limit_type_id', '=', $filter['commission_template_limit_type_id'])
-            ->orWhere('commission_template_limit.commission_template_limit_transfer_direction_id', '=', $filter['commission_template_limit_transfer_direction_id'])
-            ->orWhere('commission_template_limit.commission_template_limit_period_id', '=', $filter['commission_template_limit_period_id'])
-            ->orWhere('commission_template_limit.currency_id', '=', $filter['currency_id'])
-            ->orWhere('commission_template_limit.amount', '=', $filter['amount'])
-            ->orWhere('commission_template_limit.period_count', '=', $filter['period_count'])
-            ->orWhere('commission_template_regions.region_id', '=', $filter['region_id']);
-    }
+    // public static function getAccountFilter($filter): Builder
+    // {
+    //     return self::query()
+    //         ->leftJoin('accounts', 'accounts.commission_template.id', '=', 'commission_template_limit.commission_template_id')
+    //         ->leftJoin('payment_provider_payment_system', 'payment_provider_payment_system.payment_provider_id', '=', 'commission_template.payment_provider_id')
+    //         ->leftJoin('payment_system', 'payment_system.id', '=', 'payment_provider_payment_system.payment_system_id')
+    //         ->leftJoin('commission_template_regions', 'commission_template_regions.commission_template_id', '=', 'commission_template_limit.commission_template_id')
+    //         ->where('commission_template.account_id', '=', $filter['account_id'])
+    //         ->orWhere('commission_template_limit.commission_template_id', '=', $filter['commission_template_id'])
+    //         ->orWhere('payment_system.id', '=', $filter['payment_system_id'])
+    //         ->orWhere('commission_template_limit.commission_template_limit_action_type_id', '=', $filter['commission_template_limit_action_type_id'])
+    //         ->orWhere('commission_template_limit.commission_template_limit_type_id', '=', $filter['commission_template_limit_type_id'])
+    //         ->orWhere('commission_template_limit.commission_template_limit_transfer_direction_id', '=', $filter['commission_template_limit_transfer_direction_id'])
+    //         ->orWhere('commission_template_limit.commission_template_limit_period_id', '=', $filter['commission_template_limit_period_id'])
+    //         ->orWhere('commission_template_limit.currency_id', '=', $filter['currency_id'])
+    //         ->orWhere('commission_template_limit.amount', '=', $filter['amount'])
+    //         ->orWhere('commission_template_limit.period_count', '=', $filter['period_count'])
+    //         ->orWhere('commission_template_regions.region_id', '=', $filter['region_id']);
+    // }
 }

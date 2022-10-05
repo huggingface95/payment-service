@@ -27,9 +27,11 @@ class PaymentProviderMutationTest extends TestCase
             )
             {
                 createPaymentProvider (
-                    name: $name
-                    description: $description
-                    company_id: $company_id
+                    input: {
+                        name: $name
+                        description: $description
+                        company_id: $company_id
+                    }
                 )
                 {
                     id
@@ -61,14 +63,18 @@ class PaymentProviderMutationTest extends TestCase
         $this->graphQL('
             mutation UpdatePaymentProvider(
                 $id: ID!
-                $name: String
+                $name: String!
                 $description: String
+                $company_id: ID!
             )
             {
                 updatePaymentProvider (
                     id: $id
-                    name: $name
-                    description: $description
+                    input: {
+                        name: $name
+                        description: $description
+                        company_id: $company_id
+                    }
                 )
                 {
                     id
@@ -79,6 +85,7 @@ class PaymentProviderMutationTest extends TestCase
             'id' => strval($payment_provider[0]->id),
             'name' => 'PaymentProviderName_Updated_'.\Illuminate\Support\Str::random(3),
             'description' => 'PaymentProviderDescription_Updated_'.\Illuminate\Support\Str::random(3),
+            'company_id' => '1',
         ]);
 
         $id = json_decode($this->response->getContent(), true);

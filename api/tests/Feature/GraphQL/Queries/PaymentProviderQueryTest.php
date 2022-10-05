@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\PaymentSystem;
 use Illuminate\Support\Facades\DB;
 
 class PaymentProviderQueryTest extends TestCase
@@ -22,10 +23,15 @@ class PaymentProviderQueryTest extends TestCase
             ->latest('id')
             ->first();
 
+        $paymentSystems = PaymentSystem::select('name')->where('payment_provider_id', $payment_provider->id)->get();
+
         $this->graphQL('
             query PaymentProvider($id:ID!){
                 paymentProvider(id: $id) {
                     id
+                    payment_systems {
+                        name
+                    }
                 }
             }
         ', [
@@ -34,6 +40,7 @@ class PaymentProviderQueryTest extends TestCase
             'data' => [
                 'paymentProvider' => [
                     'id' => strval($payment_provider->id),
+                    'payment_systems' => $paymentSystems,
                 ],
             ],
         ]);
@@ -85,7 +92,7 @@ class PaymentProviderQueryTest extends TestCase
                 data {
                     id
                 }
-                }
+            }
         }')->seeJsonContains([
             [
                 'id' => strval($payment_provider[0]->id),
@@ -118,7 +125,7 @@ class PaymentProviderQueryTest extends TestCase
             }
         }
         ', [
-            "name" => (string) $payment_provider->name
+            "name" => (string) $payment_provider->name,
         ])->seeJsonContains([
             [
                 'id' => (string) $payment_provider->id,
@@ -136,9 +143,7 @@ class PaymentProviderQueryTest extends TestCase
             ->table('payment_provider')
             ->first();
 
-        $payment_system = DB::connection('pgsql_test')
-            ->table('payment_provider_payment_system')
-            ->first();
+        $payment_system = PaymentSystem::where('payment_provider_id', $payment_provider->id)->first();
 
         $this->graphQL('
         query PaymentProviders($id: Mixed) {
@@ -156,7 +161,7 @@ class PaymentProviderQueryTest extends TestCase
             }
         }
         ', [
-            "id" => (string) $payment_system->payment_system_id
+            "id" => (string) $payment_system->id,
         ])->seeJsonContains([
             [
                 'id' => (string) $payment_provider->id,
@@ -190,7 +195,7 @@ class PaymentProviderQueryTest extends TestCase
             }
         }
         ', [
-            "id" => (string) $payment_provider->company_id
+            "id" => (string) $payment_provider->company_id,
         ])->seeJsonContains([
             [
                 'id' => (string) $payment_provider->id,

@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
+use Staudenmeir\EloquentHasManyDeep\HasTableAlias;
 
 class PaymentSystem extends BaseModel
 {
-    use HasRelationships;
+    use HasRelationships, HasTableAlias;
 
     public $timestamps = false;
 
@@ -38,36 +39,18 @@ class PaymentSystem extends BaseModel
         return $this->belongsToMany(Region::class, 'payment_system_regions', 'payment_system_id', 'region_id');
     }
 
-    public function providers(): BelongsToMany
+    public function providers(): BelongsTo
     {
-        return $this->belongsToMany(PaymentProvider::class, 'payment_provider_payment_system', 'payment_system_id', 'payment_provider_id');
+        return $this->belongsTo(PaymentProvider::class, 'payment_provider_id');
     }
 
     public function companies(): HasManyDeep
     {
         return $this->hasManyDeep(
             Companies::class,
-            [PaymentProviderPaymentSystem::class, PaymentProvider::class], // Intermediate models, beginning at the far parent (Country).
+            [PaymentSystem::class, PaymentProvider::class],
             [
-                'payment_system_id',     // Foreign key on the "comments" table.
-                'id', // Foreign key on the "users" table.
-                'id',    // Foreign key on the "posts" table.
-            ],
-            [
-                'id', // Local key on the "countries" table.
-                'payment_provider_id', // Local key on the "users" table.
-                'company_id',  // Local key on the "posts" table.
-            ]
-        );
-    }
-
-    public function company(): HasOneDeep
-    {
-        return $this->hasOneDeep(
-            Companies::class,
-            [PaymentProviderPaymentSystem::class, PaymentProvider::class],
-            [
-                'payment_system_id',
+                'payment_provider_id',
                 'id',
                 'id',
             ],
@@ -75,8 +58,13 @@ class PaymentSystem extends BaseModel
                 'id',
                 'payment_provider_id',
                 'company_id',
-            ]
+            ],
         );
+    }
+
+    public function company(): HasOneDeep
+    {
+        return $this->hasOneDeepFromRelations($this->providers(), (new PaymentProvider())->company());
     }
 
     public function banks(): BelongsToMany
