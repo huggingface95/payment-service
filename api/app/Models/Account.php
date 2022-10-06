@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
-use App\Events\AccountCreatedEvent;
 use App\Events\AccountUpdatedEvent;
 use App\Models\Interfaces\BaseModelInterface;
 use App\Models\Scopes\AccountIndividualsCompaniesScope;
@@ -45,7 +44,6 @@ class Account extends BaseModel implements BaseModelInterface
 
     protected $dispatchesEvents = [
         'updated' => AccountUpdatedEvent::class,
-        'created' => AccountCreatedEvent::class,
     ];
 
     /**
