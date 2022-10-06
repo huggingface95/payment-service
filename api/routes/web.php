@@ -13,16 +13,10 @@
 |
 */
 $router->group([
-    //    'middleware' => 'api',
-    'prefix' => 'auth',
-], function () use ($router) {
-    $router->post('login', 'AuthController@login');
-});
-
-$router->group([
     'prefix' => 'auth',
     'middleware' => 'access'
 ], function () use ($router) {
+    $router->post('login', 'AuthController@login');
     $router->post('me', 'AuthController@me');
     $router->post('refresh', 'AuthController@refresh');
     $router->post('logout', 'AuthController@logout');

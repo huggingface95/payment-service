@@ -115,16 +115,17 @@ class AuthController extends Controller
 
                 if ($user->two_factor_auth_setting_id == 2 && ! ($user->google2fa_secret)) {
                     $this->writeToAuthLog('login');
-                    $user->createToken($user->fullname)->accessToken;
+                    $authTokenId = $user->createToken($user->fullname)->token->id;
+                    OauthTokens::where('id', $authTokenId)->update(['client_id' => $clientId]);
                     OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+                    
                     if (Cache::get($authCacheKey)) {
                         Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
                     } else {
                         Cache::add($authCacheKey, $token, env('JWT_TTL', 3600));
                     }
-                    $auth_token = OauthTokens::select('id')->where('user_id', $user->id)->where('client_id', $clientId)->orderByDesc('created_at')->limit(1)->get();
 
-                    return response()->json(['2fa_token' => $auth_token[0]->id]);
+                    return response()->json(['2fa_token' => $authTokenId]);
                 }
 
                 if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
@@ -180,25 +181,27 @@ class AuthController extends Controller
             }
         }
 
+        $this->writeToAuthLog('login');
+
         if ($user->two_factor_auth_setting_id == 2 && ! ($user->google2fa_secret)) {
-            $this->writeToAuthLog('login');
-            $user->createToken($user->fullname)->accessToken;
+            $authTokenId = $user->createToken($user->fullname)->token->id;
+            OauthTokens::where('id', $authTokenId)->update(['client_id' => $clientId]);
             OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+
             if (Cache::get($authCacheKey)) {
                 Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
             } else {
                 Cache::add($authCacheKey, $token, env('JWT_TTL', 3600));
             }
-            $auth_token = OauthTokens::select('id')->where('user_id', $user->id)->where('client_id', $clientId)->orderByDesc('created_at')->limit(1)->get();
+
             if (Cache::get($loginAttemptCacheKey)) {
                 Cache::forget($loginAttemptCacheKey);
             }
 
-            return response()->json(['2fa_token' => $auth_token[0]->id]);
+            return response()->json(['2fa_token' => $authTokenId]);
         }
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
-            $this->writeToAuthLog('login');
             OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
             if (Cache::get($authCacheKey)) {
                 Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
@@ -209,7 +212,6 @@ class AuthController extends Controller
 
             return response()->json(['two_factor' => 'true', 'auth_token' => $auth_token[0]->id]);
         } else {
-            $this->writeToAuthLog('login');
             if (Cache::get($authCacheKey)) {
                 Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
             } else {
@@ -242,11 +244,9 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $guard = $this->authService->getGuardByClientType($request->client_type);
-
-        $user = auth($guard)->user();
+        $user = auth()->user();
         $this->writeToAuthLog('logout');
-        auth($guard)->logout();
+        auth()->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
     }
@@ -345,6 +345,7 @@ class AuthController extends Controller
 
         if ($request->auth_token) {
             $user_id = OauthTokens::select('user_id')->where('id', $request->auth_token)->orderByDesc('created_at')->limit(1)->get();
+
             $user = $this->authService->getUserByGuard($this->guard, $user_id[0]->user_id);
         } else {
             $user = auth($this->guard)->user();
@@ -363,7 +364,8 @@ class AuthController extends Controller
             str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), config('lumen2fa.string_pad', 'X'));
         $user->save();
         OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
-        $user->createToken($user->fullname)->accessToken;
+        $authTokenId = $user->createToken($user->fullname)->token->id;
+        OauthTokens::where('id', $authTokenId)->update(['client_id' => $clientId]);
 
         if ($this->verify2FA($request)->getData()->data == 'success') {
             $user->two_factor_auth_setting_id = 2;
@@ -453,7 +455,8 @@ class AuthController extends Controller
             }
         }
 
-        $access_token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
+        $clientId = $this->authService->getClientTypeIdByGuard($this->guard);
+        $access_token = OauthTokens::where('user_id', $user->id)->where('client_id', $clientId)->latest()->limit(1);
         $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
         if (! $valid) {
             $access_token->update(['twofactor_verified' => false]);
@@ -494,13 +497,16 @@ class AuthController extends Controller
                 return response()->json(['data' => 'Member not found']);
             }
         }
-        $token = DB::table('oauth_access_tokens')->where('user_id', $user->id)->latest()->limit(1);
+        
         $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
 
         if ($valid) {
             $user->google2fa_secret = null;
             $user->two_factor_auth_setting_id = 1;
             $user->save();
+
+            $clientId = $this->authService->getClientTypeIdByGuard($this->guard);
+            $token = OauthTokens::where('user_id', $user->id)->where('client_id', $clientId)->latest()->limit(1);
             $token->update(['twofactor_verified' => false]);
         } else {
             return response()->json(['data' => 'Unable to verify your code']);
