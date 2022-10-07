@@ -232,7 +232,8 @@ class AuthController extends Controller
      */
     public function me(Request $request)
     {
-        $guard = $this->authService->getGuardByClientType($request->client_type);
+        $clientType = JWTAuth::getPayload()->get('client_type');
+        $guard = $this->authService->getGuardByClientType($clientType);
 
         return response()->json(auth($guard)->user());
     }

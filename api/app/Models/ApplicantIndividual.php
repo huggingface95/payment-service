@@ -114,7 +114,9 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 
     public function getJWTCustomClaims(): array
     {
-        return [];
+        return [
+            'client_type' => 'applicant',
+        ];
     }
 
     public function getTwoFactorAttribute(): bool
