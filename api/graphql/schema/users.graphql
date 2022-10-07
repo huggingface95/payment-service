@@ -33,7 +33,9 @@ extend type Query @guard {
         where: _ @whereConditions(columnsEnum: "UsersColumn"),
         orderBy: _ @orderBy(columns: ["id","email","fullname"],
     )): [Users!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
 
+extend type Query @guard(with: ["api", "api_client"]) {
     userAuthData: userAuthResponse! @field(resolver:"UsersQuery@userAuthData")
 }
 

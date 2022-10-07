@@ -136,7 +136,9 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function getJWTCustomClaims(): array
     {
-        return [];
+        return [
+            'client_type' => 'member',
+        ];
     }
 
     public function IsShowOwnerApplicants(): bool

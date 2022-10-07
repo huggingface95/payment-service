@@ -2,6 +2,7 @@
 
 namespace App\DTO\GraphQLResponse;
 
+use App\Models\ApplicantIndividual;
 use App\Models\Members;
 use App\Models\PermissionsList;
 use App\Services\PermissionsService;
@@ -9,11 +10,11 @@ use Illuminate\Support\Str;
 
 class UserAuthResponse
 {
-    public Members $data;
+    public Members|ApplicantIndividual $data;
 
     public array $permissions;
 
-    public static function transform(Members $member): self
+    public static function transform(Members|ApplicantIndividual $member): self
     {
         $dto = new self();
         $dto->data = $member;
