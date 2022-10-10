@@ -260,6 +260,16 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', 'App\Models\ApplicantIndividual');
     }
 
+    public function applicantBankingAccess(): \Ankurk91\Eloquent\Relations\BelongsToOne
+    {
+        return $this->belongsToOne(ApplicantBankingAccess::class, ApplicantIndividualCompany::class, 'applicant_individual_id', 'applicant_company_id', 'id', 'applicant_company_id');
+    }
+
+    public function files(): HasMany
+    {
+        return $this->hasMany(Files::class, 'author_id')->where('entity_type', 'aidnividual');
+    }
+
     public function scopeGroupSort($query, $sort)
     {
         return $query
@@ -273,11 +283,6 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function scopeCompanySort($query, $sort)
     {
         return $query->join('companies', 'companies.id', '=', 'applicant_individual.company_id')->orderBy('companies.name', $sort)->select('applicant_individual.*');
-    }
-
-    public function applicantBankingAccess(): \Ankurk91\Eloquent\Relations\BelongsToOne
-    {
-        return $this->belongsToOne(ApplicantBankingAccess::class, ApplicantIndividualCompany::class, 'applicant_individual_id', 'applicant_company_id', 'id', 'applicant_company_id');
     }
 
     public function scopeGetGroup(Builder $query, $groupId)
