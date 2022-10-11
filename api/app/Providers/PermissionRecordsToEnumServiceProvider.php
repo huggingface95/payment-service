@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Permissions;
 use App\Models\PermissionsList;
+use App\Services\AuthService;
 use App\Services\PermissionsService;
 use GraphQL\Language\AST\EnumTypeDefinitionNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
@@ -15,10 +16,12 @@ use Nuwave\Lighthouse\Events\ManipulateAST;
 
 class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 {
+    protected AuthService $authService;
     protected PermissionsService $permissionsService;
 
     public function __construct()
     {
+        $this->authService = new AuthService;
         $this->permissionsService = new PermissionsService;
     }
 
@@ -26,15 +29,24 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
     {
         $dispatcher->listen(
             ManipulateAST::class,
-            function (ManipulateAST $manipulateAST): void {
+            function (ManipulateAST $manipulateAST): void 
+            {
+                $clientType = $this->authService->getClientTypeByToken();
 
                 // PermissionType
-                $permissions = Permissions::with('permissionList')->get()->groupBy(['permission_list_id', function ($permission) {
-                    return $permission->permissionList->name;
-                }])->collapse()->map(function ($permissions) {
-                    return $permissions->pluck('display_name', 'id')->toArray();
-                });
-
+                $permissions = Permissions::with('permissionList')
+                    ->whereHas('permissionList', function ($query) use ($clientType) {
+                        $query->where('type', $clientType);
+                    })
+                    ->get()
+                    ->groupBy(['permission_list_id', function ($permission) {
+                        return $permission->permissionList->name;
+                    }])
+                    ->collapse()
+                    ->map(function ($permissions) {
+                        return $permissions->pluck('display_name', 'id')->toArray();
+                    });
+                
                 $manipulateAST->documentAST
                     ->setTypeDefinition(
                         $this->createObjectType($permissions->keys()->toArray())

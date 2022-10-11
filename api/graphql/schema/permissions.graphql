@@ -32,7 +32,7 @@ type PermissionList {
 }
 enum PermissionListType {
     Member @enum(value: "member")
-    Individual @enum(value: "individual")
+    Individual @enum(value: "applicant")
 }
 enum PermissionSeparatorType {
     Private @enum(value: "private")
