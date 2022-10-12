@@ -1,0 +1,69 @@
+<?php
+
+namespace App\GraphQL\Mutations\Applicant;
+
+use App\DTO\Email\Request\EmailVerificationRequestDTO;
+use App\DTO\TransformerDTO;
+use App\Enums\ClientTypeEnum;
+use App\GraphQL\Mutations\BaseMutator;
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
+use App\Models\EmailVerification;
+use App\Services\EmailService;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+
+class ApplicantMutator extends BaseMutator
+{
+    public function __construct(protected EmailService $emailService)
+    {
+    }
+
+    /**
+     * Return a value for the field.
+     *
+     * @param  @param  null  $root Always null, since this field has no parent.
+     * @param  array<string, mixed>  $args The field arguments passed by the client.
+     * @return mixed
+     */
+    public function create($root, array $args)
+    {
+        $applicantData = [
+            'first_name' => $args['first_name'],
+            'last_name' => $args['last_name'],
+            'email' => $args['email'],
+            'phone' => $args['phone'],
+            'password_hash' => Hash::make($args['password']),
+            'password_salt' => Hash::make($args['password']),
+            'is_verification_email' => false,
+            'is_active' => false,
+            'country_id' => 1,
+        ];
+
+        $applicant = ApplicantIndividual::create($applicantData);
+
+        if (isset($args['client_type']) && $args['client_type'] === 'Corporate') {
+            $applicantCompany = ApplicantCompany::create([
+                'name' => $args['company_name'],
+                'email' => $applicant->email,
+                'url' => $args['url'],
+                'phone' => $applicant->phone,
+                'country_id' => $applicant->country_id,
+                'owner_id' => $applicant->id,
+            ]);
+        }
+
+        $verifyToken = EmailVerification::create([
+            'client_id' => $applicant->id,
+            'type' => ClientTypeEnum::APPLICANT->toString(),
+            'token' => Str::random(64),
+        ]);
+
+        $emailDTO = TransformerDTO::transform(EmailVerificationRequestDTO::class, $applicant, $verifyToken->token, $applicantCompany ?? null);
+
+        $this->emailService->sendApplicantVerificationEmail($emailDTO);
+
+        return $applicant;
+    }
+
+}

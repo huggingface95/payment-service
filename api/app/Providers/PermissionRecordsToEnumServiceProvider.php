@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Enums\ClientTypeEnum;
 use App\Models\Permissions;
 use App\Models\PermissionsList;
 use App\Services\AuthService;
@@ -31,7 +32,7 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
             ManipulateAST::class,
             function (ManipulateAST $manipulateAST): void 
             {
-                $clientType = $this->authService->getClientTypeByToken();
+                $clientType = $this->authService->getClientTypeByToken() ?? ClientTypeEnum::APPLICANT->toString();
 
                 // PermissionType
                 $permissions = Permissions::with('permissionList')
