@@ -1,0 +1,30 @@
+enum ApplicantClientType {
+    Private @enum(value: "Private")
+    Corporate @enum(value: "Corporate")
+}
+
+extend type Mutation {
+    "Создать частного пользователя"
+    createApplicant(
+        "Имя"
+        first_name: String!
+        "Фамилия"
+        last_name: String!
+        "email"
+        email: EMAIL! @rules(apply: ["email", "unique:members"])
+        "Телефон"
+        phone: String!
+        "Тип клиента"
+        client_type: ApplicantClientType!
+        "Название компании"
+        company_name: String @rules(apply: ["required_if:client_type,Corporate"])
+        "URL сайта компании"
+        url: String @rules(apply: ["required_if:client_type,Corporate"])
+        "Пароль"
+        password: String! @rules(apply: ["confirmed" ,"min:8", "regex:/[a-z]/", "regex:/[A-Z]/", "regex:/[0-9]/"])
+        "Подтверждение пароля"
+        password_confirmation: String!
+    ): ApplicantSettingsProfile
+        @field(resolver: "ApplicantMutator@create") 
+        @namespace(field: "App\\GraphQL\\Mutations\\Applicant")
+}

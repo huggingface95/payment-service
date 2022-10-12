@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-
+use App\DTO\Email\Request\EmailVerificationRequestDTO;
 use App\DTO\Email\SmtpConfigDTO;
 use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
@@ -33,6 +33,22 @@ class EmailService
 
         $smtp = $this->emailRepository->getSmtpByCompanyId($account);
         $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubject($account);
+        $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
+
+        try {
+            dispatch(new SendMailJob($config, $emailContentSubjectDto));
+        } catch (\Throwable) {
+            throw new GraphqlException('Don\'t send email', '404');
+        }
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function sendApplicantVerificationEmail(EmailVerificationRequestDTO $dto): void
+    {
+        $smtp = $this->emailRepository->getSmtpByCompanyId($dto->account);
+        $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByTemplateName($dto);
         $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
 
         try {

@@ -53,3 +53,4 @@ $router->post('/password/email', 'PasswordController@postEmail');
 $router->post('/password/reset/{token}', 'PasswordController@postReset');
 $router->get('/password/reset/{token}', ['as'=>'password.reset', function () {
 }]);
+$router->get('/email/verify/{token}', 'VerifyController@emailVerify');

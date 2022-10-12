@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\ClientTypeEnum;
 use App\Models\ApplicantIndividual;
 use App\Models\Members;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -31,7 +32,7 @@ class AuthService extends AbstractService
         };
     }
 
-    public function getClientTypeIdByGuard(string $guard): int | null
+    public function getClientTypeIdByGuard(string $guard): int|null
     {
         return match($guard) {
             self::GUARD_TYPE_MEMBER => 2,
@@ -43,10 +44,10 @@ class AuthService extends AbstractService
 
     public function getGuardByClientType(string $client_type = null): string
     {
-        return $client_type === 'applicant' ? self::GUARD_TYPE_APPLICANT : self::GUARD_TYPE_MEMBER;
+        return $client_type === ClientTypeEnum::APPLICANT->toString() ? self::GUARD_TYPE_APPLICANT : self::GUARD_TYPE_MEMBER;
     }
 
-    public function getClientTypeByToken(): string
+    public function getClientTypeByToken(): string|null
     {
         JWTAuth::parseToken();
         $clientType = JWTAuth::getPayload()->get('client_type');
