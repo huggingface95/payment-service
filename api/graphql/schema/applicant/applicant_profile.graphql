@@ -1,0 +1,98 @@
+type ApplicantProfile {
+    id: ID!
+    "Имя"
+    first_name: String
+    "Фамилия"
+    last_name: String
+    "Отчество"
+    middle_name: String
+    "email"
+    email: EMAIL
+    "Адрес сайта"
+    url: String
+    "Телефон"
+    phone: String
+    "Верецифиорован телефон true/false"
+    is_verification_phone: Boolean
+    "Получить связанную страну"
+    country: Country @belongsTo(relation: "country")
+    "Получить язык"
+    language: Languages @belongsTo(relation: "language")
+    "Получить связанную страну гражданства"
+    citizenship_country: Country @belongsTo(relation: "citizenshipCountry")
+    "Штат / область"
+    state: String
+    "Город"
+    city: String
+    "Адрес"
+    address: String
+    "Индекс"
+    zip: String
+    "Национальность"
+    nationality: String
+    "Получить связанную страну рождения"
+    birth_country: Country @belongsTo(relation: "birthCountry")
+    "Штат/область рождения"
+    birth_state: String
+    "Город рождения"
+    birth_city: String
+    "Дата рождения"
+    birth_at: Date
+    "Пол"
+    sex: Sex
+    "Время создания"
+    created_at: DateTime
+    "Дополнительные поля Profile data"
+    profile_additional_fields: JSON
+    "Дополнительные поля для Personal info"
+    personal_additional_fields: JSON
+    "Дополнительные поля блока контакты"
+    contacts_additional_fields: JSON
+    "Полное имя"
+    fullname: String
+    "Получить статусы"
+    status: ApplicantStatus @belongsTo(relation: "status")
+    "Получить состояния"
+    applicant_state: ApplicantState @belongsTo(relation: "state")
+    "Получить причины"
+    state_reason: ApplicantStateReason @belongsTo(relation: "stateReason")
+    "Получить уровни рисков"
+    risk_level: ApplicantRiskLevel @belongsTo(relation: "riskLevel")
+    "Получить менеджера"
+    manager: Members @belongsTo(relation: "manager")
+    "Получить метки"
+    labels: [ApplicantIndividualLabel] @belongsToMany(relation: "labels")
+    "Название компании держателя applicant"
+    created_for: Companies @belongsTo(relation: "company")
+    "Получить заметки"
+    notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
+    "Получить модули"
+    modules: [ApplicantIndividualModules] @hasMany (relation: "modules")
+    "Получить компании"
+    companies: [ApplicantCompany] @belongsToMany (relation: "companies")
+    "Получить группу"
+    group: GroupRole @morphOne(relation: "groupRole")
+    "Получить файл аватара"
+    files: [Files!]! @hasMany(relation: "files")
+    "Получить two factor auth"
+    two_factor_auth: TwoFactorAuthSettings @belongsTo (relation: "twoFactorAuth")
+    "Security PIN"
+    security_pin: String
+    "Google Secret"
+    google2fa_secret: String
+    "Backup Codes"
+    backup_codes: JSON
+    "IP адрес"
+    ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
+}
+
+extend type Query @guard(with: "api_client") {
+    """
+    Получить профиль пользователя
+    """
+    applicantProfile: ApplicantProfile 
+        @field(resolver: "ApplicantProfileQuery@getProfile") 
+        @namespace(field: "App\\GraphQL\\Queries\\Applicant")
+}
+
+

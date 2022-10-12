@@ -77,6 +77,5 @@ input ConnectImageableInput {
 }
 
 #import schema/*.graphql
-
-
+#import schema/applicant/*.graphql
 
