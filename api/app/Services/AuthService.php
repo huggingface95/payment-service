@@ -49,9 +49,13 @@ class AuthService extends AbstractService
 
     public function getClientTypeByToken(): string|null
     {
-        JWTAuth::parseToken();
-        $clientType = JWTAuth::getPayload()->get('client_type');
-
+        try {
+            JWTAuth::parseToken();
+            $clientType = JWTAuth::getPayload()->get('client_type');
+        } catch (\Exception) {
+            return null;
+        }
+        
         return $clientType;
     }
 }
