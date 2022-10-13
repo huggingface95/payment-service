@@ -61,7 +61,7 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
                 }
 
                 // PermissionAuth
-                $list = $this->permissionsService->getPermissionsList(PermissionsList::get());
+                $list = $this->permissionsService->getPermissionsList(PermissionsList::get()->where('type', $clientType));
                 $manipulateAST->documentAST->setTypeDefinition(
                     $this->createObjectType($list, 'PermissionAuth')
                 );
