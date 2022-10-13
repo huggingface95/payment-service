@@ -3,8 +3,20 @@ enum ApplicantClientType {
     Corporate @enum(value: "Corporate")
 }
 
+type ApplicantSettingsProfile {
+    id: ID!
+    "Имя"
+    first_name: String
+    "Фамилия"
+    last_name: String
+    "Отчество"
+    middle_name: String
+    "email"
+    email: EMAIL
+}
+
 extend type Mutation {
-    "Создать частного пользователя"
+    "Регистрация частного пользователя"
     createApplicant(
         "Имя"
         first_name: String!
