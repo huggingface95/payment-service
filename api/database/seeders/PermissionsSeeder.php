@@ -1897,7 +1897,7 @@ class PermissionsSeeder extends Seeder
                             'Tickets' => [
                                 'data' => [
                                     'name' => 'Tickets',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 1,
                                 ],
@@ -1970,7 +1970,7 @@ class PermissionsSeeder extends Seeder
                             'Dashboard' => [
                                 'data' => [
                                     'name' => 'Dashboard',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 2,
                                 ],
@@ -2016,7 +2016,7 @@ class PermissionsSeeder extends Seeder
                             'My Net Worth' => [
                                 'data' => [
                                     'name' => 'My Net Worth',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 3,
                                 ],
@@ -2062,7 +2062,7 @@ class PermissionsSeeder extends Seeder
                             'Account Details' => [
                                 'data' => [
                                     'name' => 'Account Details',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 4,
                                 ],
@@ -2153,7 +2153,7 @@ class PermissionsSeeder extends Seeder
                             'makePayments' => [
                                 'data' => [
                                     'name' => 'makePayments',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 5,
                                 ],
@@ -2172,7 +2172,7 @@ class PermissionsSeeder extends Seeder
                             'Requisites' => [
                                 'data' => [
                                     'name' => 'Requisites',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 6,
                                 ],
@@ -2209,7 +2209,7 @@ class PermissionsSeeder extends Seeder
                             'My Templates' => [
                                 'data' => [
                                     'name' => 'My Templates',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 7,
                                 ],
@@ -2255,7 +2255,7 @@ class PermissionsSeeder extends Seeder
                             'Statements' => [
                                 'data' => [
                                     'name' => 'Statements',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 8,
                                 ],
@@ -2283,7 +2283,7 @@ class PermissionsSeeder extends Seeder
                             'Payment List' => [
                                 'data' => [
                                     'name' => 'Payment List',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 9,
                                 ],
@@ -2320,7 +2320,7 @@ class PermissionsSeeder extends Seeder
                             'Payment Details' => [
                                 'data' => [
                                     'name' => 'Payment Details',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 10,
                                 ],
@@ -2348,7 +2348,7 @@ class PermissionsSeeder extends Seeder
                             'Settings:Contact Details' => [
                                 'data' => [
                                     'name' => 'Settings:Contact Details',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 11,
                                 ],
@@ -2376,7 +2376,7 @@ class PermissionsSeeder extends Seeder
                             'Settings:Log in Details' => [
                                 'data' => [
                                     'name' => 'Settings:Log in Details',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 12,
                                 ],
@@ -2431,7 +2431,7 @@ class PermissionsSeeder extends Seeder
                             'Settings:Security Level' => [
                                 'data' => [
                                     'name' => 'Settings:Security Level',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 13,
                                 ],
@@ -2459,7 +2459,7 @@ class PermissionsSeeder extends Seeder
                             'Settings:Account' => [
                                 'data' => [
                                     'name' => 'Settings:Account',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 14,
                                 ],
@@ -2487,7 +2487,7 @@ class PermissionsSeeder extends Seeder
                             'Make Payments' => [
                                 'data' => [
                                     'name' => 'Make Payments',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'business',
                                     'order' => 15,
                                 ],
@@ -2517,7 +2517,7 @@ class PermissionsSeeder extends Seeder
                             'Dashboard' => [
                                 'data' => [
                                     'name' => 'Dashboard',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 1,
                                 ],
@@ -2563,7 +2563,7 @@ class PermissionsSeeder extends Seeder
                             'My Net Worth' => [
                                 'data' => [
                                     'name' => 'My Net Worth',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 2,
                                 ],
@@ -2609,7 +2609,7 @@ class PermissionsSeeder extends Seeder
                             'Account Details' => [
                                 'data' => [
                                     'name' => 'Account Details',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 3,
                                 ],
@@ -2700,7 +2700,7 @@ class PermissionsSeeder extends Seeder
                             'makePayments' => [
                                 'data' => [
                                     'name' => 'makePayments',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 4,
                                 ],
@@ -2719,7 +2719,7 @@ class PermissionsSeeder extends Seeder
                             'Requisites' => [
                                 'data' => [
                                     'name' => 'Requisites',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 5,
                                 ],
@@ -2756,7 +2756,7 @@ class PermissionsSeeder extends Seeder
                             'My Templates' => [
                                 'data' => [
                                     'name' => 'My Templates',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 6,
                                 ],
@@ -2802,7 +2802,7 @@ class PermissionsSeeder extends Seeder
                             'Statements' => [
                                 'data' => [
                                     'name' => 'Statements',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 7,
                                 ],
@@ -2830,7 +2830,7 @@ class PermissionsSeeder extends Seeder
                             'Payment List' => [
                                 'data' => [
                                     'name' => 'Payment List',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 8,
                                 ],
@@ -2867,7 +2867,7 @@ class PermissionsSeeder extends Seeder
                             'Payment Details' => [
                                 'data' => [
                                     'name' => 'Payment Details',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 9,
                                 ],
@@ -2895,7 +2895,7 @@ class PermissionsSeeder extends Seeder
                             'Tickets' => [
                                 'data' => [
                                     'name' => 'Tickets',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 10,
                                 ],
@@ -2968,7 +2968,7 @@ class PermissionsSeeder extends Seeder
                             'Settings:Contact Details' => [
                                 'data' => [
                                     'name' => 'Settings:Contact Details',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 11,
                                 ],
@@ -2996,7 +2996,7 @@ class PermissionsSeeder extends Seeder
                             'Settings:Log in Details' => [
                                 'data' => [
                                     'name' => 'Settings:Log in Details',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 12,
                                 ],
@@ -3051,7 +3051,7 @@ class PermissionsSeeder extends Seeder
                             'Settings:Security Level' => [
                                 'data' => [
                                     'name' => 'Settings:Security Level',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 13,
                                 ],
@@ -3079,7 +3079,7 @@ class PermissionsSeeder extends Seeder
                             'Settings:Account' => [
                                 'data' => [
                                     'name' => 'Settings:Account',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 14,
                                 ],
@@ -3107,7 +3107,7 @@ class PermissionsSeeder extends Seeder
                             'Make Payments' => [
                                 'data' => [
                                     'name' => 'Make Payments',
-                                    'type' => 'individual',
+                                    'type' => 'applicant',
                                     'separator' => 'private',
                                     'order' => 15,
                                 ],
