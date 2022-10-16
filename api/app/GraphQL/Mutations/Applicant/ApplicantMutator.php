@@ -2,12 +2,15 @@
 
 namespace App\GraphQL\Mutations\Applicant;
 
+use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\Email\Request\EmailVerificationRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\ClientTypeEnum;
+use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\BaseMutator;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
+use App\Models\Companies;
 use App\Models\EmailVerification;
 use App\Services\EmailService;
 use Illuminate\Support\Facades\Hash;
@@ -28,6 +31,14 @@ class ApplicantMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
+        // TODO: get client_url from request
+        $args['client_url'] = 'docudots.com';
+
+        $company = Companies::where('url', $args['client_url'])->first();
+        if (!$company) {
+            throw new GraphqlException('Owner company not found', 'use');
+        }
+
         $applicantData = [
             'first_name' => $args['first_name'],
             'last_name' => $args['last_name'],
@@ -38,18 +49,20 @@ class ApplicantMutator extends BaseMutator
             'is_verification_email' => false,
             'is_active' => false,
             'country_id' => 1,
+            'company_id' => $company->id,
         ];
 
         $applicant = ApplicantIndividual::create($applicantData);
 
         if (isset($args['client_type']) && $args['client_type'] === 'Corporate') {
-            $applicantCompany = ApplicantCompany::create([
+            ApplicantCompany::create([
                 'name' => $args['company_name'],
                 'email' => $applicant->email,
                 'url' => $args['url'],
                 'phone' => $applicant->phone,
                 'country_id' => $applicant->country_id,
                 'owner_id' => $applicant->id,
+                'company_id' => $company->id,
             ]);
         }
 
@@ -59,9 +72,15 @@ class ApplicantMutator extends BaseMutator
             'token' => Str::random(64),
         ]);
 
-        $emailDTO = TransformerDTO::transform(EmailVerificationRequestDTO::class, $applicant, $verifyToken->token, $applicantCompany ?? null);
+        $emailTemplateName = 'Welcome! Confirm your email address';
+        $emailData = [
+            'client_name' => $applicant->first_name,
+            'email_confirm_url' => $company->companySettings->client_url . '/email/verify/' . $verifyToken->token,
+            'member_company_name' => $company->name,
+        ];
+        $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $company, $emailTemplateName, $emailData);
 
-        $this->emailService->sendApplicantVerificationEmail($emailDTO);
+        $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
 
         return $applicant;
     }

@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\DTO\Email\Request\EmailVerificationRequestDTO;
+use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\Email\SmtpDataDTO;
 use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
@@ -90,11 +90,11 @@ class EmailRepository implements EmailRepositoryInterface
     /**
      * @throws GraphqlException
      */
-    public function getTemplateContentAndSubjectByTemplateName(EmailVerificationRequestDTO $dto): SmtpDataDTO
+    public function getTemplateContentAndSubjectByDto(EmailApplicantRequestDTO $dto): SmtpDataDTO
     {
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = $this->template->newQuery()
-            ->whereRaw("lower(name) LIKE  '%".strtolower($dto->emailTemplateName)."%'  ")
+            ->whereRaw("lower(subject) LIKE  '%".strtolower($dto->emailTemplateName)."%'  ")
             ->first();
 
         $content = $this->replaceObjectData($emailTemplate->getHtml(), $dto->data, '/\{(.*?)\}/');

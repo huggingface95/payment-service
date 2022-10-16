@@ -117,7 +117,7 @@ class AuthController extends Controller
                     $this->writeToAuthLog('login');
                     $authTokenId = $user->createToken($user->fullname)->token->id;
                     OauthTokens::where('id', $authTokenId)->update(['client_id' => $clientId]);
-                    OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+                    OauthCodes::insert(['id' => $this->authService->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
                     
                     if (Cache::get($authCacheKey)) {
                         Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
@@ -129,7 +129,7 @@ class AuthController extends Controller
                 }
 
                 if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
-                    OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+                    OauthCodes::insert(['id' => $this->authService->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
                     if (Cache::get($authCacheKey)) {
                         Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
                     } else {
@@ -186,7 +186,7 @@ class AuthController extends Controller
         if ($user->two_factor_auth_setting_id == 2 && ! ($user->google2fa_secret)) {
             $authTokenId = $user->createToken($user->fullname)->token->id;
             OauthTokens::where('id', $authTokenId)->update(['client_id' => $clientId]);
-            OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+            OauthCodes::insert(['id' => $this->authService->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
 
             if (Cache::get($authCacheKey)) {
                 Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
@@ -202,15 +202,15 @@ class AuthController extends Controller
         }
 
         if ($user->two_factor_auth_setting_id == 2 && $user->google2fa_secret) {
-            OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+            $authToken = $this->authService->getTwoFactorAuthToken($user, $clientId);
+
             if (Cache::get($authCacheKey)) {
                 Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
             } else {
                 Cache::add($authCacheKey, $token, env('JWT_TTL', 3600));
             }
-            $auth_token = OauthTokens::select('id')->where('user_id', $user->id)->where('client_id', $clientId)->orderByDesc('created_at')->limit(1)->get();
 
-            return response()->json(['two_factor' => 'true', 'auth_token' => $auth_token[0]->id]);
+            return response()->json(['two_factor' => 'true', 'auth_token' => $authToken]);
         } else {
             if (Cache::get($authCacheKey)) {
                 Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
@@ -365,7 +365,7 @@ class AuthController extends Controller
         $user->google2fa_secret =
             str_pad($secretKey, pow(2, ceil(log(strlen($secretKey), 2))), config('lumen2fa.string_pad', 'X'));
         $user->save();
-        OauthCodes::insert(['id' => $this->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
+        OauthCodes::insert(['id' => $this->authService->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
         $authTokenId = $user->createToken($user->fullname)->token->id;
         OauthTokens::where('id', $authTokenId)->update(['client_id' => $clientId]);
 
@@ -541,7 +541,7 @@ class AuthController extends Controller
         }
         $codes = [];
         for ($i = 0; $i <= 9; $i++) {
-            $codes[$i] = $this->generateUniqueCode();
+            $codes[$i] = $this->authService->generateUniqueCode();
         }
 
         return response()->json(['backup_codes' => $codes, 'user_id' => $user->id, '2fa_secret' => $user->google2fa_secret]);
@@ -578,23 +578,6 @@ class AuthController extends Controller
         $token = JWTAuth::fromUser($user);
 
         return response()->json(['data' => 'Backup Codes stored success for user id '.$user->id, 'access_token' => $token]);
-    }
-
-    public function generateUniqueCode()
-    {
-        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-        $charactersNumber = strlen($characters);
-        $codeLength = 6;
-
-        $code = '';
-
-        while (strlen($code) < $codeLength) {
-            $position = rand(0, $charactersNumber - 1);
-            $character = $characters[$position];
-            $code = $code.$character;
-        }
-
-        return $code;
     }
 
     public function getIp()
