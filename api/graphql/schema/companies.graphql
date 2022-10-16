@@ -75,7 +75,7 @@ extend type Mutation @guard {
         "Email компании"
         email: EMAIL!
         "Сайт компании"
-        url: String
+        url: String!
         "Индекс компании"
         zip: String
         "Адрес компании"
