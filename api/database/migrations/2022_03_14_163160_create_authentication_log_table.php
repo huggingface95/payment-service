@@ -14,25 +14,26 @@ class CreateAuthenticationLogTable extends Migration
     {
         DB::connection('clickhouse')->unprepared('
             CREATE TABLE authentication_log (
-                id UInt32,
+                id UUID,
+                provider String,
+                email String,
                 company String,
-                member String,
-                group String,
                 domain String,
                 ip String,
                 country String,
                 city String,
-                platform String,
-                browser String,
-                device_type String,
-                model String,
                 status String,
                 info String,
-                expired_at DateTime,
-                created_at DateTime
+                platform String,
+                browser String,
+                browser_version String,
+                device_type String,
+                model String,
+                expired_at Nullable(DateTime),
+                created_at DateTime DEFAULT now()
             )
             ENGINE = MergeTree()
-            ORDER BY (id)
+            ORDER BY created_at
         ');
     }
 
