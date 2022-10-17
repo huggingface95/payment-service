@@ -23,7 +23,7 @@ extend type Mutation {
         "Фамилия"
         last_name: String!
         "email"
-        email: EMAIL! @rules(apply: ["email", "unique:members"])
+        email: EMAIL! @rules(apply: ["email", "unique:applicant_individual"])
         "Телефон"
         phone: String!
         "Тип клиента"

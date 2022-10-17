@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Enums\ClientTypeEnum;
 use App\Models\ApplicantIndividual;
 use App\Models\Members;
+use App\Models\OauthCodes;
+use App\Models\OauthTokens;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService extends AbstractService
@@ -57,5 +59,40 @@ class AuthService extends AbstractService
         }
         
         return $clientType;
+    }
+
+    public function getTwoFactorAuthToken(Members|ApplicantIndividual $user, $clientId): string
+    {
+        OauthCodes::insert([
+            'id' => $this->generateUniqueCode(), 
+            'user_id' => $user->id, 
+            'client_id' => $clientId, 
+            'revoked' => 'true', 
+            'expires_at' => now()->addMinutes(15)
+        ]);
+        
+        return OauthTokens::select('id')
+            ->where('user_id', $user->id)
+            ->where('client_id', $clientId)
+            ->orderByDesc('created_at')
+            ->first()
+            ->id;
+    }
+
+    public function generateUniqueCode(): string
+    {
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        $charactersNumber = strlen($characters);
+        $codeLength = 6;
+
+        $code = '';
+
+        while (strlen($code) < $codeLength) {
+            $position = rand(0, $charactersNumber - 1);
+            $character = $characters[$position];
+            $code = $code . $character;
+        }
+
+        return $code;
     }
 }

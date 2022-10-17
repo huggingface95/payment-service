@@ -1,0 +1,39 @@
+type TwoFactorAuthToken {
+    two_factor: Boolean
+    auth_token: String
+}
+
+extend type Mutation @guard(with: ["api_client"])  {
+    """
+    Установить пароль
+    """
+    setApplicantSettingsPassword(
+        "новый пароль"
+        password: String! @rules(apply: ["confirmed" ,"min:8", "regex:/[a-z]/", "regex:/[A-Z]/", "regex:/[0-9]/"])
+        "подтверждение пароля"
+        password_confirmation: String!
+        "текущий пароль"
+        current_password: String!
+    ): TwoFactorAuthToken
+        @field(resolver: "ApplicantSettingsMutator@setPassword")
+        @namespace(field: "App\\GraphQL\\Mutations\\Applicant")
+
+    """
+    Установить пароль c OTP
+    """
+    setApplicantSettingsPasswordWithOtp(
+        "код"
+        code: String!
+        "токен"
+        auth_token: String!
+        "новый пароль"
+        password: String! @rules(apply: ["confirmed" ,"min:8", "regex:/[a-z]/", "regex:/[A-Z]/", "regex:/[0-9]/"])
+        "подтверждение пароля"
+        password_confirmation: String!
+        "текущий пароль"
+        current_password: String!
+    ): ApplicantSettingsProfile    
+        @field(resolver: "ApplicantSettingsMutator@setPasswordWithOtp")
+        @namespace(field: "App\\GraphQL\\Mutations\\Applicant")
+}
+
