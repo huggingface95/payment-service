@@ -20,7 +20,7 @@ class AuthController extends Controller
 {
 
     private string $guard = '';
-    
+
     /**
      * Create a new AuthController instance.
      *
@@ -47,7 +47,7 @@ class AuthController extends Controller
 
         $this->guard = $this->authService->getGuardByClientType($request->client_type);
         $credentials = [
-            'email' => $request->email, 
+            'email' => $request->email,
             'password' => $request->password,
         ];
         $attemptCacheKey = 'login_attempt_'.$this->guard.':'.$request->email;
@@ -118,7 +118,7 @@ class AuthController extends Controller
                     $authTokenId = $user->createToken($user->fullname)->token->id;
                     OauthTokens::where('id', $authTokenId)->update(['client_id' => $clientId]);
                     OauthCodes::insert(['id' => $this->authService->generateUniqueCode(), 'user_id' => $user->id, 'client_id' => $clientId, 'revoked' => 'true', 'expires_at' => now()->addMinutes(15)]);
-                    
+
                     if (Cache::get($authCacheKey)) {
                         Cache::put($authCacheKey, $token, env('JWT_TTL', 3600));
                     } else {
@@ -247,6 +247,12 @@ class AuthController extends Controller
     {
         $user = auth()->user();
         $this->writeToAuthLog('logout');
+        $this->guard = $this->authService->getGuardByClientType($request->client_type);
+        $authCacheKey = 'auth_user_'.$this->guard.':'.$user->id;
+        if (Cache::get($authCacheKey)) {
+            JWTAuth::setToken(Cache::get($authCacheKey))->invalidate();
+            Cache::forget($authCacheKey);
+        }
         auth()->logout();
 
         return response()->json(['message' => 'Successfully logged out']);
@@ -499,7 +505,7 @@ class AuthController extends Controller
                 return response()->json(['data' => 'Member not found']);
             }
         }
-        
+
         $valid = Google2FA::verifyGoogle2FA($user->google2fa_secret, $request->code);
 
         if ($valid) {
