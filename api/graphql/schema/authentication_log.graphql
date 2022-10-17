@@ -1,14 +1,10 @@
 type AuthenticationLog {
     "ID"
-    id: ID!
+    id: String!
     "Название компании"
     company: String!
-    "Группа"
-    member: String!
-    "Тип"
-    client_type: String!
-    "Группа"
-    group: String!
+    "Почта"
+    email: String!
     "Домен"
     domain: String!
     "IP"
@@ -21,6 +17,8 @@ type AuthenticationLog {
     platform: String
     "Браузер"
     browser: String
+    "Версия браузера"
+    browser_version: String
     "Устройство"
     device_type: String
     "Модель"
@@ -42,21 +40,21 @@ type AuthenticationLogs {
 
 extend type Query @guard {
     """
-    Получить список логов аутентификации 
+    Получить список логов аутентификации
     query: {
-        column: COMPANY, value: "", 
-        column: MEMBER, value: "", 
-        column: CLIENT_TYPE, value: "", 
-        column: GROUP, value: "", 
-        column: DOMAIN, value: "", 
-        column: IP, value: "", 
-        column: COUNTRY, value: "", 
-        column: CITY, value: "", 
-        column: PLATFORM, value: "", 
-        column: BROWSER, value: "", 
-        column: DEVICE_TYPE, value: "", 
-        column: MODEL, value: "", 
-        column: STATUS, value: "", 
+        column: COMPANY, value: "",
+        column: MEMBER, value: "",
+        column: CLIENT_TYPE, value: "",
+        column: GROUP, value: "",
+        column: DOMAIN, value: "",
+        column: IP, value: "",
+        column: COUNTRY, value: "",
+        column: CITY, value: "",
+        column: PLATFORM, value: "",
+        column: BROWSER, value: "",
+        column: DEVICE_TYPE, value: "",
+        column: MODEL, value: "",
+        column: STATUS, value: "",
         column: EXPIRED_AT, value: "2021-10-12",
         column: CREATED_AT, value: "2021-10-12"
     } фильтр по company, member, group, domain, ip, country, city, platform, browser, device_type, model, status, expired_at, created_at

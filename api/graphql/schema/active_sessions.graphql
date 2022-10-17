@@ -1,12 +1,10 @@
 type ActiveSession {
     "ID"
-    id: ID!
+    id: String!
     "Название компании"
     company: String!
     "Группа"
     member: String!
-    "Группа"
-    group: String!
     "Домен"
     domain: String!
     "IP"
@@ -19,12 +17,14 @@ type ActiveSession {
     platform: String
     "Браузер"
     browser: String
+    "Версия браузера"
+    browser_version: String
     "Устройство"
     device_type: String
     "Модель"
     model: String
-    "Дата истечения"
-    expired_at: DateTime
+    "доверенный"
+    trusted: Boolean
     "Дата создания"
     created_at: DateTime!
 }
@@ -32,6 +32,11 @@ type ActiveSession {
 type ActiveSessions {
     data: [ActiveSession!]
     paginatorInfo: PaginatorInfo
+}
+
+type ActiveSessionMutatorResponse{
+    status: String!
+    message: String!
 }
 
 extend type Query @guard {
@@ -52,4 +57,13 @@ input QueryActiveSessionsStatic @spread {
     member: String @eq
     group: String @eq
     created_at: Date @like
+}
+
+extend type Mutation @guard {
+    "Изменение Active Session"
+    updateActiveSession(
+        id: String!
+        "Название"
+        trusted: Boolean!
+    ):ActiveSessionMutatorResponse! @field(resolver: "ActiveSessionMutator@update")
 }
