@@ -14,7 +14,7 @@ class CreateActivityLogTable extends Migration
     {
         DB::connection('clickhouse')->unprepared('
             CREATE TABLE activity_log (
-                id UInt32,
+                id UUID,
                 company String,
                 member String,
                 group String,
@@ -26,7 +26,7 @@ class CreateActivityLogTable extends Migration
                 created_at DateTime
             )
             ENGINE = MergeTree()
-            ORDER BY (id)
+            ORDER BY created_at
         ');
     }
 
