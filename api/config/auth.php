@@ -37,7 +37,7 @@ return [
 
     'guards' => [
         'api' => [
-            'driver' => 'jwt',
+            'driver' => 'go-auth',
             'provider' => 'members',
         ],
         'api_client' => [

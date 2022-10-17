@@ -1,6 +1,6 @@
 type ActivityLog {
     "ID"
-    id: ID!
+    id: String!
     "Название компании"
     company: String!
     "Группа"
@@ -24,12 +24,12 @@ type ActivityLogs {
 
 extend type Query @guard {
     """
-    Получить список логов активности 
+    Получить список логов активности
     query: {
-        column: COMPANY, value: "", 
-        column: MEMBER, value: "", 
-        column: GROUP, value: "", 
-        column: DOMAIN, value: "", 
+        column: COMPANY, value: "",
+        column: MEMBER, value: "",
+        column: GROUP, value: "",
+        column: DOMAIN, value: "",
         column: CREATED_AT, value: "2021-10-12"
     } фильтр по company, member, group, domain, created_at
     orderBy: [{ column: CREATED_AT, order: DESC }] сортировка по created_at
