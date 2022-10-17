@@ -86,8 +86,8 @@ enum MembersColumn {
 }
 
 input QueryMembersFilterStatic @spread{
-    hasGroupRoleFIlterById: ID @eq
-    hasRoleFIlterById: ID @eq
+    hasGroupRoleFilterById: ID @eq
+    hasRoleFilterById: ID @eq
     hasDepartmentFilterById: ID @eq
     id: ID @eq
     fullname: String @ilike
