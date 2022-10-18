@@ -82,6 +82,9 @@ class ApplicantMutator extends BaseMutator
 
         $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
 
+        // TODO: remove this line
+        $applicant->email_confirm_url = 'https://dev.account.docudots.com/email/verify/' . $verifyToken->token;
+
         return $applicant;
     }
 
