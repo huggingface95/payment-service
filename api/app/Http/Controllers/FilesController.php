@@ -8,17 +8,29 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class FilesController extends Controller
 {
     public function upload(Request $request)
     {
+        $allowedEntityTypes = [
+            'member', 
+            'applicant', 
+            'company', 
+            'document', 
+            'aidnividual',
+            'acompany',
+        ];
+
         $this->validate($request, [
             'file' => 'required|file|mimes:jpeg,jpg,png,gif,pdf|max:102400',
+            'entity_type' => ['required', Rule::in($allowedEntityTypes)],
         ], $messages = [
             'mimes' => 'Please insert only jpeg, jpg, png, gif, pdf files',
             'max' => 'File should be less than 100 MB',
         ]);
+
         if ($request->hasfile('file')) {
             $file = $request->file('file');
             $original_name = $file->getClientOriginalName();
