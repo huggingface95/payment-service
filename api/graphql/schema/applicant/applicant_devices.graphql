@@ -1,0 +1,62 @@
+type ApplicantDevice {
+    "ID"
+    id: ID
+    "IP"
+    ip: String
+    "Платформа"
+    platform: String
+    "Браузер"
+    browser: String
+    "Устройство"
+    device_type: String
+    "Модель"
+    model: String
+    "Доверенное устройство"
+    trusted: Boolean!
+    "Дата истечения"
+    expired_at: DateTime
+    "Дата создания"
+    created_at: DateTime!
+}
+
+extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Queries\\Applicant") {
+    """
+    Получить список устройств пользователя
+    """
+    applicantDevices: [ApplicantDevice!] 
+        @field(resolver: "ApplicantDeviceQuery@getList")  
+}
+
+extend type Mutation @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Mutations\\Applicant") {
+    "Изменение устройства"
+    updateApplicantDevice(
+        "ID"
+        id: ID!
+        "Доверенное устройство"
+        trusted: Boolean!
+    ): TwoFactorAuthToken!
+        @field(resolver: "ApplicantDeviceMutator@update")
+
+    """
+    Подтверждение изменения устройства c OTP
+    """
+    updateApplicantDeviceWithOtp(
+        "Код"
+        code: String!
+        "Токен"
+        auth_token: String!
+        "ID"
+        id: ID!
+        "Доверенное устройство"
+        trusted: Boolean!
+    ): ApplicantDevice!  
+        @field(resolver: "ApplicantDeviceMutator@updateWithOtp")
+
+    """
+    Удалить устройство
+    """
+    deleteApplicantDevice(
+        id: ID!
+    ): ApplicantDevice
+        @field(resolver: "ApplicantDeviceMutator@delete")
+}
