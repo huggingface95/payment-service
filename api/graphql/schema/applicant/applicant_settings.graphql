@@ -3,7 +3,7 @@ type TwoFactorAuthToken {
     auth_token: String
 }
 
-extend type Mutation @guard(with: ["api_client"])  {
+extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQL\\Mutations\\Applicant") {
     """
     Установить пароль
     """
@@ -16,7 +16,6 @@ extend type Mutation @guard(with: ["api_client"])  {
         current_password: String!
     ): TwoFactorAuthToken
         @field(resolver: "ApplicantSettingsMutator@setPassword")
-        @namespace(field: "App\\GraphQL\\Mutations\\Applicant")
 
     """
     Установить пароль c OTP
@@ -34,6 +33,5 @@ extend type Mutation @guard(with: ["api_client"])  {
         current_password: String!
     ): ApplicantSettingsProfile    
         @field(resolver: "ApplicantSettingsMutator@setPasswordWithOtp")
-        @namespace(field: "App\\GraphQL\\Mutations\\Applicant")
 }
 

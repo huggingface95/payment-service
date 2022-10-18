@@ -3,7 +3,6 @@
 namespace App\GraphQL\Mutations\Applicant;
 
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
-use App\DTO\Email\Request\EmailVerificationRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\ClientTypeEnum;
 use App\Exceptions\GraphqlException;

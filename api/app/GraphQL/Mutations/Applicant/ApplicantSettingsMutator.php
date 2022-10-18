@@ -1,11 +1,12 @@
 <?php
 
-namespace App\GraphQL\Mutations;
+namespace App\GraphQL\Mutations\Applicant;
 
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\ClientTypeEnum;
 use App\Exceptions\GraphqlException;
+use App\GraphQL\Mutations\BaseMutator;
 use App\Models\ApplicantIndividual;
 use App\Services\AuthService;
 use App\Services\EmailService;
@@ -18,8 +19,7 @@ class ApplicantSettingsMutator extends BaseMutator
     public function __construct(
         protected AuthService $authService,
         protected EmailService $emailService
-    )
-    {
+    ) {
     }
 
     /**
