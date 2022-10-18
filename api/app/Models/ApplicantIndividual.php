@@ -78,6 +78,8 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'is_verification_phone',
         'company_id',
         'two_factor_auth_setting_id',
+        'photo_id',
+        'notify_device_email',
     ];
 
     protected $hidden = [
@@ -269,6 +271,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function files(): HasMany
     {
         return $this->hasMany(Files::class, 'author_id')->where('entity_type', 'aidnividual');
+    }
+
+    public function photo(): BelongsTo
+    {
+        return $this->belongsTo(Files::class, 'photo_id');
     }
 
     public function scopeGroupSort($query, $sort)

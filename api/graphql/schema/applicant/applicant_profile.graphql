@@ -72,8 +72,10 @@ type ApplicantProfile {
     companies: [ApplicantCompany] @belongsToMany (relation: "companies")
     "Получить группу"
     group: GroupRole @morphOne(relation: "groupRole")
-    "Получить файл аватара"
-    files: [Files!]! @hasMany(relation: "files")
+    "Фото"
+    photo: Files @belongsTo(relation: "photo")
+    "Оповещения об устройствах на email"
+    notify_device_email: Boolean
     "Получить two factor auth"
     two_factor_auth: TwoFactorAuthSettings @belongsTo (relation: "twoFactorAuth")
     "Security PIN"
@@ -86,13 +88,33 @@ type ApplicantProfile {
     ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
 }
 
-extend type Query @guard(with: "api_client") {
+extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Queries\\Applicant") {
     """
     Получить профиль пользователя
     """
     applicantProfile: ApplicantProfile 
         @field(resolver: "ApplicantProfileQuery@getProfile") 
-        @namespace(field: "App\\GraphQL\\Queries\\Applicant")
+}
+
+extend type Mutation @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Mutations\\Applicant") {
+    """
+    Обновить профиль пользователя
+    """
+    updateApplicantProfile(
+        "Штат / область"
+        state: String
+        "Город"
+        city: String
+        "Адрес"
+        address: String
+        "Индекс"
+        zip: String
+        "ID photo"
+        photo_id: ID
+        "Оповещения об устройствах на email"
+        notify_device_email: Boolean
+    ): ApplicantProfile
+        @field(resolver: "ApplicantProfileMutator@update")
 }
 
 
