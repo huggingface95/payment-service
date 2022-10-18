@@ -31,7 +31,15 @@ class GroupRole extends BaseModel
     protected $table = 'group_role';
 
     protected $fillable = [
-        'name', 'group_type_id', 'role_id', 'payment_provider_id', 'commission_template_id', 'is_active', 'description', 'company_id',
+        'name',
+        'group_type_id',
+        'role_id',
+        'payment_provider_id',
+        'commission_template_id',
+        'is_active',
+        'description',
+        'company_id',
+        'module_id',
     ];
 
     public static self $clone;
@@ -87,6 +95,11 @@ class GroupRole extends BaseModel
     public function members(): MorphToMany
     {
         return $this->morphedByMany(Members::class, 'user', GroupRoleUser::class, 'group_role_id');
+    }
+
+    public function modules(): BelongsTo
+    {
+        return $this->belongsTo(ApplicantModules::class, 'module_id');
     }
 
     public function users(): BelongsToMany
