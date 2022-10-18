@@ -13,6 +13,8 @@ type ApplicantSettingsProfile {
     middle_name: String
     "email"
     email: EMAIL
+    # TODO: remove this line
+    email_confirm_url: String
 }
 
 extend type Mutation {
