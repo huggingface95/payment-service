@@ -18,7 +18,7 @@ class ApplicantAccountQuery
 
         $accounts = Account::where('owner_id', $applicant->id);
 
-        if (isset($args['filter']['column']) > 0 && $args['filter']['column'] === 'is_show') {
+        if (isset($args['filter']['column']) && $args['filter']['column'] === 'is_show') {
             $accounts->where('is_show', $args['filter']['value'])->get();
         }
 
