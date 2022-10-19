@@ -47,6 +47,8 @@ class IbanIndividualStatusCommand extends Command
         foreach ($individualIbanAccountApprovals as $account) {
             try {
                 $emailService->sendAccountStatusEmail($account);
+                $account->account_state_id = AccountState::ACTIVE;
+                $account->saveQuietly();
             } catch (\Exception) {
                 continue;
             }
