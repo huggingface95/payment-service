@@ -1,0 +1,30 @@
+type ApplicantAccount {
+    "ID"
+    id: ID!
+    "Получить связанный код валюты"
+    currency: Currencies @belongsTo(relation:"currencies")
+    "Аккаунт/Карта"
+    account_number: String
+    "Тип аккаунта"
+    account_type: String!
+    "Имя"
+    account_name: String!
+    "Баланс"
+    current_balance: Decimal
+    "Показать на главной"
+    is_show: Boolean
+}
+
+extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Queries\\Applicant") {
+    """
+    Получить список аккаунтов
+    """
+    applicantAccounts(
+        filter: _ @filterConditions(static: QueryApplicantAccountsFilterStatic)
+    ): [ApplicantAccount!]
+        @field(resolver: "ApplicantAccountQuery@getList")
+}
+
+input QueryApplicantAccountsFilterStatic @spread {
+    is_show: Boolean @eq
+}

@@ -73,6 +73,7 @@ class Account extends BaseModel implements BaseModelInterface
         'payment_bank_id',
         'client_id',
         'client_type',
+        'is_show',
     ];
 
     protected static function booted()
