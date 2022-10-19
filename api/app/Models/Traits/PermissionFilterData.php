@@ -3,10 +3,11 @@
 namespace App\Models\Traits;
 
 use App\Models\PermissionFilter;
+use Illuminate\Database\Eloquent\Collection;
 
 trait PermissionFilterData
 {
-    public static function getPermissionFilter($mode, $action, $table, $conditions)
+    public static function getPermissionFilter($mode, $action, $table, $conditions): Collection|array
     {
         return PermissionFilter::query()->with('binds')->where('mode', $mode)
             ->where(function ($q) use ($action) {

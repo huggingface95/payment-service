@@ -16,7 +16,7 @@ class RoleFilterSuperAdminScope implements Scope
         $member = Auth::user();
 
         if ($member && ! $member->is_super_admin) {
-            $builder->where('id', '<>', 1);
+            $builder->where('roles.id', '<>', 1);
         }
     }
 }
