@@ -45,7 +45,11 @@ class IbanIndividualStatusCommand extends Command
 
         /** @var Account $account */
         foreach ($individualIbanAccountApprovals as $account) {
-            $emailService->sendAccountStatusEmail($account);
+            try {
+                $emailService->sendAccountStatusEmail($account);
+            } catch (\Exception) {
+                continue;
+            }
         }
     }
 }

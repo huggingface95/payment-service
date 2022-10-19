@@ -69,15 +69,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
-ADD cron/laravel_crontab /etc/cron.d/laravel_crontab
-
-RUN crontab /etc/cron.d/laravel_crontab
-
 RUN install-php-extensions gd ldap soap intl zip pdo_pgsql xsl
 
 #RUN pecl install xdebug \
 #    && docker-php-ext-enable xdebug
-
 
 RUN chown www-data:www-data /var/www
 
