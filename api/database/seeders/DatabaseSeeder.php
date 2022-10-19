@@ -63,5 +63,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PaymentUrgencyTableSeeder::class);
         $this->call(RespondentFeesTableSeeder::class);
         $this->call(CommissionTemplateBusinessActivityTableSeeder::class);
+        $this->call(RoleActionsSeeder::class);
     }
 }

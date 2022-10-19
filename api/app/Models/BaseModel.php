@@ -18,16 +18,24 @@ class BaseModel extends Model
     protected static function booting()
     {
         self::creating(function ($model) {
-            return self::filterByPermissionFilters('creating', $model);
+            $user = Auth::user();
+            return self::filterByPermissionFilters($user, 'creating', $model)
+                && self::filterByRoleActions($user, 'creating', $model);
         });
         self::saving(function ($model) {
-            return self::filterByPermissionFilters('saving', $model);
+            $user = Auth::user();
+            return self::filterByPermissionFilters($user, 'saving', $model)
+                && self::filterByRoleActions($user, 'saving', $model);
         });
         self::updating(function ($model) {
-            return self::filterByPermissionFilters('updating', $model);
+            $user = Auth::user();
+            return self::filterByPermissionFilters($user, 'updating', $model)
+                && self::filterByRoleActions($user, 'updating', $model);
         });
         self::deleting(function ($model) {
-            return self::filterByPermissionFilters('deleting', $model);
+            $user = Auth::user();
+            return self::filterByPermissionFilters($user, 'deleting', $model)
+                && self::filterByRoleActions($user, 'deleting', $model);
         });
 
         parent::booting();
@@ -43,10 +51,10 @@ class BaseModel extends Model
         return json_decode(str_replace(['{', '}'], ['[', ']'], $value));
     }
 
-    protected static function filterByPermissionFilters($action, Model $model): bool
+    protected static function filterByPermissionFilters(?Model $user, string $action, Model $model): bool
     {
-        /** @var Members $user */
-        if ($user = Auth::user()) {
+        if ($user) {
+            /** @var Members $user */
             $allPermissions = $user->getAllPermissions();
 
             $filters = self::getPermissionFilter(PermissionFilter::EVENT_MODE, $action, $model->getTable(), $model->getAttributes());
@@ -59,6 +67,22 @@ class BaseModel extends Model
             }
         }
 
+        return true;
+    }
+
+    protected static function filterByRoleActions(?Model $user, string $action, Model $model): bool
+    {
+        if ($user) {
+            /** @var Members $user */
+            $roleId = $user->role->id;
+
+            /** @var RoleAction $roleAction */
+            return !RoleAction::query()
+                ->where('action', $action)
+                ->where('table', $model->getTable())
+                ->where('role_id', $roleId)->first();
+        }
+        //TODO may be changed to false in the future
         return true;
     }
 }
