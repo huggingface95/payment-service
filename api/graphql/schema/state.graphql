@@ -1,0 +1,13 @@
+type State {
+    "ID"
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query @guard {
+    """
+    Получить список
+    """
+    states: [State!]! @all
+}

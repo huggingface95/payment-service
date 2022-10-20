@@ -32,9 +32,27 @@ type Companies {
     "Должности компании"
     positions: [DepartmentPosition] @hasMany(relation: "positions")
     "Получить настройки компании"
-    company_settings: CompanySettings  @hasOne(relation: "companySettings")
+    company_settings: CompanySettings @hasOne(relation: "companySettings")
     "Дополнительные поля"
     additional_fields: JSON
+    "Телефон"
+    phone: String
+    "Адрес регистрации"
+    reg_address: String
+    tax_id: ID
+    incorporate_date: DateTime
+    "Количество сотрудниуов"
+    employees: Employee @belongsTo(relation: "employee")
+    "Область деятельности"
+    type_of_industry: TypeOfIndustry @belongsTo(relation: "typeOfIndustry")
+    "Номер лицензии"
+    license_number: String
+    "Дата окончания лицензии"
+    exp_date: DateTime
+    "Состояние"
+    state: State @belongsTo(relation: "state")
+    "Причина состояния"
+    state_reason: stateReason @belongsTo(relation: "stateReason")
     created_at: DateTime!
     updated_at: DateTime!
 }
@@ -88,6 +106,24 @@ extend type Mutation @guard {
         contact_name: String
         "ID страны"
         country_id: ID!
+        "Телефон"
+        phone: String
+        "Адрес регистрации"
+        reg_address: String
+        tax_id: ID
+        incorporate_date: DateTime
+        "Количество сотрудниуов"
+        employees_id: ID
+        "Область деятельности"
+        type_of_industry_id: ID
+        "Номер лицензии"
+        license_number: String
+        "Дата окончания лицензии"
+        exp_date: DateTime
+        "Состояние"
+        state_id: ID
+        "Причина состояния"
+        state_reason_id: ID
     ): Companies   @create
 
     "Обновить данные компании"
@@ -114,9 +150,27 @@ extend type Mutation @guard {
         contact_name: String
         "Дополнительные поля"
         additional_fields: [AdditionalFieldInput]
+        "Телефон"
+        phone: String
+        "Адрес регистрации"
+        reg_address: String
+        tax_id: ID
+        incorporate_date: DateTime
+        "Количество сотрудниуов"
+        employees_id: ID
+        "Область деятельности"
+        type_of_industry_id: ID
+        "Номер лицензии"
+        license_number: String
+        "Дата окончания лицензии"
+        exp_date: DateTime
+        "Состояние"
+        state_id: ID
+        "Причина состояния"
+        state_reason_id: ID
     ): Companies   @field(resolver:"CompanyMutator@update")
 
-    "Удалит компанию"
+    "Удалить компанию"
     deleteCompany(id: ID!): Companies   @field(resolver:"CompanyMutator@delete")
 
 }
