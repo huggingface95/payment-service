@@ -32,6 +32,8 @@ type GroupRole {
     group_type_id: ID
     "ID роли"
     role_id: ID
+    "ID модуля"
+    module_id: ID
     "Описание группы"
     description: String
     "Активная и не активная группа"
@@ -45,6 +47,8 @@ type GroupRole {
     "Получит свящанный шаблон комиссий"
     commission_template: CommissionTemplate @belongsTo(relation: "commissionTemplate")
     company: Companies @belongsTo(relation: "company")
+    "Получить связанный модуль"
+    module: ApplicantModules @belongsTo(relation: "modules")
 }
 
 
@@ -63,7 +67,8 @@ extend type Query @guard {
         hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
         hasGroupType: _ @whereHasConditions(columns: ["name", "id"]),
         hasRole: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["id","group_type_id", "name","role_id", "payment_provider_id", "commission_template_id", "is_active","company_id"]),
+        hasModule: _ @whereHasConditions(columns: ["name", "id"]),
+        where: _ @whereConditions(columns: ["id","group_type_id", "name","role_id", "payment_provider_id", "commission_template_id", "is_active","company_id", "module_id"]),
         orderBy: _ @orderBy(columns: ["id","is_active","description"],
         )): [GroupRole!]!   @paginate(defaultCount: 10) @deprecated
 
@@ -82,6 +87,7 @@ input QueryGroupCondition {
     group_type_id: ID @eq
     commission_template_id: ID @eq
     is_active: Boolean @eq
+    module_id: ID @eq
 }
 
 enum GroupTypeMode {
@@ -108,6 +114,8 @@ extend type Mutation @guard {
         is_active: Boolean
         "ID компании"
         company_id: ID
+        "ID модуля"
+        module_id: ID
     ): GroupRole   @field(resolver:"GroupMutator@create")
 
     "Обновить поля группы"
@@ -130,6 +138,8 @@ extend type Mutation @guard {
         is_active: Boolean
         "ID компании"
         company_id: ID
+        "ID модуля"
+        module_id: ID
     ): GroupRole   @field(resolver:"GroupMutator@update")
 
 
