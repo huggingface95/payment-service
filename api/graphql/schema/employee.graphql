@@ -1,0 +1,13 @@
+type Employee {
+    "ID"
+    id: ID!
+    "Номер"
+    employees_number: String!
+}
+
+extend type Query @guard {
+    """
+    Получить список
+    """
+    employees: [Employee!]! @all
+}
