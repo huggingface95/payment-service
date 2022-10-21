@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\PaymentProvider;
+use App\Models\PaymentSystem;
 
 class PaymentProviderMutator
 {
@@ -14,9 +15,10 @@ class PaymentProviderMutator
     {
         if (isset($args['payment_systems'])) {
             $paymentSystems = $args['payment_systems'];
+            $getSystem = PaymentSystem::whereIn('id', $paymentSystems)->get();
             unset($args['payment_systems']);
             $paymentProvider = PaymentProvider::create($args);
-            $paymentProvider->paymentSystems()->attach($paymentSystems);
+            $paymentProvider->paymentSystems()->saveMany($getSystem);
         } else {
             $paymentProvider = PaymentProvider::create($args);
         }
@@ -32,9 +34,10 @@ class PaymentProviderMutator
     {
         $paymentProvider = PaymentProvider::find($args['id']);
         if (isset($args['payment_systems'])) {
-            $paymentProvider->paymentSystems()->detach();
-            $paymentProvider->paymentSystems()->attach($args['payment_systems']);
+            $paymentSystems = $args['payment_systems'];
+            $getSystem = PaymentSystem::whereIn('id', $paymentSystems)->get();
             unset($args['payment_systems']);
+            $paymentProvider->paymentSystems()->saveMany($getSystem);
         }
         $paymentProvider->update($args);
 
