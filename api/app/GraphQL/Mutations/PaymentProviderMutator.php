@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphqlException;
 use App\Models\PaymentProvider;
+use App\Models\PaymentSystem;
 
 class PaymentProviderMutator
 {
@@ -14,9 +16,15 @@ class PaymentProviderMutator
     {
         if (isset($args['payment_systems'])) {
             $paymentSystems = $args['payment_systems'];
-            unset($args['payment_systems']);
-            $paymentProvider = PaymentProvider::create($args);
-            $paymentProvider->paymentSystems()->attach($paymentSystems);
+            $getSystem = PaymentSystem::whereIn('id', $paymentSystems)->get();
+            if ($getSystem->isEmpty()) {
+                throw new GraphqlException('Payment System does not exist', 'use');
+            }
+            else {
+                unset($args['payment_systems']);
+                $paymentProvider = PaymentProvider::create($args);
+                $paymentProvider->paymentSystems()->saveMany($getSystem);
+            }
         } else {
             $paymentProvider = PaymentProvider::create($args);
         }
@@ -32,9 +40,15 @@ class PaymentProviderMutator
     {
         $paymentProvider = PaymentProvider::find($args['id']);
         if (isset($args['payment_systems'])) {
-            $paymentProvider->paymentSystems()->detach();
-            $paymentProvider->paymentSystems()->attach($args['payment_systems']);
-            unset($args['payment_systems']);
+            $paymentSystems = $args['payment_systems'];
+            $getSystem = PaymentSystem::whereIn('id', $paymentSystems)->get();
+            if ($getSystem->isEmpty()) {
+                throw new GraphqlException('Payment System does not exist', 'use');
+            }
+            else {
+                unset($args['payment_systems']);
+                $paymentProvider->paymentSystems()->saveMany($getSystem);
+            }
         }
         $paymentProvider->update($args);
 
