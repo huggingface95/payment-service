@@ -41,7 +41,7 @@ class CreateMembersTable extends Migration
             $table->foreign('country_id')->references('id')->on('countries');
         });
 
-        DB::raw("alter table members add column fullname varchar(255) GENERATED ALWAYS AS (first_name || ' '|| last_name) STORED");
+        DB::statement("alter table members add column fullname varchar(255) GENERATED ALWAYS AS (first_name || ' '|| last_name) STORED");
     }
 
     /**

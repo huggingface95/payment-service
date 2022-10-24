@@ -28,8 +28,7 @@ abstract class TestCase extends BaseTestCase
             Artisan::call(
                 'db:seed', ['--database' => 'pgsql_test']
             );
-            DB::connection('pgsql_test')->statement("alter table members add column fullname varchar(255) GENERATED ALWAYS AS (first_name || ' '|| last_name) STORED");
-            DB::connection('pgsql_test')->statement("alter table applicant_individual add column fullname varchar(255) GENERATED ALWAYS AS (first_name || ' '|| last_name) STORED");
+
             static::$setUpHasRunOnce = true;
         }
     }
