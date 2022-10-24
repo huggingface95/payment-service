@@ -23,7 +23,7 @@ class CompaniesMutationTest extends TestCase
             mutation CreateCompany(
                 $name: String!
                 $email: EMAIL!
-                $url: String
+                $url: String!
                 $zip: String
                 $address: String
                 $city: String
