@@ -62,11 +62,15 @@ class EmailTemplatesMutationTest extends TestCase
         ]);
     }
 
-    public function testUpdateEmailSmtpSettings(): void
+    public function testUpdateEmailTemplateSettings(): void
     {
         $this->login();
 
-        $email_template = DB::connection('pgsql_test')->table('email_smtps')->orderBy('id', 'DESC')->take(1)->get();
+        $email_template = DB::connection('pgsql_test')
+            ->table('email_templates')
+            ->orderBy('id', 'DESC')
+            ->take(1)
+            ->get();
 
         $this->graphQL('
             mutation UpdateEmailTemplate(
@@ -94,7 +98,7 @@ class EmailTemplatesMutationTest extends TestCase
         ', [
             'id' => strval($email_template[0]->id),
             'subject' =>  'updated_subject',
-            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'content' => '<html></html>',
             'company_id' => 1,
         ]);
 
