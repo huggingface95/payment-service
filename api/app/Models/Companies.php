@@ -43,6 +43,11 @@ class Companies extends BaseModel
         'state_reason_id',
     ];
 
+    protected $appends = [
+        'members_count',
+        'projects_count',
+    ];
+
     public function country(): BelongsTo
     {
         return $this->belongsTo('App\Models\Country', 'country_id');
@@ -113,8 +118,13 @@ class Companies extends BaseModel
         return $query->join('countries', 'companies.country_id', '=', 'countries.id')->orderBy('countries.id', $sort)->select('companies.*');
     }
 
-    public function getMembersCountAttribute()
+    public function getMembersCountAttribute(): int
     {
         return $this->members()->count();
+    }
+
+    public function getProjectsCountAttribute(): int
+    {
+        return $this->projects()->count();
     }
 }

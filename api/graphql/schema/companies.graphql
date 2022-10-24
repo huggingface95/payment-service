@@ -27,6 +27,8 @@ type Companies {
     members: [Members] @hasMany(relation: "members")
     "Количество участников в компании"
     members_count: Int
+    "Количество проектов"
+    projects_count: Int
     "Департаменты компании"
     departments: [Departments] @hasMany(relation: "departments")
     "Должности компании"
