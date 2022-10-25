@@ -31,6 +31,8 @@ class VerifyController extends Controller
 
             if ($user) {
                 $user->is_verification_email = true;
+                $user->is_active = true;
+                $user->two_factor_auth_setting_id = 2;
                 $user->save();
 
                 $verifyClient->delete();
