@@ -62,22 +62,22 @@ class AuthController extends Controller
                 return response()->json(['error' => 'No such user'], 403);
             }
             if ($user->is_active == false) {
-                return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
+                return response()->json(['error' => 'User is not active. Please contact support'], 403);
             }
             if (Cache::get('block_account_'.$this->guard.':'.$user->id)) {
-                return response()->json(['error' => 'Your account temporary blocked. Try again later'], 403);
+                return response()->json(['error' => 'User temporary blocked. Try again later'], 403);
             }
             if (Cache::get($attemptCacheKey) == env('MFA_ATTEMPTS', '5')) {
                 Cache::add('block_account_'.$this->guard.':'.$user->id, 1, env('BLOCK_ACCOUNT_TTL', 100));
                 Cache::put($attemptCacheKey, Cache::get($attemptCacheKey) + 1);
 
-                return response()->json(['error' => 'Account is temporary blocked for '.env('BLOCK_ACCOUNT_TTL', 120) / 60 .' minutes'], 403);
+                return response()->json(['error' => 'User is temporary blocked for '.env('BLOCK_ACCOUNT_TTL', 120) / 60 .' minutes'], 403);
             } elseif (Cache::get($attemptCacheKey) >= env('MFA_ATTEMPTS', '5') * 2 + 1) {
                 $user->is_active = false;
                 $user->save();
                 Cache::forget($attemptCacheKey);
 
-                return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
+                return response()->json(['error' => 'User is blocked. Please contact support'], 403);
             }
         }
 
