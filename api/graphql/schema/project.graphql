@@ -1,0 +1,136 @@
+
+type Project {
+    id: ID!
+    "Название проекта"
+    name: String!
+    "URL"
+    url: String
+    "Описание"
+    description: String
+    "Email поддержки"
+    support_email: String
+    "URL входа"
+    login_url: String
+    "Имя отправителя SMS"
+    sms_sender_name: String
+    "URL клиента"
+    client_url: String
+    "Настройки проекта"
+    project_settings: [ProjectSettings] @hasMany(relation: "projectSettings")
+    "Модуль"
+    module: ApplicantModules @BelongsTo(relation: "module")
+    "Компания"
+    company: Companies @BelongsTo(relation: "company")
+    "Аватар"
+    avatar: Files @belongsTo(relation: "avatar")
+    "Состояние"
+    state: State @belongsTo(relation: "state")
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+"""
+Настройки проекта
+"""
+type ProjectSettings {
+    "Тип группы"
+    group_type: GroupType @belongsTo(relation: "groupType")
+    "Роль"
+    group_role: GroupRole @belongsTo(relation: "groupRole")
+    "Связанный платежный провайдер"
+    payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
+    "Связанный платежный шаблон"
+    commission_template: CommissionTemplate @belongsTo(relation: "commissionTemplate")
+}
+
+extend type Query @guard {
+    """
+    Получить список проектов
+    """
+    projects(
+        filter: _ @filterConditions(static: QueryProjectsFilterStatic),
+    ): [Project!]!
+        @paginate(defaultCount: 100)
+        @orderBy(column: "id", direction: ASC)
+}
+
+input QueryProjectsFilterStatic @spread {
+    id: ID @eq
+    company_id: ID @eq
+    module_id: ID @eq
+}
+
+input InputProjectSettings @spread {
+    group_type_id: ID
+    group_role_id: ID
+    commission_template_id: ID
+    payment_provider_id: ID
+}
+
+extend type Mutation @guard {
+    """
+    Создать проект
+    """
+    createProject(
+        "Название"
+        name: String!
+        "URL"
+        url: String
+        "Описание"
+        description: String
+        "Email поддержки"
+        support_email: String
+        "URL входа"
+        login_url: String
+        "Имя отправителя SMS"
+        sms_sender_name: String
+        "URL клиента"
+        client_url: String
+        "Компания"
+        company_id: ID!
+        "Модуль"
+        module_id: ID
+        "Аватар"
+        avatar_id: ID
+        "Состояние"
+        state_id: ID
+        "Настройки"
+        project_settings: [InputProjectSettings]
+    ): Project
+        @field(resolver: "ProjectMutator@create")
+        @validator
+
+    """
+    Обновить проект
+    """
+    updateProject(
+        "ID проекта"
+        id: ID!
+        "Название"
+        name: String!
+        "URL"
+        url: String
+        "Описание"
+        description: String
+        "Email поддержки"
+        support_email: String
+        "URL входа"
+        login_url: String
+        "Имя отправителя SMS"
+        sms_sender_name: String
+        "URL клиента"
+        client_url: String
+        "Компания"
+        company_id: ID!
+        "Модуль"
+        module_id: ID
+        "Аватар"
+        avatar_id: ID
+        "Состояние"
+        state_id: ID
+        "Настройки"
+        project_settings: [InputProjectSettings]
+    ): Project
+        @field(resolver:"ProjectMutator@update")
+        @validator
+}

@@ -21,6 +21,7 @@ class FilesController extends Controller
             'document', 
             'aidnividual',
             'acompany',
+            'project',
         ];
 
         $this->validate($request, [
