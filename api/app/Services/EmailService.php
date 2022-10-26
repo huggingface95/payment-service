@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\DTO\Email\EmailRequestDTO;
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
+use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\Email\SmtpConfigDTO;
 use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
@@ -45,7 +47,7 @@ class EmailService
     /**
      * @throws GraphqlException
      */
-    public function sendApplicantEmailByApplicantDto(EmailApplicantRequestDTO $dto): void
+    public function sendApplicantEmailByApplicantDto(EmailApplicantRequestDTO|EmailMemberRequestDTO $dto): void
     {
         $smtp = $this->emailRepository->getSmtpByCompanyId($dto->account);
         $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
@@ -57,5 +59,4 @@ class EmailService
             throw new GraphqlException('Don\'t send email', '404');
         }
     }
-    
 }

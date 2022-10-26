@@ -2,18 +2,21 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\DTO\Email\SmtpConfigDTO;
-use App\DTO\Email\SmtpDataDTO;
+use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\Requisite\RequisiteSendEmailDTO;
 use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
-use App\Jobs\SendMailJob;
 use App\Models\Account;
-use App\Models\EmailSmtp;
+use App\Services\EmailService;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class RequisiteMutator extends BaseMutator
 {
+    public function __construct(
+        protected EmailService $emailService
+    ) {
+    }
+
     /**
      * @throws GraphqlException
      */
@@ -24,20 +27,20 @@ class RequisiteMutator extends BaseMutator
         }
 
         try {
-            $RequisiteSendEmailDTO = TransformerDTO::transform(RequisiteSendEmailDTO::class, $args);
             $account = Account::findOrFail($args['account_id']);
 
-            /** @var EmailSmtp $smtp */
-            if (! $smtp = EmailSmtp::where('member_id', $account->member->id)->where('company_id', $account->company_id)->first()) {
-                throw new GraphqlException('SMTP configuration for this company not found', 'Not found', '404');
-            }
-            $smtp->replay_to = $args['email'];
+            $emailTemplateSubject = 'Account Requisites';
+            $args['account_details_link'] = $account->company->companySettings->client_url;
+            $args['customer_support'] = $account->company->companySettings->support_email;
 
-            $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, $RequisiteSendEmailDTO->content, 'Requisite details');
-            $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
-            dispatch(new SendMailJob($config, $data));
+            $emailDTO = TransformerDTO::transform(EmailMemberRequestDTO::class, $account, $args, $emailTemplateSubject);
 
-            return ['status' => 'OK', 'message' => 'Email sent for processing'];
+            $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
+
+            return [
+                'status' => 'OK',
+                'message' => 'Email sent for processing',
+            ];
         } catch (\Throwable $e) {
             throw new GraphqlException($e->getMessage(), 'Internal', $e->getCode());
         }
@@ -52,6 +55,7 @@ class RequisiteMutator extends BaseMutator
         header('Content-type: application/pdf');
         header('Content-Disposition: inline; filename=requisite.pdf');
         echo $pdf->output();
+
         exit();
     }
 }
