@@ -59,4 +59,23 @@ class AccountsQuery
 
         return $account->paginate(env('PAGINATE_DEFAULT_COUNT'));
     }
+
+    public function accountRequisitesList($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo)
+    {
+        $account = Account::query();
+        if (isset($args['query']) && count($args['query']) > 0) {
+            $query = $args['query'];
+            if (isset($query['id']) && !isset($query['filter'])) {
+                $account = Account::find($query['id']);
+            }
+            if (isset($query['filter']) && count($query['filter']) > 0) {
+                $filter = $query['filter'];
+                $account = Account::getAccountRequisitesFilter($query, $filter)->first();
+            } elseif (isset($query['account_name'])) {
+                $account = Account::orWhere('id', 'like', $query['account_name'])->orWhere('account_name', 'like', $query['account_name']);
+            }
+        }
+
+        return $account;
+    }
 }
