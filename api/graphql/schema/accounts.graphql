@@ -67,18 +67,6 @@ type ClientAccountsDetails{
     currency: Currencies!
 }
 
-type AccountsRequisites{
-    id: ID
-    "Данные аппликанта"
-    beneficiary: ApplicantIndividual @belongsTo(relation:"owner")
-    "#Account от провайдера"
-    account_number: String
-    "Данные банка"
-    bank_details: PaymentSystem @belongsTo(relation:"paymentSystem")
-    "#Account от провайдера"
-    provider_details: PaymentProvider @belongsTo(relation:"paymentProvider")
-}
-
 type AccountGenerateIbanResponse{
     status: String!
     message: String!
@@ -121,14 +109,6 @@ extend type Query @guard {
         query: QueryAccountDetailsCondition
         orderBy: _ @orderBy(columns: ["id","created_at"])
     ): [Account!]!  @field(resolver:"AccountsQuery@clientDetailsList") @orderBy(column: "id", direction: ASC)
-
-    """
-    Получить список requisites для accounts
-    """
-    accountRequisites(
-        query: QueryAccountRequisitesCondition
-        orderBy: _ @orderBy(columns: ["id","created_at"])
-    ): AccountsRequisites  @field(resolver:"AccountsQuery@accountRequisitesList") @orderBy(column: "id", direction: ASC)
 
     """
     Получить список account states
@@ -200,18 +180,7 @@ input FilterAccountDetails {
     payment_provider: String @like
 }
 
-input FilterAccountRequisites {
-    company: String @like
-    payment_provider: String @like
-    payment_system: String @like
-    payment_bank: String @like
-    account_number: String @like
-}
 
-input QueryAccountRequisitesCondition {
-    id: ID @eq
-    filter: FilterAccountRequisites
-}
 
 
 input QueryClientCondition {
