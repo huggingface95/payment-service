@@ -93,7 +93,7 @@ extend type Query @guard {
         query: QueryAccountCondition,
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id","created_at"])
-    ): [Account!]!   @paginateWithConditions(defaultCount: 10) @orderBy(column: "id", direction: DESC)
+    ): [Account!]!   @paginateWithConditions(defaultCount: 10) @orderBy(column: "id", direction: DESC) @deprecated
 
     accountList(
         filter: _ @filterConditions(static: QueryAccountListFilterStatic),
@@ -179,6 +179,9 @@ input FilterAccountDetails {
     owner: String @like
     payment_provider: String @like
 }
+
+
+
 
 input QueryClientCondition {
     id: ID!
