@@ -32,6 +32,7 @@ class AccountTableSeeder extends Seeder
                 'payment_system_id' => 1,
                 'payment_provider_id' => 1,
                 'account_state_id' => 1,
+                'payment_bank_id' => 1,
                 'is_primary' => true,
                 'current_balance' => 10000,
                 'current_balance' => 0,
