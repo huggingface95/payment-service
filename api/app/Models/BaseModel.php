@@ -72,16 +72,16 @@ class BaseModel extends Model
 
     protected static function filterByRoleActions(?Model $user, string $action, Model $model): bool
     {
-        if ($user) {
-            /** @var Members $user */
-            $roleId = $user->role->id;
+        // if ($user) {
+        //     /** @var Members $user */
+        //     $roleId = $user->role->id;
 
-            /** @var RoleAction $roleAction */
-            return !RoleAction::query()
-                ->where('action', $action)
-                ->where('table', $model->getTable())
-                ->where('role_id', $roleId)->first();
-        }
+        //     /** @var RoleAction $roleAction */
+        //     return !RoleAction::query()
+        //         ->where('action', $action)
+        //         ->where('table', $model->getTable())
+        //         ->where('role_id', $roleId)->first();
+        // }
         //TODO may be changed to false in the future
         return true;
     }
