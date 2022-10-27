@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
+use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\Email\SmtpDataDTO;
 use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
@@ -90,7 +91,7 @@ class EmailRepository implements EmailRepositoryInterface
     /**
      * @throws GraphqlException
      */
-    public function getTemplateContentAndSubjectByDto(EmailApplicantRequestDTO $dto): SmtpDataDTO
+    public function getTemplateContentAndSubjectByDto(EmailApplicantRequestDTO|EmailMemberRequestDTO $dto): SmtpDataDTO
     {
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = $this->template->newQuery()
