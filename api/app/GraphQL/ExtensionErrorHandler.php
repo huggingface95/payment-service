@@ -180,6 +180,21 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
+        if (strpos($error->getMessage(), 'price_list_fees_price_list_id_foreign')) {
+            return $next(new Error(
+                'Region already in use.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Region already in use.',
+                ]
+            ));
+        }
         if (strpos($error->getMessage(), 'applicant_company_business_type_name_unique')) {
             return $next(new Error(
                 'Business type with this name already exist.',
