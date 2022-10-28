@@ -5,11 +5,13 @@ Administration->Company Info->Full Profile->Branding
 type CompanySettings {
     company_id: ID
     "URL в тексте письма"
-    email_url: String
+    client_url: String
+    "URL входа"
+    login_url: String
     "Email для jwt"
     email_jwt: String
     "Email отправителя"
-    email_from: EMAIL
+    support_email: EMAIL
     "Токен для видеоверификации"
     vv_token: String
     "Лого"
