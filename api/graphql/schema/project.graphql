@@ -45,6 +45,10 @@ type ProjectSettings {
 
 extend type Query @guard {
     """
+    Получить компанию по ID
+    """
+    project(id: ID @eq): Project   @find
+    """
     Получить список проектов
     """
     projects(
@@ -67,35 +71,39 @@ input InputProjectSettings @spread {
     payment_provider_id: ID
 }
 
+input InputProject {
+    "Название"
+    name: String!
+    "URL"
+    url: String
+    "Описание"
+    description: String
+    "Email поддержки"
+    support_email: String
+    "URL входа"
+    login_url: String
+    "Имя отправителя SMS"
+    sms_sender_name: String
+    "URL клиента"
+    client_url: String
+    "Компания"
+    company_id: ID!
+    "Модуль"
+    module_id: ID
+    "Аватар"
+    avatar_id: ID
+    "Состояние"
+    state_id: ID
+    "Настройки"
+    project_settings: [InputProjectSettings]
+}
+
 extend type Mutation @guard {
     """
     Создать проект
     """
     createProject(
-        "Название"
-        name: String!
-        "URL"
-        url: String
-        "Описание"
-        description: String
-        "Email поддержки"
-        support_email: String
-        "URL входа"
-        login_url: String
-        "Имя отправителя SMS"
-        sms_sender_name: String
-        "URL клиента"
-        client_url: String
-        "Компания"
-        company_id: ID!
-        "Модуль"
-        module_id: ID
-        "Аватар"
-        avatar_id: ID
-        "Состояние"
-        state_id: ID
-        "Настройки"
-        project_settings: [InputProjectSettings]
+        input: InputProject! @spread
     ): Project
         @field(resolver: "ProjectMutator@create")
         @validator
@@ -106,30 +114,7 @@ extend type Mutation @guard {
     updateProject(
         "ID проекта"
         id: ID!
-        "Название"
-        name: String!
-        "URL"
-        url: String
-        "Описание"
-        description: String
-        "Email поддержки"
-        support_email: String
-        "URL входа"
-        login_url: String
-        "Имя отправителя SMS"
-        sms_sender_name: String
-        "URL клиента"
-        client_url: String
-        "Компания"
-        company_id: ID!
-        "Модуль"
-        module_id: ID
-        "Аватар"
-        avatar_id: ID
-        "Состояние"
-        state_id: ID
-        "Настройки"
-        project_settings: [InputProjectSettings]
+        input: InputProject! @spread
     ): Project
         @field(resolver:"ProjectMutator@update")
         @validator
