@@ -13,6 +13,12 @@ type ApplicantAccount {
     current_balance: Decimal
     "Показать на главной"
     is_show: Boolean
+    "Первичный аккаунт"
+    is_primary: Boolean
+}
+
+input QueryApplicantAccountsFilterStatic @spread {
+    is_show: Boolean @eq
 }
 
 extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Queries\\Applicant") {
@@ -25,6 +31,13 @@ extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Qu
         @field(resolver: "ApplicantAccountQuery@getList")
 }
 
-input QueryApplicantAccountsFilterStatic @spread {
-    is_show: Boolean @eq
+extend type Mutation @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Mutations\\Applicant") {
+    "Изменение аккаунта"
+    updateApplicantAccount(
+        "ID"
+        id: ID!
+        "Показать на главной"
+        is_show: Boolean!
+    ): ApplicantAccount!
+        @field(resolver: "ApplicantAccountMutator@update")
 }
