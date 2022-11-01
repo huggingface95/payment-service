@@ -22,10 +22,6 @@ class RequisiteMutator extends BaseMutator
      */
     public function sendEmail($root, array $args): array
     {
-        if (! $this->validEmail($args['email'])) {
-            throw new GraphqlException('Email not correct', 'Bad Request', 400);
-        }
-
         try {
             $account = Account::findOrFail($args['account_id']);
 

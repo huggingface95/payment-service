@@ -59,7 +59,7 @@ input MutationRequisitesSendEmail{
     "Валюта"
     currency: String!
     "Почта"
-    email: String!
+    email: String! @rules(apply: ["email"])
 }
 
 input MutationRequisitesDownload{

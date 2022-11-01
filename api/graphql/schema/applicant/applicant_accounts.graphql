@@ -27,8 +27,10 @@ extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Qu
     """
     applicantAccounts(
         filter: _ @filterConditions(static: QueryApplicantAccountsFilterStatic)
+        orderBy: _ @orderBy(columns: ["id", "current_balance"])
     ): [ApplicantAccount!]
         @field(resolver: "ApplicantAccountQuery@getList")
+        @orderBy(column: "id", direction: DESC)
 }
 
 extend type Mutation @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Mutations\\Applicant") {

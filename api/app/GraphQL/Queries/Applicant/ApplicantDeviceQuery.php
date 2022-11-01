@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Queries;
+namespace App\GraphQL\Queries\Applicant;
 
 use App\Models\Clickhouse\ActiveSession;
 use GraphQL\Type\Definition\ResolveInfo;

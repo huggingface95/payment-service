@@ -1,9 +1,10 @@
 <?php
 
-namespace App\GraphQL\Queries;
+namespace App\GraphQL\Queries\Applicant;
 
 use App\Models\Account;
 use GraphQL\Type\Definition\ResolveInfo;
+use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class ApplicantAccountQuery
@@ -20,6 +21,16 @@ class ApplicantAccountQuery
 
         if (isset($args['filter']['column']) && $args['filter']['column'] === 'is_show') {
             $accounts->where('is_show', $args['filter']['value'])->get();
+        }
+
+        if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
+            $fields = $args['orderBy'];
+
+            foreach ($fields as $field) {
+                $accounts->orderBy(Str::lower($field['column']), $field['order']);
+            }
+        } else {
+            $accounts->orderBy('id', 'DESC');
         }
 
         return $accounts->get();
