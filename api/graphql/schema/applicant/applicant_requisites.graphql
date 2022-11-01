@@ -1,0 +1,62 @@
+"""
+Реквизиты
+"""
+type ApplicantRequisites {
+    "Account ID"
+    id: ID!
+    "IBAN"
+    account_number: String!
+    "Создатель"
+    owner: ApplicantProfile @belongsTo(relation: "owner")
+    "Связанный банк"
+    bank: PaymentBank @belongsTo(relation: "paymentBank")
+    "Валюта"
+    currency: Currencies @belongsTo(relation: "currencies")
+}
+
+type ApplicantDetailsRequisites {
+    currency: String!
+    beneficiary: String!
+    address: String!
+    country: String!
+    iban: String!
+    bank_name: String!
+    swift_code: String!
+    bank_address: String!
+    bank_country: String!
+}
+
+type RawFile {
+    base64: String!
+}
+
+extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Queries\\Applicant") {
+    """
+    Получить реквизиты по Account_number
+    """
+    applicantRequisite(account_number: String @eq): ApplicantDetailsRequisites
+        @field(resolver: "ApplicantRequisiteQuery@get")
+
+    """
+    Получить список реквизитов
+    """
+    applicantRequisites: [ApplicantRequisites!]!
+        @field(resolver: "ApplicantRequisiteQuery@getList")
+
+    """
+    Скачать PDF с реквизитами
+    """
+    downloadApplicantRequisiteDetails(account_id: ID @eq): RawFile
+        @field(resolver: "ApplicantRequisiteQuery@download")
+
+    """
+    Отправить реквизиты на email
+    """
+    sendApplicantRequisiteDetails(
+        "ID аккаунта"
+        account_id: ID!
+        "Email"
+        email: String! @rules(apply: ["email"])
+    ): StatusType 
+        @field(resolver: "ApplicantRequisiteQuery@sendEmail")
+}
