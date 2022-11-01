@@ -58,15 +58,9 @@ class RolesQueryTest extends TestCase
                     }
                 }
             }
-        ')->seeJson([
-            'data' => [
-                'roles' => [
-                    'data' => [[
-                        'id' => strval($role->id),
-                        'name' => strval($role->name),
-                    ]],
-                ],
-            ],
+        ')->seeJsonContains([
+            'id' => strval($role->id),
+            'name' => strval($role->name),
         ]);
     }
 
@@ -145,15 +139,9 @@ class RolesQueryTest extends TestCase
             }
             ', [
                 'id' => $role->group_type_id,
-        ])->seeJson([
-            'data' => [
-                'roles' => [
-                    'data' => [[
-                        'id' => strval($role->id),
-                        'name' => strval($role->name),
-                    ]],
-                ],
-            ],
+        ])->seeJsonContains([
+            'id' => strval($role->id),
+            'name' => strval($role->name),
         ]);
     }
 }

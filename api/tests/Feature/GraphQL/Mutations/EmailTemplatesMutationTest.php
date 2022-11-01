@@ -17,7 +17,7 @@ class EmailTemplatesMutationTest extends TestCase
      */
     public function testCreateEmailTemplate(): void
     {
-        $this->login();
+        $this->login(['email' => 'test3@test.com', 'password' => '1234567Qa']);
 
         $seq = DB::table('email_templates')->max('id') + 1;
         DB::select('ALTER SEQUENCE email_templates_id_seq RESTART WITH '.$seq);
@@ -34,8 +34,8 @@ class EmailTemplatesMutationTest extends TestCase
                     subject: $subject
                     content: $content
                     use_layout: false
-                    service_type: Banking
-                    type: Administration
+                    service_type: Common
+                    type: Client
                     company_id: $company_id
                 )
               {
@@ -45,9 +45,9 @@ class EmailTemplatesMutationTest extends TestCase
               }
            }
         ', [
-            'name' => 'Test Email Template',
+            'name' => 'Test Email Template mutator test',
             'subject' =>  'Waiting for approval',
-            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'content' => '<html></html>',
             'company_id' => 1,
         ]);
 
