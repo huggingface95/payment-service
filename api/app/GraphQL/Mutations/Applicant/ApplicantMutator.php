@@ -54,7 +54,7 @@ class ApplicantMutator extends BaseMutator
         $applicant = ApplicantIndividual::create($applicantData);
 
         if (isset($args['client_type']) && $args['client_type'] === 'Corporate') {
-            ApplicantCompany::create([
+            $applicantCompany = ApplicantCompany::create([
                 'name' => $args['company_name'],
                 'email' => $applicant->email,
                 'url' => $args['url'],
@@ -62,6 +62,11 @@ class ApplicantMutator extends BaseMutator
                 'country_id' => $applicant->country_id,
                 'owner_id' => $applicant->id,
                 'company_id' => $company->id,
+            ]);
+
+            $applicant->companies()->attach($applicantCompany->id, [
+                'applicant_individual_company_relation_id' => 1,
+                'applicant_individual_company_position_id' => 1,
             ]);
         }
 
