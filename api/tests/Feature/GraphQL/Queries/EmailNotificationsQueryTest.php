@@ -54,21 +54,21 @@ class EmailNotificationsQueryTest extends TestCase
 
         $email_notification = DB::connection('pgsql_test')
             ->table('email_notifications')
-            ->orderBy('id', 'DESC')
-            ->take(1)
-            ->get();
+            ->first();
 
         $this->graphQL('
-            query {
-                emailNotifications(hasGroupRole: { column: ID, value: 3 }) {
+            query EmailNotifications ($id: Mixed) {
+                emailNotifications(hasGroupRole: { column: ID, value: $id }) {
                     data {
                         id
                     }
                 }
             }
-            ')->seeJsonContains([
+            ', [
+                'id' => strval($email_notification->group_role_id),
+        ])->seeJsonContains([
             [
-                'id' => strval($email_notification[0]->id),
+                'id' => strval($email_notification->id),
             ],
         ]);
     }
