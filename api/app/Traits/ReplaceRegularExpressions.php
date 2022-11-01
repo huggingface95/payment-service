@@ -22,7 +22,11 @@ trait ReplaceRegularExpressions
         return preg_replace_callback(
          $regexp, function ($m) use ($d) {
              try {
-                 if (isset($m[1]) && count(($e = explode('.', $m[1]))) > 1) {
+                 if (isset($m[1]) && count(($e = explode('.', $m[1]))) == 3) {
+                     return $d[$e[0]][$e[1]][$e[2]];
+                 }
+                 if (isset($m[1]) && count(($e = explode('.', $m[1]))) == 2) {
+
                      return $d[$e[0]][$e[1]];
                  }
                  if (isset($d[$m[1]]) && !is_array($d[$m[1]])) {
