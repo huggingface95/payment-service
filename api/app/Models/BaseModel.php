@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\GraphqlException;
 use App\Models\Traits\PermissionFilterData;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -70,17 +71,21 @@ class BaseModel extends Model
         return true;
     }
 
+    /**
+     * @throws GraphqlException
+     */
     protected static function filterByRoleActions(?Model $user, string $action, Model $model): bool
     {
         if ($user) {
             /** @var Members $user */
             $roleId = $user->role->id;
 
-            /** @var RoleAction $roleAction */
-            return !RoleAction::query()
+            if (RoleAction::query()
                 ->where('action', $action)
                 ->where('table', $model->getTable())
-                ->where('role_id', $roleId)->first();
+                ->where('role_id', $roleId)->first()){
+                throw new GraphqlException("{$action} action access denied in {$model->getTable()} table", 'permission denied', 403);
+            }
         }
         //TODO may be changed to false in the future
         return true;
