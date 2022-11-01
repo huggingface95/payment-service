@@ -16,7 +16,7 @@ class EmailNotificationsTableSeeder extends Seeder
     {
         EmailNotification::insert([
             'company_id' => 1,
-            'group_role_id' => 1,
+            'group_role_id' => 3,
             'group_type_id' => 2,
         ]);
     }

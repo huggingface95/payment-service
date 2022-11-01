@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CommissionTemplateLimitTypeTableSeeder::class);
         $this->call(CommissionTemplateTableSeeder::class);
         $this->call(RolesTableSeeder::class);
+        $this->call(SuperAdminSeeder::class);
         $this->call(GroupRoleTableSeeder::class);
         $this->call(GroupRoleMembersIndividualsTableSeeder::class);
         $this->call(ApplicantIndividualTableSeeder::class);

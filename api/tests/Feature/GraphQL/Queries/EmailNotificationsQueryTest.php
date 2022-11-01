@@ -37,7 +37,7 @@ class EmailNotificationsQueryTest extends TestCase
             }
         ', [
             'group_type_id' => 2,
-            'group_role_id' =>  1,
+            'group_role_id' =>  3,
             'company_id' => 1,
         ])->seeJson([
             'data' => [
@@ -60,7 +60,7 @@ class EmailNotificationsQueryTest extends TestCase
 
         $this->graphQL('
             query {
-                emailNotifications(hasGroupRole: { column: ID, value: 1 }) {
+                emailNotifications(hasGroupRole: { column: ID, value: 3 }) {
                     data {
                         id
                     }

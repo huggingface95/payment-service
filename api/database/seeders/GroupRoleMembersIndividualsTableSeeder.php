@@ -15,7 +15,7 @@ class GroupRoleMembersIndividualsTableSeeder extends Seeder
      */
     public function run()
     {
-        $groupRole = GroupRole::select('*')->where('id', 1)->get();
+        $groupRole = GroupRole::select('*')->where('id', 3)->get();
         DB::table('group_role_members_individuals')->insert(['group_role_id' => $groupRole[0]->id, 'user_id' => 2]);
 
         $groupRole = GroupRole::select('*')->where('id', 2)->get();
