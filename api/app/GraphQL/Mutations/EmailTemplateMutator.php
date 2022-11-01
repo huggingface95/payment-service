@@ -31,7 +31,7 @@ class EmailTemplateMutator extends BaseMutator
         }
 
         if ($member->role->IsSuperAdmin()) {
-            Companies::query()->get()
+            Companies::query()->where('id', '<>', $args['company_id'])->get()
                 ->map(function ($company) use ($args) {
                     $args['company_id'] = $company->id;
                     return new EmailTemplate($args);
