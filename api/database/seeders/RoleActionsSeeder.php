@@ -20,8 +20,8 @@ class RoleActionsSeeder extends Seeder
     {
 
         $actions = [
-            ['without_role_id' => 1, 'table' => 'email_templates', 'action' => RoleAction::ACTION_CREATING],
-            ['without_role_id' => 1, 'table' => 'email_template_layouts', 'action' => RoleAction::ACTION_CREATING],
+            ['without_role_id' => Role::SUPER_ADMIN_ID, 'table' => 'email_templates', 'action' => RoleAction::ACTION_CREATING],
+            ['without_role_id' => Role::SUPER_ADMIN_ID, 'table' => 'email_template_layouts', 'action' => RoleAction::ACTION_CREATING],
         ];
 
         foreach ($actions as $action) {
