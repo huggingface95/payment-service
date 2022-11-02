@@ -10,9 +10,9 @@ class RequisiteSendEmailDTO
     {
         $dto = new self();
 
-        $storagePath = storage_path('app');
+        $storagePath = storage_path('pdf');
 		$imgLogoBase64 = base64_encode(file_get_contents($args['logo_path']));
-        $cssStyles = file_get_contents($storagePath . '/pdf/css/main.css');
+        $cssStyles = file_get_contents($storagePath . '/css/main.css');
 
         $dto->content = '<!DOCTYPE html>
         <html lang="en">
