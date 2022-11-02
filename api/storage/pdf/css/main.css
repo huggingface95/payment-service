@@ -1,0 +1,105 @@
+body {
+    font-size: 16px;
+    min-width: 320px;
+    position: relative;
+    line-height: 1.5;
+    font-family: "roboto";
+    color: #000000;
+    background: #ffffff;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 1944px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.p100 {
+    padding: 100px 0;
+}
+
+.title-page {
+    background: #F6F5F7;
+    border-radius: 0px;
+    padding: 40px 0;
+    margin: 0 -72px;
+}
+
+.title-page h1 {
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 100%;
+    color: #2E2E2E;
+    padding: 0 40px;
+    margin: 0;
+}
+
+.table {
+    border: 4px solid #CDCDCD;
+    border-radius: 37px;
+    width: 100%;
+    border-spacing: 0;
+}
+
+.table tr {
+    border: none;
+}
+
+.table th {
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 120%;
+    color: #8E96B0;
+    padding: 40px;
+    width: 20%;
+    border-bottom: 4px solid #CDCDCD;
+    border-right: 4px solid #CDCDCD;
+    text-align: left;
+}
+
+.table td {
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 120%;
+    color: #2E2E2E;
+    padding: 40px;
+    border-bottom: 4px solid #CDCDCD;
+}
+
+.table tr:last-child th,
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.container {
+    max-width: 1180px;
+}
+
+.logo {
+    width: 196px;
+}
+
+.table {
+    border-width: 2px;
+}
+
+.table td,
+.table th {
+    font-size: 22px;
+    padding: 26px 22px;
+    border-width: 2px;
+}
+
+.title-page {
+    padding: 24px 0;
+}
+
+.title-page h1 {
+    font-size: 22px;
+}
+
+.p100 {
+    padding: 55px 0;
+}

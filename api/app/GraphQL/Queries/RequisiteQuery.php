@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GraphQL\Queries\Applicant;
+namespace App\GraphQL\Queries;
 
 use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\TransformerDTO;
@@ -10,7 +10,7 @@ use App\Services\ApplicantService;
 use App\Services\EmailService;
 use App\Services\PdfService;
 
-class ApplicantRequisiteQuery
+class RequisiteQuery
 {
     public function __construct(
         protected EmailService $emailService,
@@ -23,43 +23,10 @@ class ApplicantRequisiteQuery
      * @param  null  $_
      * @param  array<string, mixed>  $args
      */
-    public function get($_, array $args)
-    {
-        $applicant = auth()->user();
-
-        $account = Account::where('account_number', $args['account_number'])
-            ->where('owner_id', $applicant->id)
-            ->first();
-
-        $requsites = $this->applicantService->getApplicantRequisites($applicant, $account);
-
-        return $requsites;
-    }
-
-    /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
-     */
-    public function getList($_, array $args)
-    {
-        $applicant = auth()->user();
-
-        $accounts = Account::where('owner_id', $applicant->id)->get();
-
-        return $accounts;
-    }
-
-    /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
-     */
     public function download($root, array $args)
     {
-        $applicant = auth()->user();
-
-        $account = Account::where('id', $args['account_id'])
-            ->where('owner_id', $applicant->id)
-            ->first();
+        $account = Account::where('id', $args['account_id'])->first();
+        $applicant = $account->owner;
 
         $data = $this->applicantService->getApplicantRequisites($applicant, $account);
 
@@ -77,12 +44,9 @@ class ApplicantRequisiteQuery
      */
     public function sendEmail($root, array $args)
     {
-        $applicant = auth()->user();
-
         try {
-            $account = Account::where('id', $args['account_id'])
-                ->where('owner_id', $applicant->id)
-                ->firstOrFail();
+            $account = Account::where('id', $args['account_id'])->firstOrFail();
+            $applicant = $account->owner;
 
             $args = array_merge(
                 $args,

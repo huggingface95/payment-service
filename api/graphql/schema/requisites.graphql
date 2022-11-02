@@ -17,8 +17,12 @@ type Requisite {
 
 
 extend type Query @guard {
-    "Получить реквизиты по ID"
-    requisite(account_number: String @eq): Requisite @find(model: "\\App\\Models\\Account")
+    """
+    Получить реквизиты по ID
+    """
+    requisite(account_number: String @eq): Requisite
+        @find(model: "\\App\\Models\\Account")
+
     """
     Получить список реквизитов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -26,6 +30,23 @@ extend type Query @guard {
     requisites(
         filter: _ @filterConditions(static: QueryRequisitesFilterStatic)
         ): [Requisite!]! @all(model: "\\App\\Models\\Account")
+    
+    """
+    Скачать PDF с реквизитами
+    """
+    downloadRequisiteDetails(account_id: ID @eq): RawFile
+        @field(resolver: "RequisiteQuery@download")
+
+    """
+    Отправить реквизиты на email
+    """
+    sendRequisiteDetails(
+        "ID аккаунта"
+        account_id: ID!
+        "Email"
+        email: String! @rules(apply: ["email"])
+    ): StatusType 
+        @field(resolver: "RequisiteQuery@sendEmail")
 }
 
 input QueryRequisitesFilterStatic @spread{
@@ -34,61 +55,4 @@ input QueryRequisitesFilterStatic @spread{
     payment_system_id: ID @eq
     payment_bank_id: ID @eq
     account_number: String @eq
-}
-
-
-input MutationRequisitesSendEmail{
-    "Ид аккаунта"
-    account_id: ID!
-    "Бенефициар"
-    beneficiary: String!
-    "Адрес"
-    address: String!
-    "Страна"
-    country: String!
-    "Банк"
-    bank_name: String!
-    "ибан"
-    iban: String!
-    "Свифт код"
-    swift_code: String!
-    "Адрес банка"
-    bank_address: String!
-    "Страна банка"
-    bank_country: String!
-    "Валюта"
-    currency: String!
-    "Почта"
-    email: String! @rules(apply: ["email"])
-}
-
-input MutationRequisitesDownload{
-    "Бенефициар"
-    beneficiary: String!
-    "Адрес"
-    address: String!
-    "Страна"
-    country: String!
-    "Банк"
-    bank_name: String!
-    "ибан"
-    iban: String!
-    "Свифт код"
-    swift_code: String!
-    "Адрес банка"
-    bank_address: String!
-    "Страна банка"
-    bank_country: String!
-    "Валюта"
-    currency: String!
-}
-
-extend type Mutation @guard {
-    sendRequisiteDetails(
-        input: MutationRequisitesSendEmail! @spread
-    ):StatusType @field(resolver: "RequisiteMutator@sendEmail")
-
-    downloadRequisiteDetails(
-        input: MutationRequisitesDownload! @spread
-    ):Mixed @field(resolver: "RequisiteMutator@download")
 }
