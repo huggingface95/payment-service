@@ -21,6 +21,10 @@ class EmailRepository implements EmailRepositoryInterface
 {
     use ReplaceRegularExpressions;
 
+    protected static array $staticParams = [
+        'account_details_link' => '{config.app.url}/dashboard/banking/account/details/{id}',
+    ];
+
     protected EmailSmtp $smtp;
 
     protected EmailTemplate $template;
@@ -80,6 +84,10 @@ class EmailRepository implements EmailRepositoryInterface
 
         if (! count($emails)) {
             throw new GraphqlException('Email not found', '404');
+        }
+
+        foreach (self::$staticParams as $k => $staticParam){
+            $account->{$k} = $this->replaceStaticParams($staticParam, $account, '/\{(.*?)}/');
         }
 
         $content = $this->replaceObjectData($emailTemplate->getHtml(), $account, '/\{(.*?)\}/');
