@@ -199,7 +199,7 @@ extend type Mutation @guard {
         "ID группа"
         group_id: ID
         "Two factor auth"
-        two_factor_auth_id: ID
+        two_factor_auth_setting_id: ID
         "Пароль"
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
@@ -272,7 +272,7 @@ extend type Mutation @guard {
         "ID группы"
         group_id: ID
         "Two factor auth"
-        two_factor_auth_id: ID
+        two_factor_auth_setting_id: ID
         "Пароль"
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
         "подтверждение пароля"
