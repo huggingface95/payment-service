@@ -35,10 +35,12 @@ class ProjectMutator extends BaseMutator
 
         $project->update($args);
 
-        $project->projectSettings()->delete();
+        if (isset($args['project_settings'])) {
+            $project->projectSettings()->delete();
 
-        foreach ($args['project_settings'] as $settings) {
-            $project->projectSettings()->create($settings);
+            foreach ($args['project_settings'] as $settings) {
+                $project->projectSettings()->create($settings);
+            }
         }
 
         return $project;
