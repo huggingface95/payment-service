@@ -30,7 +30,7 @@ class EmailService
         $account =Account::find($account->id);
 
         $account->load('group', 'company', 'paymentProvider', 'clientable', 'owner',
-            'accountState', 'paymentBank', 'paymentSystem', 'currencies', 'groupRole'
+            'accountState', 'paymentBank.country', 'paymentSystem', 'currencies', 'groupRole',
         );
 
         $smtp = $this->emailRepository->getSmtpByCompanyId($account);
