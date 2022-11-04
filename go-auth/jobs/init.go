@@ -39,11 +39,11 @@ func Init() {
 }
 
 func convertConfirmationLink(path string, token string) string {
-	return fmt.Sprintf("%s/confirmation/%s?token=%s", config.Conf.App.AppUrl, path, token)
+	return fmt.Sprintf("%s/auth/individual/confirmation/%s?token=%s", config.Conf.App.AppUrl, path, token)
 }
 
 func convertPasswordRecoveryLink(path string, token string) string {
-	return fmt.Sprintf("%s/confirmation/%s?token=%s", config.Conf.App.AppFrontUrl, path, token)
+	return fmt.Sprintf("%s/auth/individual/confirmation/%s?token=%s", config.Conf.App.AppFrontUrl, path, token)
 }
 
 func convertDeviceDetails(os string, model string, browser string, deviceType string) string {
