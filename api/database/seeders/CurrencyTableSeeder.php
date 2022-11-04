@@ -14,13 +14,16 @@ class CurrencyTableSeeder extends Seeder
      */
     public function run()
     {
-        $path = base_path().'/data/currency_codes.csv';
+        $path = base_path() . '/data/currency_codes.csv';
         $dataCsv = array_map('str_getcsv', file($path));
+
         foreach ($dataCsv as $item) {
-            Currencies::create(
+            Currencies::firstOrCreate(
                 [
-                    'name'=> $item[0],
                     'code' => $item[1],
+                ],
+                [
+                    'name' => $item[0],
                     'minor_unit' => $item[2],
                 ]
             );

@@ -15,7 +15,7 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-        Role::insert([
+        $roles = [
             [
                 'id' => 2,
                 'name' => 'Super Role',
@@ -31,6 +31,12 @@ class RolesTableSeeder extends Seeder
                 'company_id' => 2,
                 'group_type_id' => 2,
             ],
-        ]);
+        ];
+
+        foreach ($roles as $role) {
+            Role::firstOrCreate([
+                'id' => $role['id'],
+            ], $role);
+        }
     }
 }

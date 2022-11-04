@@ -18,18 +18,16 @@ class PaymentProviderTableSeeder extends Seeder
         $faker = Factory::create();
 
         for ($i = 1; $i <= 10; $i++) {
-            $paymentProvider = PaymentProvider::create(
+            PaymentProvider::firstOrCreate(
                 [
-                    'id'        => $i,
-                    'name'     => 'PaymentProvider'.$i,
+                    'name' => 'PaymentProvider ' . $i,
+                ],
+                [
                     'description' => $faker->text(100),
                     'is_active' => true,
                     'company_id' => $i,
                 ]
             );
-            //$paymentProvider->countries()->attach([$faker->numberBetween(1, 100)]);
-            //$paymentProvider->currencies()->attach([$faker->numberBetween(1, 100)]);
-            //$paymentProvider->paymentSystems()->attach($i);
         }
     }
 }

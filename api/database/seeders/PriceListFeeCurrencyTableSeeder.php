@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Currencies;
-use App\Models\FeeMode;
 use App\Models\PriceListFee;
 use App\Models\PriceListFeeCurrency;
 use Illuminate\Database\Seeder;
@@ -106,8 +105,10 @@ class PriceListFeeCurrencyTableSeeder extends Seeder
             ],
         ];
 
-        foreach ($priceListFeeCurrency as $priceListFeesItem) {
-            PriceListFeeCurrency::create($priceListFeesItem);
+        foreach ($priceListFeeCurrency as $id => $priceListFeesItem) {
+            PriceListFeeCurrency::firstOrCreate([
+                'id' => $id + 1,
+            ], $priceListFeesItem);
         }
     }
 }

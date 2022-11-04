@@ -14,7 +14,7 @@ class DepartmentPositionTableSeeder extends Seeder
      */
     public function run()
     {
-        DepartmentPosition::insert([
+        $positions = [
             [
                 'name' => 'Test Department 1',
                 'company_id' => 1,
@@ -22,6 +22,10 @@ class DepartmentPositionTableSeeder extends Seeder
                 'name' => 'Test Department 2',
                 'company_id' => 2,
             ],
-        ]);
+        ];
+
+        foreach ($positions as $position) {
+            DepartmentPosition::firstOrCreate($position);
+        }
     }
 }

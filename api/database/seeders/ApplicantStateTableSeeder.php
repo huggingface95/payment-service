@@ -14,8 +14,16 @@ class ApplicantStateTableSeeder extends Seeder
      */
     public function run()
     {
-        ApplicantState::create(['name'=>'Active']);
-        ApplicantState::create(['name'=>'Suspended']);
-        ApplicantState::create(['name'=>'Blocked']);
+        $applicantStates = [
+            'Active',
+            'Suspended',
+            'Blocked',
+        ];
+
+        foreach ($applicantStates as $state) {
+            ApplicantState::firstOrCreate([
+                'name' => $state,
+            ]);
+        }
     }
 }

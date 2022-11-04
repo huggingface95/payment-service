@@ -14,7 +14,7 @@ class EmailSmtpsTableSeeder extends Seeder
      */
     public function run()
     {
-        EmailSmtp::insert([
+        EmailSmtp::firstOrCreate([
             'id' => 1,
             'member_id' => 2,
             'security' => 'ssl',

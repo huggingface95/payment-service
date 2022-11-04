@@ -14,17 +14,25 @@ class CommissionTemplateLimitTypeTableSeeder extends Seeder
      */
     public function run()
     {
-        foreach ([
+        $limits = [
             1 => CommissionTemplateLimitType::ALL,
             2 => CommissionTemplateLimitType::TRANSACTION_AMOUNT,
             3 => CommissionTemplateLimitType::TRANSACTION_COUNT,
             4 => CommissionTemplateLimitType::TRANSFER_COUNT,
-        ] as $id => $name) {
-            /** @var CommissionTemplateLimitType $commissionTemplateType */
-            if ($commissionTemplateType = CommissionTemplateLimitType::find($id)) {
-                $commissionTemplateType->update(['name' => $name]);
+        ];
+
+        foreach ($limits as $id => $name) {
+            $limit = CommissionTemplateLimitType::find($id);
+            if ($limit) {
+                if ($limit->name != $name) {
+                    $limit->name = $name;
+                    $limit->save();
+                }
             } else {
-                CommissionTemplateLimitType::create(['id' => $id, 'name' => $name]);
+                CommissionTemplateLimitType::firstOrCreate([
+                    'id' => $id,
+                    'name' => $name,
+                ]);
             }
         }
     }

@@ -14,19 +14,17 @@ class GroupTableSeeder extends Seeder
      */
     public function run()
     {
-        GroupType::create([
-            'id'        => 1,
-            'name'     => 'Member',
-        ]);
+        $groupTypes = [
+            1 => 'Member',
+            2 => 'Company',
+            3 => 'Individual',
+        ];
 
-        GroupType::create([
-            'id'        => 2,
-            'name'     => 'Company',
-        ]);
-
-        GroupType::create([
-            'id'        => 3,
-            'name'     => 'Individual',
-        ]);
+        foreach ($groupTypes as $id => $type) {
+            GroupType::firstOrCreate([
+                'id' => $id,
+                'name' => $type,
+            ]);
+        }
     }
 }

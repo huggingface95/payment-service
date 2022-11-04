@@ -18,10 +18,11 @@ class ProjectTableSeeder extends Seeder
         $faker = Factory::create();
 
         for ($i = 1; $i <= 10; $i++) {
-            Project::create([
+            Project::firstOrCreate([
                 'id' => $i,
+            ], [
                 'name' => $faker->company(),
-                'company_id' =>  $faker->randomElement([1, 2]),
+                'company_id' => $faker->randomElement([1, 2]),
                 'module_id' => $faker->randomElement([1, 2]),
             ]);
         }

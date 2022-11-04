@@ -14,12 +14,12 @@ class PaymentUrgencyTableSeeder extends Seeder
      */
     public function run()
     {
-        PaymentUrgency::create([
+        PaymentUrgency::firstOrCreate([
             'id' => 1,
             'name' => 'Standart',
         ]);
 
-        PaymentUrgency::create([
+        PaymentUrgency::firstOrCreate([
             'id' => 2,
             'name' => 'Urgent',
         ]);

@@ -18,7 +18,7 @@ class PaymentStatusSeed extends Seeder
         $statuses = PaymentStatusEnum::cases();
 
         foreach ($statuses as $status) {
-            PaymentStatus::create([
+            PaymentStatus::firstOrCreate([
                 'id' => $status->value,
                 'name' => $status->toString(),
             ]);
