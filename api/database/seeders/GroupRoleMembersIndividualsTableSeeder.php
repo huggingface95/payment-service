@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\GroupRole;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,10 +14,14 @@ class GroupRoleMembersIndividualsTableSeeder extends Seeder
      */
     public function run()
     {
-        $groupRole = GroupRole::select('*')->where('id', 3)->get();
-        DB::table('group_role_members_individuals')->insert(['group_role_id' => $groupRole[0]->id, 'user_id' => 2]);
+        $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 3, 'user_id' => 2])->first();
+        if (!$row) {
+            DB::table('group_role_members_individuals')->insert(['group_role_id' => 3, 'user_id' => 2]);
+        }
 
-        $groupRole = GroupRole::select('*')->where('id', 2)->get();
-        DB::table('group_role_members_individuals')->insert(['group_role_id' => $groupRole[0]->id, 'user_id' => 3]);
+        $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 2, 'user_id' => 3])->first();
+        if (!$row) {
+            DB::table('group_role_members_individuals')->insert(['group_role_id' => 2, 'user_id' => 3]);
+        }
     }
 }

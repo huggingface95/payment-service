@@ -18,4 +18,7 @@ class DepartmentPositionRelation extends BaseModel
         'department_id',
         'position_id',
     ];
+
+    public $incrementing = false;
+    public $timestamps = false;
 }

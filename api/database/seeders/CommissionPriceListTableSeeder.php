@@ -28,8 +28,9 @@ class CommissionPriceListTableSeeder extends Seeder
         $companies = Companies::select('id')->get();
         $regions = Region::select('id')->get();
 
-        CommissionPriceList::create([
-            'name' => $faker->sentence(1),
+        CommissionPriceList::firstOrCreate([
+            'name' => 'Test commission',
+        ], [
             'provider_id' => $paymentProviders[0]->id,
             'payment_system_id' => $paymentSystems[0]->id,
             'commission_template_id' => 1, //$commissionTemplates[0]->id,

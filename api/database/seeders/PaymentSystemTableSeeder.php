@@ -18,9 +18,10 @@ class PaymentSystemTableSeeder extends Seeder
         $faker = Factory::create();
 
         for ($i = 1; $i <= 10; $i++) {
-            PaymentSystem::create([
-                'id'        => $i,
-                'name'     => $faker->company().'Pay',
+            PaymentSystem::firstOrCreate([
+                'id' => $i,
+            ], [
+                'name' => $faker->company() . 'Pay',
                 'is_active' => true,
                 'payment_provider_id' => $i,
             ]);

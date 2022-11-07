@@ -14,11 +14,15 @@ class TwoFactorAuthTableSeeder extends Seeder
      */
     public function run()
     {
-        TwoFactorAuthSettings::create(
-            ['name' => 'Disabled']
-        );
-        TwoFactorAuthSettings::create(
-            ['name' => 'GA Enabled']
-        );
+        $twofas = [
+            ['name' => 'Disabled'],
+            ['name' => 'GA Enabled'],
+        ];
+
+        foreach ($twofas as $twofa) {
+            TwoFactorAuthSettings::firstOrCreate(
+                $twofa
+            );
+        }
     }
 }

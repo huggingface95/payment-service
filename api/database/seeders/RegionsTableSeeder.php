@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Region;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class RegionsTableSeeder extends Seeder
 {
@@ -14,6 +14,10 @@ class RegionsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('regions')->insert(['name' => 'TestRegion', 'company_id' => 1]);
+        Region::firstOrCreate([
+            'id' => 1,
+            'name' => 'TestRegion',
+            'company_id' => 1,
+        ]);
     }
 }

@@ -16,15 +16,20 @@ class CommissionTemplateTableSeeder extends Seeder
     public function run()
     {
         $faker = Factory::create();
+
         for ($i = 1; $i <= 10; $i++) {
-            CommissionTemplate::create([
-                'id'        => $i,
-                'name'     => 'Template'.$i,
-                'description'    => $faker->name(),
-                'payment_provider_id' => $i,
-                'is_active' => true,
-                'member_id' => 2,
-            ]);
+            CommissionTemplate::firstOrCreate(
+                [
+                    'name' => 'Template ' . $i
+                ],
+                [
+                    'description' => $faker->name(),
+                    'payment_provider_id' => $i,
+                    'is_active' => true,
+                    'member_id' => 2,
+                    'company_id' => 1,
+                ]
+            );
         }
     }
 }

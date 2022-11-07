@@ -14,8 +14,8 @@ class DepartmentPositionRelationSeeder extends Seeder
      */
     public function run()
     {
-        DepartmentPositionRelation::insert([
-            'department_id'=> 1,
+        DepartmentPositionRelation::firstOrCreate([
+            'department_id' => 1,
             'position_id' => 1,
         ]);
     }

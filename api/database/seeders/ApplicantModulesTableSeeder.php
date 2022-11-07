@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\ApplicantModules;
-use Faker\Factory;
 use Illuminate\Database\Seeder;
 
 class ApplicantModulesTableSeeder extends Seeder
@@ -15,16 +14,12 @@ class ApplicantModulesTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Factory::create();
+        $modules = ['KYC', 'Banking'];
 
-        $modules = [
-            [
-                'name' => $faker->company(),
-            ], [
-                'name' => $faker->company(),
-            ],
-        ];
-
-        ApplicantModules::insert($modules);
+        foreach ($modules as $module) {
+            ApplicantModules::firstOrCreate([
+                'name' => $module,
+            ]);
+        }
     }
 }
