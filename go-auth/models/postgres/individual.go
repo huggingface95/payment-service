@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/datatypes"
 	"jwt-authentication-golang/constants"
+	"reflect"
 	"time"
 )
 
@@ -56,8 +57,35 @@ type Individual struct {
 	Company                  *Company            `gorm:"foreignKey:CompanyId"`
 }
 
+func (user *Individual) StructName() string {
+	rModel := reflect.TypeOf(user)
+
+	return rModel.Elem().Name()
+}
+
 func (*Individual) TableName() string {
 	return "applicant_individual"
+}
+
+func (*Individual) Omit() []string {
+	return []string{
+		"fullname", "language_id", "citizenship_country_id",
+		"birth_country_id", "applicant_status_id", "applicant_state_reason_id", "applicant_state_id",
+		"applicant_risk_level_id", "account_manager_member_id"}
+}
+
+func (user *Individual) MergeOmit(omits []string) []string {
+	var list []string
+	baseOmits := user.Omit()
+
+	for i := 0; i < len(baseOmits); i++ {
+		list = append(list, baseOmits[i])
+	}
+	for i := 0; i < len(omits); i++ {
+		list = append(list, omits[i])
+	}
+
+	return list
 }
 
 func (user *Individual) HashPassword(password string) error {
@@ -70,11 +98,7 @@ func (user *Individual) HashPassword(password string) error {
 }
 
 func (user *Individual) CheckPassword(providedPassword string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(providedPassword))
-	if err != nil {
-		return err
-	}
-	return nil
+	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(providedPassword))
 }
 
 func (user *Individual) IsGoogle2FaSecret() bool {
@@ -151,6 +175,10 @@ func (user *Individual) GetModelType() string {
 
 func (user *Individual) SetIsActivated(v bool) {
 	user.IsActive = v
+}
+
+func (user *Individual) SetCompanyId(v uint64) {
+	user.CompanyId = v
 }
 
 func (user *Individual) SetIsEmailVerify(v bool) {

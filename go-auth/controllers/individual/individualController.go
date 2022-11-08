@@ -37,7 +37,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	if err := user.HashPassword(user.PasswordHash); err != nil {
+	if err := user.HashPassword(request.Password); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		c.Abort()
 		return
@@ -73,7 +73,7 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 	data, _ := cache.Caching.ConfirmationEmailLinks.Get(token)
 	user = userRepository.GetUserById(data.Id, constants.Individual)
 	if user != nil {
-		user.SetIsActivated(true)
+		user.SetIsEmailVerify(true)
 		res := userRepository.SaveUser(user)
 		if res.Error == nil {
 			cache.Caching.ConfirmationEmailLinks.Delete(token)

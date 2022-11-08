@@ -5,13 +5,26 @@ import (
 	"github.com/gin-gonic/gin"
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/constants"
+	"jwt-authentication-golang/requests"
 	"jwt-authentication-golang/services"
 	"jwt-authentication-golang/services/auth"
 	"net/http"
 )
 
 func Refresh(context *gin.Context) {
-	user := auth.GetAuthUserFromRequest(context)
+	var request requests.RefreshRequest
+	if err := context.Bind(&request); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.Abort()
+		return
+	}
+
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
+	}
+
+	user := auth.GetAuthUserFromRequest(context, clientType)
 	if user == nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Not found bearer token"})
 		context.Abort()

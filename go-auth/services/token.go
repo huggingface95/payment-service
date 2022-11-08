@@ -1,8 +1,6 @@
 package services
 
 import (
-	"crypto/sha1"
-	"encoding/hex"
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v4"
@@ -34,13 +32,8 @@ func (j *JWTClaim) GetSubject() uint64 {
 func getJWTClaims(id uint64, twoFactorAuthSettingId uint64, provider string) *JWTClaim {
 	IssuedTime, _, _, _, expirationJWTTime := times.GetTokenTimes()
 
-	prv := fmt.Sprint(provider)
-	h := sha1.New()
-	h.Write([]byte(prv))
-	sha := hex.EncodeToString(h.Sum(nil))
-
 	return &JWTClaim{
-		Prv: sha,
+		Prv: fmt.Sprint(provider),
 		RegisteredClaims: jwt.RegisteredClaims{
 			Audience:  []string{strconv.FormatUint(twoFactorAuthSettingId, 10)},
 			Issuer:    config.Conf.Jwt.PayloadUrl,
@@ -55,7 +48,6 @@ func getJWTClaims(id uint64, twoFactorAuthSettingId uint64, provider string) *JW
 
 func GenerateJWT(id uint64, twoFactorAuthSettingId uint64, name string, provider string, jwtType string) (token string, oauthClient *postgres.OauthClient, expirationTime time.Time, err error) {
 	claims := getJWTClaims(id, twoFactorAuthSettingId, provider)
-
 	oauthClient = oauthRepository.GetOauthClientByType(provider, jwtType)
 
 	token, err = GetToken(claims, oauthClient.Secret)

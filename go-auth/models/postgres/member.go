@@ -5,6 +5,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/datatypes"
 	"jwt-authentication-golang/constants"
+	"reflect"
 	"time"
 )
 
@@ -36,8 +37,32 @@ type BackupJson struct {
 	} `json:"backup_codes"`
 }
 
+func (user *Member) StructName() string {
+	rModel := reflect.TypeOf(user)
+
+	return rModel.Elem().Name()
+}
+
 func (*Member) TableName() string {
 	return "members"
+}
+
+func (*Member) Omit() []string {
+	return []string{"fullname"}
+}
+
+func (user *Member) MergeOmit(omits []string) []string {
+	var list []string
+	baseOmits := user.Omit()
+
+	for i := 0; i < len(baseOmits); i++ {
+		list = append(list, baseOmits[i])
+	}
+	for i := 0; i < len(omits); i++ {
+		list = append(list, omits[i])
+	}
+
+	return list
 }
 
 func (user *Member) HashPassword(password string) error {
@@ -50,11 +75,7 @@ func (user *Member) HashPassword(password string) error {
 }
 
 func (user *Member) CheckPassword(providedPassword string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(providedPassword))
-	if err != nil {
-		return err
-	}
-	return nil
+	return bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(providedPassword))
 }
 
 func (user *Member) IsGoogle2FaSecret() bool {
@@ -127,6 +148,10 @@ func (user *Member) GetGoogle2FaSecret() string {
 
 func (user *Member) GetModelType() string {
 	return constants.Member
+}
+
+func (user *Member) SetCompanyId(v uint64) {
+	user.CompanyId = v
 }
 
 func (user *Member) SetIsActivated(v bool) {

@@ -11,7 +11,7 @@ import (
 
 func ProcessConvertPasswordRecoveryLinkEmailQueue() {
 	for {
-		redisData := redisRepository.GetRedisDataByBlPop(constants.QueueSendChangedIpEmail, func() interface{} {
+		redisData := redisRepository.GetRedisDataByBlPop(constants.QueueSendResetPasswordEmail, func() interface{} {
 			return new(cache.ConfirmationIpLinksData)
 		})
 		if redisData == nil {

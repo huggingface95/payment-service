@@ -42,6 +42,10 @@ func convertConfirmationLink(path string, token string) string {
 	return fmt.Sprintf("%s/auth/individual/confirmation/%s?token=%s", config.Conf.App.AppUrl, path, token)
 }
 
+func convertConfirmationIp(path string, token string) string {
+	return fmt.Sprintf("%s/confirmation/%s?token=%s", config.Conf.App.AppUrl, path, token)
+}
+
 func convertPasswordRecoveryLink(path string, token string) string {
 	return fmt.Sprintf("%s/auth/individual/confirmation/%s?token=%s", config.Conf.App.AppFrontUrl, path, token)
 }

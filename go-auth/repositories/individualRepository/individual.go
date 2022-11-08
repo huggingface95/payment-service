@@ -1,7 +1,6 @@
 package individualRepository
 
 import (
-	"fmt"
 	"github.com/eneoti/merge-struct"
 	"gorm.io/gorm"
 	"jwt-authentication-golang/constants"
@@ -24,15 +23,11 @@ func CreateIndividual(user *postgres.Individual) *gorm.DB {
 		Preload("CompanySetting.GroupRole").
 		First(&company)
 	if res.Error == nil {
-		uRecord := database.PostgresInstance.Omit(
-			"fullname", "language_id", "company_id", "citizenship_country_id",
-			"birth_country_id", "applicant_status_id", "applicant_state_reason_id", "applicant_state_id",
-			"applicant_risk_level_id", "account_manager_member_id").
-			Create(user)
+		user.SetCompanyId(company.Id)
+		uRecord := database.PostgresInstance.Omit(user.Omit()...).
+			Create(&user)
 
 		if uRecord.Error == nil {
-			fmt.Println(company.CompanySetting.GroupRole)
-
 			return database.PostgresInstance.Create(&postgres.GroupRoleUser{
 				GroupRoleId: company.CompanySetting.GroupRole.Id,
 				UserId:      user.ID,

@@ -8,6 +8,10 @@ type LoginRequest struct {
 	Cancel   bool   `form:"cancel"`
 }
 
+type RefreshRequest struct {
+	Type string `form:"type"`
+}
+
 type HeaderRequest struct {
 	HttpClientIp      string `header:"HTTP_CLIENT_IP"`
 	HttpXForwardedFor string `header:"HTTP_X_FORWARDED_FOR"`

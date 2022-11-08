@@ -4,7 +4,7 @@ type GenerateTwoFactorQrRequest struct {
 	MemberId    uint64 `form:"member_id"`
 	TwoFaToken  string `form:"2fa_token"`
 	AccessToken string `form:"access_token"`
-	Type        string `form:"type" binding:"required"`
+	Type        string `form:"type"`
 }
 
 type ActivateTwoFactorQrRequest struct {
@@ -13,7 +13,7 @@ type ActivateTwoFactorQrRequest struct {
 	AccessToken string `form:"access_token"`
 	AuthToken   string `form:"auth_token"`
 	MemberId    uint64 `form:"member_id"`
-	Type        string `form:"type" binding:"required"`
+	Type        string `form:"type"`
 }
 
 type VerifyTwoFactorQrRequest struct {
@@ -21,12 +21,12 @@ type VerifyTwoFactorQrRequest struct {
 	AuthToken  string `form:"auth_token"`
 	MemberId   uint64 `form:"member_id"`
 	BackupCode string `form:"backup_code"`
-	Type       string `form:"type" binding:"required"`
+	Type       string `form:"type"`
 }
 
 type DisableTwoFactorQrRequest struct {
 	Code     string `form:"code" binding:"required"`
 	Password string `form:"password" binding:"required"`
 	MemberId uint64 `form:"member_id"`
-	Type     string `form:"type" binding:"required"`
+	Type     string `form:"type"`
 }

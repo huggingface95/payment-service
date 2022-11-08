@@ -33,7 +33,6 @@ func Login(context *gin.Context) {
 	}
 
 	user = userRepository.GetUserByEmail(request.Email, request.Type)
-
 	if user == nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": "User not found"})
 		return
@@ -158,7 +157,6 @@ func checkAndUpdateSession(provider string, email string, fullName string, compa
 	cookie, err := c.Cookie("BIND-" + config.Conf.App.AppName)
 	if err == nil {
 		activeSession := oauthRepository.GetActiveSessionWithConditions(map[string]string{"provider": provider, "email": email, "cookie": cookie})
-		fmt.Println(activeSession)
 		if activeSession != nil {
 			return true, 200, nil
 		}

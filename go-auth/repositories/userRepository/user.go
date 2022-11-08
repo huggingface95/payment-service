@@ -55,5 +55,13 @@ func GetWithConditions(columns map[string]interface{}, oauthClientId uint64, mc 
 }
 
 func SaveUser(user postgres.User) *gorm.DB {
-	return database.PostgresInstance.Omit("fullname").Save(&user)
+	var model postgres.User
+
+	if user.StructName() == constants.StructMember {
+		model = user.(*postgres.Member)
+	} else {
+		model = user.(*postgres.Individual)
+	}
+
+	return database.PostgresInstance.Omit(user.MergeOmit([]string{"Company"})...).Save(model)
 }

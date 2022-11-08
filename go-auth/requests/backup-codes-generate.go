@@ -8,7 +8,7 @@ type GenerateBackupCodesRequest struct {
 	MemberId    uint64 `form:"member_id"`
 	AuthToken   string `form:"auth_token"`
 	AccessToken string `form:"access_token"`
-	Type        string `form:"type" binding:"required"`
+	Type        string `form:"type"`
 }
 
 type StoreBackupCodesRequest struct {

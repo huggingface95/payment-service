@@ -21,10 +21,15 @@ func GenerateTwoFactorQr(context *gin.Context) {
 	var request requests.GenerateTwoFactorQrRequest
 	var user postgres.User
 
-	if err := context.BindQuery(&request); err != nil {
+	if err := context.ShouldBind(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		context.Abort()
 		return
+	}
+
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
 	}
 
 	if request.TwoFaToken != "" {
@@ -36,7 +41,7 @@ func GenerateTwoFactorQr(context *gin.Context) {
 		}
 		user = accessToken.GetUser()
 	} else if request.AccessToken != "" {
-		user = auth.GetAuthUserFromRequest(context)
+		user = auth.GetAuthUserFromRequest(context, clientType)
 		if user == nil {
 			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
 			context.Abort()
@@ -44,7 +49,7 @@ func GenerateTwoFactorQr(context *gin.Context) {
 		}
 
 	} else if request.MemberId > 0 {
-		user = userRepository.GetUserById(request.MemberId, request.Type)
+		user = userRepository.GetUserById(request.MemberId, clientType)
 
 		if user == nil {
 			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
@@ -264,7 +269,12 @@ func DisableTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	user = auth.GetAuthUserFromRequest(context)
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
+	}
+
+	user = auth.GetAuthUserFromRequest(context, clientType)
 	credentialError := user.CheckPassword(request.Password)
 	if credentialError != nil {
 		context.JSON(http.StatusUnauthorized, gin.H{"error": "Password is not valid"})

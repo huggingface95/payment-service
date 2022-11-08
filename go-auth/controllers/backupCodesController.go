@@ -24,6 +24,10 @@ func GenerateBackupCodes(context *gin.Context) {
 		context.Abort()
 		return
 	}
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
+	}
 
 	if request.AuthToken != "" {
 		oauthToken := oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"id": request.AuthToken})
@@ -31,7 +35,7 @@ func GenerateBackupCodes(context *gin.Context) {
 	}
 
 	if request.AccessToken != "" {
-		user = auth.GetAuthUserFromRequest(context)
+		user = auth.GetAuthUserFromRequest(context, clientType)
 	}
 
 	if request.MemberId > 0 {
@@ -39,7 +43,7 @@ func GenerateBackupCodes(context *gin.Context) {
 	}
 
 	if user == nil {
-		user = auth.GetAuthUserFromRequest(context)
+		user = auth.GetAuthUserFromRequest(context, clientType)
 	}
 
 	codes := make([]string, 9)
@@ -69,13 +73,18 @@ func StoreBackupCodes(context *gin.Context) {
 		return
 	}
 
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
+	}
+
 	if request.AuthToken != "" {
 		oauthToken := oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"id": request.AuthToken})
 		user = oauthToken.GetUser()
 	}
 
 	if request.AccessToken != "" {
-		user = auth.GetAuthUserFromRequest(context)
+		user = auth.GetAuthUserFromRequest(context, clientType)
 		if user == nil {
 			context.JSON(http.StatusForbidden, gin.H{"data": "Member not found"})
 			context.Abort()
@@ -93,7 +102,7 @@ func StoreBackupCodes(context *gin.Context) {
 	}
 
 	if user == nil {
-		user = auth.GetAuthUserFromRequest(context)
+		user = auth.GetAuthUserFromRequest(context, clientType)
 	}
 
 	user.SetBackupCodeData(request.BackupCodes)

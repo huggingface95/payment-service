@@ -1,7 +1,10 @@
 package postgres
 
 type User interface {
+	StructName() string
 	TableName() string
+	Omit() []string
+	MergeOmit(omits []string) []string
 	HashPassword(password string) error
 	CheckPassword(providedPassword string) error
 	IsGoogle2FaSecret() bool
@@ -22,4 +25,5 @@ type User interface {
 	SetBackupCodeData(v *BackupJson)
 	SetGoogle2FaSecret(v string)
 	SetTwoFactorAuthSettingId(v uint64)
+	SetCompanyId(v uint64)
 }
