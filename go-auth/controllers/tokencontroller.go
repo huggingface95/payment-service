@@ -19,12 +19,7 @@ func Refresh(context *gin.Context) {
 		return
 	}
 
-	clientType := constants.Member
-	if request.Type != "" {
-		clientType = request.Type
-	}
-
-	user := auth.GetAuthUserFromRequest(context, clientType)
+	user := auth.GetAuthUserFromRequest(context)
 	if user == nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Not found bearer token"})
 		context.Abort()

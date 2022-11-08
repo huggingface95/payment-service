@@ -73,44 +73,35 @@ func GetToken(claims jwt.Claims, secret string) (tokenString string, err error) 
 	return
 }
 
-func parseJWT(provider string, signedToken string, jwtType string, replaceBearer bool) (claims *JWTClaim, err error) {
+func parseJWT(signedToken string, jwtType string, replaceBearer bool) (claims *JWTClaim, err error) {
 	if replaceBearer {
 		signedToken = strings.Replace(signedToken, "Bearer ", "", -1)
 	}
 
-	oauthClient := oauthRepository.GetOauthClientByType(provider, jwtType)
-
-	token, err := new(jwt.Parser).ParseWithClaims(signedToken, &JWTClaim{}, func(token *jwt.Token) (interface{}, error) {
-		return []byte(oauthClient.Secret), nil
-	})
-
-	if err != nil {
-		return
+	for _, provider := range []string{constants.Member, constants.Individual} {
+		oauthClient := oauthRepository.GetOauthClientByType(provider, jwtType)
+		token, err := new(jwt.Parser).ParseWithClaims(signedToken, &JWTClaim{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(oauthClient.Secret), nil
+		})
+		if err == nil {
+			claims, ok := token.Claims.(*JWTClaim)
+			if ok {
+				if claims.ExpiresAt.Unix() < time.Now().Local().Unix() {
+					err = errors.New("token expired")
+				}
+				return claims, err
+			}
+		}
 	}
+	err = errors.New("token not working")
+	return claims, err
+}
 
-	claims, ok := token.Claims.(*JWTClaim)
-	if !ok {
-		err = errors.New("couldn't parse claims")
-		return
-	}
-
-	if claims.ExpiresAt.Unix() < time.Now().Local().Unix() {
-		err = errors.New("token expired")
-		return
-	}
-
+func ValidateToken(token string, jwtType string, replaceBearer bool) (err error) {
+	_, err = parseJWT(token, jwtType, replaceBearer)
 	return
 }
 
-func ValidateToken(provider string, token string, jwtType string, replaceBearer bool) (err error) {
-	_, err = parseJWT(provider, token, jwtType, replaceBearer)
-	return
-}
-
-func GetClaims(provider string, token string, jwtType string, replaceBearer bool) (claims *JWTClaim) {
-	claims, err := parseJWT(provider, token, jwtType, replaceBearer)
-	if err != nil {
-		return nil
-	}
-	return claims
+func GetClaims(token string, jwtType string, replaceBearer bool) (claims *JWTClaim, err error) {
+	return parseJWT(token, jwtType, replaceBearer)
 }

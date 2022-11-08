@@ -16,5 +16,5 @@ type StoreBackupCodesRequest struct {
 	AuthToken   string               `form:"auth_token"`
 	AccessToken string               `form:"access_token"`
 	BackupCodes *postgres.BackupJson `form:"backup_codes" binding:"required"`
-	Type        string               `form:"type" binding:"required"`
+	Type        string               `form:"type"`
 }

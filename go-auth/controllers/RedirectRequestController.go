@@ -20,6 +20,7 @@ func RedirectRequest(context *gin.Context) {
 	req.Header.Set("referer", context.GetHeader("referer"))
 	req.Header.Set("Content-Type", gin.MIMEJSON)
 	req.Header.Set("Authorization", context.GetHeader("Authorization"))
+	req.Header.Set("PROVIDER_TYPE", "ffff")
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

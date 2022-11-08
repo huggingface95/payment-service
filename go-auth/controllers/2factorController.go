@@ -41,7 +41,7 @@ func GenerateTwoFactorQr(context *gin.Context) {
 		}
 		user = accessToken.GetUser()
 	} else if request.AccessToken != "" {
-		user = auth.GetAuthUserFromRequest(context, clientType)
+		user = auth.GetAuthUserFromRequest(context)
 		if user == nil {
 			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
 			context.Abort()
@@ -211,9 +211,9 @@ func ActivateTwoFactorQr(context *gin.Context) {
 	}
 
 	if request.AccessToken != "" {
-		claims := services.GetClaims(request.Type, request.AccessToken, constants.GrantPassword, false)
-		if claims == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
+		claims, err := services.GetClaims(request.AccessToken, constants.GrantPassword, false)
+		if err != nil {
+			context.JSON(http.StatusOK, gin.H{"data": err})
 			return
 		}
 		user = userRepository.GetUserById(claims.GetSubject(), request.Type)
@@ -269,12 +269,7 @@ func DisableTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	clientType := constants.Member
-	if request.Type != "" {
-		clientType = request.Type
-	}
-
-	user = auth.GetAuthUserFromRequest(context, clientType)
+	user = auth.GetAuthUserFromRequest(context)
 	credentialError := user.CheckPassword(request.Password)
 	if credentialError != nil {
 		context.JSON(http.StatusUnauthorized, gin.H{"error": "Password is not valid"})
