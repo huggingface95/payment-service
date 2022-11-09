@@ -244,8 +244,6 @@ extend type Mutation @guard {
         owner_position_id: ID
         "Массив ID меток"
         labels: [ID]
-        "ID типа группы"
-        group_type_id: ID!
         "ID группы"
         group_id: ID!
         "ID модулей"

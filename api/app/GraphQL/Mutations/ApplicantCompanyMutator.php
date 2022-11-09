@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\ApplicantModulesEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividualCompany;
@@ -17,21 +18,23 @@ class ApplicantCompanyMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
-        $applicant = ApplicantCompany::create($args);
+        $applicantCompany = ApplicantCompany::create($args);
+
+        $args['module_ids'] = array_unique(
+            array_merge($args['module_ids'], [(string) ApplicantModulesEnum::KYC->value])
+        );
 
         if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {
-            $this->setOwner($applicant, $args);
+            $this->setOwner($applicantCompany, $args);
         }
 
         if (isset($args['group_id'])) {
-            $applicant->groupRole()->sync([$args['group_id']], true);
+            $applicantCompany->groupRole()->sync([$args['group_id']], true);
         }
 
-        if (isset($args['module_ids'])) {
-            $applicant->modules()->attach($args['module_ids']);
-        }
+        $applicantCompany->modules()->attach($args['module_ids']);
 
-        return $applicant;
+        return $applicantCompany;
     }
 
     /**
@@ -63,7 +66,7 @@ class ApplicantCompanyMutator extends BaseMutator
             $applicant->labels()->detach($args['labels']);
             $applicant->labels()->attach($args['labels']);
         }
-        
+
         if (isset($args['group_id'])) {
             $applicant->groupRole()->sync([$args['group_id']], true);
         }
@@ -89,7 +92,7 @@ class ApplicantCompanyMutator extends BaseMutator
     {
         try {
             return ApplicantIndividualCompany::firstOrCreate([
-                'applicant_individual_id'=> $args['owner_id'],
+                'applicant_individual_id' => $args['owner_id'],
                 'applicant_company_id' => $applicant->id,
                 'applicant_individual_company_relation_id' => ($args['owner_relation_id']) ?? $args['owner_relation_id'],
                 'applicant_individual_company_position_id' => ($args['owner_position_id']) ?? $args['owner_position_id'],
