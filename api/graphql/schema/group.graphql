@@ -57,6 +57,8 @@ extend type Query @guard {
     group_type(id: ID @eq): GroupType   @find
     "Получить список типов групп"
     group_types(mode: GroupTypeMode): [GroupType!]!  @field(resolver:"GroupsQuery@get") @orderBy(column: "id", direction: ASC)
+    "Получить список типов групп"
+    group_type_list (mode: GroupTypeMode): [GroupType!]! @paginate(builder: "App\\GraphQL\\Queries\\GroupsTypeQuery", defaultCount:10) @orderBy(column: "id", direction: ASC)
     """
     Получить список групп с ролями
     orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
