@@ -13,6 +13,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Laravel\Lumen\Auth\Authorizable;
@@ -80,6 +81,8 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'two_factor_auth_setting_id',
         'photo_id',
         'notify_device_email',
+        'project_id',
+        'group_type_id',
     ];
 
     protected $hidden = [
@@ -133,6 +136,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function labels()
     {
         return $this->belongsToMany(ApplicantIndividualLabel::class, 'applicant_individual_label_relation', 'applicant_individual_id', 'applicant_individual_label_id');
+    }
+
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
     }
 
     /**
@@ -218,11 +226,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
             ->join('companies', 'companies.id', '=', 'members.company_id')->select('companies.*')->first();
     }
 
-    public function modules()
+    public function modules(): BelongsToMany
     {
-        return $this->hasMany(ApplicantIndividualModules::class, 'applicant_individual_id', 'id');
+        return $this->belongsToMany(ApplicantModules::class, 'applicant_individual_modules', 'applicant_individual_id', 'applicant_module_id')->withPivot('is_active');
     }
-
+    
     public function ApplicantIndividual()
     {
         return $this->belongsTo(self::class, 'applicant_individual_id', 'id');
