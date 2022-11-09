@@ -14,7 +14,8 @@ class EmailNotificationsTableSeeder extends Seeder
      */
     public function run()
     {
-        EmailNotification::insert([
+        EmailNotification::firstOrCreate([
+            'id' => 1,
             'company_id' => 1,
             'group_role_id' => 3,
             'group_type_id' => 2,

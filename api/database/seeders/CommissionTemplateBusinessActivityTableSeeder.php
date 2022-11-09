@@ -14,10 +14,17 @@ class CommissionTemplateBusinessActivityTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('commission_template_business_activity')
-            ->insert([
-                'commission_template_id' => 1,
-                'business_activity_id' => 1,
-            ]);
+        $row = DB::table('commission_template_business_activity')->where([
+            'commission_template_id' => 1,
+            'business_activity_id' => 1,
+        ])->first();
+        
+        if (!$row) {
+            DB::table('commission_template_business_activity')
+                ->insert([
+                    'commission_template_id' => 1,
+                    'business_activity_id' => 1,
+                ]);
+        }
     }
 }

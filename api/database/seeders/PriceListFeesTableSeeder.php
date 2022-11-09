@@ -20,9 +20,11 @@ class PriceListFeesTableSeeder extends Seeder
 
         $commissionPriceList = CommissionPriceList::first();
 
-        for ($i = 0; $i < 3; $i++) {
-            PriceListFee::create([
-                'name' => 'Test fee '.$faker->sentence(1).$faker->randomDigit(2),
+        for ($i = 1; $i <= 3; $i++) {
+            PriceListFee::firstOrCreate([
+                'id' => $i,
+            ], [
+                'name' => 'Test fee ' . $faker->sentence(1) . $faker->randomDigit(2),
                 'price_list_id' => $commissionPriceList->id,
                 'type_id' => 1,
                 'operation_type_id' => 1,

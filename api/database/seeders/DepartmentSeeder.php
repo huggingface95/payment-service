@@ -14,8 +14,8 @@ class DepartmentSeeder extends Seeder
      */
     public function run()
     {
-        Departments::insert([
-            'name'=> 'Department 1',
+        Departments::firstOrCreate([
+            'name' => 'Department 1',
             'company_id' => 1,
         ]);
     }

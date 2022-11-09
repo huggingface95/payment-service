@@ -14,8 +14,16 @@ class ApplicantStateReasonTableSeeder extends Seeder
      */
     public function run()
     {
-        ApplicantStateReason::create(['name'=>'Kyc']);
-        ApplicantStateReason::create(['name'=>'Documents Expired']);
-        ApplicantStateReason::create(['name'=>'Financial Monitoring']);
+        $stateReasons = [
+            'Kyc',
+            'Documents Expired',
+            'Financial Monitoring',
+        ];
+
+        foreach ($stateReasons as $reason) {
+            ApplicantStateReason::firstOrCreate([
+                'name' => $reason,
+            ]);
+        }
     }
 }

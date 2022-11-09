@@ -14,9 +14,17 @@ class ApplicantStatusTableSeeder extends Seeder
      */
     public function run()
     {
-        ApplicantStatus::create(['name'=>'Requested']);
-        ApplicantStatus::create(['name'=>'Declined']);
-        ApplicantStatus::create(['name'=>'Approved']);
-        ApplicantStatus::create(['name'=>'Pending']);
+        $applicantStatus = [
+            'Requested',
+            'Declined',
+            'Approved',
+            'Pending',
+        ];
+
+        foreach ($applicantStatus as $status) {
+            ApplicantStatus::firstOrCreate([
+                'name' => $status,
+            ]);
+        }
     }
 }

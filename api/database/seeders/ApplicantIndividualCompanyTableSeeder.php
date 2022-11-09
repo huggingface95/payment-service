@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
+use App\Models\ApplicantIndividualCompany;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class ApplicantIndividualCompanyTableSeeder extends Seeder
 {
@@ -16,8 +16,18 @@ class ApplicantIndividualCompanyTableSeeder extends Seeder
      */
     public function run()
     {
-        $applicantIndividual = ApplicantIndividual::select('*')->where('id', 1)->get();
-        $applicantCompany = ApplicantCompany::select('*')->where('id', 1)->get();
-        DB::table('applicant_individual_company')->insert(['applicant_individual_id' => $applicantIndividual[0]->id, 'applicant_company_id' => $applicantCompany[0]->id, 'applicant_individual_company_relation_id' => 1, 'applicant_individual_company_position_id' => 1]);
+        $applicantIndividual = ApplicantIndividual::where('id', 1)->first();
+        $applicantCompany = ApplicantCompany::where('id', 1)->first();
+
+        ApplicantIndividualCompany::firstOrCreate(
+            [
+                'applicant_individual_id' => $applicantIndividual->id,
+                'applicant_company_id' => $applicantCompany->id,
+            ],
+            [
+                'applicant_individual_company_relation_id' => 1,
+                'applicant_individual_company_position_id' => 1,
+            ]
+        );
     }
 }

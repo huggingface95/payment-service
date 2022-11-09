@@ -14,10 +14,11 @@ class CountryTableSeeder extends Seeder
      */
     public function run()
     {
-        $path = base_path().'/data/country_iso.csv';
+        $path = base_path() . '/data/country_iso.csv';
         $dataCsv = array_map('str_getcsv', file($path));
+
         foreach ($dataCsv as $item) {
-            Country::create(
+            Country::firstOrCreate(
                 [
                     'name' => $item[0],
                     'iso' => $item[1],

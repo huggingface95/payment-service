@@ -15,10 +15,8 @@ class OauthClientsTableSeeder extends Seeder
      */
     public function run()
     {
-        OauthClient::insert([
+        $oaClients = [
             [
-                'id' => 1,
-                'name' => 'Docudots',
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => null,
                 'redirect' => 'http://localhost',
@@ -26,8 +24,6 @@ class OauthClientsTableSeeder extends Seeder
                 'password_client' => 0,
                 'revoked' => 0,
             ], [
-                'id' => 2,
-                'name' => 'Docudots',
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => 'member',
                 'redirect' => 'http://localhost',
@@ -35,8 +31,6 @@ class OauthClientsTableSeeder extends Seeder
                 'password_client' => 1,
                 'revoked' => 0,
             ], [
-                'id' => 3,
-                'name' => 'Docudots',
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => 'applicant',
                 'redirect' => 'http://localhost',
@@ -44,6 +38,16 @@ class OauthClientsTableSeeder extends Seeder
                 'password_client' => 0,
                 'revoked' => 0,
             ],
-        ]);
+        ];
+
+        $i = 1;
+        foreach ($oaClients as $oaClient) {
+            OauthClient::firstOrCreate([
+                'id' => $i,
+                'name' => 'Docudots',
+            ], $oaClient);
+
+            $i++;
+        }
     }
 }

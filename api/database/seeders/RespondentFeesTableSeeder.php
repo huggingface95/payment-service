@@ -18,7 +18,7 @@ class RespondentFeesTableSeeder extends Seeder
         $fees = RespondentFeesEnum::cases();
 
         foreach ($fees as $fee) {
-            RespondentFee::create([
+            RespondentFee::firstOrCreate([
                 'id' => $fee->value,
                 'name' => $fee->toString(),
             ]);

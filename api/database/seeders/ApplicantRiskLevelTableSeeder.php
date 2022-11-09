@@ -14,8 +14,16 @@ class ApplicantRiskLevelTableSeeder extends Seeder
      */
     public function run()
     {
-        ApplicantRiskLevel::create(['name'=>'Low']);
-        ApplicantRiskLevel::create(['name'=>'Medium']);
-        ApplicantRiskLevel::create(['name'=>'High']);
+        $riskLevels = [
+            'Low',
+            'Medium',
+            'High',
+        ];
+
+        foreach ($riskLevels as $level) {
+            ApplicantRiskLevel::firstOrCreate([
+                'name' => $level,
+            ]);
+        }
     }
 }

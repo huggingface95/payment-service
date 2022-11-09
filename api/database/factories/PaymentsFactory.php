@@ -21,7 +21,7 @@ class PaymentsFactory extends Factory
      */
     public function definition()
     {
-        $amount = $this->faker->randomNumber(4);
+        $amount = $this->faker->randomNumber(3);
 
         return [
             'amount' => $amount,
@@ -34,7 +34,7 @@ class PaymentsFactory extends Factory
             'payment_provider_id' => 1,
             'account_id' => 1,
             'company_id' => 1,
-            'member_id' => $this->faker->numberBetween(2, 3),
+            'member_id' => 2,
             'payment_number' => $this->faker->randomNumber(),
             'error' => 'Error' . $this->faker->text(50),
             'received_at' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
