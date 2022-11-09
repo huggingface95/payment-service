@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 interface JWTRepositoryInterface
 {
-    public function getPersonalAccessToken(string $provider = 'members'): Model|Builder|null;
+    public function getPersonalAccessToken(string $provider): Model|Builder|null;
 }

@@ -19,7 +19,7 @@ class JWTRepository implements JWTRepositoryInterface
         $this->client = $client;
     }
 
-    public function getPersonalAccessToken(string $provider = 'members'): Model|Builder|null
+    public function getPersonalAccessToken(string $provider): Model|Builder|null
     {
         return $this->client->newQuery()
             ->where('provider', $provider)
