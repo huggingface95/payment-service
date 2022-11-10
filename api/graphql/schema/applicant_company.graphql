@@ -77,6 +77,8 @@ type ApplicantCompany {
     company: Companies @belongsTo(relation: "company")
     "Получить группу"
     group: GroupRole @morphOne(relation: "groupRole")
+    "Получить фото"
+    photo: Files @belongsTo(relation: "photo")
 }
 
 
@@ -209,6 +211,8 @@ extend type Mutation @guard {
         labels: [ID]
         "ID группы"
         group_id: ID
+        "ID photo"
+        photo_id: ID
     ): ApplicantCompany   @field(resolver:"ApplicantCompanyMutator@create")
 
     "Редактирование applicant company"
@@ -284,6 +288,8 @@ extend type Mutation @guard {
         labels: [ID]
         "ID группы"
         group_id: ID
+        "ID photo"
+        photo_id: ID
     ): ApplicantCompany   @field(resolver:"ApplicantCompanyMutator@update")
 
     "Удалить пользователя"

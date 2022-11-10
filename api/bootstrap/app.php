@@ -101,6 +101,7 @@ $app->configure('vv');
 
 $app->routeMiddleware([
     'access' => App\Http\Middleware\AccessByGuardMiddleware::class,
+    'auth' => App\Http\Middleware\Authenticate::class,
 ]);
 
 /*

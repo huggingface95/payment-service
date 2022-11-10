@@ -42,10 +42,15 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->post('api/files', ['uses' => 'FilesController@upload']);
-$router->get('api/pdf', ['uses' => 'FilesController@createpdf']);
-$router->post('api/email', ['uses' => 'FilesController@sendreq']);
-$router->post('api/sms', ['uses' => 'SmsController@send']);
+$router->group([
+    'prefix' => 'api',
+    'middleware' => 'auth',
+], function () use ($router) {
+    $router->post('files', ['uses' => 'FilesController@upload']);
+    $router->get('pdf', ['uses' => 'FilesController@createpdf']);
+    $router->post('email', ['uses' => 'FilesController@sendreq']);
+    $router->post('sms', ['uses' => 'SmsController@send']);
+});
 
 $router->get('/test', ['uses' => 'ExampleController@index']);
 
