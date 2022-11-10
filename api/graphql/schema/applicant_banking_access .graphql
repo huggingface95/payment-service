@@ -9,10 +9,6 @@ type ApplicantBankingAccess {
     applicant_company: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
     "Получить связанного Member"
     member: Members @belongsTo(relation: "Members")
-    "Может создать платеж"
-    can_create_payment: Boolean!
-    "Может подписать платеж"
-    can_sign_payment: Boolean!
     "Contact administrator"
     contact_administrator: Boolean!
     "Ежедневный лимит"
@@ -33,17 +29,10 @@ extend type Query @guard {
     where:{column: APPLICANT_INDIVIDUAL_ID, value: ""} фильтр по applicant_individual_id
     """
     applicantBankingAccess(
-        filter: _ @filterConditions(static: QueryApplicantBankingAccessFilterStatic),
         where: _ @whereConditions(columns: ["applicant_individual_id","applicant_company_id","member_id"]),
         orderBy: _ @orderBy(
         columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
     )): [ApplicantBankingAccess!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
-}
-
-input QueryApplicantBankingAccessFilterStatic @spread{
-    applicant_individual_id: ID @eq
-    applicant_company_id: ID @eq
-    member_id: ID @eq
 }
 
 extend type Mutation @guard {
@@ -53,12 +42,8 @@ extend type Mutation @guard {
         applicant_individual_id: ID!
         "Applicant company"
         applicant_company_id: ID!
-        "Member"
-        member_id: ID!
-        "Может создать платеж"
-        can_create_payment: Boolean!
-        "Может подписать платеж"
-        can_sign_payment: Boolean!
+        "ID роли"
+        role_id: ID!
         "Contact administrator"
         contact_administrator: Boolean!
         "Ежедневный лимит"
@@ -69,7 +54,8 @@ extend type Mutation @guard {
         operation_limit: Float!
         "Использованный лимит"
         used_limit: Float
-    ): ApplicantBankingAccess   @create
+    ): ApplicantBankingAccess
+        @field(resolver: "ApplicantBankingAccessMutator@create")
 
     "Редактирование applicant company"
     updateApplicantBankingAccess (
@@ -78,12 +64,8 @@ extend type Mutation @guard {
         applicant_individual_id: ID!
         "Applicant company"
         applicant_company_id: ID!
-        "Member"
-        member_id: ID!
-        "Может создать платеж"
-        can_create_payment: Boolean!
-        "Может подписать платеж"
-        can_sign_payment: Boolean!
+        "ID роли"
+        role_id: ID!
         "Contact administrator"
         contact_administrator: Boolean!
         "Ежедневный лимит"
@@ -94,7 +76,8 @@ extend type Mutation @guard {
         operation_limit: Float!
         "Использованный лимит"
         used_limit: Float
-    ): ApplicantBankingAccess   @update
+    ): ApplicantBankingAccess
+        @field(resolver: "ApplicantBankingAccessMutator@update")
 
     "Удалить пользователя"
     deleteApplicantBankingAccess (
