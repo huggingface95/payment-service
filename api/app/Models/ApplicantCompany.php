@@ -62,6 +62,7 @@ class ApplicantCompany extends BaseModel
         'owner_relation_id',
         'owner_position_id',
         'company_id',
+        'photo_id',
         'project_id',
         'group_type_id',
     ];
@@ -93,6 +94,11 @@ class ApplicantCompany extends BaseModel
         return $this->belongsToMany(ApplicantCompanyLabel::class, 'applicant_company_label_relation', 'applicant_company_id', 'applicant_company_label_id');
     }
 
+    public function photo(): BelongsTo
+    {
+        return $this->belongsTo(Files::class, 'photo_id');
+    }
+    
     /**
      * @return BelongsTo
      */

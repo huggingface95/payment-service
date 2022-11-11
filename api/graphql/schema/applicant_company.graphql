@@ -78,6 +78,8 @@ type ApplicantCompany {
     company: Companies @belongsTo(relation: "company")
     "Получить группу"
     group: GroupRole @morphOne(relation: "groupRole")
+    "Получить фото"
+    photo: Files @belongsTo(relation: "photo")
     "Проект"
     project: Project @belongsTo(relation: "project")
 }
@@ -171,6 +173,8 @@ extend type Mutation @guard {
         owner_relation_id: ID
         "ID position владельца"
         owner_position_id: ID
+        "ID photo"
+        photo_id: ID
     ): ApplicantCompany   @field(resolver:"ApplicantCompanyMutator@create")
 
     "Редактирование applicant company"
@@ -250,6 +254,8 @@ extend type Mutation @guard {
         module_ids: [ID]!
         "ID проекта"
         project_id: ID!
+        "ID photo"
+        photo_id: ID
     ): ApplicantCompany   @field(resolver:"ApplicantCompanyMutator@update")
 
     "Удалить пользователя"

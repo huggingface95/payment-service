@@ -76,6 +76,8 @@ type ApplicantIndividual {
     companies: [ApplicantCompany] @belongsToMany (relation: "companies")
     "Получить группу"
     group: GroupRole @morphOne(relation: "groupRole")
+    "Фото"
+    photo: Files @belongsTo(relation: "photo")
     "Получить проект"
     project: Project @belongsTo(relation: "project")
     "Получить two factor auth"
@@ -154,6 +156,8 @@ extend type Mutation @guard {
         phone: String!
         "ID компании"
         company_id: ID!
+        "ID photo"
+        photo_id: ID
         "ID модулей"
         module_ids: [ID]!
     ): ApplicantIndividual   @field(resolver:"ApplicantMutator@create")
@@ -231,10 +235,12 @@ extend type Mutation @guard {
         two_factor_auth_setting_id: ID
         "Пароль"
         password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
-        "подтверждение пароля"
+        "Подтверждение пароля"
         password_confirmation: String
         "IP адрес"
         ip_address: String
+        "ID photo"
+        photo_id: ID
     ): ApplicantIndividual   @field(resolver:"ApplicantMutator@update")
 
     """
