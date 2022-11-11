@@ -3,26 +3,20 @@
 Dashboard -> Applicants -> Individual -> Full Profile -> Settings
 """
 type ApplicantIndividualModules {
-    "Получить индивидуала"
-    applicant_individual: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
-    "Получить модуль"
-    applicant_module: ApplicantModules @belongsTo(relation: "module")
-    applicant_module_id: ID
+    "ID"
+    id: ID
+    "Название"
+    name: String
     "Активен = true или не активный = false"
     is_active: Boolean
 }
 
-
 extend type Query @guard {
     """
     Получить список всех модулей аппликанта
-    orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    applicantIndividualModules(
-        filter: _ @filterConditions(static: QueryApplicantIndividualModulesFilterStatic),
-        where: _ @whereConditions(columns: ["applicant_individual_id"]),
-        orderBy: _ @orderBy(columns: ["applicant_individual_id"])
-    ): [ApplicantIndividualModules!]!    @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
+    applicantIndividualModules(applicant_individual_id: ID! @eq): [ApplicantIndividualModules!]!
+        @field(resolver: "ApplicantIndividualModulesQuery@getList")
 }
 
 input QueryApplicantIndividualModulesFilterStatic @spread{

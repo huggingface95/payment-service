@@ -62,6 +62,9 @@ class ApplicantCompany extends BaseModel
         'owner_relation_id',
         'owner_position_id',
         'company_id',
+        'photo_id',
+        'project_id',
+        'group_type_id',
     ];
 
     protected $casts = [
@@ -91,6 +94,11 @@ class ApplicantCompany extends BaseModel
         return $this->belongsToMany(ApplicantCompanyLabel::class, 'applicant_company_label_relation', 'applicant_company_id', 'applicant_company_label_id');
     }
 
+    public function photo(): BelongsTo
+    {
+        return $this->belongsTo(Files::class, 'photo_id');
+    }
+    
     /**
      * @return BelongsTo
      */
@@ -163,9 +171,14 @@ class ApplicantCompany extends BaseModel
         return $this->belongsTo(ApplicantCompanyBusinessType::class, 'applicant_company_business_type_id');
     }
 
-    public function modules(): HasMany
+    public function project(): BelongsTo
     {
-        return $this->hasMany(ApplicantCompanyModules::class, 'applicant_company_id', 'id');
+        return $this->belongsTo(Project::class);
+    }
+
+    public function modules(): BelongsToMany
+    {
+        return $this->belongsToMany(ApplicantModules::class, 'applicant_company_modules', 'applicant_company_id', 'applicant_module_id')->withPivot('is_active');
     }
 
     public function notes(): HasMany
