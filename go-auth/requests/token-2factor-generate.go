@@ -5,6 +5,7 @@ type GenerateTwoFactorQrRequest struct {
 	TwoFaToken  string `form:"2fa_token"`
 	AccessToken string `form:"access_token"`
 	Type        string `form:"type"`
+	Token       string `form:"token"`
 }
 
 type ActivateTwoFactorQrRequest struct {
@@ -14,6 +15,7 @@ type ActivateTwoFactorQrRequest struct {
 	AuthToken   string `form:"auth_token"`
 	MemberId    uint64 `form:"member_id"`
 	Type        string `form:"type"`
+	Token       string `form:"token"`
 }
 
 type VerifyTwoFactorQrRequest struct {
@@ -22,6 +24,7 @@ type VerifyTwoFactorQrRequest struct {
 	MemberId   uint64 `form:"member_id"`
 	BackupCode string `form:"backup_code"`
 	Type       string `form:"type"`
+	Token      string `form:"token"`
 }
 
 type DisableTwoFactorQrRequest struct {
@@ -29,4 +32,5 @@ type DisableTwoFactorQrRequest struct {
 	Password string `form:"password" binding:"required"`
 	MemberId uint64 `form:"member_id"`
 	Type     string `form:"type"`
+	Token    string `form:"token"`
 }

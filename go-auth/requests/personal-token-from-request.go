@@ -1,7 +1,7 @@
 package requests
 
 type RouteJWT struct {
-	Token string `uri:"token" binding:"required"`
+	Token string `uri:"token" json:"token" binding:"required"`
 }
 
 type BearerJWT struct {

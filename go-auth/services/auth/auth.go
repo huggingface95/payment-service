@@ -19,14 +19,13 @@ func GetAuthUserFromRequest(c *gin.Context) postgres.User {
 
 	if err := c.BindHeader(&bearerJWT); err == nil {
 		claims, e = services.GetClaims(bearerJWT.Bearer, constants.Personal, true)
-	} else if err := c.Bind(&inputJWT); err != nil {
+	} else if err := c.Bind(&inputJWT); err == nil {
 		claims, e = services.GetClaims(inputJWT.Token, constants.Personal, false)
-	} else if err := c.BindUri(&routeJWT); err != nil {
+	} else if err := c.BindUri(&routeJWT); err == nil {
 		claims, e = services.GetClaims(routeJWT.Token, constants.Personal, false)
 	} else {
 		return nil
 	}
-
 	if e != nil {
 		return nil
 	}
