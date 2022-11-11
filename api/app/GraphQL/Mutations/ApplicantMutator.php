@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\ApplicantModulesEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividual;
 use App\Models\ClientIpAddress;
@@ -33,7 +34,9 @@ class ApplicantMutator extends BaseMutator
         if (isset($args['contacts_additional_fields'])) {
             $args['contacts_additional_fields'] = $this->setAdditionalField($args['contacts_additional_fields']);
         }
+
         $applicant = ApplicantIndividual::create($args);
+        $applicant->modules()->attach(ApplicantModulesEnum::KYC->value);
 
         if (isset($args['group_id'])) {
             $applicant->groupRole()->sync([$args['group_id']], true);

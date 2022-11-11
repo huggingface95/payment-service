@@ -13,6 +13,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Laravel\Lumen\Auth\Authorizable;
@@ -218,11 +219,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
             ->join('companies', 'companies.id', '=', 'members.company_id')->select('companies.*')->first();
     }
 
-    public function modules()
+    public function modules(): BelongsToMany
     {
-        return $this->hasMany(ApplicantIndividualModules::class, 'applicant_individual_id', 'id');
+        return $this->belongsToMany(ApplicantIndividualModules::class, 'applicant_individual_modules', 'applicant_individual_id', 'applicant_module_id');
     }
-
+    
     public function ApplicantIndividual()
     {
         return $this->belongsTo(self::class, 'applicant_individual_id', 'id');

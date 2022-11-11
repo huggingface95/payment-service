@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\ApplicantModulesEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividualCompany;
@@ -17,29 +18,23 @@ class ApplicantCompanyMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
-        if (isset($args['company_info_additional_fields'])) {
-            $args['company_info_additional_fields'] = $this->setAdditionalField($args['company_info_additional_fields']);
-        }
-        if (isset($args['contacts_additional_fields'])) {
-            $args['contacts_additional_fields'] = $this->setAdditionalField($args['contacts_additional_fields']);
-        }
+        $applicantCompany = ApplicantCompany::create($args);
 
-        $applicant = ApplicantCompany::create($args);
+        $args['module_ids'] = array_unique(
+            array_merge($args['module_ids'], [(string) ApplicantModulesEnum::KYC->value])
+        );
 
         if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {
-            $this->setOwner($applicant, $args);
-        }
-
-        if (isset($args['labels'])) {
-            $applicant->labels()->detach($args['labels']);
-            $applicant->labels()->attach($args['labels']);
+            $this->setOwner($applicantCompany, $args);
         }
 
         if (isset($args['group_id'])) {
-            $applicant->groupRole()->sync([$args['group_id']], true);
+            $applicantCompany->groupRole()->sync([$args['group_id']], true);
         }
 
-        return $applicant;
+        $applicantCompany->modules()->attach($args['module_ids']);
+
+        return $applicantCompany;
     }
 
     /**
@@ -71,8 +66,14 @@ class ApplicantCompanyMutator extends BaseMutator
             $applicant->labels()->detach($args['labels']);
             $applicant->labels()->attach($args['labels']);
         }
+
         if (isset($args['group_id'])) {
             $applicant->groupRole()->sync([$args['group_id']], true);
+        }
+
+        if (isset($args['module_ids'])) {
+            $applicant->modules()->detach();
+            $applicant->modules()->attach($args['module_ids']);
         }
 
         $applicant->update($args);
@@ -90,8 +91,8 @@ class ApplicantCompanyMutator extends BaseMutator
     private function setOwner(ApplicantCompany $applicant, array $args): ApplicantIndividualCompany
     {
         try {
-            return ApplicantIndividualCompany::create([
-                'applicant_individual_id'=> $args['owner_id'],
+            return ApplicantIndividualCompany::firstOrCreate([
+                'applicant_individual_id' => $args['owner_id'],
                 'applicant_company_id' => $applicant->id,
                 'applicant_individual_company_relation_id' => ($args['owner_relation_id']) ?? $args['owner_relation_id'],
                 'applicant_individual_company_position_id' => ($args['owner_position_id']) ?? $args['owner_position_id'],
