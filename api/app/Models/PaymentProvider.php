@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -41,6 +42,11 @@ class PaymentProvider extends BaseModel
     public function company(): BelongsTo
     {
         return $this->belongsTo(Companies::class, 'company_id');
+    }
+
+    public function account(): HasMany
+    {
+        return $this->hasMany(Account::class, 'payment_provider_id')->withoutGlobalScope(AccountIndividualsCompaniesScope::class);
     }
 
     public function scopePaymentProviderCountry($query, $countryId)
