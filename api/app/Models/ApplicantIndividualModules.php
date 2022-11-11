@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ApplicantIndividualModules extends BaseModel
 {
@@ -14,7 +15,9 @@ class ApplicantIndividualModules extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'applicant_individual_id', 'applicant_module_id', 'is_active',
+        'applicant_individual_id',
+        'applicant_module_id',
+        'is_active',
     ];
 
     public $timestamps = false;
@@ -25,14 +28,9 @@ class ApplicantIndividualModules extends BaseModel
         static::addGlobalScope(new ApplicantFilterByMemberScope);
     }
 
-    /**
-     * Get relation applicant_individual
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function ApplicantIndividual()
+    public function ApplicantIndividual(): BelongsToMany
     {
-        return $this->belongsTo(ApplicantIndividual::class, 'applicant_individual_id', 'id');
+        return $this->belongsToMany(ApplicantIndividual::class, 'applicant_individual_modules', 'applicant_module_id', 'applicant_individual_id');
     }
 
     /**

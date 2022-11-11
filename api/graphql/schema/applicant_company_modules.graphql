@@ -3,11 +3,10 @@
 Dashboard -> Applicants -> Company -> Full Profile -> Settings
 """
 type ApplicantCompanyModules {
-    "Получить компанию"
-    applicant_company: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
-    "Получить модуль"
-    applicant_module: ApplicantModules @belongsTo(relation: "module")
-    applicant_module_id: ID
+    "ID"
+    id: ID
+    "Название"
+    name: String
     "Активен = true или не активный = false"
     is_active: Boolean
 }
@@ -15,11 +14,9 @@ type ApplicantCompanyModules {
 extend type Query @guard {
     """
     Получить список всех модулей компании
-    orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    applicantCompanyModules(where: _ @whereConditions(columns: ["applicant_company_id"]), orderBy: _ @orderBy(
-        columns: ["applicant_company_id"],
-    )): [ApplicantCompanyModules!]!    @paginate(defaultCount: 10) @orderBy(column: "applicant_company_id", direction: ASC)
+    applicantCompanyModules(applicant_company_id: ID! @eq): [ApplicantCompanyModules!]!
+        @field(resolver: "ApplicantCompanyModulesQuery@getList")
 }
 
 extend type Mutation @guard {

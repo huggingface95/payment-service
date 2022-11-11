@@ -2,9 +2,11 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\ApplicantModulesEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividual;
 use App\Models\ClientIpAddress;
+use App\Models\GroupRole;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -19,30 +21,18 @@ class ApplicantMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
-        if (! isset($args['password'])) {
-            $password = Str::random(8);
-        } else {
-            $password = $args['password'];
-        }
-        $args['password_hash'] = Hash::make($password);
-        $args['password_salt'] = Hash::make($password);
+        $password = Hash::make(Str::random(8));
 
-        if (isset($args['personal_additional_fields'])) {
-            $args['personal_additional_fields'] = $this->setAdditionalField($args['personal_additional_fields']);
-        }
-        if (isset($args['contacts_additional_fields'])) {
-            $args['contacts_additional_fields'] = $this->setAdditionalField($args['contacts_additional_fields']);
-        }
+        $args['password_hash'] = $password;
+        $args['password_salt'] = $password;
+        $args['group_type_id'] = GroupRole::INDIVIDUAL;
+        $args['module_ids'] = array_unique(
+            array_merge($args['module_ids'], [(string) ApplicantModulesEnum::KYC->value])
+        );
+
         $applicant = ApplicantIndividual::create($args);
 
-        if (isset($args['group_id'])) {
-            $applicant->groupRole()->sync([$args['group_id']], true);
-        }
-
-        if (isset($args['labels'])) {
-            $applicant->labels()->detach($args['labels']);
-            $applicant->labels()->attach($args['labels']);
-        }
+        $applicant->modules()->attach($args['module_ids']);
 
         return $applicant;
     }
@@ -100,12 +90,17 @@ class ApplicantMutator extends BaseMutator
             $applicant->groupRole()->sync([$args['group_id']], true);
         }
 
+        if (isset($args['module_ids'])) {
+            $applicant->modules()->detach();
+            $applicant->modules()->attach($args['module_ids']);
+        }
+        
         return $applicant;
     }
 
     public function setSecurityPin($_, array $args)
     {
-        ApplicantIndividual::where('id', $args['id'])->update(['security_pin'=>str_pad(mt_rand(1, 99999999), 8, '0', STR_PAD_LEFT)]);
+        ApplicantIndividual::where('id', $args['id'])->update(['security_pin' => str_pad(mt_rand(1, 99999999), 8, '0', STR_PAD_LEFT)]);
 
         return $args;
     }
