@@ -76,6 +76,8 @@ type ApplicantIndividual {
     companies: [ApplicantCompany] @belongsToMany (relation: "companies")
     "Получить группу"
     group: GroupRole @morphOne(relation: "groupRole")
+    "Получить проект"
+    project: Project @belongsTo(relation: "project")
     "Получить two factor auth"
     two_factor_auth: TwoFactorAuthSettings @belongsTo (relation: "twoFactorAuth")
     "Security PIN"
@@ -131,10 +133,12 @@ input QueryApplicantIndividualsFilterStatic @spread{
     fullname: String @ilike
     email: String @ilike
     company_id: ID @eq
+    project_id: ID @eq
     hasRiskLevelFilterById: ID @eq
     hasStateReasonFilterById: ID @eq
     hasStatusFilterById: ID @eq
     hasGroupRoleMixedGroupTypeIdOrRoleIdORId: ID @eq
+    hasModulesFilterById: ID @eq
 }
 
 extend type Mutation @guard {
@@ -144,83 +148,31 @@ extend type Mutation @guard {
         first_name: String!
         "Фамилия"
         last_name: String!
-        "Отчество"
-        middle_name: String
         "email"
-        email: EMAIL! @rules(apply: ["email", "unique:members"])
-        "Адрес сайта"
-        url: String
+        email: EMAIL! @rules(apply: ["email", "unique:applicant_individual"])
         "Телефон"
         phone: String!
-        "ID Страны"
-        country_id: ID!
-        "ID языка"
-        language_id: ID
-        "ID страны гражданства"
-        citizenship_country_id: ID
-        "Штат / область"
-        state: String
-        "Город"
-        city: String!
-        "Адрес"
-        address: String!
-        "Индекс"
-        zip: String
-        "Национальность"
-        nationality: String
-        "ID страны рождения"
-        birth_country_id: ID!
-        "Штат/область рождения"
-        birth_state: String
-        "Город рождения"
-        birth_city: String
-        "Дата рождения"
-        birth_at: Date!
-        "Пол"
-        sex: Sex!
-        "Дополнительные поля для Personal info"
-        personal_additional_fields: [AdditionalFieldInput]
-        "Дополнительные поля блока контакты"
-        contacts_additional_fields: [AdditionalFieldInput]
-        "ID статуса"
-        applicant_status_id: ID
-        "ID состояния"
-        applicant_state_id: ID!
-        "ID причины"
-        applicant_state_reason_id: ID
-        "ID уровня рисков"
-        applicant_risk_level_id: ID
-        "ID менеджера"
-        account_manager_member_id: ID!
         "ID компании"
         company_id: ID!
-        "Массив ID меток"
-        labels: [ID]
-        "ID группа"
-        group_id: ID
-        "Two factor auth"
-        two_factor_auth_setting_id: ID
-        "Пароль"
-        password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
-        "подтверждение пароля"
-        password_confirmation: String
+        "ID модулей"
+        module_ids: [ID]!
     ): ApplicantIndividual   @field(resolver:"ApplicantMutator@create")
 
     "Редактирование частного пользователя"
     updateApplicantIndividual(
         id: ID!
         "Имя"
-        first_name: String
+        first_name: String!
         "Фамилия"
-        last_name: String
+        last_name: String!
         "Отчество"
         middle_name: String
         "email"
-        email: EMAIL
+        email: EMAIL!
         "Адрес сайта"
         url: String
         "Телефон"
-        phone: String
+        phone: String!
         "Верецифиорован телефон true/false"
         is_verification_phone: Boolean
         "ID Страны"
@@ -266,11 +218,15 @@ extend type Mutation @guard {
         "ID менеджера"
         account_manager_member_id: ID
         "ID компании"
-        company_id: ID
+        company_id: ID!
         "Массив ID меток"
         labels: [ID]
         "ID группы"
         group_id: ID
+        "ID модулей"
+        module_ids: [ID]!
+        "ID Проекта"
+        project_id: ID
         "Two factor auth"
         two_factor_auth_setting_id: ID
         "Пароль"
