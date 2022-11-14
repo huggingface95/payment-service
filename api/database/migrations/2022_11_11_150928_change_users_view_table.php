@@ -15,7 +15,9 @@ class ChangeUsersViewTable extends Migration
     {
         DB::statement('DROP VIEW IF EXISTS users_view');
         DB::statement("
-          CREATE VIEW users_view AS  SELECT m.id,
+          CREATE VIEW users_view AS
+          SELECT row_number() OVER () AS id, *  FROM (
+            SELECT
                 m.fullname,
                 m.first_name,
                 m.last_name,
@@ -27,9 +29,9 @@ class ChangeUsersViewTable extends Migration
                FROM ((members m
                  JOIN group_role_members_individuals grmi ON ((m.id = grmi.user_id)))
                  JOIN group_role gr ON ((gr.id = grmi.group_role_id)))
-                 WHERE grmi.user_type = 'App\Models\Members'
+              WHERE ((grmi.user_type)::text = 'App\Models\Members'::text)
             UNION
-             SELECT ai.id,
+             SELECT
                 ai.fullname,
                 ai.first_name,
                 ai.last_name,
@@ -41,7 +43,8 @@ class ChangeUsersViewTable extends Migration
                FROM ((applicant_individual ai
                  JOIN group_role_members_individuals grmi ON ((ai.id = grmi.user_id)))
                  JOIN group_role gr ON ((gr.id = grmi.group_role_id)))
-                 WHERE grmi.user_type = 'App\Models\ApplicantIndividual'
+              WHERE ((grmi.user_type)::text = 'App\Models\ApplicantIndividual'::TEXT)
+              ) AS users_view
         ");
     }
 
