@@ -19,7 +19,7 @@ func GenerateBackupCodes(context *gin.Context) {
 	var request requests.GenerateBackupCodesRequest
 	var user postgres.User
 
-	if err := context.Bind(&request); err != nil {
+	if err := context.BindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		context.Abort()
 		return
@@ -68,7 +68,7 @@ func StoreBackupCodes(context *gin.Context) {
 	var request requests.StoreBackupCodesRequest
 	var user postgres.User
 
-	if err := context.Bind(&request); err != nil {
+	if err := context.BindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		context.Abort()
 		return

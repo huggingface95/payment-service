@@ -8,11 +8,12 @@ import (
 var AppConf = AppConfig{}
 
 type AppConfig struct {
-	AppName     string
-	AppUrl      string
-	AppFrontUrl string
-	RedirectUrl string
-	CheckIp     bool
+	AppName                    string
+	AppUrl                     string
+	AppFrontUrl                string
+	RedirectUrl                string
+	CheckIp                    bool
+	PasswordRequiredCharacters string
 }
 
 func (a *AppConfig) Load() *AppConfig {
@@ -25,6 +26,7 @@ func (a *AppConfig) Load() *AppConfig {
 	a.AppUrl = os.Getenv("APP_URL")
 	a.AppFrontUrl = os.Getenv("APP_FRONT_URL")
 	a.RedirectUrl = os.Getenv("REDIRECT_URL")
+	a.PasswordRequiredCharacters = os.Getenv("PASSWORD_REQUIRED_CHARACTERS")
 
 	return a
 }

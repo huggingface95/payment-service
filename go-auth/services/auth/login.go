@@ -12,11 +12,13 @@ import (
 	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/repositories/redisRepository"
 	"jwt-authentication-golang/requests"
+	"regexp"
+	"strings"
 	"time"
 )
 
 func ParseRequest(c *gin.Context) (r requests.LoginRequest, h requests.HeaderRequest, err error) {
-	if err = c.Bind(&r); err != nil {
+	if err = c.BindJSON(&r); err != nil {
 		return
 	}
 
@@ -117,4 +119,16 @@ func CreateConfirmationIpLink(provider string, id uint64, companyId uint64, emai
 	}
 
 	return false
+}
+
+func PasswordValidation(password string) (bool, string) {
+	validators := strings.Split(config.Conf.App.PasswordRequiredCharacters, ",")
+
+	for _, validator := range validators {
+		match, _ := regexp.MatchString(validator, password)
+		if match == false {
+			return false, "Validation error in " + validator
+		}
+	}
+	return true, ""
 }

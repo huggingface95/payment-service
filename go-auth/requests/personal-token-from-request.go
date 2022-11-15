@@ -9,5 +9,5 @@ type BearerJWT struct {
 }
 
 type InputJWT struct {
-	Token string `form:"token" binding:"required"`
+	Token string `json:"token" binding:"required"`
 }

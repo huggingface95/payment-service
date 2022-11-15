@@ -65,3 +65,10 @@ func SaveUser(user postgres.User) *gorm.DB {
 
 	return database.PostgresInstance.Omit(user.MergeOmit([]string{"Company"})...).Save(model)
 }
+
+func HasUserByEmail(email string, provider string) bool {
+	if GetUserByEmail(email, provider) == nil {
+		return false
+	}
+	return true
+}

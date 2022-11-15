@@ -13,13 +13,20 @@ import (
 	"jwt-authentication-golang/repositories/redisRepository"
 	"jwt-authentication-golang/repositories/userRepository"
 	"jwt-authentication-golang/requests/individual"
+	"jwt-authentication-golang/services/auth"
 	"net/http"
 )
 
 func Register(c *gin.Context) {
 	var request individual.RegisterRequest
-	if err := c.Bind(&request); err != nil {
+	if err := c.BindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.Abort()
+		return
+	}
+
+	if ok, msg := auth.PasswordValidation(request.Password); ok == false {
+		c.JSON(http.StatusBadRequest, gin.H{"error": msg})
 		c.Abort()
 		return
 	}
@@ -27,6 +34,13 @@ func Register(c *gin.Context) {
 	if request.Password != request.PasswordRepeat {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Password and Confirm Password do not match"})
 		c.Abort()
+		return
+	}
+
+	if userRepository.HasUserByEmail(request.Email, constants.Individual) == true {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Client has exists"})
+		c.Abort()
+		return
 	}
 	user, err := individualRepository.FillIndividual(request)
 	user.TwoFactorAuthId = 2
@@ -93,7 +107,7 @@ func ResetPassword(c *gin.Context) {
 	var user postgres.User
 
 	var request individual.ResetPasswordRequest
-	if err := c.Bind(&request); err != nil {
+	if err := c.BindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		c.Abort()
 		return
@@ -122,7 +136,7 @@ func ChangePassword(c *gin.Context) {
 	var user postgres.User
 
 	var request individual.ChangePasswordRequest
-	if err := c.Bind(&request); err != nil {
+	if err := c.BindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

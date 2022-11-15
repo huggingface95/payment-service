@@ -13,7 +13,7 @@ import (
 
 func Refresh(context *gin.Context) {
 	var request requests.RefreshRequest
-	if err := context.Bind(&request); err != nil {
+	if err := context.BindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		context.Abort()
 		return

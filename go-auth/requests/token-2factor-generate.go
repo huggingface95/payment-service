@@ -1,36 +1,36 @@
 package requests
 
 type GenerateTwoFactorQrRequest struct {
-	MemberId    uint64 `form:"member_id"`
-	TwoFaToken  string `form:"2fa_token"`
-	AccessToken string `form:"access_token"`
-	Type        string `form:"type"`
-	Token       string `form:"token"`
+	MemberId    uint64 `json:"member_id"`
+	TwoFaToken  string `json:"2fa_token"`
+	AccessToken string `json:"access_token"`
+	Type        string `json:"type"`
+	Token       string `json:"token"`
 }
 
 type ActivateTwoFactorQrRequest struct {
-	Code        string `form:"code" binding:"required"`
-	Secret      string `form:"secret" binding:"required"`
-	AccessToken string `form:"access_token"`
-	AuthToken   string `form:"auth_token"`
-	MemberId    uint64 `form:"member_id"`
-	Type        string `form:"type"`
-	Token       string `form:"token"`
+	Code        string `json:"code" binding:"required"`
+	Secret      string `json:"secret" binding:"required"`
+	AccessToken string `json:"access_token"`
+	AuthToken   string `json:"auth_token"`
+	MemberId    uint64 `json:"member_id"`
+	Type        string `json:"type"`
+	Token       string `json:"token"`
 }
 
 type VerifyTwoFactorQrRequest struct {
-	Code       string `form:"code" binding:"required"`
-	AuthToken  string `form:"auth_token"`
-	MemberId   uint64 `form:"member_id"`
-	BackupCode string `form:"backup_code"`
-	Type       string `form:"type"`
-	Token      string `form:"token"`
+	Code       string `json:"code" binding:"required"`
+	AuthToken  string `json:"auth_token"`
+	MemberId   uint64 `json:"member_id"`
+	BackupCode string `json:"backup_code"`
+	Type       string `json:"type"`
+	Token      string `json:"token"`
 }
 
 type DisableTwoFactorQrRequest struct {
-	Code     string `form:"code" binding:"required"`
-	Password string `form:"password" binding:"required"`
-	MemberId uint64 `form:"member_id"`
-	Type     string `form:"type"`
-	Token    string `form:"token"`
+	Code     string `json:"code" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	MemberId uint64 `json:"member_id"`
+	Type     string `json:"type"`
+	Token    string `json:"token"`
 }

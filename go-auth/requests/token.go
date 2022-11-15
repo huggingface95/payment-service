@@ -1,15 +1,15 @@
 package requests
 
 type LoginRequest struct {
-	Email    string `form:"email" binding:"required"`
-	Password string `form:"password" binding:"required"`
-	Type     string `form:"type" binding:"required"`
-	Proceed  bool   `form:"proceed"`
-	Cancel   bool   `form:"cancel"`
+	Email    string `json:"email" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	Type     string `json:"type" binding:"required"`
+	Proceed  bool   `json:"proceed"`
+	Cancel   bool   `json:"cancel"`
 }
 
 type RefreshRequest struct {
-	Type string `form:"type"`
+	Type string `json:"type"`
 }
 
 type HeaderRequest struct {

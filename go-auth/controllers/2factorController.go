@@ -21,7 +21,7 @@ func GenerateTwoFactorQr(context *gin.Context) {
 	var request requests.GenerateTwoFactorQrRequest
 	var user postgres.User
 
-	if err := context.ShouldBind(&request); err != nil {
+	if err := context.BindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		context.Abort()
 		return
@@ -78,7 +78,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 
 	newTime, blockedTime, _, _, _ := times.GetTokenTimes()
 
-	if err := context.Bind(&request); err != nil {
+	if err := context.BindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		context.Abort()
 		return
@@ -205,7 +205,7 @@ func ActivateTwoFactorQr(context *gin.Context) {
 
 	_, _, _, oauthCodeTime, _ := times.GetTokenTimes()
 
-	if err := context.Bind(&request); err != nil {
+	if err := context.BindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -263,7 +263,7 @@ func ActivateTwoFactorQr(context *gin.Context) {
 func DisableTwoFactorQr(context *gin.Context) {
 	var request requests.DisableTwoFactorQrRequest
 	var user postgres.User
-	if err := context.Bind(&request); err != nil {
+	if err := context.BindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		context.Abort()
 		return
