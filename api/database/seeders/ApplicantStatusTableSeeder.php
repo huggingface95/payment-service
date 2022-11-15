@@ -18,15 +18,7 @@ class ApplicantStatusTableSeeder extends Seeder
             'Requested',
             'Declined',
             'Approved',
-            'Document Requested',
             'Pending',
-            'Processing',
-            'Check Complited',
-            'Verified',
-            'Rejected',
-            'Resubmission Requested',
-            'Requires Action',
-            'Prechecked',
         ];
 
         foreach ($applicantStatus as $status) {
