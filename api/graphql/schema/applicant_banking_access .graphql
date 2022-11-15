@@ -17,9 +17,8 @@ type ApplicantBankingAccess {
     monthly_limit: Float!
     "Лимит операций"
     operation_limit: Float!
-    "Использованный лимит"
-    day_used_limit: Float
-    month_used_limit: Float
+    "Получить роль"
+    role: Role @hasOne(relation: "role")
 }
 
 extend type Query @guard {

@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Scopes\RoleFilterSuperAdminScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * Class ApplicantBankingAccess
@@ -76,5 +78,10 @@ class ApplicantBankingAccess extends BaseModel
     public function Members()
     {
         return $this->belongsTo(Members::class, 'member_id', 'id');
+    }
+
+    public function role(): HasOne
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id')->withoutGlobalScope(RoleFilterSuperAdminScope::class);
     }
 }
