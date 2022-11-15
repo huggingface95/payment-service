@@ -127,7 +127,7 @@ func PasswordValidation(password string) (bool, string) {
 	for _, validator := range validators {
 		match, _ := regexp.MatchString(validator, password)
 		if match == false {
-			return false, "Validation error in " + validator
+			return false, "Password is not secure"
 		}
 	}
 	return true, ""
