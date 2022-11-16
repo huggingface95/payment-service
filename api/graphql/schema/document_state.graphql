@@ -1,0 +1,16 @@
+"""
+Состояния документа
+"""
+type DocumentState {
+    "ID"
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query @guard {
+    """
+    Получить список ducument states
+    """
+    documentStates: [DocumentState!]! @all
+}
