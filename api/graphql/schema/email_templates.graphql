@@ -53,7 +53,7 @@ extend type Query @guard {
         orderBy: _ @orderBy(
             columns: ["id"]
         )
-    ): [EmailTemplate!]! @all @orderBy(column: "id", direction: ASC)
+    ): [EmailTemplate!]! @field(resolver:"EmailTemplateQuery@get") @orderBy(column: "id", direction: ASC)
 }
 
 input QueryEmailTemplatesFilterStatic @spread{
