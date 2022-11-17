@@ -36,30 +36,30 @@ class PermissionsSeeder extends Seeder
                                     'name' => 'Email Templates:Tag',
                                     'type' => 'member',
                                     'separator' => null,
-                                    'order' => 11,
+                                    'order' => 10,
                                 ],
                                 'list' => [
-                                    'Email Templates:Tag.Common' => [
+                                    'Email Templates:Tag.KYC: Common' => [
                                         'data' => [
-                                            'name' => 'Email Templates:Tag.Common',
+                                            'name' => 'Email Templates:Tag.KYC: Common',
                                             'display_name' => 'KYC: Common',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Email Templates:Tag.System' => [
+                                    'Email Templates:Tag.KYC: System' => [
                                         'data' => [
-                                            'name' => 'Email Templates:Tag.System',
+                                            'name' => 'Email Templates:Tag.KYC: System',
                                             'display_name' => 'KYC: System',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Email Templates:Tag.Admin Notify' => [
+                                    'Email Templates:Tag.KYC: Admin Notify' => [
                                         'data' => [
-                                            'name' => 'Email Templates:Tag.Admin Notify',
+                                            'name' => 'Email Templates:Tag.KYC: Admin Notify',
                                             'display_name' => 'KYC: Admin Notify',
                                             'guard_name' => 'api',
                                             'order' => null,
@@ -739,6 +739,52 @@ class PermissionsSeeder extends Seeder
                 'list' => [
                     'member' => [
                         '' => [
+                            'Email Templates:Tag' => [
+                                'data' => [
+                                    'name' => 'Email Templates:Tag',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 10,
+                                ],
+                                'list' => [
+                                    'Email Templates:Tag.Administration: Common' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tag.Administration: Common',
+                                            'display_name' => 'Administration: Common',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tag.Administration: System' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tag.Administration: System',
+                                            'display_name' => 'Administration: System',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tag.Administration: Admin Notify' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tag.Administration: Admin Notify',
+                                            'display_name' => 'Administration: Admin Notify',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tag.Administration: Banking' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tag.Administration: Banking',
+                                            'display_name' => 'Administration: Banking',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
                             'Email Templates:Settings' => [
                                 'data' => [
                                     'name' => 'Email Templates:Settings',
@@ -1252,27 +1298,27 @@ class PermissionsSeeder extends Seeder
                                     'order' => 16,
                                 ],
                                 'list' => [
-                                    'Email Templates:Tag.Common' => [
+                                    'Email Templates:Tag.Banking: Common' => [
                                         'data' => [
-                                            'name' => 'Email Templates:Tag.Common',
+                                            'name' => 'Email Templates:Tag.Banking: Common',
                                             'display_name' => 'Banking: Common',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Email Templates:Tag.System' => [
+                                    'Email Templates:Tag.Banking: System' => [
                                         'data' => [
-                                            'name' => 'Email Templates:Tag.System',
+                                            'name' => 'Email Templates:Tag.Banking: System',
                                             'display_name' => 'Banking: System',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Email Templates:Tag.Admin Notify' => [
+                                    'Email Templates:Tag.Banking: Admin Notify' => [
                                         'data' => [
-                                            'name' => 'Email Templates:Tag.Admin Notify',
+                                            'name' => 'Email Templates:Tag.Banking: Admin Notify',
                                             'display_name' => 'Banking: Admin Notify',
                                             'guard_name' => 'api',
                                             'order' => null,
@@ -4172,7 +4218,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'banking',
-                'binds' => ['Email Templates:Tag.Banking'],
+                'binds' => ['Email Templates:Tag.Administration: Banking'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4180,7 +4226,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'banking',
-                'binds' => ['Email Templates:Tag.Banking'],
+                'binds' => ['Email Templates:Tag.Administration: Banking'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4188,7 +4234,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'banking',
-                'binds' => ['Email Templates:Tag.Banking'],
+                'binds' => ['Email Templates:Tag.Administration: Banking'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4196,7 +4242,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'banking',
-                'binds' => ['Email Templates:Tag.Banking'],
+                'binds' => ['Email Templates:Tag.Administration: Banking'],
             ],
             [
                 'mode' => PermissionFilter::SCOPE_MODE,
@@ -4204,7 +4250,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'common',
-                'binds' => ['Email Templates:Tag.Common'],
+                'binds' => ['Email Templates:Tag.Administration: Common'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4212,7 +4258,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'common',
-                'binds' => ['Email Templates:Tag.Common'],
+                'binds' => ['Email Templates:Tag.Administration: Common'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4220,7 +4266,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'common',
-                'binds' => ['Email Templates:Tag.Common'],
+                'binds' => ['Email Templates:Tag.Administration: Common'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4228,7 +4274,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'common',
-                'binds' => ['Email Templates:Tag.Common'],
+                'binds' => ['Email Templates:Tag.Administration: Common'],
             ],
             [
                 'mode' => PermissionFilter::SCOPE_MODE,
@@ -4236,7 +4282,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'admin notify',
-                'binds' => ['Email Templates:Tag.Admin Notify'],
+                'binds' => ['Email Templates:Tag.Administration: Admin Notify'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4244,7 +4290,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'admin notify',
-                'binds' => ['Email Templates:Tag.Admin Notify'],
+                'binds' => ['Email Templates:Tag.Administration: Admin Notify'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4252,7 +4298,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'admin notify',
-                'binds' => ['Email Templates:Tag.Admin Notify'],
+                'binds' => ['Email Templates:Tag.Administration: Admin Notify'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4260,7 +4306,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'admin notify',
-                'binds' => ['Email Templates:Tag.Admin Notify'],
+                'binds' => ['Email Templates:Tag.Administration: Admin Notify'],
             ],
             [
                 'mode' => PermissionFilter::SCOPE_MODE,
@@ -4268,7 +4314,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'system',
-                'binds' => ['Email Templates:Tag.System'],
+                'binds' => ['Email Templates:Tag.Administration: System'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4276,7 +4322,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'system',
-                'binds' => ['Email Templates:Tag.System'],
+                'binds' => ['Email Templates:Tag.Administration: System'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4284,7 +4330,7 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'system',
-                'binds' => ['Email Templates:Tag.System'],
+                'binds' => ['Email Templates:Tag.Administration: System'],
             ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
@@ -4292,9 +4338,200 @@ class PermissionsSeeder extends Seeder
                 'table' => 'email_templates',
                 'column' => 'service_type',
                 'value' => 'system',
-                'binds' => ['Email Templates:Tag.System'],
+                'binds' => ['Email Templates:Tag.Administration: System'],
             ],
-
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.KYC: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.KYC: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.KYC: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_DELETING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.KYC: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.KYC: Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.KYC: Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.KYC: Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_DELETING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.KYC: Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.KYC: System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.KYC: System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.KYC: System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_DELETING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.KYC: System'],
+            ],
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.Banking: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.Banking: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.Banking: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_DELETING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'common',
+                'binds' => ['Email Templates:Tag.Banking: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.Banking: Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.Banking: Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.Banking: Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_DELETING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'admin notify',
+                'binds' => ['Email Templates:Tag.Banking: Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.Banking: System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.Banking: System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.Banking: System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_DELETING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => 'system',
+                'binds' => ['Email Templates:Tag.Banking: System'],
+            ],
         ];
 
         foreach ($filters as $filter) {
