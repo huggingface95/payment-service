@@ -1,0 +1,31 @@
+"""
+Типы документов
+"""
+type DocumentType {
+    "ID"
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query @guard {
+    """
+    Получить список ducument types
+    """
+    documentTypes: [DocumentType!]! @all
+}
+
+extend type Mutation @guard {
+    """
+    Добавить тип документа
+    """
+    createDocumentType(
+        "Название"
+        name: String!
+    ): DocumentType @create
+
+    """
+    Удалить тип документа
+    """
+    deleteDocumentType(id: ID!): DocumentType @delete
+}
