@@ -67,8 +67,8 @@ func SaveUser(user postgres.User) *gorm.DB {
 }
 
 func HasUserByEmail(email string, provider string) bool {
-	if GetUserByEmail(email, provider) == nil {
-		return false
+	if GetUserByEmail(email, provider).GetId() > 0 {
+		return true
 	}
-	return true
+	return false
 }
