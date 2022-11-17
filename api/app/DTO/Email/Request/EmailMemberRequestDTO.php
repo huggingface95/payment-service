@@ -19,7 +19,7 @@ class EmailMemberRequestDTO
         $dto->account = $account;
         $dto->email = $data['email'];
         $dto->data = (object) $data;
-        
+
         return $dto;
     }
 }
