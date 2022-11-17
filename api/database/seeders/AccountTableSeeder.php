@@ -20,7 +20,6 @@ class AccountTableSeeder extends Seeder
         for ($i = 1; $i <= 3; $i++) {
             Account::firstOrCreate(
                 [
-                    'id' => $i,
                     'account_name' => 'Test account ' . $i,
                 ],
                 [

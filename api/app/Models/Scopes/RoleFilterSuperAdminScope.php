@@ -3,6 +3,7 @@
 namespace App\Models\Scopes;
 
 use App\Models\Members;
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -16,7 +17,7 @@ class RoleFilterSuperAdminScope implements Scope
         $member = Auth::user();
 
         if ($member && ! $member->is_super_admin) {
-            $builder->where('roles.id', '<>', 1);
+            $builder->where('roles.id', '<>', Role::SUPER_ADMIN_ID);
         }
     }
 }

@@ -25,16 +25,7 @@ class ApplicantIndividualMutationTest extends TestCase
                 $last_name: String!
                 $email: EMAIL!
                 $company_id: ID!
-                $country_id: ID!
-                $language_id: ID!
                 $phone: String!
-                $city: String!
-                $address: String!
-                $birth_country_id: ID!
-                $birth_at: Date!
-                $sex: Sex!
-                $applicant_state_id: ID!
-                $account_manager_member_id: ID!
             )
             {
                 createApplicantIndividual (
@@ -42,16 +33,8 @@ class ApplicantIndividualMutationTest extends TestCase
                     last_name: $last_name
                     email: $email
                     company_id: $company_id
-                    country_id: $country_id
-                    language_id: $language_id
                     phone: $phone
-                    city: $city
-                    address: $address
-                    birth_country_id: $birth_country_id
-                    birth_at: $birth_at
-                    sex: $sex
-                    applicant_state_id: $applicant_state_id
-                    account_manager_member_id: $account_manager_member_id
+                    module_ids: []
                 )
                 {
                     id
@@ -62,16 +45,7 @@ class ApplicantIndividualMutationTest extends TestCase
             'last_name' => 'ApplicantLast_'.\Illuminate\Support\Str::random(3),
             'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
             'company_id' => 1,
-            'country_id' => 1,
-            'language_id' => 1,
             'phone' => '098'.str_pad(mt_rand(1, 9), 6, '0', STR_PAD_LEFT),
-            'city' => 'New York',
-            'address' => '1st Street',
-            'birth_country_id' => 1,
-            'birth_at' => '1986-01-02',
-            'sex' => 'Male',
-            'applicant_state_id' => 1,
-            'account_manager_member_id' => 2,
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -94,12 +68,21 @@ class ApplicantIndividualMutationTest extends TestCase
         $this->graphQL('
             mutation UpdateApplicantIndividual(
                 $id: ID!
+                $first_name: String!
+                $last_name: String!
                 $email: EMAIL!
+                $phone: String!
+                $company_id: ID!
             )
             {
                 updateApplicantIndividual (
                     id: $id
+                    first_name: $first_name
+                    last_name: $last_name
                     email: $email
+                    phone: $phone
+                    company_id: $company_id
+                    module_ids: []
                 )
                 {
                     id
@@ -108,7 +91,11 @@ class ApplicantIndividualMutationTest extends TestCase
             }
         ', [
             'id' => strval($applicant[0]->id),
+            'first_name' => 'First test',
+            'last_name' => 'Last_name test',
             'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
+            'phone' => '+938276532222',
+            'company_id' => 1,
         ]);
 
         $id = json_decode($this->response->getContent(), true);

@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 
 class RolesQueryTest extends TestCase
@@ -19,6 +20,7 @@ class RolesQueryTest extends TestCase
         $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'DESC')
+            ->where('id', '!=', Role::SUPER_ADMIN_ID)
             ->take(1)
             ->get();
 
@@ -45,9 +47,18 @@ class RolesQueryTest extends TestCase
     {
         $this->login();
 
-        $role = DB::connection('pgsql_test')
+        $roles = DB::connection('pgsql_test')
             ->table('roles')
-            ->first();
+            ->where('group_type_id', 1)
+            ->where('id', '!=', Role::SUPER_ADMIN_ID)
+            ->get();
+
+        foreach($roles as $role) {
+            $data[] = [
+                'id' => strval($role->id),
+                'name' => strval($role->name),
+            ];
+        }
 
         $this->graphQL('
             query {
@@ -58,9 +69,12 @@ class RolesQueryTest extends TestCase
                     }
                 }
             }
-        ')->seeJsonContains([
-            'id' => strval($role->id),
-            'name' => strval($role->name),
+        ')->seeJson([
+            'data' => [
+                'roles' => [
+                    'data' => $data,
+                ]
+            ]
         ]);
     }
 

@@ -17,11 +17,18 @@ class PaymentsMutationTest extends TestCase
         'account_id' => 1,
     ];
 
+    private $amount = [];
+
     public function setUp(): void
     {
         parent::setUp();
 
         Account::where('id', $this->data['account_id'])->update(['current_balance' => 10000, 'available_balance' => 10000]);
+
+        $this->amount = [
+            'real' => 949,
+            'fee' => 102,
+        ];
     }
 
     public function testCreatePayment(): void
@@ -150,8 +157,8 @@ class PaymentsMutationTest extends TestCase
             'data' => [
                 'createPayment' => [
                     'amount' => $data['amount'],
-                    'amount_real' => 811.5,
-                    'fee' => 377,
+                    'amount_real' => $this->amount['real'],
+                    'fee' => $this->amount['fee'],
                     'fee_type' => $feeType,
                     'price_list_fees' => $priceListFees,
                     'respondent_fee' => $respondentFee,
@@ -175,8 +182,8 @@ class PaymentsMutationTest extends TestCase
             (new Account)->getTable(),
             [
                 'current_balance' => 10000.00000,
-                'reserved_balance' => 1188.50000,
-                'available_balance' => 8811.50000,
+                'reserved_balance' => ($this->amount['fee'] + $this->amount['real']),
+                'available_balance' => 10000.00000 - ($this->amount['fee'] + $this->amount['real']),
             ]
         );
     }
@@ -209,8 +216,8 @@ class PaymentsMutationTest extends TestCase
             'data' => [
                 'updatePayment' => [
                     'amount' => 1000,
-                    'amount_real' => 811.5,
-                    'fee' => 377,
+                    'amount_real' => $this->amount['real'],
+                    'fee' => $this->amount['fee'],
                 ],
             ],
         ]);
@@ -218,9 +225,9 @@ class PaymentsMutationTest extends TestCase
         $this->seeInDatabase(
             (new Account)->getTable(),
             [
-                'current_balance' => 8811.50000,
+                'current_balance' => 10000 - ($this->amount['fee'] + $this->amount['real']),
                 'reserved_balance' => 0.00000,
-                'available_balance' => 8811.50000,
+                'available_balance' => 10000 - ($this->amount['fee'] + $this->amount['real']),
             ]
         );
     }
@@ -251,8 +258,8 @@ class PaymentsMutationTest extends TestCase
             'data' => [
                 'deletePayment' => [
                     'amount' => 1000,
-                    'amount_real' => 811.5,
-                    'fee' => 377,
+                    'amount_real' => $this->amount['real'],
+                    'fee' => $this->amount['fee'],
                 ],
             ],
         ]);
