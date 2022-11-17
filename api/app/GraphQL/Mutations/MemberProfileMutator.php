@@ -30,7 +30,7 @@ class MemberProfileMutator extends BaseMutator
         $member = auth()->user();
 
         if ($args['email']) {
-            $this->sendConfirmChangeEmail($args);
+            $this->sendConfirmChangeEmail(null, $args);
         }
 
         $member->update($args);
@@ -38,7 +38,7 @@ class MemberProfileMutator extends BaseMutator
         return $member;
     }
 
-    public function sendConfirmChangeEmail(array $args)
+    public function sendConfirmChangeEmail($_, array $args)
     {
         $member = auth()->user();
 
