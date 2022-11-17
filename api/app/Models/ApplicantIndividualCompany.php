@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ApplicantIndividualCompany extends BaseModel
 {
@@ -14,7 +15,12 @@ class ApplicantIndividualCompany extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'applicant_individual_id', 'applicant_company_id', 'applicant_individual_company_relation_id', 'applicant_individual_company_position_id',
+        'applicant_id',
+        'applicant_type',
+        'applicant_company_id',
+        'applicant_individual_company_relation_id',
+        'applicant_individual_company_position_id',
+        'percentage_owned',
     ];
 
     public $timestamps = false;
@@ -43,5 +49,10 @@ class ApplicantIndividualCompany extends BaseModel
     public function ApplicantIndividualState()
     {
         return $this->belongsTo(ApplicantStatus::class, 'applicant_individual_status_id', 'id');
+    }
+
+    public function clientable(): MorphTo
+    {
+        return $this->morphTo(__FUNCTION__, 'applicant_type', 'applicant_id');
     }
 }

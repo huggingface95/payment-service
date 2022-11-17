@@ -84,15 +84,22 @@ type ApplicantCompany {
     project: Project @belongsTo(relation: "project")
 }
 
+enum ApplicantType {
+    INDIVIDUAL @enum(value: "ApplicantIndividual")
+    COMPANY @enum(value: "ApplicantCompany")
+}
 
 type ApplicantIndividualCompany {
-    applicant_individual_id: ID!
+    applicant_id: ID!
+    applicant_type: String!
     applicant_company_id: ID!
     applicant_individual_company_relation_id: ID!
     applicant_individual_company_position_id: ID!
-    applicant_individual: ApplicantIndividual @belongsTo(relation: "ApplicantIndividual")
     relation_to_company: ApplicantIndividualCompanyRelation @belongsTo(relation: "ApplicantIndividualCompanyRelation")
     position_in_company: ApplicantIndividualCompanyPosition @belongsTo(relation: "ApplicantIndividualCompanyPosition")
+    percentage_owned: Float
+    "Получить индивидуала или компанию индивидуала"
+    client: Client @morphTo(relation: "clientable")
 }
 
 extend type Query @guard{
@@ -119,14 +126,17 @@ extend type Query @guard{
         orderBy: _ @orderBy(
         columns: ["id","name", "email","created_at","url","owner_id","company_id"],
     )): [ApplicantCompany!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    
     """
-    Получить список applicant individuals по applicant company
+    Получить список всех привязаных applicant (individual/company) по applicant_company_id
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     where:{column: applicant_company_id, operator: LIKE, value: ""} фильтр по applicant_company_id
     """
-    getMatchedUsers(applicant_company_id: ID! @eq, orderBy: _ @orderBy(
-        columns: ["id"],
-    )): [ApplicantIndividualCompany!]!   @paginate(defaultCount: 10) @orderBy(column: "applicant_individual_id", direction: ASC)
+    getMatchedUsers(
+        applicant_company_id: ID! @eq,
+        filter: _ @filterConditions(static: QueryGetMatchedUsersFilterStatic)
+    ): [ApplicantIndividualCompany!]!
+        @field(resolver: "MatchedUsersQuery@getList")
 }
 
 input QueryApplicantCompaniesFilterStatic @spread{
@@ -146,6 +156,11 @@ input QueryApplicantCompaniesFilterStatic @spread{
     name: String @ilike
     url: String @ilike
     email: String @ilike
+}
+
+input QueryGetMatchedUsersFilterStatic @spread {
+    applicant_company_id: ID @eq
+    applicant_type: ApplicantType @eq
 }
 
 extend type Mutation @guard {
@@ -269,6 +284,7 @@ extend type Mutation @guard {
         applicant_company_id: ID!
         applicant_individual_company_relation_id: ID!
         applicant_individual_company_position_id: ID!
+        percentage_owned: Float @rules(apply: ["required", "numeric", "between:0,100.00"])
     ): ApplicantIndividualCompany   @create
 
     "Редактировать связь Individual с Company"
@@ -277,6 +293,7 @@ extend type Mutation @guard {
         applicant_company_id: ID!
         applicant_individual_company_relation_id: ID
         applicant_individual_company_position_id: ID
+        percentage_owned: Float @rules(apply: ["required", "numeric", "between:0,100.00"])
     ): ApplicantIndividualCompany   @field(resolver: "ApplicantIndividualCompanyMutator@update")
 
     "Удалить связь Individual с Company"
