@@ -31,6 +31,43 @@ class PermissionsSeeder extends Seeder
                 'list' => [
                     'member' => [
                         '' => [
+                            'Email Templates:Tag' => [
+                                'data' => [
+                                    'name' => 'Email Templates:Tag',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 11,
+                                ],
+                                'list' => [
+                                    'Email Templates:Tag.Common' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tag.Common',
+                                            'display_name' => 'KYC: Common',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tag.System' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tag.System',
+                                            'display_name' => 'KYC: System',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tag.Admin Notify' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tag.Admin Notify',
+                                            'display_name' => 'KYC: Admin Notify',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
                             'Applicants Individual List' => [
                                 'data' => [
                                     'name' => 'Applicants Individual List',
@@ -702,52 +739,6 @@ class PermissionsSeeder extends Seeder
                 'list' => [
                     'member' => [
                         '' => [
-                            'Email Templates:Tag' => [
-                                'data' => [
-                                    'name' => 'Email Templates:Tag',
-                                    'type' => 'member',
-                                    'separator' => null,
-                                    'order' => 10,
-                                ],
-                                'list' => [
-                                    'Email Templates:Tag.Common' => [
-                                        'data' => [
-                                            'name' => 'Email Templates:Tag.Common',
-                                            'display_name' => 'Common',
-                                            'guard_name' => 'api',
-                                            'order' => null,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Email Templates:Tag.System' => [
-                                        'data' => [
-                                            'name' => 'Email Templates:Tag.System',
-                                            'display_name' => 'System',
-                                            'guard_name' => 'api',
-                                            'order' => null,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Email Templates:Tag.Admin Notify' => [
-                                        'data' => [
-                                            'name' => 'Email Templates:Tag.Admin Notify',
-                                            'display_name' => 'Admin Notify',
-                                            'guard_name' => 'api',
-                                            'order' => null,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Email Templates:Tag.Banking' => [
-                                        'data' => [
-                                            'name' => 'Email Templates:Tag.Banking',
-                                            'display_name' => 'Banking',
-                                            'guard_name' => 'api',
-                                            'order' => null,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
                             'Email Templates:Settings' => [
                                 'data' => [
                                     'name' => 'Email Templates:Settings',
@@ -1261,10 +1252,28 @@ class PermissionsSeeder extends Seeder
                                     'order' => 16,
                                 ],
                                 'list' => [
-                                    'Email Templates:Tag.Banking' => [
+                                    'Email Templates:Tag.Common' => [
                                         'data' => [
-                                            'name' => 'Email Templates:Tag.Banking',
-                                            'display_name' => 'Banking',
+                                            'name' => 'Email Templates:Tag.Common',
+                                            'display_name' => 'Banking: Common',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tag.System' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tag.System',
+                                            'display_name' => 'Banking: System',
+                                            'guard_name' => 'api',
+                                            'order' => null,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tag.Admin Notify' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tag.Admin Notify',
+                                            'display_name' => 'Banking: Admin Notify',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',
