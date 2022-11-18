@@ -16,6 +16,7 @@ type ActiveSession struct {
 	BrowserVersion string    `gorm:"column:browser_version"`
 	DeviceType     string    `gorm:"column:device_type"`
 	Model          string    `gorm:"column:model"`
+	Lang           string    `gorm:"column:lang"`
 	Active         bool      `gorm:"column:active"`
 	Trusted        bool      `gorm:"column:trusted"`
 	Code           string    `gorm:"column:code"`

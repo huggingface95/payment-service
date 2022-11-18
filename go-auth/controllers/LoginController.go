@@ -154,8 +154,12 @@ func checkPassword(c *gin.Context, u postgres.User, r requests.LoginRequest) boo
 }
 
 func checkAndUpdateSession(provider string, email string, fullName string, companyId uint64, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
-	activeSession := oauthRepository.GetActiveSessionWithConditions(email, deviceInfo)
-	if activeSession != nil {
+	ok, err := oauthRepository.HasActiveSessionWithConditions(email, deviceInfo)
+
+	if err != nil {
+		return false, 403, gin.H{"data": "Failed to authorize device"}
+	}
+	if ok == true {
 		return true, 200, nil
 	}
 	activeSessionCreated := oauthRepository.InsertActiveSessionLog(provider, email, false, false, deviceInfo)
@@ -176,5 +180,5 @@ func checkAndUpdateSession(provider string, email string, fullName string, compa
 		}
 	}
 
-	return false, 403, gin.H{"data": "Error during check device"}
+	return false, 403, gin.H{"data": "Failed to authorize device"}
 }

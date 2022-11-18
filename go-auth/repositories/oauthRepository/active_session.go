@@ -20,6 +20,22 @@ func GetActiveSessionWithConditions(email string, deviceInfo *dto.DeviceDetector
 	return authLog
 }
 
+func HasActiveSessionWithConditions(email string, deviceInfo *dto.DeviceDetectorInfo) (bool, error) {
+	var authLog *clickhouse.ActiveSession
+	code := encodeCode(email, deviceInfo)
+	query := database.ClickhouseInstance.
+		Order("created_at desc").
+		Limit(1).Where("code = ?", code)
+	exists := query.Find(&authLog)
+
+	ok := false
+	if exists.RowsAffected > 0 {
+		ok = true
+	}
+
+	return ok, exists.Error
+}
+
 func encodeCode(email string, deviceInfo *dto.DeviceDetectorInfo) string {
 	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s-%s-%s-%s-%s", email, deviceInfo.Ip, deviceInfo.OsName, deviceInfo.ClientEngine, deviceInfo.Lang)))
 }
@@ -40,6 +56,7 @@ func InsertActiveSessionLog(provider string, email string, active bool, trusted 
 		BrowserVersion: deviceInfo.ClientEngineVersion,
 		Country:        deviceInfo.Country,
 		City:           deviceInfo.City,
+		Lang:           deviceInfo.Lang,
 	}
 
 	result := database.ClickhouseInstance.Create(&activeSession)
