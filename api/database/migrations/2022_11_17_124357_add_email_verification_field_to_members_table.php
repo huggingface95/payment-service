@@ -14,7 +14,7 @@ class AddIsVerificationEmailFieldToMembersTable extends Migration
     public function up()
     {
         Schema::table('members', function (Blueprint $table) {
-            $table->boolean('is_verification_email')->default(false);
+            $table->integer('email_verification')->default(1);
         });
     }
 
@@ -26,7 +26,7 @@ class AddIsVerificationEmailFieldToMembersTable extends Migration
     public function down()
     {
         Schema::table('members', function (Blueprint $table) {
-            $table->dropColumn('is_verification_email');
+            $table->dropColumn('email_verification');
         });
     }
 }

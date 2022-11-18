@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\DTO\Email\Request\EmailMemberRequestDTO;
+use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\ClientTypeEnum;
 use App\Exceptions\GraphqlException;
@@ -31,8 +31,8 @@ class MemberProfileMutator extends BaseMutator
 
         if ($args['email']) {
             $this->sendConfirmChangeEmail(null, $args);
+            $member->email_verification = 2;
         }
-
         $member->update($args);
 
         return $member;
@@ -43,8 +43,6 @@ class MemberProfileMutator extends BaseMutator
         $member = auth()->user();
 
         try {
-                $account = Account::where('member_id', $member->id)
-                ->firstOrFail();
                 $verifyToken = EmailVerification::create([
                     'client_id' => $member->id,
                     'type' => ClientTypeEnum::MEMBER->toString(),
@@ -58,9 +56,9 @@ class MemberProfileMutator extends BaseMutator
                     'email_confirm_url' => $confirmUrl . '/email/verify/' . $verifyToken->token.'?email='.$args['email'],
                 ];
                 $data = array_merge($args, $emailData);
-                $emailDTO = TransformerDTO::transform(EmailMemberRequestDTO::class, $account, $data, $emailTemplateSubject);
+                $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $data, $emailTemplateSubject);
 
-                $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
+                $this->emailService->sendMemberEmailByMemberDto($emailDTO);
 
                 return [
                     'status' => 'OK',

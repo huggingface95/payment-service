@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\Email\Request\EmailMemberRequestDTO;
+use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\ClientTypeEnum;
 use App\Models\Account;
@@ -57,16 +58,14 @@ class VerifyController extends Controller
             }
 
             if (isset($member)) {
-                $account = Account::where('member_id', $member->id)
-                    ->firstOrFail();
                 $emailTemplateSubject = 'Change Email Successful';
                 $emailData = [
                     'client_name' => $member->first_name,
                     'email' => $request->email,
                 ];
-                $emailDTO = TransformerDTO::transform(EmailMemberRequestDTO::class, $account, $emailData, $emailTemplateSubject);
-                $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
-                $member->is_verification_email = true;
+                $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $emailData, $emailTemplateSubject);
+                $this->emailService->sendMemberEmailByMemberDto($emailDTO);
+                $member->email_verification = 3;
                 $member->email = $request->email;
                 $member->save();
 
