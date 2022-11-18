@@ -14,7 +14,7 @@ class ApplicantCompanyModulesMutationTest extends TestCase
 
     public function testCreateApplicantCompanyModule(): void
     {
-        $this->login();
+        $this->loginAsSuperAdmin();
 
         $this->graphQL('
             mutation CreateApplicantModule(
