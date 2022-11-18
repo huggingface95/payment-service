@@ -154,30 +154,25 @@ func checkPassword(c *gin.Context, u postgres.User, r requests.LoginRequest) boo
 }
 
 func checkAndUpdateSession(provider string, email string, fullName string, companyId uint64, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
-	cookie, err := c.Cookie("BIND-" + config.Conf.App.AppName)
-	if err == nil {
-		activeSession := oauthRepository.GetActiveSessionWithConditions(map[string]string{"provider": provider, "email": email, "cookie": cookie})
-		if activeSession != nil {
-			return true, 200, nil
-		}
-	} else {
-		activeSessionCreated := oauthRepository.InsertActiveSessionLog(provider, email, false, false, deviceInfo)
-		if activeSessionCreated != nil {
-			ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendNewDeviceEmail, &cache.ConfirmationNewDeviceData{
-				CompanyId: companyId,
-				Email:     email,
-				FullName:  fullName,
-				Cookie:    activeSessionCreated.Cookie,
-				CreatedAt: activeSessionCreated.CreatedAt.String(),
-				Os:        deviceInfo.OsName,
-				Type:      deviceInfo.Type,
-				Browser:   deviceInfo.ClientEngine,
-				Model:     deviceInfo.Model,
-				Ip:        c.ClientIP(),
-			})
-			if ok {
-				return false, 200, gin.H{"data": "An email has been sent to your email to confirm the new device"}
-			}
+	activeSession := oauthRepository.GetActiveSessionWithConditions(email, deviceInfo)
+	if activeSession != nil {
+		return true, 200, nil
+	}
+	activeSessionCreated := oauthRepository.InsertActiveSessionLog(provider, email, false, false, deviceInfo)
+	if activeSessionCreated != nil {
+		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendNewDeviceEmail, &cache.ConfirmationNewDeviceData{
+			CompanyId: companyId,
+			Email:     email,
+			FullName:  fullName,
+			CreatedAt: activeSessionCreated.CreatedAt.String(),
+			Os:        deviceInfo.OsName,
+			Type:      deviceInfo.Type,
+			Browser:   deviceInfo.ClientEngine,
+			Model:     deviceInfo.Model,
+			Ip:        c.ClientIP(),
+		})
+		if ok {
+			return false, 200, gin.H{"data": "An email has been sent to your email to confirm the new device"}
 		}
 	}
 

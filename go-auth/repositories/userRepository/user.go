@@ -19,6 +19,22 @@ func GetUserByEmail(email string, provider string) (user postgres.User) {
 	return
 }
 
+func HasUserByEmail(email string, provider string) bool {
+	var err error
+	var ok bool
+	if provider == constants.Individual {
+		ok, err = HasWithConditions(map[string]interface{}{"email": email}, func() interface{} { return new(postgres.Individual) })
+	} else {
+		ok, err = HasWithConditions(map[string]interface{}{"email": email}, func() interface{} { return new(postgres.Member) })
+	}
+
+	if err == nil {
+		return ok
+	}
+
+	return false
+}
+
 func GetUserById(id uint64, provider string) (user postgres.User) {
 	oauthClient := oauthRepository.GetOauthClientByType(provider, constants.Personal)
 	if provider == constants.Individual {
@@ -54,6 +70,22 @@ func GetWithConditions(columns map[string]interface{}, oauthClientId uint64, mc 
 	return model.(postgres.User)
 }
 
+func HasWithConditions(columns map[string]interface{}, mc func() interface{}) (bool, error) {
+	model := mc()
+	query := database.PostgresInstance.Limit(1)
+	for column, value := range columns {
+		query.Where(column+" = ?", value)
+	}
+	exists := query.Find(model)
+
+	ok := false
+	if exists.RowsAffected > 0 {
+		ok = true
+	}
+
+	return ok, exists.Error
+}
+
 func SaveUser(user postgres.User) *gorm.DB {
 	var model postgres.User
 
@@ -64,11 +96,4 @@ func SaveUser(user postgres.User) *gorm.DB {
 	}
 
 	return database.PostgresInstance.Omit(user.MergeOmit([]string{"Company"})...).Save(model)
-}
-
-func HasUserByEmail(email string, provider string) bool {
-	if GetUserByEmail(email, provider).GetId() > 0 {
-		return true
-	}
-	return false
 }

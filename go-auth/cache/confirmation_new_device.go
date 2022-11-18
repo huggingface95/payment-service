@@ -16,7 +16,6 @@ type ConfirmationNewDeviceData struct {
 	Email     string `json:"email"`
 	CreatedAt string `json:"created_at"`
 	Ip        string `json:"ip"`
-	Cookie    string `json:"cookie"`
 	Os        string `json:"os"`
 	Type      string `json:"type"`
 	Model     string `json:"model"`

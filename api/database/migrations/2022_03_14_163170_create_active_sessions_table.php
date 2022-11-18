@@ -23,12 +23,13 @@ class CreateActiveSessionsTable extends Migration
                 browser String,
                 browser_version String,
                 device_type String,
+                lang String,
                 model String,
                 country String,
                 city String,
                 active Bool DEFAULT true,
                 trusted Bool DEFAULT false,
-                cookie Nullable(String),
+                code Nullable(String),
                 created_at DateTime DEFAULT now()
             )
             ENGINE = MergeTree()

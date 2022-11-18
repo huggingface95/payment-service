@@ -18,7 +18,7 @@ type ActiveSession struct {
 	Model          string    `gorm:"column:model"`
 	Active         bool      `gorm:"column:active"`
 	Trusted        bool      `gorm:"column:trusted"`
-	Cookie         string    `gorm:"column:cookie"`
+	Code           string    `gorm:"column:code"`
 	CreatedAt      time.Time `gorm:"column:created_at"`
 }
 

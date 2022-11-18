@@ -3,7 +3,6 @@ package individual
 import (
 	"github.com/gin-gonic/gin"
 	"jwt-authentication-golang/cache"
-	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/dto"
 	"jwt-authentication-golang/helpers"
@@ -88,13 +87,15 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 	user = userRepository.GetUserById(data.Id, constants.Individual)
 	if user != nil {
 		user.SetIsEmailVerify(true)
+		user.SetIsActivated(true)
 		res := userRepository.SaveUser(user)
 		if res.Error == nil {
 			cache.Caching.ConfirmationEmailLinks.Delete(token)
-			activeSession := oauthRepository.InsertActiveSessionLog(constants.Individual, user.GetEmail(), true, true, deviceInfo)
-			context.SetCookie("BIND-"+config.Conf.App.AppName, activeSession.Cookie, -1, "/", config.Conf.App.AppFrontUrl, false, true)
-			context.JSON(http.StatusOK, gin.H{"data": "Email Verified"})
-			return
+			activeSessionLog := oauthRepository.InsertActiveSessionLog(constants.Individual, user.GetEmail(), true, true, deviceInfo)
+			if activeSessionLog != nil {
+				context.JSON(http.StatusOK, gin.H{"data": "Email Verified"})
+				return
+			}
 		}
 	}
 

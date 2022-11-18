@@ -28,6 +28,7 @@ type DeviceDetectorInfo struct {
 	Country             string
 	City                string
 	Domain              string
+	Lang                string
 }
 
 func (d *DeviceDetectorInfo) Parse(context *gin.Context) *DeviceDetectorInfo {
@@ -36,7 +37,7 @@ func (d *DeviceDetectorInfo) Parse(context *gin.Context) *DeviceDetectorInfo {
 	client := info.GetClient()
 	bot := info.GetBot()
 	ip := context.ClientIP()
-
+	lang := context.GetHeader("Accept-Language")
 	ipInfo := parseIp(ip)
 
 	if ipInfo != nil {
@@ -44,6 +45,7 @@ func (d *DeviceDetectorInfo) Parse(context *gin.Context) *DeviceDetectorInfo {
 		d.City = ipInfo.City
 	}
 
+	d.Lang = lang
 	d.Ip = ip
 	d.Model = info.Model
 	d.Brand = info.Brand

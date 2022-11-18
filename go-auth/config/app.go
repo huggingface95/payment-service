@@ -9,6 +9,7 @@ var AppConf = AppConfig{}
 
 type AppConfig struct {
 	AppName                    string
+	AppDebug                   bool
 	AppUrl                     string
 	AppFrontUrl                string
 	RedirectUrl                string
