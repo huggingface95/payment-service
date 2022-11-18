@@ -109,8 +109,8 @@ class ApplicantIndividualQueryTest extends TestCase
 
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
-            ->orderBy('id', 'DESC')
-            ->get();
+            ->where('id', 1)
+            ->first();
 
         $this->graphQL('
         query {
@@ -118,10 +118,10 @@ class ApplicantIndividualQueryTest extends TestCase
                 data {
                     id
                 }
-                }
+            }
         }')->seeJsonContains([
             [
-                'id' => strval($applicant[0]->id),
+                'id' => strval($applicant->id),
             ],
         ]);
     }
@@ -202,9 +202,19 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $this->login();
 
-        $applicant = DB::connection('pgsql_test')
+        $applicants = DB::connection('pgsql_test')
             ->table('applicant_individual')
-            ->first();
+            ->where('company_id', 1)
+            ->get();
+
+        foreach($applicants as $applicant) {
+            $data[] = [
+                'id' => strval($applicant->id),
+                'first_name' => strval($applicant->first_name),
+                'email' => strval($applicant->email),
+                'url' => strval($applicant->url),
+            ];
+        }
 
         $this->graphQL('
             query TestApplicantIndividualFilters($company_id: Mixed) {
@@ -220,16 +230,11 @@ class ApplicantIndividualQueryTest extends TestCase
                 }
             }
         ', [
-            'company_id' => strval($applicant->company_id),
+            'company_id' => 1,
         ])->seeJson([
             'data' => [
                 'applicantIndividuals' => [
-                    'data' => [[
-                        'id' => strval($applicant->id),
-                        'first_name' => strval($applicant->first_name),
-                        'email' => strval($applicant->email),
-                        'url' => strval($applicant->url),
-                    ]]
+                    'data' => $data
                 ],
             ],
         ]);
@@ -239,9 +244,19 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $this->login();
 
-        $applicant = DB::connection('pgsql_test')
+        $applicants = DB::connection('pgsql_test')
             ->table('applicant_individual')
-            ->first();
+            ->where('applicant_risk_level_id', 1)
+            ->get();
+
+        foreach ($applicants as $applicant) {
+            $data[] = [
+                'id' => strval($applicant->id),
+                'first_name' => strval($applicant->first_name),
+                'email' => strval($applicant->email),
+                'url' => strval($applicant->url),
+            ];
+        }
 
         $this->graphQL('
             query TestApplicantIndividualFilters($id: Mixed) {
@@ -261,12 +276,7 @@ class ApplicantIndividualQueryTest extends TestCase
         ])->seeJson([
             'data' => [
                 'applicantIndividuals' => [
-                    'data' => [[
-                        'id' => strval($applicant->id),
-                        'first_name' => strval($applicant->first_name),
-                        'email' => strval($applicant->email),
-                        'url' => strval($applicant->url),
-                    ]]
+                    'data' => $data
                 ],
             ],
         ]);
@@ -276,9 +286,19 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $this->login();
 
-        $applicant = DB::connection('pgsql_test')
+        $applicants = DB::connection('pgsql_test')
             ->table('applicant_individual')
-            ->first();
+            ->where('applicant_state_reason_id', 1)
+            ->get();
+
+        foreach ($applicants as $applicant) {
+            $data[] = [
+                'id' => strval($applicant->id),
+                'first_name' => strval($applicant->first_name),
+                'email' => strval($applicant->email),
+                'url' => strval($applicant->url),
+            ];
+        }
 
         $this->graphQL('
             query TestApplicantIndividualFilters($id: Mixed) {
@@ -294,16 +314,11 @@ class ApplicantIndividualQueryTest extends TestCase
                 }
             }
         ', [
-            'id' => strval($applicant->applicant_state_reason_id),
+            'id' => 1,
         ])->seeJson([
             'data' => [
                 'applicantIndividuals' => [
-                    'data' => [[
-                        'id' => strval($applicant->id),
-                        'first_name' => strval($applicant->first_name),
-                        'email' => strval($applicant->email),
-                        'url' => strval($applicant->url),
-                    ]]
+                    'data' => $data
                 ],
             ],
         ]);

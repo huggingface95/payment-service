@@ -41,8 +41,8 @@ class ApplicantBankingAccessQueryTest extends TestCase
 
         $access = DB::connection('pgsql_test')
             ->table('applicant_banking_access')
-            ->orderBy('id', 'DESC')
-            ->get();
+            ->where('member_id', 2)
+            ->first();
 
         $this->graphQL('
         query {
@@ -50,10 +50,10 @@ class ApplicantBankingAccessQueryTest extends TestCase
                 data {
                     id
                 }
-                }
+            }
         }')->seeJsonContains([
             [
-                'id' => strval($access[0]->id),
+                'id' => strval($access->id),
             ],
         ]);
     }
@@ -69,7 +69,7 @@ class ApplicantBankingAccessQueryTest extends TestCase
         $this->graphQL('
         query TestApplicantBankingAccessFilters($applicant: Mixed) {
             applicantBankingAccess(
-                filter: { column: APPLICANT_INDIVIDUAL_ID, value: $applicant }
+                where: { column: APPLICANT_INDIVIDUAL_ID, value: $applicant }
             ) {
                 data {
                     id
@@ -96,7 +96,7 @@ class ApplicantBankingAccessQueryTest extends TestCase
         $this->graphQL('
         query TestApplicantBankingAccessFilters($applicant: Mixed) {
             applicantBankingAccess(
-                filter: { column: APPLICANT_COMPANY_ID, value: $applicant }
+                where: { column: APPLICANT_COMPANY_ID, value: $applicant }
             ) {
                 data {
                     id
@@ -123,7 +123,7 @@ class ApplicantBankingAccessQueryTest extends TestCase
         $this->graphQL('
         query TestApplicantBankingAccessFilters($applicant: Mixed) {
             applicantBankingAccess(
-                filter: { column: MEMBER_ID, value: $applicant }
+                where: { column: MEMBER_ID, value: $applicant }
             ) {
                 data {
                     id

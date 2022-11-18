@@ -20,19 +20,17 @@ class ApplicantBankingAccessMutationTest extends TestCase
             mutation CreateApplicantBankingAccess(
                 $applicant_individual_id: ID!
                 $applicant_company_id: ID!
-                $member_id: ID!
+                $role_id: ID!
             )
             {
                 createApplicantBankingAccess (
                     applicant_individual_id: $applicant_individual_id
                     applicant_company_id: $applicant_company_id
-                    member_id: $member_id
+                    role_id: $role_id
                     daily_limit: 100.000
                     monthly_limit: 500.000
                     operation_limit: 5.000
                     contact_administrator: false
-                    can_sign_payment: false
-                    can_create_payment: true
                 )
                 {
                     id
@@ -40,10 +38,10 @@ class ApplicantBankingAccessMutationTest extends TestCase
             }
         ', [
             'applicant_individual_id' =>  1,
-            'applicant_company_id' => 1,
-            'member_id' => 2,
+            'applicant_company_id' => 2,
+            'role_id' => 2,
         ]);
-
+        
         $id = json_decode($this->response->getContent(), true);
 
         $this->seeJson([
@@ -66,30 +64,29 @@ class ApplicantBankingAccessMutationTest extends TestCase
                 $id: ID!
                 $applicant_individual_id: ID!
                 $applicant_company_id: ID!
-                $member_id: ID!
+                $role_id: ID!
             )
             {
                 updateApplicantBankingAccess (
                     id: $id
                     applicant_individual_id: $applicant_individual_id
                     applicant_company_id: $applicant_company_id
-                    member_id: $member_id
-                    daily_limit: 1000.000
+                    role_id: $role_id
+                    daily_limit: 100.000
                     monthly_limit: 5000.000
                     operation_limit: 50.000
                     contact_administrator: false
-                    can_sign_payment: false
-                    can_create_payment: false
                 )
                 {
                     id
+                    daily_limit
                 }
             }
         ', [
             'id' => strval($access[0]->id),
             'applicant_individual_id' =>  1,
             'applicant_company_id' => 1,
-            'member_id' => 2,
+            'role_id' => 3,
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -98,6 +95,7 @@ class ApplicantBankingAccessMutationTest extends TestCase
             'data' => [
                 'updateApplicantBankingAccess' => [
                     'id' => $id['data']['updateApplicantBankingAccess']['id'],
+                    'daily_limit' => 100
                 ],
             ],
         ]);

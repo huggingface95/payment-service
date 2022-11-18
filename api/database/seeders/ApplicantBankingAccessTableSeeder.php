@@ -20,18 +20,16 @@ class ApplicantBankingAccessTableSeeder extends Seeder
         for ($i = 1; $i <= 3; $i++) {
             ApplicantBankingAccess::firstOrCreate(
                 [
-                    'id' => $i,
-                ],
-                [
                     'applicant_individual_id' => 1,
                     'applicant_company_id' => 1,
-                    'member_id' => 2,
+                    'member_id' => $i,
+                ],
+                [
                     'daily_limit' => str_pad(mt_rand(1, 9999), 5, '0', STR_PAD_LEFT),
                     'monthly_limit' => str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
                     'operation_limit' => str_pad(mt_rand(1, 99), 5, '0', STR_PAD_LEFT),
                     'contact_administrator' => $faker->boolean,
-                    'can_sign_payment' => $faker->boolean,
-                    'can_create_payment' => $faker->boolean,
+                    'role_id' => 1
                 ]
             );
         }
