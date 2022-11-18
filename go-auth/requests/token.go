@@ -3,13 +3,13 @@ package requests
 type LoginRequest struct {
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
-	Type     string `json:"type" binding:"required"`
+	Type     string `json:"client_type" binding:"required"`
 	Proceed  bool   `json:"proceed"`
 	Cancel   bool   `json:"cancel"`
 }
 
 type RefreshRequest struct {
-	Type string `json:"type"`
+	Type string `json:"client_type"`
 }
 
 type HeaderRequest struct {

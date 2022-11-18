@@ -1,6 +1,6 @@
 package constants
 
-const Individual = "individual"
+const Individual = "applicant"
 const Member = "member"
 
 const StructMember = "Member"
