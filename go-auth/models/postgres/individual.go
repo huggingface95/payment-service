@@ -40,7 +40,6 @@ type Individual struct {
 	FullName                 string              `gorm:"column:fullname"`
 	CompanyId                uint64              `gorm:"column:company_id"`
 	MemberGroupRoleId        uint64              `gorm:"column:member_group_role_id"`
-	TwoFactorAuthId          uint64              `gorm:"column:two_factor_auth_setting_id"`
 	ApplicantStateReasonId   uint64              `gorm:"column:applicant_state_reason_id"`
 	ApplicantRiskLevelId     uint64              `gorm:"column:applicant_risk_level_id"`
 	AccountManagerMemberId   uint64              `gorm:"column:account_manager_member_id"`

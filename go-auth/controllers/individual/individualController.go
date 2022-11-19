@@ -51,7 +51,7 @@ func Register(c *gin.Context) {
 	}
 	user, err := individualRepository.FillIndividual(request)
 	company, err := individualRepository.FillCompany(request)
-	user.TwoFactorAuthId = 2
+	user.TwoFactorAuthSettingId = 2
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

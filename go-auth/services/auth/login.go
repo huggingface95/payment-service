@@ -88,14 +88,14 @@ func GetAuthUser(authLog *clickhouse.AuthenticationLog, dto *dto.CreateAuthLogDt
 }
 
 func CreateOauthToken(dto *dto.CreateOauthTokenDto, authLogDto *dto.CreateAuthLogDto) *postgres.OauthAccessToken {
-	oauthRepository.InsertAuthLog("status", authLogDto)
+	oauthRepository.InsertAuthLog("login", authLogDto)
 	oauthRepository.CreateOauthCode(dto.Id, dto.OauthClientId, true, dto.OauthCodeTime)
 	cache.Caching.AuthUser.Set(dto.Key, &cache.AuthUserData{
 		Token:     dto.Token,
 		ExpiresAt: dto.AuthUserTime,
 	})
 
-	return oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"user_id": dto.Id})
+	return oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"id": dto.OauthClientId})
 }
 
 func CreateOauthTokenWithoutCode(dto *dto.CreateOauthTokenDto, authLogDto *dto.CreateAuthLogDto) {

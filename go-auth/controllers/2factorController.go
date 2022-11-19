@@ -211,7 +211,7 @@ func ActivateTwoFactorQr(context *gin.Context) {
 	}
 
 	if request.AccessToken != "" {
-		claims, err := services.GetClaims(request.AccessToken, constants.GrantPassword, false)
+		claims, err := services.GetClaims(request.AccessToken, constants.Personal, false)
 		if err != nil {
 			context.JSON(http.StatusOK, gin.H{"data": err})
 			return
@@ -241,7 +241,7 @@ func ActivateTwoFactorQr(context *gin.Context) {
 
 	oauthRepository.CreateOauthCode(user.GetId(), 1, true, oauthCodeTime)
 
-	_, _, _, err := services.GenerateJWT(user.GetId(), user.GetTwoFactorAuthSettingId(), user.GetFullName(), request.Type, constants.GrantPassword)
+	_, _, _, err := services.GenerateJWT(user.GetId(), user.GetTwoFactorAuthSettingId(), user.GetFullName(), request.Type, constants.Personal)
 	if err != nil {
 		return
 	}
