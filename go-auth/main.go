@@ -53,7 +53,7 @@ func initRouter() *gin.Engine {
 
 	auth := router.Group("/auth")
 	{
-		i := auth.Group("individual")
+		i := auth.Group("applicant")
 		{
 			i.POST("register", individual.Register)
 			i.POST("reset-password", individual.ResetPassword)
