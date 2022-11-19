@@ -24,6 +24,14 @@ func Register(c *gin.Context) {
 		return
 	}
 
+	if request.ClientType == constants.RegisterClientTypeCorporate {
+		if request.CompanyName == "" || request.Url == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Add required parameters"})
+			c.Abort()
+			return
+		}
+	}
+
 	if ok, msg := auth.PasswordValidation(request.Password); ok == false {
 		c.JSON(http.StatusBadRequest, gin.H{"error": msg})
 		c.Abort()
@@ -42,6 +50,7 @@ func Register(c *gin.Context) {
 		return
 	}
 	user, err := individualRepository.FillIndividual(request)
+	company, err := individualRepository.FillCompany(request)
 	user.TwoFactorAuthId = 2
 
 	if err != nil {
@@ -56,7 +65,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	record := individualRepository.CreateIndividual(&user)
+	record := individualRepository.CreateIndividual(&user, &company, request.ClientType)
 	if record.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": record.Error.Error()})
 		c.Abort()

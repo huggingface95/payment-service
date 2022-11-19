@@ -7,3 +7,6 @@ const StructMember = "Member"
 const StructIndividual = "Individual"
 const ModelMember = "App\\Models\\Members"
 const ModelIndividual = "App\\Models\\ApplicantIndividual"
+
+const RegisterClientTypePrivate = "Private"
+const RegisterClientTypeCorporate = "Corporate"

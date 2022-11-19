@@ -7,5 +7,8 @@ type RegisterRequest struct {
 	Email          string `json:"email" binding:"required,email"`
 	CountryId      uint64 `json:"country_id" binding:"required"`
 	Password       string `json:"password" binding:"required"`
-	PasswordRepeat string `json:"password_repeat" binding:"required"`
+	PasswordRepeat string `json:"password_confirmation" binding:"required"`
+	ClientType     string `json:"client_type" binding:"required,oneof=Corporate Private"`
+	CompanyName    string `json:"company_name"`
+	Url            string `json:"url"`
 }
