@@ -15,7 +15,7 @@ func Auth() gin.HandlerFunc {
 			context.Abort()
 			return
 		}
-		err := services.ValidateToken(tokenString, constants.Personal, true)
+		err := services.ValidateAccessToken(tokenString, constants.Personal, true)
 		if err != nil {
 			context.JSON(401, gin.H{"error": err.Error()})
 			context.Abort()

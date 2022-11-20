@@ -23,10 +23,9 @@ type Member struct {
 	IsVerificationEmail    bool   `gorm:"column:is_verification_email"`
 	CreatedAt              time.Time
 	UpdatedAt              time.Time
-	BackupCodeData         *BackupJson         `gorm:"column:backup_codes"`
-	ClientIpAddresses      []*ClientIpAddress  `gorm:"foreignKey:ClientId;references:ID"`
-	OauthAccessTokens      []*OauthAccessToken `gorm:"foreignKey:UserId;references:ID"`
-	Company                *Company            `gorm:"foreignKey:CompanyId"`
+	BackupCodeData         *BackupJson        `gorm:"column:backup_codes"`
+	ClientIpAddresses      []*ClientIpAddress `gorm:"foreignKey:ClientId;references:ID"`
+	Company                *Company           `gorm:"foreignKey:CompanyId"`
 }
 
 type BackupJson struct {

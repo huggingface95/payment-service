@@ -23,7 +23,7 @@ func Login(context *gin.Context) {
 
 	deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
 
-	newTime, blockedTime, authUserTime, oauthCodeTime, _ := times.GetTokenTimes()
+	newTime, blockedTime, _, oauthCodeTime, _ := times.GetTokenTimes()
 
 	request, headerRequest, err := auth.ParseRequest(context)
 
@@ -105,31 +105,27 @@ func Login(context *gin.Context) {
 		}
 
 		if request.Proceed {
-			if authUserData, ok := cache.Caching.AuthUser.Get(key); ok == true {
-				cache.Caching.BlackList.Set(&cache.BlackListData{Id: user.GetId(), Token: authUserData.Token, Forever: false})
-			}
 			oauthRepository.InsertAuthLog("logout", createAuthLogDto)
 		}
 	}
 
-	tokenJWT, oauthClient, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetTwoFactorAuthSettingId(), user.GetFullName(), request.Type, constants.Personal)
-	if err != nil {
-		return
-	}
-
-	createOauthTokenDto := dto.DTO.CreateOauthTokenDto.Parse(key, user.GetId(), oauthClient.Id, tokenJWT, request.Type, oauthCodeTime, authUserTime)
+	oauthRepository.InsertAuthLog("login", createAuthLogDto)
 
 	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == false {
-		oauthAccess := auth.CreateOauthToken(createOauthTokenDto, createAuthLogDto)
-		context.JSON(http.StatusOK, gin.H{"2fa_token": oauthAccess.ID})
+		tokenJWT, oauthClient, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.ForTwoFactor)
+		if err != nil {
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		oauthRepository.CreateOauthCode(user.GetId(), oauthClient.Id, true, oauthCodeTime)
+		context.JSON(http.StatusOK, gin.H{"2fa_token": tokenJWT})
 		return
 	}
 
 	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == true {
-		oauthAccess := auth.CreateOauthToken(createOauthTokenDto, createAuthLogDto)
-		context.JSON(http.StatusOK, gin.H{"two_factor": "true", "auth_token": oauthAccess.ID})
+		context.JSON(http.StatusOK, gin.H{"two_factor": "true", "auth_token": user.GetGoogle2FaSecret()})
 	} else {
-		auth.CreateOauthTokenWithoutCode(createOauthTokenDto, createAuthLogDto)
+		cache.Caching.LoginAttempt.Delete(key)
 	}
 
 	if user.InClientIpAddresses(context.ClientIP()) == false {
@@ -137,6 +133,12 @@ func Login(context *gin.Context) {
 			context.JSON(http.StatusOK, gin.H{"data": "An email has been sent to your email to confirm the new ip"})
 			return
 		}
+	}
+
+	tokenJWT, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
+	if err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	context.JSON(http.StatusOK, gin.H{"access_token": tokenJWT, "token_type": "bearer", "expires_in": expirationTime.Unix()})

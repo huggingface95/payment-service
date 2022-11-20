@@ -28,7 +28,7 @@ func Refresh(context *gin.Context) {
 
 	token := context.GetHeader("Authorization")
 
-	newToken, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetTwoFactorAuthSettingId(), user.GetFullName(), user.GetModelType(), constants.Personal)
+	newToken, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), user.GetModelType(), constants.Personal, constants.AccessToken)
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err})

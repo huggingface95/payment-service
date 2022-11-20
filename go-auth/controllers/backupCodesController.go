@@ -7,7 +7,6 @@ import (
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/postgres"
-	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/repositories/userRepository"
 	"jwt-authentication-golang/requests"
 	"jwt-authentication-golang/services"
@@ -26,8 +25,7 @@ func GenerateBackupCodes(context *gin.Context) {
 	}
 
 	if request.AuthToken != "" {
-		oauthToken := oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"id": request.AuthToken})
-		user = oauthToken.GetUser()
+
 	}
 
 	if request.AccessToken != "" {
@@ -75,8 +73,7 @@ func StoreBackupCodes(context *gin.Context) {
 	}
 
 	if request.AuthToken != "" {
-		oauthToken := oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"id": request.AuthToken})
-		user = oauthToken.GetUser()
+
 	}
 
 	if request.AccessToken != "" {
@@ -104,7 +101,7 @@ func StoreBackupCodes(context *gin.Context) {
 	user.SetBackupCodeData(request.BackupCodes)
 	userRepository.SaveUser(user)
 
-	token, _, _, err := services.GenerateJWT(user.GetId(), user.GetTwoFactorAuthSettingId(), user.GetFullName(), request.Type, constants.Personal)
+	token, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
 	if err != nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Token don't generate"})
 		context.Abort()

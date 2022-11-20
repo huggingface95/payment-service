@@ -3,7 +3,6 @@ package cache
 var Caching = Cache{}
 
 type Cache struct {
-	AuthUser               AuthUserCache
 	BlackList              BlackListCache
 	LoginAttempt           LoginAttemptCache
 	BlockedAccounts        BlockedAccountsCache
@@ -16,7 +15,6 @@ type Cache struct {
 }
 
 func (c *Cache) Init() *Cache {
-	c.AuthUser = AuthUserCache{Data: make(map[string]AuthUserData)}
 	c.BlackList = BlackListCache{}
 	c.LoginAttempt = LoginAttemptCache{Data: make(map[string]int)}
 	c.TwoFactorAttempt = TwoFactorAttemptCache{Data: make(map[string]int)}

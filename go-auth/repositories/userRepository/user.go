@@ -5,16 +5,14 @@ import (
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/database"
 	"jwt-authentication-golang/models/postgres"
-	"jwt-authentication-golang/repositories/oauthRepository"
 	"reflect"
 )
 
 func GetUserByEmail(email string, provider string) (user postgres.User) {
-	oauthClient := oauthRepository.GetOauthClientByType(provider, constants.Personal)
 	if provider == constants.Individual {
-		user = GetWithConditions(map[string]interface{}{"email": email}, oauthClient.Id, func() interface{} { return new(postgres.Individual) })
+		user = GetWithConditions(map[string]interface{}{"email": email}, func() interface{} { return new(postgres.Individual) })
 	} else {
-		user = GetWithConditions(map[string]interface{}{"email": email}, oauthClient.Id, func() interface{} { return new(postgres.Member) })
+		user = GetWithConditions(map[string]interface{}{"email": email}, func() interface{} { return new(postgres.Member) })
 	}
 	return
 }
@@ -36,16 +34,15 @@ func HasUserByEmail(email string, provider string) bool {
 }
 
 func GetUserById(id uint64, provider string) (user postgres.User) {
-	oauthClient := oauthRepository.GetOauthClientByType(provider, constants.Personal)
 	if provider == constants.Individual {
-		user = GetWithConditions(map[string]interface{}{"id": id}, oauthClient.Id, func() interface{} { return new(postgres.Individual) })
+		user = GetWithConditions(map[string]interface{}{"id": id}, func() interface{} { return new(postgres.Individual) })
 	} else {
-		user = GetWithConditions(map[string]interface{}{"id": id}, oauthClient.Id, func() interface{} { return new(postgres.Member) })
+		user = GetWithConditions(map[string]interface{}{"id": id}, func() interface{} { return new(postgres.Member) })
 	}
 	return
 }
 
-func GetWithConditions(columns map[string]interface{}, oauthClientId uint64, mc func() interface{}) postgres.User {
+func GetWithConditions(columns map[string]interface{}, mc func() interface{}) postgres.User {
 	var m string
 	model := mc()
 
@@ -63,10 +60,13 @@ func GetWithConditions(columns map[string]interface{}, oauthClientId uint64, mc 
 		m = constants.ModelIndividual
 	}
 
-	query.Preload("ClientIpAddresses", "client_type = ?", m).
-		Preload("OauthAccessTokens", "client_id = ?", oauthClientId).
+	rec := query.Preload("ClientIpAddresses", "client_type = ?", m).
 		Preload("Company").
 		First(model)
+	if rec.Error != nil {
+		return nil
+	}
+
 	return model.(postgres.User)
 }
 

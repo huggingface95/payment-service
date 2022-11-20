@@ -8,7 +8,6 @@ import (
 	"jwt-authentication-golang/dto"
 	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/clickhouse"
-	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/repositories/redisRepository"
 	"jwt-authentication-golang/requests"
@@ -85,26 +84,6 @@ func GetAuthUser(authLog *clickhouse.AuthenticationLog, dto *dto.CreateAuthLogDt
 	}
 
 	return authLog.Status
-}
-
-func CreateOauthToken(dto *dto.CreateOauthTokenDto, authLogDto *dto.CreateAuthLogDto) *postgres.OauthAccessToken {
-	oauthRepository.InsertAuthLog("login", authLogDto)
-	oauthRepository.CreateOauthCode(dto.Id, dto.OauthClientId, true, dto.OauthCodeTime)
-	cache.Caching.AuthUser.Set(dto.Key, &cache.AuthUserData{
-		Token:     dto.Token,
-		ExpiresAt: dto.AuthUserTime,
-	})
-
-	return oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"id": dto.OauthClientId})
-}
-
-func CreateOauthTokenWithoutCode(dto *dto.CreateOauthTokenDto, authLogDto *dto.CreateAuthLogDto) {
-	oauthRepository.InsertAuthLog("login", authLogDto)
-	cache.Caching.AuthUser.Set(dto.Key, &cache.AuthUserData{
-		Token:     dto.Token,
-		ExpiresAt: dto.AuthUserTime,
-	})
-	cache.Caching.LoginAttempt.Delete(dto.Key)
 }
 
 func CreateConfirmationIpLink(provider string, id uint64, companyId uint64, email string, clientIp string, timeNow time.Time) bool {

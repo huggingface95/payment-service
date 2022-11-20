@@ -33,30 +33,33 @@ func GenerateTwoFactorQr(context *gin.Context) {
 	}
 
 	if request.TwoFaToken != "" {
-		accessToken := oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"id": request.TwoFaToken})
-		if accessToken.GetUser() == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
-			context.Abort()
-			return
-		}
-		user = accessToken.GetUser()
-	} else if request.AccessToken != "" {
-		user = auth.GetAuthUserFromRequest(context)
+		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.TwoFaToken)
 		if user == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
 			context.Abort()
 			return
 		}
-
-	} else if request.MemberId > 0 {
+	}
+	if request.MemberId > 0 && request.Type == constants.Member {
+		if request.AccessToken == "" {
+			context.JSON(http.StatusOK, gin.H{"data": "Access token required"})
+			context.Abort()
+			return
+		}
+		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.AccessToken)
+		if user == nil {
+			context.JSON(http.StatusOK, gin.H{"data": "Access token not working"})
+			context.Abort()
+			return
+		}
 		user = userRepository.GetUserById(request.MemberId, clientType)
-
 		if user == nil {
 			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
 			context.Abort()
 			return
 		}
-	} else {
+	}
+	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
 		context.Abort()
 		return
@@ -84,27 +87,45 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	if request.AuthToken != "" {
-		accessToken := oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"id": request.AuthToken})
-		if accessToken.GetUser() == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
-			context.Abort()
-			return
-		}
-		user = accessToken.GetUser()
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
 	}
 
-	if request.MemberId > 0 {
-		user = userRepository.GetUserById(request.MemberId, request.Type)
+	if request.TwoFaToken != "" {
+		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.TwoFaToken)
 		if user == nil {
 			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
 			context.Abort()
 			return
 		}
 	}
+	if request.MemberId > 0 && request.Type == constants.Member {
+		if request.AccessToken == "" {
+			context.JSON(http.StatusOK, gin.H{"data": "Access token required"})
+			context.Abort()
+			return
+		}
+		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.AccessToken)
+		if user == nil {
+			context.JSON(http.StatusOK, gin.H{"data": "Access token not working"})
+			context.Abort()
+			return
+		}
+		user = userRepository.GetUserById(request.MemberId, clientType)
+		if user == nil {
+			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
+			context.Abort()
+			return
+		}
+	}
+	if user == nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
+		context.Abort()
+		return
+	}
 
 	oauthCode := oauthRepository.GetOauthCodeWithConditions(map[string]interface{}{"user_id": user.GetId()})
-
 	if oauthCode.ExpiresAt.Unix() < newTime.Unix() {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Token has expired"})
 		context.Abort()
@@ -116,13 +137,6 @@ func VerifyTwoFactorQr(context *gin.Context) {
 	if twoFactorAttempt, ok := cache.Caching.TwoFactorAttempt.Get(fmt.Sprintf("%s_%d", "members", user.GetId())); ok == true {
 		cache.Caching.BlockedAccounts.Set(key, blockedTime.Unix())
 		cache.Caching.TwoFactorAttempt.Set(key, twoFactorAttempt+1)
-		if authUserData, ok := cache.Caching.AuthUser.Get(key); ok == true {
-			cache.Caching.BlackList.Set(&cache.BlackListData{
-				Forever: false,
-				Token:   authUserData.Token,
-				Id:      user.GetId(),
-			})
-		}
 		context.JSON(http.StatusForbidden, gin.H{"error": fmt.Sprint("Account is temporary blocked for ", blockedTime.Sub(newTime))})
 		context.Abort()
 		return
@@ -130,13 +144,6 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		user.SetIsActivated(false)
 		userRepository.SaveUser(user)
 		cache.Caching.LoginAttempt.Delete(key)
-		if authUserData, ok := cache.Caching.AuthUser.Get(key); ok == true {
-			cache.Caching.BlackList.Set(&cache.BlackListData{
-				Forever: false,
-				Token:   authUserData.Token,
-				Id:      user.GetId(),
-			})
-		}
 		context.JSON(http.StatusForbidden, gin.H{"error": "Account is blocked. Please contact support"})
 		context.Abort()
 		return
@@ -158,7 +165,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		user.SetBackupCodeData(backupCodeData)
 		userRepository.SaveUser(user)
 		if success == true {
-			token, _, _, _ := services.GenerateJWT(user.GetId(), user.GetTwoFactorAuthSettingId(), user.GetFullName(), request.Type, constants.Personal)
+			token, _, _, _ := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
 			context.JSON(http.StatusOK, gin.H{"data": "success", "token": token})
 			return
 		} else {
@@ -168,25 +175,19 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		}
 	}
 
-	accessToken := oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"user_id": user.GetId()})
-
 	valid := services.Validate(user.GetId(), request.Code, config.Conf.App.AppName)
 
 	if valid == false {
-		accessToken.TwoFactorVerified = false
-		oauthRepository.SaveOauthAccessToken(accessToken)
 		twoFactorAttempt, _ := cache.Caching.TwoFactorAttempt.Get(key)
 		cache.Caching.TwoFactorAttempt.Set(key, twoFactorAttempt+1)
 		context.JSON(http.StatusForbidden, gin.H{"data": "Unable to verify your code"})
 		context.Abort()
 		return
 	}
-	accessToken.TwoFactorVerified = true
-	oauthRepository.SaveOauthAccessToken(accessToken)
 
 	cache.Caching.TwoFactorAttempt.Delete(key)
 
-	token, _, _, err := services.GenerateJWT(user.GetId(), user.GetTwoFactorAuthSettingId(), user.GetFullName(), request.Type, constants.Personal)
+	token, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
 
 	if err != nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Generate Error"})
@@ -210,39 +211,52 @@ func ActivateTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	if request.AccessToken != "" {
-		claims, err := services.GetClaims(request.AccessToken, constants.Personal, false)
-		if err != nil {
-			context.JSON(http.StatusOK, gin.H{"data": err})
-			return
-		}
-		user = userRepository.GetUserById(claims.GetSubject(), request.Type)
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
 	}
 
-	if request.AuthToken != "" {
-		accessToken := oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"id": request.AuthToken})
-		if accessToken.GetUser() == nil {
+	if request.TwoFaToken != "" {
+		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.TwoFaToken)
+		if user == nil {
 			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
 			context.Abort()
 			return
 		}
-		user = accessToken.GetUser()
 	}
-
-	if request.MemberId > 0 {
-		user = userRepository.GetUserById(request.MemberId, request.Type)
-		if user == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
+	if request.MemberId > 0 && request.Type == constants.Member {
+		if request.AccessToken == "" {
+			context.JSON(http.StatusOK, gin.H{"data": "Access token required"})
+			context.Abort()
 			return
 		}
+		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.AccessToken)
+		if user == nil {
+			context.JSON(http.StatusOK, gin.H{"data": "Access token not working"})
+			context.Abort()
+			return
+		}
+		user = userRepository.GetUserById(request.MemberId, clientType)
+		if user == nil {
+			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
+			context.Abort()
+			return
+		}
+	}
+	if user == nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
+		context.Abort()
+		return
 	}
 	user.SetGoogle2FaSecret(request.Secret)
 	userRepository.SaveUser(user)
 
-	oauthRepository.CreateOauthCode(user.GetId(), 1, true, oauthCodeTime)
+	oauthClient := oauthRepository.GetOauthClientByType(user.StructName(), constants.Personal)
+	code := oauthRepository.CreateOauthCode(user.GetId(), oauthClient.Id, true, oauthCodeTime)
 
-	_, _, _, err := services.GenerateJWT(user.GetId(), user.GetTwoFactorAuthSettingId(), user.GetFullName(), request.Type, constants.Personal)
-	if err != nil {
+	if code == nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "System error"})
+		context.Abort()
 		return
 	}
 
@@ -269,22 +283,31 @@ func DisableTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	user = auth.GetAuthUserFromRequest(context)
-	credentialError := user.CheckPassword(request.Password)
-	if credentialError != nil {
-		context.JSON(http.StatusUnauthorized, gin.H{"error": "Password is not valid"})
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
+	}
+
+	user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.AccessToken)
+	if user == nil {
+		context.JSON(http.StatusOK, gin.H{"data": "Access token not working"})
 		context.Abort()
 		return
 	}
 
-	oauthToken := oauthRepository.GetOauthAccessTokenWithConditions(map[string]interface{}{"user_id": user.GetId()})
+	if request.MemberId > 0 && request.Type == constants.Member {
+		user = userRepository.GetUserById(request.MemberId, clientType)
+		if user == nil {
+			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
+			context.Abort()
+			return
+		}
+	}
 
 	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName) == false {
 		user.SetTwoFactorAuthSettingId(1)
 		user.SetGoogle2FaSecret("")
 		userRepository.SaveUser(user)
-		oauthToken.TwoFactorVerified = false
-		oauthRepository.SaveOauthAccessToken(oauthToken)
 		context.JSON(http.StatusOK, gin.H{"data": "Google 2fa disabled successful"})
 		context.Abort()
 		return

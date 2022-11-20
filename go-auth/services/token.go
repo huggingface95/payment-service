@@ -6,7 +6,6 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
-	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/times"
@@ -16,51 +15,43 @@ import (
 )
 
 type JWTClaim struct {
-	Prv string `json:"prv,omitempty"`
+	Prv  string `json:"prv"`
+	Type string `json:"type"`
 
 	jwt.RegisteredClaims
 }
 
-func (j *JWTClaim) GetSubject() uint64 {
-	number, err := strconv.ParseUint(j.Subject, 10, 64)
+func (j *JWTClaim) GetId() uint64 {
+	id, err := strconv.ParseUint(j.ID, 10, 64)
 	if err != nil {
 		return 0
 	}
-	return number
+	return id
 }
 
-func getJWTClaims(id uint64, twoFactorAuthSettingId uint64, provider string) *JWTClaim {
+func getJWTClaims(id uint64, name string, provider string, accessType string) *JWTClaim {
 	IssuedTime, _, _, _, expirationJWTTime := times.GetTokenTimes()
 
 	return &JWTClaim{
-		Prv: fmt.Sprint(provider),
+		Prv:  fmt.Sprint(provider),
+		Type: accessType,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Audience:  []string{strconv.FormatUint(twoFactorAuthSettingId, 10)},
 			Issuer:    config.Conf.Jwt.PayloadUrl,
 			IssuedAt:  jwt.NewNumericDate(IssuedTime),
 			ExpiresAt: jwt.NewNumericDate(expirationJWTTime),
 			NotBefore: jwt.NewNumericDate(IssuedTime),
-			Subject:   strconv.Itoa(int(id)),
-			ID:        helpers.GenerateRandomString(20),
+			Subject:   name,
+			ID:        strconv.Itoa(int(id)),
 		},
 	}
 }
 
-func GenerateJWT(id uint64, twoFactorAuthSettingId uint64, name string, provider string, jwtType string) (token string, oauthClient *postgres.OauthClient, expirationTime time.Time, err error) {
-	claims := getJWTClaims(id, twoFactorAuthSettingId, provider)
+func GenerateJWT(id uint64, name string, provider string, jwtType string, accessType string) (token string, oauthClient *postgres.OauthClient, expirationTime time.Time, err error) {
+	claims := getJWTClaims(id, name, provider, accessType)
 	oauthClient = oauthRepository.GetOauthClientByType(provider, jwtType)
 
 	token, err = GetToken(claims, oauthClient.Secret)
-	if err == nil && jwtType == constants.GrantPassword {
-		oauthRepository.CreateOauthAccessToken(&postgres.OauthAccessToken{
-			ID:                claims.ID,
-			UserId:            id,
-			ClientId:          oauthClient.Id,
-			Name:              name,
-			Revoked:           false,
-			TwoFactorVerified: false,
-		})
-	}
+
 	expirationTime = claims.ExpiresAt.Time
 	return
 }
@@ -97,8 +88,37 @@ func parseJWT(signedToken string, jwtType string, replaceBearer bool) (claims *J
 	return claims, err
 }
 
-func ValidateToken(token string, jwtType string, replaceBearer bool) (err error) {
-	_, err = parseJWT(token, jwtType, replaceBearer)
+func ValidateAccessToken(token string, jwtType string, replaceBearer bool) (err error) {
+	claims, err := parseJWT(token, jwtType, replaceBearer)
+	if err == nil {
+		if claims.Type != constants.AccessToken {
+			err = errors.New("bad access token")
+			return
+		}
+	}
+	return
+}
+
+func ValidateForTwoFactorTOken(token string, jwtType string, replaceBearer bool) (err error) {
+	claims, err := parseJWT(token, jwtType, replaceBearer)
+	fmt.Println(claims)
+	if err == nil {
+		if claims.Type != constants.ForTwoFactor {
+			err = errors.New("bad two factor token")
+			return
+		}
+	}
+	return
+}
+
+func ValidateAuthToken(token string, jwtType string, replaceBearer bool) (err error) {
+	claims, err := parseJWT(token, jwtType, replaceBearer)
+	if err == nil {
+		if claims.Type != constants.AuthToken {
+			err = errors.New("bad two factor token")
+			return
+		}
+	}
 	return
 }
 

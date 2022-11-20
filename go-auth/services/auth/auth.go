@@ -30,5 +30,22 @@ func GetAuthUserFromRequest(c *gin.Context) postgres.User {
 		return nil
 	}
 
-	return userRepository.GetUserById(claims.GetSubject(), claims.Prv)
+	return userRepository.GetUserById(claims.GetId(), claims.Prv)
+}
+
+func GetAuthUserByToken(jwtType string, jwtAccessType string, token string) postgres.User {
+	var err error
+	if jwtAccessType == constants.AccessToken {
+		err = services.ValidateAccessToken(token, jwtType, false)
+	} else if jwtAccessType == constants.AuthToken {
+		err = services.ValidateAuthToken(token, jwtType, false)
+	} else {
+		err = services.ValidateForTwoFactorTOken(token, jwtType, false)
+	}
+	if err != nil {
+		return nil
+	}
+	claims, err := services.GetClaims(token, jwtType, false)
+
+	return userRepository.GetUserById(claims.GetId(), claims.Prv)
 }
