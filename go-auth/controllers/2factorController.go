@@ -251,7 +251,7 @@ func ActivateTwoFactorQr(context *gin.Context) {
 	user.SetGoogle2FaSecret(request.Secret)
 	userRepository.SaveUser(user)
 
-	oauthClient := oauthRepository.GetOauthClientByType(user.StructName(), constants.Personal)
+	oauthClient := oauthRepository.GetOauthClientByType(clientType, constants.Personal)
 	code := oauthRepository.CreateOauthCode(user.GetId(), oauthClient.Id, true, oauthCodeTime)
 
 	if code == nil {
@@ -260,7 +260,7 @@ func ActivateTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName) == false {
+	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName) == true {
 		user.SetTwoFactorAuthSettingId(2)
 		userRepository.SaveUser(user)
 		context.JSON(http.StatusOK, gin.H{"data": "2fa activated"})
@@ -304,7 +304,7 @@ func DisableTwoFactorQr(context *gin.Context) {
 		}
 	}
 
-	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName) == false {
+	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName) == true {
 		user.SetTwoFactorAuthSettingId(1)
 		user.SetGoogle2FaSecret("")
 		userRepository.SaveUser(user)

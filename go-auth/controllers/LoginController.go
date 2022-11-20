@@ -124,6 +124,7 @@ func Login(context *gin.Context) {
 
 	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == true {
 		context.JSON(http.StatusOK, gin.H{"two_factor": "true", "auth_token": user.GetGoogle2FaSecret()})
+		return
 	} else {
 		cache.Caching.LoginAttempt.Delete(key)
 	}

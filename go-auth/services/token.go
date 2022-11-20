@@ -101,7 +101,6 @@ func ValidateAccessToken(token string, jwtType string, replaceBearer bool) (err 
 
 func ValidateForTwoFactorTOken(token string, jwtType string, replaceBearer bool) (err error) {
 	claims, err := parseJWT(token, jwtType, replaceBearer)
-	fmt.Println(claims)
 	if err == nil {
 		if claims.Type != constants.ForTwoFactor {
 			err = errors.New("bad two factor token")
