@@ -20,7 +20,7 @@ class CommissionTemplateMutator
         return $commissionTemplate;
     }
 
-    public function update($_, array $args)
+    public function update($root, array $args)
     {
         /** @var CommissionTemplate $commissionTemplate */
         $commissionTemplate = CommissionTemplate::find($args['id']);
