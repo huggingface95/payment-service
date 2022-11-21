@@ -65,7 +65,7 @@ func GenerateTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	qr, code, err := services.GenerateTwoFactorQr(user.GetId(), user.GetEmail(), config.Conf.App.AppName, crypto.SHA1, 8)
+	qr, code, err := services.GenerateTwoFactorQr(clientType, user.GetId(), user.GetEmail(), config.Conf.App.AppName, crypto.SHA1, 8)
 	if err != nil {
 		context.JSON(http.StatusOK, gin.H{"data": "Don't generate two factor token"})
 		context.Abort()
@@ -135,7 +135,7 @@ func ActivateTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName) == true {
+	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType) == true {
 		user.SetTwoFactorAuthSettingId(2)
 		userRepository.SaveUser(user)
 		context.JSON(http.StatusOK, gin.H{"data": "2fa activated"})
@@ -249,7 +249,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		}
 	}
 
-	valid := services.Validate(user.GetId(), request.Code, config.Conf.App.AppName)
+	valid := services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType)
 
 	if valid == false {
 		twoFactorAttempt, _ := cache.Caching.TwoFactorAttempt.Get(key)
@@ -304,7 +304,7 @@ func DisableTwoFactorQr(context *gin.Context) {
 		}
 	}
 
-	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName) == true {
+	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType) == true {
 		user.SetTwoFactorAuthSettingId(1)
 		user.SetGoogle2FaSecret("")
 		userRepository.SaveUser(user)

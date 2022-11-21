@@ -8,8 +8,12 @@ import (
 	"jwt-authentication-golang/cache"
 )
 
-func GenerateTwoFactorQr(id uint64, email string, app string, crypt crypto.Hash, digits int) (qr string, secret string, err error) {
+func GenerateTwoFactorQr(clientType string, id uint64, email string, app string, crypt crypto.Hash, digits int) (qr string, secret string, err error) {
 	otp, err := twofactor.NewTOTP(email, app, crypt, digits)
+	if err != nil {
+		return
+	}
+	_, err = otp.OTP()
 	if err != nil {
 		return
 	}
@@ -27,13 +31,13 @@ func GenerateTwoFactorQr(id uint64, email string, app string, crypt crypto.Hash,
 		return
 	}
 
-	cache.Caching.Totp.Set(fmt.Sprintf("%s_%d", "members", id), otpToBytes)
+	cache.Caching.Totp.Set(fmt.Sprintf("%s_%d", clientType, id), otpToBytes)
 
 	return
 }
 
-func Validate(id uint64, code string, issuer string) bool {
-	otpBytes, ok := cache.Caching.Totp.Get(fmt.Sprintf("%s_%d", "members", id))
+func Validate(id uint64, code string, issuer string, provider string) bool {
+	otpBytes, ok := cache.Caching.Totp.Get(fmt.Sprintf("%s_%d", provider, id))
 	if ok == false {
 		return false
 	}
