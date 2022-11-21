@@ -15,12 +15,20 @@ func Auth() gin.HandlerFunc {
 			context.Abort()
 			return
 		}
-		err := services.ValidateAccessToken(tokenString, constants.Personal, true)
-		if err != nil {
-			context.JSON(401, gin.H{"error": err.Error()})
-			context.Abort()
+		errAccessToken := services.ValidateAccessToken(tokenString, constants.Personal, true)
+		errAuthToken := services.ValidateAuthToken(tokenString, constants.Personal, true)
+
+		if errAuthToken == nil || errAccessToken == nil {
+			context.Next()
 			return
 		}
-		context.Next()
+
+		if errAuthToken != nil {
+			context.JSON(401, gin.H{"error": errAuthToken})
+		} else if errAccessToken != nil {
+			context.JSON(401, gin.H{"error": errAccessToken})
+		}
+		context.Abort()
+		return
 	}
 }

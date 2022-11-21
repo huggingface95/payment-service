@@ -123,7 +123,13 @@ func Login(context *gin.Context) {
 	}
 
 	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == true {
-		context.JSON(http.StatusOK, gin.H{"two_factor": "true", "auth_token": user.GetGoogle2FaSecret()})
+		authToken, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AuthToken)
+		if err != nil {
+			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		context.JSON(http.StatusOK, gin.H{"two_factor": "true", "auth_token": authToken})
 		return
 	} else {
 		cache.Caching.LoginAttempt.Delete(key)

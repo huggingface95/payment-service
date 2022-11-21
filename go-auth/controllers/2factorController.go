@@ -41,20 +41,20 @@ func GenerateTwoFactorQr(context *gin.Context) {
 		}
 	}
 	if request.MemberId > 0 && request.Type == constants.Member {
-		if request.AccessToken == "" {
-			context.JSON(http.StatusOK, gin.H{"data": "Access token required"})
+		if request.AuthToken == "" {
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Access token required"})
 			context.Abort()
 			return
 		}
-		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.AccessToken)
+		user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, request.AuthToken)
 		if user == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Access token not working"})
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Access token not working"})
 			context.Abort()
 			return
 		}
 		user = userRepository.GetUserById(request.MemberId, clientType)
 		if user == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
 			context.Abort()
 			return
 		}
@@ -94,26 +94,26 @@ func ActivateTwoFactorQr(context *gin.Context) {
 	if request.TwoFaToken != "" {
 		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.TwoFaToken)
 		if user == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
 			context.Abort()
 			return
 		}
 	}
 	if request.MemberId > 0 && request.Type == constants.Member {
-		if request.AccessToken == "" {
-			context.JSON(http.StatusOK, gin.H{"data": "Access token required"})
+		if request.AuthToken == "" {
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Auth token required"})
 			context.Abort()
 			return
 		}
-		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.AccessToken)
+		user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, request.AuthToken)
 		if user == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Access token not working"})
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Access token not working"})
 			context.Abort()
 			return
 		}
 		user = userRepository.GetUserById(request.MemberId, clientType)
 		if user == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
 			context.Abort()
 			return
 		}
@@ -169,26 +169,26 @@ func VerifyTwoFactorQr(context *gin.Context) {
 	if request.TwoFaToken != "" {
 		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.TwoFaToken)
 		if user == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
 			context.Abort()
 			return
 		}
 	}
 	if request.MemberId > 0 && request.Type == constants.Member {
-		if request.AccessToken == "" {
-			context.JSON(http.StatusOK, gin.H{"data": "Access token required"})
+		if request.AuthToken == "" {
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Access token required"})
 			context.Abort()
 			return
 		}
-		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.AccessToken)
+		user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, request.AuthToken)
 		if user == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Access token not working"})
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Access token not working"})
 			context.Abort()
 			return
 		}
 		user = userRepository.GetUserById(request.MemberId, clientType)
 		if user == nil {
-			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
+			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
 			context.Abort()
 			return
 		}
@@ -288,7 +288,7 @@ func DisableTwoFactorQr(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, request.AccessToken)
+	user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, request.AuthToken)
 	if user == nil {
 		context.JSON(http.StatusOK, gin.H{"data": "Access token not working"})
 		context.Abort()
