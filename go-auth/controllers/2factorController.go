@@ -288,7 +288,7 @@ func DisableTwoFactorQr(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.AccessToken)
+	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, request.AccessToken)
 	if user == nil {
 		context.JSON(http.StatusOK, gin.H{"data": "Access token not working"})
 		context.Abort()
