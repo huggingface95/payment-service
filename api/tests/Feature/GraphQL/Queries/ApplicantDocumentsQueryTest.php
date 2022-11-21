@@ -40,7 +40,7 @@ class ApplicantDocumentsQueryTest extends TestCase
                 'document_type_id' => (string) $document->document_type_id,
                 'document_state_id' => (string) $document->document_state_id,
                 'applicant_id' => (string) $document->applicant_id,
-                'applicant_type' => (string) $document->applicant_type == ApplicantIndividual::class ? 'INDIVIDUAL' : 'COMPANY',
+                'applicant_type' => (string) $document->applicant_type,
             ];
         }
 

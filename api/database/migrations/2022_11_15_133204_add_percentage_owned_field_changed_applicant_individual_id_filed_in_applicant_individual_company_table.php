@@ -19,7 +19,7 @@ class AddPercentageOwnedFieldChangedApplicantIndividualIdFiledInApplicantIndivid
             $table->dropForeign(['applicant_individual_id']);
 
             $table->decimal('percentage_owned', 5, 2)->nullable();
-            $table->enum('applicant_type', [ApplicantIndividual::class, ApplicantCompany::class])->default(ApplicantIndividual::class);
+            $table->enum('applicant_type', [class_basename(ApplicantIndividual::class), class_basename(ApplicantCompany::class)])->default(class_basename(ApplicantIndividual::class));
             $table->dropUnique(['applicant_individual_id', 'applicant_company_id']);
             $table->renameColumn('applicant_individual_id', 'applicant_id');
             $table->unique(['applicant_id', 'applicant_type', 'applicant_company_id']);

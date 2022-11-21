@@ -29,7 +29,7 @@ class ChangeUsersViewTable extends Migration
                FROM ((members m
                  JOIN group_role_members_individuals grmi ON ((m.id = grmi.user_id)))
                  JOIN group_role gr ON ((gr.id = grmi.group_role_id)))
-              WHERE ((grmi.user_type)::text = 'App\Models\Members'::text)
+              WHERE ((grmi.user_type)::text = 'Members'::text)
             UNION
              SELECT
                 ai.fullname,
@@ -43,7 +43,7 @@ class ChangeUsersViewTable extends Migration
                FROM ((applicant_individual ai
                  JOIN group_role_members_individuals grmi ON ((ai.id = grmi.user_id)))
                  JOIN group_role gr ON ((gr.id = grmi.group_role_id)))
-              WHERE ((grmi.user_type)::text = 'App\Models\ApplicantIndividual'::TEXT)
+              WHERE ((grmi.user_type)::text = 'ApplicantIndividual'::TEXT)
               ) AS users_view
         ");
     }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -26,7 +28,7 @@ class CreateKycTimelineTable extends Migration
             $table->unsignedBigInteger('document_id')->nullable();
             $table->unsignedBigInteger('company_id');
             $table->unsignedBigInteger('applicant_id');
-            $table->enum('applicant_type', [ApplicantIndividual::class, ApplicantCompany::class])->default(ApplicantIndividual::class);
+            $table->enum('applicant_type', [class_basename(ApplicantIndividual::class), class_basename(ApplicantCompany::class)])->default(class_basename(ApplicantIndividual::class));
             $table->dateTime('created_at');
 
             $table->foreign('creator_id')->references('id')->on('members');

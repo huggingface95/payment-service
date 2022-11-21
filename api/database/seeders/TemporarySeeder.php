@@ -26,11 +26,11 @@ class TemporarySeeder extends Seeder
         foreach ($groupRoleUsers as $groupRoleUser) {
             $groupRole = GroupRole::find($groupRoleUser->group_role_id);
             if ($groupRole->group_type_id == GroupRole::MEMBER) {
-                $groupRoleUser->user_type = Members::class;
+                $groupRoleUser->user_type = class_basename(Members::class);
             } elseif ($groupRole->group_type_id == GroupRole::COMPANY) {
-                $groupRoleUser->user_type = ApplicantCompany::class;
+                $groupRoleUser->user_type = class_basename(ApplicantCompany::class);
             } else {
-                $groupRoleUser->user_type = ApplicantIndividual::class;
+                $groupRoleUser->user_type = class_basename(ApplicantIndividual::class);
             }
             $groupRoleUser->save();
         }

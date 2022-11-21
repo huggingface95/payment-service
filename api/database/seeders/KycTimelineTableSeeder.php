@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\ApplicantCompany;
-use App\Models\ApplicantIndividual;
 use App\Models\KycTimeline;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
