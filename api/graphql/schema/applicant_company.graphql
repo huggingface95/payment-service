@@ -85,8 +85,8 @@ type ApplicantCompany {
 }
 
 enum ApplicantType {
-    INDIVIDUAL @enum(value: "ApplicantIndividual")
-    COMPANY @enum(value: "ApplicantCompany")
+    ApplicantIndividual @enum(value: "ApplicantIndividual")
+    ApplicantCompany @enum(value: "ApplicantCompany")
 }
 
 type ApplicantIndividualCompany {

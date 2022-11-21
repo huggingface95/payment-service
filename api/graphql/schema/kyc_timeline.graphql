@@ -1,0 +1,56 @@
+"""
+KYC Timeline
+"""
+type KycTimeline {
+    "ID"
+    id: ID!
+    "ОС"
+    os: String!
+    "Браузер"
+    browser: String!
+    "IP адрес"
+    ip: String!
+    "Действие"
+    action: String!
+    action_state: String!
+    action_type: String!
+    "Тег"
+    tag: String!
+    "Мембер"
+    creator: Members @belongsTo(relation: "member")
+    "Документ"
+    document: ApplicantDocument @belongsTo(relation: "document")
+    "ID аппликанта"
+    applicant_id: ID!
+    "Тип аппликанта"
+    applicant_type: ApplicantType!
+    "Аппликант"
+    applicant: Client @morphTo(relation: "clientable")
+    "Компания"
+    company: Companies @belongsTo(relation: "company")
+    "Дата добавления"
+    created_at: DateTime!
+}
+
+extend type Query @guard {
+    """
+    Получить запись
+    """
+    kycTimeline(id: ID! @eq): KycTimeline! @find
+
+    """
+    Получить список
+    """
+    kycTimelines(
+        filter: _ @filterConditions(static: QueryKycTimelinesFilterStatic),
+        orderBy: _ @orderBy(columns: ["id", "created_at"])
+    ): [KycTimeline!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: ASC)
+}
+
+input QueryKycTimelinesFilterStatic @spread {
+    applicant_id: ID @eq
+    company_id: ID @eq
+    applicant_type: ApplicantType @eq
+}
