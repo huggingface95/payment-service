@@ -31,9 +31,9 @@ class AccountsQuery
     {
         if (isset($args['group_type'])) {
             if ($args['group_type'] == GroupRole::INDIVIDUAL) {
-                return AccountClient::where('client_type', ApplicantIndividual::class)->get();
+                return AccountClient::where('client_type', class_basename(ApplicantIndividual::class))->get();
             } else {
-                return AccountClient::where('client_type', ApplicantCompany::class)->get();
+                return AccountClient::where('client_type', class_basename(ApplicantCompany::class))->get();
             }
         }
 

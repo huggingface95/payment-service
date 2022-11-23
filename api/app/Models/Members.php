@@ -196,7 +196,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function ipAddress()
     {
-        return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', 'App\Models\Members');
+        return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', class_basename(Members::class));
     }
 
     public function roles()
@@ -224,7 +224,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
                 'group_role_id',
                 'role_id',
             ]
-        )->where('user_type', self::class);
+        )->where('user_type', class_basename(self::class));
     }
 
     public function groupRoles(): MorphToMany

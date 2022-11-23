@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\ApplicantCompany;
-use App\Models\ApplicantIndividual;
-use App\Models\Members;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

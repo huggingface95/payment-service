@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\ApplicantIndividual;
+use App\Models\Members;
 use App\Services\AuthService;
 use Closure;
 use Illuminate\Http\Request;
@@ -26,9 +28,9 @@ class AccessByGuardMiddleware
         $guard = $this->authService->getGuardByClientType($request->client_type);
 
         if ($guard === 'api_client') {
-            config(['auth.providers.members.model' => \App\Models\ApplicantIndividual::class]);
+            config(['auth.providers.members.model' => class_basename(ApplicantIndividual::class)]);
         } else {
-            config(['auth.providers.members.model' => \App\Models\Members::class]);
+            config(['auth.providers.members.model' => class_basename(Members::class)]);
         }
 
         return $next($request);

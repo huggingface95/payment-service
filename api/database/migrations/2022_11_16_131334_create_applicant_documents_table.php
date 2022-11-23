@@ -21,7 +21,7 @@ class CreateApplicantDocumentsTable extends Migration
             $table->unsignedInteger('document_state_id');
             $table->unsignedBigInteger('file_id');
             $table->unsignedBigInteger('applicant_id');
-            $table->enum('applicant_type', [ApplicantIndividual::class, ApplicantCompany::class])->default(ApplicantIndividual::class);
+            $table->enum('applicant_type', [class_basename(ApplicantIndividual::class), class_basename(ApplicantCompany::class)])->default(class_basename(ApplicantIndividual::class));
             $table->unsignedBigInteger('company_id');
             $table->string('info')->nullable();
             $table->timestamps();

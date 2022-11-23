@@ -78,8 +78,8 @@ enum AccountType {
 }
 
 enum AccountClientsType {
-    INDIVIDUAL @enum(value: "App\\Models\\ApplicantIndividual")
-    COMPANY @enum(value: "App\\Models\\ApplicantCompany")
+    INDIVIDUAL @enum(value: "ApplicantIndividual")
+    COMPANY @enum(value: "ApplicantCompany")
 }
 
 extend type Query @guard {
