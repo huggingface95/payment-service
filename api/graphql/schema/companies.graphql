@@ -70,11 +70,9 @@ extend type Query @guard {
     county: сортировка по  стране
     orderBy: [{ column: CREATED_AT, order: DESC }] сортировка по дате создания, по ID, по названию, email, url
     created_at: {from:"2021-10-11", to: "2021-10-12"} фильтр по дате
-    where:{column: NAME, operator: LIKE, value: ""} фильтр по названию, по email , url
     """
     companies(
         filter: _ @filterConditions(static: QueryCompaniesFilterStatic),
-        where: _ @whereConditions(columns: ["name", "email","url","created_at"]),
         created_at: DateRange @whereBetween,
         country: Sort @scope(name:"CountrySort"), member_count: Sort @scope(name:"MemberSort"),
         orderBy: _ @orderBy(columns: ["id","created_at","name","email","url"])
@@ -86,6 +84,7 @@ input QueryCompaniesFilterStatic @spread {
     email: String @ilike
     url: String @ilike
     hasPaymentProvidersFilterById: ID @eq
+    hasPaymentSystemFilterById: ID @eq
 }
 
 extend type Mutation @guard {
