@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
  * Class Companies
@@ -86,6 +87,18 @@ class Companies extends BaseModel
     public function paymentProviders(): HasMany
     {
         return $this->hasMany(PaymentProvider::class, 'company_id');
+    }
+
+    public function paymentSystem(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            PaymentSystem::class,
+            PaymentProvider::class,
+            'company_id',
+            'payment_provider_id',
+            'id',
+            'id',
+        );
     }
     
     public function projects(): HasMany
