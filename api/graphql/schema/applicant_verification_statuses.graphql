@@ -1,0 +1,13 @@
+type ApplicantVerificationStatus {
+    "ID"
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query @guard {
+    """
+    Получить список
+    """
+    applicantVerificationStatuses: [ApplicantVerificationStatus!]! @all
+}
