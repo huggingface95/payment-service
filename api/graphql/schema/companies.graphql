@@ -81,10 +81,11 @@ extend type Query @guard {
     ): [Companies!]!   @paginate(defaultCount: 100) @orderBy(column: "id", direction: ASC)
 }
 
-input QueryCompaniesFilterStatic @spread{
+input QueryCompaniesFilterStatic @spread {
     name: String @ilike
     email: String @ilike
     url: String @ilike
+    hasPaymentProvidersFilterById: ID @eq
 }
 
 extend type Mutation @guard {
