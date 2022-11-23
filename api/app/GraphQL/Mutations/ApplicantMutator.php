@@ -95,7 +95,7 @@ class ApplicantMutator extends BaseMutator
                 ClientIpAddress::create([
                     'client_id' => $applicant->id,
                     'ip_address' => $ip,
-                    'client_type' => 'App\Models\ApplicantIndividual',
+                    'client_type' => class_basename(ApplicantIndividual::class),
                 ]);
             }
         }

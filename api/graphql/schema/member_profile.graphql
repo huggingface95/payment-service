@@ -1,0 +1,89 @@
+type MemberProfile {
+    id: ID!
+    "Имя участника"
+    first_name: String
+    "Фамилия участника"
+    last_name: String
+    "Email участника"
+    email: EMAIL
+    "Пол участника"
+    sex: Sex
+    "Активен = true или не активный = false участник"
+    is_active: Boolean
+    "Последняя авторизация"
+    last_login_at: DateTime
+    "получить компанию участника"
+    company: Companies! @belongsTo(relation: "company")
+    "получить страну участника"
+    country: Country @belongsTo(relation: "country")
+    "Получить язык участника"
+    language: Languages @belongsTo(relation: "language")
+    "Получить группу участника"
+    group: GroupRole @morphOne(relation: "groupRole")
+    "Получить должность"
+    position: DepartmentPosition @belongsTo(relation: "position")
+    "Получить департамент"
+    department: Departments @belongsTo(relation: "department")
+    "ID настройки двухфактороной авторизации"
+    two_factor_auth_setting_id: ID
+    "Получить настройки двухфакторной авторизации"
+    two_factor_auth_settings: TwoFactorAuthSettings @belongsTo(relation: "twoFactor")
+    "Дополнительны поля"
+    additional_fields: JSON
+    "Дополнительны поля для member info"
+    additional_info_fields: JSON
+    "Полное имя"
+    fullname: String
+    "Access limitation groups"
+    access_groups: [MemberAccessLimitation] @hasMany(relation: "accessLimitations")
+    "если true видит только своих аппликантов"
+    is_show_owner_applicants: Boolean
+    "Security PIN"
+    security_pin: String
+    "Google Secret"
+    google2fa_secret: String
+    "Member Backup Codes"
+    backup_codes: JSON
+    "Подписывать или нет транзакцию"
+    is_sign_transaction: Boolean
+    "Member ip address"
+    ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
+}
+
+extend type Query @guard(with: "api") {
+    """
+    Получить профиль пользователя
+    """
+    memberProfile: MemberProfile
+        @field(resolver: "MemberProfileQuery@getProfile")
+}
+
+extend type Mutation @guard(with: "api") {
+    """
+    Обновить профиль пользователя
+    """
+    updateMemberProfile(
+        "Имя"
+        first_name: String
+        "Фамилия"
+        last_name: String
+        "ID Страны"
+        country_id: ID
+        "ID языка"
+        language_id: ID
+        "Email"
+        email: EMAIL @rules(apply: ["email", "unique:members"])
+    ): MemberProfile
+        @field(resolver: "MemberProfileMutator@update")
+
+    """
+    Отправить письмо с подтверждением смены email
+    """
+    sendConfirmChangeEmail (
+        "Email"
+        email: String! @rules(apply: ["email"])
+    ): StatusType
+        @field(resolver: "MemberProfileMutator@sendConfirmChangeEmail")
+}
+
+

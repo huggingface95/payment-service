@@ -268,7 +268,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 
     public function ipAddress(): HasMany
     {
-        return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', 'App\Models\ApplicantIndividual');
+        return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', class_basename(ApplicantIndividual::class));
     }
 
     public function applicantBankingAccess(): \Ankurk91\Eloquent\Relations\BelongsToOne

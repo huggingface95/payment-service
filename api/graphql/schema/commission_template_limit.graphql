@@ -23,7 +23,7 @@ type CommissionTemplateLimit {
     "Получить платежную систему"
     payment_system: PaymentSystem! @hasOne(relation:"paymentSystem")
     "Получить регион"
-    region: Region! @hasOne(relation:"region")
+    region: Region! @belongsTo(relation:"region")
 }
 
 extend type Query @guard {
@@ -51,47 +51,38 @@ input QueryCommissionTemplateLimitsFilterStatic @spread{
     period_count: Int @eq
 }
 
+input InputCommissionTemplateLimit {
+    "ID типа лимита"
+    commission_template_limit_type_id: ID!
+    "ID направления платежа"
+    commission_template_limit_transfer_direction_id: ID!
+    "Сумма лимита"
+    amount: Float!
+    "ID валюты лимита"
+    currency_id: ID
+    "ID периода лимита"
+    commission_template_limit_period_id: ID!
+    "ID события лимита"
+    commission_template_limit_action_type_id: ID!
+    "ID количество срабатываний лимита"
+    period_count: ID
+    "ID шаблона комиссии"
+    commission_template_id: ID!
+    "ID региона"
+    region_id: ID
+}
+
 extend type Mutation @guard {
     "Создать лимит"
     createCommissionTemplateLimit(
-        "ID типа лимита"
-        commission_template_limit_type_id: ID!
-        "ID направления платежа"
-        commission_template_limit_transfer_direction_id: ID!
-        "Сумма лимита"
-        amount: Float!
-        "ID валюты лимита"
-        currency_id: ID
-        "ID периода лимита"
-        commission_template_limit_period_id: ID!
-        "ID события лимита"
-        commission_template_limit_action_type_id: ID!
-        "ID количество срабатываний лимита"
-        period_count: ID
-        "ID шаблона комиссии"
-        commission_template_id: ID!
+        input: InputCommissionTemplateLimit! @spread
     ):CommissionTemplateLimit   @create
 
     "Обновить лимит"
     updateCommissionTemplateLimit(
         "ID шаблона"
         id: ID!
-        "ID типа лимита"
-        commission_template_limit_type_id: ID
-        "ID направления платежа"
-        commission_template_limit_transfer_direction_id: ID
-        "Сумма лимита"
-        amount: Float
-        "ID валюты лимита"
-        currency_id: ID
-        "ID периода лимита"
-        commission_template_limit_period_id: ID
-        "ID события лимита"
-        commission_template_limit_action_type_id: ID
-        "количество срабатываний лимита"
-        period_count: Int
-        "ID шаблона комиссии"
-        commission_template_id: ID!
+        input: InputCommissionTemplateLimit! @spread
     ):CommissionTemplateLimit   @update
 
     "Удалить лимит"

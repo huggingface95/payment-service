@@ -81,7 +81,7 @@ class MembersMutator extends BaseMutator
                 ClientIpAddress::create([
                     'client_id' => $member->id,
                     'ip_address' => $ip,
-                    'client_type' => 'App\Models\Members',
+                    'client_type' => class_basename(Members::class),
                 ]);
             }
         }

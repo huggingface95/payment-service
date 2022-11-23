@@ -22,7 +22,7 @@ class ApplicantDocumentTableSeeder extends Seeder
                 'document_state_id' => 1,
                 'file_id' => 1,
                 'applicant_id' => 1,
-                'applicant_type' => ApplicantIndividual::class,
+                'applicant_type' => class_basename(ApplicantIndividual::class),
                 'company_id' => 1,
             ],
             [
@@ -30,7 +30,7 @@ class ApplicantDocumentTableSeeder extends Seeder
                 'document_state_id' => 2,
                 'file_id' => 1,
                 'applicant_id' => 1,
-                'applicant_type' => ApplicantIndividual::class,
+                'applicant_type' => class_basename(ApplicantIndividual::class),
                 'company_id' => 1,
             ],
             [
@@ -38,7 +38,7 @@ class ApplicantDocumentTableSeeder extends Seeder
                 'document_state_id' => 2,
                 'file_id' => 1,
                 'applicant_id' => 2,
-                'applicant_type' => ApplicantCompany::class,
+                'applicant_type' => class_basename(ApplicantCompany::class),
                 'company_id' => 1,
             ],
         ];

@@ -6,7 +6,7 @@ type ApplicantDocument {
     id: ID!
     company_id: ID!
     applicant_id: ID!
-    applicant_type: AccountClientsType!
+    applicant_type: ApplicantType!
     document_type_id: ID!
     document_state_id: ID!
     file: Files @belongsTo(relation: "file")
@@ -43,7 +43,7 @@ extend type Mutation @guard {
     createApplicantDocument(
         company_id: ID!
         applicant_id: ID!
-        applicant_type: AccountClientsType!
+        applicant_type: ApplicantType!
         document_type_id: ID!
         document_state_id: ID!
         file_id: ID!

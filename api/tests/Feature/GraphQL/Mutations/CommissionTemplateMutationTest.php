@@ -26,10 +26,12 @@ class CommissionTemplateMutationTest extends TestCase
                 $company_id: ID!
             ) {
             createCommissionTemplate(
-                name: $name
-                description: $description
-                payment_provider_id: $payment_provider_id
-                company_id: $company_id
+                input: {
+                    name: $name
+                    description: $description
+                    payment_provider_id: $payment_provider_id
+                    company_id: $company_id
+                }
             ) {
                 id
             }
@@ -66,8 +68,10 @@ class CommissionTemplateMutationTest extends TestCase
             ) {
             updateCommissionTemplate(
                 id: $id
-                name: $name
-                description: $description
+                input: {
+                    name: $name
+                    description: $description
+                }
             ) {
                 id
                 name

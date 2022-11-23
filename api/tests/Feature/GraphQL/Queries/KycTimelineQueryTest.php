@@ -2,16 +2,16 @@
 
 namespace Tests\Feature\GraphQL\Queries;
 
-use App\Models\ApplicantDocument;
-use App\Models\ApplicantIndividual;
+use App\Models\KycTimeline;
 use Database\Seeders\ApplicantDocumentTableSeeder;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\DocumentStateTableSeeder;
 use Database\Seeders\DocumentTypeTableSeeder;
 use Database\Seeders\FileTableSeeder;
+use Database\Seeders\KycTimelineTableSeeder;
 use Tests\TestCase;
 
-class ApplicantDocumentsQueryTest extends TestCase
+class KycTimelineQueryTest extends TestCase
 {
 
     public function setUp(): void
@@ -22,36 +22,45 @@ class ApplicantDocumentsQueryTest extends TestCase
         (new DatabaseSeeder())->call(DocumentTypeTableSeeder::class);
         (new DatabaseSeeder())->call(FileTableSeeder::class);
         (new DatabaseSeeder())->call(ApplicantDocumentTableSeeder::class);
+        (new DatabaseSeeder())->call(KycTimelineTableSeeder::class);
     }
 
     /**
-     * @dataProvider provide_testQueryApplicantDocumentsWithFilterByCondition
+     * @dataProvider provide_testQueryKycTimelinesWithFilterByCondition
      */
-    public function testQueryApplicantDocumentsWithFilterByCondition($cond, $value): void
+    public function testQueryKycTimelinesWithFilterByCondition($cond, $value): void
     {
         $this->login();
 
-        $documents = ApplicantDocument::where($cond, $value)->orderBy('id', 'ASC')->get();
-        
+        $documents = KycTimeline::where($cond, $value)->orderBy('id', 'ASC')->get();
+
         $expect = [];
 
         foreach ($documents as $document) {
-            $expect['data']['applicantDocuments']['data'][] = [
-                'document_type_id' => (string) $document->document_type_id,
-                'document_state_id' => (string) $document->document_state_id,
+            $expect['data']['kycTimelines']['data'][] = [
+                'os' => (string) $document->os,
+                'browser' => (string) $document->browser,
+                'ip' => (string) $document->ip,
+                'action' => (string) $document->action,
+                'action_state' => (string) $document->action_state,
+                'action_type' => (string) $document->action_type,
                 'applicant_id' => (string) $document->applicant_id,
                 'applicant_type' => (string) $document->applicant_type,
             ];
         }
 
         $this->graphQL('
-            query ApplicantDocuments($id: Mixed) {
-                applicantDocuments (
+            query KycTimelines($id: Mixed) {
+                kycTimelines (
                     filter: { column: ' . strtoupper($cond) . ', operator: EQ, value: $id }
                 ) {
                     data {
-                        document_type_id
-                        document_state_id
+                        os
+                        browser
+                        ip
+                        action
+                        action_state
+                        action_type
                         applicant_id
                         applicant_type
                     }
@@ -62,15 +71,14 @@ class ApplicantDocumentsQueryTest extends TestCase
         ])->seeJson($expect);
     }
 
-    public function provide_testQueryApplicantDocumentsWithFilterByCondition()
+    public function provide_testQueryKycTimelinesWithFilterByCondition()
     {
         return [
-            ['id', '1'],
             ['applicant_id', '1'],
-            ['document_type_id', '1'],
-            ['document_type_id', '2'],
-            ['document_state_id', '1'],
-            ['document_state_id', '2'],
+            ['company_id', '1'],
+            ['company_id', '2'],
+            ['applicant_type', 'ApplicantIndividual'],
+            ['applicant_type', 'ApplicantCompany'],
         ];
     }
 

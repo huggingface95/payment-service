@@ -4,10 +4,12 @@ namespace App\Repositories;
 
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\Email\Request\EmailMemberRequestDTO;
+use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\Email\SmtpDataDTO;
 use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
+use App\Models\Members;
 use App\Models\EmailNotification;
 use App\Models\EmailSmtp;
 use App\Models\EmailTemplate;
@@ -44,6 +46,20 @@ class EmailRepository implements EmailRepositoryInterface
     public function getSmtpByCompanyId(Account $account): Model|Builder
     {
         $smtp = $this->smtp->newQuery()->where('company_id', $account->company_id)->first();
+
+        if (!$smtp) {
+            throw new GraphqlException('SMTP configuration for this company not found', 'Not found', '404');
+        }
+
+        return $smtp;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function getSmtpByMemberId(Members $members): Model|Builder
+    {
+        $smtp = $this->smtp->newQuery()->where('member_id', $members->id)->first();
 
         if (!$smtp) {
             throw new GraphqlException('SMTP configuration for this company not found', 'Not found', '404');
@@ -99,7 +115,7 @@ class EmailRepository implements EmailRepositoryInterface
     /**
      * @throws GraphqlException
      */
-    public function getTemplateContentAndSubjectByDto(EmailApplicantRequestDTO|EmailMemberRequestDTO $dto): SmtpDataDTO
+    public function getTemplateContentAndSubjectByDto(EmailApplicantRequestDTO|EmailMemberRequestDTO|EmailMembersRequestDTO $dto): SmtpDataDTO
     {
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = $this->template->newQuery()

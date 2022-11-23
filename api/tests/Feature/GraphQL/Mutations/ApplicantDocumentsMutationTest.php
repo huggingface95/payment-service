@@ -28,7 +28,7 @@ class ApplicantDocumentsMutationTest extends TestCase
             mutation CreateApplicantDocument(
                 $company_id: ID!
                 $applicant_id: ID!
-                $applicant_type: AccountClientsType!
+                $applicant_type: ApplicantType!
                 $document_type_id: ID!
                 $document_state_id: ID!
                 $file_id: ID!
@@ -50,12 +50,12 @@ class ApplicantDocumentsMutationTest extends TestCase
         ', [
             'company_id' => 1,
             'applicant_id' => 1,
-            'applicant_type' => 'INDIVIDUAL',
+            'applicant_type' => 'ApplicantIndividual',
             'document_type_id' => 1,
             'document_state_id' => 1,
             'file_id' => 1,
         ]);
-
+        
         $response = json_decode($this->response->getContent(), true);
 
         $this->seeJsonContains([

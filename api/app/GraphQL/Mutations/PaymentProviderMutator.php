@@ -39,7 +39,7 @@ class PaymentProviderMutator
     public function update($_, array $args)
     {
         $paymentProvider = PaymentProvider::find($args['id']);
-        if (isset($args['payment_systems'])) {
+        if (isset($args['payment_systems']) && count($args['payment_systems'])) {
             $paymentSystems = $args['payment_systems'];
             $getSystem = PaymentSystem::whereIn('id', $paymentSystems)->get();
             if ($getSystem->isEmpty()) {
