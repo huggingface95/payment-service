@@ -1,4 +1,4 @@
-ARG POSTGRES_VERSION=alpine
+ARG POSTGRES_VERSION=14-alpine
 FROM postgres:${POSTGRES_VERSION}
 
 COPY ./docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
