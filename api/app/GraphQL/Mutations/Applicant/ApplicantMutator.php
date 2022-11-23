@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations\Applicant;
 
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\ApplicantVerificationStatusEnum;
 use App\Enums\ClientTypeEnum;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\BaseMutator;
@@ -45,7 +46,7 @@ class ApplicantMutator extends BaseMutator
             'phone' => $args['phone'],
             'password_hash' => Hash::make($args['password']),
             'password_salt' => Hash::make($args['password']),
-            'is_verification_email' => false,
+            'email_verification_status_id' => ApplicantVerificationStatusEnum::NOT_VERIFIED->value,
             'is_active' => false,
             'country_id' => 1,
             'company_id' => $company->id,

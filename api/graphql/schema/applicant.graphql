@@ -16,8 +16,10 @@ type ApplicantIndividual {
     url: String
     "Телефон"
     phone: String
-    "Верецифиорован телефон true/false"
-    is_verification_phone: Boolean
+    "Статус верецификации email"
+    email_verification: ApplicantVerificationStatus @belongsTo(relation: "verificationEmailStatus")
+    "Статус верецификации телефона"
+    phone_verification: ApplicantVerificationStatus @belongsTo(relation: "verificationPhoneStatus")
     "Получить связанную страну"
     country: Country @belongsTo(relation: "country")
     "Получить язык"
@@ -261,10 +263,23 @@ extend type Mutation @guard {
         id: ID!
     ): ApplicantIndividual   @field(resolver: "ApplicantMutator@setSecurityPin")
 
-    "Удалит пользователя"
+    "Удалить пользователя"
     deleteApplicantIndividual(
         id: ID!
     ): ApplicantIndividual   @delete
 
+    """
+    Отправить ссылку для подтверждения email
+    """
+    sendEmailVerification(
+        applicant_id: ID!
+    ): ApplicantIndividual   @field(resolver: "ApplicantMutator@sendEmailVerification")
+
+    """
+    Отправить подтверждение телефона
+    """
+    sendPhoneVerification(
+        applicant_id: ID!
+    ): ApplicantIndividual   @field(resolver: "ApplicantMutator@sendPhoneVerification")
 }
 

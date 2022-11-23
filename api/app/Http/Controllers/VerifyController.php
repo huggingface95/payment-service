@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\ApplicantVerificationStatusEnum;
 use App\Enums\ClientTypeEnum;
 use App\Models\EmailVerification;
 use App\Services\AuthService;
@@ -30,7 +31,7 @@ class VerifyController extends Controller
             }
 
             if ($user) {
-                $user->is_verification_email = true;
+                $user->email_verification_status_id = ApplicantVerificationStatusEnum::VERIFIED->value;
                 $user->is_active = true;
                 $user->two_factor_auth_setting_id = 2;
                 $user->save();

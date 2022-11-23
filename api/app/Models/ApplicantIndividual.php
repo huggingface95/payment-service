@@ -75,8 +75,8 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'account_manager_member_id',
         'password_hash',
         'password_salt',
-        'is_verification_email',
-        'is_verification_phone',
+        'email_verification_status_id',
+        'phone_verification_status_id',
         'company_id',
         'two_factor_auth_setting_id',
         'photo_id',
@@ -284,6 +284,16 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function photo(): BelongsTo
     {
         return $this->belongsTo(Files::class, 'photo_id');
+    }
+
+    public function verificationEmailStatus(): BelongsTo
+    {
+        return $this->belongsTo(ApplicantVerificationStatus::class, 'email_verification_status_id');
+    }
+
+    public function verificationPhoneStatus(): BelongsTo
+    {
+        return $this->belongsTo(ApplicantVerificationStatus::class, 'phone_verification_status_id');
     }
 
     public function scopeGroupSort($query, $sort)
