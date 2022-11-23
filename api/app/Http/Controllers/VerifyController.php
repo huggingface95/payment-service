@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
+use App\DTO\Email\Request\EmailMemberRequestDTO;
+use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\ClientTypeEnum;
+use App\Models\Account;
 use App\Models\EmailVerification;
 use App\Services\AuthService;
 use App\Services\EmailService;
@@ -27,9 +30,11 @@ class VerifyController extends Controller
         if ($verifyClient) {
             if ($verifyClient->type === ClientTypeEnum::APPLICANT->toString()) {
                 $user = $this->authService->getUserByClientId(ClientTypeEnum::APPLICANT->value, $verifyClient->client_id);
+            } elseif ($verifyClient->type === ClientTypeEnum::MEMBER->toString()) {
+                $member = $this->authService->getUserByClientId(ClientTypeEnum::MEMBER->value, $verifyClient->client_id);
             }
 
-            if ($user) {
+            if (isset($user)) {
                 $user->is_verification_email = true;
                 $user->is_active = true;
                 $user->two_factor_auth_setting_id = 2;
@@ -50,6 +55,23 @@ class VerifyController extends Controller
                 $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
 
                 return response()->json(['data' => 'Email successfully verified']);
+            }
+
+            if (isset($member)) {
+                $emailTemplateSubject = 'Change Email Successful';
+                $emailData = [
+                    'client_name' => $member->first_name,
+                    'email' => $request->email,
+                ];
+                $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $emailData, $emailTemplateSubject);
+                $this->emailService->sendMemberEmailByMemberDto($emailDTO);
+                $member->email_verification = 3;
+                $member->email = $request->email;
+                $member->save();
+
+                $verifyClient->delete();
+
+                return response()->json(['data' => 'Email successfully changed']);
             }
         }
 

@@ -81,6 +81,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'additional_info_fields',
         'is_show_owner_applicants',
         'is_sign_transaction',
+        'email_veirfication',
         'groupRoles',
         'department_position_id',
     ];

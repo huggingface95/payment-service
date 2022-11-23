@@ -2,21 +2,21 @@
 
 namespace App\DTO\Email\Request;
 
-use App\Models\Account;
+use App\Models\Members;
 
-class EmailMemberRequestDTO
+class EmailMembersRequestDTO
 {
     public string $emailTemplateName;
-    public Account $account;
+    public Members $members;
     public object $data;
     public string $email;
 
-    public static function transform(Account $account, array $data, string $emailTemplateName): self
+    public static function transform(Members $members, array $data, string $emailTemplateName): self
     {
         $dto = new self();
 
         $dto->emailTemplateName = $emailTemplateName;
-        $dto->account = $account;
+        $dto->members = $members;
         $dto->email = $data['email'];
         $dto->data = (object) $data;
 
