@@ -5,7 +5,7 @@ Banking -> Commission Templates -> Template List
 type CommissionTemplateLimit {
     id: ID!
     "Сумма лимита"
-    amount: Decimal!
+    amount: Float!
     "Валюта"
     currency: Currencies! @belongsTo(relation: "currency")
     "количество срабатываний лимита"
@@ -76,14 +76,14 @@ extend type Mutation @guard {
     "Создать лимит"
     createCommissionTemplateLimit(
         input: InputCommissionTemplateLimit! @spread
-    ):CommissionTemplateLimit   @create
+    ):CommissionTemplateLimit   @field(resolver: "CommissionTemplateLimitMutator@create")
 
     "Обновить лимит"
     updateCommissionTemplateLimit(
         "ID шаблона"
         id: ID!
         input: InputCommissionTemplateLimit! @spread
-    ):CommissionTemplateLimit   @update
+    ):CommissionTemplateLimit   @field(resolver: "CommissionTemplateLimitMutator@update")
 
     "Удалить лимит"
     deleteCommissionTemplateLimit(id: ID!): CommissionTemplateLimit   @delete
