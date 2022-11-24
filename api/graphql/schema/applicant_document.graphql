@@ -1,0 +1,60 @@
+"""
+Документы аппдиканта
+"""
+type ApplicantDocument {
+    "ID"
+    id: ID!
+    company_id: ID!
+    applicant_id: ID!
+    applicant_type: ApplicantType!
+    document_type_id: ID!
+    document_state_id: ID!
+    file: Files @belongsTo(relation: "file")
+    info: String
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+extend type Query @guard {
+    """
+    Получить список документов
+    """
+    applicantDocuments(
+        filter: _ @filterConditions(static: QueryApplicantDocumentsFilterStatic),
+        created_at: DateRange @whereBetween,
+        update_at: DateRange @whereBetween,
+        orderBy: _ @orderBy(columns: ["id", "created_at"])
+    ): [ApplicantDocument!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: ASC)
+}
+
+input QueryApplicantDocumentsFilterStatic @spread {
+    id: ID @eq
+    applicant_id: ID @eq
+    document_type_id: ID @eq
+    document_state_id: ID @eq
+}
+
+extend type Mutation @guard {
+    """
+    Добавить документ
+    """
+    createApplicantDocument(
+        company_id: ID!
+        applicant_id: ID!
+        applicant_type: ApplicantType!
+        document_type_id: ID!
+        document_state_id: ID!
+        file_id: ID!
+    ): ApplicantDocument @create
+
+    """
+    Обновить документ
+    """
+    updateApplicantDocument(
+        id: ID!
+        document_state_id: ID!
+        info: String
+    ): ApplicantDocument @update
+}

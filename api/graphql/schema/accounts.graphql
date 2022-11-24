@@ -41,7 +41,7 @@ type Account {
     is_primary: Boolean
     created_at: DateTime
     updated_at: DateTime
-    activated_at : DateTime
+    activated_at: DateTime
 }
 
 type AccountClient {
@@ -78,8 +78,8 @@ enum AccountType {
 }
 
 enum AccountClientsType {
-    INDIVIDUAL @enum(value: "App\\Models\\ApplicantIndividual")
-    COMPANY @enum(value: "App\\Models\\ApplicantCompany")
+    INDIVIDUAL @enum(value: "ApplicantIndividual")
+    COMPANY @enum(value: "ApplicantCompany")
 }
 
 extend type Query @guard {
@@ -210,7 +210,7 @@ enum QueryAccountWhereColumn {
 
 input InputAccount{
     "ID компании",
-    company_id :ID!
+    company_id: ID!
     "ID валюты"
     currency_id: ID!
     "ID владельца"

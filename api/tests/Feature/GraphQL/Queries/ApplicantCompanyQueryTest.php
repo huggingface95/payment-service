@@ -96,16 +96,14 @@ class ApplicantCompanyQueryTest extends TestCase
         $this->graphQL('
             query GetMatchedUsers($applicant_company_id:ID!){
                 getMatchedUsers(applicant_company_id: $applicant_company_id) {
-                    data {
-                        applicant_individual_id
-                    }
+                    applicant_id
                 }
             }
         ', [
             'applicant_company_id' => strval($applicant[0]->id),
         ])->seeJsonContains([
             [
-                'applicant_individual_id' => strval($applicant[0]->id),
+                'applicant_id' => strval($applicant[0]->id),
             ],
         ]);
     }

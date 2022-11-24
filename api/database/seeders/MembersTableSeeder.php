@@ -16,6 +16,17 @@ class MembersTableSeeder extends Seeder
     public function run()
     {
         $members = [
+            1 => [
+                'last_name' => 'Member1 Last',
+                'email' => 'test0@test.com',
+                'password_hash' => Hash::make('1234567Qa'),
+                'password_salt' => Hash::make('1234567Qa'),
+                'company_id' => 2,
+                'country_id' => 1,
+                'language_id' => 2,
+                'two_factor_auth_setting_id' => 1,
+                'department_position_id' => 1,
+            ],
             [
                 'last_name' => 'Member2 Last',
                 'email' => 'test@test.com',
@@ -26,9 +37,21 @@ class MembersTableSeeder extends Seeder
                 'language_id' => 2,
                 'two_factor_auth_setting_id' => 1,
                 'department_position_id' => 1,
-            ], [
+            ],
+            [
                 'last_name' => 'Member3 Last',
-                'email' => 'test3@test.com',
+                'email' => 'test2@test.com',
+                'password_hash' => Hash::make('1234567Qa'),
+                'password_salt' => Hash::make('1234567Qa'),
+                'company_id' => 2,
+                'country_id' => 1,
+                'language_id' => 2,
+                'two_factor_auth_setting_id' => 1,
+                'department_position_id' => 1,
+            ],
+            [
+                'last_name' => 'Member4 Last',
+                'email' => 'superadmin@test.com',
                 'password_hash' => Hash::make('1234567Qa'),
                 'password_salt' => Hash::make('1234567Qa'),
                 'company_id' => 2,
@@ -39,14 +62,11 @@ class MembersTableSeeder extends Seeder
             ],
         ];
 
-        $i = 3;
-        foreach ($members as $member) {
+        foreach ($members as $id => $member) {
             Members::firstOrCreate([
-                'id' => $i,
-                'first_name' => 'Member' . $i,
+                'id' => $id,
+                'first_name' => 'Member' . $id,
             ], $member);
-
-            $i++;
         }
     }
 }

@@ -21,7 +21,8 @@ class ApplicantIndividualCompanyTableSeeder extends Seeder
 
         ApplicantIndividualCompany::firstOrCreate(
             [
-                'applicant_individual_id' => $applicantIndividual->id,
+                'applicant_id' => $applicantIndividual->id,
+                'applicant_type' => class_basename(ApplicantIndividual::class),
                 'applicant_company_id' => $applicantCompany->id,
             ],
             [

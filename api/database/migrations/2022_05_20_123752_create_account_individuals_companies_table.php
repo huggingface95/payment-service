@@ -19,7 +19,7 @@ class CreateAccountIndividualsCompaniesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('account_id');
             $table->unsignedBigInteger('client_id');
-            $table->enum('client_type', [ApplicantIndividual::class, ApplicantCompany::class])->default(ApplicantIndividual::class);
+            $table->enum('client_type', [class_basename(ApplicantIndividual::class), class_basename(ApplicantCompany::class)])->default(class_basename(ApplicantIndividual::class));
             $table->unique(['account_id', 'client_id', 'client_type']);
 
             $table->foreign('account_id')->references('id')->on('accounts')

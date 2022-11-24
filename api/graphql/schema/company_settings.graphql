@@ -20,6 +20,16 @@ type CompanySettings {
     company: Companies @belongsTo(relation: "company")
     "Показывать или нет лого"
     show_own_logo: Boolean
+    "Url верификации мембера"
+    member_verify_url: String
+    "Backoffice login URL"
+    backoffice_login_url: String
+    "Backoffice forgot password URL"
+    backoffice_forgot_password_url: String
+    "Backoffice support URL"
+    backoffice_support_url: String
+    "Backoffice support EMAIL"
+    backoffice_support_email: String
 }
 
 extend type Query @guard {
@@ -29,12 +39,40 @@ extend type Query @guard {
 
 extend type Mutation @guard {
 
+    "Создание настроек компании"
+        createCompanySettings(
+            "ID компании"
+            company_id: ID!
+            "Client applicant URL в формате http://example.com"
+            client_url: String @rules(apply: ["regex:!https?:\/\/!","regex:/[a-z0-9]/"])
+            "JWT token"
+            email_jwt: String
+            "Email отправителя клиента"
+            email_from: EMAIL
+            "ID лого"
+            logo_id: ID
+            "Токен для видеоверификации"
+            vv_token: String
+            "Показывать лого компании или нет"
+            show_own_logo: Boolean
+            "Url верификации мембера"
+            member_verify_url: String
+            "Backoffice login URL"
+            backoffice_login_url: String
+            "Backoffice forgot password URL"
+            backoffice_forgot_password_url: String
+            "Backoffice support URL"
+            backoffice_support_url: String
+            "Backoffice support EMAIL"
+            backoffice_support_email: String
+        ): CompanySettings   @field(resolver: "CompanyMutator@createSettings")
+
     "Обновление настроек компании"
     updateCompanySettings(
         "ID компании"
         company_id: ID!
         "Client applicant URL в формате http://example.com"
-        email_url: String @rules(apply: ["regex:!https?:\/\/!","regex:/[a-z0-9]/"])
+        client_url: String @rules(apply: ["regex:!https?:\/\/!","regex:/[a-z0-9]/"])
         "JWT token"
         email_jwt: String
         "Email отправителя клиента"
@@ -45,6 +83,16 @@ extend type Mutation @guard {
         vv_token: String
         "Показывать лого компании или нет"
         show_own_logo: Boolean
+        "Url верификации мембера"
+        member_verify_url: String
+        "Backoffice login URL"
+        backoffice_login_url: String
+        "Backoffice forgot password URL"
+        backoffice_forgot_password_url: String
+        "Backoffice support URL"
+        backoffice_support_url: String
+        "Backoffice support EMAIL"
+        backoffice_support_email: String
     ): CompanySettings   @field(resolver: "CompanyMutator@updateSettings")
 
 

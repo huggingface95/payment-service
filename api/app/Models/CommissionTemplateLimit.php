@@ -88,21 +88,9 @@ class CommissionTemplateLimit extends BaseModel
         );
     }
 
-    public function region(): CustomHasOne
+    public function region(): BelongsTo
     {
-        $query = Region::query()
-            ->leftJoin('commission_template_regions', 'commission_template_regions.region_id', '=', 'regions.id')
-            ->leftJoin('commission_template', 'commission_template.id', '=', 'commission_template_regions.commission_template_id')
-            ->select('regions.*', 'commission_template.id as c_t_id');
-
-        return new CustomHasOne(
-            $query,
-            $this,
-            'commission_template.id',
-            'commission_template_id',
-            'c_t_id',
-            $query
-        );
+        return $this->belongsTo(Region::class, 'region_id');
     }
 
     public function paymentSystem(): CustomHasOne

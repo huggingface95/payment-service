@@ -17,7 +17,7 @@ class EmailTemplatesMutationTest extends TestCase
      */
     public function testCreateEmailTemplate(): void
     {
-        $this->login(['email' => 'test3@test.com', 'password' => '1234567Qa']);
+        $this->loginAsSuperAdmin();
 
         $seq = DB::table('email_templates')->max('id') + 1;
         DB::select('ALTER SEQUENCE email_templates_id_seq RESTART WITH '.$seq);
@@ -50,7 +50,7 @@ class EmailTemplatesMutationTest extends TestCase
             'content' => '<html></html>',
             'company_id' => 1,
         ]);
-
+        
         $id = json_decode($this->response->getContent(), true);
 
         $this->seeJson([

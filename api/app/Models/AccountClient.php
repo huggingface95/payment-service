@@ -13,6 +13,8 @@ class AccountClient extends BaseModel
 
     protected $guard_name = 'api';
 
+    public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *

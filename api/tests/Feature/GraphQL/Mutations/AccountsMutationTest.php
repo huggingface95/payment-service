@@ -46,16 +46,16 @@ class AccountsMutationTest extends TestCase
                   }
                 )
               {
-                 id
+                id
               }
            }
         ', [
             'company_id' => 1,
             'currency_id' => 1,
-            'owner_id' => 1,
+            'owner_id' => 2,
             'account_number' => '2566'.str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
             'commission_template_id' => 1,
-            'account_name' => 'Test_'.\Illuminate\Support\Str::random(3),
+            'account_name' => 'Test_account_' . \Illuminate\Support\Str::random(6),
             'group_type_id' => 2,
             'group_role_id' => 1,
             'payment_system_id' => 1,

@@ -13,6 +13,8 @@ class AccountIndividualCompany extends BaseModel
 {
     protected $table = 'account_individuals_companies';
 
+    public $timestamps = false;
+
     protected $fillable = ['account_id', 'client_type', 'client_id'];
 
     public function client(): MorphTo

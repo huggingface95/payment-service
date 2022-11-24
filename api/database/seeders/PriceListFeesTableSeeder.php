@@ -22,10 +22,9 @@ class PriceListFeesTableSeeder extends Seeder
 
         for ($i = 1; $i <= 3; $i++) {
             PriceListFee::firstOrCreate([
-                'id' => $i,
-            ], [
-                'name' => 'Test fee ' . $faker->sentence(1) . $faker->randomDigit(2),
+                'name' => 'Test fee ' .$i,
                 'price_list_id' => $commissionPriceList->id,
+            ], [
                 'type_id' => 1,
                 'operation_type_id' => 1,
                 'period_id' => 1,

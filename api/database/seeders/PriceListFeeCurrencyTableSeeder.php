@@ -107,7 +107,8 @@ class PriceListFeeCurrencyTableSeeder extends Seeder
 
         foreach ($priceListFeeCurrency as $id => $priceListFeesItem) {
             PriceListFeeCurrency::firstOrCreate([
-                'id' => $id + 1,
+                'price_list_fee_id' => $priceListFeesItem['price_list_fee_id'],
+                'currency_id' => $priceListFeesItem['currency_id'],
             ], $priceListFeesItem);
         }
     }

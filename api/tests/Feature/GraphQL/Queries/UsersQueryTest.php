@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL\Queries;
 
+use App\Enums\ClientTypeEnum;
 use App\Models\Members;
 use App\Models\Permissions;
 use App\Models\PermissionsList;
@@ -22,7 +23,7 @@ class UsersQueryTest extends TestCase
         Role::find($member->id)->permissions()->sync(Permissions::all()->pluck('id'), true);
 
         $data = $this->getUserPermissions($member);
-
+        
         $this->graphQL('
             {
                 userAuthData {
@@ -52,8 +53,10 @@ class UsersQueryTest extends TestCase
 
     private function getUserPermissions(Members $member): array
     {
+        $clientType = ClientTypeEnum::APPLICANT->toString();
+
         $allPermissions = (new PermissionsService)->getPermissionsList(
-            PermissionsList::get()
+            PermissionsList::get()->where('type', $clientType)
         );
 
         $permissionsList = '';

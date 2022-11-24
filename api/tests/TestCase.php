@@ -11,7 +11,7 @@ use Nuwave\Lighthouse\Testing\MakesGraphQLRequestsLumen;
 abstract class TestCase extends BaseTestCase
 {
     use MakesGraphQLRequestsLumen,
-    ClearsSchemaCache;
+        ClearsSchemaCache;
 
     protected static $setUpHasRunOnce = false;
 
@@ -40,7 +40,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function createApplication()
     {
-        return require __DIR__.'/../bootstrap/app.php';
+        return require __DIR__ . '/../bootstrap/app.php';
     }
 
     /**
@@ -56,6 +56,19 @@ abstract class TestCase extends BaseTestCase
         }
 
         return auth()->attempt($data);
+    }
+
+    /**
+     * Login as Super admin
+     *
+     * @param  array  $data
+     * @return string
+     */
+    public function loginAsSuperAdmin(): string
+    {
+        $data = ['email' => 'superadmin@test.com', 'password' => '1234567Qa'];
+
+        return $this->login($data);
     }
 
     /**
