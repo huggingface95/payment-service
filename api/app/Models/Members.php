@@ -84,6 +84,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'email_veirfication',
         'groupRoles',
         'department_position_id',
+        'is_need_change_password',
     ];
 
     protected $hidden = [

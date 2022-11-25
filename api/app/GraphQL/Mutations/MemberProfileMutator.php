@@ -4,18 +4,16 @@ namespace App\GraphQL\Mutations;
 
 use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\TransformerDTO;
-use App\Enums\ClientTypeEnum;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\BaseMutator;
-use App\Models\Account;
-use App\Models\EmailVerification;
 use App\Services\EmailService;
-use Illuminate\Support\Str;
+use App\Services\VerifyService;
 
 class MemberProfileMutator extends BaseMutator
 {
     public function __construct(
-        protected EmailService $emailService
+        protected EmailService $emailService,
+        protected VerifyService $verifyService
     ) {
     }
     /**
@@ -43,11 +41,8 @@ class MemberProfileMutator extends BaseMutator
         $member = auth()->user();
 
         try {
-                $verifyToken = EmailVerification::create([
-                    'client_id' => $member->id,
-                    'type' => ClientTypeEnum::MEMBER->toString(),
-                    'token' => Str::random(64),
-                ]);
+                $verifyToken = $this->verifyService->createVerifyToken($member);
+                
                 $confirmUrl = 'https://dev.admin.docudots.com';
                 // TODO: Create Email Template with subject 'Confirm change email'
                 $emailTemplateSubject = 'Confirm change email';

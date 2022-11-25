@@ -99,7 +99,8 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     ];
 
     protected $appends = [
-        'two_factor'
+        'two_factor',
+        'is_need_change_password',
     ];
 
     protected static function booted()
@@ -128,6 +129,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function getTwoFactorAttribute(): bool
     {
         return ($this->google2fa_secret) ? true : false;
+    }
+
+    public function getIsNeedChangePasswordAttribute(): bool
+    {
+        return false;
     }
 
     /**
