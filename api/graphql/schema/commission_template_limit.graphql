@@ -76,14 +76,14 @@ extend type Mutation @guard {
     "Создать лимит"
     createCommissionTemplateLimit(
         input: InputCommissionTemplateLimit! @spread
-    ):CommissionTemplateLimit   @field(resolver: "CommissionTemplateLimitMutator@create")
+    ):CommissionTemplateLimit   @create
 
     "Обновить лимит"
     updateCommissionTemplateLimit(
         "ID шаблона"
         id: ID!
         input: InputCommissionTemplateLimit! @spread
-    ):CommissionTemplateLimit   @field(resolver: "CommissionTemplateLimitMutator@update")
+    ):CommissionTemplateLimit   @update
 
     "Удалить лимит"
     deleteCommissionTemplateLimit(id: ID!): CommissionTemplateLimit   @delete
