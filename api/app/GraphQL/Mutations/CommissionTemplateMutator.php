@@ -22,9 +22,7 @@ class CommissionTemplateMutator
         $commissionTemplate = CommissionTemplate::create($args);
 
         if (isset($args['payment_provider_id']) && isset($args['payment_system_id'])) {
-            if (isset($args['payment_provider_id']) && isset($args['payment_system_id'])) {
                 $this->updatePaymentProvider($args);
-            }
         }
 
         return $commissionTemplate;
