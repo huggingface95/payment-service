@@ -15,7 +15,7 @@ class CommissionTemplateMutator
     {
         $memberId = CommissionTemplate::DEFAULT_MEMBER_ID;
         $args['member_id'] = $memberId;
-        $commissionTemplate = c
+        $commissionTemplate = CommissionTemplate::create($args);
 
         return $commissionTemplate;
     }
