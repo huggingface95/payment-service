@@ -22,13 +22,8 @@ class CommissionTemplateMutator
         $commissionTemplate = CommissionTemplate::create($args);
 
         if (isset($args['payment_provider_id']) && isset($args['payment_system_id'])) {
-            $paymentSystem = PaymentSystem::whereIn('id', $args['payment_system_id'])->count();
-            if (count($args['payment_system_id']) != $paymentSystem) {
-                throw new GraphqlException('Payment system not exists.', 'use');
-            }
-            else {
-                PaymentSystem::whereIn('id', $args['payment_system_id'])
-                    ->update(['payment_provider_id' => $args['payment_provider_id']]);
+            if (isset($args['payment_provider_id']) && isset($args['payment_system_id'])) {
+                $this->updatePaymentProvider($args);
             }
         }
 
@@ -62,17 +57,22 @@ class CommissionTemplateMutator
             unset($args['region_id']);
         }
         if (isset($args['payment_provider_id']) && isset($args['payment_system_id'])) {
-            $paymentSystem = PaymentSystem::whereIn('id', $args['payment_system_id'])->count();
-            if (count($args['payment_system_id']) != $paymentSystem) {
-                throw new GraphqlException('Payment system not exists.', 'use');
-            }
-            else {
-                PaymentSystem::whereIn('id', $args['payment_system_id'])
-                    ->update(['payment_provider_id' => $args['payment_provider_id']]);
-            }
+            $this->updatePaymentProvider($args);
         }
+
         $commissionTemplate->update($args);
 
         return $commissionTemplate;
+    }
+
+    public function updatePaymentProvider ($args)
+    {
+        $paymentSystem = PaymentSystem::whereIn('id', $args['payment_system_id'])->count();
+        if (count($args['payment_system_id']) != $paymentSystem) {
+            throw new GraphqlException('Payment system not exists.', 'use');
+        }
+
+        PaymentSystem::whereIn('id', $args['payment_system_id'])
+            ->update(['payment_provider_id' => $args['payment_provider_id']]);
     }
 }
