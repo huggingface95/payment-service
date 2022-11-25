@@ -2,8 +2,11 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphqlException;
 use App\Models\CommissionTemplate;
 use App\Models\CommissionTemplateLimit;
+use App\Models\PaymentProvider;
+use App\Models\PaymentSystem;
 
 class CommissionTemplateMutator
 {
@@ -15,7 +18,19 @@ class CommissionTemplateMutator
     {
         $memberId = CommissionTemplate::DEFAULT_MEMBER_ID;
         $args['member_id'] = $memberId;
+
         $commissionTemplate = CommissionTemplate::create($args);
+
+        if (isset($args['payment_provider_id']) && isset($args['payment_system_id'])) {
+            $paymentSystem = PaymentSystem::whereIn('id', $args['payment_system_id'])->count();
+            if (count($args['payment_system_id']) != $paymentSystem) {
+                throw new GraphqlException('Payment system not exists.', 'use');
+            }
+            else {
+                PaymentSystem::whereIn('id', $args['payment_system_id'])
+                    ->update(['payment_provider_id' => $args['payment_provider_id']]);
+            }
+        }
 
         return $commissionTemplate;
     }
@@ -45,6 +60,16 @@ class CommissionTemplateMutator
             $commissionTemplate->regions()->detach();
             $commissionTemplate->regions()->attach($args['region_id']);
             unset($args['region_id']);
+        }
+        if (isset($args['payment_provider_id']) && isset($args['payment_system_id'])) {
+            $paymentSystem = PaymentSystem::whereIn('id', $args['payment_system_id'])->count();
+            if (count($args['payment_system_id']) != $paymentSystem) {
+                throw new GraphqlException('Payment system not exists.', 'use');
+            }
+            else {
+                PaymentSystem::whereIn('id', $args['payment_system_id'])
+                    ->update(['payment_provider_id' => $args['payment_provider_id']]);
+            }
         }
         $commissionTemplate->update($args);
 
