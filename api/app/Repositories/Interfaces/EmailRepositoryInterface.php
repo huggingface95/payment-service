@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 interface EmailRepositoryInterface
 {
-    public function getSmtpByCompanyId(Account $account): Model|Builder;
+    public function getSmtpByCompanyId(Account|Members $account): Model|Builder;
 
     public function getSmtpByMemberId(Members $members): Model|Builder;
 

@@ -2,16 +2,28 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\DTO\Email\Request\EmailMembersRequestDTO;
+use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
 use App\Models\ClientIpAddress;
 use App\Models\DepartmentPosition;
 use App\Models\GroupRole;
 use App\Models\Members;
+use App\Services\EmailService;
+use App\Services\VerifyService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class MembersMutator extends BaseMutator
 {
+
+    public function __construct(
+        protected EmailService $emailService,
+        protected VerifyService $verifyService
+    )
+    {
+    }
+
     /**
      * @param $_
      * @param  array  $args
@@ -102,11 +114,16 @@ class MembersMutator extends BaseMutator
      */
     public function invite($_, array $args)
     {
-        $password = Str::random(8);
+        if (! isset($args['password'])) {
+            $password = Str::random(8);
+        } else {
+            $password = $args['password'];
+        }
+        
         $args['is_active'] = false;
-
         $args['password_hash'] = Hash::make($password);
         $args['password_salt'] = Hash::make($password);
+        $args['is_need_change_password'] = true;
 
         $member = Members::create($args);
 
@@ -114,6 +131,24 @@ class MembersMutator extends BaseMutator
             $member->groupRoles()->sync([$args['group_id']], true);
         }
 
+        if (isset($args['send_email']) && $args['send_email'] === true) {
+            $verifyToken = $this->verifyService->createVerifyToken($member);
+
+            $company = $member->company;
+
+            $emailTemplateName = '{member_company_name} has invited you to join team';
+            $emailData = [
+                'email' => $member->email,
+                'member_name' => $member->first_name,
+                'logo_member_company' => $company->companySettings->logo_link,
+                'member_email_confirm_url' => $company->companySettings->member_verify_url . '/join/verify/' . $verifyToken->token,
+                'member_company_name' => $company->name,
+            ];
+
+            $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $emailData, $emailTemplateName);
+            $this->emailService->sendMemberEmailByMemberDto($emailDTO, true);
+        }
+        
         return $member;
     }
 

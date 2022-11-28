@@ -64,9 +64,12 @@ class EmailService
     /**
      * @throws GraphqlException
      */
-    public function sendMemberEmailByMemberDto(EmailMembersRequestDTO $dto): void
+    public function sendMemberEmailByMemberDto(EmailMembersRequestDTO $dto, bool $findByCompanyId = false): void
     {
-        $smtp = $this->emailRepository->getSmtpByMemberId($dto->members);
+        $smtp = $findByCompanyId ?
+            $this->emailRepository->getSmtpByCompanyId($dto->members) :
+            $this->emailRepository->getSmtpByMemberId($dto->members);
+        
         $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
         $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
 

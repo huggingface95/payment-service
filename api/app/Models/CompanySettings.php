@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CompanySettings extends BaseModel
 {
+    public const DEFAULT_LOGO_PATH = '/img/logo.png';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -35,10 +37,18 @@ class CompanySettings extends BaseModel
         'backoffice_support_email',
     ];
 
+    protected $appends = ['logo_link'];
 
     public $timestamps = false;
 
-    public function company(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function getLogoLinkAttribute(): string
+    {
+        $defaultLogoPath = storage_path('app') . self::DEFAULT_LOGO_PATH;
+
+        return $this->logo->link ?? $defaultLogoPath;
+    }
+
+    public function company(): BelongsTo
     {
         return $this->belongsTo('App\Models\Companies', 'company_id');
     }
