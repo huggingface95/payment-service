@@ -113,7 +113,7 @@ class Companies extends BaseModel
 
     public function stateReason(): BelongsTo
     {
-        return $this->belongsTo(stateReason::class, 'state_reason_id');
+        return $this->belongsTo(StateReason::class, 'state_reason_id');
     }
 
     public function typeOfIndustry(): BelongsTo
