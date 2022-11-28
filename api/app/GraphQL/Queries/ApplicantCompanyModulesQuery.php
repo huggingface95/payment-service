@@ -14,7 +14,11 @@ class ApplicantCompanyModulesQuery
     {
         $modules = [];
 
-        $applicantModules = ApplicantCompany::findOrFail($args['applicant_company_id'])->modules;
+        $applicantModules = ApplicantCompany::find($args['applicant_company_id'])->modules ?? null;
+        
+        if (! $applicantModules) {
+            return $modules;
+        }
 
         foreach ($applicantModules as $module) {
             $modules[] = [
