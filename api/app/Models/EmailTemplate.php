@@ -101,11 +101,15 @@ class EmailTemplate extends BaseModel
     public function scopeHiddenClientAndAdminRows(Builder $query): Builder
     {
         return $query->where(function (Builder $query) {
-            return $query->where(function (Builder $query) {
-                return $query->where('type', '=', self::CLIENT)->where('service_type', '<>', self::ADMIN);
-            })->orWhere(function (Builder $query) {
-                return $query->where('service_type', '=', self::ADMIN)->where('type', '<>', self::CLIENT);
-            });
+            return $query
+                ->where(function (Builder $query) {
+                    return $query->where('type', '<>', self::CLIENT)->where('service_type', '<>', self::ADMIN);
+                })
+                ->orWhere(function (Builder $query) {
+                    return $query->where('type', '=', self::CLIENT)->where('service_type', '<>', self::ADMIN);
+                })->orWhere(function (Builder $query) {
+                    return $query->where('service_type', '=', self::ADMIN)->where('type', '<>', self::CLIENT);
+                });
         });
     }
 }
