@@ -85,6 +85,7 @@ input QueryCompaniesFilterStatic @spread {
     url: String @ilike
     hasPaymentProvidersFilterById: ID @eq
     hasPaymentSystemFilterById: ID @eq
+    hasRegionsFilterById: ID @eq
 }
 
 extend type Mutation @guard {

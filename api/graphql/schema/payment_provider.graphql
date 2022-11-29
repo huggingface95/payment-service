@@ -39,6 +39,7 @@ input QueryPaymentProvidersFilterStatic @spread{
     name: String @ilike
     hasPaymentSystemsFilterById: ID @eq
     hasAccountFilterById: ID @eq
+    hasCommissionTemplateFilterById: ID @eq
     company_id: ID @eq
     id: ID @eq
 }
