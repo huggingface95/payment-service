@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Ankurk91\Eloquent\MorphToOne;
+use App\Enums\MemberStatusEnum;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\UserPermission;
 use Illuminate\Auth\Authenticatable;
@@ -69,7 +70,6 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'last_name',
         'email',
         'sex',
-        'is_active',
         'company_id',
         'country_id',
         'language_id',
@@ -85,6 +85,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'groupRoles',
         'department_position_id',
         'is_need_change_password',
+        'member_status_id',
     ];
 
     protected $hidden = [
@@ -100,7 +101,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['two_factor', 'permissions', 'is_super_admin'];
+    protected $appends = ['two_factor', 'permissions', 'is_super_admin', 'is_active'];
 
     protected static function booted()
     {
@@ -158,6 +159,11 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         }
     }
 
+    public function getIsActiveAttribute(): bool
+    {
+        return $this->member_status_id != MemberStatusEnum::ACTIVE->value;
+    }
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Companies::class, 'company_id');
@@ -176,6 +182,11 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function position(): BelongsTo
     {
         return $this->belongsTo(DepartmentPosition::class, 'department_position_id');
+    }
+
+    public function memberStatus(): BelongsTo
+    {
+        return $this->belongsTo(MemberStatus::class, 'member_status_id');
     }
 
     public function department(): HasOneThrough

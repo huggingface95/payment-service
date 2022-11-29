@@ -76,7 +76,7 @@ class ApplicantMutator extends BaseMutator
         $emailTemplateName = 'Welcome! Confirm your email address';
         $emailData = [
             'client_name' => $applicant->first_name,
-            'email_confirm_url' => $company->companySettings->client_url . '/email/verify/' . $verifyToken->token,
+            'email_confirm_url' => $company->companySettings->client_url . '/email/registration/verify/' . $verifyToken->token,
             'member_company_name' => $company->name,
         ];
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $company, $emailTemplateName, $emailData);
@@ -84,7 +84,7 @@ class ApplicantMutator extends BaseMutator
         $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
 
         // TODO: remove this line
-        $applicant->email_confirm_url = 'https://dev.account.docudots.com/email/verify/' . $verifyToken->token;
+        $applicant->email_confirm_url = 'https://dev.account.docudots.com/email/registration/verify/' . $verifyToken->token;
 
         return $applicant;
     }

@@ -48,7 +48,7 @@ class MemberProfileMutator extends BaseMutator
                 $emailTemplateSubject = 'Confirm change email';
                 $emailData = [
                     'client_name' => $member->first_name,
-                    'email_confirm_url' => $confirmUrl . '/email/verify/' . $verifyToken->token.'?email='.$args['email'],
+                    'email_confirm_url' => $confirmUrl . '/email/change/verify/' . $verifyToken->token . '?email='.$args['email'],
                 ];
                 $data = array_merge($args, $emailData);
                 $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $data, $emailTemplateSubject);
