@@ -39,7 +39,6 @@ extend type Query @guard {
 }
 
 input QueryCommissionPriceListsFilterStatic @spread{
-    hasCompanyFilterById: ID @eq
     hasPaymentProviderFilterById: ID @eq
     hasCommissionTemplateFilterById: ID @eq
     hasPaymentSystemFilterById: ID @eq

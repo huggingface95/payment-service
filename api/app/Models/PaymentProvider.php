@@ -39,6 +39,11 @@ class PaymentProvider extends BaseModel
         return $this->hasOne(CommissionPriceList::class, 'provider_id', 'id');
     }
 
+    public function commissionTemplate(): HasOne
+    {
+        return $this->hasOne(CommissionTemplate::class, 'payment_provider_id', 'id');
+    }
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Companies::class, 'company_id');

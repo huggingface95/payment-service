@@ -100,10 +100,15 @@ class Companies extends BaseModel
             'id',
         );
     }
-    
+
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class, 'company_id');
+    }
+
+    public function regions(): HasOne
+    {
+        return $this->hasOne(Region::class, 'company_id');
     }
 
     public function state(): BelongsTo

@@ -41,6 +41,7 @@ input QueryPaymentSystemsFilterStatic @spread{
     hasProvidersFilterByName: String @ilike
     hasProvidersFilterById: ID @eq
     hasCompaniesFilterById: ID @eq
+    hasRegionsFilterById: ID @eq
 }
 
 input InputPaymentSystem {
