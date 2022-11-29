@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\PermissionFilterScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
@@ -55,13 +56,13 @@ class EmailTemplate extends BaseModel
     public function getHtml(): string
     {
         return $this->useLayout()
-            ? $this->layout->header.$this->attributes['content'].$this->layout->footer
+            ? $this->layout->header . $this->attributes['content'] . $this->layout->footer
             : $this->attributes['content'];
     }
 
     public function useLayout(): bool
     {
-        return (bool) $this->attributes['use_layout'];
+        return (bool)$this->attributes['use_layout'];
     }
 
     public function getTypes(): array
@@ -95,5 +96,20 @@ class EmailTemplate extends BaseModel
     public function layout(): BelongsTo
     {
         return $this->belongsTo(EmailTemplateLayout::class, 'company_id', 'company_id');
+    }
+
+    public function scopeHiddenClientAndAdminRows(Builder $query): Builder
+    {
+        return $query->where(function (Builder $query) {
+            return $query
+                ->where(function (Builder $query) {
+                    return $query->where('type', '<>', self::CLIENT)->where('service_type', '<>', self::ADMIN);
+                })
+                ->orWhere(function (Builder $query) {
+                    return $query->where('type', '=', self::CLIENT)->where('service_type', '<>', self::ADMIN);
+                })->orWhere(function (Builder $query) {
+                    return $query->where('service_type', '=', self::ADMIN)->where('type', '<>', self::CLIENT);
+                });
+        });
     }
 }
