@@ -6,6 +6,8 @@ use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\ApplicantVerificationStatusEnum;
+use App\Enums\EmailVerificationStatusEnum;
+use App\Enums\MemberStatusEnum;
 use App\Models\ApplicantIndividual;
 use App\Models\Members;
 use App\Services\AuthService;
@@ -24,6 +26,23 @@ class VerifyController extends Controller
     }
 
     public function emailVerify(Request $request): JsonResponse
+    {
+        $user = $this->verifyService->getVerifyUserModelByToken($request->token);
+
+        if ($user instanceof Members) {
+            $user->email_verification = EmailVerificationStatusEnum::VERIFIED->value;
+            $user->member_status_id = MemberStatusEnum::ACTIVE->value;
+            $user->save();
+
+            $this->verifyService->deleteVerifyCode($request->token);
+
+            return response()->json(['data' => 'Email successfully verified']);
+        }
+
+        return response()->json(['error' => 'Wrong token']);
+    }
+
+    public function emailRegistrationVerify(Request $request): JsonResponse
     {
         $user = $this->verifyService->getVerifyUserModelByToken($request->token);
 
@@ -50,6 +69,13 @@ class VerifyController extends Controller
             return response()->json(['data' => 'Email successfully verified']);
         }
 
+        return response()->json(['error' => 'Wrong token']);
+    }
+
+    public function emailChangeVerify(Request $request): JsonResponse
+    {
+        $user = $this->verifyService->getVerifyUserModelByToken($request->token);
+
         if ($user instanceof Members) {
             $emailTemplateSubject = 'Change Email Successful';
             $emailData = [
@@ -69,5 +95,4 @@ class VerifyController extends Controller
 
         return response()->json(['error' => 'Wrong token']);
     }
-
 }

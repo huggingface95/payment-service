@@ -64,4 +64,10 @@ $router->group([
     $router->post('change/member/{token}', ['as' => 'password.change.member_by_token', 'uses' => 'PasswordController@changeMemberPasswordByToken']);
 });
 
-$router->get('/email/verify/{token}', 'VerifyController@emailVerify');
+$router->group([
+    'prefix' => 'email',
+], function () use ($router) {
+    $router->get('verify/{token}', ['as' => 'email.confirm.verify', 'uses' => 'VerifyController@emailVerify']);
+    $router->get('change/verify/{token}', ['as' => 'email.confirm.change', 'uses' => 'VerifyController@emailChangeVerify']);
+    $router->get('registration/verify/{token}', ['as' => 'email.confirm.registration', 'uses' => 'VerifyController@emailRegistrationVerify']);
+});

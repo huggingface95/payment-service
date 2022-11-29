@@ -12,8 +12,8 @@ type Members {
     email: EMAIL
     "Пол участника"
     sex: Sex
-    "Активен = true или не активный = false участник"
-    is_active: Boolean
+    "Статус участника"
+    member_status: MemberStatus @belongsTo(relation: "memberStatus")
     "Последняя авторизация"
     last_login_at: DateTime
     "получить компанию участника"
@@ -120,8 +120,8 @@ extend type Mutation  {
         language_id: ID
         "ID роли участника"
         group_id: ID!
-        "Активен не активен"
-        is_active: Boolean
+        "Статус участника"
+        member_status_id: ID!
         "ID настройки двухфактороной авторизации"
         two_factor_auth_setting_id: ID!
         "Пароль участника, если не передан то сгенерируется случайный"
@@ -130,6 +130,8 @@ extend type Mutation  {
         is_show_owner_applicants: Boolean
         "Подписывать или нет транзакцию"
         is_sign_transaction: Boolean
+        "Отправить приглашение на email"
+        send_email: Boolean
     ): Members @field(resolver: "MembersMutator@create")
 
     """
@@ -201,6 +203,20 @@ extend type Mutation  {
     ): Members   @field(resolver: "MembersMutator@update")
 
     """
+    Установить статус Suspended
+    """
+    setMemberSuspended(
+        id: ID!
+    ): Members   @field(resolver: "MembersMutator@setSuspended")
+
+    """
+    Установить статус Inactive
+    """
+    setMemberInactive(
+        id: ID!
+    ): Members   @field(resolver: "MembersMutator@setInactive")
+
+    """
     Установить пароль участника
     """
     setMemberPassword(
@@ -215,6 +231,20 @@ extend type Mutation  {
     setMemberSecurityPin(
         id: ID!
     ): Members   @field(resolver: "MembersMutator@setSecurityPin")
+
+    """
+    Отправить ссылку для подтверждения email
+    """
+    sendMemberEmailVerification(
+        id: ID!
+    ): Members   @field(resolver: "MembersMutator@sendEmailVerification")
+
+    """
+    Сбросить пароль участнику
+    """
+    resetMemberPassword(
+        id: ID!
+    ): Members   @field(resolver: "MembersMutator@resetPassword")
 
     """
     Удалить участника

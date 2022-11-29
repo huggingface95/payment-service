@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\MemberStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\ClientIpAddress;
 use App\Models\DepartmentPosition;
@@ -31,6 +32,11 @@ class MembersMutator extends BaseMutator
      */
     public function create($_, array $args)
     {
+        if (! isset($args['send_email']) || $args['send_email'] == false) {
+            if (! isset($args['password'])) {
+                throw new GraphqlException('Password field can\'t be empty', 'use');
+            }
+        }
         if (! isset($args['password'])) {
             $password = Str::random(8);
         } else {
@@ -38,12 +44,17 @@ class MembersMutator extends BaseMutator
         }
 
         $args['password_hash'] = Hash::make($password);
-        $args['password_salt'] = Hash::make($password);
+        $args['password_salt'] = $args['password_hash'];
+        $args['is_need_change_password'] = true;
 
         $member = Members::create($args);
 
         if (isset($args['group_id'])) {
             $member->groupRole()->sync([$args['group_id']], true);
+        }
+
+        if (isset($args['send_email']) && $args['send_email'] === true) {
+            $this->emailService->sendChangePasswordEmail($member);
         }
 
         return $member;
@@ -120,7 +131,7 @@ class MembersMutator extends BaseMutator
             $password = $args['password'];
         }
         
-        $args['is_active'] = false;
+        $args['member_status_id'] = MemberStatusEnum::INACTIVE->value;
         $args['password_hash'] = Hash::make($password);
         $args['password_salt'] = Hash::make($password);
         $args['is_need_change_password'] = true;
@@ -132,21 +143,7 @@ class MembersMutator extends BaseMutator
         }
 
         if (isset($args['send_email']) && $args['send_email'] === true) {
-            $verifyToken = $this->verifyService->createVerifyToken($member);
-
-            $company = $member->company;
-
-            $emailTemplateName = '{member_company_name} has invited you to join team';
-            $emailData = [
-                'email' => $member->email,
-                'member_name' => $member->first_name,
-                'logo_member_company' => $company->companySettings->logo_link,
-                'member_email_confirm_url' => $company->companySettings->member_verify_url . '/join/verify/' . $verifyToken->token,
-                'member_company_name' => $company->name,
-            ];
-
-            $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $emailData, $emailTemplateName);
-            $this->emailService->sendMemberEmailByMemberDto($emailDTO, true);
+            $this->emailService->sendChangePasswordEmail($member);
         }
         
         return $member;
@@ -162,6 +159,83 @@ class MembersMutator extends BaseMutator
         Members::where('id', $args['id'])->update(['password_hash'=>Hash::make($args['password']), 'password_salt'=>Hash::make($args['password_confirmation'])]);
 
         return $args;
+    }
+
+    /**
+     * @param  $_
+     * @param  array  $args
+     * @return mixed
+     */
+    public function resetPassword($_, array $args)
+    {        
+        $member = Members::find($args['id']);
+        if (! $member) {
+            throw new GraphqlException('Member not found', 'not found', 404);
+        }
+
+        $password = Str::random(8);
+        $args['password_hash'] = Hash::make($password);
+        $args['password_salt'] = $args['password_hash'];
+        $args['is_need_change_password'] = true;
+        $member->update($args);
+
+        $this->emailService->sendChangePasswordEmail($member);
+
+        return $member;
+    }
+
+    /**
+     * @param  $_
+     * @param  array  $args
+     * @return mixed
+     */
+    public function setSuspended($_, array $args)
+    {
+        $member = Members::find($args['id']);
+        if (! $member) {
+            throw new GraphqlException('Member not found', 'not found', 404);
+        }
+
+        $member->update([
+            'member_status_id' => MemberStatusEnum::SUSPENDED->value
+        ]);
+
+        return $member;
+    }
+
+    /**
+     * @param  $_
+     * @param  array  $args
+     * @return mixed
+     */
+    public function setInactive($_, array $args)
+    {
+        $member = Members::find($args['id']);
+        if (! $member) {
+            throw new GraphqlException('Member not found', 'not found', 404);
+        }
+
+        $member->update([
+            'member_status_id' => MemberStatusEnum::INACTIVE->value
+        ]);
+
+        $this->emailService->sendVerificationEmail($member);
+
+        return $member;
+    }
+
+    /**
+     * @param  $_
+     * @param  array  $args
+     * @return mixed
+     */
+    public function sendEmailVerification($_, array $args)
+    {
+        $member = Members::find($args['id']);
+
+        $this->emailService->sendVerificationEmail($member);
+
+        return $member;
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\MemberStatusEnum;
 use App\Models\Members;
 use App\Services\EmailService;
 use App\Services\VerifyService;
@@ -82,7 +83,7 @@ class PasswordController extends Controller
         $this->validate($request, $rules);
 
         // One-time link valid 24 hours
-        $user = $this->verifyService->getVerifyUserModelByToken($request->token, 24);
+        $user = $this->verifyService->getVerifyUserModelByToken($request->token, env('EMAIL_VERIFY_TOKEN_TTL', 24));
         $this->verifyService->deleteVerifyCode($request->token);
 
         if (! $user) {
@@ -102,6 +103,7 @@ class PasswordController extends Controller
         $data['password_hash'] = Hash::make($request->password);
         $data['password_salt'] = $data['password_hash'];
         $data['is_need_change_password'] = false;
+        $data['member_status_id'] = MemberStatusEnum::ACTIVE->value;
 
         if ($user->update($data)) {
             return response()->json(['success' => true]);
