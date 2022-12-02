@@ -96,6 +96,10 @@ class AuthController extends Controller
         $authCacheKey = 'auth_user_'.$this->guard.':'.$user->id;
         $loginAttemptCacheKey = 'login_attempt_'.$this->guard.':'.$user->email;
 
+        if ($user->is_need_change_password) {
+            return response()->json(['message' => 'Please change password first', 'url' => route('password.change.member')], 403);
+        }
+
         if ($user->is_active == false) {
             return response()->json(['error' => 'Account is blocked. Please contact support'], 403);
         }

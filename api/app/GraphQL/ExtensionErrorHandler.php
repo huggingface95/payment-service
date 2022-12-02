@@ -30,6 +30,21 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
+        if (strpos($error->getMessage(), 'composite_uniqe_commission_template_limit')) {
+            return $next(new Error(
+                'This threshold already exist.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'This threshold already exist.',
+                ]
+            ));
+        }
         if (strpos($error->getMessage(), 'applicant_companies_name_unique')) {
             return $next(new Error(
                 'This Company Name already exist.',

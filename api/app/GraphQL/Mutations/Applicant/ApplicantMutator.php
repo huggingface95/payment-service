@@ -5,21 +5,21 @@ namespace App\GraphQL\Mutations\Applicant;
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\ApplicantVerificationStatusEnum;
-use App\Enums\ClientTypeEnum;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\BaseMutator;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use App\Models\Companies;
-use App\Models\EmailVerification;
 use App\Services\EmailService;
+use App\Services\VerifyService;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class ApplicantMutator extends BaseMutator
 {
-    public function __construct(protected EmailService $emailService)
-    {
+    public function __construct(
+        protected EmailService $emailService,
+        protected VerifyService $verifyService
+    ) {
     }
 
     /**
@@ -71,16 +71,12 @@ class ApplicantMutator extends BaseMutator
             ]);
         }
 
-        $verifyToken = EmailVerification::create([
-            'client_id' => $applicant->id,
-            'type' => ClientTypeEnum::APPLICANT->toString(),
-            'token' => Str::random(64),
-        ]);
+        $verifyToken = $this->verifyService->createVerifyToken($applicant);
 
         $emailTemplateName = 'Welcome! Confirm your email address';
         $emailData = [
             'client_name' => $applicant->first_name,
-            'email_confirm_url' => $company->companySettings->client_url . '/email/verify/' . $verifyToken->token,
+            'email_confirm_url' => $company->companySettings->client_url . '/email/registration/verify/' . $verifyToken->token,
             'member_company_name' => $company->name,
         ];
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $company, $emailTemplateName, $emailData);
@@ -88,7 +84,7 @@ class ApplicantMutator extends BaseMutator
         $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
 
         // TODO: remove this line
-        $applicant->email_confirm_url = 'https://dev.account.docudots.com/email/verify/' . $verifyToken->token;
+        $applicant->email_confirm_url = 'https://dev.account.docudots.com/email/registration/verify/' . $verifyToken->token;
 
         return $applicant;
     }

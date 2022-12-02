@@ -43,7 +43,7 @@ class EmailRepository implements EmailRepositoryInterface
     /**
      * @throws GraphqlException
      */
-    public function getSmtpByCompanyId(Account $account): Model|Builder
+    public function getSmtpByCompanyId(Account|Members $account): Model|Builder
     {
         $smtp = $this->smtp->newQuery()->where('company_id', $account->company_id)->first();
 
@@ -121,6 +121,10 @@ class EmailRepository implements EmailRepositoryInterface
         $emailTemplate = $this->template->newQuery()
             ->whereRaw("lower(subject) LIKE  '%".strtolower($dto->emailTemplateName)."%'  ")
             ->first();
+
+        if (! $emailTemplate) {
+            throw new GraphqlException('Email template not found', '404');
+        }
 
         $content = $this->replaceObjectData($emailTemplate->getHtml(), $dto->data, '/\{(.*?)\}/');
         $subject = $this->replaceObjectData($emailTemplate->subject, $dto->data, '/\{(.*?)\}/');

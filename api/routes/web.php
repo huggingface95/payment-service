@@ -54,8 +54,20 @@ $router->group([
 
 $router->get('/test', ['uses' => 'ExampleController@index']);
 
-$router->post('/password/email', 'PasswordController@postEmail');
-$router->post('/password/reset/{token}', 'PasswordController@postReset');
-$router->get('/password/reset/{token}', ['as'=>'password.reset', function () {
-}]);
-$router->get('/email/verify/{token}', 'VerifyController@emailVerify');
+$router->group([
+    'prefix' => 'password',
+], function () use ($router) {
+    $router->post('email', 'PasswordController@postEmail');
+    $router->post('reset/{token}', 'PasswordController@postReset');
+    $router->get('reset/{token}', ['as'=>'password.reset', function () {}]);
+    $router->post('change/member', ['as' => 'password.change.member', 'uses' => 'PasswordController@changeMemberPassword']);
+    $router->post('change/member/{token}', ['as' => 'password.change.member_by_token', 'uses' => 'PasswordController@changeMemberPasswordByToken']);
+});
+
+$router->group([
+    'prefix' => 'email',
+], function () use ($router) {
+    $router->get('verify/{token}', ['as' => 'email.confirm.verify', 'uses' => 'VerifyController@emailVerify']);
+    $router->get('change/verify/{token}', ['as' => 'email.confirm.change', 'uses' => 'VerifyController@emailChangeVerify']);
+    $router->get('registration/verify/{token}', ['as' => 'email.confirm.registration', 'uses' => 'VerifyController@emailRegistrationVerify']);
+});

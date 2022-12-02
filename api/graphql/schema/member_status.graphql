@@ -1,0 +1,16 @@
+"""
+Статусы мембера
+"""
+type MemberStatus {
+    "ID"
+    id: ID!
+    "Название"
+    name: String!
+}
+
+extend type Query @guard {
+    """
+    Получить список статусов мембера
+    """
+    memberStatuses: [MemberStatus!]! @all
+}

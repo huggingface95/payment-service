@@ -29,6 +29,7 @@ type PriceListFee {
     period: FeePeriod @belongsTo(relation: "feePeriod")
     "Цены"
     fees: [PriceListFeeCurrency] @belongsTo(relation: "fees")
+    fee_ranges: JSON
     created_at: DateTime
     updated_at: DateTime
 }
@@ -83,6 +84,7 @@ input PriceListFeeInput {
     operation_type_id: ID!
     period_id: ID!
     price_list_id: ID!
+    fee_ranges: JSON
     fees: [PriceListFeesList!]!
 }
 
