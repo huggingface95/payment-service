@@ -7,7 +7,7 @@ use App\Models\ApplicantIndividual;
 
 class ApplicantService
 {
-    public const DEFAULT_LOGO_PATH = '/img/logo.png';
+    public const DEFAULT_LOGO_PATH = '/img/logo.svg';
 
     public function getApplicantRequisites(ApplicantIndividual $applicant, Account $account): array
     {
