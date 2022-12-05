@@ -19,7 +19,7 @@ type User interface {
 	GetTwoFactorAuthSettingId() uint64
 	GetGoogle2FaSecret() string
 	GetModelType() string
-	SetIsActivated(v bool)
+	SetIsActivated(v uint64)
 	SetIsEmailVerify(v uint64)
 	GetCompany() *Company
 	SetBackupCodeData(v *BackupJson)

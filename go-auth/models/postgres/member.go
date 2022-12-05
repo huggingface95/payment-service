@@ -17,10 +17,10 @@ type Member struct {
 	FullName               string `gorm:"column:fullname"`
 	Email                  string `gorm:"unique,column:email"`
 	PasswordHash           string `gorm:"column:password_hash"`
-	IsActive               bool   `gorm:"column:is_active"`
+	IsActive               uint64 `gorm:"column:member_status_id"`
 	TwoFactorAuthSettingId uint64 `gorm:"column:two_factor_auth_setting_id"`
 	Google2FaSecret        string `gorm:"column:google2fa_secret"`
-	IsVerificationEmail    uint64 `gorm:"column:email_verification_status_id"`
+	IsVerificationEmail    uint64 `gorm:"column:email_verification"`
 	CreatedAt              time.Time
 	UpdatedAt              time.Time
 	BackupCodeData         *BackupJson        `gorm:"column:backup_codes"`
@@ -119,11 +119,11 @@ func (user *Member) GetEmail() string {
 }
 
 func (user *Member) IsActivated() bool {
-	return user.IsActive
+	return user.IsActive == MemberStatusActive
 }
 
 func (user *Member) IsEmailVerify() bool {
-	return user.IsVerificationEmail == Verifyed
+	return user.IsVerificationEmail == MemberVerificationStatusActive
 }
 
 func (user *Member) GetCompanyId() uint64 {
@@ -153,7 +153,7 @@ func (user *Member) SetCompanyId(v uint64) {
 	user.CompanyId = v
 }
 
-func (user *Member) SetIsActivated(v bool) {
+func (user *Member) SetIsActivated(v uint64) {
 	user.IsActive = v
 }
 

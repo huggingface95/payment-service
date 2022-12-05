@@ -35,7 +35,6 @@ type Individual struct {
 	PersonalAdditionalFields datatypes.JSON     `gorm:"column:personal_additional_fields"`
 	ContactsAdditionalFields datatypes.JSON     `gorm:"column:contacts_additional_fields"`
 	ApplicantStatusId        uint64             `gorm:"column:applicant_status_id"`
-	ApplicantStateId         uint64             `gorm:"column:applicant_state_id"`
 	IsVerificationPhone      uint64             `gorm:"column:phone_verification_status_id"`
 	FullName                 string             `gorm:"column:fullname"`
 	CompanyId                uint64             `gorm:"column:company_id"`
@@ -48,7 +47,7 @@ type Individual struct {
 	UpdatedAt                time.Time          `gorm:"column:updated_at"`
 	IsVerificationEmail      uint64             `gorm:"column:email_verification_status_id"`
 	Google2FaSecret          string             `gorm:"column:google2fa_secret"`
-	IsActive                 bool               `gorm:"column:is_active"`
+	IsActive                 uint64             `gorm:"column:applicant_state_id"`
 	TwoFactorAuthSettingId   uint64             `gorm:"column:two_factor_auth_setting_id"`
 	BackupCodeData           *BackupJson        `gorm:"column:backup_codes"`
 	ClientIpAddresses        []*ClientIpAddress `gorm:"foreignKey:ClientId;references:ID"`
@@ -141,11 +140,11 @@ func (user *Individual) GetEmail() string {
 }
 
 func (user *Individual) IsActivated() bool {
-	return user.IsActive
+	return user.IsActive == ApplicantStateActive
 }
 
 func (user *Individual) IsEmailVerify() bool {
-	return user.IsVerificationEmail == Verifyed
+	return user.IsVerificationEmail == ApplicantVerificationVerifyed
 }
 
 func (user *Individual) GetCompanyId() uint64 {
@@ -171,7 +170,7 @@ func (user *Individual) GetModelType() string {
 	return constants.Individual
 }
 
-func (user *Individual) SetIsActivated(v bool) {
+func (user *Individual) SetIsActivated(v uint64) {
 	user.IsActive = v
 }
 

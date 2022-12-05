@@ -52,8 +52,8 @@ func Register(c *gin.Context) {
 	user, err := individualRepository.FillIndividual(request)
 	company, err := individualRepository.FillCompany(request)
 	user.TwoFactorAuthSettingId = 2
-	user.IsVerificationPhone = postgres.NotVerifyed
-	user.IsVerificationEmail = postgres.NotVerifyed
+	user.IsVerificationPhone = postgres.ApplicantVerificationNotVerifyed
+	user.IsVerificationEmail = postgres.ApplicantVerificationNotVerifyed
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -104,8 +104,13 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 	data, _ := cache.Caching.ConfirmationEmailLinks.Get(token)
 	user = userRepository.GetUserById(data.Id, constants.Individual)
 	if user != nil {
-		user.SetIsEmailVerify(postgres.Verifyed)
-		user.SetIsActivated(true)
+		if user.StructName() == constants.StructMember {
+			user.SetIsActivated(postgres.MemberStatusActive)
+			user.SetIsEmailVerify(postgres.MemberVerificationStatusActive)
+		} else {
+			user.SetIsEmailVerify(postgres.ApplicantVerificationVerifyed)
+			user.SetIsActivated(postgres.ApplicantStateActive)
+		}
 		res := userRepository.SaveUser(user)
 		if res.Error == nil {
 			cache.Caching.ConfirmationEmailLinks.Delete(token)

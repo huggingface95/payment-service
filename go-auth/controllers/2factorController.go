@@ -132,7 +132,11 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		context.Abort()
 		return
 	} else if twoFactorAttempt >= config.Conf.Jwt.MfaAttempts {
-		user.SetIsActivated(false)
+		if user.StructName() == constants.StructMember {
+			user.SetIsActivated(postgres.MemberStatusSuspended)
+		} else {
+			user.SetIsActivated(postgres.ApplicantStateBlocked)
+		}
 		userRepository.SaveUser(user)
 		cache.Caching.LoginAttempt.Delete(key)
 		context.JSON(http.StatusForbidden, gin.H{"error": "Account is blocked. Please contact support"})

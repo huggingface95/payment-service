@@ -45,7 +45,11 @@ func Login(context *gin.Context) {
 	}
 
 	if auth.AttemptLimitLarge(key) {
-		user.SetIsActivated(false)
+		if user.StructName() == constants.StructMember {
+			user.SetIsActivated(postgres.MemberStatusSuspended)
+		} else {
+			user.SetIsActivated(postgres.ApplicantStateBlocked)
+		}
 		userRepository.SaveUser(user)
 		context.JSON(http.StatusForbidden, gin.H{"error": "Account is blocked. Please contact support"})
 		return

@@ -1,8 +1,8 @@
 package postgres
 
-const NotVerifyed = 1
-const Requested = 2
-const Verifyed = 3
+const ApplicantVerificationNotVerifyed = 1
+const ApplicantVerificationRequested = 2
+const ApplicantVerificationVerifyed = 3
 
 type ApplicantVerificationStatuses struct {
 }
