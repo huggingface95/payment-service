@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\PriceListFeeService;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -39,6 +40,15 @@ class PriceListFee extends BaseModel
      * @var array
      */
     protected $fillable = ['name', 'price_list_id', 'type_id', 'operation_type_id', 'period_id'];
+
+    protected $appends = ['fee_ranges'];
+
+    public function getFeeRangesAttribute()
+    {
+        $fees = $this->fees()->get();
+
+        return (new PriceListFeeService)->convertFeesToFeeRanges($fees);
+    }
 
 //    protected function getFeeAttribute($value)
 //    {

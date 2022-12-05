@@ -121,7 +121,7 @@ extend type Mutation  {
         "ID роли участника"
         group_id: ID!
         "Статус участника"
-        member_status_id: ID!
+        member_status_id: ID
         "ID настройки двухфактороной авторизации"
         two_factor_auth_setting_id: ID!
         "Пароль участника, если не передан то сгенерируется случайный"

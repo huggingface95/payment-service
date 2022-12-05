@@ -3,15 +3,22 @@
 namespace App\GraphQL\Mutations;
 
 use App\Models\PriceListFee;
+use App\Services\PriceListFeeService;
 
 class PriceListFeesMutator
 {
+    public function __construct(protected PriceListFeeService $priceListFeeService)
+    {
+    }
+
     /**
      * @param  null  $_
      * @param  array<string, mixed>  $args
      */
     public function create($_, array $args)
     {
+        $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args['fee_ranges']);
+
         $priceListFee = PriceListFee::create($args);
 
         if (isset($args['fees'])) {
