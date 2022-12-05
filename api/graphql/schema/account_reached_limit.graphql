@@ -49,5 +49,5 @@ input QueryAccountReachedLimitsFilterStatic @spread{
     limit_value: String @ilike
     transfer_direction: String @ilike
     period: Int @eq
-    amount: Decimal @eq
+    amount: Float @eq
 }
