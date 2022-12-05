@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\EmailVerificationStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\BaseMutator;
 use App\Services\EmailService;
@@ -29,7 +30,7 @@ class MemberProfileMutator extends BaseMutator
 
         if ($args['email']) {
             $this->sendConfirmChangeEmail(null, $args);
-            $member->email_verification = 2;
+            $member->email_verification = EmailVerificationStatusEnum::REQUESTED->value;
         }
         $member->update($args);
 
@@ -42,7 +43,7 @@ class MemberProfileMutator extends BaseMutator
 
         try {
                 $verifyToken = $this->verifyService->createVerifyToken($member);
-                
+
                 $confirmUrl = 'https://dev.admin.docudots.com';
                 // TODO: Create Email Template with subject 'Confirm change email'
                 $emailTemplateSubject = 'Confirm change email';

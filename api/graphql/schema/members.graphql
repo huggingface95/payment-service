@@ -52,6 +52,14 @@ type Members {
     is_sign_transaction: Boolean
     "Member ip address"
     ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
+    "Верификация email"
+    email_verification: EmailVerification
+}
+
+enum EmailVerification {
+    NOT_VERIFIED @enum(value: 1)
+    REQUESTED @enum(value: 2)
+    VERIFIED @enum(value: 3)
 }
 
 extend type Query @guard {
