@@ -20,7 +20,7 @@ type Member struct {
 	IsActive               bool   `gorm:"column:is_active"`
 	TwoFactorAuthSettingId uint64 `gorm:"column:two_factor_auth_setting_id"`
 	Google2FaSecret        string `gorm:"column:google2fa_secret"`
-	IsVerificationEmail    bool   `gorm:"column:is_verification_email"`
+	IsVerificationEmail    uint64 `gorm:"column:email_verification_status_id"`
 	CreatedAt              time.Time
 	UpdatedAt              time.Time
 	BackupCodeData         *BackupJson        `gorm:"column:backup_codes"`
@@ -123,7 +123,7 @@ func (user *Member) IsActivated() bool {
 }
 
 func (user *Member) IsEmailVerify() bool {
-	return user.IsVerificationEmail
+	return user.IsVerificationEmail == Verifyed
 }
 
 func (user *Member) GetCompanyId() uint64 {
@@ -157,7 +157,7 @@ func (user *Member) SetIsActivated(v bool) {
 	user.IsActive = v
 }
 
-func (user *Member) SetIsEmailVerify(v bool) {
+func (user *Member) SetIsEmailVerify(v uint64) {
 	user.IsVerificationEmail = v
 }
 

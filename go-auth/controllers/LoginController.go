@@ -164,7 +164,6 @@ func checkPassword(c *gin.Context, u postgres.User, r requests.LoginRequest) boo
 
 func checkAndUpdateSession(provider string, email string, fullName string, companyId uint64, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
 	ok, err := oauthRepository.HasActiveSessionWithConditions(email, deviceInfo)
-
 	if err != nil {
 		return false, 403, gin.H{"data": "Failed to authorize device"}
 	}

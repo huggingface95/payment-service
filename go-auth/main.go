@@ -47,7 +47,7 @@ func initRouter() *gin.Engine {
 	{
 		ip := confirmation.Group("/ip").Use(middlewares.CheckIpConfirmation())
 		{
-			ip.GET("/", controllers.ConfirmationIp)
+			ip.GET("", controllers.ConfirmationIp)
 		}
 	}
 
@@ -61,7 +61,7 @@ func initRouter() *gin.Engine {
 			{
 				iConfEmail := iConf.Group("email")
 				{
-					iConfEmail.Use(middlewares.CheckIndividualEmailConfirmation()).GET("/", individual.ConfirmationIndividualEmail)
+					iConfEmail.Use(middlewares.CheckIndividualEmailConfirmation()).GET("", individual.ConfirmationIndividualEmail)
 				}
 				iConfResetPass := iConf.Group("password")
 				{
@@ -71,7 +71,7 @@ func initRouter() *gin.Engine {
 		}
 
 		auth.POST("login", controllers.Login)
-		auth.GET("login-two-factor", controllers.GenerateTwoFactorQr)
+		auth.POST("login-two-factor", controllers.GenerateTwoFactorQr)
 		auth.POST("verify-two-factor", controllers.VerifyTwoFactorQr)
 		auth.POST("activate-two-factor", controllers.ActivateTwoFactorQr)
 		auth.POST("generate-backup-codes", controllers.GenerateBackupCodes)
@@ -87,7 +87,7 @@ func initRouter() *gin.Engine {
 
 	redirect := router.Group("/api").Use(middlewares.Auth())
 	{
-		redirect.POST("/", controllers.RedirectRequest)
+		redirect.POST("", controllers.RedirectRequest)
 	}
 	return router
 }

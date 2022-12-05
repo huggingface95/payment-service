@@ -29,6 +29,11 @@ func CreateIndividual(user *postgres.Individual, applicantCompany *postgres.Appl
 		Limit(1).
 		Preload("CompanySetting.GroupRole").
 		First(&company)
+
+	if company.CompanySetting == nil || company.CompanySetting.GroupRole == nil {
+		return nil
+	}
+
 	if res.Error == nil {
 		user.SetCompanyId(company.Id)
 		uRecord := database.PostgresInstance.Omit(user.Omit()...).

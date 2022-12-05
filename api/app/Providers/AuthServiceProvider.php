@@ -7,7 +7,7 @@ use App\Models\Members;
 use App\Services\JwtService;
 use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Lumen\Http\Request;
+use Illuminate\Http\Request;
 use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
@@ -36,11 +36,11 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app['auth']->viaRequest('go-auth', function (Request $request) use ($jwtService) {
             $token = $request->bearerToken();
-            $provider = $request->header('PROVIDER_TYPE');
             try {
-                $credentials = $jwtService->parseJWT($token, $provider);
-                return $provider == 'members' ? Members::find($credentials->sub) : ApplicantIndividual::find($credentials->sub);
-            } catch (\Throwable) {
+                $credentials = $jwtService->parseJWT($token);
+                return $credentials->prv == 'members' ? Members::find($credentials->jti) : ApplicantIndividual::find($credentials->jti);
+            } catch (\Throwable $e) {
+                dd($e);
                 return null;
             }
         });

@@ -20,7 +20,7 @@ type User interface {
 	GetGoogle2FaSecret() string
 	GetModelType() string
 	SetIsActivated(v bool)
-	SetIsEmailVerify(v bool)
+	SetIsEmailVerify(v uint64)
 	GetCompany() *Company
 	SetBackupCodeData(v *BackupJson)
 	SetGoogle2FaSecret(v string)

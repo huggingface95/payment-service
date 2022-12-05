@@ -29,7 +29,7 @@ class AuthController extends Controller
     public function __construct(protected AuthService $authService)
     {
         //        $this->middleware('auth:api', ['except' => ['login']]);
-        $this->middleware('jwt.auth', ['except' => ['login', 'verify2FA', 'show2FARegistrationInfo', 'activate2FA', 'generateBackupCodes', 'storeBackupCodes']]);
+//        $this->middleware('jwt.auth', ['except' => ['login', 'verify2FA', 'show2FARegistrationInfo', 'activate2FA', 'generateBackupCodes', 'storeBackupCodes']]);
     }
 
     /**
@@ -236,10 +236,7 @@ class AuthController extends Controller
      */
     public function me(Request $request)
     {
-        $clientType = JWTAuth::getPayload()->get('client_type');
-        $guard = $this->authService->getGuardByClientType($clientType);
-
-        return response()->json(auth($guard)->user());
+        return response()->json($request->user());
     }
 
     /**

@@ -32,37 +32,9 @@ func GenerateTwoFactorQr(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	if request.TwoFaToken != "" {
-		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.TwoFaToken)
-		if user == nil {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
-			context.Abort()
-			return
-		}
-	}
-	if request.MemberId > 0 && request.Type == constants.Member {
-		if request.AuthToken == "" {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Access token required"})
-			context.Abort()
-			return
-		}
-		user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, request.AuthToken)
-		if user == nil {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Access token not working"})
-			context.Abort()
-			return
-		}
-		user = userRepository.GetUserById(request.MemberId, clientType)
-		if user == nil {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
-			context.Abort()
-			return
-		}
-	}
+	user, message := checkUserByToken(request.TwoFaToken, request.AuthToken, request.MemberId, clientType)
 	if user == nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
-		context.Abort()
-		return
+		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
 
 	qr, code, err := services.GenerateTwoFactorQr(clientType, user.GetId(), user.GetEmail(), config.Conf.App.AppName, crypto.SHA1, 8)
@@ -91,38 +63,11 @@ func ActivateTwoFactorQr(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	if request.TwoFaToken != "" {
-		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.TwoFaToken)
-		if user == nil {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
-			context.Abort()
-			return
-		}
-	}
-	if request.MemberId > 0 && request.Type == constants.Member {
-		if request.AuthToken == "" {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Auth token required"})
-			context.Abort()
-			return
-		}
-		user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, request.AuthToken)
-		if user == nil {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Access token not working"})
-			context.Abort()
-			return
-		}
-		user = userRepository.GetUserById(request.MemberId, clientType)
-		if user == nil {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
-			context.Abort()
-			return
-		}
-	}
+	user, message := checkUserByToken(request.TwoFaToken, request.AuthToken, request.MemberId, clientType)
 	if user == nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
-		context.Abort()
-		return
+		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
+
 	user.SetGoogle2FaSecret(request.Secret)
 	userRepository.SaveUser(user)
 
@@ -142,7 +87,7 @@ func ActivateTwoFactorQr(context *gin.Context) {
 		context.Abort()
 		return
 	} else {
-		context.JSON(http.StatusForbidden, gin.H{"data": "Unable to verify your code"})
+		context.JSON(http.StatusForbidden, gin.H{"data": "Not working secret"})
 		context.Abort()
 		return
 	}
@@ -166,41 +111,13 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	if request.TwoFaToken != "" {
-		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, request.TwoFaToken)
-		if user == nil {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
-			context.Abort()
-			return
-		}
-	}
-	if request.MemberId > 0 && request.Type == constants.Member {
-		if request.AuthToken == "" {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Access token required"})
-			context.Abort()
-			return
-		}
-		user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, request.AuthToken)
-		if user == nil {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Access token not working"})
-			context.Abort()
-			return
-		}
-		user = userRepository.GetUserById(request.MemberId, clientType)
-		if user == nil {
-			context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
-			context.Abort()
-			return
-		}
-	}
+	user, message := checkUserByToken(request.TwoFaToken, request.AuthToken, request.MemberId, clientType)
 	if user == nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
-		context.Abort()
-		return
+		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
+	oauthCode := oauthRepository.GetOauthCodeWithConditions(map[string]interface{}{"user_id": user.GetId(), "revoked": true})
 
-	oauthCode := oauthRepository.GetOauthCodeWithConditions(map[string]interface{}{"user_id": user.GetId()})
-	if oauthCode.ExpiresAt.Unix() < newTime.Unix() {
+	if oauthCode != nil && oauthCode.ExpiresAt.Unix() < newTime.Unix() {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Token has expired"})
 		context.Abort()
 		return
@@ -314,5 +231,29 @@ func DisableTwoFactorQr(context *gin.Context) {
 	}
 	context.JSON(http.StatusForbidden, gin.H{"data": "Unable to verify your code"})
 	context.Abort()
+	return
+}
+
+func checkUserByToken(twaToken string, authToken string, memberId uint64, clientType string) (user postgres.User, errorMessage string) {
+	if twaToken != "" {
+		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, twaToken)
+		errorMessage = "TwoFaToken not working"
+	} else if authToken != "" {
+		user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, authToken)
+		errorMessage = "Auth token not working"
+	} else {
+		errorMessage = "two factor token or Auth token required"
+	}
+
+	if user == nil {
+		return
+	}
+
+	if memberId > 0 && clientType == constants.Member {
+		user = userRepository.GetUserById(memberId, clientType)
+		if user == nil {
+			errorMessage = "Member not found"
+		}
+	}
 	return
 }

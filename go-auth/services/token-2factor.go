@@ -13,11 +13,11 @@ func GenerateTwoFactorQr(clientType string, id uint64, email string, app string,
 	if err != nil {
 		return
 	}
-	_, err = otp.OTP()
+	code, err := otp.OTP()
 	if err != nil {
 		return
 	}
-
+	fmt.Println(code)
 	qrBytes, err := otp.QR()
 	if err != nil {
 		return

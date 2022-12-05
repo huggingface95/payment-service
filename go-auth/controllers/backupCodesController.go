@@ -24,19 +24,14 @@ func GenerateBackupCodes(context *gin.Context) {
 		return
 	}
 
-	user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, request.AuthToken)
-	if user == nil {
-		context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
-		context.Abort()
-		return
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
 	}
 
-	if request.MemberId > 0 {
-		user = userRepository.GetUserById(request.MemberId, request.Type)
-		if user == nil {
-			context.JSON(http.StatusBadRequest, gin.H{"error": "User not found"})
-			return
-		}
+	user, message := checkUserByAuthToken(request.AuthToken, request.MemberId, clientType)
+	if user == nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
 
 	codes := make([]string, 9)
@@ -66,26 +61,20 @@ func StoreBackupCodes(context *gin.Context) {
 		return
 	}
 
-	user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, request.AuthToken)
-	if user == nil {
-		context.JSON(http.StatusBadRequest, gin.H{"data": "Member not found"})
-		context.Abort()
-		return
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
 	}
 
-	if request.MemberId > 0 {
-		user = userRepository.GetUserById(request.MemberId, request.Type)
-		if user == nil {
-			context.JSON(http.StatusForbidden, gin.H{"data": "Member not found"})
-			context.Abort()
-			return
-		}
+	user, message := checkUserByAuthToken(request.AuthToken, request.MemberId, clientType)
+	if user == nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
 
 	user.SetBackupCodeData(request.BackupCodes)
 	userRepository.SaveUser(user)
 
-	token, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
+	token, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 	if err != nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Token don't generate"})
 		context.Abort()
@@ -96,5 +85,23 @@ func StoreBackupCodes(context *gin.Context) {
 		"access_token": token,
 	})
 	context.Abort()
+	return
+}
+
+func checkUserByAuthToken(authToken string, memberId uint64, clientType string) (user postgres.User, errorMessage string) {
+
+	user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, authToken)
+	if user == nil {
+		errorMessage = "Auth token not working"
+		return
+	}
+
+	if memberId > 0 && clientType == constants.Member {
+		user = userRepository.GetUserById(memberId, clientType)
+		if user == nil {
+			errorMessage = "Member not found"
+		}
+	}
+
 	return
 }

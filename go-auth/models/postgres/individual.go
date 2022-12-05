@@ -36,7 +36,7 @@ type Individual struct {
 	ContactsAdditionalFields datatypes.JSON     `gorm:"column:contacts_additional_fields"`
 	ApplicantStatusId        uint64             `gorm:"column:applicant_status_id"`
 	ApplicantStateId         uint64             `gorm:"column:applicant_state_id"`
-	IsVerificationPhone      bool               `gorm:"column:is_verification_phone"`
+	IsVerificationPhone      uint64             `gorm:"column:phone_verification_status_id"`
 	FullName                 string             `gorm:"column:fullname"`
 	CompanyId                uint64             `gorm:"column:company_id"`
 	MemberGroupRoleId        uint64             `gorm:"column:member_group_role_id"`
@@ -46,7 +46,7 @@ type Individual struct {
 	LanguageId               uint64             `gorm:"column:language_id"`
 	CreatedAt                time.Time          `gorm:"column:created_at"`
 	UpdatedAt                time.Time          `gorm:"column:updated_at"`
-	IsVerificationEmail      bool               `gorm:"is_verification_email"`
+	IsVerificationEmail      uint64             `gorm:"column:email_verification_status_id"`
 	Google2FaSecret          string             `gorm:"column:google2fa_secret"`
 	IsActive                 bool               `gorm:"column:is_active"`
 	TwoFactorAuthSettingId   uint64             `gorm:"column:two_factor_auth_setting_id"`
@@ -145,7 +145,7 @@ func (user *Individual) IsActivated() bool {
 }
 
 func (user *Individual) IsEmailVerify() bool {
-	return user.IsVerificationEmail
+	return user.IsVerificationEmail == Verifyed
 }
 
 func (user *Individual) GetCompanyId() uint64 {
@@ -179,7 +179,7 @@ func (user *Individual) SetCompanyId(v uint64) {
 	user.CompanyId = v
 }
 
-func (user *Individual) SetIsEmailVerify(v bool) {
+func (user *Individual) SetIsEmailVerify(v uint64) {
 	user.IsVerificationEmail = v
 }
 
