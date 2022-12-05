@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AddTransferTypeToOperationTypeTable extends Migration
@@ -14,8 +15,9 @@ class AddTransferTypeToOperationTypeTable extends Migration
     public function up()
     {
         Schema::table('operation_type', function (Blueprint $table) {
-            $table->unsignedBigInteger('operation_type_id')->nullable();
+            $table->string('transfer_type', 255)->nullable();
         });
+        DB::statement('ALTER TABLE operation_type ALTER COLUMN transfer_type TYPE text[] USING ARRAY[transfer_type]');
     }
 
     /**
@@ -26,7 +28,7 @@ class AddTransferTypeToOperationTypeTable extends Migration
     public function down()
     {
         Schema::table('operation_type', function (Blueprint $table) {
-            $table->dropColumn('operation_type_id');
+            $table->dropColumn('transfer_type');
         });
     }
 }

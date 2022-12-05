@@ -16,16 +16,15 @@ class OperationTypeSeeder extends Seeder
      */
     public function run()
     {
-        $incomingOperationTypeFees = ['Incoming Transfer', 'Between Account', 'Between Users', 'Exchange'];
+        $incomingOperationTypeFees = ['Between Account', 'Between Users', 'Exchange'];
         $outgoingOperationTypeFees = ['Outgoing Transfer', 'Fee'];
         $feeTypeFees = FeeType::where('name', FeeType::FEES)->first();
-        $incomingTransferType = TransferType::where('name', TransferType::INCOMING)->first();
-        $outgoingTransferType = TransferType::where('name', TransferType::OUTGOING)->first();
+        OperationType::firstOrCreate(['name' => 'Incoming Transfer', 'fee_type_id' => $feeTypeFees->id, 'transfer_type' => '{Incoming}']);
         foreach ($incomingOperationTypeFees as $item) {
-            OperationType::firstOrCreate(['name' => $item, 'fee_type_id' => $feeTypeFees->id, 'operation_type_id' => $incomingTransferType->id]);
+            OperationType:: firstOrCreate(['name' => $item, 'fee_type_id' => $feeTypeFees->id, 'transfer_type' => '{Incoming, Outgoing}']);
         }
         foreach ($outgoingOperationTypeFees as $item) {
-            OperationType::firstOrCreate(['name' => $item, 'fee_type_id' => $feeTypeFees->id, 'operation_type_id' => $outgoingTransferType->id]);
+            OperationType::firstOrCreate(['name' => $item, 'fee_type_id' => $feeTypeFees->id, 'transfer_type' => '{Outgoing}']);
         }
     }
 }
