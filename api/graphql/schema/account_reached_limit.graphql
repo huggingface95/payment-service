@@ -25,7 +25,7 @@ type AccountReachedLimit {
     "Период"
     period: Int!
     "Сумма"
-    amount: Float!
+    amount: Decimal!
 }
 
 extend type Query @guard {
@@ -49,5 +49,5 @@ input QueryAccountReachedLimitsFilterStatic @spread{
     limit_value: String @ilike
     transfer_direction: String @ilike
     period: Int @eq
-    amount: Float @eq
+    amount: Decimal @eq
 }

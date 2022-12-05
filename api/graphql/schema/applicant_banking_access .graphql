@@ -12,11 +12,11 @@ type ApplicantBankingAccess {
     "Contact administrator"
     contact_administrator: Boolean!
     "Ежедневный лимит"
-    daily_limit: Float!
+    daily_limit: Decimal!
     "Ежемесячный лимит"
-    monthly_limit: Float!
+    monthly_limit: Decimal!
     "Лимит операций"
-    operation_limit: Float!
+    operation_limit: Decimal!
     "Получить роль"
     role: Role @hasOne(relation: "role")
 }
@@ -46,13 +46,13 @@ extend type Mutation @guard {
         "Contact administrator"
         contact_administrator: Boolean!
         "Ежедневный лимит"
-        daily_limit: Float!
+        daily_limit: Decimal!
         "Ежемесячный лимит"
-        monthly_limit: Float!
+        monthly_limit: Decimal!
         "Лимит операций"
-        operation_limit: Float!
+        operation_limit: Decimal!
         "Использованный лимит"
-        used_limit: Float
+        used_limit: Decimal
     ): ApplicantBankingAccess
         @field(resolver: "ApplicantBankingAccessMutator@create")
 
@@ -68,13 +68,11 @@ extend type Mutation @guard {
         "Contact administrator"
         contact_administrator: Boolean!
         "Ежедневный лимит"
-        daily_limit: Float!
+        daily_limit: Decimal!
         "Ежемесячный лимит"
-        monthly_limit: Float!
+        monthly_limit: Decimal!
         "Лимит операций"
-        operation_limit: Float!
-        "Использованный лимит"
-        used_limit: Float
+        operation_limit: Decimal!
     ): ApplicantBankingAccess
         @field(resolver: "ApplicantBankingAccessMutator@update")
 

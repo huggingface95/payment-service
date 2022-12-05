@@ -5,7 +5,7 @@ Banking -> Commission Templates -> Template List
 type CommissionTemplateLimit {
     id: ID!
     "Сумма лимита"
-    amount: Float!
+    amount: Decimal!
     "Валюта"
     currency: Currencies! @belongsTo(relation: "currency")
     "количество срабатываний лимита"
@@ -57,7 +57,7 @@ input InputCommissionTemplateLimit {
     "ID направления платежа"
     commission_template_limit_transfer_direction_id: ID!
     "Сумма лимита"
-    amount: Float!
+    amount: Decimal!
     "ID валюты лимита"
     currency_id: ID
     "ID периода лимита"
