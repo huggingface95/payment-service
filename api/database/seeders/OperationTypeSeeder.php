@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\FeeType;
 use App\Models\OperationType;
+use App\Models\TransferType;
 use Illuminate\Database\Seeder;
 
 class OperationTypeSeeder extends Seeder
@@ -15,15 +16,15 @@ class OperationTypeSeeder extends Seeder
      */
     public function run()
     {
-        $operationTypeFees = ['Incoming Transfer', 'Outgoing Transfer', 'Deposit', 'System Deposit', 'Currency Conversion'];
-        $operationTypeServiceFee = ['Service', 'Additional Account', 'Annual Balance'];
+        $incomingOperationTypeFees = ['Between Account', 'Between Users', 'Exchange'];
+        $outgoingOperationTypeFees = ['Outgoing Transfer', 'Fee'];
         $feeTypeFees = FeeType::where('name', FeeType::FEES)->first();
-        $feeTypeServiceFee = FeeType::where('name', FeeType::SERVICE_FEE)->first();
-        foreach ($operationTypeFees as $item) {
-            OperationType::firstOrCreate(['name'=>$item, 'fee_type_id'=>$feeTypeFees->id]);
+        OperationType::firstOrCreate(['name' => 'Incoming Transfer', 'fee_type_id' => $feeTypeFees->id, 'transfer_type' => '{Incoming}']);
+        foreach ($incomingOperationTypeFees as $item) {
+            OperationType:: firstOrCreate(['name' => $item, 'fee_type_id' => $feeTypeFees->id, 'transfer_type' => '{Incoming, Outgoing}']);
         }
-        foreach ($operationTypeServiceFee as $item) {
-            OperationType::firstOrCreate(['name'=>$item, 'fee_type_id'=>$feeTypeServiceFee->id]);
+        foreach ($outgoingOperationTypeFees as $item) {
+            OperationType::firstOrCreate(['name' => $item, 'fee_type_id' => $feeTypeFees->id, 'transfer_type' => '{Outgoing}']);
         }
     }
 }
