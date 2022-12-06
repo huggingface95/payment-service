@@ -7,7 +7,7 @@ type Department {
     "Название департамента"
     name: String!
     "Получить компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Получить должность"
     positions: [DepartmentPosition] @hasMany(relation: "positions")
 }
@@ -20,7 +20,7 @@ type DepartmentPosition {
     "Активен = true или не активный = false"
     is_active: Boolean
     "Получить компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Получить департамент"
     department: [Department] @BelongsToMany(relation: "department")
 }

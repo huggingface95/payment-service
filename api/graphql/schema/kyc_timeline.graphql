@@ -27,7 +27,7 @@ type KycTimeline {
     "Аппликант"
     applicant: Client @morphTo(relation: "clientable")
     "Компания"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Дата добавления"
     created_at: DateTime!
 }

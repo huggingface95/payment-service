@@ -75,7 +75,7 @@ type ApplicantCompany {
     company_position: ApplicantIndividualCompany @belongsTo(relation: "applicantIndividualCompany")
     owner_relation: ApplicantIndividualCompany @belongsTo(relation: "ownerRelation")
     owner_position: ApplicantIndividualCompany @belongsTo(relation: "ownerPosition")
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Получить группу"
     group: GroupRole @morphOne(relation: "groupRole")
     "Получить фото"
@@ -126,7 +126,7 @@ extend type Query @guard{
         orderBy: _ @orderBy(
         columns: ["id","name", "email","created_at","url","owner_id","company_id"],
     )): [ApplicantCompany!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
-    
+
     """
     Получить список всех привязаных applicant (individual/company) по applicant_company_id
     orderBy: [{ column: ID, order: DESC }] сортировка по ID

@@ -20,7 +20,7 @@ class Department extends BaseModel
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Companies', 'company_id');
+        return $this->belongsTo('App\Models\Company', 'company_id');
     }
 
     public function positions(): BelongsToMany

@@ -3,7 +3,7 @@
 namespace App\DTO\Vv\Request;
 
 use App\DTO\Vv\VvConfig;
-use App\Models\Companies;
+use App\Models\Company;
 
 class VvRegisterRequest
 {
@@ -13,7 +13,7 @@ class VvRegisterRequest
 
     public string $inputs;
 
-    public static function transform(VvConfig $config, Companies $company): self
+    public static function transform(VvConfig $config, Company $company): self
     {
         $dto = new self();
         $dto->url = sprintf($config->routes->register, $config->host, $config->appName, $company->id);

@@ -11,7 +11,7 @@ type Users {
     "Email участника"
     email: EMAIL
     "получить компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Получить группу"
     group: GroupRole @belongsTo(relation: "groupRole")
     "Полное имя"

@@ -259,7 +259,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class);
+        return $this->belongsTo(Company::class);
     }
 
     public function groupRoles(): MorphToMany

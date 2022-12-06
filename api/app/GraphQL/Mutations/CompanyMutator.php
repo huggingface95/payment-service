@@ -3,7 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
-use App\Models\Companies;
+use App\Models\Company;
 use App\Models\CompanySettings;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
@@ -20,7 +20,7 @@ class CompanyMutator extends BaseMutator
      */
     public function update($root, array $args, GraphQLContext $context)
     {
-        $company = Companies::find($args['id']);
+        $company = Company::find($args['id']);
         if (isset($args['additional_fields'])) {
             $args['additional_fields'] = $this->setAdditionalField($args['additional_fields']);
         }
@@ -31,7 +31,7 @@ class CompanyMutator extends BaseMutator
 
     public function delete($root, array $args, GraphQLContext $context)
     {
-        $company = Companies::find($args['id']);
+        $company = Company::find($args['id']);
 
         $company->delete();
 
@@ -49,7 +49,7 @@ class CompanyMutator extends BaseMutator
      */
     public function createSettings($root, array $args, GraphQLContext $context)
     {
-        $company = Companies::where('id','=',$args['company_id'])->first();
+        $company = Company::where('id','=',$args['company_id'])->first();
         if (!$company) {
             throw new GraphqlException('Company not found', 'not found', 404);
         }

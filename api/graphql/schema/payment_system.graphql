@@ -11,7 +11,7 @@ type PaymentSystem {
     "Получить связанные регионы"
     regions: [Region] @belongsToMany(relation:"regions")
     "Получить связанную компанию"
-    company: Companies @hasOne(relation:"company")
+    company: Company @hasOne(relation:"company")
     "Получить связанные валюты"
     currencies: [Currencies] @belongsToMany(relation:"currencies")
     "Получить Платежные провайдеры"

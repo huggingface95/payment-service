@@ -114,7 +114,7 @@ class Payments extends BaseModel
     {
         return $this->belongsTo(Country::class, 'beneficiary_country_id', 'id');
     }
-    
+
     public function recipientBankCountry(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'recipient_bank_country_id', 'id');
@@ -127,7 +127,7 @@ class Payments extends BaseModel
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class, 'company_id', 'id');
+        return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 
     public function paymentUrgency(): BelongsTo

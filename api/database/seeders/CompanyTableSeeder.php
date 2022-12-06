@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Companies;
+use App\Models\Company;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 
@@ -18,7 +18,7 @@ class CompanyTableSeeder extends Seeder
         $faker = Factory::create();
 
         for ($i = 1; $i <= 10; $i++) {
-            Companies::firstOrCreate(
+            Company::firstOrCreate(
                 [
                     'name' => 'Company ' . $i,
                 ],

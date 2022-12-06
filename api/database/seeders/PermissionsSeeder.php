@@ -222,10 +222,10 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Individual Profile:General.Matched Companies' => [
+                                    'Individual Profile:General.Matched Company' => [
                                         'data' => [
-                                            'name' => 'Individual Profile:General.Matched Companies',
-                                            'display_name' => 'Matched Companies',
+                                            'name' => 'Individual Profile:General.Matched Company',
+                                            'display_name' => 'Matched Company',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',
@@ -406,10 +406,10 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Company Profile:General.Matched Companies' => [
+                                    'Company Profile:General.Matched Company' => [
                                         'data' => [
-                                            'name' => 'Company Profile:General.Matched Companies',
-                                            'display_name' => 'Matched Companies',
+                                            'name' => 'Company Profile:General.Matched Company',
+                                            'display_name' => 'Matched Company',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',

@@ -144,7 +144,7 @@ class Account extends BaseModel implements BaseModelInterface
      */
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class, 'company_id', 'id');
+        return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 
     /**

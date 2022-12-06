@@ -35,7 +35,7 @@ type Payments {
     "Получить связанного мембера"
     member: Members @belongsTo(relation: "member")
     "Получить связанную компанию"
-    company: Companies @belongsTo(relation:"company")
+    company: Company @belongsTo(relation:"company")
     "Получить связанныую срочность"
     payment_urgency: PaymentUrgency @belongsTo(relation:"paymentUrgency")
     "Статус"

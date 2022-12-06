@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 /**
- * Class Companies
+ * Class Company
  *
  * @property int id
  *
  * @property CompanySettings $companySettings
  */
-class Companies extends BaseModel
+class Company extends BaseModel
 {
     /**
      * The attributes that are mass assignable.

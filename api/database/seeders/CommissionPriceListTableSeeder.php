@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\CommissionPriceList;
 use App\Models\CommissionTemplate;
-use App\Models\Companies;
+use App\Models\Company;
 use App\Models\PaymentProvider;
 use App\Models\PaymentSystem;
 use App\Models\Region;
@@ -25,7 +25,7 @@ class CommissionPriceListTableSeeder extends Seeder
         $paymentProviders = PaymentProvider::select('id')->get();
         $paymentSystems = PaymentSystem::select('id')->get();
         $commissionTemplates = CommissionTemplate::select('id')->get();
-        $companies = Companies::select('id')->get();
+        $companies = Company::select('id')->get();
         $regions = Region::select('id')->get();
 
         CommissionPriceList::firstOrCreate([

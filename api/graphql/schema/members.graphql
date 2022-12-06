@@ -17,7 +17,7 @@ type Members {
     "Последняя авторизация"
     last_login_at: DateTime
     "получить компанию участника"
-    company: Companies! @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "получить страну участника"
     country: Country @belongsTo(relation: "country")
     "Получить язык участника"

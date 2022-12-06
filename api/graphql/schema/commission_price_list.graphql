@@ -21,7 +21,7 @@ type CommissionPriceList {
     "Получить Регион"
     region: Region @belongsTo(relation: "region")
     "Получить компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
 }
 
 extend type Query @guard {

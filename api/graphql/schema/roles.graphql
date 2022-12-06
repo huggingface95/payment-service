@@ -17,7 +17,7 @@ type Role {
     "Получить тип группы"
     group_type: GroupType @belongsTo(relation: "groupType")
     "Получить компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Получить список групп"
     groups: [GroupRole] @hasMany(relation: "groups")
     "Получить количество групп с данной ролью"

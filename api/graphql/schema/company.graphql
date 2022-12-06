@@ -3,7 +3,7 @@
 Administration->Company Info
 error codes: 500, 400
 """
-type Companies {
+type Company {
     id: ID!
     "Название компании"
     name: String!
@@ -63,7 +63,7 @@ extend type Query @guard {
     """
     Получить компанию по ID
     """
-    company(id: ID @eq): Companies   @find
+    company(id: ID @eq): Company   @find
     """
     Получить список компаний
     member_count: сортировка по количеству участников компании
@@ -76,7 +76,7 @@ extend type Query @guard {
         created_at: DateRange @whereBetween,
         country: Sort @scope(name:"CountrySort"), member_count: Sort @scope(name:"MemberSort"),
         orderBy: _ @orderBy(columns: ["id","created_at","name","email","url"])
-    ): [Companies!]!   @paginate(defaultCount: 100) @orderBy(column: "id", direction: ASC)
+    ): [Company!]!   @paginate(defaultCount: 100) @orderBy(column: "id", direction: ASC)
 }
 
 input QueryCompaniesFilterStatic @spread {
@@ -127,7 +127,7 @@ extend type Mutation @guard {
         state_id: ID
         "Причина состояния"
         state_reason_id: ID
-    ): Companies   @create
+    ): Company   @create
 
     "Обновить данные компании"
     updateCompany(
@@ -171,10 +171,10 @@ extend type Mutation @guard {
         state_id: ID
         "Причина состояния"
         state_reason_id: ID
-    ): Companies   @field(resolver:"CompanyMutator@update")
+    ): Company   @field(resolver:"CompanyMutator@update")
 
     "Удалить компанию"
-    deleteCompany(id: ID!): Companies   @field(resolver:"CompanyMutator@delete")
+    deleteCompany(id: ID!): Company   @field(resolver:"CompanyMutator@delete")
 
 }
 

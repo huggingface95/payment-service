@@ -79,7 +79,7 @@ class GroupRole extends BaseModel
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class, 'company_id');
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function individuals(): MorphToMany

@@ -27,7 +27,7 @@ type EmailSmtp {
     "Получить мембера"
     member: Members @belongsTo(relation: "member")
     "Получить компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
 }
 
 

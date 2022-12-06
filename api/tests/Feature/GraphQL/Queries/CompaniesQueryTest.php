@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 class CompaniesQueryTest extends TestCase
 {
     /**
-     * Companies Query Testing
+     * Company Query Testing
      *
      * @return void
      */
@@ -102,7 +102,7 @@ class CompaniesQueryTest extends TestCase
             ->get();
 
         $this->graphQL('
-        query Companies($name: Mixed) {
+        query Company($name: Mixed) {
             companies(filter: { column: NAME, operator: ILIKE, value: $name }) {
                 data {
                     id
@@ -144,7 +144,7 @@ class CompaniesQueryTest extends TestCase
             ->get();
 
         $this->graphQL('
-            query Companies($email: Mixed) {
+            query Company($email: Mixed) {
                 companies(filter: { column: EMAIL, operator: ILIKE, value: $email }) {
                     data {
                         id
@@ -186,7 +186,7 @@ class CompaniesQueryTest extends TestCase
             ->get();
 
         $this->graphQL('
-            query Companies($url: Mixed) {
+            query Company($url: Mixed) {
                 companies(filter: { column: URL, operator: ILIKE, value: $url }) {
                     data {
                         id

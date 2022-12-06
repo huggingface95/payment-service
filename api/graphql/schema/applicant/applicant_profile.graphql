@@ -63,7 +63,7 @@ type ApplicantProfile {
     "Получить метки"
     labels: [ApplicantIndividualLabel] @belongsToMany(relation: "labels")
     "Название компании держателя applicant"
-    created_for: Companies @belongsTo(relation: "company")
+    created_for: Company @belongsTo(relation: "company")
     "Получить заметки"
     notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
     "Получить модули"
@@ -92,8 +92,8 @@ extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Qu
     """
     Получить профиль пользователя
     """
-    applicantProfile: ApplicantProfile 
-        @field(resolver: "ApplicantProfileQuery@getProfile") 
+    applicantProfile: ApplicantProfile
+        @field(resolver: "ApplicantProfileQuery@getProfile")
 }
 
 extend type Mutation @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Mutations\\Applicant") {

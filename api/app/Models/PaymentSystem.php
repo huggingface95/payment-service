@@ -47,7 +47,7 @@ class PaymentSystem extends BaseModel
     public function companies(): HasManyDeep
     {
         return $this->hasManyDeep(
-            Companies::class,
+            Company::class,
             [PaymentSystem::class, PaymentProvider::class],
             [
                 'payment_provider_id',
