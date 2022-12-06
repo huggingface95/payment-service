@@ -54,7 +54,7 @@ class AuthController extends Controller
 
         if (Cache::get($attemptCacheKey)) {
             if ($this->guard == 'api') {
-                $user = Members::select('id')->where('email', $request->email)->first();
+                $user = Members::select('id','member_status_id')->where('email', $request->email)->first();
             } else {
                 $user = ApplicantIndividual::select('id', 'is_active')->where('email', $request->email)->first();
             }
