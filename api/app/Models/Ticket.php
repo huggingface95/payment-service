@@ -25,7 +25,7 @@ use Illuminate\Support\Carbon;
  * @property ApplicantIndividual client
  * @property Companies company
  * @property DepartmentPosition position
- * @property Departments department
+ * @property Department department
  */
 class Ticket extends BaseModel
 {

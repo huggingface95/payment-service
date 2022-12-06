@@ -192,7 +192,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function department(): HasOneThrough
     {
         return $this->hasOneThrough(
-            Departments::class,
+            Department::class,
             DepartmentPositionRelation::class,
             'position_id',
             'id',

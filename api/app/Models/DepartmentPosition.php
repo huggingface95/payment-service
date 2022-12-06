@@ -23,7 +23,7 @@ class DepartmentPosition extends BaseModel
 
     public function department(): BelongsToMany
     {
-        return $this->belongsToMany(Departments::class, 'department_position_relation', 'position_id', 'department_id');
+        return $this->belongsToMany(Department::class, 'department_position_relation', 'position_id', 'department_id');
     }
 
     public function members(): HasMany

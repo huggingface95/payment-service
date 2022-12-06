@@ -30,7 +30,7 @@ type Companies {
     "Количество проектов"
     projects_count: Int
     "Департаменты компании"
-    departments: [Departments] @hasMany(relation: "departments")
+    departments: [Department] @hasMany(relation: "departments")
     "Должности компании"
     positions: [DepartmentPosition] @hasMany(relation: "positions")
     "Получить настройки компании"

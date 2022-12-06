@@ -71,7 +71,7 @@ class Companies extends BaseModel
 
     public function departments(): HasMany
     {
-        return $this->hasMany(Departments::class, 'company_id');
+        return $this->hasMany(Department::class, 'company_id');
     }
 
     public function employee(): BelongsTo

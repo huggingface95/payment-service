@@ -17,7 +17,7 @@ type Ticket {
     "Получить позицию"
     position: DepartmentPosition @hasOne(relation: "position")
     "Получить Департаменты"
-    department: Departments
+    department: Department
     "Получить мембера"
     member: Members @belongsTo(relation: "member")
     "Получить Клиента"
