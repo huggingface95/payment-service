@@ -1,0 +1,4 @@
+type Fee {
+    fee: Decimal
+    member: Members @belongsTo(relation: "member")
+}
