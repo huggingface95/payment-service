@@ -2,13 +2,11 @@
 
 namespace App\Providers;
 
-use App\Models\ApplicantIndividual;
-use App\Models\Members;
+use App\DTO\Auth\Credentials;
+use App\DTO\TransformerDTO;
 use App\Services\JwtService;
-use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Request;
-use Laravel\Passport\Passport;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -38,8 +36,10 @@ class AuthServiceProvider extends ServiceProvider
             $token = $request->bearerToken();
             try {
                 $credentials = $jwtService->parseJWT($token);
-                return $credentials->prv == 'members' ? Members::find($credentials->jti) : ApplicantIndividual::find($credentials->jti);
+                $credentialsDto = TransformerDTO::transform(Credentials::class, $credentials);
+                return $credentialsDto->model;
             } catch (\Throwable $e) {
+                //TODO REMOVE dd dump after the test
                 dd($e);
                 return null;
             }

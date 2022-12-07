@@ -93,6 +93,7 @@ services:
       - ../go-auth/go.sum:/auth/go.sum
       - ../go-auth/.env:/auth/.env
       - ../go-auth/vendor:/auth/vendor
+      - ../go-auth/storage:/auth/storage
     command:
       - go
       - run
