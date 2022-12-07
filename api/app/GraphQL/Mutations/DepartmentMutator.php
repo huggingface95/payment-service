@@ -19,17 +19,14 @@ class DepartmentMutator extends BaseMutator
     {
         $department = Department::create($args);
 
-        if (isset($args['department_positions_name'])) {
-            $departmentPositions = [];
-
-            foreach ($args['department_positions_name'] as $position) {
-                $departmentPositions[] = DepartmentPosition::create([
-                    'name' => $position,
-                    'company_id' => $department->company_id,
-                ])->id;
+        if (isset($args['department_positions_id'])) {
+            if (! $department->positions->isEmpty()) {
+                $currentPosition = collect($department->positions)->pluck('id')->all();
+                $positionsActive = array_diff($args['department_positions_id'], $currentPosition);
+            } else {
+                $positionsActive = $args['department_positions_id'];
             }
-
-            $department->positions()->attach($departmentPositions);
+            $department->positions()->attach($positionsActive);
         }
 
         return $department;

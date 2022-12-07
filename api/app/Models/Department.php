@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Department extends BaseModel
 {
-    public $timestamps = false;
+    const UPDATED_AT = null;
 
     /**
      * The attributes that are mass assignable.
@@ -15,7 +15,8 @@ class Department extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'company_id',
+        'name',
+        'company_id',
     ];
 
     public function company(): BelongsTo
