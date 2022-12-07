@@ -1,4 +1,27 @@
 type Fee {
+    "Дата"
+    created_at: DateTime
     fee: Decimal
+    "Трансфер"
+    transfer_outgoing: TransferOutgoing @belongsTo(relation: "transferOutgoing")
+    "Тип трансфера"
+    transfer_type: String
+    "Тип операции"
+    operation_type: OperationType @belongsTo(relation: "operationType")
+    price_list_fee: PriceListFee @belongsTo(relation: "priceListFee")
+    "Клиент (Индивидуал или Компани)"
+    client: Client @morphTo(relation: "client")
+    "Получить связанного мембера"
     member: Members @belongsTo(relation: "member")
+    "Получить связанный аккаунт"
+    account: Account @belongsTo(relation: "account")
+    "Статус"
+    status: PaymentStatus @belongsTo(relation: "paymentStatus")
+}
+
+extend type Query @guard {
+    """
+    Получить деталии фи
+    """
+    feeDetails(id: ID! @eq): Fee!    @find
 }

@@ -11,7 +11,9 @@ type TransferOutgoing {
     amount: Decimal!
     amount_debt: Decimal!
     "Коммиссия"
-    fee: Fee @hasMany(realtion: "fee")
+    fee: Fee @hasOne(realtion: "fee")
+    "Все коммиссии"
+    fees: [Fee] @hasMany(realtion: "fees")
     "Получить связанную валюту"
     currency: Currencies @belongsTo(relation: "currency")
     "Статус"
@@ -64,6 +66,11 @@ type TransferOutgoingStatistic {
 }
 
 extend type Query @guard {
+    """
+    Получить трансфер
+    """
+    transferOutgoing(id: ID! @eq): TransferOutgoing!    @find
+
     """
     Получить список исходящих платежей
     """
