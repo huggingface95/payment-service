@@ -85,7 +85,7 @@ input PriceListFeeInput {
     period_id: ID!
     price_list_id: ID!
     fee_ranges: JSON
-    fees: [PriceListFeesList!]!
+    fees: [PriceListFeesList!]
 }
 
 
