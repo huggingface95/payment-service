@@ -41,7 +41,7 @@ type Company {
     phone: String
     "Адрес регистрации"
     reg_address: String
-    tax_id: ID
+    tax_id: String
     incorporate_date: DateTime
     "Количество сотрудниуов"
     employees: Employee @belongsTo(relation: "employee")
