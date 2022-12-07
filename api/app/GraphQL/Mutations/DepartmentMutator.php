@@ -4,7 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
 use App\Models\DepartmentPosition;
-use App\Models\Departments;
+use App\Models\Department;
 
 class DepartmentMutator extends BaseMutator
 {
@@ -17,7 +17,7 @@ class DepartmentMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
-        $department = Departments::create($args);
+        $department = Department::create($args);
 
         if (isset($args['department_positions_name'])) {
             $departmentPositions = [];
@@ -44,7 +44,7 @@ class DepartmentMutator extends BaseMutator
      */
     public function update($root, array $args)
     {
-        $department = Departments::find($args['id']);
+        $department = Department::find($args['id']);
         if (! $department) {
             throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
         }
@@ -74,7 +74,7 @@ class DepartmentMutator extends BaseMutator
     public function delete($root, array $args)
     {
         try {
-            $department = Departments::find($args['id']);
+            $department = Department::find($args['id']);
             if (! $department) {
                 throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
             }

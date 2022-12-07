@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 class CompaniesMutationTest extends TestCase
 {
     /**
-     * Companies Mutation Testing
+     * Company Mutation Testing
      *
      * @return void
      */

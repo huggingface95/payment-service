@@ -15,7 +15,7 @@ type EmailTemplate {
     "Контент"
     content: String!
     "Получить Компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Получить Компанию"
     layout: EmailTemplateLayout @hasOne(relation: "layout")
     created_at: DateTime

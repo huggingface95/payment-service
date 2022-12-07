@@ -13,11 +13,11 @@ type Ticket {
     "Получить файл"
     file_object: Files  @hasOne(relation: "file")
     "Получить компанию"
-    company: Companies @hasOne(relation: "company")
+    company: Company @hasOne(relation: "company")
     "Получить позицию"
     position: DepartmentPosition @hasOne(relation: "position")
     "Получить Департаменты"
-    department: Departments
+    department: Department
     "Получить мембера"
     member: Members @belongsTo(relation: "member")
     "Получить Клиента"

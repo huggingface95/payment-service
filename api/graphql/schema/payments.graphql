@@ -27,15 +27,15 @@ type Payments {
     beneficiary_zip: String
     beneficiary_additional_data: JSON
     "Сумма"
-    amount: Float!
-    amount_real: Float!
+    amount: Decimal!
+    amount_real: Decimal!
     "Комиссия"
-    fee: Float
+    fee: Decimal
     fee_type: FeeType @belongsTo(relation: "feeType")
     "Получить связанного мембера"
     member: Members @belongsTo(relation: "member")
     "Получить связанную компанию"
-    company: Companies @belongsTo(relation:"company")
+    company: Company @belongsTo(relation:"company")
     "Получить связанныую срочность"
     payment_urgency: PaymentUrgency @belongsTo(relation:"paymentUrgency")
     "Статус"
@@ -112,7 +112,7 @@ extend type Mutation @guard {
         beneficiary_zip: String!
         beneficiary_additional_data: JSON
         "Сумма"
-        amount: Float! @rules(apply: ["required", "gt:0"])
+        amount: Decimal! @rules(apply: ["required", "gt:0"])
         "Комиссия"
         fee_type_id: ID!
         "Срочность"

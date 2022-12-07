@@ -17,7 +17,7 @@ type Members {
     "Последняя авторизация"
     last_login_at: DateTime
     "получить компанию участника"
-    company: Companies! @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "получить страну участника"
     country: Country @belongsTo(relation: "country")
     "Получить язык участника"
@@ -27,7 +27,7 @@ type Members {
     "Получить должность"
     position: DepartmentPosition @belongsTo(relation: "position")
     "Получить департамент"
-    department: Departments @belongsTo(relation: "department")
+    department: Department @belongsTo(relation: "department")
     "ID настройки двухфактороной авторизации"
     two_factor_auth_setting_id: ID
     "Получить настройки двухфакторной авторизации"
@@ -52,6 +52,14 @@ type Members {
     is_sign_transaction: Boolean
     "Member ip address"
     ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
+    "Верификация email"
+    email_verification: EmailVerification
+}
+
+enum EmailVerification {
+    NOT_VERIFIED @enum(value: 1)
+    REQUESTED @enum(value: 2)
+    VERIFIED @enum(value: 3)
 }
 
 extend type Query @guard {

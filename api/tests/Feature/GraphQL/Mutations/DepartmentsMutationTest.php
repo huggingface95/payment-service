@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use App\Models\Departments;
+use App\Models\Department;
 use Illuminate\Support\Facades\DB;
 
 class DepartmentsMutationTest extends TestCase
@@ -46,7 +46,7 @@ class DepartmentsMutationTest extends TestCase
 
         $id = json_decode($this->response->getContent(), true);
 
-        $department = Departments::latest('id')->first();
+        $department = Department::latest('id')->first();
         $departmens = $department->positions()->get()->map(function ($department) {
             return $department->only(['name']);
         });

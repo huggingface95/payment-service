@@ -77,7 +77,7 @@ class PriceListFee extends BaseModel
     public function company(): HasOneThrough
     {
         return $this->hasOneThrough(
-            Companies::class,
+            Company::class,
             CommissionPriceList::class,
             'id',
             'id',

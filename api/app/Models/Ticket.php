@@ -23,9 +23,9 @@ use Illuminate\Support\Carbon;
  * @property TicketComments comments
  * @property Members member
  * @property ApplicantIndividual client
- * @property Companies company
+ * @property Company company
  * @property DepartmentPosition position
- * @property Departments department
+ * @property Department department
  */
 class Ticket extends BaseModel
 {
@@ -62,7 +62,7 @@ class Ticket extends BaseModel
     public function company(): HasOneThrough
     {
         return $this->hasOneThrough(
-            Companies::class,
+            Company::class,
             Members::class,
             'id',
             'id',

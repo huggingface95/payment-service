@@ -3,7 +3,7 @@
 namespace App\DTO\Vv\Request;
 
 use App\DTO\Vv\VvConfig;
-use App\Models\Companies;
+use App\Models\Company;
 
 class VvGetLinkRequest
 {
@@ -14,7 +14,7 @@ class VvGetLinkRequest
 
     public array $inputs;
 
-    public static function transform(VvConfig $config, Companies $company, string $action, string $image = null): self
+    public static function transform(VvConfig $config, Company $company, string $action, string $image = null): self
     {
         $dto = new self();
         $dto->url = sprintf($config->routes->preparation, $config->host);

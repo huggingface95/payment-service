@@ -1,13 +1,13 @@
 """
 Департаменты
-Administration->Company Info->Full Profile->Departments
+Administration->Company Info->Full Profile->Department
 """
-type Departments {
+type Department {
     id: ID!
     "Название департамента"
     name: String!
     "Получить компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Получить должность"
     positions: [DepartmentPosition] @hasMany(relation: "positions")
 }
@@ -20,14 +20,14 @@ type DepartmentPosition {
     "Активен = true или не активный = false"
     is_active: Boolean
     "Получить компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Получить департамент"
-    department: [Departments] @BelongsToMany(relation: "department")
+    department: [Department] @BelongsToMany(relation: "department")
 }
 
 extend type Query @guard {
     "Получить департамент по его ID"
-    department(id: ID @eq): Departments   @find
+    department(id: ID @eq): Department  @find
     """
     Получить список департаментов
     orderBy: [{ column: ID, order: DESC }] сортировка по названию или по ID
@@ -39,7 +39,7 @@ extend type Query @guard {
         hasCompany: _ @whereHasConditions(columns: ["id"]),
         where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id","name"])
-    ): [Departments!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [Department!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
     "Получить должность по ID"
     departmentPosition(id: ID @eq): DepartmentPosition   @find
     """
@@ -76,7 +76,7 @@ extend type Mutation @guard {
         company_id: ID!
         "Массив названий должностей"
         department_positions_name: [String]
-    ): Departments   @field(resolver:"DepartmentMutator@create")
+    ): Department   @field(resolver:"DepartmentMutator@create")
 
     "Изменить название департамента"
     updateDepartment(
@@ -86,7 +86,7 @@ extend type Mutation @guard {
         name: String
         "ID активных должностей"
         active_department_positions_id: [ID]
-    ): Departments   @field(resolver:"DepartmentMutator@update")
+    ): Department  @field(resolver:"DepartmentMutator@update")
 
     "Создание должности"
     createDepartmentPosition(
@@ -99,7 +99,7 @@ extend type Mutation @guard {
     ): DepartmentPosition   @field(resolver:"DepartmentPositionMutator@create")
 
     "Удалить департамент"
-    deleteDepartment(id: ID!): Departments   @field(resolver:"DepartmentMutator@delete")
+    deleteDepartment(id: ID!): Department   @field(resolver:"DepartmentMutator@delete")
     "Удалить должность"
     deleteDepartmentPosition(id: ID!): DepartmentPosition   @delete
 

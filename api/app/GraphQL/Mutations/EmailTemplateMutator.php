@@ -8,7 +8,7 @@ use App\DTO\GraphQLResponse\EmailTemplateOnCompanyResponse;
 use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
-use App\Models\Companies;
+use App\Models\Company;
 use App\Models\EmailSmtp;
 use App\Models\EmailTemplate;
 use App\Models\EmailTemplateLayout;
@@ -31,7 +31,7 @@ class EmailTemplateMutator extends BaseMutator
         }
 
         if ($member->role->IsSuperAdmin()) {
-            Companies::query()->where('id', '<>', $args['company_id'])->get()
+            Company::query()->where('id', '<>', $args['company_id'])->get()
                 ->map(function ($company) use ($args) {
                     $args['company_id'] = $company->id;
                     return new EmailTemplate($args);

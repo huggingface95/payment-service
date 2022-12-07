@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\ClientTypeEnum;
+use App\Enums\MemberStatusEnum;
 use App\Models\ApplicantIndividual;
 use App\Models\Members;
 use App\Models\OauthCodes;
@@ -94,5 +95,16 @@ class AuthService extends AbstractService
         }
 
         return $code;
+    }
+
+    public function setInactive(Members|ApplicantIndividual $user): void
+    {
+        if ($user instanceof Members) {
+            $user->member_status_id = MemberStatusEnum::INACTIVE->value;
+        } else {
+            $user->is_active = false;
+        }
+
+        $user->save();
     }
 }

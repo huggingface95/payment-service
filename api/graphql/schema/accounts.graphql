@@ -30,7 +30,7 @@ type Account {
     "Состояние аккаунта"
     account_state: AccountState @belongsTo(relation:"accountState")
     "Компания которой принадлежит аккаунт"
-    company: Companies @belongsTo(relation:"company")
+    company: Company @belongsTo(relation:"company")
     "Получить менеджера"
     member: Members @belongsTo(relation:"member")
     "Все аккаунты клиента"

@@ -6,7 +6,7 @@ type Region {
     "Получать страны"
     countries: [Country] @belongsToMany(relation: "countries")
     "Получать компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
 }
 
 extend type Query @guard {

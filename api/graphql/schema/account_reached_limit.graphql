@@ -25,7 +25,7 @@ type AccountReachedLimit {
     "Период"
     period: Int!
     "Сумма"
-    amount: Float!
+    amount: Decimal!
 }
 
 extend type Query @guard {

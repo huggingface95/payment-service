@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Departments extends BaseModel
+class Department extends BaseModel
 {
     public $timestamps = false;
 
@@ -20,7 +20,7 @@ class Departments extends BaseModel
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Companies', 'company_id');
+        return $this->belongsTo('App\Models\Company', 'company_id');
     }
 
     public function positions(): BelongsToMany

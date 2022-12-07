@@ -161,12 +161,12 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function getIsActiveAttribute(): bool
     {
-        return $this->member_status_id != MemberStatusEnum::ACTIVE->value;
+        return $this->member_status_id == MemberStatusEnum::ACTIVE->value;
     }
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class, 'company_id');
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function country(): BelongsTo
@@ -192,7 +192,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function department(): HasOneThrough
     {
         return $this->hasOneThrough(
-            Departments::class,
+            Department::class,
             DepartmentPositionRelation::class,
             'position_id',
             'id',

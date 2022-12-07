@@ -15,7 +15,7 @@ type PaymentProvider {
     "Получить связанные платежные системы"
     payment_systems: [PaymentSystem] @belongsTo(relation:"paymentSystems")
     commission_price_list: CommissionPriceList @hasOne(relation:"commissionPriceList")
-    company: Companies @belongsTo(relation:"company")
+    company: Company @belongsTo(relation:"company")
 }
 
 extend type Query @guard {

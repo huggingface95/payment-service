@@ -98,7 +98,7 @@ class ApplicantCompany extends BaseModel
     {
         return $this->belongsTo(Files::class, 'photo_id');
     }
-    
+
     /**
      * @return BelongsTo
      */
@@ -221,7 +221,7 @@ class ApplicantCompany extends BaseModel
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class);
+        return $this->belongsTo(Company::class);
     }
 
     public function groupRole(): \Ankurk91\Eloquent\Relations\MorphToOne

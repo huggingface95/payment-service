@@ -23,7 +23,7 @@ type CommissionTemplate {
     "Получить связанный аккаунт"
     account: Account @belongsTo(relation: "account")
     "Получить компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     regions: [Region] @belongsToMany(relation: "regions")
     currencies: [Currencies] @belongsToMany(relation: "currencies")
     commission_template_limits: [CommissionTemplateLimit] @hasMany(relation: "commissionTemplateLimits")

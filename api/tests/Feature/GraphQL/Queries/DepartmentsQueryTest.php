@@ -77,7 +77,7 @@ class DepartmentsQueryTest extends TestCase
             ->get();
 
         $this->graphQL('
-            query Departments($name: Mixed){
+            query Department($name: Mixed){
                 departments(
                     filter: { column: NAME, operator: ILIKE, value: $name }
                 ) {

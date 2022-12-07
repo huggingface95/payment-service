@@ -20,7 +20,7 @@ type Project {
     "Модуль"
     module: ApplicantModules @BelongsTo(relation: "module")
     "Компания"
-    company: Companies @BelongsTo(relation: "company")
+    company: Company @BelongsTo(relation: "company")
     "Аватар"
     avatar: Files @belongsTo(relation: "avatar")
     "Состояние"

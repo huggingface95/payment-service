@@ -46,7 +46,7 @@ type GroupRole {
     payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
     "Получит свящанный шаблон комиссий"
     commission_template: CommissionTemplate @belongsTo(relation: "commissionTemplate")
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Получить связанный модуль"
     module: ApplicantModules @belongsTo(relation: "modules")
 }

@@ -54,7 +54,7 @@ class AuthController extends Controller
 
         if (Cache::get($attemptCacheKey)) {
             if ($this->guard == 'api') {
-                $user = Members::select('id', 'is_active')->where('email', $request->email)->first();
+                $user = Members::select('id','member_status_id')->where('email', $request->email)->first();
             } else {
                 $user = ApplicantIndividual::select('id', 'is_active')->where('email', $request->email)->first();
             }
@@ -73,8 +73,7 @@ class AuthController extends Controller
 
                 return response()->json(['error' => 'User is temporary blocked for '.env('BLOCK_ACCOUNT_TTL', 120) / 60 .' minutes'], 403);
             } elseif (Cache::get($attemptCacheKey) >= env('MFA_ATTEMPTS', '5') * 2 + 1) {
-                $user->is_active = false;
-                $user->save();
+                $this->authService->setInactive($user);
                 Cache::forget($attemptCacheKey);
 
                 return response()->json(['error' => 'User is blocked. Please contact support'], 403);
@@ -429,8 +428,7 @@ class AuthController extends Controller
 
                 return response()->json(['error' => 'Account is temporary blocked for '.env('BLOCK_ACCOUNT_TTL', 120) / 60 .' minutes'], 403);
             } elseif (Cache::get($mtaAttemptCacheKey) >= env('MFA_ATTEMPTS', '5') * 2 + 1) {
-                $user->is_active = false;
-                $user->save();
+                $this->authService->setInactive($user);
                 JWTAuth::setToken(Cache::get($authCacheKey))->invalidate();
                 Cache::forget($mtaAttemptCacheKey);
                 JWTAuth::setToken(Cache::get($authCacheKey))->invalidate();

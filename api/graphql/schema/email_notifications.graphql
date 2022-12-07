@@ -16,7 +16,7 @@ type EmailNotification {
     "Получить клиента ApplicantIndividual | ApplicantCompany | Members"
     clientable: Clientable @morphTo
     "Получить компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Получить Group Role"
     group_role: GroupRole @belongsTo(relation: "groupRole")
     created_at: DateTime

@@ -17,7 +17,7 @@ type CompanySettings {
     "Лого"
     logo: Files @belongsTo(relation: "logo")
     "Данные о компании"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Показывать или нет лого"
     show_own_logo: Boolean
     "Url верификации мембера"

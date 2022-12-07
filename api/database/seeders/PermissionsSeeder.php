@@ -222,10 +222,10 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Individual Profile:General.Matched Companies' => [
+                                    'Individual Profile:General.Matched Company' => [
                                         'data' => [
-                                            'name' => 'Individual Profile:General.Matched Companies',
-                                            'display_name' => 'Matched Companies',
+                                            'name' => 'Individual Profile:General.Matched Company',
+                                            'display_name' => 'Matched Company',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',
@@ -406,10 +406,10 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Company Profile:General.Matched Companies' => [
+                                    'Company Profile:General.Matched Company' => [
                                         'data' => [
-                                            'name' => 'Company Profile:General.Matched Companies',
-                                            'display_name' => 'Matched Companies',
+                                            'name' => 'Company Profile:General.Matched Company',
+                                            'display_name' => 'Matched Company',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',
@@ -1006,10 +1006,10 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Member Company Profile.Departments' => [
+                                    'Member Company Profile.Department' => [
                                         'data' => [
-                                            'name' => 'Member Company Profile.Departments',
-                                            'display_name' => 'Departments',
+                                            'name' => 'Member Company Profile.Department',
+                                            'display_name' => 'Department',
                                             'guard_name' => 'api',
                                             'order' => null,
                                             'type' => 'info',
@@ -3925,7 +3925,7 @@ class PermissionsSeeder extends Seeder
             [
                 'name' => 'GetCompanyById',
                 'referer' => 'administration/company/full-profile/profile/departments',
-                'binds' => ['Member Company Profile.Departments'],
+                'binds' => ['Member Company Profile.Department'],
                 'parents' => ['Member Company Profile.Read', 'Member Company Profile.Edit'],
             ],
             [
@@ -3943,7 +3943,7 @@ class PermissionsSeeder extends Seeder
             [
                 'name' => 'GetCompanyDepartmentsList',
                 'referer' => 'administration/company/full-profile/profile/departments',
-                'binds' => ['Member Company Profile.Departments'],
+                'binds' => ['Member Company Profile.Department'],
                 'parents' => ['Member Company Profile.Read', 'Member Company Profile.Edit'],
             ],
             [

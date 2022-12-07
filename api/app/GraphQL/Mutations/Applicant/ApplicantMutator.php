@@ -9,7 +9,7 @@ use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\BaseMutator;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
-use App\Models\Companies;
+use App\Models\Company;
 use App\Services\EmailService;
 use App\Services\VerifyService;
 use Illuminate\Support\Facades\Hash;
@@ -34,7 +34,7 @@ class ApplicantMutator extends BaseMutator
         // TODO: get client_url from request
         $args['client_url'] = 'docudots.com';
 
-        $company = Companies::where('url', $args['client_url'])->first();
+        $company = Company::where('url', $args['client_url'])->first();
         if (!$company) {
             throw new GraphqlException('Owner company not found', 'use');
         }

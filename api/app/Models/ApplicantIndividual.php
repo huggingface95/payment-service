@@ -239,7 +239,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     {
         return $this->belongsToMany(ApplicantModules::class, 'applicant_individual_modules', 'applicant_individual_id', 'applicant_module_id')->withPivot('is_active');
     }
-    
+
     public function ApplicantIndividual()
     {
         return $this->belongsTo(self::class, 'applicant_individual_id', 'id');
@@ -247,7 +247,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 
     public function companies()
     {
-        return $this->belongsToMany(ApplicantCompany::class, 'applicant_individual_company', 'applicant_individual_id', 'applicant_company_id');
+        return $this->belongsToMany(ApplicantCompany::class, 'applicant_individual_company', 'applicant_id', 'applicant_company_id');
     }
 
     public function account(): \Ankurk91\Eloquent\Relations\MorphToOne
@@ -262,7 +262,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class);
+        return $this->belongsTo(Company::class);
     }
 
     public function groupRoles(): MorphToMany

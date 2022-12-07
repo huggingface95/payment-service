@@ -13,7 +13,7 @@ type MemberProfile {
     "Последняя авторизация"
     last_login_at: DateTime
     "получить компанию участника"
-    company: Companies! @belongsTo(relation: "company")
+    company: Company! @belongsTo(relation: "company")
     "получить страну участника"
     country: Country @belongsTo(relation: "country")
     "Получить язык участника"
@@ -23,7 +23,7 @@ type MemberProfile {
     "Получить должность"
     position: DepartmentPosition @belongsTo(relation: "position")
     "Получить департамент"
-    department: Departments @belongsTo(relation: "department")
+    department: Department @belongsTo(relation: "department")
     "ID настройки двухфактороной авторизации"
     two_factor_auth_setting_id: ID
     "Получить настройки двухфакторной авторизации"

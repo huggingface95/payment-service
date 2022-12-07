@@ -9,7 +9,7 @@ type AccountLimit {
     "ID направления платежа"
     commission_template_limit_transfer_direction_id: ID
     "Сумма лимита"
-    amount: Float
+    amount: Decimal
     "ID валюты лимита"
     currency_id: ID
     "Валюта"
@@ -61,7 +61,7 @@ extend type Mutation @guard {
         "ID направления платежа"
         commission_template_limit_transfer_direction_id: ID!
         "Сумма лимита"
-        amount: Float!
+        amount: Decimal!
         "ID валюты лимита"
         currency_id: ID
         "ID периода лимита"
@@ -81,7 +81,7 @@ extend type Mutation @guard {
         "ID направления платежа"
         commission_template_limit_transfer_direction_id: ID
         "Сумма лимита"
-        amount: Float
+        amount: Decimal
         "ID валюты лимита"
         currency_id: ID
         "ID периода лимита"

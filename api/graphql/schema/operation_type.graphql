@@ -6,15 +6,21 @@ type OperationType {
     name: String
 }
 
+enum TransferType {
+    INCOMING @enum(value: "Incoming")
+    OUTGOING @enum(value: "Outgoing")
+}
+
 extend type Query  @guard{
     """
     Получить список типов операций
     """
    operationTypes(
         filter: _ @filterConditions(static: QueryOperationTypesFilterStatic)
-    ): [OperationType!]!   @all
+    ): [OperationType!]!   @field(resolver:"OperationTypeQuery@get")
 }
 
 input QueryOperationTypesFilterStatic @spread{
     fee_type_id: ID @eq
+    transfer_type: TransferType @eq
 }

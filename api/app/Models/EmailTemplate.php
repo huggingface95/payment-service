@@ -21,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon created_at
  * @property Carbon updated_at
  * @property Members $member
- * @property Companies $company
+ * @property Company $company
  * @property EmailTemplateLayout $layout
  */
 class EmailTemplate extends BaseModel
@@ -90,7 +90,7 @@ class EmailTemplate extends BaseModel
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class, 'company_id');
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function layout(): BelongsTo

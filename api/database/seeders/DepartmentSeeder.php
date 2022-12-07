@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Departments;
+use App\Models\Department;
 use Illuminate\Database\Seeder;
 
 class DepartmentSeeder extends Seeder
@@ -14,7 +14,7 @@ class DepartmentSeeder extends Seeder
      */
     public function run()
     {
-        Departments::firstOrCreate([
+        Department::firstOrCreate([
             'name' => 'Department 1',
             'company_id' => 1,
         ]);
