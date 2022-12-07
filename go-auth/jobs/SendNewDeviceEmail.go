@@ -35,7 +35,10 @@ func sendNewDeviceEmailByData(e *cache.ConfirmationNewDeviceData) {
 		)
 		err := pkg.Mail(template.Name, content, e.Email)
 		if err != nil {
+			pkg.Error().Err(err)
 			return
 		}
+	} else {
+		pkg.Error().Msgf("email template not found:company_id:%d:name:Devices: New Device Detected", e.CompanyId)
 	}
 }

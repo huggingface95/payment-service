@@ -35,7 +35,10 @@ func sendTrustedDeviceEmailByData(e *redis.TrustedDeviceRequest) {
 		)
 		err := pkg.Mail(content, content, e.Email)
 		if err != nil {
+			pkg.Error().Err(err)
 			return
 		}
+	} else {
+		pkg.Error().Msgf("email template not found:company_id:%d:name:Devices: New Trust Device has been added", e.CompanyId)
 	}
 }

@@ -27,17 +27,22 @@ func Login(context *gin.Context) {
 
 	request, headerRequest, err := auth.ParseRequest(context)
 
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
+	}
+
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	user = userRepository.GetUserByEmail(request.Email, request.Type)
+	user = userRepository.GetUserByEmail(request.Email, clientType)
 	if user == nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": "User not found"})
 		return
 	}
-	var key = fmt.Sprintf("%s_%d", request.Type, user.GetId())
+	var key = fmt.Sprintf("%s_%d", clientType, user.GetId())
 
 	if auth.AttemptLimitEqual(key, blockedTime) {
 		context.JSON(http.StatusForbidden, gin.H{"error": fmt.Sprint("Account is temporary blocked for ", blockedTime.Sub(newTime))})
@@ -66,8 +71,8 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	if request.Type == constants.Individual {
-		if ok, s, data := checkAndUpdateSession(request.Type, user.GetEmail(), user.GetFullName(), user.GetCompanyId(), deviceInfo, context); ok == false {
+	if clientType == constants.Individual {
+		if ok, s, data := checkAndUpdateSession(clientType, user.GetEmail(), user.GetFullName(), user.GetCompanyId(), deviceInfo, context); ok == false {
 			context.JSON(s, data)
 			return
 		}
@@ -83,7 +88,7 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	createAuthLogDto := dto.DTO.CreateAuthLogDto.Parse(request.Type, user.GetEmail(), user.GetCompany().Name, deviceInfo)
+	createAuthLogDto := dto.DTO.CreateAuthLogDto.Parse(clientType, user.GetEmail(), user.GetCompany().Name, deviceInfo)
 
 	if config.Conf.App.CheckIp {
 		if request.Cancel {
@@ -116,7 +121,7 @@ func Login(context *gin.Context) {
 	oauthRepository.InsertAuthLog("login", createAuthLogDto)
 
 	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == false {
-		tokenJWT, oauthClient, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.ForTwoFactor)
+		tokenJWT, oauthClient, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.ForTwoFactor)
 		if err != nil {
 			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -127,7 +132,7 @@ func Login(context *gin.Context) {
 	}
 
 	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == true {
-		authToken, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AuthToken)
+		authToken, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AuthToken)
 		if err != nil {
 			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -139,14 +144,16 @@ func Login(context *gin.Context) {
 		cache.Caching.LoginAttempt.Delete(key)
 	}
 
-	if user.InClientIpAddresses(context.ClientIP()) == false {
-		if auth.CreateConfirmationIpLink(request.Type, user.GetId(), user.GetCompanyId(), user.GetEmail(), context.ClientIP(), newTime) {
-			context.JSON(http.StatusOK, gin.H{"data": "An email has been sent to your email to confirm the new ip"})
-			return
+	if config.Conf.App.CheckIpAddress {
+		if user.InClientIpAddresses(context.ClientIP()) == false {
+			if auth.CreateConfirmationIpLink(clientType, user.GetId(), user.GetCompanyId(), user.GetEmail(), context.ClientIP(), newTime) {
+				context.JSON(http.StatusOK, gin.H{"data": "An email has been sent to your email to confirm the new ip"})
+				return
+			}
 		}
 	}
 
-	tokenJWT, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
+	tokenJWT, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -35,7 +35,10 @@ func sendEmailByData(e *cache.ConfirmationIpLinksData) {
 		)
 		err := pkg.Mail(content, content, e.Email)
 		if err != nil {
+			pkg.Error().Err(err)
 			return
 		}
+	} else {
+		pkg.Error().Msgf("email template not found:company_id:%d:name:New IP Detected", e.CompanyId)
 	}
 }

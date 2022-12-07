@@ -15,6 +15,9 @@ import (
 )
 
 func main() {
+
+	pkg.InitDefault()
+
 	config.Conf.Init()
 	cache.Caching.Init()
 	// Initialize Database

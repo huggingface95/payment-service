@@ -34,7 +34,10 @@ func sendConfirmationEmailByData(e *cache.ConfirmationEmailLinksData) {
 		)
 		err := pkg.Mail(content, content, e.Email)
 		if err != nil {
+			pkg.Error().Err(err)
 			return
 		}
+	} else {
+		pkg.Error().Msgf("email template not found:name:Sign Up: Email Confirmation")
 	}
 }
