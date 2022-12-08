@@ -45,10 +45,10 @@ class DepartmentMutator extends BaseMutator
         if (! $department) {
             throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
         }
-        if (isset($args['active_department_positions_id'])) {
-            $department->positions()->sync($args['active_department_positions_id'], true);
+        if (isset($args['department_positions_id'])) {
+            $department->positions()->sync($args['department_positions_id'], true);
 
-            unset($args['active_department_positions_id']);
+            unset($args['department_positions_id']);
         }
         $department->update($args);
 

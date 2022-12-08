@@ -85,7 +85,7 @@ extend type Mutation @guard {
         "Название департамента"
         name: String
         "ID активных должностей"
-        active_department_positions_id: [ID]
+        department_positions_id: [ID]
     ): Department  @field(resolver:"DepartmentMutator@update")
 
     "Создание должности"
