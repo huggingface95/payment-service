@@ -121,54 +121,10 @@ extend type Mutation @guard {
         email: EMAIL!
         "Сайт компании"
         url: String!
-        "Индекс компании"
-        zip: String
-        "Адрес компании"
-        address: String
-        "Город компании"
-        city: String
-        "Регистрационный номер компании"
-        company_number: String
-        "Контактное имя"
-        contact_name: String
         "ID страны"
         country_id: ID!
         "Телефон"
         phone: String
-        "Адрес регистрации"
-        reg_address: String
-        tax_id: String
-        incorporate_date: DateTime
-        "Количество сотрудниуов"
-        employees_id: ID
-        "Область деятельности"
-        type_of_industry_id: ID
-        "Номер лицензии"
-        license_number: String
-        "Дата окончания лицензии"
-        exp_date: DateTime
-        "Состояние"
-        state_id: ID
-        "Причина состояния"
-        state_reason_id: ID
-        "Регистрационный номер"
-        reg_number: String
-        "Тип сущности"
-        entity_type: String
-        "Лого"
-        logo_id: ID
-        "Токен для видеоверификации"
-        vv_token: String
-        "Url верификации мембера"
-        member_verify_url: String
-        "Backoffice login URL"
-        backoffice_login_url: String
-        "Backoffice forgot password URL"
-        backoffice_forgot_password_url: String
-        "Backoffice support URL"
-        backoffice_support_url: String
-        "Backoffice support EMAIL"
-        backoffice_support_email: EMAIL
     ): Company   @create
 
     "Обновить данные компании"
