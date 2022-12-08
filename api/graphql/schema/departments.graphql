@@ -74,8 +74,8 @@ extend type Mutation @guard {
         name: String!
         "ID компании"
         company_id: ID!
-        "Массив названий должностей"
-        department_positions_name: [String]
+        "Массив ID должностей"
+        department_positions_id: [ID]
     ): Department   @field(resolver:"DepartmentMutator@create")
 
     "Изменить название департамента"
@@ -92,8 +92,6 @@ extend type Mutation @guard {
     createDepartmentPosition(
         "Назвние должности"
         name: String!
-        "ID департамента"
-        department_id: ID
         "ID компании"
         company_id: ID!
     ): DepartmentPosition   @field(resolver:"DepartmentPositionMutator@create")
