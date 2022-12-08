@@ -1,12 +1,8 @@
 """
 Исходящие переводы
 """
-type TransferOutgoing {
+type TransferIncoming {
     id: ID!
-    "Получить инициатора платежа (Мембер или Апликант)"
-    requested_by: Clientable @morphTo(relation: "clientable")
-    "Тип инициатора платежа"
-    user_type: UserType
     "Сумма"
     amount: Decimal!
     amount_debt: Decimal!
@@ -18,7 +14,7 @@ type TransferOutgoing {
     currency: Currencies @belongsTo(relation: "currency")
     "Статус"
     status: PaymentStatus @belongsTo(relation: "paymentStatus")
-    "Получить связанныую срочность"
+    "Получить связанную срочность"
     payment_urgency: PaymentUrgency @belongsTo(relation: "paymentUrgency")
     "Получить связанный тип"
     payment_operation_type: OperationType @belongsTo(relation: "paymentOperation")
@@ -32,26 +28,26 @@ type TransferOutgoing {
     payment_number: String!
     "Получить связанный аккаунт"
     account: Account @belongsTo(relation: "account")
-    "Получить отправителя (Индивидуал или Компани)"
-    sender: Client @morphTo(relation: "sender")
+    "Получатьль платежа (Индивидуал или Компани)"
+    recipient: Client @morphTo(relation: "recipient")
     "Получить связанную компанию"
     company: Companies @belongsTo(relation: "company")
     system_message: String
     reason: String
     channel: String
     bank_message: String
-    "Номер счета или IBAN получателя"
-    recipient_account: String!
-    recipient_bank_name: String!
-    recipient_bank_address: String!
-    recipient_bank_swift: String
-    recipient_bank_country: Country @belongsTo(relation: "recipientBankCountry")
-    recipient_name: String!
-    recipient_country: Country @belongsTo(relation: "recipientCountry")
-    recipient_city: String!
-    recipient_address: String!
-    recipient_state: String!
-    recipient_zip: String!
+    "Номер счета или IBAN отправителя"
+    sender_account: String
+    sender_bank_name: String
+    sender_bank_address: String
+    sender_bank_swift: String
+    sender_bank_country: Country @belongsTo(relation: "senderBankCountry")
+    sender_name: String
+    sender_country: Country @belongsTo(relation: "senderCountry")
+    sender_city: String
+    sender_address: String
+    sender_state: String
+    sender_zip: String
     respondent_fee: RespondentFee @belongsTo(relation: "respondentFee")
     "Дата и время выполнения транзакции"
     execution_at: DateTime
@@ -59,54 +55,46 @@ type TransferOutgoing {
     updated_at: DateTime
 }
 
-type TransferOutgoingStatistic {
+type TransferIncomingStatistic {
     status_id: ID!
     name: String!
     count: Int!
-}
-
-enum UserType {
-    ApplicantIndividual @enum(value: "ApplicantIndividual")
-    ApplicantCompany @enum(value: "ApplicantCompany")
-    Members @enum(value: "Members")
 }
 
 extend type Query @guard {
     """
     Получить трансфер
     """
-    transferOutgoing(id: ID! @eq): TransferOutgoing!    @find
+    transferIncoming(id: ID! @eq): TransferIncoming!    @find
 
     """
-    Получить список исходящих платежей
+    Получить список входящих платежей
     """
-    transferOutgoings(
-        filter: _ @filterConditions(static: QueryTransferOutgoingsFilterStatic),
+    transferIncomings(
+        filter: _ @filterConditions(static: QueryTransferIncomingsFilterStatic),
         created_at: DateRange @whereBetween
-    ): [TransferOutgoing!]!
+    ): [TransferIncoming!]!
         @paginate(defaultCount: 10)
         @orderBy(column: "id", direction: ASC)
 
     """
-    Получить статистику по исходящим платежам
+    Получить статистику по входящим платежам
     """
-    transferOutgoingsStatistic(
+    transferIncomingsStatistic(
         created_at: DateRange @whereBetween
         company_id: ID
         payment_provider_id: ID
         account_id: ID
-    ): [TransferOutgoingStatistic]
-        @field(resolver: "TransferOutgoingQuery@statistic")
+    ): [TransferIncomingStatistic]
+        @field(resolver: "TransferIncomingQuery@statistic")
 }
 
-input QueryTransferOutgoingsFilterStatic @spread {
+input QueryTransferIncomingsFilterStatic @spread {
     id: ID @eq
     urgency_id: ID @eq
     operation_type_id: ID @eq
+    sender_name: String @ilike
     status_id: ID @eq
-    recipient_name: String @ilike
-    user_type: UserType @eq
     hasAccountFilterByAccountNumber: String @ilike
-    hasSenderMixedNameOrFullname: Mixed @ilike
     hasFeeFilterByFee: String @ilike
 }

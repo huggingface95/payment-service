@@ -23,7 +23,6 @@ class FeeTableSeeder extends Seeder
                 Fee::firstOrCreate(
                     [
                         'transfer_id' => $i,
-                        'transfer_type' => FeeTransferTypeEnum::OUTGOING->toString(),
                     ],
                     $fee
                 );
