@@ -92,6 +92,8 @@ type ApplicantIndividual {
     backup_codes: JSON
     "IP адрес"
     ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
+    "Applicant KYC Level"
+    kyc_level: ApplicantKycLevel @belongsTo (relation: "kycLevel")
 }
 
 
@@ -138,6 +140,7 @@ input QueryApplicantIndividualsFilterStatic @spread{
     email: String @ilike
     company_id: ID @eq
     project_id: ID @eq
+    kyc_level_id: ID @eq
     hasRiskLevelFilterById: ID @eq
     hasStateReasonFilterById: ID @eq
     hasStatusFilterById: ID @eq
@@ -243,6 +246,8 @@ extend type Mutation @guard {
         ip_address: String
         "ID photo"
         photo_id: ID
+        "KYC Level"
+        kyc_level_id: ID
     ): ApplicantIndividual   @field(resolver:"ApplicantMutator@update")
 
     """
