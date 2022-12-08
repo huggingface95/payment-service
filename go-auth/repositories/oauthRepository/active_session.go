@@ -9,31 +9,18 @@ import (
 	"jwt-authentication-golang/models/clickhouse"
 )
 
-func GetActiveSessionWithConditions(email string, deviceInfo *dto.DeviceDetectorInfo) *clickhouse.ActiveSession {
-	var authLog *clickhouse.ActiveSession
+func HasActiveSessionWithConditions(email string, clientType string, deviceInfo *dto.DeviceDetectorInfo) (activeSession *clickhouse.ActiveSession, err error) {
 	code := encodeCode(email, deviceInfo)
 	query := database.ClickhouseInstance.
 		Order("created_at desc").
-		Limit(1).Where("code = ?", code)
-	query.First(&authLog)
+		Limit(1).
+		Where("code = ?", code).
+		Where("provider = ?", clientType).
+		Where("active = ?", true).
+		Where("trusted = ?", false)
+	exists := query.Find(&activeSession)
 
-	return authLog
-}
-
-func HasActiveSessionWithConditions(email string, deviceInfo *dto.DeviceDetectorInfo) (bool, error) {
-	var authLog *clickhouse.ActiveSession
-	code := encodeCode(email, deviceInfo)
-	query := database.ClickhouseInstance.
-		Order("created_at desc").
-		Limit(1).Where("code = ?", code)
-	exists := query.Find(&authLog)
-
-	ok := false
-	if exists.RowsAffected > 0 {
-		ok = true
-	}
-
-	return ok, exists.Error
+	return activeSession, exists.Error
 }
 
 func encodeCode(email string, deviceInfo *dto.DeviceDetectorInfo) string {

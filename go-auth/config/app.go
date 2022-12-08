@@ -15,6 +15,8 @@ type AppConfig struct {
 	RedirectUrl                string
 	CheckIp                    bool
 	CheckIpAddress             bool
+	CheckLoginDevice           bool
+	CheckDevice                bool
 	PasswordRequiredCharacters string
 }
 
@@ -27,8 +29,18 @@ func (a *AppConfig) Load() *AppConfig {
 	if err != nil {
 		panic(err)
 	}
+	checkLoginDevice, err := strconv.ParseBool(os.Getenv("CHECK_LOGIN_DEVICE"))
+	if err != nil {
+		panic(err)
+	}
+	checkDevice, err := strconv.ParseBool(os.Getenv("CHECK_DEVICE"))
+	if err != nil {
+		panic(err)
+	}
 	a.CheckIp = checkIp
 	a.CheckIpAddress = checkIpAddress
+	a.CheckLoginDevice = checkLoginDevice
+	a.CheckDevice = checkDevice
 	a.AppName = os.Getenv("APP_NAME")
 	a.AppUrl = os.Getenv("APP_URL")
 	a.AppFrontUrl = os.Getenv("APP_FRONT_URL")

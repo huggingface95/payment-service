@@ -7,6 +7,7 @@ import (
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/dto"
+	"jwt-authentication-golang/models/clickhouse"
 	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/repositories/redisRepository"
@@ -20,21 +21,24 @@ import (
 
 func Login(context *gin.Context) {
 	var user postgres.User
+	var activeSession *clickhouse.ActiveSession
+	var authLog *clickhouse.AuthenticationLog
+	var activeSessionError error
 
 	deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
 
 	newTime, blockedTime, _, oauthCodeTime, _ := times.GetTokenTimes()
 
-	request, headerRequest, err := auth.ParseRequest(context)
-
-	clientType := constants.Member
-	if request.Type != "" {
-		clientType = request.Type
-	}
+	request, _, err := auth.ParseRequest(context)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
 	}
 
 	user = userRepository.GetUserByEmail(request.Email, clientType)
@@ -43,6 +47,11 @@ func Login(context *gin.Context) {
 		return
 	}
 	var key = fmt.Sprintf("%s_%d", clientType, user.GetId())
+
+	activeSession, activeSessionError = oauthRepository.HasActiveSessionWithConditions(user.GetEmail(), clientType, deviceInfo)
+	if activeSessionError == nil {
+		authLog = oauthRepository.HasActiveAuthLogWithConditions(activeSession.Id)
+	}
 
 	if auth.AttemptLimitEqual(key, blockedTime) {
 		context.JSON(http.StatusForbidden, gin.H{"error": fmt.Sprint("Account is temporary blocked for ", blockedTime.Sub(newTime))})
@@ -71,8 +80,8 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	if clientType == constants.Individual {
-		if ok, s, data := checkAndUpdateSession(clientType, user.GetEmail(), user.GetFullName(), user.GetCompanyId(), deviceInfo, context); ok == false {
+	if clientType == constants.Individual && config.Conf.App.CheckDevice {
+		if ok, s, data := checkAndUpdateSession(activeSession, clientType, user.GetEmail(), user.GetFullName(), user.GetCompanyId(), deviceInfo, context); ok == false {
 			context.JSON(s, data)
 			return
 		}
@@ -88,37 +97,29 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	createAuthLogDto := dto.DTO.CreateAuthLogDto.Parse(clientType, user.GetEmail(), user.GetCompany().Name, deviceInfo)
-
-	if config.Conf.App.CheckIp {
+	if config.Conf.App.CheckLoginDevice {
 		if request.Cancel {
 			context.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
-		authLog := oauthRepository.GetAuthLogWithConditions(map[string]string{"status": "login", "member": request.Email})
-		ip := auth.GetUserIp(authLog, headerRequest.HttpClientIp, headerRequest.HttpXForwardedFor)
-		if ip != context.ClientIP() || ip != "" {
+
+		if activeSessionError != nil {
 			context.JSON(http.StatusUnauthorized, gin.H{"error": "This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users."})
 			return
 		}
 
-		browser := auth.GetUserBrowser(authLog)
-		if browser != context.Request.UserAgent() || browser != "" {
-			context.JSON(http.StatusUnauthorized, gin.H{"error": "This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users."})
-			return
-		}
-
-		if auth.GetAuthUser(authLog, createAuthLogDto) != "login" {
+		if authLog != nil {
+			oauthRepository.InsertAuthLog("logout", activeSession.Id, newTime)
 			context.JSON(http.StatusUnauthorized, gin.H{"error": "This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users."})
 			return
 		}
 
 		if request.Proceed {
-			oauthRepository.InsertAuthLog("logout", createAuthLogDto)
+			oauthRepository.InsertAuthLog("logout", activeSession.Id, newTime)
 		}
 	}
 
-	oauthRepository.InsertAuthLog("login", createAuthLogDto)
+	oauthRepository.InsertAuthLog("login", activeSession.Id, newTime)
 
 	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == false {
 		tokenJWT, oauthClient, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.ForTwoFactor)
@@ -173,12 +174,8 @@ func checkPassword(c *gin.Context, u postgres.User, r requests.LoginRequest) boo
 	return true
 }
 
-func checkAndUpdateSession(provider string, email string, fullName string, companyId uint64, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
-	ok, err := oauthRepository.HasActiveSessionWithConditions(email, deviceInfo)
-	if err != nil {
-		return false, 403, gin.H{"data": "Failed to authorize device"}
-	}
-	if ok == true {
+func checkAndUpdateSession(activeSession *clickhouse.ActiveSession, provider string, email string, fullName string, companyId uint64, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
+	if activeSession != nil {
 		return true, 200, nil
 	}
 	activeSessionCreated := oauthRepository.InsertActiveSessionLog(provider, email, false, false, deviceInfo)
