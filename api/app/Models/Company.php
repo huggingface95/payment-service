@@ -31,7 +31,10 @@ class Company extends BaseModel
         'zip',
         'address',
         'city',
-        'additional_fields',
+        'additional_fields_info',
+        'additional_fields_basic',
+        'additional_fields_settings',
+        'additional_fields_data',
         'phone',
         'reg_address',
         'tax_id',
@@ -42,6 +45,15 @@ class Company extends BaseModel
         'exp_date',
         'state_id',
         'state_reason_id',
+        'reg_number',
+        'entity_type',
+        'vv_token',
+        'member_verify_url',
+        'backoffice_login_url',
+        'backoffice_forgot_password_url',
+        'backoffice_support_url',
+        'backoffice_support_email',
+        'logo_id',
     ];
 
     protected $appends = [
@@ -144,5 +156,10 @@ class Company extends BaseModel
     public function getProjectsCountAttribute(): int
     {
         return $this->projects()->count();
+    }
+
+    public function logo(): belongsTo
+    {
+        return $this->belongsTo(Files::class, 'logo_id');
     }
 }

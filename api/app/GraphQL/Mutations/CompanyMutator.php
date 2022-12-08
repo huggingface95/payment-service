@@ -4,7 +4,6 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
 use App\Models\Company;
-use App\Models\CompanySettings;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class CompanyMutator extends BaseMutator
@@ -21,8 +20,17 @@ class CompanyMutator extends BaseMutator
     public function update($root, array $args, GraphQLContext $context)
     {
         $company = Company::find($args['id']);
-        if (isset($args['additional_fields'])) {
-            $args['additional_fields'] = $this->setAdditionalField($args['additional_fields']);
+        if (isset($args['additional_fields_info'])) {
+            $args['additional_fields_info'] = $this->setAdditionalField($args['additional_fields_info']);
+        }
+        if (isset($args['additional_fields_basic'])) {
+            $args['additional_fields_basic'] = $this->setAdditionalField($args['additional_fields_basic']);
+        }
+        if (isset($args['additional_fields_settings'])) {
+            $args['additional_fields_settings'] = $this->setAdditionalField($args['additional_fields_settings']);
+        }
+        if (isset($args['additional_fields_data'])) {
+            $args['additional_fields_data'] = $this->setAdditionalField($args['additional_fields_data']);
         }
         $company->update($args);
 
@@ -36,50 +44,5 @@ class CompanyMutator extends BaseMutator
         $company->delete();
 
         return $company;
-    }
-
-    /**
-     * Return a value for the field.
-     *
-     * @param  @param  null  $root Always null, since this field has no parent.
-     * @param  array<string, mixed>  $args The field arguments passed by the client.
-     * @param  \Nuwave\Lighthouse\Support\Contracts\GraphQLContext  $context Shared between all fields.
-     * @param  \GraphQL\Type\Definition\ResolveInfo  $resolveInfo Metadata for advanced query resolution.
-     * @return mixed
-     */
-    public function createSettings($root, array $args, GraphQLContext $context)
-    {
-        $company = Company::where('id','=',$args['company_id'])->first();
-        if (!$company) {
-            throw new GraphqlException('Company not found', 'not found', 404);
-        }
-        return CompanySettings::create(
-            $args
-        );
-
-    }
-
-    /**
-     * Return a value for the field.
-     *
-     * @param  @param  null  $root Always null, since this field has no parent.
-     * @param  array<string, mixed>  $args The field arguments passed by the client.
-     * @param  \Nuwave\Lighthouse\Support\Contracts\GraphQLContext  $context Shared between all fields.
-     * @param  \GraphQL\Type\Definition\ResolveInfo  $resolveInfo Metadata for advanced query resolution.
-     * @return mixed
-     */
-    public function updateSettings($root, array $args, GraphQLContext $context)
-    {
-        $companySettings = CompanySettings::where('company_id','=',$args['company_id'])->first();
-        if (!$companySettings) {
-            $companySettings = CompanySettings::create(
-                $args
-            );
-        } else {
-            $companySettings->update($args);
-        }
-
-
-        return $companySettings;
     }
 }
