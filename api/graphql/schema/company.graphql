@@ -33,8 +33,6 @@ type Company {
     departments: [Department] @hasMany(relation: "departments")
     "Должности компании"
     positions: [DepartmentPosition] @hasMany(relation: "positions")
-    "Получить настройки компании"
-    company_settings: CompanySettings @hasOne(relation: "companySettings")
     "Дополнительные поля"
     additional_fields_info: JSON
     "Телефон"
