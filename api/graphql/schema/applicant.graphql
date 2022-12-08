@@ -165,6 +165,10 @@ extend type Mutation @guard {
         photo_id: ID
         "ID модулей"
         module_ids: [ID]!
+        "ID Проекта"
+        project_id: ID
+        "ID группы"
+        group_id: ID
     ): ApplicantIndividual   @field(resolver:"ApplicantMutator@create")
 
     "Редактирование частного пользователя"
