@@ -35,7 +35,7 @@ type TransferOutgoing {
     "Получить отправителя (Индивидуал или Компани)"
     sender: Client @morphTo(relation: "sender")
     "Получить связанную компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     system_message: String
     reason: String
     channel: String

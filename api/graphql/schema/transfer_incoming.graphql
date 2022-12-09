@@ -31,7 +31,7 @@ type TransferIncoming {
     "Получатьль платежа (Индивидуал или Компани)"
     recipient: Client @morphTo(relation: "recipient")
     "Получить связанную компанию"
-    company: Companies @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     system_message: String
     reason: String
     channel: String
