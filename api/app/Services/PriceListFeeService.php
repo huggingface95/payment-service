@@ -104,6 +104,7 @@ class PriceListFeeService extends AbstractService
 
         $multi[] = ['feeState' => 'Multi'];
         foreach ($multiFees as $multiFee) {
+            $newMultiFees['currencies'] = $multiFee['fees']['currencies'];
             $newMultiFees['feeValues'] = [];
             foreach ($multiFee['fees']['feeValues'] as $fee) {
                 if ($fee['mode'] == FeeModeEnum::PERCENT->toString()) {
