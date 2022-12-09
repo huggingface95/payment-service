@@ -78,4 +78,48 @@ final class AuthenticationLogsQuery
             ],
         ];
     }
+
+    public function getMember($_, array $args)
+    {
+        $query = DB::connection('clickhouse')
+            ->query()
+            ->from((new AuthenticationLog)->getTable());
+
+        if (isset($args['query']) && count($args['query']) > 0) {
+            $fields = $args['query'];
+
+            if (isset($fields['member_id'])) {
+                $member = Members::where('id', $fields['member_id'])->get('email')->first();
+                $query->where('member', $member->email);
+
+                unset($fields['member_id']);
+            }
+        }
+
+        if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
+            $fields = $args['orderBy'];
+
+            foreach ($fields as $field) {
+                $query->orderBy(Str::lower($field['column']), $field['order']);
+            }
+        } else {
+            $query->orderBy('id', 'DESC');
+        }
+
+        $result = $query->paginate($args['page'] ?? 1, $args['count'] ?? env('PAGINATE_DEFAULT_COUNT'));
+
+        return [
+            'data' => $result->items(),
+            'paginatorInfo' => [
+                'count' => $result->count(),
+                'currentPage' => $result->currentPage(),
+                'firstItem' => $result->firstItem(),
+                'hasMorePages' => $result->hasMorePages(),
+                'lastItem' => $result->lastItem(),
+                'lastPage' => $result->lastPage(),
+                'perPage' => $result->perPage(),
+                'total' => $result->total(),
+            ],
+        ];
+    }
 }

@@ -69,12 +69,24 @@ extend type Query @guard {
         orderBy: [OrderBy!]
     ): AuthenticationLogs
         @field(resolver:"AuthenticationLogsQuery@get")
+
+    """
+    Получить список логов для мембера по его ID
+    """
+    authenticationMemberLogs(
+        page: Int = 1,
+        count: Int = 15,
+        query: QueryAuthenticationMemberLogsStatic
+        orderBy: [OrderBy!]
+    ): AuthenticationLogs
+    @field(resolver:"AuthenticationLogsQuery@getMember")
+
+
 }
 
 input QueryAuthenticationLogsStatic @spread {
     company: String @eq
     member: String @eq
-    member_id: ID @eq
     client_type: String @eq
     group: String @eq
     domain: String @eq
@@ -88,6 +100,10 @@ input QueryAuthenticationLogsStatic @spread {
     status: String @eq
     expired_at: Date @like
     created_at: Date @like
+}
+
+input QueryAuthenticationMemberLogsStatic @spread {
+    member_id: ID @eq
 }
 
 input OrderBy @spread {
