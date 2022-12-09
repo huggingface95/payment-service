@@ -3,6 +3,7 @@
 namespace App\GraphQL\Queries;
 
 use App\Models\Clickhouse\AuthenticationLog;
+use App\Models\Members;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -34,6 +35,12 @@ final class AuthenticationLogsQuery
                 $query->whereBetween('created_at', [$value.' 00:00:00', $value.' 23:59:59']);
 
                 unset($fields['created_at']);
+            }
+            if (isset($fields['member_id'])) {
+                $member = Members::where('id', $fields['member_id'])->get('email')->first();
+                $query->where('member', $member->email);
+
+                unset($fields['member_id']);
             }
 
             if (count($fields) > 0) {
