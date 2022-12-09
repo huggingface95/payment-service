@@ -109,4 +109,5 @@ input QueryTransferOutgoingsFilterStatic @spread {
     hasAccountFilterByAccountNumber: String @ilike
     hasSenderMixedNameOrFullname: Mixed @ilike
     hasFeeFilterByFee: String @ilike
+    hasFeeFilterByFeeAmount: String @ilike
 }

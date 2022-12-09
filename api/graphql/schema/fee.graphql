@@ -1,11 +1,13 @@
 type Fee {
     "Дата"
-    created_at: DateTime
-    fee: Decimal
+    created_at: DateTime!
+    fee: Decimal!
+    fee_pp: Decimal!
+    fee_amount: Decimal!
     "Трансфер"
     transfer_outgoing: TransferOutgoing @belongsTo(relation: "transferOutgoing")
     "Тип трансфера"
-    transfer_type: String
+    transfer_type: String!
     "Тип операции"
     operation_type: OperationType @belongsTo(relation: "operationType")
     price_list_fee: PriceListFee @belongsTo(relation: "priceListFee")

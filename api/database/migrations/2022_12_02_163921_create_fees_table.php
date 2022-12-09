@@ -3,6 +3,7 @@
 use App\Enums\FeeTransferTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateFeesTable extends Migration
@@ -35,6 +36,8 @@ class CreateFeesTable extends Migration
             $table->foreign('member_id')->references('id')->on('members');
             $table->foreign('status_id')->references('id')->on('payment_status');
         });
+
+        DB::statement("alter table fees add column fee_amount numeric(15,5) generated always as (fee + fee_pp) stored;");
     }
 
     /**

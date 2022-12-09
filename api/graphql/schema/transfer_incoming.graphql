@@ -97,4 +97,5 @@ input QueryTransferIncomingsFilterStatic @spread {
     status_id: ID @eq
     hasAccountFilterByAccountNumber: String @ilike
     hasFeeFilterByFee: String @ilike
+    hasFeeFilterByFeeAmount: String @ilike
 }
