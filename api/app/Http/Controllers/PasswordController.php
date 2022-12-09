@@ -106,6 +106,22 @@ class PasswordController extends Controller
         $data['member_status_id'] = MemberStatusEnum::ACTIVE->value;
 
         if ($user->update($data)) {
+            $company = $user->company;
+
+            $emailTemplateName = 'Registration Details';
+            $emailData = [
+                'email' => $user->email,
+                'member_email' => $user->email,
+                'member_name' => $user->first_name,
+                'member_forgot_page_url' => $company->companySettings->backoffice_forgot_password_url,
+                'member_login_page_url' => $company->companySettings->backoffice_login_url,
+                'member_customer_support_url' => $company->companySettings->backoffice_support_url,
+                'member_company_name' => $company->name,
+            ];
+
+            $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $user, $emailData, $emailTemplateName);
+            $this->emailService->sendMemberEmailByMemberDto($emailDTO, true);
+
             return response()->json(['success' => true]);
         }
 
