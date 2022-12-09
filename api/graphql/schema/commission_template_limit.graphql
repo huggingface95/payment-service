@@ -61,9 +61,9 @@ input InputCommissionTemplateLimit {
     "ID валюты лимита"
     currency_id: ID
     "ID периода лимита"
-    commission_template_limit_period_id: ID!
+    commission_template_limit_period_id: ID
     "ID события лимита"
-    commission_template_limit_action_type_id: ID!
+    commission_template_limit_action_type_id: ID
     "ID количество срабатываний лимита"
     period_count: ID
     "ID шаблона комиссии"

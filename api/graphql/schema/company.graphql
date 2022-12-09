@@ -33,15 +33,13 @@ type Company {
     departments: [Department] @hasMany(relation: "departments")
     "Должности компании"
     positions: [DepartmentPosition] @hasMany(relation: "positions")
-    "Получить настройки компании"
-    company_settings: CompanySettings @hasOne(relation: "companySettings")
     "Дополнительные поля"
-    additional_fields: JSON
+    additional_fields_info: JSON
     "Телефон"
     phone: String
     "Адрес регистрации"
     reg_address: String
-    tax_id: ID
+    tax_id: String
     incorporate_date: DateTime
     "Количество сотрудниуов"
     employees: Employee @belongsTo(relation: "employee")
@@ -55,6 +53,30 @@ type Company {
     state: State @belongsTo(relation: "state")
     "Причина состояния"
     state_reason: stateReason @belongsTo(relation: "stateReason")
+    "Регистрационный номер"
+    reg_number: String
+    "Тип сущности"
+    entity_type: String
+    "Дополнительные поля основные"
+    additional_fields_basic: JSON
+    "Дополнительные поля настройки"
+    additional_fields_settings: JSON
+    "Дополнительные поля данные"
+    additional_fields_data: JSON
+    "Лого"
+    logo: Files @belongsTo(relation: "logo")
+    "Токен для видеоверификации"
+    vv_token: String
+    "Url верификации мембера"
+    member_verify_url: String
+    "Backoffice login URL"
+    backoffice_login_url: String
+    "Backoffice forgot password URL"
+    backoffice_forgot_password_url: String
+    "Backoffice support URL"
+    backoffice_support_url: String
+    "Backoffice support EMAIL"
+    backoffice_support_email: EMAIL
     created_at: DateTime!
     updated_at: DateTime!
 }
@@ -83,6 +105,8 @@ input QueryCompaniesFilterStatic @spread {
     name: String @ilike
     email: String @ilike
     url: String @ilike
+    reg_number: String @ilike
+    entity_type: String @ilike
     hasPaymentProvidersFilterById: ID @eq
     hasPaymentSystemFilterById: ID @eq
     hasRegionsFilterById: ID @eq
@@ -97,36 +121,10 @@ extend type Mutation @guard {
         email: EMAIL!
         "Сайт компании"
         url: String!
-        "Индекс компании"
-        zip: String
-        "Адрес компании"
-        address: String
-        "Город компании"
-        city: String
-        "Регистрационный номер компании"
-        company_number: String
-        "Контактное имя"
-        contact_name: String
         "ID страны"
         country_id: ID!
         "Телефон"
         phone: String
-        "Адрес регистрации"
-        reg_address: String
-        tax_id: ID
-        incorporate_date: DateTime
-        "Количество сотрудниуов"
-        employees_id: ID
-        "Область деятельности"
-        type_of_industry_id: ID
-        "Номер лицензии"
-        license_number: String
-        "Дата окончания лицензии"
-        exp_date: DateTime
-        "Состояние"
-        state_id: ID
-        "Причина состояния"
-        state_reason_id: ID
     ): Company   @create
 
     "Обновить данные компании"
@@ -152,12 +150,18 @@ extend type Mutation @guard {
         "Контактное имя"
         contact_name: String
         "Дополнительные поля"
-        additional_fields: [AdditionalFieldInput]
+        additional_fields_info: [AdditionalFieldInput]
+        "Дополнительные поля основные"
+        additional_fields_basic: [AdditionalFieldInput]
+        "Дополнительные поля настройки"
+        additional_fields_settings: [AdditionalFieldInput]
+        "Дополнительные поля данные"
+        additional_fields_data: [AdditionalFieldInput]
         "Телефон"
         phone: String
         "Адрес регистрации"
         reg_address: String
-        tax_id: ID
+        tax_id: String
         incorporate_date: DateTime
         "Количество сотрудниуов"
         employees_id: ID
@@ -171,6 +175,24 @@ extend type Mutation @guard {
         state_id: ID
         "Причина состояния"
         state_reason_id: ID
+        "Регистрационный номер"
+        reg_number: String
+        "Тип сущности"
+        entity_type: String
+        "Лого"
+        logo_id: ID
+        "Токен для видеоверификации"
+        vv_token: String
+        "Url верификации мембера"
+        member_verify_url: String
+        "Backoffice login URL"
+        backoffice_login_url: String
+        "Backoffice forgot password URL"
+        backoffice_forgot_password_url: String
+        "Backoffice support URL"
+        backoffice_support_url: String
+        "Backoffice support EMAIL"
+        backoffice_support_email: EMAIL
     ): Company   @field(resolver:"CompanyMutator@update")
 
     "Удалить компанию"

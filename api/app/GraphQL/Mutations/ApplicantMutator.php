@@ -46,6 +46,10 @@ class ApplicantMutator extends BaseMutator
 
         $applicant->modules()->attach($args['module_ids']);
 
+        if (isset($args['group_id'])) {
+            $applicant->groupRole()->sync([$args['group_id']], true);
+        }
+
         return $applicant;
     }
 
@@ -111,7 +115,7 @@ class ApplicantMutator extends BaseMutator
             $applicant->modules()->detach();
             $applicant->modules()->attach($args['module_ids']);
         }
-        
+
         return $applicant;
     }
 

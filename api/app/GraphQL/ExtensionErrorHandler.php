@@ -255,7 +255,6 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
-
         if (strpos($error->getMessage(), 'group_role_un')) {
             return $next(new Error(
                 'An entry with this  group name already exist',
@@ -271,10 +270,24 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
-
         if (strpos($error->getMessage(), 'group_role_name_group_type_id_unique')) {
             return $next(new Error(
                 'An entry with this  group name already exist',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'An entry with this  group name already exist',
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(), 'department_position_relation_position_id_foreign')) {
+            return $next(new Error(
+                'Department Position does not exist',
                 // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
                 $error->getNodes(),
                 $error->getSource(),
