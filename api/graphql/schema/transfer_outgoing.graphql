@@ -1,0 +1,113 @@
+"""
+Исходящие переводы
+"""
+type TransferOutgoing {
+    id: ID!
+    "Получить инициатора платежа (Мембер или Апликант)"
+    requested_by: Clientable @morphTo(relation: "clientable")
+    "Тип инициатора платежа"
+    user_type: UserType
+    "Сумма"
+    amount: Decimal!
+    amount_debt: Decimal!
+    "Коммиссия"
+    fee: Fee @hasOne(realtion: "fee")
+    "Все коммиссии"
+    fees: [Fee] @hasMany(realtion: "fees")
+    "Получить связанную валюту"
+    currency: Currencies @belongsTo(relation: "currency")
+    "Статус"
+    status: PaymentStatus @belongsTo(relation: "paymentStatus")
+    "Получить связанныую срочность"
+    payment_urgency: PaymentUrgency @belongsTo(relation: "paymentUrgency")
+    "Получить связанный тип"
+    payment_operation_type: OperationType @belongsTo(relation: "paymentOperation")
+    "Получить связанный провайдер"
+    payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
+    "Получить связанную платежную систему"
+    payment_system: PaymentSystem @belongsTo(relation: "paymentSystem")
+    "Получить связанный банк"
+    payment_bank: PaymentBank @belongsTo(relation: "paymentBank")
+    "Номер платежа"
+    payment_number: String!
+    "Получить связанный аккаунт"
+    account: Account @belongsTo(relation: "account")
+    "Получить отправителя (Индивидуал или Компани)"
+    sender: Client @morphTo(relation: "sender")
+    "Получить связанную компанию"
+    company: Companies @belongsTo(relation: "company")
+    system_message: String
+    reason: String
+    channel: String
+    bank_message: String
+    "Номер счета или IBAN получателя"
+    recipient_account: String!
+    recipient_bank_name: String!
+    recipient_bank_address: String!
+    recipient_bank_swift: String
+    recipient_bank_country: Country @belongsTo(relation: "recipientBankCountry")
+    recipient_name: String!
+    recipient_country: Country @belongsTo(relation: "recipientCountry")
+    recipient_city: String!
+    recipient_address: String!
+    recipient_state: String!
+    recipient_zip: String!
+    respondent_fee: RespondentFee @belongsTo(relation: "respondentFee")
+    "Дата и время выполнения транзакции"
+    execution_at: DateTime
+    created_at: DateTime
+    updated_at: DateTime
+}
+
+type TransferOutgoingStatistic {
+    status_id: ID!
+    name: String!
+    count: Int!
+}
+
+enum UserType {
+    ApplicantIndividual @enum(value: "ApplicantIndividual")
+    ApplicantCompany @enum(value: "ApplicantCompany")
+    Members @enum(value: "Members")
+}
+
+extend type Query @guard {
+    """
+    Получить трансфер
+    """
+    transferOutgoing(id: ID! @eq): TransferOutgoing!    @find
+
+    """
+    Получить список исходящих платежей
+    """
+    transferOutgoings(
+        filter: _ @filterConditions(static: QueryTransferOutgoingsFilterStatic),
+        created_at: DateRange @whereBetween
+    ): [TransferOutgoing!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: ASC)
+
+    """
+    Получить статистику по исходящим платежам
+    """
+    transferOutgoingsStatistic(
+        created_at: DateRange @whereBetween
+        company_id: ID
+        payment_provider_id: ID
+        account_id: ID
+    ): [TransferOutgoingStatistic]
+        @field(resolver: "TransferOutgoingQuery@statistic")
+}
+
+input QueryTransferOutgoingsFilterStatic @spread {
+    id: ID @eq
+    urgency_id: ID @eq
+    operation_type_id: ID @eq
+    status_id: ID @eq
+    recipient_name: String @ilike
+    user_type: UserType @eq
+    hasAccountFilterByAccountNumber: String @ilike
+    hasSenderMixedNameOrFullname: Mixed @ilike
+    hasFeeFilterByFee: String @ilike
+    hasFeeFilterByFeeAmount: String @ilike
+}
