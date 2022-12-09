@@ -28,7 +28,9 @@ class CreateAuthenticationLogTable extends Migration
                 browser String,
                 browser_version String,
                 device_type String,
+                lang String,
                 model String,
+                code Nullable(String),
                 expired_at Nullable(DateTime),
                 created_at DateTime DEFAULT now()
             )

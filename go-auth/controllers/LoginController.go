@@ -23,11 +23,11 @@ func Login(context *gin.Context) {
 	var user postgres.User
 	var activeSession *clickhouse.ActiveSession
 	var authLog *clickhouse.AuthenticationLog
-	var activeSessionError error
+	//var authLogActive *clickhouse.AuthenticationLog
 
 	deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
 
-	newTime, blockedTime, _, oauthCodeTime, _ := times.GetTokenTimes()
+	newTime, blockedTime, _, oauthCodeTime, expirationJWTTime := times.GetTokenTimes()
 
 	request, _, err := auth.ParseRequest(context)
 
@@ -48,10 +48,9 @@ func Login(context *gin.Context) {
 	}
 	var key = fmt.Sprintf("%s_%d", clientType, user.GetId())
 
-	activeSession, activeSessionError = oauthRepository.HasActiveSessionWithConditions(user.GetEmail(), clientType, deviceInfo)
-	if activeSessionError == nil {
-		authLog = oauthRepository.HasActiveAuthLogWithConditions(activeSession.Id)
-	}
+	activeSession = oauthRepository.HasActiveSessionWithConditions(user.GetEmail(), clientType, deviceInfo)
+	//authLogActive = oauthRepository.HasActiveAuthLogWithConditions(user.GetEmail(), clientType, deviceInfo)
+	authLog = oauthRepository.HasAuthLogWithConditions(user.GetEmail(), clientType, deviceInfo)
 
 	if auth.AttemptLimitEqual(key, blockedTime) {
 		context.JSON(http.StatusForbidden, gin.H{"error": fmt.Sprint("Account is temporary blocked for ", blockedTime.Sub(newTime))})
@@ -80,8 +79,8 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	if clientType == constants.Individual && config.Conf.App.CheckDevice {
-		if ok, s, data := checkAndUpdateSession(activeSession, clientType, user.GetEmail(), user.GetFullName(), user.GetCompanyId(), deviceInfo, context); ok == false {
+	if clientType == constants.Individual && config.Conf.App.CheckDevice && activeSession == nil {
+		if ok, s, data := checkAndUpdateSession(clientType, user.GetEmail(), user.GetFullName(), user.GetCompanyId(), deviceInfo, context); ok == false {
 			context.JSON(s, data)
 			return
 		}
@@ -97,29 +96,38 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	if config.Conf.App.CheckLoginDevice {
+	if config.Conf.App.CheckLoginDevice && authLog != nil {
+		var proceed = false
+		if request.Proceed {
+			proceed = true
+			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), "logout", expirationJWTTime, deviceInfo)
+		}
+
 		if request.Cancel {
 			context.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
 
-		if activeSessionError != nil {
+		if authLog.Status == "login" && proceed == false {
 			context.JSON(http.StatusUnauthorized, gin.H{"error": "This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users."})
 			return
 		}
 
-		if authLog != nil {
-			oauthRepository.InsertAuthLog("logout", activeSession.Id, newTime)
-			context.JSON(http.StatusUnauthorized, gin.H{"error": "This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users."})
-			return
-		}
+	}
 
-		if request.Proceed {
-			oauthRepository.InsertAuthLog("logout", activeSession.Id, newTime)
+	if config.Conf.App.CheckIp {
+		if user.InClientIpAddresses(context.ClientIP()) == false {
+			if auth.CreateConfirmationIpLink(clientType, user.GetId(), user.GetCompanyId(), user.GetEmail(), context.ClientIP(), newTime) {
+				context.JSON(http.StatusOK, gin.H{"data": "An email has been sent to your email to confirm the new ip"})
+				return
+			}
 		}
 	}
 
-	oauthRepository.InsertAuthLog("login", activeSession.Id, newTime)
+	if activeSession == nil {
+		activeSession = oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), true, true, deviceInfo)
+	}
+	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), "login", expirationJWTTime, deviceInfo)
 
 	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == false {
 		tokenJWT, oauthClient, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.ForTwoFactor)
@@ -145,15 +153,6 @@ func Login(context *gin.Context) {
 		cache.Caching.LoginAttempt.Delete(key)
 	}
 
-	if config.Conf.App.CheckIpAddress {
-		if user.InClientIpAddresses(context.ClientIP()) == false {
-			if auth.CreateConfirmationIpLink(clientType, user.GetId(), user.GetCompanyId(), user.GetEmail(), context.ClientIP(), newTime) {
-				context.JSON(http.StatusOK, gin.H{"data": "An email has been sent to your email to confirm the new ip"})
-				return
-			}
-		}
-	}
-
 	tokenJWT, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -174,10 +173,7 @@ func checkPassword(c *gin.Context, u postgres.User, r requests.LoginRequest) boo
 	return true
 }
 
-func checkAndUpdateSession(activeSession *clickhouse.ActiveSession, provider string, email string, fullName string, companyId uint64, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
-	if activeSession != nil {
-		return true, 200, nil
-	}
+func checkAndUpdateSession(provider string, email string, fullName string, companyId uint64, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
 	activeSessionCreated := oauthRepository.InsertActiveSessionLog(provider, email, false, false, deviceInfo)
 	if activeSessionCreated != nil {
 		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendNewDeviceEmail, &cache.ConfirmationNewDeviceData{
