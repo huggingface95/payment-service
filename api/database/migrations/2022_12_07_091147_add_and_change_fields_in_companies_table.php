@@ -26,6 +26,7 @@ class AddAndChangeFieldsInCompaniesTable extends Migration
             $table->string('backoffice_support_url')->nullable();
             $table->string('backoffice_support_email')->nullable();
             $table->string('vv_token')->nullable();
+            $table->string('entity_type')->nullable();
             $table->unsignedBigInteger('logo_id')->nullable();
             $table->foreign('logo_id')->references('id')->on('files');
         });
