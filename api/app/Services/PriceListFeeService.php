@@ -88,7 +88,6 @@ class PriceListFeeService extends AbstractService
     {
         $multi = [];
         $multiFees = [];
-        
 
         foreach ($fees as $feeItems) {
             $key = $this->getKeyName($feeItems['fee']);
@@ -105,25 +104,26 @@ class PriceListFeeService extends AbstractService
 
         $multi[] = ['feeState' => 'Multi'];
         foreach ($multiFees as $multiFee) {
+            $newMultiFees['currencies'] = $multiFee['fees']['currencies'];
+            $newMultiFees['feeValues'] = [];
             foreach ($multiFee['fees']['feeValues'] as $fee) {
-
                 if ($fee['mode'] == FeeModeEnum::PERCENT->toString()) {
-                    $multiFee['fees']['feeValues'] = [
+                    $newMultiFees['feeValues'][] = [
                         'mode' => '%',
                         'value' => $fee['percent'],
                     ];
                 } else if ($fee['mode'] == FeeModeEnum::FIX->toString()) {
-                    $multiFee['fees']['feeValues'] = [
+                    $newMultiFees['feeValues'][] = [
                         'mode' => 'fix',
                         'value' => $fee['fee'],
                     ];
                 }
             }
 
-            $multi[0]['fees'][] = $multiFee['fees'];
+            $multi[0]['fees'][] = $newMultiFees;
         }
 
-        return $multi;
+        return isset($multi[0]['fees']) ? $multi : [];
     }
 
     public function makeFeeRangesArray($fees): array
