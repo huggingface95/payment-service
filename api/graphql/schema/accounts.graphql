@@ -108,7 +108,7 @@ extend type Query @guard {
         filter: _ @filterConditions(static: QueryAccountDetailsListFilterStatic),
         query: QueryAccountDetailsCondition
         orderBy: _ @orderBy(columns: ["id","created_at"])
-    ): [Account!]!  @field(resolver:"AccountsQuery@clientDetailsList") @orderBy(column: "id", direction: ASC)
+    ): [Account!]!  @field(resolver:"AccountsQuery@clientDetailsList") @orderBy(column: "id", direction: ASC) @deprecated
 
     """
     Получить список account states
