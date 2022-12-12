@@ -3,6 +3,7 @@
 namespace App\GraphQL\Queries;
 
 use App\Models\Clickhouse\AuthenticationLog;
+use App\Models\Members;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -43,6 +44,44 @@ final class AuthenticationLogsQuery
                     }
                 });
             }
+        }
+
+        if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
+            $fields = $args['orderBy'];
+
+            foreach ($fields as $field) {
+                $query->orderBy(Str::lower($field['column']), $field['order']);
+            }
+        } else {
+            $query->orderBy('id', 'DESC');
+        }
+
+        $result = $query->paginate($args['page'] ?? 1, $args['count'] ?? env('PAGINATE_DEFAULT_COUNT'));
+
+        return [
+            'data' => $result->items(),
+            'paginatorInfo' => [
+                'count' => $result->count(),
+                'currentPage' => $result->currentPage(),
+                'firstItem' => $result->firstItem(),
+                'hasMorePages' => $result->hasMorePages(),
+                'lastItem' => $result->lastItem(),
+                'lastPage' => $result->lastPage(),
+                'perPage' => $result->perPage(),
+                'total' => $result->total(),
+            ],
+        ];
+    }
+
+    public function getMember($_, array $args)
+    {
+        $query = DB::connection('clickhouse')
+            ->query()
+            ->from((new AuthenticationLog)->getTable());
+
+        if (isset($args['member_id'])) {
+            $member = Members::find($args['member_id']);
+            $query->where('member', $member->email);
         }
 
         if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
