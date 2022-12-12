@@ -5,6 +5,8 @@ type AuthenticationLog {
     company: String!
     "Группа"
     member: String!
+    "Member ID"
+    member_id: ID!
     "Тип"
     client_type: String!
     "Группа"
@@ -74,9 +76,9 @@ extend type Query @guard {
     Получить список логов для мембера по его ID
     """
     authenticationMemberLogs(
+        member_id: ID @eq
         page: Int = 1,
         count: Int = 15,
-        query: QueryAuthenticationMemberLogsStatic
         orderBy: [OrderBy!]
     ): AuthenticationLogs
     @field(resolver:"AuthenticationLogsQuery@getMember")
@@ -100,10 +102,6 @@ input QueryAuthenticationLogsStatic @spread {
     status: String @eq
     expired_at: Date @like
     created_at: Date @like
-}
-
-input QueryAuthenticationMemberLogsStatic @spread {
-    member_id: ID @eq
 }
 
 input OrderBy @spread {

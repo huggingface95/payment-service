@@ -611,6 +611,7 @@ class AuthController extends Controller
             ->table((new AuthenticationLog)->getTable())
             ->insert([
                 'id' => rand(0, 4294967295),
+                'member_id' => $user->id,
                 'member' => $user->email,
                 'client_type' => $this->guard,
                 'domain' => request()->getHttpHost(),
