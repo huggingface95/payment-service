@@ -3,7 +3,7 @@ type AuthenticationLog {
     id: ID!
     "Название компании"
     company: String!
-    "Группа"
+    "Member email"
     member: String!
     "Тип"
     client_type: String!
@@ -42,21 +42,21 @@ type AuthenticationLogs {
 
 extend type Query @guard {
     """
-    Получить список логов аутентификации 
+    Получить список логов аутентификации
     query: {
-        column: COMPANY, value: "", 
-        column: MEMBER, value: "", 
-        column: CLIENT_TYPE, value: "", 
-        column: GROUP, value: "", 
-        column: DOMAIN, value: "", 
-        column: IP, value: "", 
-        column: COUNTRY, value: "", 
-        column: CITY, value: "", 
-        column: PLATFORM, value: "", 
-        column: BROWSER, value: "", 
-        column: DEVICE_TYPE, value: "", 
-        column: MODEL, value: "", 
-        column: STATUS, value: "", 
+        column: COMPANY, value: "",
+        column: MEMBER, value: "",
+        column: CLIENT_TYPE, value: "",
+        column: GROUP, value: "",
+        column: DOMAIN, value: "",
+        column: IP, value: "",
+        column: COUNTRY, value: "",
+        column: CITY, value: "",
+        column: PLATFORM, value: "",
+        column: BROWSER, value: "",
+        column: DEVICE_TYPE, value: "",
+        column: MODEL, value: "",
+        column: STATUS, value: "",
         column: EXPIRED_AT, value: "2021-10-12",
         column: CREATED_AT, value: "2021-10-12"
     } фильтр по company, member, group, domain, ip, country, city, platform, browser, device_type, model, status, expired_at, created_at
@@ -69,6 +69,19 @@ extend type Query @guard {
         orderBy: [OrderBy!]
     ): AuthenticationLogs
         @field(resolver:"AuthenticationLogsQuery@get")
+
+    """
+    Получить список логов для мембера по его ID
+    """
+    authenticationMemberLogs(
+        member_id: ID! @eq
+        page: Int = 1,
+        count: Int = 15,
+        orderBy: [OrderBy!]
+    ): AuthenticationLogs
+    @field(resolver:"AuthenticationLogsQuery@getMember")
+
+
 }
 
 input QueryAuthenticationLogsStatic @spread {
