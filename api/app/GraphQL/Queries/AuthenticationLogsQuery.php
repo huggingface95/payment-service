@@ -36,12 +36,6 @@ final class AuthenticationLogsQuery
 
                 unset($fields['created_at']);
             }
-            if (isset($fields['member_id'])) {
-                $member = Members::where('id', $fields['member_id'])->get('email')->first();
-                $query->where('member', $member->email);
-
-                unset($fields['member_id']);
-            }
 
             if (count($fields) > 0) {
                 $query->where(function ($query) use ($fields) {
