@@ -3,10 +3,8 @@ type AuthenticationLog {
     id: ID!
     "Название компании"
     company: String!
-    "Группа"
+    "Member email"
     member: String!
-    "Member ID"
-    member_id: ID!
     "Тип"
     client_type: String!
     "Группа"

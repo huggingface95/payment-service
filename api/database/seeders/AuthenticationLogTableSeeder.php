@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ClientTypeEnum;
 use App\Models\Clickhouse\AuthenticationLog;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
@@ -25,6 +26,7 @@ class AuthenticationLogTableSeeder extends Seeder
                     'id' => $i,
                     'company' => $faker->randomElement(['Nginx', 'Apple', 'Nike']),
                     'member' => $faker->randomElement(['feder@gmail.com', 'jover@gmail.com', 'dan@gmail.com']),
+                    'client_type' => $faker->randomElement([ClientTypeEnum::MEMBER->toString(), ClientTypeEnum::APPLICANT->toString()]),
                     'group' => $faker->randomElement(['Member', 'Admin']),
                     'domain' => $faker->domainName,
                     'ip' => $faker->ipv4,

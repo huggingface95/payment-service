@@ -86,7 +86,8 @@ final class AuthenticationLogsQuery
             ->from((new AuthenticationLog)->getTable());
 
         if (isset($args['member_id'])) {
-            $query->where('member_id', $args['member_id']);
+            $member = Members::find($args['member_id']);
+            $query->where('member', $member->email);
         }
 
         if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
