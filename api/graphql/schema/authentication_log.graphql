@@ -76,7 +76,7 @@ extend type Query @guard {
     Получить список логов для мембера по его ID
     """
     authenticationMemberLogs(
-        member_id: ID @eq
+        member_id: ID! @eq
         page: Int = 1,
         count: Int = 15,
         orderBy: [OrderBy!]
