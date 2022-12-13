@@ -7,6 +7,7 @@ import (
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/dto"
+	"jwt-authentication-golang/models/clickhouse"
 	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/repositories/redisRepository"
@@ -20,21 +21,24 @@ import (
 
 func Login(context *gin.Context) {
 	var user postgres.User
+	var activeSession *clickhouse.ActiveSession
+	var authLog *clickhouse.AuthenticationLog
+	//var authLogActive *clickhouse.AuthenticationLog
 
 	deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
 
-	newTime, blockedTime, _, oauthCodeTime, _ := times.GetTokenTimes()
+	newTime, blockedTime, _, oauthCodeTime, expirationJWTTime := times.GetTokenTimes()
 
-	request, headerRequest, err := auth.ParseRequest(context)
-
-	clientType := constants.Member
-	if request.Type != "" {
-		clientType = request.Type
-	}
+	request, _, err := auth.ParseRequest(context)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	clientType := constants.Member
+	if request.Type != "" {
+		clientType = request.Type
 	}
 
 	user = userRepository.GetUserByEmail(request.Email, clientType)
@@ -43,6 +47,10 @@ func Login(context *gin.Context) {
 		return
 	}
 	var key = fmt.Sprintf("%s_%d", clientType, user.GetId())
+
+	activeSession = oauthRepository.HasActiveSessionWithConditions(user.GetEmail(), clientType, deviceInfo)
+	//authLogActive = oauthRepository.HasActiveAuthLogWithConditions(user.GetEmail(), clientType, deviceInfo)
+	authLog = oauthRepository.HasAuthLogWithConditions(user.GetEmail(), clientType, deviceInfo)
 
 	if auth.AttemptLimitEqual(key, blockedTime) {
 		context.JSON(http.StatusForbidden, gin.H{"error": fmt.Sprint("Account is temporary blocked for ", blockedTime.Sub(newTime))})
@@ -71,7 +79,7 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	if clientType == constants.Individual {
+	if clientType == constants.Individual && config.Conf.App.CheckDevice && activeSession == nil {
 		if ok, s, data := checkAndUpdateSession(clientType, user.GetEmail(), user.GetFullName(), user.GetCompanyId(), deviceInfo, context); ok == false {
 			context.JSON(s, data)
 			return
@@ -88,37 +96,38 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	createAuthLogDto := dto.DTO.CreateAuthLogDto.Parse(clientType, user.GetEmail(), user.GetCompany().Name, deviceInfo)
+	if config.Conf.App.CheckLoginDevice && authLog != nil {
+		var proceed = false
+		if request.Proceed {
+			proceed = true
+			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), "logout", expirationJWTTime, deviceInfo)
+		}
 
-	if config.Conf.App.CheckIp {
 		if request.Cancel {
 			context.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
-		authLog := oauthRepository.GetAuthLogWithConditions(map[string]string{"status": "login", "member": request.Email})
-		ip := auth.GetUserIp(authLog, headerRequest.HttpClientIp, headerRequest.HttpXForwardedFor)
-		if ip != context.ClientIP() || ip != "" {
+
+		if authLog.Status == "login" && proceed == false {
 			context.JSON(http.StatusUnauthorized, gin.H{"error": "This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users."})
 			return
 		}
 
-		browser := auth.GetUserBrowser(authLog)
-		if browser != context.Request.UserAgent() || browser != "" {
-			context.JSON(http.StatusUnauthorized, gin.H{"error": "This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users."})
-			return
-		}
+	}
 
-		if auth.GetAuthUser(authLog, createAuthLogDto) != "login" {
-			context.JSON(http.StatusUnauthorized, gin.H{"error": "This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users."})
-			return
-		}
-
-		if request.Proceed {
-			oauthRepository.InsertAuthLog("logout", createAuthLogDto)
+	if config.Conf.App.CheckIp {
+		if user.InClientIpAddresses(context.ClientIP()) == false {
+			if auth.CreateConfirmationIpLink(clientType, user.GetId(), user.GetCompanyId(), user.GetEmail(), context.ClientIP(), newTime) {
+				context.JSON(http.StatusOK, gin.H{"data": "An email has been sent to your email to confirm the new ip"})
+				return
+			}
 		}
 	}
 
-	oauthRepository.InsertAuthLog("login", createAuthLogDto)
+	if activeSession == nil {
+		activeSession = oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), true, true, deviceInfo)
+	}
+	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), "login", expirationJWTTime, deviceInfo)
 
 	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == false {
 		tokenJWT, oauthClient, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.ForTwoFactor)
@@ -144,15 +153,6 @@ func Login(context *gin.Context) {
 		cache.Caching.LoginAttempt.Delete(key)
 	}
 
-	if config.Conf.App.CheckIpAddress {
-		if user.InClientIpAddresses(context.ClientIP()) == false {
-			if auth.CreateConfirmationIpLink(clientType, user.GetId(), user.GetCompanyId(), user.GetEmail(), context.ClientIP(), newTime) {
-				context.JSON(http.StatusOK, gin.H{"data": "An email has been sent to your email to confirm the new ip"})
-				return
-			}
-		}
-	}
-
 	tokenJWT, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -174,13 +174,6 @@ func checkPassword(c *gin.Context, u postgres.User, r requests.LoginRequest) boo
 }
 
 func checkAndUpdateSession(provider string, email string, fullName string, companyId uint64, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
-	ok, err := oauthRepository.HasActiveSessionWithConditions(email, deviceInfo)
-	if err != nil {
-		return false, 403, gin.H{"data": "Failed to authorize device"}
-	}
-	if ok == true {
-		return true, 200, nil
-	}
 	activeSessionCreated := oauthRepository.InsertActiveSessionLog(provider, email, false, false, deviceInfo)
 	if activeSessionCreated != nil {
 		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendNewDeviceEmail, &cache.ConfirmationNewDeviceData{

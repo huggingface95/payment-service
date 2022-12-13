@@ -5,41 +5,46 @@ import (
 	"jwt-authentication-golang/database"
 	"jwt-authentication-golang/dto"
 	"jwt-authentication-golang/models/clickhouse"
+	"time"
 )
 
-func GetAuthLogWithConditions(columns map[string]string) *clickhouse.AuthenticationLog {
-	var authLog *clickhouse.AuthenticationLog
+func HasAuthLogWithConditions(email string, clientType string, deviceInfo *dto.DeviceDetectorInfo) (authLog *clickhouse.AuthenticationLog) {
+	code := encodeCode(clientType, email, deviceInfo)
 	query := database.ClickhouseInstance.
 		Order("created_at desc").
-		Limit(1)
+		Limit(1).
+		Where("code = ?", code).
+		Where("expired_at > ?", time.Now())
 
-	for column, value := range columns {
-		query.Where(column+" = ?", value)
+	exists := query.Find(&authLog)
+
+	if exists.RowsAffected > 0 {
+		return authLog
 	}
-	query.First(&authLog)
 
-	return authLog
+	return nil
 }
 
-func InsertAuthLog(status string, dto *dto.CreateAuthLogDto) *clickhouse.AuthenticationLog {
+func InsertAuthLog(provider string, email string, status string, expirationJWTTime time.Time, deviceInfo *dto.DeviceDetectorInfo) *clickhouse.AuthenticationLog {
 	authLog := &clickhouse.AuthenticationLog{
 		Id:             uuid.NewString(),
-		Provider:       dto.Provider,
-		Email:          dto.Email,
 		Status:         status,
-		Platform:       dto.DeviceInfo.OsPlatform,
-		DeviceType:     dto.DeviceInfo.Type,
-		Model:          dto.DeviceInfo.Model,
-		Company:        dto.Company,
-		Browser:        dto.DeviceInfo.ClientEngine,
-		BrowserVersion: dto.DeviceInfo.ClientEngineVersion,
-		Ip:             dto.DeviceInfo.Ip,
-		Domain:         dto.DeviceInfo.Domain,
-		Country:        dto.DeviceInfo.Country,
-		City:           dto.DeviceInfo.City,
+		ExpiredAt:      expirationJWTTime,
+		Code:           encodeCode(provider, email, deviceInfo),
+		Email:          email,
+		Provider:       provider,
+		Platform:       deviceInfo.OsPlatform,
+		DeviceType:     deviceInfo.Type,
+		Model:          deviceInfo.Model,
+		Browser:        deviceInfo.ClientEngine,
+		Ip:             deviceInfo.Ip,
+		BrowserVersion: deviceInfo.ClientEngineVersion,
+		Country:        deviceInfo.Country,
+		City:           deviceInfo.City,
+		Lang:           deviceInfo.Lang,
 	}
 
-	result := database.ClickhouseInstance.Omit("ExpiredAt").Create(&authLog)
+	result := database.ClickhouseInstance.Create(&authLog)
 
 	if result.Error != nil {
 		return nil

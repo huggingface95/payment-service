@@ -13,6 +13,7 @@ type AuthenticationLog struct {
 	BrowserVersion string    `gorm:"column:browser_version"`
 	DeviceType     string    `gorm:"column:device_type"`
 	Model          string    `gorm:"column:model"`
+	Lang           string    `gorm:"column:lang"`
 	Company        string    `gorm:"column:company"`
 	Domain         string    `gorm:"column:domain"`
 	Ip             string    `gorm:"column:ip"`
@@ -20,6 +21,7 @@ type AuthenticationLog struct {
 	City           string    `gorm:"column:city"`
 	Status         string    `gorm:"column:status"`
 	Info           string    `gorm:"column:info"`
+	Code           string    `gorm:"column:code"`
 	CreatedAt      time.Time `gorm:"column:created_at"`
 	ExpiredAt      time.Time `gorm:"column:expired_at"`
 }

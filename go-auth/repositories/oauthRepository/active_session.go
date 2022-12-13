@@ -9,41 +9,31 @@ import (
 	"jwt-authentication-golang/models/clickhouse"
 )
 
-func GetActiveSessionWithConditions(email string, deviceInfo *dto.DeviceDetectorInfo) *clickhouse.ActiveSession {
-	var authLog *clickhouse.ActiveSession
-	code := encodeCode(email, deviceInfo)
+func HasActiveSessionWithConditions(email string, clientType string, deviceInfo *dto.DeviceDetectorInfo) (activeSession *clickhouse.ActiveSession) {
+	code := encodeCode(clientType, email, deviceInfo)
 	query := database.ClickhouseInstance.
 		Order("created_at desc").
-		Limit(1).Where("code = ?", code)
-	query.First(&authLog)
+		Limit(1).
+		Where("code = ?", code).
+		Where("active = ?", true).
+		Where("trusted = ?", true)
+	exists := query.Find(&activeSession)
 
-	return authLog
-}
-
-func HasActiveSessionWithConditions(email string, deviceInfo *dto.DeviceDetectorInfo) (bool, error) {
-	var authLog *clickhouse.ActiveSession
-	code := encodeCode(email, deviceInfo)
-	query := database.ClickhouseInstance.
-		Order("created_at desc").
-		Limit(1).Where("code = ?", code)
-	exists := query.Find(&authLog)
-
-	ok := false
 	if exists.RowsAffected > 0 {
-		ok = true
+		return activeSession
 	}
 
-	return ok, exists.Error
+	return nil
 }
 
-func encodeCode(email string, deviceInfo *dto.DeviceDetectorInfo) string {
-	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s-%s-%s-%s-%s", email, deviceInfo.Ip, deviceInfo.OsName, deviceInfo.ClientEngine, deviceInfo.Lang)))
+func encodeCode(provider string, email string, deviceInfo *dto.DeviceDetectorInfo) string {
+	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s-%s-%s-%s-%s-%s", provider, email, deviceInfo.Ip, deviceInfo.OsName, deviceInfo.ClientEngine, deviceInfo.Lang)))
 }
 
 func InsertActiveSessionLog(provider string, email string, active bool, trusted bool, deviceInfo *dto.DeviceDetectorInfo) *clickhouse.ActiveSession {
 	activeSession := &clickhouse.ActiveSession{
 		Id:             uuid.NewString(),
-		Code:           encodeCode(email, deviceInfo),
+		Code:           encodeCode(provider, email, deviceInfo),
 		Email:          email,
 		Provider:       provider,
 		Active:         active,
