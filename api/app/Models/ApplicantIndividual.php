@@ -86,6 +86,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'notify_device_email',
         'project_id',
         'group_type_id',
+        'kyc_level_id',
     ];
 
     protected $hidden = [
@@ -303,6 +304,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function verificationPhoneStatus(): BelongsTo
     {
         return $this->belongsTo(ApplicantVerificationStatus::class, 'phone_verification_status_id');
+    }
+
+    public function kycLevel(): BelongsTo
+    {
+        return $this->belongsTo(ApplicantKycLevel::class, 'kyc_level_id');
     }
 
     public function scopeGroupSort($query, $sort)

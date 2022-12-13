@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ClientTypeEnum;
 use App\Models\ApplicantIndividual;
 use App\Models\Clickhouse\AuthenticationLog;
 use App\Models\Members;
@@ -609,7 +610,7 @@ class AuthController extends Controller
             ->insert([
                 'id' => rand(0, 4294967295),
                 'member' => $user->email,
-                'client_type' => $this->guard,
+                'client_type' => $this->guard == 'api' ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString(),
                 'domain' => request()->getHttpHost(),
                 'browser' => Agent::browser() ? Agent::browser() : 'unknown',
                 'platform' => Agent::platform() ? Agent::platform() : 'unknown',
@@ -626,7 +627,7 @@ class AuthController extends Controller
             ->table((new AuthenticationLog)->getTable())
             ->select(['ip'])
             ->where('member', '=', (string) $email)
-            ->where('client_type', '=', (string) $this->guard)
+            ->where('client_type', '=', (string) $this->guard == 'api' ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString())
             ->where('status', '=', 'login')
             ->orderByDesc('created_at')
             ->limit(1)
@@ -645,7 +646,7 @@ class AuthController extends Controller
             ->table((new AuthenticationLog)->getTable())
             ->select(['status'])
             ->where('member', '=', (string) $email)
-            ->where('client_type', '=', (string) $this->guard)
+            ->where('client_type', '=', (string) $this->guard == 'api' ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString())
             ->orderByDesc('created_at')
             ->limit(1)
             ->get();
@@ -659,7 +660,7 @@ class AuthController extends Controller
                 ->table((new AuthenticationLog)->getTable())
                 ->select(['status'])
                 ->where('member', '=', (string) $email)
-                ->where('client_type', '=', (string) $this->guard)
+                ->where('client_type', '=', (string) $this->guard == 'api' ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString())
                 ->orderByDesc('created_at')
                 ->limit(1)
                 ->get();
@@ -674,7 +675,7 @@ class AuthController extends Controller
             ->table((new AuthenticationLog)->getTable())
             ->select(['browser'])
             ->where('member', '=', (string) $email)
-            ->where('client_type', '=', (string) $this->guard)
+            ->where('client_type', '=', (string) $this->guard == 'api' ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString())
             ->where('status', '=', 'login')
             ->orderByDesc('created_at')
             ->limit(1)

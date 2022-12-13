@@ -34,6 +34,7 @@ class PriceListFeesMutator
      */
     public function update($_, array $args)
     {
+        $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args['fee_ranges']);
         $priceListFee = PriceListFee::find($args['id']);
 
         if ($priceListFee) {

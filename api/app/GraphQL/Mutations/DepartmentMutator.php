@@ -19,17 +19,14 @@ class DepartmentMutator extends BaseMutator
     {
         $department = Department::create($args);
 
-        if (isset($args['department_positions_name'])) {
-            $departmentPositions = [];
-
-            foreach ($args['department_positions_name'] as $position) {
-                $departmentPositions[] = DepartmentPosition::create([
-                    'name' => $position,
-                    'company_id' => $department->company_id,
-                ])->id;
+        if (isset($args['department_positions_id'])) {
+            if (! $department->positions->isEmpty()) {
+                $currentPosition = collect($department->positions)->pluck('id')->all();
+                $positionsActive = array_diff($args['department_positions_id'], $currentPosition);
+            } else {
+                $positionsActive = $args['department_positions_id'];
             }
-
-            $department->positions()->attach($departmentPositions);
+            $department->positions()->attach($positionsActive);
         }
 
         return $department;
@@ -48,16 +45,10 @@ class DepartmentMutator extends BaseMutator
         if (! $department) {
             throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
         }
-        if (isset($args['active_department_positions_id'])) {
-            if (! $department->positions->isEmpty()) {
-                $currentPosition = collect($department->positions)->pluck('id')->all();
-                $positionsActive = array_diff($args['active_department_positions_id'], $currentPosition);
-            } else {
-                $positionsActive = $args['active_department_positions_id'];
-            }
-            $department->positions()->attach($positionsActive);
+        if (isset($args['department_positions_id'])) {
+            $department->positions()->sync($args['department_positions_id'], true);
 
-            unset($args['active_department_positions_id']);
+            unset($args['department_positions_id']);
         }
         $department->update($args);
 

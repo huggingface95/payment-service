@@ -79,7 +79,7 @@ enum RecipientType {
 
 
 extend type Mutation @guard {
-    "Создать электронную почту"
+    "Создать уведомление"
     createEmailNotification(
         "Тип Группы"
         group_type_id: ID!
@@ -93,7 +93,7 @@ extend type Mutation @guard {
         templates: [Int]!
     ): EmailNotification   @field(resolver:"EmailNotificationMutator@create")
 
-    "Обновить данные компании"
+    "Обновить данные уведомления"
     updateEmailNotification(
         id: ID!
         "Тип Группы"

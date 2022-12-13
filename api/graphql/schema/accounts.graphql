@@ -89,26 +89,11 @@ extend type Query @guard {
     Получить список аккаунтов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    accounts(
-        query: QueryAccountCondition,
-        created_at: DateTimeRange @whereBetween,
-        orderBy: _ @orderBy(columns: ["id","created_at"])
-    ): [Account!]!   @paginateWithConditions(defaultCount: 10) @orderBy(column: "id", direction: DESC) @deprecated
-
     accountList(
         filter: _ @filterConditions(static: QueryAccountListFilterStatic),
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id","created_at"])
     ): [Account!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
-
-    """
-    Получить список accounts для accountDetails
-    """
-    accountDetailsList(
-        filter: _ @filterConditions(static: QueryAccountDetailsListFilterStatic),
-        query: QueryAccountDetailsCondition
-        orderBy: _ @orderBy(columns: ["id","created_at"])
-    ): [Account!]!  @field(resolver:"AccountsQuery@clientDetailsList") @orderBy(column: "id", direction: ASC)
 
     """
     Получить список account states
@@ -139,74 +124,13 @@ input QueryAccountListFilterStatic @spread{
     hasClientableMixedIdOrFullname: Mixed @eq
 }
 
-input QueryAccountDetailsListFilterStatic @spread{
-    account_name: String @ilike
-    hasCompanyMixedIdOrName: Mixed @eq
-    group_type_id: ID @eq
-    hasGroupRoleMixedIdOrName: Mixed @eq
-    hasOwnerMixedIdOrFullname: Mixed @eq
-    hasPaymentProviderMixedIdOrName: Mixed @eq
-}
 
 #todo
 #client: String  - поиск по id клиента или по fullname
 
-input QueryAccountCondition {
-    client: String @like
-    company: String @like
-    payment_provider: String @eq
-    owner: String @eq
-    account_number: String @like
-    account_name: String @like
-    currency_id: ID @eq
-    group_role: String @like
-    group_type_id: ID @eq
-    member: String @like
-    is_primary: Boolean @eq
-    commission_template: String @like
-    account_state_id: ID @eq
-    #client_id: ID @eq
-    #client_type: AccountClientsType @eq
-}
-input QueryAccountDetailsCondition {
-    account_name: String @like
-    filter: FilterAccountDetails
-}
-
-input FilterAccountDetails {
-    company: String @like
-    group_type_id: ID @eq
-    group_role: String @like
-    owner: String @like
-    payment_provider: String @like
-}
-
-
-
-
 input QueryClientCondition {
     id: ID!
 }
-
-enum QueryAccountWhereColumn {
-    ACCOUNT_NUMBER @enum(value: "account_number")
-    ACCOUNT_TYPE @enum(value: "account_type")
-    ACCOUNT_STATE_ID @enum(value: "account_state_id")
-    OWNER_ID @enum(value: "owner_id")
-    ACCOUNT_NAME @enum(value: "account_name")
-    CURRENCY_ID @enum(value: "currency_id")
-    PAYMENT_PROVIDER_ID @enum(value: "payment_provider_id")
-    COMPANY_ID @enum(value: "company_id")
-    GROUP_ROLE_ID @enum(value: "group_role_id")
-    GROUP_TYPE_ID @enum(value: "group_type_id")
-    MEMBER_ID @enum(value: "member_id")
-    ACCOUNT_NUMBER @enum(value: "account_number")
-    IS_PRIMARY @enum(value: "is_primary")
-    COMMISSION_TEMPLATE_ID @enum(value: "commission_template_id")
-    #CLIENT_ID @enum(value: "client_id")
-    #CLIENT_TYPE @enum(value: "client_type")
-}
-
 
 input InputAccount{
     "ID компании",
@@ -235,8 +159,6 @@ input InputAccount{
     payment_bank_id: ID
     "clientable"
     clientableAttach: PivotTable
-    "фильтр"
-    query: QueryAccountCondition
 }
 
 extend type Mutation @guard {
