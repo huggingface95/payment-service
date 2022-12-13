@@ -6,6 +6,8 @@ type ApplicantIndividualCompanyRelation {
     id: ID!
     "Название"
     name: String!
+    "Компания"
+    company: Company @belongsTo(relation:"company")
 }
 
 extend type Query @guard {
@@ -18,9 +20,16 @@ extend type Query @guard {
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
     """
-    applicantIndividualCompanyRelations(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
-        columns: ["id","name"],
-    )): [ApplicantIndividualCompanyRelation!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    applicantIndividualCompanyRelations(
+        filter: _ @filterConditions(static: QueryApplicantIndividualCompanyRelationsFilterStatic),
+        where: _ @whereConditions(columns: ["name"]),
+        orderBy: _ @orderBy(columns: ["id","name","company_id"]),
+    ): [ApplicantIndividualCompanyRelation!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryApplicantIndividualCompanyRelationsFilterStatic @spread{
+    name: String @ilike
+    company_id: ID @eq
 }
 
 extend type Mutation @guard {
@@ -28,6 +37,8 @@ extend type Mutation @guard {
     createApplicantIndividualCompanyRelation(
         "Название"
         name: String!
+        "Компания"
+        company_id: ID!
     ): ApplicantIndividualCompanyRelation    @create
 
     "Редактирование отнощения"
@@ -36,6 +47,8 @@ extend type Mutation @guard {
         id: ID!
         "Название"
         name: String!
+        "Компания"
+        company_id: ID
     ): ApplicantIndividualCompanyRelation    @update
 
 
