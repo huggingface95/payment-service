@@ -22,7 +22,6 @@ extend type Query @guard {
     """
     applicantIndividualCompanyPositions(
         filter: _ @filterConditions(static: QueryApplicantIndividualCompanyPositionsFilterStatic),
-        where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id","name","company_id"]),
     ): [ApplicantIndividualCompanyPosition!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
