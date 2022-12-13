@@ -124,6 +124,7 @@ return [
        */
     'redis' => [
         'job' => 'smtp:email:job',
+        'device' => 'queue:email:send-trusted-device',
     ],
 
 ];
