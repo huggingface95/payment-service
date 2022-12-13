@@ -6,6 +6,8 @@ use App\Enums\ApplicantModulesEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividualCompany;
+use App\Models\GroupRole;
+use App\Models\Groups;
 
 class ApplicantCompanyMutator extends BaseMutator
 {
@@ -18,6 +20,7 @@ class ApplicantCompanyMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
+        $args['group_type_id'] = GroupRole::COMPANY;
         $applicantCompany = ApplicantCompany::create($args);
 
         $args['module_ids'] = array_unique(
@@ -47,6 +50,7 @@ class ApplicantCompanyMutator extends BaseMutator
     public function update($root, array $args)
     {
         $applicant = ApplicantCompany::find($args['id']);
+        $args['group_type_id'] = GroupRole::COMPANY;
         if (isset($args['info_additional_fields'])) {
             $args['info_additional_fields'] = $this->setAdditionalField($args['info_additional_fields']);
         }
