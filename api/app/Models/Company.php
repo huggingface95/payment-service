@@ -59,16 +59,21 @@ class Company extends BaseModel
     protected $appends = [
         'members_count',
         'projects_count',
+        'logo_link',
     ];
 
+    public const DEFAULT_LOGO_PATH = '/img/logo.png';
+
+    public function getLogoLinkAttribute(): string
+    {
+        $defaultLogoPath = storage_path('app') . self::DEFAULT_LOGO_PATH;
+
+        return $this->logo->link ?? $defaultLogoPath;
+    }
+    
     public function country(): BelongsTo
     {
         return $this->belongsTo('App\Models\Country', 'country_id');
-    }
-
-    public function companySettings(): HasOne
-    {
-        return $this->hasOne(CompanySettings::class, 'company_id', 'id');
     }
 
     public function language(): BelongsTo
