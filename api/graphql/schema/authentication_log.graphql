@@ -60,11 +60,11 @@ extend type Query @guard {
         column: EXPIRED_AT, value: "2021-10-12",
         column: CREATED_AT, value: "2021-10-12"
     } фильтр по company, member, group, domain, ip, country, city, platform, browser, device_type, model, status, expired_at, created_at
-    orderBy: [{ column: EXPIRED_AT, order: DESC }] сортировка по expired_at, created_at
+    orderBy: [{ column: EXPIRED_AT, order: DESC }] сортировка по expired_at, created_at, id
     """
     authenticationLogs(
         page: Int = 1,
-        count: Int = 15,
+        first: Int = 10,
         query: QueryAuthenticationLogsStatic
         orderBy: [OrderBy!]
     ): AuthenticationLogs
@@ -76,12 +76,10 @@ extend type Query @guard {
     authenticationMemberLogs(
         member_id: ID! @eq
         page: Int = 1,
-        count: Int = 15,
+        first: Int = 10,
         orderBy: [OrderBy!]
     ): AuthenticationLogs
-    @field(resolver:"AuthenticationLogsQuery@getMember")
-
-
+        @field(resolver:"AuthenticationLogsQuery@getMember")
 }
 
 input QueryAuthenticationLogsStatic @spread {
@@ -110,6 +108,7 @@ input OrderBy @spread {
 enum Column {
     EXPIRED_AT
     CREATED_AT
+    ID
 }
 
 enum Order {
