@@ -21,11 +21,11 @@ class DepartmentsMutationTest extends TestCase
         DB::select('ALTER SEQUENCE departments_id_seq RESTART WITH ' . $seq);
 
         $this->graphQL('
-            mutation CreateDepartment($name: String!, $company_id: ID!, $dep_pos:[String]) {
+            mutation CreateDepartment($name: String!, $company_id: ID!, $dep_pos:[ID]) {
                 createDepartment(
                     name: $name
                     company_id: $company_id
-                    department_positions_name: $dep_pos
+                    department_positions_id: $dep_pos
                 ) {
                     id
                     name
@@ -38,9 +38,8 @@ class DepartmentsMutationTest extends TestCase
             'name' => 'Test Department',
             'company_id' => 1,
             'dep_pos' => [
-                'Director',
-                'Manager',
-                'Programmer',
+                1,
+                2,
             ],
         ]);
 

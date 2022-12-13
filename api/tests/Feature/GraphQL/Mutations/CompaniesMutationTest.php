@@ -24,49 +24,29 @@ class CompaniesMutationTest extends TestCase
                 $name: String!
                 $email: EMAIL!
                 $url: String!
-                $zip: String
-                $address: String
-                $city: String
-                $company_number: String
                 $country_id: ID!
-                $contact_name: String
             ) {
             createCompany(
                 name: $name
                 email: $email
                 url: $url
-                zip: $zip
-                address: $address
-                city: $city
-                company_number: $company_number
                 country_id: $country_id
-                contact_name: $contact_name
             ) {
                 id
                 name
                 url
                 email
-                zip
-                address
-                city
                 country {
                     id
                     name
                 }
-                company_number
-                contact_name
             }
         }
         ', [
             'name' =>  'Company_'.\Illuminate\Support\Str::random(5),
             'email' => 'company_'.\Illuminate\Support\Str::random(3).'@gmail.com',
             'url' => 'company_'.\Illuminate\Support\Str::random(3).'.com',
-            'zip' => '72319',
-            'address' => '1st Street',
-            'city' => 'New York',
-            'company_number' => '265555411'.mt_rand(1, 9999),
             'country_id' => 1,
-            'contact_name' => 'Petrov Vasiliy',
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -78,12 +58,7 @@ class CompaniesMutationTest extends TestCase
                     'name' => $id['data']['createCompany']['name'],
                     'url' => $id['data']['createCompany']['url'],
                     'email' => $id['data']['createCompany']['email'],
-                    'zip' => $id['data']['createCompany']['zip'],
-                    'address' => $id['data']['createCompany']['address'],
-                    'city' => $id['data']['createCompany']['city'],
-                    'company_number' => $id['data']['createCompany']['company_number'],
                     'country' => $id['data']['createCompany']['country'],
-                    'contact_name' => $id['data']['createCompany']['contact_name'],
                 ],
             ],
         ]);
@@ -93,7 +68,10 @@ class CompaniesMutationTest extends TestCase
     {
         $this->login();
 
-        $company = DB::connection('pgsql_test')->table('companies')->orderBy('id', 'DESC')->get();
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
             mutation UpdateCompany(
@@ -150,7 +128,10 @@ class CompaniesMutationTest extends TestCase
     {
         $this->login();
 
-        $company = DB::connection('pgsql_test')->table('companies')->orderBy('id', 'DESC')->get();
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
             mutation DeleteCompany(

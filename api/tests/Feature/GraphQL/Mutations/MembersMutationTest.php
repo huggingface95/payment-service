@@ -29,6 +29,7 @@ class MembersMutationTest extends TestCase
                 $language_id: ID!
                 $group_id: ID!
                 $two_factor_auth_setting_id: ID!
+                $password: String
             )
             {
                 createMember (
@@ -40,6 +41,7 @@ class MembersMutationTest extends TestCase
                     language_id: $language_id
                     group_id: $group_id
                     two_factor_auth_setting_id: $two_factor_auth_setting_id
+                    password: $password
                 )
                 {
                     id
@@ -54,6 +56,7 @@ class MembersMutationTest extends TestCase
             'language_id' => 1,
             'group_id' => 1,
             'two_factor_auth_setting_id' => 1,
+            'password' => '1234567Qa',
         ]);
 
         $id = json_decode($this->response->getContent(), true);

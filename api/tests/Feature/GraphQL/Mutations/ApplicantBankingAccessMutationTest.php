@@ -41,7 +41,7 @@ class ApplicantBankingAccessMutationTest extends TestCase
             'applicant_company_id' => 2,
             'role_id' => 2,
         ]);
-        
+
         $id = json_decode($this->response->getContent(), true);
 
         $this->seeJson([
@@ -65,6 +65,9 @@ class ApplicantBankingAccessMutationTest extends TestCase
                 $applicant_individual_id: ID!
                 $applicant_company_id: ID!
                 $role_id: ID!
+                $dl: Decimal!
+                $ml: Decimal!
+                $ol: Decimal!
             )
             {
                 updateApplicantBankingAccess (
@@ -72,14 +75,16 @@ class ApplicantBankingAccessMutationTest extends TestCase
                     applicant_individual_id: $applicant_individual_id
                     applicant_company_id: $applicant_company_id
                     role_id: $role_id
-                    daily_limit: 100.000
-                    monthly_limit: 5000.000
-                    operation_limit: 50.000
+                    daily_limit: $dl
+                    monthly_limit: $ml
+                    operation_limit: $ol
                     contact_administrator: false
                 )
                 {
                     id
                     daily_limit
+                    monthly_limit
+                    operation_limit
                 }
             }
         ', [
@@ -87,6 +92,9 @@ class ApplicantBankingAccessMutationTest extends TestCase
             'applicant_individual_id' =>  1,
             'applicant_company_id' => 1,
             'role_id' => 3,
+            'dl' => 1000.00,
+            'ml' => 5000.00,
+            'ol' => 50.00,
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -95,7 +103,9 @@ class ApplicantBankingAccessMutationTest extends TestCase
             'data' => [
                 'updateApplicantBankingAccess' => [
                     'id' => $id['data']['updateApplicantBankingAccess']['id'],
-                    'daily_limit' => 100
+                    'daily_limit' => $id['data']['updateApplicantBankingAccess']['daily_limit'],
+                    'monthly_limit' => $id['data']['updateApplicantBankingAccess']['monthly_limit'],
+                    'operation_limit' => $id['data']['updateApplicantBankingAccess']['operation_limit'],
                 ],
             ],
         ]);
@@ -105,7 +115,10 @@ class ApplicantBankingAccessMutationTest extends TestCase
     {
         $this->login();
 
-        $access = DB::connection('pgsql_test')->table('applicant_banking_access')->orderBy('id', 'DESC')->get();
+        $access = DB::connection('pgsql_test')
+            ->table('applicant_banking_access')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
             mutation DeleteApplicantBankingAccess(

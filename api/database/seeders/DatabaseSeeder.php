@@ -30,7 +30,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PaymentStatusSeed::class);
         $this->call(FeeTypeSeeder::class);
         $this->call(FeePeriodSeeder::class);
-        $this->call(TransferTypeSeeder::class);
         $this->call(OperationTypeSeeder::class);
         $this->call(AccountStatesTableSeeder::class);
         $this->call(DepartmentSeeder::class);

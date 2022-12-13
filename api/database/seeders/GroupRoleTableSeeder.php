@@ -32,7 +32,7 @@ class GroupRoleTableSeeder extends Seeder
                 'payment_provider_id' => 1,
             ], [
                 'name' => 'Test',
-                'group_type_id' => 2,
+                'group_type_id' => 1,
                 'role_id' => 3,
                 'company_id' => 1,
                 'description' => 'Test description 1',
@@ -45,7 +45,7 @@ class GroupRoleTableSeeder extends Seeder
             GroupRole::firstOrCreate([
                 'id' => $i,
             ], $group);
-            
+
             $i++;
         }
     }
