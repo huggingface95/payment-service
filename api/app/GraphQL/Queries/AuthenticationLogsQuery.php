@@ -56,7 +56,7 @@ final class AuthenticationLogsQuery
             $query->orderBy('id', 'DESC');
         }
 
-        $result = $query->paginate($args['page'] ?? 1, $args['count'] ?? env('PAGINATE_DEFAULT_COUNT'));
+        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
 
         return [
             'data' => $result->items(),
@@ -94,7 +94,7 @@ final class AuthenticationLogsQuery
             $query->orderBy('id', 'DESC');
         }
 
-        $result = $query->paginate($args['page'] ?? 1, $args['count'] ?? env('PAGINATE_DEFAULT_COUNT'));
+        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
 
         return [
             'data' => $result->items(),
