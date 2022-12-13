@@ -64,6 +64,13 @@ class Company extends BaseModel
 
     public const DEFAULT_LOGO_PATH = '/img/logo.png';
 
+    public function getLogoLinkAttribute(): string
+    {
+        $defaultLogoPath = storage_path('app') . self::DEFAULT_LOGO_PATH;
+
+        return $this->logo->link ?? $defaultLogoPath;
+    }
+    
     public function country(): BelongsTo
     {
         return $this->belongsTo('App\Models\Country', 'country_id');

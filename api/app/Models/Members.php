@@ -109,13 +109,6 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         static::addGlobalScope(new ApplicantFilterByMemberScope);
     }
 
-    public function getLogoLinkAttribute(): string
-    {
-        $defaultLogoPath = storage_path('app') . self::DEFAULT_LOGO_PATH;
-
-        return $this->logo->link ?? $defaultLogoPath;
-    }
-
     public function getFullnameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
