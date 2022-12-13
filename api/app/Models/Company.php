@@ -59,7 +59,10 @@ class Company extends BaseModel
     protected $appends = [
         'members_count',
         'projects_count',
+        'logo_link',
     ];
+
+    public const DEFAULT_LOGO_PATH = '/img/logo.png';
 
     public function country(): BelongsTo
     {

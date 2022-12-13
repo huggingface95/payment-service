@@ -65,8 +65,6 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public $password_confirmation;
 
-    public const DEFAULT_LOGO_PATH = '/img/logo.png';
-
     protected $fillable = [
         'first_name',
         'last_name',
@@ -103,7 +101,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['two_factor', 'permissions', 'is_super_admin', 'is_active', 'logo_link'];
+    protected $appends = ['two_factor', 'permissions', 'is_super_admin', 'is_active'];
 
     protected static function booted()
     {
