@@ -55,8 +55,8 @@ class EmailService
         $emailData = [
             'email' => $member->email,
             'member_name' => $member->first_name,
-            'logo_member_company' => $company->companySettings->logo_link,
-            'member_email_confirm_url' => $company->companySettings->member_verify_url . '/email/verify/' . $verifyToken->token,
+            'logo_member_company' => $company->logo_link,
+            'member_email_confirm_url' => $company->member_verify_url . '/email/verify/' . $verifyToken->token,
             'member_company_name' => $company->name,
         ];
 
@@ -73,11 +73,11 @@ class EmailService
         $emailData = [
             'email' => $member->email,
             'member_name' => $member->first_name,
-            'logo_member_company' => $company->companySettings->logo_link,
-            'member_email_confirm_url' => $company->companySettings->member_verify_url . '/password/change/member/' . $verifyToken->token,
+            'logo_member_company' => $company->logo_link,
+            'member_email_confirm_url' => $company->member_verify_url . '/password/change/member/' . $verifyToken->token,
             'member_company_name' => $company->name,
         ];
-        
+
         $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $emailData, $emailTemplateName);
         $this->sendMemberEmailByMemberDto($emailDTO, true);
     }
@@ -106,7 +106,7 @@ class EmailService
         $smtp = $findByCompanyId ?
             $this->emailRepository->getSmtpByCompanyId($dto->members) :
             $this->emailRepository->getSmtpByMemberId($dto->members);
-        
+
         $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
         $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
 

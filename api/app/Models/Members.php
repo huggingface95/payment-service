@@ -65,6 +65,8 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public $password_confirmation;
 
+    public const DEFAULT_LOGO_PATH = '/img/logo.png';
+
     protected $fillable = [
         'first_name',
         'last_name',
@@ -101,12 +103,19 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['two_factor', 'permissions', 'is_super_admin', 'is_active'];
+    protected $appends = ['two_factor', 'permissions', 'is_super_admin', 'is_active', 'logo_link'];
 
     protected static function booted()
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope);
+    }
+
+    public function getLogoLinkAttribute(): string
+    {
+        $defaultLogoPath = storage_path('app') . self::DEFAULT_LOGO_PATH;
+
+        return $this->logo->link ?? $defaultLogoPath;
     }
 
     public function getFullnameAttribute()

@@ -66,11 +66,6 @@ class Company extends BaseModel
         return $this->belongsTo('App\Models\Country', 'country_id');
     }
 
-    public function companySettings(): HasOne
-    {
-        return $this->hasOne(CompanySettings::class, 'company_id', 'id');
-    }
-
     public function language(): BelongsTo
     {
         return $this->belongsTo('App\Models\Languages', 'language_id');
