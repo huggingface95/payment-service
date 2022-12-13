@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class ApplicantIndividualCompanyRelation extends BaseModel
 {
     protected $table = 'applicant_individual_company_relation';
@@ -13,7 +15,13 @@ class ApplicantIndividualCompanyRelation extends BaseModel
      */
     protected $fillable = [
         'name',
+        'company_id',
     ];
 
     public $timestamps = false;
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
 }
