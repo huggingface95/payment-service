@@ -24,7 +24,7 @@ class JwtService extends JWT
         foreach (['members', 'applicant'] as $provider) {
             $personalClient = $this->repository->getPersonalAccessToken($provider);
             if ($personalClient) {
-                return self::decode($token, new Key($personalClient->secret, env('JWT_ALGORITHM')));
+                return self::decode($token, new Key($personalClient->secret, env('JWT_ALGO')));
             }
         }
         return null;
