@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\DTO\Auth\Credentials;
 use App\DTO\TransformerDTO;
 use App\Services\JwtService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Request;
 
@@ -39,8 +40,7 @@ class AuthServiceProvider extends ServiceProvider
                 $credentialsDto = TransformerDTO::transform(Credentials::class, $credentials);
                 return $credentialsDto->model;
             } catch (\Throwable $e) {
-                //TODO REMOVE dd dump after the test
-                dd($e);
+                Log::log('error',$e->getMessage());
                 return null;
             }
         });
