@@ -12,6 +12,6 @@ class Files extends BaseModel
     protected $guarded = [];
 
     protected $fillable = [
-        'file_name', 'mime_type', 'size', 'entity_type', 'author_id', 'storage_path', 'storage_name', 'link',
+        'file_name', 'mime_type', 'size', 'entity_type', 'author_id', 'storage_path', 'storage_name', 'link', 'resolution',
     ];
 }

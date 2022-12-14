@@ -2,56 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Files;
 use App\Models\Requisites;
+use App\Services\FileService;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class FilesController extends Controller
 {
+    public function __construct(protected FileService $fileService)
+    {
+    }
+
     public function upload(Request $request)
     {
         $allowedEntityTypes = [
-            'member', 
-            'applicant', 
-            'company', 
-            'document', 
-            'aidnividual',
-            'acompany',
+            'member',
+            'company',
+            'document',
+            'applicant_individual',
+            'applicant_company',
             'project',
         ];
 
         $this->validate($request, [
             'file' => 'required|file|mimes:jpeg,jpg,png,gif,pdf|max:102400',
             'entity_type' => ['required', Rule::in($allowedEntityTypes)],
+            'author_id' => ['required', 'integer'],
         ], $messages = [
             'mimes' => 'Please insert only jpeg, jpg, png, gif, pdf files',
             'max' => 'File should be less than 100 MB',
         ]);
 
         if ($request->hasfile('file')) {
-            $file = $request->file('file');
-            $original_name = $file->getClientOriginalName();
-            $entity_type = $request->post('entity_type');
-            $author_id = $request->post('author_id');
-            $filepath = $author_id.'/'.$entity_type;
-            $store = $file->store($filepath, 's3');
-            $filename = explode('/', $store);
-            $fileDb = Files::create([
-                'file_name' => $original_name,
-                'mime_type' => $file->getClientMimeType(),
-                'size' => $file->getSize(),
-                'entity_type' => $entity_type,
-                'author_id' => $author_id,
-                'storage_path' => '/'.$filepath.'/',
-                'storage_name' => $filename[2],
-                'link' => 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename[2],
-            ]);
-            $exists = Storage::disk('s3')->exists($filepath.'/'.$filename[2]);
-            ($exists and $fileDb) ? $link = 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename[2].'' : Storage::disk('s3')->delete($filepath.'/'.$filename[2]);
+            $fileDb = $this->fileService->uploadFile($request);
 
             return response()->json([$fileDb], 201, [], JSON_UNESCAPED_SLASHES);
         }
@@ -79,6 +64,6 @@ class FilesController extends Controller
             $message->attachData($pdf->output(), 'requisites.pdf');
         });
 
-        return response()->json(['message' => 'Requisites has been send to '.$email], 200);
+        return response()->json(['message' => 'Requisites has been send to ' . $email], 200);
     }
 }

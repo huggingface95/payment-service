@@ -12,7 +12,6 @@ type KycTimeline {
     ip: String!
     "Действие"
     action: String!
-    action_state: String!
     action_type: String!
     "Тег"
     tag: String!
@@ -28,6 +27,10 @@ type KycTimeline {
     applicant: Client @morphTo(relation: "clientable")
     "Компания"
     company: Company @belongsTo(relation: "company")
+    "Старые значения"
+    action_old_value: JSON
+    "Новые значения"
+    action_new_value: JSON
     "Дата добавления"
     created_at: DateTime!
 }

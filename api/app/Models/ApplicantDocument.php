@@ -2,10 +2,17 @@
 
 namespace App\Models;
 
+use App\Events\ApplicantDocumentCreatedEvent;
+use App\Events\ApplicantDocumentUpdatedEvent;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApplicantDocument extends BaseModel
 {
+    protected $dispatchesEvents = [
+        'created' => ApplicantDocumentCreatedEvent::class,
+        'updated' => ApplicantDocumentUpdatedEvent::class,
+    ];
+
     protected $fillable = [
         'document_type_id',
         'document_state_id',
