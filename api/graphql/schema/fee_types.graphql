@@ -11,5 +11,11 @@ extend type Query @guard {
     """
     Получить список статусов
     """
-   feeTypes: [FeeType!]!   @all
+   feeTypes (
+        filter: _ @filterConditions(static: QueryFeeTypesFilterStatic)
+    ): [FeeType!]!   @field(resolver:"FeeTypeQuery@get")
+}
+
+input QueryFeeTypesFilterStatic @spread{
+    operation_type_id: ID @eq
 }
