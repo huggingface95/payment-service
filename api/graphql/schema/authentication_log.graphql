@@ -1,6 +1,6 @@
 type AuthenticationLog {
     "ID"
-    id: String!
+    id: ID!
     "Название компании"
     company: String!
     "Почта"
