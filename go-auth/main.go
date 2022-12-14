@@ -59,7 +59,7 @@ func initRouter() *gin.Engine {
 		i := auth.Group("applicant")
 		{
 			i.POST("register", individual.Register)
-			i.POST("reset-password", controllers.ResetPassword)
+
 			iConf := i.Group("confirmation")
 			{
 				iConfEmail := iConf.Group("email")
@@ -72,7 +72,7 @@ func initRouter() *gin.Engine {
 				}
 			}
 		}
-
+		auth.POST("reset-password", controllers.ResetPassword)
 		auth.POST("login", controllers.Login)
 		auth.POST("login-two-factor", controllers.GenerateTwoFactorQr)
 		auth.POST("verify-two-factor", controllers.VerifyTwoFactorQr)
