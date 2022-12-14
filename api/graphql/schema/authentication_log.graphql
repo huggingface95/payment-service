@@ -3,6 +3,8 @@ type AuthenticationLog {
     id: ID!
     "Название компании"
     company: String!
+    "Почта"
+    email: String!
     "Member email"
     member: String!
     "Тип"
@@ -21,6 +23,8 @@ type AuthenticationLog {
     platform: String
     "Браузер"
     browser: String
+    "Версия браузера"
+    browser_version: String
     "Устройство"
     device_type: String
     "Модель"

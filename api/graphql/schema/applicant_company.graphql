@@ -176,10 +176,8 @@ extend type Mutation @guard {
         company_id: ID!
         "ID модулей"
         module_ids: [ID]!
-        "ID типа группы"
-        group_type_id: ID!
         "ID группы"
-        group_id: ID!
+        group_id: ID
         "ID проекта"
         project_id: ID!
         "ID owner"
@@ -264,7 +262,7 @@ extend type Mutation @guard {
         "Массив ID меток"
         labels: [ID]
         "ID группы"
-        group_id: ID!
+        group_id: ID
         "ID модулей"
         module_ids: [ID]!
         "ID проекта"

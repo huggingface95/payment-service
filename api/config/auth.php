@@ -37,12 +37,12 @@ return [
 
     'guards' => [
         'api' => [
-            'driver' => 'jwt',
+            'driver' => 'go-auth',
             'provider' => 'members',
         ],
         'api_client' => [
-            'driver' => 'jwt',
-            'provider' => 'applicant_individual',
+            'driver' => 'go-auth',
+            'provider' => 'individual',
         ],
     ],
 
@@ -68,7 +68,7 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Members::class,
         ],
-        'applicant_individual' => [
+        'individual' => [
             'driver' => 'eloquent',
             'model' => App\Models\ApplicantIndividual::class,
         ],
@@ -100,8 +100,8 @@ return [
             'table' => 'passwords_resets',
             'expire' => 60,
         ],
-        'applicant_individual' => [
-            'provider' => 'applicant_individual',
+        'individual' => [
+            'provider' => 'individual',
             //'email' => 'auth.emails.password',
             'table' => 'passwords_resets',
             'expire' => 60,

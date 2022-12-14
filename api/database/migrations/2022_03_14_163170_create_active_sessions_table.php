@@ -14,23 +14,26 @@ class CreateActiveSessionsTable extends Migration
     {
         DB::connection('clickhouse')->unprepared('
             CREATE TABLE active_sessions (
-                id UInt32,
+                id UUID,
+                provider String,
+                email String,
                 company String,
-                member String,
-                group String,
-                domain String,
                 ip String,
-                country String,
-                city String,
                 platform String,
                 browser String,
+                browser_version String,
                 device_type String,
+                lang String,
                 model String,
-                expired_at DateTime,
-                created_at DateTime
+                country String,
+                city String,
+                active Bool DEFAULT true,
+                trusted Bool DEFAULT false,
+                code Nullable(String),
+                created_at DateTime DEFAULT now()
             )
             ENGINE = MergeTree()
-            ORDER BY (id)
+            ORDER BY created_at
         ');
     }
 

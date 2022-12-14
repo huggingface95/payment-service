@@ -67,5 +67,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CommissionTemplateBusinessActivityTableSeeder::class);
         $this->call(RoleActionsSeeder::class);
         $this->call(ApplicantModulesTableSeeder::class);
+        $this->call(ApplicantIndividualCompanyPositionTableSeeder::class);
+        $this->call(ApplicantIndividualCompanyRelationTableSeeder::class);
     }
 }
