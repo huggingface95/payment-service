@@ -96,7 +96,8 @@ class ApplicantCompanyMutator extends BaseMutator
     {
         try {
             return ApplicantIndividualCompany::firstOrCreate([
-                'applicant_individual_id' => $args['owner_id'],
+                'applicant_id' => $args['owner_id'],
+                'applicant_type' => class_basename(ApplicantCompany::class),
                 'applicant_company_id' => $applicant->id,
                 'applicant_individual_company_relation_id' => ($args['owner_relation_id']) ?? $args['owner_relation_id'],
                 'applicant_individual_company_position_id' => ($args['owner_position_id']) ?? $args['owner_position_id'],
