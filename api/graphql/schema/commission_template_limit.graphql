@@ -15,7 +15,7 @@ type CommissionTemplateLimit {
     "Получить направления лимита"
     commission_template_limit_transfer_direction: CommissionTemplateLimitTransferDirection! @belongsTo(relation:"commissionTemplateLimitTransferDirection")
     "Получить периоды лимита"
-    commission_template_limit_period: CommissionTemplateLimitPeriod! @belongsTo(relation:"commissionTemplateLimitPeriod")
+    commission_template_limit_period: CommissionTemplateLimitPeriod @belongsTo(relation:"commissionTemplateLimitPeriod")
     "Получить события лимита"
     commission_template_limit_action_type: CommissionTemplateLimitActionType! @belongsTo(relation:"commissionTemplateLimitActionType")
     "Получить шаблон комиссии"
