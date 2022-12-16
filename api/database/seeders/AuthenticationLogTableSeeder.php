@@ -23,11 +23,10 @@ class AuthenticationLogTableSeeder extends Seeder
             DB::connection('clickhouse')
                 ->table((new AuthenticationLog)->getTable())
                 ->insert([
-                    'id' => $i,
+                    'id' => $faker->uuid(),
                     'company' => $faker->randomElement(['Nginx', 'Apple', 'Nike']),
-                    'member' => $faker->randomElement(['feder@gmail.com', 'jover@gmail.com', 'dan@gmail.com']),
+                    'email' => $faker->randomElement(['feder@gmail.com', 'jover@gmail.com', 'dan@gmail.com']),
                     'client_type' => $faker->randomElement([ClientTypeEnum::MEMBER->toString(), ClientTypeEnum::APPLICANT->toString()]),
-                    'group' => $faker->randomElement(['Member', 'Admin']),
                     'domain' => $faker->domainName,
                     'ip' => $faker->ipv4,
                     'country' => $faker->country,

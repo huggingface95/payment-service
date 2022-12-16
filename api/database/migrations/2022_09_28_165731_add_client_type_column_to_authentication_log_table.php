@@ -15,7 +15,7 @@ class AddClientTypeColumnToAuthenticationLogTable extends Migration
     public function up()
     {
         DB::connection('clickhouse')->unprepared('
-            ALTER TABLE authentication_log ADD COLUMN client_type String AFTER member
+            ALTER TABLE authentication_log ADD COLUMN client_type String AFTER email
         ');
     }
 

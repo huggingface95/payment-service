@@ -2,11 +2,15 @@
 
 namespace Tests;
 
+use App\Services\AuthService;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
 use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequestsLumen;
+use Illuminate\Support\Facades\Http;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Token;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -55,7 +59,9 @@ abstract class TestCase extends BaseTestCase
             $data = ['email' => 'test@test.com', 'password' => '1234567Qa'];
         }
 
-        return auth()->attempt($data);
+        $token = Http::accept('application/json')->post('http://172.16.0.8:2491/auth/login', $data);
+        $user = Http::accept('application/json')->withHeaders(['Authorization' => 'Bearer '. $token])->post('http://172.16.0.8:2491/auth/me');
+        return $user->body();
     }
 
     /**

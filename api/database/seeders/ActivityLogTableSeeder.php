@@ -22,7 +22,7 @@ class ActivityLogTableSeeder extends Seeder
             DB::connection('clickhouse')
                 ->table((new ActivityLog)->getTable())
                 ->insert([
-                    'id' => $i,
+                    'id' => $faker->uuid(),
                     'company' => $faker->randomElement(['Nginx', 'Apple', 'Nike']),
                     'member' => $faker->randomElement(['feder@gmail.com', 'jover@gmail.com', 'dan@gmail.com']),
                     'group' => $faker->randomElement(['Member', 'Admin']),
