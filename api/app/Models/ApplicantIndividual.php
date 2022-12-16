@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
-use App\Events\ApplicantIndividualUpdatedEvent;
+use App\Events\Applicant\ApplicantIndividualUpdatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\UserPermission;
 use Illuminate\Auth\Authenticatable;

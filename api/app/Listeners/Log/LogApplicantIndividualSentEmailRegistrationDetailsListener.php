@@ -2,11 +2,11 @@
 
 namespace App\Listeners\Log;
 
-use App\Events\Applicant\ApplicantIndividualSentEmailVerificationEvent;
+use App\Events\Applicant\ApplicantIndividualSentEmailRegistrationDetailsEvent;
 use App\Exceptions\GraphqlException;
 use App\Services\KycTimelineService;
 
-class LogApplicantIndividualSentEmailVerificationListener
+class LogApplicantIndividualSentEmailRegistrationDetailsListener
 {
     public function __construct(
         protected KycTimelineService $kycTimelineService
@@ -16,10 +16,10 @@ class LogApplicantIndividualSentEmailVerificationListener
     /**
      * @throws GraphqlException
      */
-    public function handle(ApplicantIndividualSentEmailVerificationEvent $event): void
+    public function handle(ApplicantIndividualSentEmailRegistrationDetailsEvent $event): void
     {
         $applicantIndividual = $event->applicantIndividual;
-        
-        $this->kycTimelineService->logApplicantSentEmailVerification($applicantIndividual);
+
+        $this->kycTimelineService->logApplicantSentEmailRegistrationDetails($applicantIndividual);
     }
 }

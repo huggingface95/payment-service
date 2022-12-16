@@ -2,12 +2,12 @@
 
 namespace App\Listeners\Log;
 
-use App\Events\Applicant\ApplicantDocumentCreatedEvent;
+use App\Events\Applicant\ApplicantCompanyUpdatedEvent;
 use App\Exceptions\GraphqlException;
 use App\Models\Members;
 use App\Services\KycTimelineService;
 
-class LogApplicantDocumentCreatedListener
+class LogApplicantCompanyChangesListener
 {
     public function __construct(
         protected KycTimelineService $kycTimelineService
@@ -17,14 +17,14 @@ class LogApplicantDocumentCreatedListener
     /**
      * @throws GraphqlException
      */
-    public function handle(ApplicantDocumentCreatedEvent $event): void
+    public function handle(ApplicantCompanyUpdatedEvent $event): void
     {
-        $file = $event->file;
+        $applicantCompany = $event->applicantCompany;
         $member = null;
         if (auth()->user() instanceof Members) {
             $member = auth()->user();
         }
 
-        $this->kycTimelineService->logApplicantDocumentCreated($file, $member);
+        $this->kycTimelineService->logApplicantCompany($applicantCompany, $member);
     }
 }

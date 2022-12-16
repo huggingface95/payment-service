@@ -8,6 +8,7 @@ use App\DTO\TransformerDTO;
 use App\Enums\ApplicantVerificationStatusEnum;
 use App\Enums\EmailVerificationStatusEnum;
 use App\Enums\MemberStatusEnum;
+use App\Events\Applicant\ApplicantIndividualSentEmailRegistrationDetailsEvent;
 use App\Models\ApplicantIndividual;
 use App\Models\Members;
 use App\Services\AuthService;
@@ -65,6 +66,8 @@ class VerifyController extends Controller
             $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $user, $user->company, $emailTemplateName, $emailData);
 
             $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
+
+            event(new ApplicantIndividualSentEmailRegistrationDetailsEvent($user));
 
             return response()->json(['data' => 'Email successfully verified']);
         }

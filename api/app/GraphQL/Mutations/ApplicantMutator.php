@@ -6,7 +6,7 @@ use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\ModuleEnum;
 use App\Enums\ApplicantVerificationStatusEnum;
-use App\Events\ApplicantIndividualSentEmailVerificationEvent;
+use App\Events\Applicant\ApplicantIndividualSentEmailVerificationEvent;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividual;
 use App\Models\ClientIpAddress;

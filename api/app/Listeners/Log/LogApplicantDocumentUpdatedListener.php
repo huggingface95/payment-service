@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Log;
 
-use App\Events\ApplicantDocumentUpdatedEvent;
+use App\Events\Applicant\ApplicantDocumentUpdatedEvent;
 use App\Exceptions\GraphqlException;
 use App\Models\Members;
 use App\Services\KycTimelineService;

@@ -2,11 +2,11 @@
 
 namespace App\Listeners\Log;
 
-use App\Events\Applicant\ApplicantIndividualSentEmailVerificationEvent;
+use App\Events\Applicant\ApplicantIndividualSentEmailPasswordResetEvent;
 use App\Exceptions\GraphqlException;
 use App\Services\KycTimelineService;
 
-class LogApplicantIndividualSentEmailVerificationListener
+class LogApplicantIndividualSentEmailPasswordResetListener
 {
     public function __construct(
         protected KycTimelineService $kycTimelineService
@@ -16,10 +16,10 @@ class LogApplicantIndividualSentEmailVerificationListener
     /**
      * @throws GraphqlException
      */
-    public function handle(ApplicantIndividualSentEmailVerificationEvent $event): void
+    public function handle(ApplicantIndividualSentEmailPasswordResetEvent $event): void
     {
         $applicantIndividual = $event->applicantIndividual;
-        
-        $this->kycTimelineService->logApplicantSentEmailVerification($applicantIndividual);
+
+        $this->kycTimelineService->logApplicantSentEmailPasswordReset($applicantIndividual);
     }
 }

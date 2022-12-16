@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Events\ApplicantDocumentCreatedEvent;
-use App\Events\ApplicantDocumentUpdatedEvent;
+use App\Events\Applicant\ApplicantDocumentCreatedEvent;
+use App\Events\Applicant\ApplicantDocumentUpdatedEvent;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApplicantDocument extends BaseModel

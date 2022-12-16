@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Applicant;
 
+use App\Events\Event;
 use App\Models\ApplicantIndividual;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class ApplicantIndividualSentEmailVerificationEvent extends Event
+class ApplicantIndividualSentEmailTrustedDeviceRemovedEvent extends Event
 {
     use Dispatchable;
 

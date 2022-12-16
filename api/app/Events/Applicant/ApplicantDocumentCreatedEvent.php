@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Applicant;
 
+use App\Events\Event;
 use App\Models\ApplicantDocument;
 use Illuminate\Foundation\Events\Dispatchable;
 
