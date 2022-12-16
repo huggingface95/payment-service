@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Enums\ApplicantModulesEnum;
+use App\Enums\ModuleEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividualCompany;
@@ -24,7 +24,7 @@ class ApplicantCompanyMutator extends BaseMutator
         $applicantCompany = ApplicantCompany::create($args);
 
         $args['module_ids'] = array_unique(
-            array_merge($args['module_ids'], [(string) ApplicantModulesEnum::KYC->value])
+            array_merge($args['module_ids'], [(string) ModuleEnum::KYC->value])
         );
 
         if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {
@@ -96,7 +96,8 @@ class ApplicantCompanyMutator extends BaseMutator
     {
         try {
             return ApplicantIndividualCompany::firstOrCreate([
-                'applicant_individual_id' => $args['owner_id'],
+                'applicant_id' => $args['owner_id'],
+                'applicant_type' => class_basename(ApplicantCompany::class),
                 'applicant_company_id' => $applicant->id,
                 'applicant_individual_company_relation_id' => ($args['owner_relation_id']) ?? $args['owner_relation_id'],
                 'applicant_individual_company_position_id' => ($args['owner_position_id']) ?? $args['owner_position_id'],

@@ -2,9 +2,15 @@
 
 namespace App\Models;
 
+use App\Events\ApplicantIndividualNoteCreatedEvent;
+
 class ApplicantIndividualNotes extends BaseModel
 {
     protected $table = 'applicant_individual_notes';
+
+    protected $dispatchesEvents = [
+        'created' => ApplicantIndividualNoteCreatedEvent::class,
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -28,6 +34,6 @@ class ApplicantIndividualNotes extends BaseModel
      */
     public function applicant()
     {
-        return $this->belongsTo(ApplicantIndividual::class, ' applicant_individual_id');
+        return $this->belongsTo(ApplicantIndividual::class, 'applicant_individual_id');
     }
 }

@@ -220,8 +220,6 @@ extend type Mutation @guard {
         personal_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
         contacts_additional_fields: [AdditionalFieldInput]
-        "ID статуса"
-        applicant_status_id: ID
         "ID состояния"
         applicant_state_id: ID
         "ID причины"
@@ -253,6 +251,15 @@ extend type Mutation @guard {
         "KYC Level"
         kyc_level_id: ID
     ): ApplicantIndividual   @field(resolver:"ApplicantMutator@update")
+
+    """
+    Изменить статус аппликанта
+    """
+    updateApplicantIndividualVerificationStatus(
+        id: ID!
+        "ID статуса"
+        applicant_status_id: ID!
+    ): ApplicantIndividual   @update
 
     """
     Установить пароль
