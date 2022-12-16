@@ -74,8 +74,8 @@ type ApplicantIndividual {
     notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
     "Получить модули"
     modules: [ApplicantIndividualModules] @belongsToMany (relation: "modules")
-    "Получить компании"
-    companies: [ApplicantCompany] @belongsToMany (relation: "companies")
+    "Получить компании к которым принадлежит апликант"
+    applicant_companies: [ApplicantCompany] @belongsToMany (relation: "companies")
     "Получить группу"
     group: GroupRole @morphOne(relation: "groupRole")
     "Фото"
