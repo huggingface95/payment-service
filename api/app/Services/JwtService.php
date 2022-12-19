@@ -21,7 +21,7 @@ class JwtService extends JWT
 
     public function parseJWT(string $token): ?stdClass
     {
-        foreach (['members', 'applicant'] as $provider) {
+        foreach (['member', 'applicant'] as $provider) {
             $personalClient = $this->repository->getPersonalAccessToken($provider);
             if ($personalClient) {
                 return self::decode($token, new Key($personalClient->secret, env('JWT_ALGO')));
