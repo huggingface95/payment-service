@@ -6,6 +6,7 @@ use App\Models\BaseModel;
 use App\Models\Members;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SetBaseModelVariablesMiddleware
 {
@@ -17,7 +18,12 @@ class SetBaseModelVariablesMiddleware
      */
     public function handle(Request $request, Closure $next, string $guard = null): mixed
     {
-        BaseModel::$applicantIds = $this->getApplicantIdsByAuthMember($request->user());
+        if (Auth::guard('api')->check() || Auth::guard('api_client')->check()){
+            /** @var Members $user */
+            $user = Auth::guard('api')->user();
+            BaseModel::$applicantIds = $this->getApplicantIdsByAuthMember($user);
+            BaseModel::$currentCompanyId = $user->company_id == BaseModel::SUPER_COMPANY_ID ? null : $user->company_id;
+        }
 
         return $next($request);
     }

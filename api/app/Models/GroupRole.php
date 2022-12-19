@@ -40,6 +40,7 @@ class GroupRole extends BaseModel
         'description',
         'company_id',
         'module_id',
+        'entity_id',
     ];
 
     public static self $clone;

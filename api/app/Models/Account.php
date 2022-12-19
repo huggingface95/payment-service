@@ -74,6 +74,7 @@ class Account extends BaseModel implements BaseModelInterface
         'client_id',
         'client_type',
         'is_show',
+        'entity_id',
     ];
 
     protected static function booted()
