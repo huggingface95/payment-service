@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Events\Applicant\ApplicantCompanyUpdatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -21,6 +22,10 @@ class ApplicantCompany extends BaseModel
     use BelongsToOne;
 
     protected $table = 'applicant_companies';
+
+    protected $dispatchesEvents = [
+        'updated' => ApplicantCompanyUpdatedEvent::class,
+    ];
 
     /**
      * The attributes that are mass assignable.

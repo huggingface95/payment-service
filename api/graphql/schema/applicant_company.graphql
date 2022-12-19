@@ -239,8 +239,6 @@ extend type Mutation @guard {
         profile_additional_fields: [AdditionalFieldInput]
         "ID типа бизнеса"
         applicant_company_business_type_id: ID
-        "ID статуса"
-        applicant_status_id: ID
         "ID состояния"
         applicant_state_id: ID
         "ID причины"
@@ -271,10 +269,17 @@ extend type Mutation @guard {
         photo_id: ID
     ): ApplicantCompany   @field(resolver:"ApplicantCompanyMutator@update")
 
-    "Удалить пользователя"
+    "Удалить applicant company"
     deleteApplicantCompany (
         id: ID!
     ): ApplicantCompany   @delete
+
+    "Изменить статус applicant company"
+    updateApplicantCompanyVerificationStatus(
+        id: ID!
+        "ID статуса"
+        applicant_status_id: ID!
+    ): ApplicantCompany   @update
 
     "Добавить связь Individual с Company"
     createApplicantIndividualCompany(

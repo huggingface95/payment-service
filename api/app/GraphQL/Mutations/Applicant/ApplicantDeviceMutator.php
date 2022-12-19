@@ -5,6 +5,8 @@ namespace App\GraphQL\Mutations\Applicant;
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\ClientTypeEnum;
+use App\Events\Applicant\ApplicantIndividualSentEmailTrustedDeviceAddedEvent;
+use App\Events\Applicant\ApplicantIndividualSentEmailTrustedDeviceRemovedEvent;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\BaseMutator;
 use App\Models\Clickhouse\ActiveSession;
@@ -92,6 +94,8 @@ class ApplicantDeviceMutator extends BaseMutator
 
         $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
 
+        event(new ApplicantIndividualSentEmailTrustedDeviceAddedEvent($applicant));
+
         return $device;
     }
 
@@ -128,6 +132,8 @@ class ApplicantDeviceMutator extends BaseMutator
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $applicant->company, $emailTemplateSubject, $emailData);
 
         $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
+
+        event(new ApplicantIndividualSentEmailTrustedDeviceRemovedEvent($applicant));
 
         return $device;
     }

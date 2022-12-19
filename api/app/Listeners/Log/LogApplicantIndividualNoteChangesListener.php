@@ -2,7 +2,7 @@
 
 namespace App\Listeners\Log;
 
-use App\Events\ApplicantIndividualNoteCreatedEvent;
+use App\Events\Applicant\ApplicantIndividualNoteCreatedEvent;
 use App\Exceptions\GraphqlException;
 use App\Models\Members;
 use App\Services\KycTimelineService;

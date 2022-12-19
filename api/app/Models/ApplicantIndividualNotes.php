@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Events\ApplicantIndividualNoteCreatedEvent;
+use App\Events\Applicant\ApplicantIndividualNoteCreatedEvent;
 
 class ApplicantIndividualNotes extends BaseModel
 {
