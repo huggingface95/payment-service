@@ -48,6 +48,10 @@ type ApplicantCompany {
     contacts_additional_fields: JSON
     "Дополнительные поля Profile data"
     profile_additional_fields: JSON
+    "Дата включуения"
+    incorporate_date: DateTime
+    "Дополнительные поля Basic info"
+    basic_info_additional_field: JSON
     "Дата создания"
     created_at: DateTime
     "Получить тип бизнеса"
@@ -267,6 +271,10 @@ extend type Mutation @guard {
         project_id: ID!
         "ID photo"
         photo_id: ID
+        "Дата включуения"
+        incorporate_date: DateTime
+        "Дополнительные поля Basic info"
+        basic_info_additional_field: [AdditionalFieldInput]
     ): ApplicantCompany   @field(resolver:"ApplicantCompanyMutator@update")
 
     "Удалить applicant company"
