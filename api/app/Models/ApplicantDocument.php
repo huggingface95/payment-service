@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Events\Applicant\ApplicantDocumentCreatedEvent;
 use App\Events\Applicant\ApplicantDocumentUpdatedEvent;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ApplicantDocument extends BaseModel
 {
@@ -14,6 +15,8 @@ class ApplicantDocument extends BaseModel
     ];
 
     protected $fillable = [
+        'added_from',
+        'country_id',
         'document_type_id',
         'document_state_id',
         'file_id',
@@ -23,8 +26,18 @@ class ApplicantDocument extends BaseModel
         'info',
     ];
 
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+
     public function file(): BelongsTo
     {
         return $this->belongsTo(Files::class, 'file_id');
+    }
+
+    public function internalNotes(): HasMany
+    {
+        return $this->hasMany(ApplicantDocumentInternalNote::class, 'applicant_document_id');
     }
 }
