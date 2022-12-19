@@ -70,6 +70,8 @@ class ApplicantCompany extends BaseModel
         'photo_id',
         'project_id',
         'group_type_id',
+        'incorporate_date',
+        'basic_info_additional_field',
     ];
 
     protected $casts = [
