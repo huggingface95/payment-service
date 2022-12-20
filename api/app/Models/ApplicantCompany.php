@@ -72,6 +72,7 @@ class ApplicantCompany extends BaseModel
         'group_type_id',
         'incorporate_date',
         'basic_info_additional_field',
+        'entity_id',
     ];
 
     protected $casts = [

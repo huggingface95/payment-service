@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Exceptions\GraphqlException;
+use App\Models\Scopes\FilterByCompanyScope;
 use App\Models\Traits\PermissionFilterData;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -13,30 +14,45 @@ class BaseModel extends Model
 
     public const DEFAULT_MEMBER_ID = 2;
 
+    public const SUPER_COMPANY_ID = 1;
+    public const FILTER_BY_COMPANY_TABLES = ['departments', 'members', 'applicant_individual', 'applicant_companies', 'accounts', 'group_role'];
+
     //Access limitation applicant ids
     public static ?array $applicantIds = null;
+    public static ?int $currentCompanyId = null;
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new FilterByCompanyScope());
+    }
 
     protected static function booting()
     {
         self::creating(function ($model) {
+            /** @var Members|ApplicantIndividual $user */
             $user = Auth::user();
             return self::filterByPermissionFilters($user, 'creating', $model)
-                && self::filterByRoleActions($user, 'creating', $model);
+                && self::filterByRoleActions($user, 'creating', $model)
+                && self::filterByCompany($user, $model);
         });
         self::saving(function ($model) {
             $user = Auth::user();
             return self::filterByPermissionFilters($user, 'saving', $model)
-                && self::filterByRoleActions($user, 'saving', $model);
+                && self::filterByRoleActions($user, 'saving', $model)
+                && self::filterByCompany($user, $model);
         });
         self::updating(function ($model) {
             $user = Auth::user();
             return self::filterByPermissionFilters($user, 'updating', $model)
-                && self::filterByRoleActions($user, 'updating', $model);
+                && self::filterByRoleActions($user, 'updating', $model)
+                && self::filterByCompany($user, $model);
         });
         self::deleting(function ($model) {
             $user = Auth::user();
             return self::filterByPermissionFilters($user, 'deleting', $model)
-                && self::filterByRoleActions($user, 'deleting', $model);
+                && self::filterByRoleActions($user, 'deleting', $model)
+                && self::filterByCompany($user, $model);
         });
 
         parent::booting();
@@ -71,9 +87,6 @@ class BaseModel extends Model
         return true;
     }
 
-    /**
-     * @throws GraphqlException
-     */
     protected static function filterByRoleActions(?Model $user, string $action, Model $model): bool
     {
         if ($user) {
@@ -83,11 +96,20 @@ class BaseModel extends Model
             if (RoleAction::query()
                 ->where('action', $action)
                 ->where('table', $model->getTable())
-                ->where('role_id', $roleId)->first()){
+                ->where('role_id', $roleId)->first()) {
                 throw new GraphqlException("{$action} action access denied in {$model->getTable()} table", 'permission denied', 403);
             }
         }
         //TODO may be changed to false in the future
+        return true;
+    }
+
+    protected static function filterByCompany(?Model $user, Model $model): bool
+    {
+        /** @var Members|ApplicantIndividual $user */
+        if ($companyId = $model->getAttribute('company_id')) {
+            return in_array($companyId, [self::SUPER_COMPANY_ID, $user->company_id]);
+        }
         return true;
     }
 }

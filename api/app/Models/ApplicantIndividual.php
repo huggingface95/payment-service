@@ -92,6 +92,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'project_id',
         'group_type_id',
         'kyc_level_id',
+        'entity_id',
     ];
 
     protected $hidden = [
