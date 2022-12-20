@@ -20,6 +20,8 @@ type TransferIncoming {
     payment_operation_type: OperationType @belongsTo(relation: "paymentOperation")
     "Получить связанный провайдер"
     payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
+    "Получить связанную информацию по провайдеру"
+    payment_provider_history: PaymentProviderHistory @hasOne(relation: "paymentProviderHistory")
     "Получить связанную платежную систему"
     payment_system: PaymentSystem @belongsTo(relation: "paymentSystem")
     "Получить связанный банк"
