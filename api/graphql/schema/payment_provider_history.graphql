@@ -1,0 +1,14 @@
+type PaymentProviderHistory {
+    "ID"
+    id: ID!
+    "ID провайдера"
+    payment_provider_id: ID!
+    "ID трансфера"
+    transfer_id: ID!
+    "Тип трансфера"
+    transfer_type: String
+    "Информация от провайдера"
+    provider_response: JSON
+    "Дата создания"
+    created_at: DateTime
+}
