@@ -16,7 +16,11 @@ class Credentials
     public static function transform(stdClass $credentials): self
     {
         $dto = new self();
-        $dto->model = $credentials->prv == self::MEMBER ? Members::find($credentials->jti) : ApplicantIndividual::find($credentials->jti);
+        if (isset($credentials->prv) && isset($credentials->jti)){
+            $dto->model = $credentials->prv == self::MEMBER ? Members::find($credentials->jti) : ApplicantIndividual::find($credentials->jti);
+        } else{
+            $dto->model = new BaseModel();
+        }
 
         return $dto;
     }
