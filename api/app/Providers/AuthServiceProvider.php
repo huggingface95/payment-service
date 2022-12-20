@@ -56,8 +56,8 @@ class AuthServiceProvider extends ServiceProvider
                 $credentialsDto = TransformerDTO::transform(Credentials::class, $credentials);
                 return new JwtGuard(Auth::createUserProvider($config['provider']), $credentialsDto);
             } catch (\Throwable $e) {
-                Log::log('error',$e->getMessage());
-                return null;
+                $credentialsDto = TransformerDTO::transform(Credentials::class, (object)[]);
+                return new JwtGuard(Auth::createUserProvider($config['provider']), $credentialsDto);
             }
         });
 //        Passport::personalAccessTokensExpireIn(Carbon::now()->addDays(env('PERSONAL_ACCESS_TOKEN_TTL', 365)));
