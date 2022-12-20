@@ -1,0 +1,45 @@
+"""
+Внутренние заметки к документам аппликанта
+"""
+type ApplicantDocumentInternalNote {
+    "ID"
+    id: ID!
+    "Получить документ"
+    document: ApplicantDocument @belongsTo(relation: "document")
+    "Получить Мембера"
+    member: Member @belongsTo(relation: "member")
+    "Текст заметки"
+    note: String
+    "Дата создания"
+    created_at: DateTime
+    "Дата обновления"
+    updated_at: DateTime
+}
+
+extend type Query @guard {
+    """
+    Получить список заметок документа
+    """
+    applicantDocumentInternalNotes(
+        applicant_document_id: ID!
+    ): [ApplicantDocumentInternalNote!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation @guard {
+    """
+    Добавить заметку к документу
+    """
+    createApplicantDocumentInternalNote(
+        applicant_document_id: ID!
+        note: String!
+    ): ApplicantDocumentInternalNote   @field(resolver: "ApplicantDocumentInternalNoteMutator@create")
+
+    """
+    Удалить заметку
+    """
+    deleteApplicantDocumentInternalNote(
+        id: ID!
+    ): ApplicantDocumentInternalNote @delete
+}

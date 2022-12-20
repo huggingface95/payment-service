@@ -1,0 +1,35 @@
+"""
+Категории тегов документов аппликанта
+"""
+type ApplicantDocumentTagCategory {
+    "ID"
+    id: ID!
+    "Имя категории"
+    name: String!
+}
+
+extend type Query @guard {
+    """
+    Получить список категорий тегов
+    """
+    applicantDocumentTagCategories: [ApplicantDocumentTagCategory!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: ASC)
+}
+
+extend type Mutation @guard {
+    """
+    Добавить категорию
+    """
+    createApplicantDocumentTagCategory(
+        name: String!
+    ): ApplicantDocumentTagCategory @create
+
+    """
+    Обновить категорию
+    """
+    updateApplicantDocumentTagCategory(
+        id: ID!
+        name: String!
+    ): ApplicantDocumentTagCategory @update
+}

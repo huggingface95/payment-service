@@ -1,0 +1,51 @@
+"""
+Теги документов аппликанта
+"""
+type ApplicantDocumentTag {
+    "ID"
+    id: ID!
+    "Категория"
+    category: ApplicantDocumentTagCategory @belongsTo(relation: "category")
+    "Имя"
+    name: String!
+    "Описание"
+    description: String
+}
+
+extend type Query @guard {
+    """
+    Получить список тегов документов
+    """
+    applicantDocumentTags(
+        filter: _ @filterConditions(static: QueryApplicantDocumentTagsFilterStatic),
+        orderBy: _ @orderBy(columns: ["id", "created_at"])
+    ): [ApplicantDocumentTag!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: ASC)
+}
+
+input QueryApplicantDocumentTagsFilterStatic @spread {
+    name: String @ilike
+    hasCategoryFilterByName: String @ilike
+}
+
+extend type Mutation @guard {
+    """
+    Добавить тег
+    """
+    createApplicantDocumentTag(
+        category_id: ID!
+        name: String!
+        description: String
+    ): ApplicantDocumentTag @create
+
+    """
+    Обновить тег
+    """
+    updateApplicantDocumentTag(
+        id: ID!
+        category_id: ID!
+        name: String!
+        description: String
+    ): ApplicantDocumentTag @update
+}

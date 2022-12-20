@@ -4,13 +4,19 @@
 type ApplicantDocument {
     "ID"
     id: ID!
-    company_id: ID!
+    "Добавлено из"
+    added_from: String
     applicant_id: ID!
     applicant_type: ApplicantType!
+    company_id: ID!
+    "Получить страну"
+    country: Country @belongsTo(relation: "country")
     document_type_id: ID!
     document_state_id: ID!
     file: Files @belongsTo(relation: "file")
     info: String
+    "Получить внутренние заметки документа"
+    internal_notes: [ApplicantDocumentInternalNote] @hasMany(relation: "internalNotes")
     created_at: DateTime
     updated_at: DateTime
 }
@@ -20,6 +26,7 @@ extend type Query @guard {
     Получить список документов
     """
     applicantDocuments(
+        applicant_type: ApplicantType! @eq,
         filter: _ @filterConditions(static: QueryApplicantDocumentsFilterStatic),
         created_at: DateRange @whereBetween,
         update_at: DateRange @whereBetween,
@@ -47,6 +54,8 @@ extend type Mutation @guard {
         document_type_id: ID!
         document_state_id: ID!
         file_id: ID!
+        country_id: ID
+        added_from: String
     ): ApplicantDocument @create
 
     """
