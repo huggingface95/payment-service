@@ -7,7 +7,7 @@ type ApplicantDocumentInternalNote {
     "Получить документ"
     document: ApplicantDocument @belongsTo(relation: "document")
     "Получить Мембера"
-    member: Member @belongsTo(relation: "member")
+    member: Members @belongsTo(relation: "member")
     "Текст заметки"
     note: String
     "Дата создания"
