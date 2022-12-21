@@ -15,7 +15,15 @@ class BaseModel extends Model
     public const DEFAULT_MEMBER_ID = 2;
 
     public const SUPER_COMPANY_ID = 1;
-    public const FILTER_BY_COMPANY_TABLES = ['departments', 'members', 'applicant_individual', 'applicant_companies', 'accounts', 'group_role'];
+    public const FILTER_BY_COMPANY_TABLES = [
+        'departments' => 'company_id',
+        'members' => 'company_id',
+        'applicant_individual' => 'company_id',
+        'applicant_companies' => 'company_id',
+        'accounts' => 'company_id',
+        'group_role' => 'company_id',
+        'companies' => 'id'
+    ];
 
     //Access limitation applicant ids
     public static ?array $applicantIds = null;
@@ -106,9 +114,12 @@ class BaseModel extends Model
 
     protected static function filterByCompany(?Model $user, Model $model): bool
     {
+        $table = $model->getTable();
         /** @var Members|ApplicantIndividual $user */
-        if ($companyId = $model->getAttribute('company_id')) {
-            return in_array($companyId, [self::SUPER_COMPANY_ID, $user->company_id]);
+        if (array_key_exists($table, self::FILTER_BY_COMPANY_TABLES)) {
+            if ($key = $model->getAttribute(self::FILTER_BY_COMPANY_TABLES[$table])) {
+                return in_array($key, [self::SUPER_COMPANY_ID, $user->company_id]);
+            }
         }
         return true;
     }
