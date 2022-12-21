@@ -105,6 +105,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     protected $casts = [
         'personal_additional_fields' => 'array',
         'contacts_additional_fields' => 'array',
+        'profile_additional_fields' => 'array',
         'backup_codes' => 'array',
     ];
 
