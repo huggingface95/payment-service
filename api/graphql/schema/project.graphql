@@ -15,6 +15,10 @@ type Project {
     sms_sender_name: String
     "URL клиента"
     client_url: String
+    "Дополнительны поля"
+    additional_fields_basic: JSON
+    "Дополнительные поля настройки"
+    additional_fields_settings: JSON
     "Настройки проекта"
     project_settings: [ProjectSettings] @hasMany(relation: "projectSettings")
     "Модуль"
@@ -96,6 +100,10 @@ input InputProject {
     state_id: ID
     "Настройки"
     project_settings: [InputProjectSettings]
+    "Дополнительные поля"
+    additional_fields_basic: [AdditionalFieldInput]
+    "Дополнительные поля настройки"
+    additional_fields_settings: [AdditionalFieldInput]
 }
 
 extend type Mutation @guard {

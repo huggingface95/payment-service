@@ -26,6 +26,11 @@ class Project extends BaseModel
         'state_id',
     ];
 
+    protected $casts = [
+        'additional_fields_basic' => 'array',
+        'additional_fields_settings' => 'array',
+    ];
+
     public function avatar(): BelongsTo
     {
         return $this->belongsTo(Files::class, 'avatar_id')->where('entity_type', 'project');
