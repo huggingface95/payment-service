@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations\Applicant;
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\ClientTypeEnum;
+use App\Events\Applicant\ApplicantIndividualSentEmailPasswordResetEvent;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\BaseMutator;
 use App\Models\ApplicantIndividual;
@@ -75,6 +76,8 @@ class ApplicantSettingsMutator extends BaseMutator
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $applicant->company, $emailTemplateName, $emailData);
 
         $this->emailService->sendApplicantEmailByApplicantDto($emailDTO);
+
+        event(new ApplicantIndividualSentEmailPasswordResetEvent($applicant));
 
         return $applicant;
     }

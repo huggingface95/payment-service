@@ -10,6 +10,14 @@ type FeeType {
 extend type Query @guard {
     """
     Получить список статусов
+    фильтр по operation_type:
+    HAS_OPERATION_TYPE_FILTER_BY_ID
     """
-   feeTypes: [FeeType!]!   @all
+   feeTypes (
+        filter: _ @filterConditions(static: QueryFeeTypesFilterStatic)
+    ): [FeeType!]!  @all
+}
+
+input QueryFeeTypesFilterStatic @spread{
+    hasOperationTypeFilterById: ID @eq
 }

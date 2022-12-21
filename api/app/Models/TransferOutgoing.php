@@ -67,7 +67,7 @@ class TransferOutgoing extends BaseModel
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class, 'company_id', 'id');
+        return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 
     public function sender(): MorphTo
@@ -112,6 +112,12 @@ class TransferOutgoing extends BaseModel
         return $this->belongsTo(PaymentProvider::class, 'payment_provider_id', 'id');
     }
 
+    public function paymentProviderHistory(): HasOne
+    {
+        return $this->hasOne(PaymentProviderHistory::class, 'transfer_id', 'id')
+            ->where('transfer_type', FeeTransferTypeEnum::OUTGOING->toString());
+    }
+    
     public function paymentStatus(): BelongsTo
     {
         return $this->belongsTo(PaymentStatus::class, 'status_id');

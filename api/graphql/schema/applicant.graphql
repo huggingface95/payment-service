@@ -74,8 +74,8 @@ type ApplicantIndividual {
     notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
     "Получить модули"
     modules: [ApplicantIndividualModules] @belongsToMany (relation: "modules")
-    "Получить компании"
-    companies: [ApplicantCompany] @belongsToMany (relation: "companies")
+    "Получить компании к которым принадлежит апликант"
+    applicant_companies: [ApplicantCompany] @belongsToMany (relation: "companies")
     "Получить группу"
     group: GroupRole @morphOne(relation: "groupRole")
     "Фото"
@@ -175,17 +175,17 @@ extend type Mutation @guard {
     updateApplicantIndividual(
         id: ID!
         "Имя"
-        first_name: String!
+        first_name: String
         "Фамилия"
-        last_name: String!
+        last_name: String
         "Отчество"
         middle_name: String
         "email"
-        email: EMAIL!
+        email: EMAIL
         "Адрес сайта"
         url: String
         "Телефон"
-        phone: String!
+        phone: String
         "Верецифиорован телефон true/false"
         is_verification_phone: Boolean
         "ID Страны"
@@ -220,8 +220,6 @@ extend type Mutation @guard {
         personal_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
         contacts_additional_fields: [AdditionalFieldInput]
-        "ID статуса"
-        applicant_status_id: ID
         "ID состояния"
         applicant_state_id: ID
         "ID причины"
@@ -231,13 +229,13 @@ extend type Mutation @guard {
         "ID менеджера"
         account_manager_member_id: ID
         "ID компании"
-        company_id: ID!
+        company_id: ID
         "Массив ID меток"
         labels: [ID]
         "ID группы"
         group_id: ID
         "ID модулей"
-        module_ids: [ID]!
+        module_ids: [ID]
         "ID Проекта"
         project_id: ID
         "Two factor auth"
@@ -253,6 +251,15 @@ extend type Mutation @guard {
         "KYC Level"
         kyc_level_id: ID
     ): ApplicantIndividual   @field(resolver:"ApplicantMutator@update")
+
+    """
+    Изменить статус аппликанта
+    """
+    updateApplicantIndividualVerificationStatus(
+        id: ID!
+        "ID статуса"
+        applicant_status_id: ID!
+    ): ApplicantIndividual   @update
 
     """
     Установить пароль

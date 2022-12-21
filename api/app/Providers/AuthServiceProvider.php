@@ -4,10 +4,13 @@ namespace App\Providers;
 
 use App\DTO\Auth\Credentials;
 use App\DTO\TransformerDTO;
+use App\Services\Jwt\Guards\JwtGuard;
 use App\Services\JwtService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\Request;
+use Laravel\Lumen\Application;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -45,6 +48,18 @@ class AuthServiceProvider extends ServiceProvider
             }
         });
 
+        //to make it work Auth::guard('api_client')
+        Auth::extend('go-auth', function (Application $app, $name, array $config) use ($jwtService) {
+            $token = $app->get('request')->bearerToken();
+            try {
+                $credentials = $jwtService->parseJWT($token);
+                $credentialsDto = TransformerDTO::transform(Credentials::class, $credentials);
+                return new JwtGuard(Auth::createUserProvider($config['provider']), $credentialsDto);
+            } catch (\Throwable $e) {
+                $credentialsDto = TransformerDTO::transform(Credentials::class, (object)[]);
+                return new JwtGuard(Auth::createUserProvider($config['provider']), $credentialsDto);
+            }
+        });
 //        Passport::personalAccessTokensExpireIn(Carbon::now()->addDays(env('PERSONAL_ACCESS_TOKEN_TTL', 365)));
     }
 }

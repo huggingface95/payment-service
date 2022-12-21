@@ -4,8 +4,9 @@ namespace App\GraphQL\Mutations;
 
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\TransformerDTO;
-use App\Enums\ApplicantModulesEnum;
+use App\Enums\ModuleEnum;
 use App\Enums\ApplicantVerificationStatusEnum;
+use App\Events\Applicant\ApplicantIndividualSentEmailVerificationEvent;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividual;
 use App\Models\ClientIpAddress;
@@ -39,7 +40,7 @@ class ApplicantMutator extends BaseMutator
         $args['password_salt'] = $password;
         $args['group_type_id'] = GroupRole::INDIVIDUAL;
         $args['module_ids'] = array_unique(
-            array_merge($args['module_ids'], [(string) ApplicantModulesEnum::KYC->value])
+            array_merge($args['module_ids'], [(string) ModuleEnum::KYC->value])
         );
 
         $applicant = ApplicantIndividual::create($args);
@@ -145,6 +146,8 @@ class ApplicantMutator extends BaseMutator
 
         $applicant->email_verification_status_id = ApplicantVerificationStatusEnum::REQUESTED->value;
         $applicant->save();
+
+        event(new ApplicantIndividualSentEmailVerificationEvent($applicant));
 
         return $applicant;
     }

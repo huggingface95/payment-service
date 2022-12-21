@@ -65,7 +65,7 @@ class TransferIncoming extends BaseModel
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Companies::class, 'company_id', 'id');
+        return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 
     public function currency(): BelongsTo
@@ -98,6 +98,12 @@ class TransferIncoming extends BaseModel
     public function paymentProvider(): BelongsTo
     {
         return $this->belongsTo(PaymentProvider::class, 'payment_provider_id', 'id');
+    }
+
+    public function paymentProviderHistory(): HasOne
+    {
+        return $this->hasOne(PaymentProviderHistory::class, 'transfer_id', 'id')
+            ->where('transfer_type', FeeTransferTypeEnum::INCOMING->toString());
     }
 
     public function paymentStatus(): BelongsTo

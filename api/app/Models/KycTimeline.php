@@ -17,14 +17,20 @@ class KycTimeline extends BaseModel
         'browser',
         'ip',
         'action',
-        'action_state',
         'tag',
         'action_type',
         'document_id',
         'company_id',
         'applicant_id',
         'applicant_type',
+        'action_old_value',
+        'action_new_value',
         'created_at',
+    ];
+
+    protected $casts = [
+        'action_old_value' => 'array',
+        'action_new_value' => 'array',
     ];
 
     public function company(): BelongsTo

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddApplicantCompanyRiskLevelIdToApplicantCompaniesTable extends Migration
+class AddIncorporateDateAndBasicInfoAdditionalFieldToApplicantCompaniesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class AddApplicantCompanyRiskLevelIdToApplicantCompaniesTable extends Migration
     public function up()
     {
         Schema::table('applicant_companies', function (Blueprint $table) {
-            $table->unsignedBigInteger('applicant_company_risk_level_id')->nullable();
-            $table->foreign('applicant_company_risk_level_id')->references('id')->on('applicant_risk_level');
+            $table->timestamp('incorporate_date')->nullable();
+            $table->jsonb('basic_info_additional_field')->nullable();
         });
     }
 
@@ -27,7 +27,7 @@ class AddApplicantCompanyRiskLevelIdToApplicantCompaniesTable extends Migration
     public function down()
     {
         Schema::table('applicant_companies', function (Blueprint $table) {
-            $table->dropColumn('applicant_company_risk_level_id');
+            $table->dropColumn(['incorporate_date', 'basic_info_additional_field']);
         });
     }
 }

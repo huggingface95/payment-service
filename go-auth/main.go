@@ -59,7 +59,7 @@ func initRouter() *gin.Engine {
 		i := auth.Group("applicant")
 		{
 			i.POST("register", individual.Register)
-			i.POST("reset-password", individual.ResetPassword)
+
 			iConf := i.Group("confirmation")
 			{
 				iConfEmail := iConf.Group("email")
@@ -68,11 +68,11 @@ func initRouter() *gin.Engine {
 				}
 				iConfResetPass := iConf.Group("password")
 				{
-					iConfResetPass.Use(middlewares.CheckIndividualResetPassword()).POST("change", individual.ChangePassword)
+					iConfResetPass.Use(middlewares.CheckIndividualResetPassword()).POST("change", controllers.ChangePassword)
 				}
 			}
 		}
-
+		auth.POST("reset-password", controllers.ResetPassword)
 		auth.POST("login", controllers.Login)
 		auth.POST("login-two-factor", controllers.GenerateTwoFactorQr)
 		auth.POST("verify-two-factor", controllers.VerifyTwoFactorQr)

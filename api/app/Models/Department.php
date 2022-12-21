@@ -17,6 +17,7 @@ class Department extends BaseModel
     protected $fillable = [
         'name',
         'company_id',
+        'entity_id',
     ];
 
     public function company(): BelongsTo

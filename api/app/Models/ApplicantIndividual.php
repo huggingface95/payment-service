@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Events\Applicant\ApplicantIndividualUpdatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\UserPermission;
 use Illuminate\Auth\Authenticatable;
@@ -42,6 +43,10 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     protected $table = 'applicant_individual';
 
     protected $guard = 'api_client';
+
+    protected $dispatchesEvents = [
+        'updated' => ApplicantIndividualUpdatedEvent::class,
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -87,6 +92,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'project_id',
         'group_type_id',
         'kyc_level_id',
+        'entity_id',
     ];
 
     protected $hidden = [
@@ -99,6 +105,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     protected $casts = [
         'personal_additional_fields' => 'array',
         'contacts_additional_fields' => 'array',
+        'profile_additional_fields' => 'array',
         'backup_codes' => 'array',
     ];
 

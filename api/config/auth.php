@@ -38,11 +38,11 @@ return [
     'guards' => [
         'api' => [
             'driver' => 'go-auth',
-            'provider' => 'members',
+            'provider' => 'member',
         ],
         'api_client' => [
             'driver' => 'go-auth',
-            'provider' => 'individual',
+            'provider' => 'applicant',
         ],
     ],
 
@@ -64,11 +64,11 @@ return [
     */
 
     'providers' => [
-        'members' => [
+        'member' => [
             'driver' => 'eloquent',
             'model' => App\Models\Members::class,
         ],
-        'individual' => [
+        'applicant' => [
             'driver' => 'eloquent',
             'model' => App\Models\ApplicantIndividual::class,
         ],
@@ -94,14 +94,14 @@ return [
     */
 
     'passwords' => [
-        'members' => [
-            'provider' => 'members',
+        'member' => [
+            'provider' => 'member',
             //'email' => 'auth.emails.password',
             'table' => 'passwords_resets',
             'expire' => 60,
         ],
-        'individual' => [
-            'provider' => 'individual',
+        'applicant' => [
+            'provider' => 'applicant',
             //'email' => 'auth.emails.password',
             'table' => 'passwords_resets',
             'expire' => 60,

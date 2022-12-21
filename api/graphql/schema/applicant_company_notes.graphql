@@ -11,7 +11,7 @@ type ApplicantCompanyNotes {
     "Получить автора"
     author: Members @belongsTo(relation: "author")
     "Получить пользователя"
-    applicant: ApplicantCompany @belongsTo(relation: "applicant")
+    applicant: ApplicantCompany @belongsTo(relation: "applicantCompany")
 }
 
 extend type Query @guard {
