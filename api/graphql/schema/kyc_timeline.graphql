@@ -35,6 +35,19 @@ type KycTimeline {
     created_at: DateTime!
 }
 
+enum KycTimelineActionType {
+    DOCUMENT_UPLOAD @enum(value: "document_upload")
+    DOCUMENT_STATE @enum(value: "document_state")
+    VERIFICATION @enum(value: "verification")
+    EMAIL @enum(value: "email")
+    PROFILE @enum(value: "profile")
+}
+
+enum Module {
+    KYC @enum(value: "KYC")
+    BANKING @enum(value: "Banking")
+}
+
 extend type Query @guard {
     """
     Получить запись
