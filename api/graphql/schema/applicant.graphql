@@ -56,6 +56,10 @@ type ApplicantIndividual {
     contacts_additional_fields: JSON
     "Полное имя"
     fullname: String
+    "время последний просмотренный"
+    last_screened_at: DateTime
+    "Дополнительные поля"
+    address_additional_fields: JSON
     "Получить статусы"
     status: ApplicantStatus @belongsTo(relation: "status")
     "Получить состояния"
@@ -250,6 +254,10 @@ extend type Mutation @guard {
         photo_id: ID
         "KYC Level"
         kyc_level_id: ID
+        "время последний просмотренный"
+        last_screened_at: DateTime
+        "Дополнительные поля"
+        address_additional_fields: JSON
     ): ApplicantIndividual   @field(resolver:"ApplicantMutator@update")
 
     """
