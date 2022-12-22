@@ -2,7 +2,10 @@
 
 namespace Tests;
 
+use App\DTO\Auth\Credentials;
+use App\DTO\TransformerDTO;
 use App\Services\AuthService;
+use App\Services\JwtService;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
@@ -61,7 +64,10 @@ abstract class TestCase extends BaseTestCase
 
         $token = Http::accept('application/json')->post('http://172.16.0.8:2491/auth/login', $data);
         $user = Http::accept('application/json')->withHeaders(['Authorization' => 'Bearer '. $token])->post('http://172.16.0.8:2491/auth/me');
-        return $user->body();
+        $jwtService = new JwtService();
+        $credentials = $jwtService->parseJWT($token);
+        $credentialsDto = TransformerDTO::transform(Credentials::class, $credentials);
+        return $credentialsDto->model;
     }
 
     /**
