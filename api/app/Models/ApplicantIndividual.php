@@ -108,6 +108,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'personal_additional_fields' => 'array',
         'contacts_additional_fields' => 'array',
         'profile_additional_fields' => 'array',
+        'address_additional_fields' => 'array',
         'backup_codes' => 'array',
     ];
 
