@@ -224,6 +224,8 @@ extend type Mutation @guard {
         personal_additional_fields: [AdditionalFieldInput]
         "Дополнительные поля блока контакты"
         contacts_additional_fields: [AdditionalFieldInput]
+        "Дополнительные поля"
+        address_additional_fields: [AdditionalFieldInput]
         "ID состояния"
         applicant_state_id: ID
         "ID причины"
@@ -256,8 +258,6 @@ extend type Mutation @guard {
         kyc_level_id: ID
         "время последний просмотренный"
         last_screened_at: DateTime
-        "Дополнительные поля"
-        address_additional_fields: JSON
     ): ApplicantIndividual   @field(resolver:"ApplicantMutator@update")
 
     """
