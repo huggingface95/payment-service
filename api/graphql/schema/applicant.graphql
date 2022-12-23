@@ -148,7 +148,7 @@ input QueryApplicantIndividualsFilterStatic @spread{
     hasRiskLevelFilterById: ID @eq
     hasStateReasonFilterById: ID @eq
     hasStatusFilterById: ID @eq
-    hasGroupRoleMixedGroupTypeIdOrRoleIdORId: ID @eq
+    hasGroupRoleMixedIdOrName: Mixed @eq
     hasModulesFilterById: ID @eq
 }
 
