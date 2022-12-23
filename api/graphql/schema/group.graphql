@@ -84,7 +84,8 @@ extend type Query @guard {
 
 
 input QueryGroupTypesFilterStatic @spread{
-    hasGroupsMixedCompanyIdOrRoleId: Mixed @eq
+    hasGroupsFilterByCompanyId: ID @eq
+    hasGroupsFilterByRoleId: ID @eq
 }
 
 input QueryGroupCondition {
