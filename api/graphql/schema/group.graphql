@@ -56,7 +56,9 @@ extend type Query @guard {
     "Получить группу по ID"
     group_type(id: ID @eq): GroupType   @find
     "Получить список типов групп"
-    group_types(mode: GroupTypeMode): [GroupType!]!  @field(resolver:"GroupsQuery@get") @orderBy(column: "id", direction: ASC)
+    group_types(
+        filter: _ @filterConditions(static: QueryGroupTypesFilterStatic),
+    ): [GroupType!]! @all @orderBy(column: "id", direction: ASC)
     "Получить список типов групп"
     groupTypeList (mode: GroupTypeMode): [GroupType!]! @paginate(builder: "App\\GraphQL\\Queries\\GroupsTypeQuery", defaultCount:10) @orderBy(column: "id", direction: ASC)
     """
@@ -78,6 +80,11 @@ extend type Query @guard {
         query: QueryGroupCondition
         orderBy: _ @orderBy(columns: ["id","is_active","name"],
         )): [GroupRole!]!   @paginate(defaultCount: 10)
+}
+
+
+input QueryGroupTypesFilterStatic @spread{
+    hasGroupsMixedCompanyIdOrRoleId: Mixed @eq
 }
 
 input QueryGroupCondition {
