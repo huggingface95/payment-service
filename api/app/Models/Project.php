@@ -24,6 +24,8 @@ class Project extends BaseModel
         'module_id',
         'avatar_id',
         'state_id',
+        'additional_fields_basic',
+        'additional_fields_settings',
     ];
 
     protected $casts = [
