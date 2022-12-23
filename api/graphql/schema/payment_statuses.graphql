@@ -7,7 +7,7 @@ type PaymentStatus {
     name: String!
 }
 
-enum OperationType {
+enum OperationTypeEnum {
     INCOMING_TRANSFER @enum(value: "Incoming Transfer")
     BETWEEN_ACCOUNT @enum(value: "Between Account")
     BETWEEN_USERS @enum(value: "Between Users")
@@ -28,5 +28,5 @@ extend type Query  @guard{
 }
 
 input QueryPaymentStatusesFilterStatic @spread{
-    operation_type: OperationType @eq
+    operation_type: OperationTypeEnum @eq
 }
