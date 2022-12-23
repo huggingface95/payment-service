@@ -1,0 +1,67 @@
+type dashboardAccountsStatistic {
+    account_state_id: ID!
+    payment_provider_id: ID!
+    payment_provider_name: String!
+    account_state_name: String!
+    count: Int!
+}
+
+type dashboardTicketsStatistic {
+    status_id: ID!
+    status_name: String!
+    count: Int!
+}
+
+type dashboardTransfersStatistic {
+    transfer_type: String!
+    status_name: String!
+    count: Int!
+}
+
+type dashboardUsersStatistic {
+    applicant_type: String!
+    status_name: String!
+    count: Int!
+}
+
+extend type Query @guard {
+    """
+    Получить статистику по акаунтам
+    """
+    dashboardAccountsStatistic(
+        created_at: DateRange @whereBetween
+        payment_provider_id: ID
+    ): [dashboardAccountsStatistic]
+        @field(resolver: "DashboardQuery@accountsStatistic")
+
+    """
+    Получить статистику по тикетам
+    """
+    dashboardTicketsStatistic(
+        created_at: DateRange @whereBetween
+    ): [dashboardTicketsStatistic]
+        @field(resolver: "DashboardQuery@ticketsStatistic")
+    
+    """
+    Получить статистику по трансферам
+    """
+    dashboardTransfersStatistic(
+        created_at: DateRange @whereBetween
+        company_id: ID
+        payment_bank_id: ID
+        payment_provider_id: ID
+        payment_system_id: ID
+    ): [dashboardTransfersStatistic]
+        @field(resolver: "DashboardQuery@transfersStatistic")
+    
+    """
+    Получить статистику по пользователям
+    """
+    dashboardUsersStatistic(
+        company_id: ID
+        created_at: DateRange @whereBetween
+        project_id: ID
+    ): [dashboardUsersStatistic]
+        @field(resolver: "DashboardQuery@usersStatistic")
+}
+

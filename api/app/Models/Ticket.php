@@ -83,6 +83,11 @@ class Ticket extends BaseModel
         );
     }
 
+    public function status(): HasOne
+    {
+        return $this->hasOne(TicketStatus::class, 'id', 'status');
+    }
+
     public function file(): HasOne
     {
         return $this->hasOne(Files::class, 'author_id')->where('entity_type', self::class);
