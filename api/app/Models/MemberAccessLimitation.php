@@ -12,18 +12,39 @@ use Illuminate\Support\Collection;
  * @property int id
  * @property int member_id
  * @property int group_role_id
- * @property int commission_template_id
+ * @property int company_id
+ * @property int module_id
+ * @property int project_id
+ * @property int payment_provider_id
  * @property Collection groupRoles
  * @property GroupRole $groupRole
  * @property EmailSmtp $smtp
  */
 class MemberAccessLimitation extends BaseModel
 {
-    protected $fillable = ['member_id', 'group_role_id', 'commission_template_id'];
+    protected $fillable = [
+        'member_id',
+        'group_role_id',
+        'company_id',
+        'module_id',
+        'project_id',
+        'payment_provider_id',
+        'see_own_applicants',
+    ];
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
+    }
 
     public function member(): BelongsTo
     {
         return $this->belongsTo(Members::class, 'member_id');
+    }
+
+    public function module(): BelongsTo
+    {
+        return $this->belongsTo(ApplicantModules::class, 'module_id');
     }
 
     public function group(): HasOneThrough
@@ -43,20 +64,13 @@ class MemberAccessLimitation extends BaseModel
         return $this->belongsTo(GroupRole::class, 'group_role_id');
     }
 
-    public function provider(): HasOneThrough
+    public function project(): BelongsTo
     {
-        return $this->hasOneThrough(
-            PaymentProvider::class,
-            CommissionTemplate::class,
-            'id',
-            'id',
-            'commission_template_id',
-            'payment_provider_id'
-        );
+        return $this->belongsTo(Project::class);
     }
 
-    public function commissionTemplate(): BelongsTo
+    public function provider(): BelongsTo
     {
-        return $this->belongsTo(CommissionTemplate::class, 'commission_template_id');
+        return $this->belongsTo(PaymentProvider::class, 'payment_provider_id');
     }
 }

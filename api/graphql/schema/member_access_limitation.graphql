@@ -4,16 +4,22 @@ Administration->Members->MemberAccessLimitation
 """
 type MemberAccessLimitation {
     id: ID!
+    "Получить компанию"
+    company: Company @BelongsTo(relation: "company")
     "Получить Group"
     member: Members @belongsTo(relation: "member")
+    "Получить модуль"
+    module: ApplicantModules @belongsTo(relation: "module")
     "Получить GroupType"
     group: GroupType @hasOne(relation: "group")
     "Получить groupRole"
     group_role: GroupRole @belongsTo(relation: "groupRole")
+    "Получить проект"
+    project: Project @belongsTo(relation: "project")
     "Получить связанный платежный провайдер"
-    provider: PaymentProvider @hasOne(relation:"provider")
-    "Получить связанный платежный шаблон"
-    commission_template: CommissionTemplate @belongsTo(relation:"CommissionTemplate")
+    provider: PaymentProvider @hasOne(relation: "provider")
+    "Показать только своих аппликантов"
+    see_own_applicants: Boolean
 }
 
 extend type Query @guard {
@@ -29,7 +35,6 @@ extend type Query @guard {
         hasGroupRole: _ @whereHasConditions(columns: ["id","name"]),
         hasGroup: _ @whereHasConditions(columns: ["id","name"]),
         hasProvider: _ @whereHasConditions(columns: ["id","name"]),
-        hasCommissionTemplate: _ @whereHasConditions(columns: ["id","name"]),
         where: _ @whereConditions(columns: ["id","member_id","group_role_id", "provider_id"]),
         orderBy: _ @orderBy(columns: ["id"],
     )): [MemberAccessLimitation!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
@@ -44,8 +49,16 @@ extend type Mutation  {
         member_id: ID!
         "ID Груп Роль"
         group_role_id: ID!
-        "ID платежный шаблон"
-        commission_template_id: ID
+        "ID компании"
+        company_id: ID!
+        "ID модуля"
+        module_id: ID!
+        "ID проекта"
+        project_id: ID
+        "ID платежного провайдера"
+        payment_provider_id: ID
+        "Показать только своих аппликантов"
+        see_own_applicants: Boolean
     ): MemberAccessLimitation @create
 
     """
@@ -54,12 +67,21 @@ extend type Mutation  {
     updateMemberAccessLimitation(
         id: ID!
         "ID Мембера"
-        member_id: ID
+        member_id: ID!
         "ID Груп Роль"
         group_role_id: ID
-        "ID платежный шаблон"
-        commission_template_id: ID
+        "ID компании"
+        company_id: ID!
+        "ID модуля"
+        module_id: ID!
+        "ID проекта"
+        project_id: ID
+        "ID платежного провайдера"
+        payment_provider_id: ID
+        "Показать только своих аппликантов"
+        see_own_applicants: Boolean
     ): MemberAccessLimitation @update
+
     """
     Удалить ограничение доступа
     """
