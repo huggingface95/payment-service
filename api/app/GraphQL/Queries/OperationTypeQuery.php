@@ -5,6 +5,8 @@ namespace App\GraphQL\Queries;
 use App\Models\OperationType;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class OperationTypeQuery
@@ -25,6 +27,13 @@ class OperationTypeQuery
         if (isset($args['filter']['column']) && $args['filter']['column'] === 'fee_type_id') {
             $fee_type = $args['filter']['value'];
              $operationTypes->where('fee_type_id', '=', $fee_type)->get();
+        }
+
+        if (isset($args['filter']['column']) && $args['filter']['column'] === 'payment_system_id') {
+            $paymentSystem = $args['filter']['value'];
+            $operationTypes->where('payment_system_operation_types.payment_system_id', '=', $paymentSystem)
+                ->leftJoin('payment_system_operation_types', 'operation_type.id', '=', 'payment_system_operation_types.operation_type_id')
+                ->get();
         }
 
         return $operationTypes->orderBy('id', 'ASC')->get();
