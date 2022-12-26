@@ -5,8 +5,6 @@ namespace App\GraphQL\Queries;
 use App\Models\OperationType;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class OperationTypeQuery
