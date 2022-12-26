@@ -25,6 +25,16 @@ class BaseModel extends Model
         'companies' => 'id'
     ];
 
+    public const FILTER_BY_COMPANY_SKIP_ACTIONS = [
+        'members' => ['creating', 'saving'],
+        'departments' => [],
+        'applicant_individual' => [],
+        'applicant_companies' => [],
+        'accounts' => [],
+        'group_role' => [],
+        'companies' => [],
+    ];
+
     //Access limitation applicant ids
     public static ?array $applicantIds = null;
     public static ?int $currentCompanyId = null;
@@ -42,25 +52,25 @@ class BaseModel extends Model
             $user = Auth::user();
             return self::filterByPermissionFilters($user, 'creating', $model)
                 && self::filterByRoleActions($user, 'creating', $model)
-                && self::filterByCompany($user, $model);
+                && self::filterByCompany($user, 'creating', $model);
         });
         self::saving(function ($model) {
             $user = Auth::user();
             return self::filterByPermissionFilters($user, 'saving', $model)
                 && self::filterByRoleActions($user, 'saving', $model)
-                && self::filterByCompany($user, $model);
+                && self::filterByCompany($user, 'saving', $model);
         });
         self::updating(function ($model) {
             $user = Auth::user();
             return self::filterByPermissionFilters($user, 'updating', $model)
                 && self::filterByRoleActions($user, 'updating', $model)
-                && self::filterByCompany($user, $model);
+                && self::filterByCompany($user, 'updating', $model);
         });
         self::deleting(function ($model) {
             $user = Auth::user();
             return self::filterByPermissionFilters($user, 'deleting', $model)
                 && self::filterByRoleActions($user, 'deleting', $model)
-                && self::filterByCompany($user, $model);
+                && self::filterByCompany($user, 'deleting', $model);
         });
 
         parent::booting();
@@ -112,12 +122,15 @@ class BaseModel extends Model
         return true;
     }
 
-    protected static function filterByCompany(?Model $user, Model $model): bool
+    protected static function filterByCompany(?Model $user, string $action, Model $model): bool
     {
         $table = $model->getTable();
         /** @var Members|ApplicantIndividual $user */
         if (array_key_exists($table, self::FILTER_BY_COMPANY_TABLES)) {
             if ($key = $model->getAttribute(self::FILTER_BY_COMPANY_TABLES[$table])) {
+                if (in_array($action, self::FILTER_BY_COMPANY_SKIP_ACTIONS[$table])){
+                    return true;
+                }
                 return in_array($key, [self::SUPER_COMPANY_ID, $user->company_id]);
             }
         }
