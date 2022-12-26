@@ -12,7 +12,7 @@ type KycTimeline {
     ip: String!
     "Действие"
     action: String!
-    action_type: String!
+    action_type: KycTimelineActionType!
     "Тег"
     tag: String!
     "Мембер"
