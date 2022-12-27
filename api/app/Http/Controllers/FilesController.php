@@ -27,7 +27,7 @@ class FilesController extends Controller
         ];
 
         $this->validate($request, [
-            'file' => 'required|file|mimes:jpeg,jpg,png,gif,pdf|max:102400',
+            'file' => 'required|file|mimes:jpeg,jpg,png,gif,pdf,doc,docx|max:102400',
             'entity_type' => ['required', Rule::in($allowedEntityTypes)],
             'author_id' => ['required', 'integer'],
         ], $messages = [
