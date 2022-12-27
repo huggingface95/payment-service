@@ -40,6 +40,7 @@ class ApplicantBankingAccess extends BaseModel
         'operation_limit',
         'used_limit',
         'role_id',
+        'grant_access',
     ];
 
     public $timestamps = false;
