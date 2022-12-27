@@ -18,6 +18,8 @@ type PaymentSystem {
     providers: PaymentProvider @belongsTo(relation:"providers")
     "Получить Реквизиты"
     banks: [PaymentBank] @belongsToMany(relation:"banks")
+    "Получить типы операций"
+    operations: [OperationType] @belongsToMany(relation:"operations")
     "Описание"
     description: String
     "Лого"
@@ -57,6 +59,8 @@ input InputPaymentSystem {
     payment_provider_id: ID
     "массив ID Реквизитов"
     banks: PivotTable
+    "массив типов операций"
+    operations: PivotTable
     "Описание"
     description: String
     "Лого"

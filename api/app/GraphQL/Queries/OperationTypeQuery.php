@@ -27,6 +27,13 @@ class OperationTypeQuery
              $operationTypes->where('fee_type_id', '=', $fee_type)->get();
         }
 
+        if (isset($args['filter']['column']) && $args['filter']['column'] === 'payment_system_id') {
+            $paymentSystem = $args['filter']['value'];
+            $operationTypes->where('payment_system_operation_types.payment_system_id', '=', $paymentSystem)
+                ->leftJoin('payment_system_operation_types', 'operation_type.id', '=', 'payment_system_operation_types.operation_type_id')
+                ->get();
+        }
+
         return $operationTypes->orderBy('id', 'ASC')->get();
     }
 }
