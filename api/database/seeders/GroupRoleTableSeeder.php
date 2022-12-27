@@ -40,8 +40,13 @@ class GroupRoleTableSeeder extends Seeder
             ],
         ];
 
+        $i = 1;
         foreach ($groupRoles as $group) {
-            GroupRole::insert( $group);
+            GroupRole::firstOrCreate([
+                'id' => $i,
+            ], $group);
+
+            $i++;
         }
     }
 }

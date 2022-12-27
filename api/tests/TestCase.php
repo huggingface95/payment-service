@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\DTO\Auth\Credentials;
 use App\DTO\TransformerDTO;
+use App\Repositories\JWTRepository;
 use App\Services\AuthService;
 use App\Services\JwtService;
 use Illuminate\Support\Facades\Artisan;
@@ -14,11 +15,15 @@ use Nuwave\Lighthouse\Testing\MakesGraphQLRequestsLumen;
 use Illuminate\Support\Facades\Http;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Token;
+use App\Repositories\Interfaces\JWTRepositoryInterface;
+use Laravel\Passport\ClientRepository;
 
 abstract class TestCase extends BaseTestCase
 {
     use MakesGraphQLRequestsLumen,
         ClearsSchemaCache;
+
+    public JWTRepository $repository;
 
     protected static $setUpHasRunOnce = false;
 
@@ -62,11 +67,16 @@ abstract class TestCase extends BaseTestCase
             $data = ['email' => 'test@test.com', 'password' => '1234567Qa'];
         }
 
-        $token = Http::accept('application/json')->post('http://172.16.0.8:2491/auth/login', $data);
-        $user = Http::accept('application/json')->withHeaders(['Authorization' => 'Bearer '. $token])->post('http://172.16.0.8:2491/auth/me');
-        $jwtService = new JwtService();
+        $token = Http::accept('application/json')->post('http://172.16.0.3:2491/auth/login', $data);
+        //$user = Http::accept('application/json')->withHeaders(['Authorization' => 'Bearer '. $token])->post('http://172.16.0.3:2491/auth/me');
+        $client = (new ClientRepository())->createPasswordGrantClient(2, 'Docudots', 'http://localhost', 'member');
+        $client->update(['personal_access_client' => true]);
+        $client->update(['password_client' => false]);
+        $repository = new JWTRepository($client);
+        $jwtService = new JwtService($repository);
         $credentials = $jwtService->parseJWT($token);
         $credentialsDto = TransformerDTO::transform(Credentials::class, $credentials);
+
         return $credentialsDto->model;
     }
 

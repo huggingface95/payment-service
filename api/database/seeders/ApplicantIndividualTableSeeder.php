@@ -20,7 +20,6 @@ class ApplicantIndividualTableSeeder extends Seeder
                 'first_name' => 'Applicant_test',
                 'last_name' => 'Test',
                 'url' => 'https://applicant.com',
-                'email' => 'applicant1@test.com',
                 'phone' => '+000000000000',
                 'password_hash' => Hash::make('1234567Qa'),
                 'password_salt' => '4561654sd654f65d4f',
@@ -40,7 +39,6 @@ class ApplicantIndividualTableSeeder extends Seeder
                 'first_name' => 'Applicant_test2',
                 'last_name' => 'Test2',
                 'url' => 'https://applicant2.com',
-                'email' => 'applicant2@test.com',
                 'phone' => '+000000000000',
                 'password_hash' => Hash::make('1234567Qa'),
                 'password_salt' => '4561654sd654f65d4f',
@@ -58,8 +56,12 @@ class ApplicantIndividualTableSeeder extends Seeder
             ],
         ];
 
-        foreach ($applicants as $applicant) {
-            ApplicantIndividual::insert($applicant);
+        foreach ($applicants as $id => $applicant) {
+            ApplicantIndividual::firstOrCreate([
+                'id' => $id,
+                'email' => 'applicant' . $id . '@test.com',
+            ], $applicant);
+
         }
     }
 }

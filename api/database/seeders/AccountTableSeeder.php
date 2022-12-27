@@ -18,9 +18,11 @@ class AccountTableSeeder extends Seeder
         $faker = Faker::create();
 
         for ($i = 1; $i <= 3; $i++) {
-            Account::insert(
+            Account::firstOrCreate(
                 [
                     'account_name' => 'Test account ' . $i,
+                ],
+                [
                     'company_id' => 1,
                     'currency_id' => 1,
                     'owner_id' => 1,

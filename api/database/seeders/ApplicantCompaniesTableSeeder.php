@@ -18,10 +18,12 @@ class ApplicantCompaniesTableSeeder extends Seeder
         $faker = Faker::create();
 
         for ($i = 1; $i <= 3; $i++) {
-            ApplicantCompany::insert(
+            ApplicantCompany::firstOrCreate(
                 [
                     'id' => $i,
                     'name' => 'Applicant Company Test ' . $i,
+                ],
+                [
                     'email' => 'applicant' . $i . '@test.com',
                     'url' => 'https://applicant-company-test' . $i . '.com',
                     'phone' => $faker->phoneNumber(),
