@@ -12,7 +12,7 @@ type KycTimeline {
     ip: String!
     "Действие"
     action: String!
-    action_type: String!
+    action_type: KycTimelineActionType!
     "Тег"
     tag: String!
     "Мембер"
@@ -33,6 +33,19 @@ type KycTimeline {
     action_new_value: JSON
     "Дата добавления"
     created_at: DateTime!
+}
+
+enum KycTimelineActionType {
+    DOCUMENT_UPLOAD @enum(value: "document_upload")
+    DOCUMENT_STATE @enum(value: "document_state")
+    VERIFICATION @enum(value: "verification")
+    EMAIL @enum(value: "email")
+    PROFILE @enum(value: "profile")
+}
+
+enum Module {
+    KYC @enum(value: "KYC")
+    BANKING @enum(value: "Banking")
 }
 
 extend type Query @guard {

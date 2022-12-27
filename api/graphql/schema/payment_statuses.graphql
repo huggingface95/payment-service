@@ -7,9 +7,26 @@ type PaymentStatus {
     name: String!
 }
 
+enum OperationTypeEnum {
+    INCOMING_TRANSFER @enum(value: "Incoming Transfer")
+    BETWEEN_ACCOUNT @enum(value: "Between Account")
+    BETWEEN_USERS @enum(value: "Between Users")
+    EXCHANGE @enum(value: "Exchange")
+    OUTGOING_TRANSFER @enum(value: "Outgoing Transfer")
+    FEE @enum(value: "Fee")
+}
+
 extend type Query  @guard{
     """
     Получить список статусов
+    фильтр по operation_type:
+    OPERATION_TYPE
     """
-   paymentStatuses: [PaymentStatus!]!   @all
+   paymentStatuses (
+        filter: _ @filterConditions(static: QueryPaymentStatusesFilterStatic)
+    ): [PaymentStatus!]!   @field(resolver:"PaymentStatusQuery@get")
+}
+
+input QueryPaymentStatusesFilterStatic @spread{
+    operation_type: OperationTypeEnum @eq
 }

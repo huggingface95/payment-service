@@ -18,17 +18,20 @@ class EmailNotificationMutator extends BaseMutator
         $templates = $args['templates'];
         unset($args['templates']);
         ($args['group_type_id'] == GroupRole::MEMBER) ? $args['type'] = EmailNotification::ADMINISTRATION : $args['type'] = EmailNotification::CLIENT;
-        /** @var EmailNotification $emailNotification */
-        $notify = EmailNotification::where([
-            'company_id'=>$args['company_id'],
-            'type'=>$args['type'],
-            'group_type_id' => $args['group_type_id'],
-            'recipient_type'=>EmailNotification::RECIPIENT_GROUP,
-            'group_role_id'=>$args['group_role_id'],
-        ])->first();
-        if ($notify) {
-            throw new GraphqlException('This notification already exist.', 'use', 409);
+        if (!isset($args['client_id'])) {
+            /** @var EmailNotification $emailNotification */
+            $notify = EmailNotification::where([
+                'company_id'=>$args['company_id'],
+                'type'=>$args['type'],
+                'group_type_id' => $args['group_type_id'],
+                'recipient_type'=>EmailNotification::RECIPIENT_GROUP,
+                'group_role_id'=>$args['group_role_id'],
+            ])->first();
+            if ($notify) {
+                throw new GraphqlException('This notification already exist.', 'use', 409);
+            }
         }
+
         $emailNotification = EmailNotification::create($args);
         $emailNotification->templates()->sync($templates, true);
 

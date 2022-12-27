@@ -9,7 +9,7 @@ type Ticket {
     "Сообщение"
     message: String!
     "Статус"
-    status: Int!
+    status: TicketStatus @hasOne(relation: "status")
     "Получить файл"
     file_object: Files  @hasOne(relation: "file")
     "Получить компанию"
@@ -28,6 +28,10 @@ type Ticket {
     updated_at: DateTime
 }
 
+type TicketStatus {
+    id: ID!
+    name: String!
+}
 
 extend type Query @guard {
     "Получить по билет ID"

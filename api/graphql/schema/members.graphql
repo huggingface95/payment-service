@@ -143,30 +143,6 @@ extend type Mutation  {
     ): Members @field(resolver: "MembersMutator@create")
 
     """
-    Пригласить участника
-    """
-    inviteMember(
-        "Имя участника"
-        first_name: String!
-        "Фамилия участника"
-        last_name: String!
-        "Email участника"
-        email: EMAIL! @rules(apply: ["email", "unique:members"])
-        "ID компании"
-        company_id: ID!
-        "ID группы участника"
-        group_id: ID!
-        "ID настройки двухфактороной авторизации"
-        two_factor_auth_setting_id: ID!
-        "Пароль"
-        password: String @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
-        "Подтверждение пароля"
-        password_confirmation: String
-        "Отправить приглашение на email"
-        send_email: Boolean
-    ): Members @field(resolver: "MembersMutator@invite")
-
-    """
     Обновить поля участника
     """
     updateMember(

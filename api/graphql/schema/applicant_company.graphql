@@ -291,20 +291,20 @@ extend type Mutation @guard {
 
     "Добавить связь Individual с Company"
     createApplicantIndividualCompany(
-        applicant_individual_id: ID!
+        applicant_id: ID!
         applicant_company_id: ID!
         applicant_individual_company_relation_id: ID!
         applicant_individual_company_position_id: ID!
-        percentage_owned: Float @rules(apply: ["required", "numeric", "between:0,100.00"])
+        percentage_owned: Float @rules(apply: [ "numeric", "between:0,100.00"])
     ): ApplicantIndividualCompany   @create
 
     "Редактировать связь Individual с Company"
     updateApplicantIndividualCompany(
-        applicant_individual_id: ID!
+        applicant_id: ID!
         applicant_company_id: ID!
         applicant_individual_company_relation_id: ID
         applicant_individual_company_position_id: ID
-        percentage_owned: Float @rules(apply: ["required", "numeric", "between:0,100.00"])
+        percentage_owned: Float @rules(apply: [ "numeric", "between:0,100.00"])
     ): ApplicantIndividualCompany   @field(resolver: "ApplicantIndividualCompanyMutator@update")
 
     "Удалить связь Individual с Company"

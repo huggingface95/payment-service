@@ -93,6 +93,8 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'group_type_id',
         'kyc_level_id',
         'entity_id',
+        'address_additional_fields',
+        'last_screened_at',
     ];
 
     protected $hidden = [
@@ -106,6 +108,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'personal_additional_fields' => 'array',
         'contacts_additional_fields' => 'array',
         'profile_additional_fields' => 'array',
+        'address_additional_fields' => 'array',
         'backup_codes' => 'array',
     ];
 
@@ -253,7 +256,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         return $this->belongsTo(self::class, 'applicant_individual_id', 'id');
     }
 
-    public function companies()
+    public function companies(): BelongsToMany
     {
         return $this->belongsToMany(ApplicantCompany::class, 'applicant_individual_company', 'applicant_id', 'applicant_company_id');
     }
@@ -291,6 +294,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function applicantBankingAccess(): \Ankurk91\Eloquent\Relations\BelongsToOne
     {
         return $this->belongsToOne(ApplicantBankingAccess::class, ApplicantIndividualCompany::class, 'applicant_individual_id', 'applicant_company_id', 'id', 'applicant_company_id');
+    }
+
+    public function applicantIndividualCompanies(): HasMany
+    {
+        return $this->hasMany(ApplicantIndividualCompany::class, 'applicant_id');
     }
 
     public function files(): HasMany

@@ -12,13 +12,14 @@ class FilterByCompanyScope implements Scope
     public function apply(Builder $builder, Model $model)
     {
         if (BaseModel::$currentCompanyId && preg_match('/^(SELECT|select)/', $builder->getQuery()->toSql())) {
-            $filteredTables = array_map(function ($table){
+            $filteredTables = array_map(function ($table) {
                 return sprintf('%s%s', $table, '(?=[\.\"\' ])');
-            }, BaseModel::FILTER_BY_COMPANY_TABLES);
+            }, array_keys(BaseModel::FILTER_BY_COMPANY_TABLES));
 
             if (preg_match(sprintf("/%s/", implode('|', $filteredTables)), $builder->getQuery()->toSql(), $matches)) {
                 foreach ($matches as $match) {
-                    $builder->where("{$match}.company_id", BaseModel::$currentCompanyId);
+                    $column = $match . '.' . BaseModel::FILTER_BY_COMPANY_TABLES[$match];
+                    $builder->where($column, BaseModel::$currentCompanyId);
                 }
             }
         }

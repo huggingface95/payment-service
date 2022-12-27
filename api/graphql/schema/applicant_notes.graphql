@@ -23,7 +23,7 @@ extend type Query @guard {
     Получить список всех заметок
     orderBy: [{ column: CREATED_AT, order: DESC }] сортировка по ID, по времени создания
     """
-    applicantIndividualNotes( orderBy: _ @orderBy(
+    applicantIndividualNotes(applicant_individual_id: ID @eq,  orderBy: _ @orderBy(
         columns: ["id","created_at"],
     )): [ApplicantIndividualNotes!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }

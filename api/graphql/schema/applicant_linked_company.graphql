@@ -1,0 +1,10 @@
+type ApplicantLinkedCompany {
+    company: ApplicantCompany
+    company_position: ApplicantIndividualCompanyPosition
+    company_relation: ApplicantIndividualCompanyRelation
+}
+
+extend type Query @guard {
+    "Вывод списка связанные компании"
+    applicantLinkedCompanies(applicant_individual_id: ID! @eq): [ApplicantLinkedCompany!]!
+}

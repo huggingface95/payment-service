@@ -121,37 +121,6 @@ class MembersMutator extends BaseMutator
     /**
      * @param $_
      * @param  array  $args
-     * @return mixed
-     */
-    public function invite($_, array $args)
-    {
-        if (! isset($args['password'])) {
-            $password = Str::random(8);
-        } else {
-            $password = $args['password'];
-        }
-        
-        $args['member_status_id'] = MemberStatusEnum::INACTIVE->value;
-        $args['password_hash'] = Hash::make($password);
-        $args['password_salt'] = Hash::make($password);
-        $args['is_need_change_password'] = true;
-
-        $member = Members::create($args);
-
-        if (isset($args['group_id'])) {
-            $member->groupRoles()->sync([$args['group_id']], true);
-        }
-
-        if (isset($args['send_email']) && $args['send_email'] === true) {
-            $this->emailService->sendChangePasswordEmail($member);
-        }
-        
-        return $member;
-    }
-
-    /**
-     * @param $_
-     * @param  array  $args
      * @return array
      */
     public function setPassword($_, array $args)
@@ -167,7 +136,7 @@ class MembersMutator extends BaseMutator
      * @return mixed
      */
     public function resetPassword($_, array $args)
-    {        
+    {
         $member = Members::find($args['id']);
         if (! $member) {
             throw new GraphqlException('Member not found', 'not found', 404);
