@@ -18,7 +18,7 @@ class PaymentProviderTableSeeder extends Seeder
         $faker = Factory::create();
 
         for ($i = 1; $i <= 10; $i++) {
-            PaymentProvider::firstOrCreate(
+            PaymentProvider::withTrashed()->firstOrCreate(
                 [
                     'name' => 'PaymentProvider ' . $i,
                 ],
@@ -29,5 +29,13 @@ class PaymentProviderTableSeeder extends Seeder
                 ]
             );
         }
+
+        PaymentProvider::withTrashed()->firstOrCreate([
+            'name' => 'Internal',
+        ],
+        [
+            'is_active' => true,
+            'company_id' => 1,
+        ]);
     }
 }

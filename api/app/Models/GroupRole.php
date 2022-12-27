@@ -6,6 +6,7 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\RoleFilterSuperAdminScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
@@ -34,8 +35,6 @@ class GroupRole extends BaseModel
         'name',
         'group_type_id',
         'role_id',
-        'payment_provider_id',
-        'commission_template_id',
         'is_active',
         'description',
         'company_id',
@@ -63,19 +62,14 @@ class GroupRole extends BaseModel
         return $this->belongsTo(GroupType::class, 'group_type_id');
     }
 
+    public function groupRoleProviders(): HasMany 
+    {
+        return $this->hasMany(GroupRoleProvider::class, 'group_role_id');
+    }
+
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'role_id')->withoutGlobalScope(RoleFilterSuperAdminScope::class);
-    }
-
-    public function paymentProvider(): BelongsTo
-    {
-        return $this->belongsTo(PaymentProvider::class, 'payment_provider_id');
-    }
-
-    public function commissionTemplate(): BelongsTo
-    {
-        return $this->belongsTo(CommissionTemplate::class, 'commission_template_id');
     }
 
     public function company(): BelongsTo
