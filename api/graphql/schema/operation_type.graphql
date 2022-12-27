@@ -23,4 +23,5 @@ extend type Query  @guard{
 input QueryOperationTypesFilterStatic @spread{
     fee_type_id: ID @eq
     transfer_type: TransferType @eq
+    payment_system_id: ID @eq
 }
