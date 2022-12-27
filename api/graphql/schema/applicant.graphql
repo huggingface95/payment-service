@@ -98,6 +98,8 @@ type ApplicantIndividual {
     ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
     "Applicant KYC Level"
     kyc_level: ApplicantKycLevel @belongsTo (relation: "kycLevel")
+    "Applicant Banking Access"
+    banking_access: ApplicantBankingAccess @hasOne(relation: "bankingAccess")
 }
 
 
