@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\PaymentProvider;
 use App\Models\PaymentSystem;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
@@ -26,5 +27,11 @@ class PaymentSystemTableSeeder extends Seeder
                 'payment_provider_id' => $i,
             ]);
         }
+
+        PaymentSystem::firstOrCreate([
+            'name' => 'Internal',
+            'is_active' => true,
+            'payment_provider_id' => PaymentProvider::where('name', 'Internal')->first()->id,
+        ]);
     }
 }
