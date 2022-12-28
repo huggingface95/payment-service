@@ -124,14 +124,16 @@ class BaseModel extends Model
 
     protected static function filterByCompany(?Model $user, string $action, Model $model): bool
     {
-        $table = $model->getTable();
-        /** @var Members|ApplicantIndividual $user */
-        if (array_key_exists($table, self::FILTER_BY_COMPANY_TABLES)) {
-            if ($key = $model->getAttribute(self::FILTER_BY_COMPANY_TABLES[$table])) {
-                if (in_array($action, self::FILTER_BY_COMPANY_SKIP_ACTIONS[$table])){
-                    return true;
+        if ($user) {
+            $table = $model->getTable();
+            /** @var Members|ApplicantIndividual $user */
+            if (array_key_exists($table, self::FILTER_BY_COMPANY_TABLES)) {
+                if ($key = $model->getAttribute(self::FILTER_BY_COMPANY_TABLES[$table])) {
+                    if (in_array($action, self::FILTER_BY_COMPANY_SKIP_ACTIONS[$table])) {
+                        return true;
+                    }
+                    return in_array($key, [self::SUPER_COMPANY_ID, $user->company_id]);
                 }
-                return in_array($key, [self::SUPER_COMPANY_ID, $user->company_id]);
             }
         }
         return true;
