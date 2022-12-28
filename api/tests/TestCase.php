@@ -68,7 +68,7 @@ abstract class TestCase extends BaseTestCase
             $data = ['email' => 'test@test.com', 'password' => '1234567Qa'];
         }
 
-        $token = Http::accept('application/json')->post('http://dev.api.docudots.com:2491/auth/login', $data);
+        $token = Http::accept('application/json')->post('http://go-auth:2491/auth/login', $data);
 
         return $token->json('access_token');
     }
