@@ -6,6 +6,7 @@ use App\Models\ApplicantCompany;
 use App\Models\ApplicantDocument;
 use App\Models\ApplicantIndividual;
 use App\Models\ApplicantIndividualCompany;
+use App\Models\EmailNotificationClient;
 use App\Models\ClientIpAddress;
 use App\Models\GroupRoleUser;
 use App\Models\Members;
@@ -30,6 +31,7 @@ class ChangeEnumFieldsForApplicantIndividualAndApplicantCompanyAndMembersTables 
         $this->changeFieldInTableUp(new ApplicantDocument(), 'applicant_type');
         $this->changeFieldInTableUp(new ApplicantIndividualCompany(), 'applicant_type');
         $this->changeFieldInTableUp(new ClientIpAddress(), 'client_type');
+        $this->changeFieldInTableUp(new EmailNotificationClient(), 'client_type');
         $this->changeFieldInTableUp(
             new GroupRoleUser(),
             'user_type',
