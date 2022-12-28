@@ -101,6 +101,25 @@ class EmailService
         $this->sendApplicantEmailByApplicantDto($emailDTO);
     }
 
+    public function sendApplicantRegistrationLinkEmail(ApplicantIndividual $applicant): void
+    {
+        $verifyToken = $this->verifyService->createVerifyToken($applicant);
+
+        $company = $applicant->company;
+        $emailTemplateName = 'Welcome! Confirm your email address';
+        $emailData = [
+            'email' => $applicant->email,
+            'client_name' => $applicant->first_name,
+            'logo_member_company' => $company->logo_link,
+            'member_company_name' => $company->name,
+            'customer_support_url' => $company->backoffice_support_url,
+            'email_confirm_url' => $company->member_verify_url . '/email/verify/' . $verifyToken->token,
+        ];
+
+        $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $company, $emailTemplateName, $emailData);
+        $this->sendApplicantEmailByApplicantDto($emailDTO);
+    }
+
     /**
      * @throws GraphqlException
      */
