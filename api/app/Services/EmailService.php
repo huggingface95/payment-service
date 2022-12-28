@@ -11,6 +11,7 @@ use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
 use App\Models\Account;
+use App\Models\ApplicantIndividual;
 use App\Models\Members;
 use App\Repositories\Interfaces\EmailRepositoryInterface;
 
@@ -80,6 +81,24 @@ class EmailService
 
         $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $emailData, $emailTemplateName);
         $this->sendMemberEmailByMemberDto($emailDTO, true);
+    }
+
+    public function sendApplicantChangePasswordEmail(ApplicantIndividual $applicant): void
+    {
+        $verifyToken = $this->verifyService->createVerifyToken($applicant);
+
+        $company = $applicant->company;
+        $emailTemplateName = 'Reset Password';
+        $emailData = [
+            'email' => $applicant->email,
+            'member_name' => $applicant->first_name,
+            'logo_member_company' => $company->logo_link,
+            'member_email_confirm_url' => $company->member_verify_url . '/password/reset/' . $verifyToken->token,
+            'member_company_name' => $company->name,
+        ];
+
+        $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $company, $emailTemplateName, $emailData);
+        $this->sendApplicantEmailByApplicantDto($emailDTO);
     }
 
     /**

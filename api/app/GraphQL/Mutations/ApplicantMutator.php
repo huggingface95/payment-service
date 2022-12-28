@@ -161,4 +161,28 @@ class ApplicantMutator extends BaseMutator
 
         return $applicant;
     }
+
+    public function sendEmailResetPassword($_, array $args)
+    {
+        $applicant = ApplicantIndividual::find($args['applicant_id']);
+        if (! $applicant) {
+            throw new GraphqlException('Applicant not found', 'not found', 404);
+        }
+
+        $this->emailService->sendApplicantChangePasswordEmail($applicant);
+
+        return $applicant;
+    }
+
+    public function sendEmailRegistrationLink($_, array $args)
+    {
+        $applicant = ApplicantIndividual::find($args['applicant_id']);
+        if (! $applicant) {
+            throw new GraphqlException('Applicant not found', 'not found', 404);
+        }
+
+        $this->emailService->sendApplicantChangePasswordEmail($applicant);
+
+        return $applicant;
+    }
 }

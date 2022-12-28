@@ -32,11 +32,11 @@ class MembersMutator extends BaseMutator
      */
     public function create($_, array $args)
     {
-        if (! isset($args['send_email']) || $args['send_email'] == false) {
-            if (! isset($args['password'])) {
-                throw new GraphqlException('Password field can\'t be empty', 'use');
-            }
-        }
+//        if (! isset($args['send_email']) || $args['send_email'] == false) {
+//            if (! isset($args['password'])) {
+//                throw new GraphqlException('Password field can\'t be empty', 'use');
+//            }
+//        }
         if (! isset($args['password'])) {
             $password = Str::random(8);
         } else {
