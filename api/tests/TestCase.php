@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\DTO\Auth\Credentials;
 use App\DTO\TransformerDTO;
+use App\Models\Members;
 use App\Repositories\JWTRepository;
 use App\Services\AuthService;
 use App\Services\JwtService;
@@ -67,17 +68,9 @@ abstract class TestCase extends BaseTestCase
             $data = ['email' => 'test@test.com', 'password' => '1234567Qa'];
         }
 
-        $token = Http::accept('application/json')->post('http://172.16.0.3:2491/auth/login', $data);
-        //$user = Http::accept('application/json')->withHeaders(['Authorization' => 'Bearer '. $token])->post('http://172.16.0.3:2491/auth/me');
-        $client = (new ClientRepository())->createPasswordGrantClient(2, 'Docudots', 'http://localhost', 'member');
-        $client->update(['personal_access_client' => true]);
-        $client->update(['password_client' => false]);
-        $repository = new JWTRepository($client);
-        $jwtService = new JwtService($repository);
-        $credentials = $jwtService->parseJWT($token);
-        $credentialsDto = TransformerDTO::transform(Credentials::class, $credentials);
+        $token = Http::accept('application/json')->post('http://dev.api.docudots.com:2491/auth/login', $data);
 
-        return $credentialsDto->model;
+        return $token->json('access_token');
     }
 
     /**

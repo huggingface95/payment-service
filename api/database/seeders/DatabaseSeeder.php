@@ -69,5 +69,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ApplicantModulesTableSeeder::class);
         $this->call(ApplicantIndividualCompanyPositionTableSeeder::class);
         $this->call(ApplicantIndividualCompanyRelationTableSeeder::class);
+        $this->call(OuthClientsTableSeeder::class);
     }
 }
