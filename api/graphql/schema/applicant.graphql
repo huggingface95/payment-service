@@ -311,6 +311,15 @@ extend type Mutation @guard {
     """
     sendEmailResetPassword(
         applicant_id: ID!
+        email: String
     ): ApplicantIndividual   @field(resolver: "ApplicantMutator@sendEmailResetPassword")
+
+    """
+    Отправить ссылку на регистрацию
+    """
+    sendEmailRegistation(
+        applicant_id: ID!
+        email: String
+    ): ApplicantIndividual   @field(resolver: "ApplicantMutator@sendEmailRegistrationLink")
 }
 
