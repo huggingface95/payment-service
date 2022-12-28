@@ -27,13 +27,20 @@ extend type Query @guard {
     """
     Получить список пользователей
     orderBy: [{ column: APPLICANT_INDIVIDUAL_ID, order: DESC }] сортировка по ID, по имени, фамилии, email
-    where:{column: APPLICANT_INDIVIDUAL_ID, value: ""} фильтр по applicant_individual_id
+    filter: {column: MEMBER_ID, operator: EQ, value: 2} фильтр по applicant_individual_id, applicant_company_id, member_id, grant_access
     """
     applicantBankingAccess(
-        where: _ @whereConditions(columns: ["applicant_individual_id","applicant_company_id","member_id","grant_access"]),
+        filter: _ @filterConditions(static: QueryApplicantBankingAccessFilterStatic),
         orderBy: _ @orderBy(
         columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
     )): [ApplicantBankingAccess!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryApplicantBankingAccessFilterStatic @spread {
+    applicant_individual_id: ID @eq
+    applicant_company_id: ID @eq
+    member_id: ID @eq
+    grant_access: Boolean @eq
 }
 
 extend type Mutation @guard {
