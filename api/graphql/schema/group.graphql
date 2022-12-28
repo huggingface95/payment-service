@@ -23,6 +23,18 @@ type Groups {
     groups: [GroupRole] @hasMany(relation: "groups") @deprecated
 }
 
+type GroupRoleProvider {
+    id: ID!
+    "ID роль групп"
+    group_role_id: ID
+    "Получить связанный платежный провайдер"
+    payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
+    "Получить связанный шаблон комиссий"
+    commission_template: CommissionTemplate @belongsTo(relation: "commissionTemplate")
+    "По умолчанию"
+    is_default: Boolean
+}
+
 
 type GroupRole {
     id: ID!
@@ -42,10 +54,9 @@ type GroupRole {
     group_type: GroupType @belongsTo(relation: "groupType")
     "Получить связанную роль"
     role: Role @belongsTo(relation: "role")
-    "Получить связанный платежный провайдер"
-    payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
-    "Получит свящанный шаблон комиссий"
-    commission_template: CommissionTemplate @belongsTo(relation: "commissionTemplate")
+    "Получить провайдеров"
+    providers: [GroupRoleProvider] @hasMany(relation: "groupRoleProviders")
+    "Получить компанию"
     company: Company @belongsTo(relation: "company")
     "Получить связанный модуль"
     module: ApplicantModules @belongsTo(relation: "modules")
@@ -77,7 +88,7 @@ extend type Query @guard {
         )): [GroupRole!]!   @paginate(defaultCount: 10) @deprecated
 
     groupList(
-        query: QueryGroupCondition
+        filter: _ @filterConditions(static: QueryGroupListFilterStatic),
         orderBy: _ @orderBy(columns: ["id","is_active","name"],
         )): [GroupRole!]!   @paginate(defaultCount: 10)
 }
@@ -88,16 +99,25 @@ input QueryGroupTypesFilterStatic @spread{
     hasGroupsFilterByRoleId: ID @eq
 }
 
-input QueryGroupCondition {
+input QueryGroupListFilterStatic @spread {
     id: ID @eq
     company_id: ID @eq
-    payment_provider_id: ID @eq
     name: String @like
     role_id: ID @eq
     group_type_id: ID @eq
-    commission_template_id: ID @eq
     is_active: Boolean @eq
     module_id: ID @eq
+    hasGroupRoleProvidersFilterByCommissionTemplateId: ID @eq
+    hasGroupRoleProvidersFilterByPaymentProviderId: ID @eq
+}
+
+input InputGroupRoleProvider {
+    "ID платежного провайдера"
+    payment_provider_id: ID!
+    "ID шаблона комиссий"
+    commission_template_id: ID!
+    "По умолчанию"
+    is_default: Boolean
 }
 
 enum GroupTypeMode {
@@ -116,10 +136,8 @@ extend type Mutation @guard {
         role_id: ID
         "ID типа группы из списка групп поумолчанию"
         group_type_id: ID!
-        "ID платежного провайдера"
-        payment_provider_id: ID
-        "ID шаблона комиссий"
-        commission_template_id: ID
+        "Провайдер"
+        providers: [InputGroupRoleProvider]
         "Активная или нет группа (true/false)"
         is_active: Boolean
         "ID компании"
@@ -140,10 +158,8 @@ extend type Mutation @guard {
         role_id: ID
         "ID типа группы из списка групп поумолчанию"
         group_type_id: ID!
-        "ID платежного провайдера"
-        payment_provider_id: ID
-        "ID шаблона комиссий"
-        commission_template_id: ID
+        "Провайдер"
+        providers: [InputGroupRoleProvider]
         "Активная или нет группа (true/false)"
         is_active: Boolean
         "ID компании"
@@ -160,10 +176,8 @@ extend type Mutation @guard {
     setMemberGroup(
         "Group"
         group_type_id: ID!
-        "Payment Provider"
-        payment_provider_id: ID!
-        "Commission Template"
-        commission_template_id: ID!
+        "Провайдер"
+        providers: [InputGroupRoleProvider!]
         "Роль"
         role_id: ID!
     ): GroupRole   @field(resolver:"GroupMutator@setMemberGroup")

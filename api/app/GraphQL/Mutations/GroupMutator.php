@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphqlException;
 use App\Models\BaseModel;
 use App\Models\GroupRole;
+use App\Models\GroupRoleProvider;
 use App\Models\GroupType;
 use App\Models\Members;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,13 @@ class GroupMutator extends BaseMutator
             throw new GraphqlException('An entry with this group does not exist', 'not found', 404);
         }
 
-        return GroupRole::create($args);
+        $groupRole = GroupRole::create($args);
+
+        if (isset($args['providers'])) {
+            $this->setGroupRoleProviders($groupRole, $args);
+        }
+
+        return $groupRole;
     }
 
     /**
@@ -63,6 +70,10 @@ class GroupMutator extends BaseMutator
         }
 
         $groupRole->update($args);
+
+        if (isset($args['providers'])) {
+            $this->setGroupRoleProviders($groupRole, $args);
+        }
 
         return $groupRole;
     }
@@ -97,6 +108,24 @@ class GroupMutator extends BaseMutator
             $member->groupRoles()->sync([$role_id], true);
         }
 
+        if (isset($args['providers'])) {
+            $this->setGroupRoleProviders($groupRole, $args);
+        }
+
         return $groupRole;
+    }
+
+    private function setGroupRoleProviders(GroupRole $groupRole, array $args): void
+    {
+        $groupRole->groupRoleProviders()->delete();
+        
+        foreach ($args['providers'] as $provider) {
+            GroupRoleProvider::insert([
+                'group_role_id' => $groupRole->id,
+                'payment_provider_id' => $provider['payment_provider_id'],
+                'commission_template_id' => $provider['commission_template_id'],
+                'is_default' => $provider['is_default'] ?? false,
+            ]);
+        }
     }
 }
