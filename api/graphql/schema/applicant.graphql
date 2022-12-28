@@ -305,5 +305,12 @@ extend type Mutation @guard {
     sendPhoneVerification(
         applicant_id: ID!
     ): ApplicantIndividual   @field(resolver: "ApplicantMutator@sendPhoneVerification")
+
+    """
+    Сбросить пароль участнику
+    """
+    sendEmailResetPassword(
+        applicant_id: ID!
+    ): ApplicantIndividual   @field(resolver: "ApplicantMutator@sendEmailResetPassword")
 }
 

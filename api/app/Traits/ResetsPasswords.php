@@ -165,6 +165,18 @@ trait ResetsPasswords
     }
 
     /**
+     * Get the password reset validation rules with token.
+     *
+     * @return array
+     */
+    protected function getResetValidationRulesByToken()
+    {
+        return [
+            'token' => 'required',
+        ];
+    }
+
+    /**
      * Reset the given user's password.
      *
      * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
