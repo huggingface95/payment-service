@@ -181,7 +181,7 @@ class ApplicantMutator extends BaseMutator
             throw new GraphqlException('Applicant not found', 'not found', 404);
         }
 
-        $this->emailService->sendApplicantChangePasswordEmail($applicant);
+        $this->emailService->sendApplicantRegistrationLinkEmail($applicant);
 
         return $applicant;
     }
