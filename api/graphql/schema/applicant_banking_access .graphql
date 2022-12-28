@@ -19,19 +19,28 @@ type ApplicantBankingAccess {
     operation_limit: Decimal!
     "Получить роль"
     role: Role @hasOne(relation: "role")
+    "Доступ"
+    grant_access: Boolean
 }
 
 extend type Query @guard {
     """
     Получить список пользователей
     orderBy: [{ column: APPLICANT_INDIVIDUAL_ID, order: DESC }] сортировка по ID, по имени, фамилии, email
-    where:{column: APPLICANT_INDIVIDUAL_ID, value: ""} фильтр по applicant_individual_id
+    filter: {column: MEMBER_ID, operator: EQ, value: 2} фильтр по applicant_individual_id, applicant_company_id, member_id, grant_access
     """
     applicantBankingAccess(
-        where: _ @whereConditions(columns: ["applicant_individual_id","applicant_company_id","member_id"]),
+        filter: _ @filterConditions(static: QueryApplicantBankingAccessFilterStatic),
         orderBy: _ @orderBy(
         columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
     )): [ApplicantBankingAccess!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryApplicantBankingAccessFilterStatic @spread {
+    applicant_individual_id: ID @eq
+    applicant_company_id: ID @eq
+    member_id: ID @eq
+    grant_access: Boolean @eq
 }
 
 extend type Mutation @guard {
@@ -77,9 +86,20 @@ extend type Mutation @guard {
         @field(resolver: "ApplicantBankingAccessMutator@update")
 
     "Удалить пользователя"
-    deleteApplicantBankingAccess (
+    deleteApplicantBankingMember(
         id: ID!
     ): ApplicantBankingAccess   @delete
 
+    "Предоставить доступ"
+    grantApplicantBankingAccess(
+        id: ID!
+    ): ApplicantBankingAccess
+        @field(resolver: "ApplicantBankingAccessMutator@grantAccess")
+
+    "Отозвать доступ"
+    deleteApplicantBankingAccess(
+        id: ID!
+    ): ApplicantBankingAccess
+        @field(resolver: "ApplicantBankingAccessMutator@deleteAccess")
 }
 
