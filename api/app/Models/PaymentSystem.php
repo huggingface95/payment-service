@@ -77,6 +77,11 @@ class PaymentSystem extends BaseModel
         return $this->belongsToMany(PaymentBank::class, 'payment_system_banks', 'payment_system_id', 'payment_bank_id');
     }
 
+    public function bankCorrespondent(): BelongsTo
+    {
+        return $this->belongsTo(BankCorrespondent::class, 'id', 'payment_system_id');
+    }
+
     public function logo(): BelongsTo
     {
         return $this->belongsTo(Files::class, 'logo_id');
