@@ -214,17 +214,17 @@ class ApplicantCompany extends BaseModel
 
     public function ownerRelation(): BelongsTo
     {
-        return $this->belongsTo(ApplicantIndividualCompany::class, 'owner_id', 'applicant_individual_id', 'applicant_individual_company_relation_id');
+        return $this->belongsTo(ApplicantIndividualCompany::class, 'owner_id', 'applicant_id', 'applicant_individual_company_relation_id');
     }
 
     public function ownerPosition(): BelongsTo
     {
-        return $this->belongsTo(ApplicantIndividualCompany::class, 'owner_id', 'applicant_individual_id', 'applicant_individual_company_position_id');
+        return $this->belongsTo(ApplicantIndividualCompany::class, 'owner_id', 'applicant_id', 'applicant_individual_company_position_id');
     }
 
     public function applicantIndividuals(): BelongsToMany
     {
-        return $this->belongsToMany(ApplicantIndividual::class, ApplicantIndividualCompany::class, 'applicant_company_id', 'applicant_individual_id');
+        return $this->belongsToMany(ApplicantIndividual::class, ApplicantIndividualCompany::class, 'applicant_company_id', 'applicant_id');
     }
 
     public function company(): BelongsTo
