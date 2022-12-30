@@ -16,6 +16,8 @@ class CreateBankCorrespondentsTable extends Migration
         Schema::create('bank_correspondents', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('bank_code');
+            $table->string('bank_account');
             $table->unsignedBigInteger('payment_system_id');
             $table->boolean('is_active');
             $table->timestamps();
