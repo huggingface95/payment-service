@@ -14,6 +14,8 @@ type PaymentBank {
     payment_system_code: String
     "Страна"
     country: Country @belongsTo(relation:"country")
+    "Получить банк корреспондент"
+    bank_correspondent: BankCorrespondent @belongsTo(relation: "bankCorrespondent")
     "Платежная провидер"
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Платежная система"

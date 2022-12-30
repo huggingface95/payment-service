@@ -1,0 +1,93 @@
+"""
+Bank correspondents
+"""
+type BankCorrespondent {
+    "ID"
+    id: ID!
+    "Название"
+    name: String!
+    "SWIFT"
+    bank_code: String!
+    "Счет банка корреспондента"
+    bank_account: String!
+    "Получить валюты"
+    currencies: [Currencies] @hasMany(relation: "currencies")
+    "Получить регионы"
+    regions: [Region] @hasMany(relation: "regions")
+    "Активность"
+    is_active: Boolean
+}
+
+extend type Query @guard {
+    """
+    Получить запись
+    """
+    bankCorrespondent(id: ID! @eq): BankCorrespondent!  @find
+
+    """
+    Получить список
+    """
+    bankCorrespondents(
+        filter: _ @filterConditions(static: QueryBankCorrespondentsFilterStatic),
+        orderBy: _ @orderBy(columns: ["id"])
+    ): [BankCorrespondent!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: ASC)
+}
+
+input QueryBankCorrespondentsFilterStatic @spread {
+    name: String @ilike
+    hasBankCorrespondentCurrenciesFilterByCurrencyId: ID @eq
+    hasBankCorrespondentRegionsFilterByRegionId: ID @eq
+}
+
+extend type Mutation @guard {
+    """
+    Создать банк корреспондент
+    """
+    createBankCorrespondent(
+        "Название"
+        name: String!
+        "SWIFT"
+        bank_code: String!
+        "Счет банка корреспондента"
+        bank_account: String!
+        "ID платежной системы"
+        payment_system_id: ID!
+        "ID валют"
+        currency_id: [ID]!
+        "ID регионов"
+        region_id: [ID]!
+        "Активность"
+        is_active: Boolean!
+    ): BankCorrespondent
+        @field(resolver: "BankCorrespondentMutator@create")
+
+    """
+    Обновить банк корреспондент
+    """
+    updateBankCorrespondent(
+        "ID проекта"
+        id: ID!
+        "Название"
+        name: String!
+        "SWIFT"
+        bank_code: String!
+        "Счет банка корреспондента"
+        bank_account: String!
+        "ID платежной системы"
+        payment_system_id: ID!
+        "ID валют"
+        currency_id: [ID]!
+        "ID регионов"
+        region_id: [ID]!
+        "Активность"
+        is_active: Boolean!
+    ): BankCorrespondent
+        @field(resolver: "BankCorrespondentMutator@update")
+
+    """
+    Удалить банк корреспондент
+    """
+    deleteBankCorrespondent(id: ID! @eq): BankCorrespondent    @delete
+}
