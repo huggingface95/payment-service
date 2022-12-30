@@ -2,7 +2,9 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\OperationTypeEnum;
 use App\Models\PriceListFee;
+use App\Models\PriceListFeeDestinationCurrency;
 use App\Services\PriceListFeeService;
 
 class PriceListFeesMutator
@@ -17,12 +19,12 @@ class PriceListFeesMutator
      */
     public function create($_, array $args)
     {
-        $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args['fee_ranges']);
+        $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args);
 
         $priceListFee = PriceListFee::create($args);
 
         if (isset($args['fees'])) {
-            $this->createFeeModes($args['fees'], $priceListFee);
+            $this->createFeeModes($args, $priceListFee);
         }
 
         return $priceListFee;
@@ -34,7 +36,7 @@ class PriceListFeesMutator
      */
     public function update($_, array $args)
     {
-        $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args['fee_ranges']);
+        $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args);
         $priceListFee = PriceListFee::find($args['id']);
 
         if ($priceListFee) {
@@ -54,22 +56,32 @@ class PriceListFeesMutator
             if (isset($args['fees'])) {
                 $priceListFee->fees()->delete();
 
-                $this->createFeeModes($args['fees'], $priceListFee);
+                $this->createFeeModes($args, $priceListFee);
             }
         }
 
         return $priceListFee;
     }
 
-    private function createFeeModes(array $currencies, PriceListFee $priceListFee): void
+    private function createFeeModes(array $args, PriceListFee $priceListFee): void
     {
+        $currencies = $args['fees'];
         foreach ($currencies as $currency) {
             foreach ($currency['fee'] as $fees) {
-                $priceListFee->fees()->create([
+                $priceListFeeCurrency = $priceListFee->fees()->create([
                     'price_list_fee_id' => $priceListFee->id,
                     'currency_id' => $currency['currency_id'],
                     'fee' => $fees,
                 ]);
+
+                if ($args['operation_type_id'] == OperationTypeEnum::EXCHANGE->value) {
+                    foreach ($currency['currencies_destination'] as $currency) {
+                        PriceListFeeDestinationCurrency::create([
+                            'price_list_fee_currency_id' => $priceListFeeCurrency->id,
+                            'currency_id' => $currency,
+                        ]);
+                    }
+                }
             }
         }
     }
