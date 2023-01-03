@@ -141,4 +141,9 @@ class PriceListFee extends BaseModel
     {
         return $this->belongsTo(FeeType::class, 'type_id');
     }
+
+    public function feeDestinationCurrency(): HasMany
+    {
+        return $this->hasMany(PriceListFeeDestinationCurrency::class, 'price_list_fee_currency_id');
+    }
 }
