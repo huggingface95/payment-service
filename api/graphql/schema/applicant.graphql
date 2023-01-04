@@ -102,8 +102,6 @@ type ApplicantIndividual {
     kyc_level: ApplicantKycLevel @belongsTo (relation: "kycLevel")
     "Applicant Banking Access"
     banking_access: ApplicantBankingAccess @hasOne(relation: "bankingAccess")
-    "Applicant Linked Companies"
-    linked_companies: [ApplicantIndividualCompany] @hasMany(relation: "applicantIndividualCompanies")
 }
 
 
