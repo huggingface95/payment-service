@@ -97,6 +97,7 @@ type ApplicantIndividualCompany {
     applicant_id: ID!
     applicant_type: String!
     applicant_company_id: ID!
+    applicant_company: ApplicantCompany @belongsTo(relation: "ApplicantCompany")
     applicant_individual_company_relation_id: ID!
     applicant_individual_company_position_id: ID!
     relation_to_company: ApplicantIndividualCompanyRelation @belongsTo(relation: "ApplicantIndividualCompanyRelation")
