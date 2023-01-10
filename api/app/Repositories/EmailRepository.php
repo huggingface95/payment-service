@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\DTO\Email\Request\EmailApplicantCompanyRequestDTO;
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\Email\Request\EmailMembersRequestDTO;
@@ -115,7 +116,7 @@ class EmailRepository implements EmailRepositoryInterface
     /**
      * @throws GraphqlException
      */
-    public function getTemplateContentAndSubjectByDto(EmailApplicantRequestDTO|EmailMemberRequestDTO|EmailMembersRequestDTO $dto): SmtpDataDTO
+    public function getTemplateContentAndSubjectByDto(EmailApplicantRequestDTO|EmailMemberRequestDTO|EmailMembersRequestDTO|EmailApplicantCompanyRequestDTO $dto): SmtpDataDTO
     {
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = $this->template->newQuery()

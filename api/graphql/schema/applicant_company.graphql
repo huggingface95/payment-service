@@ -12,8 +12,10 @@ type ApplicantCompany {
     url: String
     "Телефон"
     phone: String
-    "Верецифиорован телефон true/false"
-    is_verification_phone: Boolean
+    "Статус верецификации email"
+    email_verification: ApplicantVerificationStatus @belongsTo(relation: "verificationEmailStatus")
+    "Статус верецификации телефона"
+    phone_verification: ApplicantVerificationStatus @belongsTo(relation: "verificationPhoneStatus")
     "Получить связанную страну"
     country: Country @belongsTo(relation: "country")
     "Получить язык"
@@ -313,6 +315,20 @@ extend type Mutation @guard {
         applicant_individual_id: ID!
         applicant_company_id: ID!
     ): ApplicantIndividualCompany   @field(resolver: "ApplicantIndividualCompanyMutator@delete")
+
+    """
+    Отправить ссылку для подтверждения email
+    """
+    sendEmailVerificationApplicantCompany(
+        applicant_company_id: ID!
+    ): ApplicantCompany   @field(resolver: "ApplicantCompanyMutator@sendEmailVerification")
+
+    """
+    Отправить подтверждение телефона
+    """
+    sendPhoneVerificationApplicantCompany(
+        applicant_company_id: ID!
+    ): ApplicantCompany   @field(resolver: "ApplicantCompanyMutator@sendPhoneVerification")
 
 }
 

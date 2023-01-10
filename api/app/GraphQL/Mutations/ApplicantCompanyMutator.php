@@ -2,15 +2,30 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\DTO\Email\Request\EmailApplicantCompanyRequestDTO;
+use App\DTO\Email\Request\EmailApplicantRequestDTO;
+use App\DTO\TransformerDTO;
+use App\Enums\ApplicantVerificationStatusEnum;
 use App\Enums\ModuleEnum;
+use App\Events\Applicant\ApplicantIndividualSentEmailVerificationEvent;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
 use App\Models\ApplicantIndividualCompany;
 use App\Models\GroupRole;
 use App\Models\Groups;
+use App\Services\EmailService;
+use App\Services\VerifyService;
 
 class ApplicantCompanyMutator extends BaseMutator
 {
+    public function __construct(
+        protected EmailService $emailService,
+        protected VerifyService $verifyService
+    )
+    {
+    }
+
     /**
      * Return a value for the field.
      *
@@ -105,5 +120,41 @@ class ApplicantCompanyMutator extends BaseMutator
         } catch (\Exception $exception) {
             throw new GraphqlException($exception->getMessage());
         }
+    }
+
+    public function sendEmailVerification($_, array $args)
+    {
+        $applicantCompany = ApplicantCompany::find($args['applicant_company_id']);
+        $applicant = ApplicantIndividual::find($applicantCompany->owner_id);
+        $company = $applicantCompany->company;
+
+        $verifyToken = $this->verifyService->createVerifyToken($applicant);
+
+        $emailTemplateName = 'Welcome! Confirm your email address';
+        $emailData = [
+            'client_name' => $applicantCompany->name,
+            'email_confirm_url' => $company->member_verify_url . '/email/verify/' . $verifyToken->token . '/' . $applicantCompany->id,
+            'member_company_name' => $company->name,
+        ];
+        $emailDTO = TransformerDTO::transform(EmailApplicantCompanyRequestDTO::class, $applicantCompany, $company, $emailTemplateName, $emailData);
+
+        $this->emailService->sendApplicantCompanyEmailByApplicantDto($emailDTO);
+
+        $applicantCompany->email_verification_status_id = ApplicantVerificationStatusEnum::REQUESTED->value;
+        $applicantCompany->save();
+
+        event(new ApplicantIndividualSentEmailVerificationEvent($applicant));
+
+        return $applicantCompany;
+    }
+
+    public function sendPhoneVerification($_, array $args)
+    {
+        $applicantCompany = ApplicantCompany::find($args['applicant_company_id']);
+
+        $applicantCompany->phone_verification_status_id = ApplicantVerificationStatusEnum::REQUESTED->value;
+        $applicantCompany->save();
+
+        return $applicantCompany;
     }
 }

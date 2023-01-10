@@ -67,7 +67,7 @@ $router->group([
 $router->group([
     'prefix' => 'email',
 ], function () use ($router) {
-    $router->get('verify/{token}', ['as' => 'email.confirm.verify', 'uses' => 'VerifyController@emailVerify']);
+    $router->get('verify/{token}/{applicant}', ['as' => 'email.confirm.verify', 'uses' => 'VerifyController@emailVerify']);
     $router->get('change/verify/{token}', ['as' => 'email.confirm.change', 'uses' => 'VerifyController@emailChangeVerify']);
     $router->get('registration/verify/{token}', ['as' => 'email.confirm.registration', 'uses' => 'VerifyController@emailRegistrationVerify']);
 });

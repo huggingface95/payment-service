@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\Email\EmailRequestDTO;
+use App\DTO\Email\Request\EmailApplicantCompanyRequestDTO;
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\Email\Request\EmailMembersRequestDTO;
@@ -124,6 +125,22 @@ class EmailService
      * @throws GraphqlException
      */
     public function sendApplicantEmailByApplicantDto(EmailApplicantRequestDTO|EmailMemberRequestDTO $dto): void
+    {
+        $smtp = $this->emailRepository->getSmtpByCompanyId($dto->account);
+        $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
+        $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
+
+        try {
+            dispatch(new SendMailJob($config, $emailContentSubjectDto));
+        } catch (\Throwable) {
+            throw new GraphqlException('Don\'t send email', '404');
+        }
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function sendApplicantCompanyEmailByApplicantDto(EmailApplicantCompanyRequestDTO $dto): void
     {
         $smtp = $this->emailRepository->getSmtpByCompanyId($dto->account);
         $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
