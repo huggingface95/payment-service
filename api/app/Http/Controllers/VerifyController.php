@@ -9,6 +9,7 @@ use App\Enums\ApplicantVerificationStatusEnum;
 use App\Enums\EmailVerificationStatusEnum;
 use App\Enums\MemberStatusEnum;
 use App\Events\Applicant\ApplicantIndividualSentEmailRegistrationDetailsEvent;
+use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use App\Models\Members;
 use App\Services\AuthService;
@@ -40,6 +41,19 @@ class VerifyController extends Controller
             return response()->json(['data' => 'Email successfully verified']);
         }
 
+        if ($user instanceof ApplicantIndividual) {
+            if ($request->applicant) {
+                $applicantCompany = ApplicantCompany::find($request->applicant);
+                $applicantCompany->email_verification_status_id = EmailVerificationStatusEnum::VERIFIED->value;
+                $applicantCompany->save();
+            }
+
+
+            $this->verifyService->deleteVerifyCode($request->token);
+
+            return response()->json(['data' => 'Email successfully verified']);
+        }
+
         return response()->json(['error' => 'Wrong token']);
     }
 
@@ -59,9 +73,9 @@ class VerifyController extends Controller
             $emailData = [
                 'client_name' => $user->first_name,
                 'client_email' => $user->email,
-                'login_page_url' => $user->company->companySettings->client_url,
-                'forgot_page_url' => $user->company->companySettings->client_url . '/forgot_password',
-                'customer_support_url' => $user->company->companySettings->support_email,
+                'login_page_url' => $user->company->backoffice_login_url,
+                'forgot_page_url' => $user->company->backoffice_forgot_password_url . '/forgot_password',
+                'customer_support_url' => $user->company->backoffice_support_url,
             ];
             $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $user, $user->company, $emailTemplateName, $emailData);
 

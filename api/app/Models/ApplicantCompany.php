@@ -63,7 +63,6 @@ class ApplicantCompany extends BaseModel
         'account_manager_member_id',
         'applicant_risk_level_id',
         'applicant_kyc_level_id',
-        'is_verification_phone',
         'owner_relation_id',
         'owner_position_id',
         'company_id',
@@ -73,6 +72,8 @@ class ApplicantCompany extends BaseModel
         'incorporate_date',
         'basic_info_additional_field',
         'entity_id',
+        'email_verification_status_id',
+        'phone_verification_status_id',
     ];
 
     protected $casts = [
@@ -240,6 +241,16 @@ class ApplicantCompany extends BaseModel
     public function account(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
         return $this->morphToOne(Account::class, 'client', AccountIndividualCompany::class, 'client_id', 'account_id');
+    }
+
+    public function verificationEmailStatus(): BelongsTo
+    {
+        return $this->belongsTo(ApplicantVerificationStatus::class, 'email_verification_status_id');
+    }
+
+    public function verificationPhoneStatus(): BelongsTo
+    {
+        return $this->belongsTo(ApplicantVerificationStatus::class, 'phone_verification_status_id');
     }
 
     public function scopeGroupSort($query, $sort)
