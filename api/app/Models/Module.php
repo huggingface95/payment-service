@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-class ApplicantModules extends BaseModel
+class Module extends BaseModel
 {
     public $timestamps = false;
-
-    protected $table = 'applicant_modules';
 
     /**
      * The attributes that are mass assignable.

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApplicantLabels extends BaseModel
 {
@@ -35,12 +36,7 @@ class ApplicantLabels extends BaseModel
         return $this->belongsTo(ApplicantIndividual::class, 'applicant_individual_id', 'applicant_individual_label_id', 'id');
     }
 
-    /**
-     * Get relation applicant_modules
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\belongsTo
-     */
-    public function ApplicantIndividualLabel()
+    public function ApplicantIndividualLabel(): BelongsTo
     {
         return $this->belongsTo(ApplicantIndividualLabel::class, 'applicant_individual_label_id', 'id');
     }

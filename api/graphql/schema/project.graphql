@@ -22,7 +22,7 @@ type Project {
     "Настройки проекта"
     project_settings: [ProjectSettings] @hasMany(relation: "projectSettings")
     "Модуль"
-    module: ApplicantModules @BelongsTo(relation: "module")
+    module: Module @BelongsTo(relation: "module")
     "Компания"
     company: Company @BelongsTo(relation: "company")
     "Аватар"

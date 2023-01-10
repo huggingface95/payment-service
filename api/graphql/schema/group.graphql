@@ -59,7 +59,7 @@ type GroupRole {
     "Получить компанию"
     company: Company @belongsTo(relation: "company")
     "Получить связанный модуль"
-    module: ApplicantModules @belongsTo(relation: "modules")
+    module: Module @belongsTo(relation: "modules")
 }
 
 type GroupRoleView @model(class: "\\App\\Models\\GroupRoleView") {
@@ -91,7 +91,7 @@ type GroupRoleView @model(class: "\\App\\Models\\GroupRoleView") {
     "Получить компанию"
     company: Company @belongsTo(relation: "company")
     "Получить связанный модуль"
-    module: ApplicantModules @belongsTo(relation: "modules")
+    module: Module @belongsTo(relation: "modules")
 }
 
 

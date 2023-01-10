@@ -17,11 +17,11 @@ class ApplicantCompanyModulesMutationTest extends TestCase
         $this->loginAsSuperAdmin();
 
         $this->graphQL('
-            mutation CreateApplicantModule(
+            mutation CreateModule(
                 $name: String!
             )
             {
-                createApplicantModule (
+                createModule (
                     name: $name
                 )
                 {
@@ -36,8 +36,8 @@ class ApplicantCompanyModulesMutationTest extends TestCase
 
         $this->seeJson([
             'data' => [
-                'createApplicantModule' => [
-                    'id' => $id['data']['createApplicantModule']['id'],
+                'createModule' => [
+                    'id' => $id['data']['createModule']['id'],
                 ],
             ],
         ]);
@@ -48,17 +48,17 @@ class ApplicantCompanyModulesMutationTest extends TestCase
         $this->login();
 
         $applicant_company = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
-        $module = DB::connection('pgsql_test')->table('applicant_modules')->orderBy('id', 'DESC')->get();
+        $module = DB::connection('pgsql_test')->table('modules')->orderBy('id', 'DESC')->get();
 
         $this->graphQL('
             mutation CreateApplicantCompanyModule(
                 $applicant_company_id: ID!
-                $applicant_module_id: [ID]
+                $module_id: [ID]
             )
             {
                 createApplicantCompanyModule (
                     applicant_company_id: $applicant_company_id
-                    applicant_module_id: $applicant_module_id
+                    module_id: $module_id
                     is_active: true
                 )
                 {
@@ -67,7 +67,7 @@ class ApplicantCompanyModulesMutationTest extends TestCase
             }
         ', [
             'applicant_company_id' => strval($applicant_company[0]->id),
-            'applicant_module_id' => strval($module[0]->id),
+            'module_id' => strval($module[0]->id),
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -86,17 +86,17 @@ class ApplicantCompanyModulesMutationTest extends TestCase
         $this->login();
 
         $applicant_company = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
-        $module = DB::connection('pgsql_test')->table('applicant_modules')->orderBy('id', 'DESC')->get();
+        $module = DB::connection('pgsql_test')->table('modules')->orderBy('id', 'DESC')->get();
 
         $this->graphQL('
             mutation DeleteApplicantCompanyModule(
                 $applicant_company_id: ID!
-                $applicant_module_id: [ID]
+                $module_id: [ID]
             )
             {
                 deleteApplicantCompanyModule (
                     applicant_company_id: $applicant_company_id
-                    applicant_module_id: $applicant_module_id
+                    module_id: $module_id
                 )
                 {
                     id
@@ -104,7 +104,7 @@ class ApplicantCompanyModulesMutationTest extends TestCase
             }
         ', [
             'applicant_company_id' => strval($applicant_company[0]->id),
-            'applicant_module_id' => strval($module[0]->id),
+            'module_id' => strval($module[0]->id),
         ]);
 
         $id = json_decode($this->response->getContent(), true);

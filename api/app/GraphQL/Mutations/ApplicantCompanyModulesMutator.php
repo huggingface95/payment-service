@@ -18,10 +18,10 @@ class ApplicantCompanyModulesMutator extends BaseMutator
     {
         $applicant = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
 
-        if (isset($args['applicant_module_id'])) {
+        if (isset($args['module_id'])) {
             $applicant->modules()->delete();
-            foreach ($args['applicant_module_id'] as $module) {
-                ApplicantCompanyModules::insert(['applicant_module_id'=> $module, 'applicant_company_id' => $args['applicant_company_id']]);
+            foreach ($args['module_id'] as $module) {
+                ApplicantCompanyModules::insert(['module_id'=> $module, 'applicant_company_id' => $args['applicant_company_id']]);
             }
         }
 
@@ -40,11 +40,11 @@ class ApplicantCompanyModulesMutator extends BaseMutator
     {
         $applicant = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
 
-        if (isset($args['applicant_module_id'])) {
-            foreach ($args['applicant_module_id'] as $module) {
+        if (isset($args['module_id'])) {
+            foreach ($args['module_id'] as $module) {
                 ApplicantCompanyModules::where([
                     'applicant_company_id' => $args['applicant_company_id'],
-                    'applicant_module_id' => $module,
+                    'module_id' => $module,
                 ])->update(['is_active'=>$args['is_active']]);
             }
         }

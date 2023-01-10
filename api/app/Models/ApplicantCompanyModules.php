@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApplicantCompanyModules extends BaseModel
 {
@@ -14,7 +15,7 @@ class ApplicantCompanyModules extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'applicant_company_id', 'applicant_module_id', 'is_active',
+        'applicant_company_id', 'module_id', 'is_active',
     ];
 
     public $timestamps = false;
@@ -35,13 +36,8 @@ class ApplicantCompanyModules extends BaseModel
         return $this->belongsTo(ApplicantCompany::class, 'applicant_company_id', 'id');
     }
 
-    /**
-     * Get relation applicant_modules
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function module()
+    public function module(): BelongsTo
     {
-        return $this->belongsTo(ApplicantModules::class, 'applicant_module_id', 'id');
+        return $this->belongsTo(Module::class, 'module_id', 'id');
     }
 }

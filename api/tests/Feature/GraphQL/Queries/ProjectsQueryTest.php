@@ -3,7 +3,7 @@
 namespace Tests\Feature\GraphQL\Queries;
 
 use App\Models\Project;
-use Database\Seeders\ApplicantModulesTableSeeder;
+use Database\Seeders\ModulesTableSeeder;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\ProjectTableSeeder;
 use Tests\TestCase;
@@ -15,7 +15,7 @@ class ProjectsQueryTest extends TestCase
     {
         parent::setUp();
 
-        (new DatabaseSeeder())->call(ApplicantModulesTableSeeder::class);
+        (new DatabaseSeeder())->call(ModulesTableSeeder::class);
         (new DatabaseSeeder())->call(ProjectTableSeeder::class);
     }
 

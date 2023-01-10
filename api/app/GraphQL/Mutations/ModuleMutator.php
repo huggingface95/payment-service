@@ -3,9 +3,9 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
-use App\Models\ApplicantModules;
+use App\Models\Module;
 
-class ApplicantModuleMutator extends BaseMutator
+class ModuleMutator extends BaseMutator
 {
     /**
      * Return a value for the field.
@@ -20,7 +20,7 @@ class ApplicantModuleMutator extends BaseMutator
             throw new GraphqlException('Access denied', 'use', 403);
         }
 
-        $module = ApplicantModules::create($args);
+        $module = Module::create($args);
 
         return $module;
     }
