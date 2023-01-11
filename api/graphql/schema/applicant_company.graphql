@@ -201,9 +201,9 @@ extend type Mutation @guard {
     updateApplicantCompany (
         id: ID!
         "Название"
-        name: String!
+        name: String
         "email"
-        email: EMAIL!
+        email: EMAIL
         "Адрес сайта"
         url: String
         "Телефон"
@@ -257,7 +257,7 @@ extend type Mutation @guard {
         "ID менеджера"
         account_manager_member_id: ID
         "ID компании"
-        company_id: ID!
+        company_id: ID
         "ID owner"
         owner_id: ID
         "ID relation владельца"
@@ -269,9 +269,9 @@ extend type Mutation @guard {
         "ID группы"
         group_id: ID
         "ID модулей"
-        module_ids: [ID]!
+        module_ids: [ID]
         "ID проекта"
-        project_id: ID!
+        project_id: ID
         "ID photo"
         photo_id: ID
         "Дата включуения"
