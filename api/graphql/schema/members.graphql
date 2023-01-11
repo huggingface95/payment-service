@@ -54,6 +54,8 @@ type Members {
     ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
     "Верификация email"
     email_verification: EmailVerification
+    "Фото"
+    photo: Files @belongsTo(relation: "photo")
 }
 
 enum EmailVerification {
@@ -184,6 +186,8 @@ extend type Mutation  {
         is_sign_transaction: Boolean
         "ip_address"
         ip_address: String
+        "ID photo"
+        photo_id: ID
     ): Members   @field(resolver: "MembersMutator@update")
 
     """

@@ -87,6 +87,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'is_need_change_password',
         'member_status_id',
         'entity_id',
+        'photo_id',
     ];
 
     protected $hidden = [
@@ -273,6 +274,11 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function accountManagerMembers(): HasMany
     {
         return $this->hasMany(self::class, 'company_id', 'company_id');
+    }
+
+    public function photo(): BelongsTo
+    {
+        return $this->belongsTo(Files::class, 'photo_id');
     }
 
     public function scopeCompanySort($query, $sort)
