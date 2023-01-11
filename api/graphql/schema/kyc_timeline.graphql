@@ -32,7 +32,7 @@ type KycTimeline {
     "Новые значения"
     action_new_value: JSON
     "Дата добавления"
-    created_at: DateTime!
+    created_at: DateTimeUtc!
 }
 
 enum KycTimelineActionType {

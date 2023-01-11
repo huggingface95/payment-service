@@ -15,7 +15,7 @@ type Members {
     "Статус участника"
     member_status: MemberStatus @belongsTo(relation: "memberStatus")
     "Последняя авторизация"
-    last_login_at: DateTime
+    last_login_at: DateTimeUtc
     "получить компанию участника"
     company: Company @belongsTo(relation: "company")
     "получить страну участника"

@@ -29,8 +29,8 @@ type Project {
     avatar: Files @belongsTo(relation: "avatar")
     "Состояние"
     state: State @belongsTo(relation: "state")
-    created_at: DateTime!
-    updated_at: DateTime!
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
 }
 
 """

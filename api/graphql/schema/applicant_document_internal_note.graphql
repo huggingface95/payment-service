@@ -11,9 +11,9 @@ type ApplicantDocumentInternalNote {
     "Текст заметки"
     note: String
     "Дата создания"
-    created_at: DateTime
+    created_at: DateTimeUtc
     "Дата обновления"
-    updated_at: DateTime
+    updated_at: DateTimeUtc
 }
 
 extend type Query @guard {

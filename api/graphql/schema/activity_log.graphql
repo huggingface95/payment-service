@@ -14,7 +14,7 @@ type ActivityLog {
     "Изменения"
     changes: String
     "Дата создания"
-    created_at: DateTime!
+    created_at: DateTimeUtc!
 }
 
 type ActivityLogs {

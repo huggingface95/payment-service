@@ -52,9 +52,9 @@ type TransferIncoming {
     sender_zip: String
     respondent_fee: RespondentFee @belongsTo(relation: "respondentFee")
     "Дата и время выполнения транзакции"
-    execution_at: DateTime
-    created_at: DateTime
-    updated_at: DateTime
+    execution_at: DateTimeUtc
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
 }
 
 type TransferIncomingStatistic {

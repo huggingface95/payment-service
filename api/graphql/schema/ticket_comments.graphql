@@ -11,8 +11,8 @@ type TicketComments {
     ticket: Ticket @belongsTo(relation: "ticket")
     "Получить Клиента"
     client: ApplicantIndividual @belongsTo(relation: "client")
-    created_at: DateTime
-    updated_at: DateTime
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
 }
 
 extend type Query @guard {
