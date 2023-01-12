@@ -3,7 +3,7 @@
 Dashboard -> Applicants -> Company->Full Profile -> Settings
 """
 
-type ApplicantModules {
+type Module {
     id: ID!
     "Название модуля"
     name: String!
@@ -11,25 +11,25 @@ type ApplicantModules {
 
 extend type Query @guard {
     "Получить модуль по ID"
-    applicant_module(id: ID @eq): ApplicantModules   @find
+    module(id: ID @eq): Module   @find
     """
     Получить список модулей
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    applicant_modules (
+    modules (
         where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id"])
-    ): [ApplicantModules!]!
+    ): [Module!]!
         @paginate(defaultCount: 10)
         @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
     "Создать модуль"
-    createApplicantModule(
+    createModule(
         "Название модуля"
         name: String!
-    ): ApplicantModules
-        @field(resolver:"ApplicantModuleMutator@create")
+    ): Module
+        @field(resolver:"ModuleMutator@create")
 }
 

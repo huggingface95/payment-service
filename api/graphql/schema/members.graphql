@@ -15,7 +15,7 @@ type Members {
     "Статус участника"
     member_status: MemberStatus @belongsTo(relation: "memberStatus")
     "Последняя авторизация"
-    last_login_at: DateTime
+    last_login_at: DateTimeUtc
     "получить компанию участника"
     company: Company @belongsTo(relation: "company")
     "получить страну участника"
@@ -54,6 +54,8 @@ type Members {
     ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
     "Верификация email"
     email_verification: EmailVerification
+    "Фото"
+    photo: Files @belongsTo(relation: "photo")
 }
 
 enum EmailVerification {
@@ -184,6 +186,8 @@ extend type Mutation  {
         is_sign_transaction: Boolean
         "ip_address"
         ip_address: String
+        "ID photo"
+        photo_id: ID
     ): Members   @field(resolver: "MembersMutator@update")
 
     """

@@ -7,7 +7,7 @@ type ApplicantIndividualNotes {
     "Заметка"
     note: String!
     "Дата и время создания"
-    created_at: DateTime
+    created_at: DateTimeUtc
     "Получить автора"
     author: Members @belongsTo(relation: "author")
     "Получить пользователя"

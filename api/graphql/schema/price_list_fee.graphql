@@ -31,8 +31,8 @@ type PriceListFee {
     fees: [PriceListFeeCurrency] @belongsTo(relation: "fees")
     price_list_id: ID
     fee_ranges: JSON
-    created_at: DateTime
-    updated_at: DateTime
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
 }
 
 

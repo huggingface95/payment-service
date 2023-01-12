@@ -156,7 +156,7 @@ class DashboardQuery
             count(applicant_individual_modules.is_active) as count"),
         ])
             ->join('applicant_individual_modules', 'applicant_individual.id', '=', 'applicant_individual_modules.applicant_individual_id')
-            ->where('applicant_individual_modules.applicant_module_id', ModuleEnum::BANKING->value)
+            ->where('applicant_individual_modules.module_id', ModuleEnum::BANKING->value)
             ->groupBy(['applicant_individual_modules.is_active']);
 
         $applicantCompany = ApplicantCompany::select([
@@ -168,7 +168,7 @@ class DashboardQuery
             count(applicant_company_modules.is_active) as count"),
         ])
             ->join('applicant_company_modules', 'applicant_companies.id', '=', 'applicant_company_modules.applicant_company_id')
-            ->where('applicant_company_modules.applicant_module_id', ModuleEnum::BANKING->value)
+            ->where('applicant_company_modules.module_id', ModuleEnum::BANKING->value)
             ->groupBy(['applicant_company_modules.is_active']);
 
         if (isset($args['company_id'])) {

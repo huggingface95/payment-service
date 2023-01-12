@@ -94,7 +94,7 @@ class GroupRole extends BaseModel
 
     public function modules(): BelongsTo
     {
-        return $this->belongsTo(ApplicantModules::class, 'module_id');
+        return $this->belongsTo(Module::class, 'module_id');
     }
 
     public function users(): BelongsToMany

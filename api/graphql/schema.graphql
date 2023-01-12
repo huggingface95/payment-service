@@ -13,7 +13,7 @@ enum Sort {
 }
 
 "Модули"
-type ApplicantModules {
+type Module {
     id: ID!
     "Имя модуля"
     name: String !

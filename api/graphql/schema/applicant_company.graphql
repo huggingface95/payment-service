@@ -51,11 +51,11 @@ type ApplicantCompany {
     "Дополнительные поля Profile data"
     profile_additional_fields: JSON
     "Дата включуения"
-    incorporate_date: DateTime
+    incorporate_date: DateTimeUtc
     "Дополнительные поля Basic info"
     basic_info_additional_field: JSON
     "Дата создания"
-    created_at: DateTime
+    created_at: DateTimeUtc
     "Получить тип бизнеса"
     business_type: ApplicantCompanyBusinessType @belongsTo(relation: "businessType")
     "Получить статусы"
@@ -275,7 +275,7 @@ extend type Mutation @guard {
         "ID photo"
         photo_id: ID
         "Дата включуения"
-        incorporate_date: DateTime
+        incorporate_date: DateTimeUtc
         "Дополнительные поля Basic info"
         basic_info_additional_field: [AdditionalFieldInput]
     ): ApplicantCompany   @field(resolver:"ApplicantCompanyMutator@update")

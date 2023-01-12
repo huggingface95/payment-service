@@ -66,7 +66,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RespondentFeesTableSeeder::class);
         $this->call(CommissionTemplateBusinessActivityTableSeeder::class);
         $this->call(RoleActionsSeeder::class);
-        $this->call(ApplicantModulesTableSeeder::class);
+        $this->call(ModulesTableSeeder::class);
         $this->call(ApplicantIndividualCompanyPositionTableSeeder::class);
         $this->call(ApplicantIndividualCompanyRelationTableSeeder::class);
         $this->call(OuthClientsTableSeeder::class);

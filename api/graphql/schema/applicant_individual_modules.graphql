@@ -29,7 +29,7 @@ extend type Mutation @guard {
         "Аппликант"
         applicant_individual_id: ID!
         "Модуль"
-        applicant_module_id: [ID]
+        module_id: [ID]
         "Активный или неактивный"
         is_active: Boolean
     ): ApplicantIndividual    @field(resolver:"ApplicantIndividualModulesMutator@attach")
@@ -39,7 +39,7 @@ extend type Mutation @guard {
         "Аппликант"
         applicant_individual_id: ID!
         "Модуль"
-        applicant_module_id: [ID]
+        module_id: [ID]
         "Активный или неактивный"
         is_active: Boolean
     ): ApplicantIndividual    @field(resolver:"ApplicantIndividualModulesMutator@update")
@@ -47,7 +47,7 @@ extend type Mutation @guard {
     "Удалить модуль"
     deleteApplicantIndividualModule(
         applicant_individual_id: ID!
-        applicant_module_id: [ID]
+        module_id: [ID]
     ): ApplicantIndividual    @field(resolver: "ApplicantIndividualModulesMutator@detach")
 
 

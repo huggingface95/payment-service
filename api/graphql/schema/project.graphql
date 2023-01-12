@@ -22,15 +22,15 @@ type Project {
     "Настройки проекта"
     project_settings: [ProjectSettings] @hasMany(relation: "projectSettings")
     "Модуль"
-    module: ApplicantModules @BelongsTo(relation: "module")
+    module: Module @BelongsTo(relation: "module")
     "Компания"
     company: Company @BelongsTo(relation: "company")
     "Аватар"
     avatar: Files @belongsTo(relation: "avatar")
     "Состояние"
     state: State @belongsTo(relation: "state")
-    created_at: DateTime!
-    updated_at: DateTime!
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
 }
 
 """

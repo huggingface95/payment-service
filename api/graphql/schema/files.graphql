@@ -19,8 +19,8 @@ type Files {
     storage_name: String!
     "Ссылка на файл"
     link: String!
-    created_at: DateTime
-    updated_at: DateTime
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
 }
 
 extend type Query @guard {

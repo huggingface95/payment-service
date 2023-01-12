@@ -25,7 +25,7 @@ extend type Mutation @guard {
         "Компания"
         applicant_company_id: ID!
         "Модуль"
-        applicant_module_id: [ID]
+        module_id: [ID]
         "Активный или неактивный"
         is_active: Boolean
     ): ApplicantCompany    @field(resolver:"ApplicantCompanyModulesMutator@attach")
@@ -35,7 +35,7 @@ extend type Mutation @guard {
         "Аппликант"
         applicant_company_id: ID!
         "Модуль"
-        applicant_module_id: [ID]
+        module_id: [ID]
         "Активный или неактивный"
         is_active: Boolean
     ): ApplicantCompany   @field(resolver:"ApplicantCompanyModulesMutator@update")
@@ -43,7 +43,7 @@ extend type Mutation @guard {
     "Удалить модуль"
     deleteApplicantCompanyModule(
         applicant_company_id: ID!
-        applicant_module_id: [ID]
+        module_id: [ID]
     ): ApplicantCompany   @field(resolver: "ApplicantCompanyModulesMutator@detach")
 
 }

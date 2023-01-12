@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ApplicantIndividualModules extends BaseModel
@@ -16,7 +17,7 @@ class ApplicantIndividualModules extends BaseModel
      */
     protected $fillable = [
         'applicant_individual_id',
-        'applicant_module_id',
+        'module_id',
         'is_active',
     ];
 
@@ -30,16 +31,11 @@ class ApplicantIndividualModules extends BaseModel
 
     public function ApplicantIndividual(): BelongsToMany
     {
-        return $this->belongsToMany(ApplicantIndividual::class, 'applicant_individual_modules', 'applicant_module_id', 'applicant_individual_id');
+        return $this->belongsToMany(ApplicantIndividual::class, 'applicant_individual_modules', 'module_id', 'applicant_individual_id');
     }
 
-    /**
-     * Get relation applicant_modules
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function module()
+    public function module(): BelongsTo
     {
-        return $this->belongsTo(ApplicantModules::class, 'applicant_module_id', 'id');
+        return $this->belongsTo(Module::class, 'module_id', 'id');
     }
 }
