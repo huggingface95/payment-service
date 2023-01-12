@@ -45,7 +45,7 @@ class Project extends BaseModel
 
     public function module(): BelongsTo
     {
-        return $this->belongsTo(ApplicantModules::class, 'module_id');
+        return $this->belongsTo(Module::class, 'module_id');
     }
 
     public function projectSettings(): HasMany

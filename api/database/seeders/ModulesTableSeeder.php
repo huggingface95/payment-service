@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\ApplicantModules;
+use App\Models\Module;
 use Illuminate\Database\Seeder;
 
-class ApplicantModulesTableSeeder extends Seeder
+class ModulesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,7 +17,7 @@ class ApplicantModulesTableSeeder extends Seeder
         $modules = ['KYC', 'Banking'];
 
         foreach ($modules as $module) {
-            ApplicantModules::firstOrCreate([
+            Module::firstOrCreate([
                 'name' => $module,
             ]);
         }

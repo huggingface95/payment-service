@@ -3663,7 +3663,7 @@ class PermissionsSeeder extends Seeder
                 'binds' => ['Company Profile:Settings.Read', 'Company Profile:Settings.Edit'],
             ],
             [
-                'name' => 'GetApplicantModules',
+                'name' => 'GetModules',
                 'referer' => 'applicants/company/full-profile/profile/settings',
                 'binds' => ['Company Profile:Settings.Access Limitation'],
                 'parents' => ['Company Profile:Settings.Read', 'Company Profile:Settings.Edit'],

@@ -9,7 +9,7 @@ type MemberAccessLimitation {
     "Получить Group"
     member: Members @belongsTo(relation: "member")
     "Получить модуль"
-    module: ApplicantModules @belongsTo(relation: "module")
+    module: Module @belongsTo(relation: "module")
     "Получить GroupType"
     group: GroupType @hasOne(relation: "group")
     "Получить groupRole"
