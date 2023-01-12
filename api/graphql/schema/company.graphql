@@ -40,7 +40,7 @@ type Company {
     "Адрес регистрации"
     reg_address: String
     tax_id: String
-    incorporate_date: DateTime
+    incorporate_date: DateTimeUtc
     "Количество сотрудниуов"
     employees: Employee @belongsTo(relation: "employee")
     "Область деятельности"
@@ -48,7 +48,7 @@ type Company {
     "Номер лицензии"
     license_number: String
     "Дата окончания лицензии"
-    exp_date: DateTime
+    exp_date: DateTimeUtc
     "Состояние"
     state: State @belongsTo(relation: "state")
     "Причина состояния"
@@ -77,8 +77,8 @@ type Company {
     backoffice_support_url: String
     "Backoffice support EMAIL"
     backoffice_support_email: EMAIL
-    created_at: DateTime!
-    updated_at: DateTime!
+    created_at: DateTimeUtc!
+    updated_at: DateTimeUtc!
 }
 
 extend type Query @guard {
@@ -162,7 +162,7 @@ extend type Mutation @guard {
         "Адрес регистрации"
         reg_address: String
         tax_id: String
-        incorporate_date: DateTime
+        incorporate_date: DateTimeUtc
         "Количество сотрудниуов"
         employees_id: ID
         "Область деятельности"
@@ -170,7 +170,7 @@ extend type Mutation @guard {
         "Номер лицензии"
         license_number: String
         "Дата окончания лицензии"
-        exp_date: DateTime
+        exp_date: DateTimeUtc
         "Состояние"
         state_id: ID
         "Причина состояния"

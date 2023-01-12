@@ -19,8 +19,8 @@ type EmailNotification {
     company: Company @belongsTo(relation: "company")
     "Получить Group Role"
     group_role: GroupRole @belongsTo(relation: "groupRole")
-    created_at: DateTime
-    updated_at: DateTime
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
 }
 
 extend type Query @guard {

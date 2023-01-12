@@ -46,11 +46,11 @@ type Payments {
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Номер платежа"
     payment_number: String
-    received_at: DateTime
-    created_at: DateTime
-    updated_at: DateTime
+    received_at: DateTimeUtc
+    created_at: DateTimeUtc
+    updated_at: DateTimeUtc
     "Дата и время выполнения транзакции"
-    execution_at: DateTime
+    execution_at: DateTimeUtc
     respondent_fee: RespondentFee @belongsTo(relation:"respondentFee")
     error: String
 }
@@ -124,7 +124,7 @@ extend type Mutation @guard {
         respondent_fees_id: ID!
         "Компания"
         company_id: ID!
-        execution_at: DateTime
+        execution_at: DateTimeUtc
     ):Payments   @field(resolver: "PaymentsMutator@create")
 
     "Редактировать платеж"

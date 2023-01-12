@@ -34,9 +34,9 @@ type AuthenticationLog {
     "Инфо"
     info: String
     "Дата истечения"
-    expired_at: DateTime
+    expired_at: DateTimeUtc
     "Дата создания"
-    created_at: DateTime!
+    created_at: DateTimeUtc!
 }
 
 type AuthenticationLogs {

@@ -47,9 +47,9 @@ type ApplicantIndividual {
     "Пол"
     sex: Sex
     "Время создания"
-    created_at: DateTime
+    created_at: DateTimeUtc
     "Время обновления"
-    updated_at: DateTime
+    updated_at: DateTimeUtc
     "Дополнительные поля Profile data"
     profile_additional_fields: JSON
     "Дополнительные поля для Personal info"
@@ -59,7 +59,7 @@ type ApplicantIndividual {
     "Полное имя"
     fullname: String
     "время последний просмотренный"
-    last_screened_at: DateTime
+    last_screened_at: DateTimeUtc
     "Дополнительные поля"
     address_additional_fields: JSON
     "Получить статусы"
@@ -261,7 +261,7 @@ extend type Mutation @guard {
         "KYC Level"
         kyc_level_id: ID
         "время последний просмотренный"
-        last_screened_at: DateTime
+        last_screened_at: DateTimeUtc
     ): ApplicantIndividual   @field(resolver:"ApplicantMutator@update")
 
     """

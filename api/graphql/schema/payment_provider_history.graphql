@@ -10,5 +10,5 @@ type PaymentProviderHistory {
     "Информация от провайдера"
     provider_response: JSON
     "Дата создания"
-    created_at: DateTime
+    created_at: DateTimeUtc
 }
