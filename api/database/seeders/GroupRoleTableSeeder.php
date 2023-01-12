@@ -21,7 +21,6 @@ class GroupRoleTableSeeder extends Seeder
                 'role_id' => 35,
                 'company_id' => 1,
                 'description' => 'Test description 2',
-                'payment_provider_id' => 1,
             ],
             [
                 'name' => 'TestGroup',
@@ -29,14 +28,12 @@ class GroupRoleTableSeeder extends Seeder
                 'role_id' => 2,
                 'company_id' => 1,
                 'description' => 'Test description 1',
-                'payment_provider_id' => 1,
             ], [
                 'name' => 'Test',
                 'group_type_id' => 1,
                 'role_id' => 3,
                 'company_id' => 1,
                 'description' => 'Test description 1',
-                'payment_provider_id' => 1,
             ],
         ];
 
