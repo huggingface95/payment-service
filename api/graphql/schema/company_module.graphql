@@ -45,7 +45,7 @@ extend type Mutation @guard {
         module_id: [ID]
         "Активность"
         is_active: Boolean!
-    ): ApplicantIndividual
+    ): Company
         @field(resolver:"CompanyModuleMutator@update")
 
     """
