@@ -81,7 +81,7 @@ class FilterConditionsHandler
             $nestedBuilder = $this->handleHasCondition(
                 $model,
                 $relation,
-                '=',
+                '>=',
                 $whereConditions['amount'] ?? 1,
                 $condition
             );
