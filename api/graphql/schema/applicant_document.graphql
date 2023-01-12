@@ -52,7 +52,7 @@ extend type Mutation @guard {
         applicant_id: ID!
         applicant_type: ApplicantType!
         document_type_id: ID!
-        document_state_id: ID!
+        document_state_id: ID
         file_id: ID!
         country_id: ID
         added_from: String
@@ -63,7 +63,7 @@ extend type Mutation @guard {
     """
     updateApplicantDocument(
         id: ID!
-        document_state_id: ID!
+        document_state_id: ID
         info: String
     ): ApplicantDocument @update
 }
