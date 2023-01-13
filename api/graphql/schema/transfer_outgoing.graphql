@@ -113,3 +113,56 @@ input QueryTransferOutgoingsFilterStatic @spread {
     hasFeeFilterByFee: String @ilike
     hasFeeFilterByFeeAmount: String @ilike
 }
+
+extend type Mutation @guard {
+    """
+    Создать исходящий перевод
+    """
+    createTransferOutgoing(
+        "ID компании"
+        company_id: ID!
+        "ID группы"
+        group_id: ID!
+        "ID типа группы"
+        group_type_id: ID!
+        "ID проекта"
+        project_id: ID!
+        "Сумма"
+        amount: Decimal!
+        "ID валюты"
+        currency_id: ID!
+        "ID аккаунта"
+        account_id: ID!
+        "ID платежного провайдера"
+        payment_provider_id: ID!
+        "ID платежной системы"
+        payment_system_id: ID!
+        "ID банка получателя"
+        recipient_bank_country_id: ID!
+        requested_by_id: ID!
+        price_list_id: ID!
+        price_list_fee_id: ID!
+        execution_at: DateTimeUtc
+        "Номер счета или IBAN получателя"
+        recipient_account: String
+        "Имя банка получателя"
+        recipient_bank_name: String
+        "Адрес банка получателя"
+        recipient_bank_address: String
+        "SWIFT банка получателя"
+        recipient_bank_swift: String
+        "Имя получателя"
+        recipient_name: String
+        "Город получателя"
+        recipient_city: String
+        "Адрес получателя"
+        recipient_address: String
+        "Штат получателя"
+        recipient_state: String
+        "Индекс получателя"
+        recipient_zip: String
+        "Сообщение банка"
+        bank_message: String
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@create")
+}
