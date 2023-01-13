@@ -48,22 +48,4 @@ extend type Mutation @guard {
         name: String!
         description: String
     ): ApplicantDocumentTag @update
-
-    """
-    Прикрепить тег к документу
-    """
-    attachApplicantDocumentTag(
-        applicant_document_id: ID!
-        applicant_document_tag_id: [ID]!
-    ): ApplicantDocument
-        @field(resolver: "ApplicantDocumentTagMutator@attach")
-
-    """
-    Открепить тег от документа
-    """
-    detachApplicantDocumentTag(
-        applicant_document_id: ID!
-        applicant_document_tag_id: [ID]!
-    ): ApplicantDocument
-        @field(resolver:"ApplicantDocumentTagMutator@detach")
 }

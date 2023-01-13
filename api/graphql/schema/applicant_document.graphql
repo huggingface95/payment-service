@@ -17,8 +17,6 @@ type ApplicantDocument {
     info: String
     "Получить внутренние заметки документа"
     internal_notes: [ApplicantDocumentInternalNote] @hasMany(relation: "internalNotes")
-    "Получить теги документа"
-    tags: [ApplicantDocumentTag] @hasMany(relation: "tags")
     created_at: DateTimeUtc
     updated_at: DateTimeUtc
 }
