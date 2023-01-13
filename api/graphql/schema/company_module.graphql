@@ -1,0 +1,58 @@
+"""
+Модули компаний
+"""
+type CompanyModule {
+    "ID"
+    id: ID!
+    "Модуль"
+    module: Module @hasOne(relation: "module")
+    "Платежные провайдеры"
+    payment_providers: [CompanyModulePaymentProvider] @hasMany(relation: "paymentProviders")
+    "IBAN провайдеры"
+    iban_providers: [CompanyModuleIbanProvider] @hasMany(relation: "ibanProviders")
+    "Активность"
+    is_active: Boolean!
+}
+
+extend type Query @guard {
+    """
+    Получить список модулей
+    """
+    companyModules(company_id: ID! @eq): [CompanyModule!]!  @all
+}
+
+extend type Mutation @guard {
+    """
+    Добавить модули
+    """
+    createCompanyModule(
+        "ID компании"
+        company_id: ID!
+        "Модуль"
+        module_id: [ID]
+        "Активность"
+        is_active: Boolean
+    ): Company
+        @field(resolver: "CompanyModuleMutator@attach")
+
+    """
+    Активировать/деактивировать модуль
+    """
+    updateCompanyModule(
+        "ID компании"
+        company_id: ID!
+        "Модуль"
+        module_id: [ID]
+        "Активность"
+        is_active: Boolean!
+    ): Company
+        @field(resolver:"CompanyModuleMutator@update")
+
+    """
+    Удалить модули
+    """
+    deleteCompanyModule(
+        company_id: ID!
+    ): Company
+        @field(resolver: "CompanyModuleMutator@detach")
+}
