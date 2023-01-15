@@ -58,6 +58,12 @@ class TransferOutgoing extends BaseModel
         'created_at',
         'updated_at',
         'execution_at',
+        'respondent_fees_id',
+        'group_id',
+        'group_type_id',
+        'project_id',
+        'price_list_id',
+        'price_list_fee_id',
     ];
 
     public function account(): BelongsTo
