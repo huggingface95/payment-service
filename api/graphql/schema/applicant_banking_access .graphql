@@ -21,6 +21,13 @@ type ApplicantBankingAccess {
     role: Role @hasOne(relation: "role")
     "Доступ"
     grant_access: Boolean
+    create_payments: Boolean
+    sign_payments: Boolean
+}
+
+type ApplicantBankingAccesses {
+    data: [ApplicantBankingAccess!]
+    paginatorInfo: PaginatorInfo
 }
 
 extend type Query @guard {
@@ -30,10 +37,13 @@ extend type Query @guard {
     filter: {column: MEMBER_ID, operator: EQ, value: 2} фильтр по applicant_individual_id, applicant_company_id, member_id, grant_access
     """
     applicantBankingAccess(
+        page: Int = 1,
+        first: Int = 15,
         filter: _ @filterConditions(static: QueryApplicantBankingAccessFilterStatic),
         orderBy: _ @orderBy(
         columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
-    )): [ApplicantBankingAccess!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): ApplicantBankingAccesses
+        @field(resolver: "ApplicantBankingAccessQuery@enabled")
 }
 
 input QueryApplicantBankingAccessFilterStatic @spread {
