@@ -16,9 +16,6 @@ class ApplicantService
         $applicantCompany = $account->owner->companies->first();
         $defaultLogoPath = storage_path('app') . self::DEFAULT_LOGO_PATH;
         $companyLogoPath = $account->company->companySettings->logo->link ?? $defaultLogoPath;
-        $f = fopen('data.txt', 'w');
-        fwrite($f, json_encode($bank_correspondent));
-        fclose($f);
         return [
             'currency' => $account->currencies->code,
             'beneficiary' => $applicantCompany ? $applicantCompany->name : $applicant->fullname,
