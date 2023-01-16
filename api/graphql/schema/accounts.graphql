@@ -19,8 +19,6 @@ type Account {
     payment_system: PaymentSystem @belongsTo(relation:"paymentSystem")
     "Получить банк"
     payment_bank: PaymentBank @belongsTo(relation:"paymentBank")
-    "Получить банк корреспондент"
-    bank_correspondent: BankCorrespondent @belongsTo(relation:"bankCorrespondent")
     "Получить связанный шаблон комиссии"
     commission_template: CommissionTemplate @belongsTo(relation:"commissionTemplate")
     "Получить групроле"
@@ -159,8 +157,6 @@ input InputAccount{
     payment_system_id: ID!
     "ID банка"
     payment_bank_id: ID
-    "ID банка корреспондента"
-    bank_correspondents_id: ID
     "clientable"
     clientableAttach: PivotTable
 }

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -75,7 +76,6 @@ class Account extends BaseModel implements BaseModelInterface
         'client_type',
         'is_show',
         'entity_id',
-        'bank_correspondents_id',
     ];
 
     protected static function booted()
@@ -167,11 +167,6 @@ class Account extends BaseModel implements BaseModelInterface
     public function paymentBank(): BelongsTo
     {
         return $this->belongsTo(PaymentBank::class, 'payment_bank_id');
-    }
-
-    public function bankCorrespondent(): BelongsTo
-    {
-        return $this->belongsTo(BankCorrespondent::class, 'bank_correspondents_id');
     }
 
     /**
