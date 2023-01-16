@@ -9,6 +9,8 @@ type Requisite {
     owner: ApplicantIndividual @belongsTo(relation:"owner")
     "Связанный банк"
     bank: PaymentBank @belongsTo(relation:"paymentBank")
+    "Связанный банк корреспондент"
+    bank_correspondent: BankCorrespondent @belongsTo(relation:"bankCorrespondent")
     "IBAN"
     account_number: String
     "Currency"
@@ -20,7 +22,7 @@ extend type Query @guard {
     """
     Получить реквизиты по ID
     """
-    requisite(account_number: String @eq): Requisite
+    requisite(id: ID @eq): Requisite
         @find(model: "\\App\\Models\\Account")
 
     """
@@ -30,7 +32,7 @@ extend type Query @guard {
     requisites(
         filter: _ @filterConditions(static: QueryRequisitesFilterStatic)
         ): [Requisite!]! @all(model: "\\App\\Models\\Account")
-    
+
     """
     Скачать PDF с реквизитами
     """
@@ -45,7 +47,7 @@ extend type Query @guard {
         account_id: ID!
         "Email"
         email: String! @rules(apply: ["email"])
-    ): StatusType 
+    ): StatusType
         @field(resolver: "RequisiteQuery@sendEmail")
 }
 

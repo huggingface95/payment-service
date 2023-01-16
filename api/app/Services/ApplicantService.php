@@ -12,6 +12,7 @@ class ApplicantService
     public function getApplicantRequisites(ApplicantIndividual $applicant, Account $account): array
     {
         $bank = $account->paymentBank;
+        $bank_correspondent = $account->bankCorrespondent;
         $applicantCompany = $account->owner->companies->first();
         $defaultLogoPath = storage_path('app') . self::DEFAULT_LOGO_PATH;
         $companyLogoPath = $account->company->companySettings->logo->link ?? $defaultLogoPath;
@@ -27,6 +28,10 @@ class ApplicantService
             'bank_address' => $bank->address,
             'bank_country' => $bank->country->name,
             'logo_path' => $companyLogoPath,
+            'correspondent_bank_name' => $bank_correspondent->name,
+            'correspondent_bank_swift_code' => $bank_correspondent->bank_code,
+            'correspondent_bank_address' => $bank_correspondent->address,
+            'correspondent_bank_account' => $bank_correspondent->bank_account,
         ];
     }
 

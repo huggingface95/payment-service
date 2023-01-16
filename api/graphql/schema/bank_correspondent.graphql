@@ -6,6 +6,8 @@ type BankCorrespondent {
     id: ID!
     "Название"
     name: String!
+    "Адрес"
+    address: String!
     "SWIFT"
     bank_code: String!
     "Счет банка корреспондента"
@@ -48,6 +50,8 @@ extend type Mutation @guard {
     createBankCorrespondent(
         "Название"
         name: String!
+        "Адрес"
+        address: String!
         "SWIFT"
         bank_code: String!
         "Счет банка корреспондента"
@@ -71,6 +75,8 @@ extend type Mutation @guard {
         id: ID!
         "Название"
         name: String!
+        "Адрес"
+        address: String!
         "SWIFT"
         bank_code: String!
         "Счет банка корреспондента"

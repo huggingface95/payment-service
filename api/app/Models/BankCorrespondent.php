@@ -14,6 +14,7 @@ class BankCorrespondent extends BaseModel
      */
     protected $fillable = [
         'name',
+        'address',
         'bank_code',
         'bank_account',
         'payment_system_id',
