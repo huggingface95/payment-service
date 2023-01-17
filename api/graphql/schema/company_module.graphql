@@ -25,7 +25,7 @@ extend type Mutation @guard {
     """
     Добавить модули
     """
-    createCompanyModule(
+    addCompanyModule(
         "ID компании"
         company_id: ID!
         "Модуль"
