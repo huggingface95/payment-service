@@ -110,7 +110,6 @@ extend type Mutation @guard {
     "Отозвать доступ"
     deleteApplicantBankingAccess(
         id: ID!
-    ): ApplicantBankingAccess
-        @field(resolver: "ApplicantBankingAccessMutator@deleteAccess")
+    ): ApplicantBankingAccess @delete
 }
 
