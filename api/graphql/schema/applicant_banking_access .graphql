@@ -40,14 +40,14 @@ extend type Query @guard {
     applicantBankingAccesses(
         page: Int = 1,
         first: Int = 15,
-        filter: _ @filterConditions(static: QueryApplicantBankingAccessFilterStatic),
+        filter: _ @filterConditions(static: QueryApplicantBankingAccessesFilterStatic),
         orderBy: _ @orderBy(
         columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
     )): ApplicantBankingAccesses
         @field(resolver: "ApplicantBankingAccessQuery@enabled")
 }
 
-input QueryApplicantBankingAccessFilterStatic @spread {
+input QueryApplicantBankingAccessesFilterStatic @spread {
     applicant_individual_id: ID @eq
     applicant_company_id: ID @eq
     member_id: ID @eq
