@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ApplicantDocumentInternalNote extends BaseModel
 {
@@ -21,15 +20,5 @@ class ApplicantDocumentInternalNote extends BaseModel
     public function member(): BelongsTo
     {
         return $this->belongsTo(Members::class, 'member_id');
-    }
-
-    public function tags(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            ApplicantDocumentTag::class,
-            'applicant_document_internal_note_tag_relation',
-            'applicant_document_internal_note_id',
-            'applicant_document_tag_id'
-        );
     }
 }
