@@ -392,6 +392,22 @@ class ExtensionErrorHandler implements ErrorHandler
             ));
         }
 
+        if (strpos($error->getMessage(), 'Foreign key violation: 7 ERROR:  update or delete on table \"company_modules\" violates foreign key constraint')) {
+            return $next(new Error(
+                'Payment provider still reference this company.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Payment provider still reference this company.',
+                ]
+            ));
+        }
+
         if ($error->getCategory() == 'graphql') {
             Log::error($error);
 //            preg_match('/argument (.*?) of type/', $error->getMessage(), $match);
