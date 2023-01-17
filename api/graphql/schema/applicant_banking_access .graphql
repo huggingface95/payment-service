@@ -31,7 +31,7 @@ type ApplicantBankingAccesses {
 }
 
 extend type Query @guard {
-    applicantBankingAccess(id: ID @eq): ApplicantBankingAccesses @find
+    applicantBankingAccess(id: ID @eq): ApplicantBankingAccess @find
     """
     Получить список пользователей
     orderBy: [{ column: APPLICANT_INDIVIDUAL_ID, order: DESC }] сортировка по ID, по имени, фамилии, email
