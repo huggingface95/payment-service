@@ -21,7 +21,7 @@ class CompanyModuleMutator extends BaseMutator
             foreach ($args['module_id'] as $module) {
                 CompanyModule::create([
                    'company_id' =>  $args['company_id'],
-                    'module_id' => $module->id
+                    'module_id' => $module
                 ]);
             }
         }
