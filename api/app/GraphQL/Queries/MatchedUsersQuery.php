@@ -15,7 +15,7 @@ class MatchedUsersQuery
         $applicantIndividualCompanies = ApplicantIndividualCompany::where('applicant_company_id', $args['applicant_company_id']);
 
         if (isset($args['filter']['column']) && $args['filter']['column'] === 'applicant_type') {
-            $applicantIndividualCompanies->where('applicant_type', 'App\\Models\\' . $args['filter']['value'])->get();
+            $applicantIndividualCompanies->where('applicant_type', $args['filter']['value'])->get();
         }
 
         return $applicantIndividualCompanies->orderBy('applicant_id', 'ASC')->get();
