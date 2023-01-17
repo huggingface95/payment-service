@@ -32,21 +32,16 @@ extend type Mutation @guard {
         module_id: [ID]
         "Активность"
         is_active: Boolean
-    ): Company
-        @field(resolver: "CompanyModuleMutator@attach")
+    ): Company @field(resolver: "CompanyModuleMutator@attach")
 
     """
     Активировать/деактивировать модуль
     """
     updateCompanyModule(
-        "ID компании"
-        company_id: ID!
-        "Модуль"
-        module_id: [ID]
+        id: ID!
         "Активность"
         is_active: Boolean!
-    ): Company
-        @field(resolver:"CompanyModuleMutator@update")
+    ): CompanyModule @update
 
     """
     Удалить модули
