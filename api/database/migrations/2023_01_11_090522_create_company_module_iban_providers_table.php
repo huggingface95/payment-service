@@ -23,7 +23,7 @@ class CreateCompanyModuleIbanProvidersTable extends Migration
             $table->boolean('is_active')->default(false);
 
             $table->unique(['company_module_id', 'payment_provider_iban_id']);
-            $table->foreign('company_module_id')->references('id')->on('company_modules');
+            $table->foreign('company_module_id')->references('id')->on('company_modules')->onDelete('cascade');
             $table->foreign('payment_provider_iban_id')->references('id')->on('payment_provider_ibans');
         });
     }
