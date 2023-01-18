@@ -83,7 +83,7 @@ input PriceListFeeInput {
     name: String!
     type_id: ID!
     operation_type_id: ID!
-    period_id: ID!
+    period_id: ID
     price_list_id: ID!
     fee_ranges: JSON
     fees: [PriceListFeesList!]
