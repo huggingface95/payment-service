@@ -39,10 +39,10 @@ class CompanyMutator extends BaseMutator
 
     public function delete($root, array $args, GraphQLContext $context)
     {
-        $company = Company::find($args['id']);
+        $company = Company::where('id', $args['id']);
 
         $company->delete();
 
-        return $company;
+        return Company::find($args['id']);
     }
 }
