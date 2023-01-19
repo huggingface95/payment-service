@@ -13,10 +13,13 @@ type ApplicantDocument {
     country: Country @belongsTo(relation: "country")
     document_type_id: ID!
     document_state_id: ID!
+    "Получить файл"
     file: Files @belongsTo(relation: "file")
     info: String
     "Получить внутренние заметки документа"
     internal_notes: [ApplicantDocumentInternalNote] @hasMany(relation: "internalNotes")
+    "Получить теги"
+    tags: [ApplicantDocumentTag] @belongsToMany(relation: "tags")
     created_at: DateTimeUtc
     updated_at: DateTimeUtc
 }
@@ -67,4 +70,22 @@ extend type Mutation @guard {
         document_state_id: ID
         info: String
     ): ApplicantDocument @update
+
+    """
+    Прикрепить тег к документу
+    """
+    attachApplicantDocumentTag(
+        applicant_document_id: ID!
+        applicant_document_tag_id: [ID]!
+    ): ApplicantDocument
+        @field(resolver: "ApplicantDocumentMutator@attachTag")
+
+    """
+    Открепить тег от документа
+    """
+    detachApplicantDocumentTag(
+        applicant_document_id: ID!
+        applicant_document_tag_id: [ID]!
+    ): ApplicantDocument
+        @field(resolver:"ApplicantDocumentMutator@detachTag")
 }

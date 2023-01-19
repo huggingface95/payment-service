@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Events\Applicant\ApplicantDocumentCreatedEvent;
 use App\Events\Applicant\ApplicantDocumentUpdatedEvent;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ApplicantDocument extends BaseModel
@@ -39,5 +40,15 @@ class ApplicantDocument extends BaseModel
     public function internalNotes(): HasMany
     {
         return $this->hasMany(ApplicantDocumentInternalNote::class, 'applicant_document_id');
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            ApplicantDocumentTag::class,
+            'applicant_document_tag_relation',
+            'applicant_document_id',
+            'applicant_document_tag_id'
+        );
     }
 }

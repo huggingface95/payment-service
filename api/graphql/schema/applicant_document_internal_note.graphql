@@ -10,8 +10,6 @@ type ApplicantDocumentInternalNote {
     member: Members @belongsTo(relation: "member")
     "Текст заметки"
     note: String
-    "Получить теги"
-    tags: [ApplicantDocumentTag] @hasMany(relation: "tags")
     "Дата создания"
     created_at: DateTimeUtc
     "Дата обновления"
@@ -44,22 +42,4 @@ extend type Mutation @guard {
     deleteApplicantDocumentInternalNote(
         id: ID!
     ): ApplicantDocumentInternalNote @delete
-
-    """
-    Прикрепить тег к заметке документа
-    """
-    attachApplicantDocumentInternalNoteTag(
-        applicant_document_internal_note_id: ID!
-        applicant_document_tag_id: [ID]!
-    ): ApplicantDocumentInternalNote
-        @field(resolver: "ApplicantDocumentInternalNoteMutator@attachTag")
-
-    """
-    Открепить тег от заметки документа
-    """
-    detachApplicantDocumentInternalNoteTag(
-        applicant_document_internal_note_id: ID!
-        applicant_document_tag_id: [ID]!
-    ): ApplicantDocumentInternalNote
-        @field(resolver:"ApplicantDocumentInternalNoteMutator@detachTag")
 }
