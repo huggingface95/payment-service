@@ -1,5 +1,5 @@
 """
-История исходящих переводов
+История входящих переводов
 """
 type TransferIncomingHistory {
     id: ID!
@@ -15,7 +15,7 @@ type TransferIncomingHistory {
 
 extend type Query @guard {
     """
-    Получить историю исходящего платежа
+    Получить историю входящего платежа
     """
     transferIncomingHistory(transfer_id: ID!): [TransferIncomingHistory!]!
         @paginate(defaultCount: 10)
