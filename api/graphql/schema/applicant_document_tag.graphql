@@ -8,6 +8,10 @@ type ApplicantDocumentTag {
     category: ApplicantDocumentTagCategory @belongsTo(relation: "category")
     "Имя"
     name: String!
+    "member"
+    member: Members @belongsTo(relation: "member")
+    "дата создания"
+    created_at: DateTimeUtc
     "Описание"
     description: String
 }
