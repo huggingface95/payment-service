@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class ApplicantDocumentTag extends BaseModel
 {
@@ -22,5 +23,10 @@ class ApplicantDocumentTag extends BaseModel
     public function member(): BelongsTo
     {
         return $this->belongsTo(Members::class, 'member_id');
+    }
+
+    public function setMemberIdAttribute($value)
+    {
+        $this->attributes['member_id'] = Auth::user()->id;
     }
 }
