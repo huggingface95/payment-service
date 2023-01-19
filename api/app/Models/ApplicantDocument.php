@@ -39,17 +39,17 @@ class ApplicantDocument extends BaseModel
 
     public function documentType(): BelongsTo
     {
-        return $this->belongsTo(Country::class, 'document_type_id');
+        return $this->belongsTo(DocumentType::class, 'document_type_id');
     }
 
     public function documentState(): BelongsTo
     {
-        return $this->belongsTo(Country::class, 'document_state_id');
+        return $this->belongsTo(DocumentState::class, 'document_state_id');
     }
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Country::class, 'company_id');
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function internalNotes(): HasMany
