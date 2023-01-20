@@ -228,9 +228,9 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         return $this->belongsTo(Country::class, 'citizenship_country_id');
     }
 
-    public function bankingAccess(): HasOne
+    public function bankingAccess(): HasMany
     {
-        return $this->hasOne(ApplicantBankingAccess::class, 'applicant_individual_id');
+        return $this->hasMany(ApplicantBankingAccess::class, 'applicant_individual_id');
     }
 
     /**
