@@ -38,6 +38,17 @@ class ApplicantBankingAccessQuery
         ];
     }
 
+    public function get($_, array $args)
+    {
+        $applicantBankingAccess = ApplicantBankingAccess::find($args['id']);
+
+        $permissions = $this->getApplicantPermissions($applicantBankingAccess['applicant_individual_id']);
+        $permissions['create_payments'] == true ? $applicantBankingAccess['create_payments'] = true : $applicantBankingAccess['create_payments'] = false;
+        $permissions['sign_payments'] == true ? $applicantBankingAccess['sign_payments'] = true : $applicantBankingAccess['sign_payments'] = false;
+
+        return $applicantBankingAccess;
+    }
+
     public function getApplicantPermissions ($id)
     {
         $result = ['create_payments' => false, 'sign_payments' => false];
