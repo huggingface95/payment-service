@@ -1,0 +1,23 @@
+"""
+История исходящих переводов
+"""
+type TransferOutgoingHistory {
+    id: ID!
+    "Статус"
+    status: PaymentStatus @belongsTo(relation: "paymentStatus")
+    "Действие"
+    action: String
+    "Комментарий"
+    comment: String
+    "Дата"
+    created_at: DateTimeUtc
+}
+
+extend type Query @guard {
+    """
+    Получить историю исходящего платежа
+    """
+    transferOutgoingHistory(transfer_id: ID!): [TransferOutgoingHistory!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: ASC)
+}
