@@ -175,7 +175,6 @@ input QueryApplicantCompaniesFilterStatic @spread{
 }
 
 input QueryGetMatchedUsersFilterStatic @spread {
-    applicant_company_id: ID @eq
     applicant_type: ApplicantType @eq
 }
 
