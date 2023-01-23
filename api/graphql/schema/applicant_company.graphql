@@ -150,7 +150,7 @@ extend type Query @guard{
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     getMatchedApplicantndividuals(
-        applicant_company_id: ID @eq,
+        applicant_company_id: ID! @eq,
     ): [ApplicantIndividualCompany!]!
     @field(resolver: "MatchedUsersQuery@getApplicantIndividuals")
 }
