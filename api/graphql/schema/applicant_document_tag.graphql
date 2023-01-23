@@ -52,4 +52,9 @@ extend type Mutation @guard {
         name: String!
         description: String
     ): ApplicantDocumentTag @update
+
+    """
+    Удалить тег
+    """
+    deleteApplicantDocumentTag(id: ID!): ApplicantDocumentTag @delete
 }
