@@ -26,6 +26,11 @@ type ApplicantDocument {
 
 extend type Query @guard {
     """
+    Получить документ
+    """
+    applicantDocument(id: ID! @eq): ApplicantDocument @find
+
+    """
     Получить список документов
     """
     applicantDocuments(
@@ -70,6 +75,11 @@ extend type Mutation @guard {
         document_state_id: ID
         info: String
     ): ApplicantDocument @update
+
+    """
+    Удалить документ
+    """
+    deleteApplicantDocument(id: ID!): ApplicantDocument @delete
 
     """
     Прикрепить тег к документу
