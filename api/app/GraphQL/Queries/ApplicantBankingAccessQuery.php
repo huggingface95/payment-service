@@ -5,13 +5,47 @@ namespace App\GraphQL\Queries;
 use App\Models\ApplicantBankingAccess;
 use App\Models\ApplicantIndividual;
 use App\Models\Role;
+use Illuminate\Support\Str;
 
 class ApplicantBankingAccessQuery
 {
     public function enabled($_, array $args)
     {
-        $applicantBankingAccess = ApplicantBankingAccess::query()
-            ->get()->toArray();
+        if (isset($args['applicant_individual_id']) && isset($args['applicant_company_id'])) {
+            $applicantBankingAccess = ApplicantBankingAccess::query()
+                ->where('applicant_individual_id', '=', $args['applicant_individual_id'])
+                ->where('applicant_company_id', '=', $args['applicant_company_id'])
+                ->get();
+        } else  {
+            $applicantBankingAccess = ApplicantBankingAccess::query()
+                ->where('applicant_company_id', $args['applicant_company_id'])
+                ->get();
+        }
+
+        if (isset($args['filter']) && $args['filter']['column'] == 'member_id') {
+            $applicantBankingAccess = $applicantBankingAccess->where('member_id',  $args['filter']['value']);
+        }
+
+        if (isset($args['filter']) && $args['filter']['column'] == 'grant_access') {
+            $applicantBankingAccess = $applicantBankingAccess->where('grant_access', $args['filter']['value']);
+        }
+
+        if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
+            $fields = $args['orderBy'];
+
+            foreach ($fields as $field) {
+                if ($field['order'] == 'DESC') {
+                    $applicantBankingAccess =  $applicantBankingAccess->sortByDesc(Str::lower($field['column']));
+                } else {
+                    $applicantBankingAccess = $applicantBankingAccess->sortBy(Str::lower($field['column']));
+                }
+            }
+        } else {
+            $applicantBankingAccess->sortBy('id');
+        }
+
+        $applicantBankingAccess->toArray();
+
         $bankingAccess = json_decode(json_encode($applicantBankingAccess), true);
 
         foreach ($bankingAccess as &$access) {
