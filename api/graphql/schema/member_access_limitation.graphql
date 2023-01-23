@@ -38,7 +38,7 @@ extend type Query @guard {
 }
 
 input QueryMemberAccessLimitationsFilterStatic @spread{
-    hasGroup: ID @eq
+    hasGroupFilterById: ID @eq
     hasGroupRoleMixedIdOrName: Mixed @eq
     hasProviderMixedIdOrName: Mixed @eq
 }
