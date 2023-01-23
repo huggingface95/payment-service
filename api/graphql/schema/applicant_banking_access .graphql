@@ -49,7 +49,7 @@ extend type Query @guard {
     filter: {column: MEMBER_ID, operator: EQ, value: 2} фильтр по member_id, grant_access
     """
     applicantBankingAccesses(
-        applicant_company_id:  ID @eq,
+        applicant_company_id:  ID! @eq,
         page: Int = 1,
         first: Int = 15,
         filter: _ @filterConditions(static: QueryApplicantBankingAccessesFilterStatic),
