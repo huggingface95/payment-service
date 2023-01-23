@@ -32,12 +32,15 @@ extend type Query @guard {
     hasPosition: {column: GROUP_ROLE_ID, operator:EQ, value: 8} поиск по id GROUP ROLE
     """
     memberAccessLimitations(
-        hasGroupRole: _ @whereHasConditions(columns: ["id","name"]),
-        hasGroup: _ @whereHasConditions(columns: ["id","name"]),
-        hasProvider: _ @whereHasConditions(columns: ["id","name"]),
-        where: _ @whereConditions(columns: ["id","member_id","group_role_id", "provider_id"]),
+        filter: _ @filterConditions(static: QueryMemberAccessLimitationsFilterStatic),
         orderBy: _ @orderBy(columns: ["id"],
     )): [MemberAccessLimitation!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryMemberAccessLimitationsFilterStatic @spread{
+    hasGroupFilterById: ID @eq
+    hasGroupRoleMixedIdOrName: Mixed @eq
+    hasProviderMixedIdOrName: Mixed @eq
 }
 
 extend type Mutation  {
