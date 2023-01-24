@@ -2,13 +2,17 @@
 
 namespace App\Providers;
 
+use App\Repositories\AccountRepository;
 use App\Repositories\EmailRepository;
 use App\Repositories\FileRepository;
+use App\Repositories\Interfaces\AccountRepositoryInterface;
 use App\Repositories\Interfaces\EmailRepositoryInterface;
 use App\Repositories\Interfaces\FileRepositoryInterface;
 use App\Repositories\Interfaces\JWTRepositoryInterface;
+use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Repositories\Interfaces\VvRepositoryInterface;
 use App\Repositories\JWTRepository;
+use App\Repositories\TransferOutgoingRepository;
 use App\Repositories\VvRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -39,6 +43,16 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             JWTRepositoryInterface::class,
             JWTRepository::class
+        );
+
+        $this->app->bind(
+            TransferOutgoingRepositoryInterface::class,
+            TransferOutgoingRepository::class
+        );
+
+        $this->app->bind(
+            AccountRepositoryInterface::class,
+            AccountRepository::class
         );
     }
 }

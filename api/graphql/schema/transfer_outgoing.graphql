@@ -165,4 +165,15 @@ extend type Mutation @guard {
         bank_message: String
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@create")
+
+    """
+    Редактировать исходящий перевод
+    """
+    updateTransferOutgoing(
+        "ID"
+        id: ID!
+        "Статус"
+        status_id: Int!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@update")
 }

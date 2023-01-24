@@ -77,6 +77,12 @@ class Account extends BaseModel implements BaseModelInterface
         'entity_id',
     ];
 
+    protected $casts = [
+        'current_balance' => 'decimal:5',
+        'reserved_balance' => 'decimal:5',
+        'available_balance' => 'decimal:5',
+    ];
+
     protected static function booted()
     {
         parent::booted();
