@@ -28,10 +28,11 @@ extend type Query @guard {
     """
     Получить список участников
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
-    where:{column: FIRST_NAME, operator: LIKE, value: ""} фильтр по фамилии, имени, email, компании, роли, департаменту, должности
+    filter:{column: FIRST_NAME, operator: LIKE, value: ""} фильтр по фамилии, имени, email, компании, роли, департаменту, должности
     hasPosition: {column: GROUP_ROLE_ID, operator:EQ, value: 8} поиск по id GROUP ROLE
     """
     memberAccessLimitations(
+        member_id: ID! @eq,
         filter: _ @filterConditions(static: QueryMemberAccessLimitationsFilterStatic),
         orderBy: _ @orderBy(columns: ["id"],
     )): [MemberAccessLimitation!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
