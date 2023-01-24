@@ -7,7 +7,7 @@ type CompanyModulePaymentProvider {
     "ID модуля компании"
     company_module_id: ID!
     "ID платежного провайдера"
-    payment_provider_id: ID!
+    payment_provider: PaymentProvider! @belongsTo(relation: "paymentProvider")
     "Кошелек"
     wallet: String!
     "API ключ"

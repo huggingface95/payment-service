@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class CompanyModulePaymentProvider extends BaseModel
 {
     public $timestamps = false;
@@ -18,4 +20,10 @@ class CompanyModulePaymentProvider extends BaseModel
     protected $hidden = [
         'password',
     ];
+
+    public function paymentProvider(): BelongsTo
+    {
+        return $this->belongsTo(PaymentProvider::class, 'payment_provider_id');
+    }
+
 }
