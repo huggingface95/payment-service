@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
+use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\RespondentFeesEnum;
+use App\Enums\TransferOutgoingChannelEnum;
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\TransferOutgoingJob;
 use App\Models\Account;
@@ -288,11 +290,12 @@ class TransferOutgoingService extends AbstractService
 
     public function validateUpdateTransferStatus(TransferOutgoing $transfer, array $args): void
     {
-        $date = Carbon::now();
-
+        $date = Carbon::today();
+        
         switch ($transfer->status_id) {
             case PaymentStatusEnum::WAITING_EXECUTION_DATE->value:
-                if ($date->lt($transfer->execution_at)) {
+                $executionAt = Carbon::parse($transfer->execution_at)->format('Y-m-d');
+                if ($date->lt($executionAt)) {
                     if ($args['status_id'] == PaymentStatusEnum::SENT->value) {
                         throw new GraphqlException('The execution date has not yet arrived, please change the execution date', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
@@ -360,5 +363,37 @@ class TransferOutgoingService extends AbstractService
 
             $this->accountService->unsetAmmountReserveOnAccountBalance($transfer);
         });
+    }
+
+    public function createTransfer(array $args): TransferOutgoing
+    {
+        $date = Carbon::now();
+        
+        $args['user_type'] = class_basename(Members::class);
+        $args['amount_debt'] = $args['amount'];
+        $args['status_id'] = PaymentStatusEnum::PENDING->value;
+        $args['urgency_id'] = 1;
+        $args['operation_type_id'] = OperationTypeEnum::OUTGOING_TRANSFER->value;
+        $args['payment_bank_id'] = 2;
+        $args['payment_number'] = rand();
+        $args['sender_id'] = 1;
+        $args['sender_type'] = class_basename(ApplicantCompany::class);
+        $args['system_message'] = 'test';
+        $args['channel'] = TransferOutgoingChannelEnum::BACK_OFFICE->toString();
+        $args['reason'] = 'test';
+        $args['recipient_country_id'] = 1;
+        $args['respondent_fees_id'] = 1;
+        $args['created_at'] = $date->format('Y-m-d H:i:s');
+
+        if (isset($args['execution_at'])) {
+            if (Carbon::parse($args['execution_at'])->lt($date)) {
+                throw new GraphqlException('execution_at cannot be earlier than current date and time', 'use');
+            }
+            $args['status_id'] = PaymentStatusEnum::WAITING_EXECUTION_DATE->value;
+        } else {
+            $args['execution_at'] = $date->format('Y-m-d H:i:s');
+        }
+
+        return $this->transferRepository->create($args);
     }
 }
