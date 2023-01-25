@@ -27,4 +27,9 @@ class Region extends BaseModel
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
+
+    public function PaymentSystem(): BelongsToMany
+    {
+        return $this->belongsToMany(PaymentSystem::class, 'payment_system_regions', 'region_id', 'payment_system_id', 'id');
+    }
 }
