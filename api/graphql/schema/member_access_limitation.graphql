@@ -42,6 +42,8 @@ input QueryMemberAccessLimitationsFilterStatic @spread{
     hasGroupFilterById: ID @eq
     hasGroupRoleMixedIdOrName: Mixed @eq
     hasProviderMixedIdOrName: Mixed @eq
+    hasModuleMixedIdOrName: Mixed @eq
+    hasProjectMixedIdOrName: Mixed @eq
 }
 
 extend type Mutation  {
