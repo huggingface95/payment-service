@@ -14,8 +14,10 @@ class ApplicantFilterByMemberScope implements Scope
         if (BaseModel::$applicantIds && preg_match('/^(SELECT|select)/', $builder->getQuery()->toSql())) {
             if (preg_match("/applicant_individual(?=[\.\"\' ])|applicant_companies(?=[\.\"\' ])|members(?=[\.\"\' ])/", $builder->getQuery()->toSql(), $matches)) {
                 foreach ($matches as $match) {
-                    /**  applicant_inidividual|applicant_companies|members $match */
-                    $builder->whereIn("{$match}.id", BaseModel::$applicantIds[$match]);
+                    if (count(BaseModel::$applicantIds[$match])){
+                        /**  applicant_inidividual|applicant_companies|members $match */
+                        $builder->whereIn("{$match}.id", BaseModel::$applicantIds[$match]);
+                    }
                 }
             }
         }
