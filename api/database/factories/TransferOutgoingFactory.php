@@ -64,6 +64,11 @@ class TransferOutgoingFactory extends Factory
             'execution_at' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
             'created_at' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
             'updated_at' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
+            'group_id' => 1,
+            'group_type_id' => 1,
+            'project_id' => 1,
+            'price_list_id' => 1,
+            'price_list_fee_id' => 1,
         ];
     }
 }
