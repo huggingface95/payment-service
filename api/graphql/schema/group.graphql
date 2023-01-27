@@ -124,6 +124,7 @@ extend type Query @guard {
 input QueryGroupTypesFilterStatic @spread{
     hasGroupsFilterByCompanyId: ID @eq
     hasGroupsFilterByRoleId: ID @eq
+    hasRolesFilterById: ID @eq
 }
 
 input QueryGroupsFilterStatic @spread {
