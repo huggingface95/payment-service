@@ -15,16 +15,24 @@ class CompanyModulePaymentProviderMutator extends BaseMutator
             throw new GraphqlException('Company module not found', 'not found', 404);
         }
 
-        $provider = $companyModule->paymentProviders()->create($args);
-
-        return $provider;
+        return $companyModule->paymentProviders()->create($args);
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function update($root, array $args): CompanyModulePaymentProvider
     {
+        /** @var CompanyModulePaymentProvider $provider */
         $provider = CompanyModulePaymentProvider::find($args['id']);
         if (!$provider) {
             throw new GraphqlException('Company module payment provider not found', 'not found', 404);
+        }
+
+        if ($args['is_active']) {
+            //TODO add logic
+        } else {
+            $provider->projectApiSettings()->delete();
         }
 
         $provider->update($args);
