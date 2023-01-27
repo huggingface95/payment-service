@@ -11,9 +11,6 @@ class CompanyModulePaymentProvider extends BaseModel
     protected $fillable = [
         'company_module_id',
         'payment_provider_id',
-        'wallet',
-        'api_key',
-        'password',
         'is_active',
     ];
 
