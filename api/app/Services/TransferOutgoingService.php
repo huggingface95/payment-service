@@ -23,7 +23,6 @@ use App\Models\Fee;
 use App\Models\GroupType;
 use App\Models\PriceListFeeCurrency;
 use App\Models\TransferOutgoing;
-use App\Models\User;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
@@ -288,10 +287,45 @@ class TransferOutgoingService extends AbstractService
         return $allLimits;
     }
 
+    public function checkApplicantBankingAccessUsedLimits(TransferOutgoing $transfer): void
+    {
+        $applicantBankingAccess = ApplicantBankingAccess::where('applicant_individual_id', $transfer->requested_by_id)
+            ->where('applicant_company_id', $transfer->sender_id)
+            ->first();
+        
+        $dailyLimit = $applicantBankingAccess->daily_limit - $applicantBankingAccess->used_daily_limit;
+        $monthlyLimit = $applicantBankingAccess->monthly_limit - $applicantBankingAccess->used_monthly_limit;
+
+        if ($dailyLimit < $transfer->amount_debt) {
+            throw new GraphqlException('Daily limit reached', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if ($monthlyLimit < $transfer->amount_debt) {
+            throw new GraphqlException('Monthly limit reached', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    public function updateApplicantBanckingAccessUsedLimits(TransferOutgoing $transaction): void
+    {
+        $usedMonthly = $this->transferRepository->getSumOfMonthlySentTransfersByApplicantIndividualId($transaction->requested_by_id);
+        $usedDaily = $this->transferRepository->getSumOfDailySentTransfersByApplicantIndividualId($transaction->requested_by_id);
+
+        $applicantBankingAccess = ApplicantBankingAccess::where('applicant_individual_id', $transaction->requested_by_id)
+            ->where('applicant_company_id', $transaction->sender_id)
+            ->first();
+
+        if ($applicantBankingAccess) {
+            $applicantBankingAccess->update([
+                'used_monthly_limit' => $usedMonthly,
+                'used_daily_limit' => $usedDaily,
+            ]);
+        }
+    }
+
     public function validateUpdateTransferStatus(TransferOutgoing $transfer, array $args): void
     {
         $date = Carbon::today();
-        
+
         switch ($transfer->status_id) {
             case PaymentStatusEnum::WAITING_EXECUTION_DATE->value:
                 $executionAt = Carbon::parse($transfer->execution_at)->format('Y-m-d');
@@ -345,13 +379,17 @@ class TransferOutgoingService extends AbstractService
         DB::transaction(function () use ($transfer) {
             $amountDebt = $this->commissionCalculation($transfer);
 
+            $this->checkApplicantBankingAccessUsedLimits($transfer);
+
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::SENT->value,
                 'amount_debt' => $amountDebt,
             ]);
 
             $this->accountService->setAmmountReserveOnAccountBalance($transfer);
-    
+
+            $this->updateApplicantBanckingAccessUsedLimits($transfer);
+
             dispatch(new TransferOutgoingJob($transfer))->afterCommit();
         });
     }
@@ -362,13 +400,15 @@ class TransferOutgoingService extends AbstractService
             $this->transferRepository->update($transfer, ['status_id' => $status]);
 
             $this->accountService->unsetAmmountReserveOnAccountBalance($transfer);
+
+            $this->updateApplicantBanckingAccessUsedLimits($transfer);
         });
     }
 
     public function createTransfer(array $args): TransferOutgoing
     {
         $date = Carbon::now();
-        
+
         $args['user_type'] = class_basename(Members::class);
         $args['amount_debt'] = $args['amount'];
         $args['status_id'] = PaymentStatusEnum::PENDING->value;
