@@ -111,6 +111,9 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'profile_additional_fields' => 'array',
         'address_additional_fields' => 'array',
         'backup_codes' => 'array',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'last_screened_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
     ];
 
     protected $appends = [

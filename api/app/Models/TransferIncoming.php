@@ -58,6 +58,12 @@ class TransferIncoming extends BaseModel
         'execution_at',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'execution_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class, 'account_id')->withoutGlobalScope(AccountIndividualsCompaniesScope::class);

@@ -21,6 +21,11 @@ class ApplicantIndividualNotes extends BaseModel
         'note', 'applicant_individual_id', 'member_id',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

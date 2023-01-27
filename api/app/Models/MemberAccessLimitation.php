@@ -32,6 +32,11 @@ class MemberAccessLimitation extends BaseModel
         'see_own_applicants',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class);

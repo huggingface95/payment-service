@@ -70,6 +70,9 @@ class TransferOutgoing extends BaseModel
     protected $casts = [
         'amount' => 'decimal:5',
         'amount_debt' => 'decimal:5',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'execution_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
     ];
 
     public function account(): BelongsTo
@@ -134,7 +137,7 @@ class TransferOutgoing extends BaseModel
         return $this->hasOne(PaymentProviderHistory::class, 'transfer_id', 'id')
             ->where('transfer_type', FeeTransferTypeEnum::OUTGOING->toString());
     }
-    
+
     public function paymentStatus(): BelongsTo
     {
         return $this->belongsTo(PaymentStatus::class, 'status_id');
