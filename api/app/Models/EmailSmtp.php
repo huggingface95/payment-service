@@ -40,6 +40,11 @@ class EmailSmtp extends BaseModel
         'name', 'member_id', 'security', 'company_id', 'host_name', 'from_name', 'from_email', 'username', 'password', 'replay_to', 'port', 'is_sending_mail',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public static function getSecurities(): array
     {
         return [

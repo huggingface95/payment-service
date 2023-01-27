@@ -43,6 +43,11 @@ class PriceListFee extends BaseModel
 
     protected $appends = ['fee_ranges'];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public function getFeeRangesAttribute()
     {
         $fees = $this->fees()->get();

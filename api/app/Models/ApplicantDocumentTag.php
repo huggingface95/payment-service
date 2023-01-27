@@ -15,6 +15,11 @@ class ApplicantDocumentTag extends BaseModel
         'description',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(ApplicantDocumentTagCategory::class, 'category_id');

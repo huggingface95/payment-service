@@ -27,6 +27,11 @@ class ApplicantDocument extends BaseModel
         'info',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id');

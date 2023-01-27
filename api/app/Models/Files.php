@@ -14,4 +14,9 @@ class Files extends BaseModel
     protected $fillable = [
         'file_name', 'mime_type', 'size', 'entity_type', 'author_id', 'storage_path', 'storage_name', 'link', 'resolution',
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
 }

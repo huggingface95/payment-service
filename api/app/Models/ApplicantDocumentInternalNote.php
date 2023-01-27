@@ -12,6 +12,11 @@ class ApplicantDocumentInternalNote extends BaseModel
         'note',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public function document(): BelongsTo
     {
         return $this->belongsTo(ApplicantDocument::class, 'applicant_document_id');
