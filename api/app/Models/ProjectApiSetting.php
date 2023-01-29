@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @method static firstOrCreate(array $array)
+ */
 class ProjectApiSetting extends BaseModel
 {
     public $timestamps = false;

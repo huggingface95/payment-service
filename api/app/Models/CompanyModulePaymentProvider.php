@@ -32,4 +32,16 @@ class CompanyModulePaymentProvider extends BaseModel
         );
     }
 
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Project::class,
+            ProjectSettings::class,
+            'payment_provider_id',
+            'project_id',
+            'payment_provider_id',
+            'id'
+        );
+    }
+
 }

@@ -16,9 +16,9 @@ class CreateProjectApiSettingsTable extends Migration
         Schema::create('project_api_settings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->string('wallet');
-            $table->string('api_key');
-            $table->string('password');
+            $table->string('wallet')->nullable();
+            $table->string('api_key')->nullable();
+            $table->string('password')->nullable();
 
             $table->foreign('project_id')->references('id')->on('projects')->onUpdate('cascade')->onDelete('cascade');
         });

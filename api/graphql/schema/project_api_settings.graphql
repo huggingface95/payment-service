@@ -7,11 +7,11 @@ type ProjectApiSetting {
     "ID проекта"
     project: Project! @belongsTo(relation: "project")
     "Кошелек"
-    wallet: String!
+    wallet: String
     "API ключ"
-    api_key: String!
+    api_key: String
     "Пароль"
-    password: String!
+    password: String
 }
 
 type ProjectApiSettingPassword {
