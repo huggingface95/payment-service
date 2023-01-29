@@ -5,8 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphqlException;
 use App\Models\CompanyModule;
 use App\Models\CompanyModulePaymentProvider;
-use Illuminate\Contracts\Encryption\EncryptException;
-use Illuminate\Support\Facades\Crypt;
+use App\Models\ProjectApiSetting;
 
 class CompanyModulePaymentProviderMutator extends BaseMutator
 {
@@ -17,36 +16,31 @@ class CompanyModulePaymentProviderMutator extends BaseMutator
             throw new GraphqlException('Company module not found', 'not found', 404);
         }
 
-        try {
-            if (!empty($args['password'])) {
-                $args['password'] = Crypt::encryptString($args['password']);
-            }
-        } catch (EncryptException $e) {
-            throw new GraphqlException('Encryption data error', 'internal');
-        }
-
-        $provider = $companyModule->paymentProviders()->create($args);
-
-        return $provider;
+        return $companyModule->paymentProviders()->create($args);
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function update($root, array $args): CompanyModulePaymentProvider
     {
-        $provider = CompanyModulePaymentProvider::find($args['id']);
-        if (!$provider) {
+        /** @var CompanyModulePaymentProvider $companyModuleProvider */
+        $companyModuleProvider = CompanyModulePaymentProvider::find($args['id']);
+        if (!$companyModuleProvider) {
             throw new GraphqlException('Company module payment provider not found', 'not found', 404);
         }
 
-        try {
-            if (!empty($args['password'])) {
-                $args['password'] = Crypt::encryptString($args['password']);
-            }
-        } catch (EncryptException $e) {
-            throw new GraphqlException('Encryption data error', 'internal');
+        if ($args['is_active']) {
+            //if not exist`s project ids to project_api_settings add with nullable params
+            $companyModuleProvider->projects()->get()->unique()->pluck('id')->crossJoin('project_id')->each(function ($item) {
+                ProjectApiSetting::firstOrCreate([$item[1] => $item[0]]);
+            });
+        } else {
+            $companyModuleProvider->projectApiSettings()->delete();
         }
 
-        $provider->update($args);
+        $companyModuleProvider->update($args);
 
-        return $provider;
+        return $companyModuleProvider;
     }
 }

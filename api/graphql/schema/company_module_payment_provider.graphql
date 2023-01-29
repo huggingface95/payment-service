@@ -8,10 +8,6 @@ type CompanyModulePaymentProvider {
     company_module_id: ID!
     "ID платежного провайдера"
     payment_provider: PaymentProvider! @belongsTo(relation: "paymentProvider")
-    "Кошелек"
-    wallet: String!
-    "API ключ"
-    api_key: String!
     "Активность"
     is_active: Boolean!
 }
@@ -23,25 +19,11 @@ type CompanyModulePaymentProviderPassword {
     password: String!
 }
 
-extend type Query @guard {
-    """
-    Получить пароль
-    """
-    companyModulePaymentProviderPassword(id: ID! @eq): CompanyModulePaymentProviderPassword
-        @field(resolver: "CompanyModulePaymentProviderQuery@getPassword")
-}
-
 input InputCompanyModulePaymentProvider {
     "ID модуля компании"
     company_module_id: ID!
     "ID платежного провайдера"
     payment_provider_id: ID!
-    "Кошелек"
-    wallet: String!
-    "API ключ"
-    api_key: String!
-    "Пароль"
-    password: String!
     "Активность"
     is_active: Boolean!
 }
@@ -61,12 +43,6 @@ extend type Mutation @guard {
     updateCompanyModulePaymentProvider(
         "ID"
         id: ID!
-        "Кошелек"
-        wallet: String!
-        "API ключ"
-        api_key: String!
-        "Пароль"
-        password: String!
         "Активность"
         is_active: Boolean!
     ): CompanyModulePaymentProvider
