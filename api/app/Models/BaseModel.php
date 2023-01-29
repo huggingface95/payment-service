@@ -101,7 +101,7 @@ class BaseModel extends Model
                 }
             }
         }
-
+        //TODO may be changed to false in the future
         return true;
     }
 
@@ -125,8 +125,12 @@ class BaseModel extends Model
     protected static function filterByCompany(?Model $user, string $action, Model $model): bool
     {
         if ($user) {
-            $table = $model->getTable();
             /** @var Members|ApplicantIndividual $user */
+            if ($user->is_super_admin) {
+                return true;
+            }
+
+            $table = $model->getTable();
             if (array_key_exists($table, self::FILTER_BY_COMPANY_TABLES)) {
                 if ($key = $model->getAttribute(self::FILTER_BY_COMPANY_TABLES[$table])) {
                     if (in_array($action, self::FILTER_BY_COMPANY_SKIP_ACTIONS[$table])) {
@@ -136,6 +140,7 @@ class BaseModel extends Model
                 }
             }
         }
+        //TODO may be changed to false in the future
         return true;
     }
 }
