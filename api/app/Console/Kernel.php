@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\DropTestTables;
+use App\Console\Commands\ExecuteWaitingTransferCommand;
 use App\Console\Commands\IbanCompanyCommand;
 use App\Console\Commands\IbanIndividualStatusCommand;
 use App\Console\Commands\NotificationsCommand;
@@ -18,6 +19,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        ExecuteWaitingTransferCommand::class,
         NotificationsCommand::class,
         SendEmailCommand::class,
         DropTestTables::class,
@@ -35,5 +37,6 @@ class Kernel extends ConsoleKernel
     {
 //        $schedule->command('notifications:send')->everyFiveMinutes();
         $schedule->command('iban:individual:approval:email')->everyMinute();
+        $schedule->command('transfer:execute-waiting')->daily();
     }
 }

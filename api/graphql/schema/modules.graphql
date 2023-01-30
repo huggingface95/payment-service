@@ -20,8 +20,17 @@ extend type Query @guard {
         where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id"])
     ): [Module!]!
-        @paginate(defaultCount: 10)
-        @orderBy(column: "id", direction: ASC)
+    @all
+    @orderBy(column: "id", direction: ASC)
+    """
+    Получить список модулей без KYC модуля
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    """
+    modulesNoKyc (
+        where: _ @whereConditions(columns: ["name"]),
+        orderBy: _ @orderBy(columns: ["id"])
+    ): [Module!]
+    @field(resolver:"ModuleQuery@nokyc")
 }
 
 extend type Mutation @guard {
@@ -30,6 +39,6 @@ extend type Mutation @guard {
         "Название модуля"
         name: String!
     ): Module
-        @field(resolver:"ModuleMutator@create")
+    @field(resolver:"ModuleMutator@create")
 }
 

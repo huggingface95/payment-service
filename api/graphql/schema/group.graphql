@@ -144,14 +144,9 @@ extend type Query @guard {
     where:{column: ID, operator: EQ, value: ""} фильтр по ID, ID группы, ID роли, ID платежного провайдера, ID шаблона комиссий, по статусу
     """
     groups(
-        hasPaymentProvider: _ @whereHasConditions(columns: ["name", "id"]),
-        hasCommissionTemplate: _ @whereHasConditions(columns: ["name", "id"]),
-        hasGroupType: _ @whereHasConditions(columns: ["name", "id"]),
-        hasRole: _ @whereHasConditions(columns: ["name", "id"]),
-        hasModule: _ @whereHasConditions(columns: ["name", "id"]),
-        where: _ @whereConditions(columns: ["id","group_type_id", "name","role_id", "payment_provider_id", "commission_template_id", "is_active","company_id", "module_id"]),
-        orderBy: _ @orderBy(columns: ["id","is_active","description"],
-        )): [GroupRole!]!   @paginate(defaultCount: 10) @deprecated
+        filter: _ @filterConditions(static: QueryGroupsFilterStatic),
+        orderBy: _ @orderBy(columns: ["id","is_active","name"],
+        )): [GroupRole!]!   @paginate(defaultCount: 10)
 
     groupList(
         filter: _ @filterConditions(static: QueryGroupListFilterStatic),
@@ -163,6 +158,16 @@ extend type Query @guard {
 input QueryGroupTypesFilterStatic @spread{
     hasGroupsFilterByCompanyId: ID @eq
     hasGroupsFilterByRoleId: ID @eq
+    hasRolesFilterById: ID @eq
+}
+
+input QueryGroupsFilterStatic @spread {
+    id: ID @eq
+    company_id: ID @eq
+    role_id: ID @eq
+    name: String @like
+    group_type_id: ID @eq
+    is_active: Boolean @eq
 }
 
 input QueryGroupListFilterStatic @spread {

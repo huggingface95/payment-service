@@ -35,6 +35,9 @@ class GroupMutator extends BaseMutator
         }
 
         $groupRole = GroupRole::create($args);
+        if (!$groupRole) {
+            throw new GraphqlException('Create group error', 'internal', 500);
+        }
 
         if (isset($args['providers'])) {
             $this->setGroupRoleProviders($groupRole, $args);
@@ -118,7 +121,7 @@ class GroupMutator extends BaseMutator
     private function setGroupRoleProviders(GroupRole $groupRole, array $args): void
     {
         $groupRole->groupRoleProviders()->delete();
-        
+
         foreach ($args['providers'] as $provider) {
             GroupRoleProvider::insert([
                 'group_role_id' => $groupRole->id,

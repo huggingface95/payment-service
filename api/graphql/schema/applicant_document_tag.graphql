@@ -8,6 +8,10 @@ type ApplicantDocumentTag {
     category: ApplicantDocumentTagCategory @belongsTo(relation: "category")
     "Имя"
     name: String!
+    "member"
+    member: Members @belongsTo(relation: "member")
+    "дата создания"
+    created_at: DateTimeUtc
     "Описание"
     description: String
 }
@@ -48,4 +52,9 @@ extend type Mutation @guard {
         name: String!
         description: String
     ): ApplicantDocumentTag @update
+
+    """
+    Удалить тег
+    """
+    deleteApplicantDocumentTag(id: ID!): ApplicantDocumentTag @delete
 }

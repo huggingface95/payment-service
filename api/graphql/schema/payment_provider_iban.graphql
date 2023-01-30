@@ -1,0 +1,72 @@
+"""
+Payment Provider Iban
+"""
+type PaymentProviderIban {
+    "ID"
+    id: ID!
+    "Название"
+    name: String!
+    "Получить компанию"
+    company: Company @belongsTo(relation: "company")
+    "Получить валюту"
+    currency: Currencies @hasOne(relation: "currency")
+    "Активность"
+    is_active: Boolean
+}
+
+extend type Query @guard {
+    """
+    Получить запись
+    """
+    paymentProviderIban(id: ID! @eq): PaymentProviderIban!  @find
+
+    """
+    Получить список
+    """
+    paymentProviderIbans(
+        filter: _ @filterConditions(static: QueryPaymentProviderIbansFilterStatic),
+        orderBy: _ @orderBy(columns: ["id"])
+    ): [PaymentProviderIban!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: ASC)
+}
+
+input QueryPaymentProviderIbansFilterStatic @spread {
+    name: String @eq
+    company_id: ID @eq
+    currency_id: ID @eq
+}
+
+input InputPaymentProviderIban {
+    "Название"
+    name: String!
+    "ID компании"
+    company_id: ID!
+    "ID валюты"
+    currency_id: ID!
+    "Активность"
+    is_active: Boolean!
+}
+
+extend type Mutation @guard {
+    """
+    Создать
+    """
+    createPaymentProviderIban(
+        input: InputPaymentProviderIban! @spread
+    ): PaymentProviderIban    @create
+
+    """
+    Обновить
+    """
+    updatePaymentProviderIban(
+        "ID"
+        id: ID!
+        input: InputPaymentProviderIban! @spread
+    ): PaymentProviderIban    @update
+
+    """
+    Удалить
+    """
+    deletePaymentProviderIban(id: ID! @eq): PaymentProviderIban    @delete
+}

@@ -88,6 +88,22 @@ class RequisiteSendEmailDTO
                                 <th>Bank Country</th>
                                 <td>' . $args['bank_country'] . '</td>
                             </tr>
+                            <tr>
+                                <th>Correspondent Bank Name</th>
+                                <td>' . $args['correspondent_bank_name'] . '</td>
+                            </tr>
+                            <tr>
+                                <th>Correspondent Bank SWIFT code</th>
+                                <td>' . $args['correspondent_bank_swift_code'] . '</td>
+                            </tr>
+                            <tr>
+                                <th>Correspondent Bank Address</th>
+                                <td>' . $args['correspondent_bank_address'] . '</td>
+                            </tr>
+                            <tr>
+                                <th>Correspondent Bank Account</th>
+                                <td>' . $args['correspondent_bank_account'] . '</td>
+                            </tr>
                         </table>
                     </div>
                 </div>

@@ -30,6 +30,11 @@ class TicketComments extends BaseModel
         'ticket_id', 'client_id', 'message',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     protected static function booted()
     {
         parent::booted();

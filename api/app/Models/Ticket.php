@@ -38,6 +38,11 @@ class Ticket extends BaseModel
         'member_id', 'client_id', 'title', 'message', 'status',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     protected static function booted()
     {
         parent::booted();

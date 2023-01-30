@@ -56,6 +56,14 @@ class Company extends BaseModel
         'logo_id',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'incorporate_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'exp_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     protected $appends = [
         'members_count',
         'projects_count',
@@ -70,7 +78,7 @@ class Company extends BaseModel
 
         return $this->logo->link ?? $defaultLogoPath;
     }
-    
+
     public function country(): BelongsTo
     {
         return $this->belongsTo('App\Models\Country', 'country_id');
@@ -84,6 +92,11 @@ class Company extends BaseModel
     public function members(): HasMany
     {
         return $this->hasMany(Members::class, 'company_id');
+    }
+
+    public function modules(): HasMany
+    {
+        return $this->hasMany(CompanyModule::class, 'company_id', 'id');
     }
 
     public function departments(): HasMany

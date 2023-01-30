@@ -14,10 +14,16 @@ class BankCorrespondent extends BaseModel
      */
     protected $fillable = [
         'name',
+        'address',
         'bank_code',
         'bank_account',
         'payment_system_id',
         'is_active',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
     ];
 
     public function bankCorrespondentCurrencies(): HasMany

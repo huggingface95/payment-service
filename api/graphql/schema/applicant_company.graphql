@@ -144,6 +144,15 @@ extend type Query @guard{
         filter: _ @filterConditions(static: QueryGetMatchedUsersFilterStatic)
     ): [ApplicantIndividualCompany!]!
         @field(resolver: "MatchedUsersQuery@getList")
+
+    """
+    Получить список ApplicantIndividualCompany по applicant_company_id, где type = ApplicantIndividual
+    orderBy: [{ column: ID, order: DESC }] сортировка по ID
+    """
+    getMatchedApplicantndividuals(
+        applicant_company_id: ID! @eq,
+    ): [ApplicantIndividualCompany!]!
+    @field(resolver: "MatchedUsersQuery@getApplicantIndividuals")
 }
 
 input QueryApplicantCompaniesFilterStatic @spread{
@@ -166,7 +175,6 @@ input QueryApplicantCompaniesFilterStatic @spread{
 }
 
 input QueryGetMatchedUsersFilterStatic @spread {
-    applicant_company_id: ID @eq
     applicant_type: ApplicantType @eq
 }
 

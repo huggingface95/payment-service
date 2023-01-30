@@ -21,24 +21,50 @@ type ApplicantBankingAccess {
     role: Role @hasOne(relation: "role")
     "Доступ"
     grant_access: Boolean
+    create_payments: Boolean
+    sign_payments: Boolean
+}
+
+type ApplicantBankingAccesses {
+    data: [ApplicantBankingAccess!]
+    paginatorInfo: PaginatorInfo
 }
 
 extend type Query @guard {
+    applicantBankingAccess(id: ID @eq): ApplicantBankingAccess @field(resolver: "ApplicantBankingAccessQuery@get")
+
+    grantedBankingAccess (
+        applicant_individual_id: ID! @eq,
+        applicant_company_id:  ID! @eq,
+        page: Int = 1,
+        first: Int = 15,
+        filter: _ @filterConditions(static: QueryGrantedBankingAccessFilterStatic),
+        orderBy: _ @orderBy(
+            columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
+    )): ApplicantBankingAccesses
+        @field(resolver: "ApplicantBankingAccessQuery@enabled")
     """
     Получить список пользователей
     orderBy: [{ column: APPLICANT_INDIVIDUAL_ID, order: DESC }] сортировка по ID, по имени, фамилии, email
-    filter: {column: MEMBER_ID, operator: EQ, value: 2} фильтр по applicant_individual_id, applicant_company_id, member_id, grant_access
+    filter: {column: MEMBER_ID, operator: EQ, value: 2} фильтр по member_id, grant_access
     """
-    applicantBankingAccess(
-        filter: _ @filterConditions(static: QueryApplicantBankingAccessFilterStatic),
+    applicantBankingAccesses(
+        applicant_company_id:  ID! @eq,
+        page: Int = 1,
+        first: Int = 15,
+        filter: _ @filterConditions(static: QueryApplicantBankingAccessesFilterStatic),
         orderBy: _ @orderBy(
         columns: ["id", "applicant_individual_id","applicant_company_id","member_id"],
-    )): [ApplicantBankingAccess!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    )): ApplicantBankingAccesses
+        @field(resolver: "ApplicantBankingAccessQuery@enabled")
 }
 
-input QueryApplicantBankingAccessFilterStatic @spread {
-    applicant_individual_id: ID @eq
-    applicant_company_id: ID @eq
+input QueryApplicantBankingAccessesFilterStatic @spread {
+    member_id: ID @eq
+    grant_access: Boolean @eq
+}
+
+input QueryGrantedBankingAccessFilterStatic @spread {
     member_id: ID @eq
     grant_access: Boolean @eq
 }
@@ -65,23 +91,23 @@ extend type Mutation @guard {
     ): ApplicantBankingAccess
         @field(resolver: "ApplicantBankingAccessMutator@create")
 
-    "Редактирование applicant company"
+    "Редактирование applicant banking access"
     updateApplicantBankingAccess (
         id: ID!
         "Applicant individual"
-        applicant_individual_id: ID!
+        applicant_individual_id: ID
         "Applicant company"
-        applicant_company_id: ID!
+        applicant_company_id: ID
         "ID роли"
-        role_id: ID!
+        role_id: ID
         "Contact administrator"
-        contact_administrator: Boolean!
+        contact_administrator: Boolean
         "Ежедневный лимит"
-        daily_limit: Decimal!
+        daily_limit: Decimal
         "Ежемесячный лимит"
-        monthly_limit: Decimal!
+        monthly_limit: Decimal
         "Лимит операций"
-        operation_limit: Decimal!
+        operation_limit: Decimal
     ): ApplicantBankingAccess
         @field(resolver: "ApplicantBankingAccessMutator@update")
 
@@ -99,7 +125,6 @@ extend type Mutation @guard {
     "Отозвать доступ"
     deleteApplicantBankingAccess(
         id: ID!
-    ): ApplicantBankingAccess
-        @field(resolver: "ApplicantBankingAccessMutator@deleteAccess")
+    ): ApplicantBankingAccess @delete
 }
 

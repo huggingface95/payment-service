@@ -32,4 +32,11 @@ extend type Mutation @guard {
         id: ID!
         name: String!
     ): ApplicantDocumentTagCategory @update
+
+    """
+    Удалить категорию
+    """
+    deleteApplicantDocumentTagCategory(
+        id: ID!
+    ): ApplicantDocumentTagCategory @delete
 }

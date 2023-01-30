@@ -392,6 +392,7 @@ class ExtensionErrorHandler implements ErrorHandler
             ));
         }
 
+
         if ($error->getCategory() == 'graphql') {
             Log::error($error);
 //            preg_match('/argument (.*?) of type/', $error->getMessage(), $match);

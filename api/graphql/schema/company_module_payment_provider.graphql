@@ -1,0 +1,55 @@
+"""
+Company Module Payment Provider
+"""
+type CompanyModulePaymentProvider {
+    "ID"
+    id: ID!
+    "ID модуля компании"
+    company_module_id: ID!
+    "ID платежного провайдера"
+    payment_provider: PaymentProvider! @belongsTo(relation: "paymentProvider")
+    "Активность"
+    is_active: Boolean!
+}
+
+type CompanyModulePaymentProviderPassword {
+    "ID"
+    id: ID!
+    "Пароль"
+    password: String!
+}
+
+input InputCompanyModulePaymentProvider {
+    "ID модуля компании"
+    company_module_id: ID!
+    "ID платежного провайдера"
+    payment_provider_id: ID!
+    "Активность"
+    is_active: Boolean!
+}
+
+extend type Mutation @guard {
+    """
+    Добавить пеймент провайдер к модулю компании
+    """
+    createCompanyModulePaymentProvider(
+        input: InputCompanyModulePaymentProvider! @spread
+    ): CompanyModulePaymentProvider
+        @field(resolver: "CompanyModulePaymentProviderMutator@create")
+
+    """
+    Изменить пеймент провайдер
+    """
+    updateCompanyModulePaymentProvider(
+        "ID"
+        id: ID!
+        "Активность"
+        is_active: Boolean!
+    ): CompanyModulePaymentProvider
+        @field(resolver: "CompanyModulePaymentProviderMutator@update")
+
+    """
+    Удалить пеймент провайдер
+    """
+    deleteCompanyModulePaymentProvider(id: ID!): CompanyModulePaymentProvider  @delete
+}

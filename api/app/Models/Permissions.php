@@ -40,6 +40,11 @@ class Permissions extends SpatiePermission
         'name', 'guard_name', 'display_name', 'type', 'permission_list_id', 'order', 'is_super_admin',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     protected $guard_name = GuardEnum::GUARD_NAME;
 
     protected static function booted()
