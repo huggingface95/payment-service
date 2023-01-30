@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  *
  * @property int id
  *
- * @property CompanySettings $companySettings
+ * @property string backoffice_support_url
  */
 class Company extends BaseModel
 {
