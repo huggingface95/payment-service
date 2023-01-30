@@ -172,4 +172,8 @@ class TransferOutgoing extends BaseModel
         return $this->belongsTo(RespondentFee::class, 'respondent_fees_id');
     }
 
+    public function transferType(): HasOneThrough
+    {
+        return $this->hasOneThrough(TransferType::class, OperationType::class, 'id', 'id', 'operation_type_id', 'transfer_type_id');
+    }
 }

@@ -27,7 +27,7 @@ class CreateTransferBetweenAccountsViewTable extends Migration
                     created_at::date
                 FROM transfer_outgoings
                 JOIN payment_status ON (transfer_outgoings.status_id=payment_status.id)
-                WHERE transfer_outgoings.operation_type_id=" . OperationTypeEnum::BETWEEN_ACCOUNTS->value . "
+                WHERE transfer_outgoings.operation_type_id=" . OperationTypeEnum::BETWEEN_ACCOUNT->value . "
                     UNION ALL
                 SELECT
                     payment_status.name as status_name,
@@ -40,7 +40,7 @@ class CreateTransferBetweenAccountsViewTable extends Migration
                     created_at::date
                 FROM transfer_incomings
                 JOIN payment_status ON (transfer_incomings.status_id=payment_status.id)
-                WHERE transfer_incomings.operation_type_id=" . OperationTypeEnum::BETWEEN_ACCOUNTS->value . "
+                WHERE transfer_incomings.operation_type_id=" . OperationTypeEnum::BETWEEN_ACCOUNT->value . "
         ");
     }
 

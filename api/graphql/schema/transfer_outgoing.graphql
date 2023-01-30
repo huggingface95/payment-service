@@ -32,6 +32,8 @@ type TransferOutgoing {
     payment_bank: PaymentBank @belongsTo(relation: "paymentBank")
     "Номер платежа"
     payment_number: String!
+    "Получить связанный тип трансфера"
+    transfer_type: TypeOfTransfer @belongsTo(relation: "transferType")
     "Получить связанный аккаунт"
     account: Account @belongsTo(relation: "account")
     "Получить отправителя (Индивидуал или Компани)"
@@ -59,6 +61,11 @@ type TransferOutgoing {
     execution_at: DateTimeUtc
     created_at: DateTimeUtc
     updated_at: DateTimeUtc
+}
+
+type TypeOfTransfer {
+    id: ID!
+    name: String!
 }
 
 type TransferOutgoingStatistic {

@@ -28,6 +28,8 @@ type TransferIncoming {
     payment_bank: PaymentBank @belongsTo(relation: "paymentBank")
     "Номер платежа"
     payment_number: String!
+    "Получить связанный тип трансфера"
+    transfer_type: TypeOfTransfer @belongsTo(relation: "transferType")
     "Получить связанный аккаунт"
     account: Account @belongsTo(relation: "account")
     "Получатьль платежа (Индивидуал или Компани)"
