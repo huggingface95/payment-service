@@ -14,6 +14,11 @@ class PaymentProviderIban extends BaseModel
         'is_active',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');

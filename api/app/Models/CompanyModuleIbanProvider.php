@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class CompanyModuleIbanProvider extends BaseModel
 {
     public $timestamps = false;
@@ -18,4 +20,9 @@ class CompanyModuleIbanProvider extends BaseModel
     protected $hidden = [
         'password',
     ];
+
+    public function paymentIbanProvider(): BelongsTo
+    {
+        return $this->belongsTo(PaymentProviderIban::class, 'payment_provider_iban_id');
+    }
 }

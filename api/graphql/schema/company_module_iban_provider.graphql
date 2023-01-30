@@ -7,7 +7,7 @@ type CompanyModuleIbanProvider {
     "ID модуля компании"
     company_module_id: ID!
     "ID IBAN провайдера"
-    payment_provider_iban_id: ID!
+    payment_provider_iban: PaymentProviderIban! @belongsTo(relation: "paymentIbanProvider")
     "Кошелек"
     wallet: String!
     "API ключ"

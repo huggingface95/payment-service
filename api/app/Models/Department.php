@@ -20,6 +20,10 @@ class Department extends BaseModel
         'entity_id',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public function company(): BelongsTo
     {
         return $this->belongsTo('App\Models\Company', 'company_id');

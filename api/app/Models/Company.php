@@ -56,6 +56,14 @@ class Company extends BaseModel
         'logo_id',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'incorporate_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'exp_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     protected $appends = [
         'members_count',
         'projects_count',

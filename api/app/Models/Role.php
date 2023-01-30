@@ -24,6 +24,11 @@ class Role extends SpatieRole
         'name', 'guard_name', 'description', 'company_id', 'group_type_id',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     protected $guard_name = GuardEnum::GUARD_NAME;
 
     protected static function booted()

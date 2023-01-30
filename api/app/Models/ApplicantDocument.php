@@ -27,6 +27,11 @@ class ApplicantDocument extends BaseModel
         'info',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id');
@@ -35,6 +40,21 @@ class ApplicantDocument extends BaseModel
     public function file(): BelongsTo
     {
         return $this->belongsTo(Files::class, 'file_id');
+    }
+
+    public function documentType(): BelongsTo
+    {
+        return $this->belongsTo(DocumentType::class, 'document_type_id');
+    }
+
+    public function documentState(): BelongsTo
+    {
+        return $this->belongsTo(DocumentState::class, 'document_state_id');
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function internalNotes(): HasMany

@@ -42,6 +42,10 @@ class GroupRole extends BaseModel
         'entity_id',
     ];
 
+    protected $casts = [
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public static self $clone;
 
     protected static function booted()
@@ -62,7 +66,7 @@ class GroupRole extends BaseModel
         return $this->belongsTo(GroupType::class, 'group_type_id');
     }
 
-    public function groupRoleProviders(): HasMany 
+    public function groupRoleProviders(): HasMany
     {
         return $this->hasMany(GroupRoleProvider::class, 'group_role_id');
     }

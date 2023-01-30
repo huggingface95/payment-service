@@ -8,11 +8,11 @@ type ApplicantDocument {
     added_from: String
     applicant_id: ID!
     applicant_type: ApplicantType!
-    company_id: ID!
+    company: Company @belongsTo(relation: "company")
     "Получить страну"
     country: Country @belongsTo(relation: "country")
-    document_type_id: ID!
-    document_state_id: ID!
+    document_type : DocumentType @belongsTo(relation: "documentType")
+    document_state: DocumentState @belongsTo(relation: "documentState")
     "Получить файл"
     file: Files @belongsTo(relation: "file")
     info: String
@@ -25,6 +25,11 @@ type ApplicantDocument {
 }
 
 extend type Query @guard {
+    """
+    Получить документ
+    """
+    applicantDocument(id: ID! @eq): ApplicantDocument @find
+
     """
     Получить список документов
     """
@@ -70,6 +75,11 @@ extend type Mutation @guard {
         document_state_id: ID
         info: String
     ): ApplicantDocument @update
+
+    """
+    Удалить документ
+    """
+    deleteApplicantDocument(id: ID!): ApplicantDocument @delete
 
     """
     Прикрепить тег к документу

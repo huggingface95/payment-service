@@ -41,6 +41,11 @@ class EmailNotification extends BaseModel
         'company_id', 'type', 'recipient_type', 'group_type_id', 'group_role_id',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public static self $clone;
 
     protected static function booted()

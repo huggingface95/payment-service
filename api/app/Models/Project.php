@@ -31,6 +31,8 @@ class Project extends BaseModel
     protected $casts = [
         'additional_fields_basic' => 'array',
         'additional_fields_settings' => 'array',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
     ];
 
     public function avatar(): BelongsTo

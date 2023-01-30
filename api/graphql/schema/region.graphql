@@ -23,6 +23,7 @@ input QueryRegionsFilterStatic @spread{
     company_id: ID @eq
     hasCountriesFilterById: ID @eq
     hasCountriesFilterByName: String @like
+    hasPaymentSystemMixedIdOrName: Mixed @eq
 }
 
 input InputRegion{

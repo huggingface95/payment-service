@@ -31,6 +31,12 @@ class AccountReachedLimit extends BaseModel
         'account_id', 'group_type', 'client_name', 'client_type', 'transfer_direction', 'limit_type', 'limit_value', 'limit_currency', 'period', 'amount',
     ];
 
+    protected $casts = [
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'expires_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     protected $dates = ['expires_at'];
 
     public function account(): BelongsTo

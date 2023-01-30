@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -66,6 +67,14 @@ class TransferOutgoing extends BaseModel
         'price_list_fee_id',
     ];
 
+    protected $casts = [
+        'amount' => 'decimal:5',
+        'amount_debt' => 'decimal:5',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'execution_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+    ];
+
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class, 'account_id')->withoutGlobalScope(AccountIndividualsCompaniesScope::class);
@@ -74,6 +83,11 @@ class TransferOutgoing extends BaseModel
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
+    public function commissionPriceList(): HasOneThrough
+    {
+        return $this->hasOneThrough(CommissionPriceList::class, PaymentProvider::class, 'id', 'provider_id', 'payment_provider_id', 'id');
     }
 
     public function sender(): MorphTo
@@ -123,7 +137,7 @@ class TransferOutgoing extends BaseModel
         return $this->hasOne(PaymentProviderHistory::class, 'transfer_id', 'id')
             ->where('transfer_type', FeeTransferTypeEnum::OUTGOING->toString());
     }
-    
+
     public function paymentStatus(): BelongsTo
     {
         return $this->belongsTo(PaymentStatus::class, 'status_id');
