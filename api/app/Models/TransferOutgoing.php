@@ -14,6 +14,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Class TransferOutgoing
+ *
+ * @property Account $account
+ * @property Currencies $currency
+ * @property float $amount
  */
 class TransferOutgoing extends BaseModel
 {

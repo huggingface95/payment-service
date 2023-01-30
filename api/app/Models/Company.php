@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class Company
  *
  * @property int id
+ *
+ * @property string backoffice_support_url
  */
 class Company extends BaseModel
 {

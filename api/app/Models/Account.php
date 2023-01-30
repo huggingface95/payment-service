@@ -22,12 +22,16 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property int account_state_id
  * @property int group_type_id
  * @property int company_id
+ * @property float min_limit_balance
+ * @property float max_limit_balance
+ * @property float current_balance
  * @property AccountState $accountState
  * @property Groups $group
  * @property CommissionTemplate $commissionTemplate
  * @property AccountLimit $limits
  * @property AccountReachedLimit $reachedLimits
- * @property ApplicantIndividual | ApplicantCompany $clientable
+ * @property ApplicantIndividual | ApplicantCompany clientable
+ * @property Currencies currencies
  * @method static find(int $id)
  * @method static findOrFail(int $id)
  */
@@ -78,6 +82,8 @@ class Account extends BaseModel implements BaseModelInterface
     ];
 
     protected $casts = [
+        'min_limit_balance' => 'decimal:5',
+        'max_limit_balance' => 'decimal:5',
         'current_balance' => 'decimal:5',
         'reserved_balance' => 'decimal:5',
         'available_balance' => 'decimal:5',
@@ -294,7 +300,7 @@ class Account extends BaseModel implements BaseModelInterface
                 $q->orWhere('account_individuals_companies.client_id', 'like', $filter['client'] ?? '%')
                     ->orWhere('applicant_individual.fullname', 'like', $filter['client'] ?? '%');
             })
-            ->when(isset($filter['currency_id']), function ($q) use($filter){
+            ->when(isset($filter['currency_id']), function ($q) use ($filter) {
                 return $q->where('currency_id', $filter['currency_id']);
             });
     }
