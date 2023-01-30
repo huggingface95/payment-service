@@ -21,6 +21,8 @@ type Project {
     additional_fields_settings: JSON
     "Настройки проекта"
     project_settings: [ProjectSettings] @hasMany(relation: "projectSettings")
+    "Настройки api проекта"
+    project_api_settings: [ProjectApiSetting] @hasMany(relation: "projectApiSettings")
     "Модуль"
     module: Module @BelongsTo(relation: "module")
     "Компания"
