@@ -26,7 +26,7 @@ class AddSoftDeletesToCompaniesTable extends Migration
     public function down()
     {
         Schema::table('companies', function (Blueprint $table) {
-            //
+            $table->dropSoftDeletes();
         });
     }
 }
