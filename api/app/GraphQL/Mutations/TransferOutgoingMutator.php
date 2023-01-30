@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Enums\PaymentStatusEnum;
+use App\Exceptions\GraphqlException;
 use App\Models\TransferOutgoing;
 use App\Repositories\AccountRepository;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
@@ -24,6 +25,9 @@ class TransferOutgoingMutator extends BaseMutator
         return $transfer;
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function update($_, array $args): TransferOutgoing
     {
         $transfer = $this->transferRepository->findById($args['id']);
