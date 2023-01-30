@@ -43,6 +43,6 @@ class CompanyMutator extends BaseMutator
 
         $company->delete();
 
-        return Company::find($args['id']);
+        return $company;
     }
 }
