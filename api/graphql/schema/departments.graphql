@@ -49,7 +49,7 @@ extend type Query @guard {
     hasDepartment: {column:ID,operator:EQ,value:1} фильтр по id департамента
     """
     departmentPositions(
-        company_id: ID! @eq,
+        company_id: ID @eq,
         filter: _ @filterConditions(static: QueryDepartmentPositionsFilterStatic),
         hasDepartment: _ @whereHasConditions(columns: ["id"]),
         where: _ @whereConditions(columns: ["name","is_active"]),
