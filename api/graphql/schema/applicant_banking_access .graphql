@@ -17,6 +17,10 @@ type ApplicantBankingAccess {
     monthly_limit: Decimal!
     "Лимит операций"
     operation_limit: Decimal!
+    "Ежедневный использованный лимит"
+    used_daily_limit: Decimal!
+    "Ежемесячный использованный лимит"
+    used_monthly_limit: Decimal!
     "Получить роль"
     role: Role @hasOne(relation: "role")
     "Доступ"
