@@ -15,4 +15,8 @@ interface TransferOutgoingRepositoryInterface
     public function update(Model|Builder $model, array $data): Model|Builder;
 
     public function getWaitingExecutionDateTransfers(): Collection;
+
+    public function getSumOfDailySentTransfersByApplicantIndividualId(int $applicantId): float;
+
+    public function getSumOfMonthlySentTransfersByApplicantIndividualId(int $applicantId): float;
 }

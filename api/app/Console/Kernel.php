@@ -7,6 +7,7 @@ use App\Console\Commands\ExecuteWaitingTransferCommand;
 use App\Console\Commands\IbanCompanyCommand;
 use App\Console\Commands\IbanIndividualStatusCommand;
 use App\Console\Commands\NotificationsCommand;
+use App\Console\Commands\ResetApplicantBankingAccessUsedLimitCommand;
 use App\Console\Commands\SendEmailCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
@@ -25,6 +26,7 @@ class Kernel extends ConsoleKernel
         DropTestTables::class,
         IbanCompanyCommand::class,
         IbanIndividualStatusCommand::class,
+        ResetApplicantBankingAccessUsedLimitCommand::class,
     ];
 
     /**
@@ -35,6 +37,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('applicant-bancking-access:reset-used-limit')->dailyAt('00:00');
 //        $schedule->command('notifications:send')->everyFiveMinutes();
         $schedule->command('iban:individual:approval:email')->everyMinute();
         $schedule->command('transfer:execute-waiting')->daily();
