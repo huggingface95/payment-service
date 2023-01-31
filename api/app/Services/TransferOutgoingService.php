@@ -14,6 +14,7 @@ use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\TransferOutgoingJob;
 use App\Models\Account;
 use App\Models\AccountLimit;
+use App\Models\AccountState;
 use App\Models\ApplicantBankingAccess;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
@@ -23,6 +24,7 @@ use App\Models\CommissionTemplateLimitTransferDirection;
 use App\Models\CommissionTemplateLimitType;
 use App\Models\Fee;
 use App\Models\GroupType;
+use App\Models\Members;
 use App\Models\PriceListFeeCurrency;
 use App\Models\TransferOutgoing;
 use App\Models\User;
@@ -423,6 +425,9 @@ class TransferOutgoingService extends AbstractService
         if (($isMinLimit = $transferOutgoing->account->min_limit_balance < $calculationBalance)
             || $transferOutgoing->account->max_limit_balance > $calculationBalance
         ) {
+            $transferOutgoing->account->account_state_id = AccountState::SUSPENDED;
+            $transferOutgoing->account->save();
+
             $emailAccountMinMaxBalanceDto = TransformerDTO::transform(EmailAccountMinMaxBalanceLimitRequestDTO::class, $transferOutgoing->account, $isMinLimit);
             $this->emailService->sendAccountBalanceLimitDto($emailAccountMinMaxBalanceDto);
             return false;
