@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\DTO\Email\EmailRequestDTO;
+use App\DTO\Email\Request\EmailAccountMinMaxBalanceLimitRequestDTO;
 use App\DTO\Email\Request\EmailApplicantCompanyRequestDTO;
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\Email\Request\EmailMemberRequestDTO;
@@ -162,6 +162,22 @@ class EmailService
             $this->emailRepository->getSmtpByCompanyId($dto->members) :
             $this->emailRepository->getSmtpByMemberId($dto->members);
 
+        $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
+        $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
+
+        try {
+            dispatch(new SendMailJob($config, $emailContentSubjectDto));
+        } catch (\Throwable) {
+            throw new GraphqlException('Don\'t send email', '404');
+        }
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function sendAccountBalanceLimitDto(EmailAccountMinMaxBalanceLimitRequestDTO $dto): void
+    {
+        $smtp = $this->emailRepository->getSmtpByCompanyId($dto->account);
         $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
         $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
 

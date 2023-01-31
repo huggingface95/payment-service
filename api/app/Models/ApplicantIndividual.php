@@ -30,6 +30,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string fullname
  * @property int company_id
  * @property ApplicantBankingAccess $applicantBankingAccess
+ * @property Company company
  */
 class ApplicantIndividual extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
 {

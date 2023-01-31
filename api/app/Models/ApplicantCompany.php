@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property ApplicantIndividual $applicantIndividuals
  * @property ApplicantIndividual $applicantsWithBankingAccess
+ * @property Company company
  */
 class ApplicantCompany extends BaseModel
 {

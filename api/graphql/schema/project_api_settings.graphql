@@ -1,0 +1,53 @@
+"""
+Project Api Setting
+"""
+type ProjectApiSetting {
+    "ID"
+    id: ID!
+    "ID проекта"
+    project: Project! @belongsTo(relation: "project")
+    "Кошелек"
+    wallet: String
+    "API ключ"
+    api_key: String
+    "Пароль"
+    password: String
+}
+
+type ProjectApiSettingPassword {
+    "ID"
+    id: ID!
+    "Пароль"
+    password: String!
+}
+
+extend type Query @guard {
+    """
+    Получить пароль
+    """
+    projectApiSettingPassword(id: ID! @eq): ProjectApiSettingPassword
+    @field(resolver: "ProjectApiSettingQuery@getPassword")
+}
+
+
+input InputProjectApiSetting {
+    "ID проекта"
+    project_id: ID!
+    "Кошелек"
+    wallet: String!
+    "API ключ"
+    api_key: String!
+    "Пароль"
+    password: String!
+}
+
+extend type Mutation @guard {
+    """
+    Изменить настройки api проекта
+    """
+    updateProjectApiSetting(
+        "ID шаблона"
+        id: ID!
+        input: InputProjectApiSetting! @spread
+    ): ProjectApiSetting @update
+}

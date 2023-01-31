@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\DTO\Email\Request\EmailAccountMinMaxBalanceLimitRequestDTO;
+use App\DTO\TransformerDTO;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\OperationTypeEnum;
@@ -12,6 +14,7 @@ use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\TransferOutgoingJob;
 use App\Models\Account;
 use App\Models\AccountLimit;
+use App\Models\AccountState;
 use App\Models\ApplicantBankingAccess;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
@@ -21,6 +24,7 @@ use App\Models\CommissionTemplateLimitTransferDirection;
 use App\Models\CommissionTemplateLimitType;
 use App\Models\Fee;
 use App\Models\GroupType;
+use App\Models\Members;
 use App\Models\PriceListFeeCurrency;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
@@ -32,9 +36,11 @@ use Illuminate\Support\Facades\DB;
 class TransferOutgoingService extends AbstractService
 {
     public function __construct(
-        protected AccountService $accountService,
+        protected EmailService                        $emailService,
+        protected AccountService                      $accountService,
         protected TransferOutgoingRepositoryInterface $transferRepository
-    ) {
+    )
+    {
     }
 
     public function getAllProcessedAmount(TransferOutgoing $transfer): Collection
@@ -47,25 +53,31 @@ class TransferOutgoingService extends AbstractService
             ->push($transfer);
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function getTransferAmountDebt(TransferOutgoing $transfer, float $paymentFee): ?float
     {
-        return match((int) $transfer->respondent_fees_id) {
+        return match ((int)$transfer->respondent_fees_id) {
             RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount,
             RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount + $paymentFee,
             RespondentFeesEnum::SHARED_FEES->value => $transfer->amount + $paymentFee / 2,
 
-            default=> throw new GraphqlException('Unknown respondent fee', 'use'),
+            default => throw new GraphqlException('Unknown respondent fee', 'use'),
         };
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function getAccountAmountRealWithCommission(TransferOutgoing $transfer, float $paymentFee): ?float
     {
-        return match((int) $transfer->respondent_fees_id) {
+        return match ((int)$transfer->respondent_fees_id) {
             RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount + $paymentFee,
             RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount,
             RespondentFeesEnum::SHARED_FEES->value => $transfer->amount + $paymentFee / 2,
 
-            default=> throw new GraphqlException('Unknown respondent fee', 'use'),
+            default => throw new GraphqlException('Unknown respondent fee', 'use'),
         };
     }
 
@@ -86,7 +98,7 @@ class TransferOutgoingService extends AbstractService
 
         $this->createFee($transfer, $paymentFee);
 
-        return (float) $amountDebt;
+        return (float)$amountDebt;
     }
 
     public function createFee(TransferOutgoing $transfer, float $paymentFee): void
@@ -137,7 +149,7 @@ class TransferOutgoingService extends AbstractService
     private static function getFeeByRangeMode(array $data, int $modeKey, float $amount): ?float
     {
         $fees = null;
-        if ((float) $data[$modeKey]['amount_from'] <= $amount && $amount <= (float) $data[$modeKey]['amount_to']) {
+        if ((float)$data[$modeKey]['amount_from'] <= $amount && $amount <= (float)$data[$modeKey]['amount_to']) {
             unset($data[$modeKey]);
 
             foreach ($data as $fee) {
@@ -166,9 +178,9 @@ class TransferOutgoingService extends AbstractService
         }) as $limit) {
             if ($limit instanceof ApplicantBankingAccess) {
                 if ($limit->daily_limit < $allProcessedAmount->whereBetween(
-                    'created_at',
-                    [Carbon::now()->startOfDay()->format('Y-m-d H:i:s'), Carbon::now()->endOfDay()->format('Y-m-d H:i:s')]
-                )->sum('amount')
+                        'created_at',
+                        [Carbon::now()->startOfDay()->format('Y-m-d H:i:s'), Carbon::now()->endOfDay()->format('Y-m-d H:i:s')]
+                    )->sum('amount')
                     || $limit->monthly_limit < $allProcessedAmount->whereBetween(
                         'created_at',
                         [Carbon::now()->startOfMonth()->format('Y-m-d H:i:s'), Carbon::now()->endOfMonth()->format('Y-m-d H:i:s')]
@@ -367,10 +379,17 @@ class TransferOutgoingService extends AbstractService
         }
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function updateTransferStatusToSent(TransferOutgoing $transfer): void
     {
         $allAmount = $this->getAllProcessedAmount($transfer);
         $allLimits = $this->getAllLimits($transfer);
+
+        if (false === $this->checkAccountBalanceLimit($transfer)) {
+            throw new GraphqlException('balance limit error', 'use');
+        }
 
         if (false === $this->checkLimit($transfer->account, $allLimits, $allAmount, $transfer->amount)) {
             throw new GraphqlException('limit is exceeded', 'use');
@@ -435,5 +454,26 @@ class TransferOutgoingService extends AbstractService
         }
 
         return $this->transferRepository->create($args);
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    protected function checkAccountBalanceLimit(TransferOutgoing $transferOutgoing): bool
+    {
+        $calculationBalance = $transferOutgoing->account->current_balance - $transferOutgoing->amount;
+
+        if (($isMinLimit = $transferOutgoing->account->min_limit_balance < $calculationBalance)
+            || $transferOutgoing->account->max_limit_balance > $calculationBalance
+        ) {
+            $transferOutgoing->account->account_state_id = AccountState::SUSPENDED;
+            $transferOutgoing->account->save();
+
+            $emailAccountMinMaxBalanceDto = TransformerDTO::transform(EmailAccountMinMaxBalanceLimitRequestDTO::class, $transferOutgoing->account, $isMinLimit);
+            $this->emailService->sendAccountBalanceLimitDto($emailAccountMinMaxBalanceDto);
+            return false;
+        }
+
+        return true;
     }
 }
