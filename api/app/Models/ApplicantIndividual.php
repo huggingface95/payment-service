@@ -313,7 +313,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 
     public function files(): HasMany
     {
-        return $this->hasMany(Files::class, 'author_id')->where('entity_type', 'aidnividual');
+        return $this->hasMany(Files::class, 'author_id')->where('entity_type', 'applicant_individual');
     }
 
     public function photo(): BelongsTo

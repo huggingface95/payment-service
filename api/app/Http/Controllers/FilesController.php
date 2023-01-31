@@ -23,6 +23,7 @@ class FilesController extends Controller
             'document',
             'applicant_individual',
             'applicant_company',
+            'applicant',
             'project',
         ];
 
