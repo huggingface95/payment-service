@@ -95,7 +95,7 @@ input InputProject {
     "Компания"
     company_id: ID!
     "Модуль"
-    module_id: ID
+    module_id: ID!
     "Аватар"
     avatar_id: ID
     "Состояние"
