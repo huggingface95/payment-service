@@ -10,6 +10,8 @@ interface TransferOutgoingRepositoryInterface
 {
     public function findById(int $id): Model|Builder|null;
 
+    public function attachFileById(Model|Builder $model, array $data): Model|Builder|null;
+
     public function create(array $data): Model|Builder;
     
     public function update(Model|Builder $model, array $data): Model|Builder;

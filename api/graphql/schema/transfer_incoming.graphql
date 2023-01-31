@@ -10,6 +10,8 @@ type TransferIncoming {
     fee: Fee @hasOne(realtion: "fee")
     "Все коммиссии"
     fees: [Fee] @hasMany(realtion: "fees")
+    "Файлы"
+    files: [Files] @belongsToMany(realtion: "files")
     "Получить связанную валюту"
     currency: Currencies @belongsTo(relation: "currency")
     "Статус"

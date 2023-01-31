@@ -7,6 +7,7 @@ use App\Enums\FeeTypeEnum;
 use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -119,6 +120,12 @@ class TransferOutgoing extends BaseModel
     public function fees(): HasMany
     {
         return $this->hasMany(Fee::class, 'transfer_id')->where('transfer_type', FeeTransferTypeEnum::OUTGOING->toString());
+    }
+
+    public function files(): BelongsToMany
+    {
+        return $this->belongsToMany(Files::class, 'transfer_file_relation', 'transfer_id', 'file_id')
+            ->where('transfer_type', class_basename(TransferOutgoing::class));
     }
 
     public function paymentBank(): BelongsTo

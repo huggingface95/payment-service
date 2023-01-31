@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
@@ -20,6 +21,18 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
     public function findById(int $id): Model|Builder|null
     {
         return $this->find(['id' => $id]);
+    }
+
+    public function attachFileById(Model|Builder $model, array $data): Model|Builder|null
+    {
+        if (isset($data)) {
+            $model->files()->detach();
+            $model->files()->attach(
+                $data, ['transfer_type' => class_basename(TransferOutgoing::class)]
+            );
+        }
+
+        return $model;
     }
 
     public function create(array $data): Model|Builder

@@ -343,10 +343,7 @@ class TransferOutgoingService extends AbstractService
         }
     }
 
-    /**
-     * @throws GraphqlException
-     */
-    public function updateTransferStatusToSent(TransferOutgoing $transfer): void
+    public function checkLimits(TransferOutgoing $transfer): void
     {
         $allAmount = $this->getAllProcessedAmount($transfer);
         $allLimits = $this->getAllLimits($transfer);
@@ -358,6 +355,14 @@ class TransferOutgoingService extends AbstractService
         if (false === $this->checkLimit($transfer->account, $allLimits, $allAmount, $transfer->amount)) {
             throw new GraphqlException('limit is exceeded', 'use');
         }
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function updateTransferStatusToSent(TransferOutgoing $transfer): void
+    {
+        $this->checkLimits($transfer);
 
         DB::transaction(function () use ($transfer) {
             $amountDebt = $this->commissionCalculation($transfer);
@@ -365,6 +370,45 @@ class TransferOutgoingService extends AbstractService
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::SENT->value,
                 'amount_debt' => $amountDebt,
+            ]);
+
+            $this->accountService->setAmmountReserveOnAccountBalance($transfer);
+
+            dispatch(new TransferOutgoingJob($transfer))->afterCommit();
+        });
+    }
+
+    public function updateTransferFeeAmount(TransferOutgoing $transfer, float $amount): void
+    {
+        DB::transaction(function () use ($transfer) {
+            $this->transferRepository->update($transfer, [
+                'status_id' => PaymentStatusEnum::PENDING->value
+            ]);
+
+            $this->accountService->unsetAmmountReserveOnAccountBalance($transfer);
+        });
+
+        $transfer->amount = $amount;
+        $this->checkLimits($transfer);
+
+        DB::transaction(function () use ($transfer, $amount) {
+            $this->transferRepository->update($transfer, [
+                'amount' => $amount,
+                'amount_debt' => $amount,
+                'status_id' => PaymentStatusEnum::SENT->value,
+            ]);
+
+            $this->accountService->setAmmountReserveOnAccountBalance($transfer);
+        });
+    }
+
+    public function updateTransferFeeStatusToSent(TransferOutgoing $transfer): void
+    {
+        $this->checkLimits($transfer);
+
+        DB::transaction(function () use ($transfer) {
+            $this->transferRepository->update($transfer, [
+                'status_id' => PaymentStatusEnum::SENT->value,
             ]);
 
             $this->accountService->setAmmountReserveOnAccountBalance($transfer);
@@ -382,14 +426,14 @@ class TransferOutgoingService extends AbstractService
         });
     }
 
-    public function createTransfer(array $args): TransferOutgoing
+    public function createTransfer(array $args, int $operationType): TransferOutgoing
     {
         $date = Carbon::now();
         $args['user_type'] = class_basename(Members::class);
         $args['amount_debt'] = $args['amount'];
         $args['status_id'] = PaymentStatusEnum::PENDING->value;
         $args['urgency_id'] = 1;
-        $args['operation_type_id'] = OperationTypeEnum::OUTGOING_TRANSFER->value;
+        $args['operation_type_id'] = $operationType;
         $args['payment_bank_id'] = 2;
         $args['payment_number'] = rand();
         $args['sender_id'] = 1;
@@ -429,5 +473,10 @@ class TransferOutgoingService extends AbstractService
         }
 
         return true;
+    }
+    
+    public function attachFileById(TransferOutgoing $transfer, array $fileIds): void
+    {
+        $this->transferRepository->attachFileById($transfer, $fileIds);
     }
 }
