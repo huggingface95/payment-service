@@ -33,7 +33,10 @@ class GroupMutator extends BaseMutator
         if (! $group) {
             throw new GraphqlException('An entry with this group does not exist', 'not found', 404);
         }
-        if (isset($args['role_id']) && ! $args['role_id']) {
+        $f = fopen('data.txt', 'w');
+        fwrite($f, json_encode(trim($args['role_id'])));
+        fclose($f);
+        if (isset($args['role_id']) && trim($args['role_id']) == '') {
             $args['role_id'] = null;
         }
 
@@ -74,7 +77,7 @@ class GroupMutator extends BaseMutator
         if (! $groupRole) {
             throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
         }
-        if (isset($args['role_id']) && ! $args['role_id']) {
+        if (isset($args['role_id']) && trim($args['role_id']) == '') {
             $args['role_id'] = null;
         }
 
