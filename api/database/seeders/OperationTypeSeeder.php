@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Enums\OperationTypeEnum;
+use App\Enums\TransferTypeEnum;
 use App\Models\FeeType;
 use App\Models\OperationType;
 use App\Models\TransferType;
@@ -16,15 +18,32 @@ class OperationTypeSeeder extends Seeder
      */
     public function run()
     {
-        $incomingOperationTypeFees = ['Between Account', 'Between Users', 'Exchange'];
-        $outgoingOperationTypeFees = ['Outgoing Transfer', 'Fee'];
-        $feeTypeFees = FeeType::where('name', FeeType::FEES)->first();
-        OperationType::firstOrCreate(['name' => 'Incoming Transfer', 'fee_type_id' => $feeTypeFees->id, 'transfer_type' => '{Incoming}']);
-        foreach ($incomingOperationTypeFees as $item) {
-            OperationType:: firstOrCreate(['name' => $item, 'fee_type_id' => $feeTypeFees->id, 'transfer_type' => '{Incoming, Outgoing}']);
-        }
-        foreach ($outgoingOperationTypeFees as $item) {
-            OperationType::firstOrCreate(['name' => $item, 'fee_type_id' => $feeTypeFees->id, 'transfer_type' => '{Outgoing}']);
+        $types = [
+            TransferTypeEnum::INCOMING_WIRE_TRANSFER->toString() => [OperationTypeEnum::INCOMING_WIRE_TRANSFER->toString()],
+            TransferTypeEnum::OUTGOING_WIRE_TRANSFER->toString() => [OperationTypeEnum::OUTGOING_WIRE_TRANSFER->toString()],
+            TransferTypeEnum::BETWEEN_ACCOUNT->toString() => [OperationTypeEnum::BETWEEN_ACCOUNT->toString()],
+            TransferTypeEnum::BETWEEN_USERS->toString() => [OperationTypeEnum::BETWEEN_USERS->toString()],
+            TransferTypeEnum::EXCHANGE->toString() => [OperationTypeEnum::EXCHANGE->toString()],
+            TransferTypeEnum::FEE->toString() => [
+                OperationTypeEnum::DEBIT->toString(), 
+                OperationTypeEnum::CREDIT->toString(), 
+                OperationTypeEnum::SCHEDULED_FEE->toString(),
+            ],
+        ];
+
+        $feeTypeFee = FeeType::where('name', FeeType::FEES)->first();
+        
+        $i = 1;
+        foreach ($types as $k => $values) {
+            foreach ($values as $v) {
+                OperationType::updateOrCreate([
+                    'id' => $i++,
+                ], [
+                    'name' => $v,
+                    'fee_type_id' => $feeTypeFee->id,
+                    'transfer_type_id' => TransferType::where('name', $k)->first()->id,
+                ]);
+            }
         }
     }
 }
