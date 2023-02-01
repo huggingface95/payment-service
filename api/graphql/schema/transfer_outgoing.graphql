@@ -14,6 +14,8 @@ type TransferOutgoing {
     fee: Fee @hasOne(realtion: "fee")
     "Все коммиссии"
     fees: [Fee] @hasMany(realtion: "fees")
+    "Файлы"
+    files: [Files] @belongsToMany(realtion: "files")
     "Получить связанную валюту"
     currency: Currencies @belongsTo(relation: "currency")
     "Статус"
@@ -32,6 +34,8 @@ type TransferOutgoing {
     payment_bank: PaymentBank @belongsTo(relation: "paymentBank")
     "Номер платежа"
     payment_number: String!
+    "Получить связанный тип трансфера"
+    transfer_type: TypeOfTransfer @belongsTo(relation: "transferType")
     "Получить связанный аккаунт"
     account: Account @belongsTo(relation: "account")
     "Получить отправителя (Индивидуал или Компани)"
@@ -59,6 +63,11 @@ type TransferOutgoing {
     execution_at: DateTimeUtc
     created_at: DateTimeUtc
     updated_at: DateTimeUtc
+}
+
+type TypeOfTransfer {
+    id: ID!
+    name: String!
 }
 
 type TransferOutgoingStatistic {
@@ -163,6 +172,8 @@ extend type Mutation @guard {
         recipient_zip: String
         "Сообщение банка"
         bank_message: String
+        "ID файлов"
+        file_id: [ID]
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@create")
 
@@ -176,4 +187,80 @@ extend type Mutation @guard {
         status_id: Int!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@update")
+
+    """
+    Создать исходящий Fee перевод
+    """
+    createTransferOutgoingFee(
+        "ID компании"
+        company_id: ID!
+        "ID группы"
+        group_id: ID!
+        "ID типа группы"
+        group_type_id: ID!
+        "ID проекта"
+        project_id: ID!
+        "Сумма"
+        amount: Decimal!
+        "ID валюты"
+        currency_id: ID!
+        "ID аккаунта"
+        account_id: ID!
+        "ID типа операции"
+        operation_type_id: ID!
+        "ID платежного провайдера"
+        payment_provider_id: ID!
+        "ID платежной системы"
+        payment_system_id: ID!
+        "ID банка получателя"
+        recipient_bank_country_id: ID!
+        requested_by_id: ID!
+        price_list_id: ID!
+        price_list_fee_id: ID!
+        execution_at: DateTimeUtc
+        "Номер счета или IBAN получателя"
+        recipient_account: String
+        "Имя банка получателя"
+        recipient_bank_name: String
+        "Адрес банка получателя"
+        recipient_bank_address: String
+        "SWIFT банка получателя"
+        recipient_bank_swift: String
+        "Имя получателя"
+        recipient_name: String
+        "Город получателя"
+        recipient_city: String
+        "Адрес получателя"
+        recipient_address: String
+        "Штат получателя"
+        recipient_state: String
+        "Индекс получателя"
+        recipient_zip: String
+        "Сообщение банка"
+        bank_message: String
+        "ID файлов"
+        file_id: [ID]
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@createFee")
+
+    """
+    Редактировать исходящий FEE перевод
+    """
+    updateTransferOutgoingFee(
+        "ID"
+        id: ID!
+        "Сумма"
+        amount: Decimal!
+        "Причина"
+        reason: String
+        "ID файлов"
+        file_id: [ID]
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@updateFee")
+
+    """
+    Отменить исходящий FEE перевод
+    """
+    cancelTransferOutgoingFee(id: ID! @eq): TransferOutgoing 
+        @field(resolver: "TransferOutgoingMutator@cancelFee")
 }

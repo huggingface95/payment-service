@@ -55,7 +55,7 @@ class DashboardQuery
             DB::raw("'" . class_basename(TransferIncoming::class) . "' as transfer_type, count(status_id) as count"),
         ])
             ->join('payment_status', 'transfer_incomings.status_id', '=', 'payment_status.id')
-            ->where('operation_type_id', OperationTypeEnum::INCOMING_TRANSFER->value)
+            ->where('operation_type_id', OperationTypeEnum::INCOMING_WIRE_TRANSFER->value)
             ->groupBy(['status_name']);
 
         $transferOutgoingStatistic = TransferOutgoing::select([
@@ -63,7 +63,7 @@ class DashboardQuery
             DB::raw("'" . class_basename(TransferOutgoing::class) . "' as transfer_type, count(status_id) as count"),
         ])
             ->join('payment_status', 'transfer_outgoings.status_id', '=', 'payment_status.id')
-            ->where('operation_type_id', OperationTypeEnum::OUTGOING_TRANSFER->value)
+            ->where('operation_type_id', OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value)
             ->groupBy(['status_name']);
 
         $transferBetweenUserStatistic = TransferBetweenUser::select([
