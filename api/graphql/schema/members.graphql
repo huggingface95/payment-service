@@ -56,6 +56,8 @@ type Members {
     email_verification: EmailVerification
     "Фото"
     photo: Files @belongsTo(relation: "photo")
+    "Дата создания"
+    created_at: DateTimeUtc
 }
 
 enum EmailVerification {
@@ -107,6 +109,7 @@ input QueryMembersFilterStatic @spread{
     is_active: Boolean @eq
     last_login_at: String @gte
     is_show_owner_applicants: Boolean @eq
+    member_status_id: ID @eq
 }
 
 extend type Mutation  {

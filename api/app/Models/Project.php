@@ -55,6 +55,11 @@ class Project extends BaseModel
         return $this->hasMany(ProjectSettings::class);
     }
 
+    public function projectApiSettings(): HasMany
+    {
+        return $this->hasMany(ProjectApiSetting::class);
+    }
+
     public function applicantCompanies(): HasMany
     {
         return $this->hasMany(ApplicantCompany::class);

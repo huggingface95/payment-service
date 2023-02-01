@@ -21,6 +21,8 @@ type Project {
     additional_fields_settings: JSON
     "Настройки проекта"
     project_settings: [ProjectSettings] @hasMany(relation: "projectSettings")
+    "Настройки api проекта"
+    project_api_settings: [ProjectApiSetting] @hasMany(relation: "projectApiSettings")
     "Модуль"
     module: Module @BelongsTo(relation: "module")
     "Компания"
@@ -93,7 +95,7 @@ input InputProject {
     "Компания"
     company_id: ID!
     "Модуль"
-    module_id: ID
+    module_id: ID!
     "Аватар"
     avatar_id: ID
     "Состояние"

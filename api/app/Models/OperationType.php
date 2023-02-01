@@ -2,20 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 /**
  * @property string $name
  */
 class OperationType extends BaseModel
 {
+    public $timestamps = false;
+
     protected $table = 'operation_type';
-
-    public const INCOMING_TRANSFER = 'Incoming Transfer';
-
-    public const OUTGOING_TRANSFER = 'Outgoing Transfer';
 
     protected $fillable = [
         'name',
+        'fee_type_id',
+        'transfer_type_id',
     ];
 
-    public $timestamps = false;
+    public function transferType(): BelongsTo
+    {
+        return $this->belongsTo(TransferType::class);
+    }
 }

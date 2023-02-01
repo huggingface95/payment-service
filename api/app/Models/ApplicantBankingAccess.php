@@ -39,6 +39,8 @@ class ApplicantBankingAccess extends BaseModel
         'monthly_limit',
         'operation_limit',
         'used_limit',
+        'used_daily_limit',
+        'used_monthly_limit',
         'role_id',
         'grant_access',
     ];

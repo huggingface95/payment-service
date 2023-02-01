@@ -49,5 +49,5 @@ extend type Mutation @guard {
         "ID шаблона"
         id: ID!
         input: InputProjectApiSetting! @spread
-    ): ProjectApiSetting!
+    ): ProjectApiSetting @update
 }

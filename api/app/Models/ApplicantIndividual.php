@@ -30,6 +30,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string fullname
  * @property int company_id
  * @property ApplicantBankingAccess $applicantBankingAccess
+ * @property Company company
  */
 class ApplicantIndividual extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
 {
@@ -312,7 +313,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 
     public function files(): HasMany
     {
-        return $this->hasMany(Files::class, 'author_id')->where('entity_type', 'aidnividual');
+        return $this->hasMany(Files::class, 'author_id')->where('entity_type', 'applicant_individual');
     }
 
     public function photo(): BelongsTo
