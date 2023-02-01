@@ -74,6 +74,9 @@ class GroupMutator extends BaseMutator
         if (! $groupRole) {
             throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
         }
+        if (isset($args['role_id']) && ! $args['role_id']) {
+            $args['role_id'] = null;
+        }
 
         $groupRole->update($args);
 
