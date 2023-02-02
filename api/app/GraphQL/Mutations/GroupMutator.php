@@ -33,6 +33,9 @@ class GroupMutator extends BaseMutator
         if (! $group) {
             throw new GraphqlException('An entry with this group does not exist', 'not found', 404);
         }
+        if (isset($args['role_id']) && trim($args['role_id']) == '') {
+            $args['role_id'] = null;
+        }
 
         $groupRole = GroupRole::create($args);
         if (!$groupRole) {
@@ -70,6 +73,9 @@ class GroupMutator extends BaseMutator
         $groupRole = GroupRole::find($args['id']);
         if (! $groupRole) {
             throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
+        }
+        if (isset($args['role_id']) && trim($args['role_id']) == '') {
+            $args['role_id'] = null;
         }
 
         $groupRole->update($args);
