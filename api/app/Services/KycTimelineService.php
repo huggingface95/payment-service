@@ -40,8 +40,7 @@ class KycTimelineService extends AbstractService
 
     public function logApplicantIndividual(ApplicantIndividual $applicantIndividual, Members|null $member): void
     {
-        $newValues = $applicantIndividual->getChanges();
-        unset($newValues['updated_at']);
+        $newValues = $this->getChanges($applicantIndividual);
 
         if (array_key_exists('applicant_status_id', $newValues)) {
             $this->logApplicantIndividualStatus($applicantIndividual, $member);
@@ -185,8 +184,7 @@ class KycTimelineService extends AbstractService
     
     public function logApplicantCompany(ApplicantCompany $applicantCompany, Members|null $member): void
     {
-        $newValues = $applicantCompany->getChanges();
-        unset($newValues['updated_at']);
+        $newValues = $this->getChanges($applicantCompany);
 
         if (array_key_exists('applicant_status_id', $newValues)) {
             $this->logApplicantCompanyStatus($applicantCompany, $member);
@@ -205,7 +203,7 @@ class KycTimelineService extends AbstractService
             'action_type' => KycTimelineActionTypeEnum::PROFILE->value,
             'action_old_value' => $oldValues,
             'action_new_value' => $newValues,
-            'company_id' => $applicantCompany->id,
+            'company_id' => $applicantCompany->company_id,
             'applicant_id' => $applicantCompany->applicantIndividualCompany->applicant_id,
             'applicant_type' => $applicantCompany->applicantIndividualCompany->applicant_type,
         ]);
@@ -240,6 +238,16 @@ class KycTimelineService extends AbstractService
             'applicant_id' => $applicant->applicant_id,
             'applicant_type' => $applicant->applicant_type,
         ]);
+    }
+
+    public function getChanges(ApplicantIndividual|ApplicantCompany $applicant): array
+    {
+        $allowedFields = ['phone', 'email', 'first_name', 'last_name', 'middle_name', 'applicant_risk_level_id', 'applicant_status_id', 'name'];
+        $newValues = $applicant->getChanges();
+
+        return array_filter($newValues, function ($key) use ($allowedFields) {
+            return in_array($key, $allowedFields);
+        }, ARRAY_FILTER_USE_KEY);
     }
 
     public function getIp(): string
