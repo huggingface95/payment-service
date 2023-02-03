@@ -41,7 +41,10 @@ class KycTimelineService extends AbstractService
     public function logApplicantIndividual(ApplicantIndividual $applicantIndividual, Members|null $member): void
     {
         $newValues = $this->getChanges($applicantIndividual);
-
+        if (empty($newValues)) {
+            return;
+        }
+        
         if (array_key_exists('applicant_status_id', $newValues)) {
             $this->logApplicantIndividualStatus($applicantIndividual, $member);
 
@@ -185,6 +188,9 @@ class KycTimelineService extends AbstractService
     public function logApplicantCompany(ApplicantCompany $applicantCompany, Members|null $member): void
     {
         $newValues = $this->getChanges($applicantCompany);
+        if (empty($newValues)) {
+            return;
+        }
 
         if (array_key_exists('applicant_status_id', $newValues)) {
             $this->logApplicantCompanyStatus($applicantCompany, $member);
