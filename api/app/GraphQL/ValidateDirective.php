@@ -44,7 +44,7 @@ GRAPHQL;
             if ($validator->fails()) {
                 $path = implode('.', $resolveInfo->path);
                 if (isset($rulesGatherer->rules['email'])) {
-                    throw new ValidationException('This Email already exist.', $validator);
+                    throw new ValidationException('This Email already exists.', $validator);
                 } else {
                     throw new ValidationException("Validation failed for the field [$path].", $validator);
                 }
