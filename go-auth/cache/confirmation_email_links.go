@@ -15,6 +15,7 @@ type ConfirmationEmailLinksData struct {
 	FullName         string `json:"full_name"`
 	Email            string `json:"email"`
 	ConfirmationLink string `json:"confirmation_link"`
+	CompanyId        uint64 `json:"company_id"`
 }
 
 func (a *ConfirmationEmailLinksCache) Get(key string) (*ConfirmationEmailLinksData, bool) {

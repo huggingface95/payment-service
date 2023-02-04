@@ -4,6 +4,7 @@ import (
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/dto"
 	"jwt-authentication-golang/repositories/redisRepository"
+	"jwt-authentication-golang/repositories/timelineRepository"
 )
 
 func ProcessAddTimeLineLogQueue() {
@@ -18,6 +19,6 @@ func ProcessAddTimeLineLogQueue() {
 	}
 }
 
-func addTimeLineLog(e *dto.CreateTimeLineDto) {
-
+func addTimeLineLog(dto *dto.CreateTimeLineDto) {
+	timelineRepository.InsertTimeLineLog(dto)
 }

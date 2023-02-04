@@ -2,10 +2,13 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/constants"
+	"jwt-authentication-golang/dto"
 	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/postgres"
+	"jwt-authentication-golang/pkg"
 	"jwt-authentication-golang/repositories/redisRepository"
 	"jwt-authentication-golang/repositories/userRepository"
 	"jwt-authentication-golang/requests"
@@ -76,6 +79,16 @@ func ChangePassword(c *gin.Context) {
 		res := userRepository.SaveUser(user)
 		if res.Error == nil {
 			cache.Caching.ConfirmationEmailLinks.Delete(request.Token)
+
+			if clientType == constants.Individual {
+				deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(c)
+				timeLineDto := dto.DTO.CreateTimeLineDto.Parse("Ip confirmation", "email", "Banking", data.CompanyId, data.Id, deviceInfo)
+				ok := redisRepository.SetRedisDataByBlPop(constants.QueueAddTimeLineLog, timeLineDto)
+				if ok == false {
+					pkg.Error().Err(errors.New("TimeLine redis error"))
+				}
+			}
+
 			c.JSON(http.StatusOK, gin.H{"data": "Password changed"})
 			return
 		}
