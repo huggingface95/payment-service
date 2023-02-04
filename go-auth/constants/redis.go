@@ -5,3 +5,4 @@ const QueueSendIndividualConfirmEmail = "queue:email:send-individual-confirm-ema
 const QueueSendResetPasswordEmail = "queue:email:send-individual-reset-password-email"
 const QueueSendNewDeviceEmail = "queue:email:send-new-device"
 const QueueSendTrustedDeviceEmail = "queue:email:send-trusted-device"
+const QueueAddTimeLineLog = "queue:timeline:log"
