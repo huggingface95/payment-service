@@ -2,9 +2,8 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\DTO\Email\Request\EmailMembersRequestDTO;
-use App\DTO\TransformerDTO;
 use App\Enums\MemberStatusEnum;
+use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Models\ClientIpAddress;
 use App\Models\DepartmentPosition;
@@ -12,6 +11,7 @@ use App\Models\GroupRole;
 use App\Models\Members;
 use App\Services\EmailService;
 use App\Services\VerifyService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -27,37 +27,46 @@ class MembersMutator extends BaseMutator
 
     /**
      * @param $_
-     * @param  array  $args
+     * @param array $args
      * @return mixed
+     * @throws GraphqlException
      */
-    public function create($_, array $args)
+    public function create($_, array $args): mixed
     {
-//        if (! isset($args['send_email']) || $args['send_email'] == false) {
-//            if (! isset($args['password'])) {
-//                throw new GraphqlException('Password field can\'t be empty', 'use');
-//            }
-//        }
-        if (! isset($args['password'])) {
-            $password = Str::random(8);
-        } else {
-            $password = $args['password'];
+        DB::beginTransaction();
+        try {
+            if (! isset($args['password'])) {
+                $password = Str::random(8);
+            } else {
+                $password = $args['password'];
+            }
+
+            $args['password_hash'] = Hash::make($password);
+            $args['password_salt'] = $args['password_hash'];
+            $args['is_need_change_password'] = true;
+
+            $member = Members::create($args);
+
+            if (isset($args['group_id'])) {
+                $member->groupRole()->sync([$args['group_id']], true);
+            }
+
+            if (isset($args['send_email']) && $args['send_email'] === true) {
+                $this->emailService->sendChangePasswordEmail($member);
+            }
+            DB::commit();
+
+            return $member;
         }
+        catch (EmailException){
+            DB::commit();
 
-        $args['password_hash'] = Hash::make($password);
-        $args['password_salt'] = $args['password_hash'];
-        $args['is_need_change_password'] = true;
-
-        $member = Members::create($args);
-
-        if (isset($args['group_id'])) {
-            $member->groupRole()->sync([$args['group_id']], true);
+            return $member ?? null;
         }
-
-        if (isset($args['send_email']) && $args['send_email'] === true) {
-            $this->emailService->sendChangePasswordEmail($member);
+        catch (\Throwable){
+            DB::rollBack();
+            throw new GraphqlException("Member create error", "internal");
         }
-
-        return $member;
     }
 
     /**

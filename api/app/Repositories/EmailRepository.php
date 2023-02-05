@@ -9,6 +9,7 @@ use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\Email\SmtpDataDTO;
 use App\DTO\TransformerDTO;
+use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\Members;
@@ -72,7 +73,7 @@ class EmailRepository implements EmailRepositoryInterface
 
 
     /**
-     * @throws GraphqlException
+     * @throws EmailException
      */
     public function getTemplateContentAndSubject(Account $account): SmtpDataDTO
     {
@@ -83,7 +84,7 @@ class EmailRepository implements EmailRepositoryInterface
             ->first();
 
         if (! $emailTemplate) {
-            throw new GraphqlException('Email template not found', '404');
+            throw new EmailException('Email template not found', '404');
         }
 
         /** @var EmailNotification $notification */
@@ -95,13 +96,13 @@ class EmailRepository implements EmailRepositoryInterface
             ->first();
 
         if (! $notification) {
-            throw new GraphqlException('Email Notification not found', '404');
+            throw new EmailException('Email Notification not found', '404');
         }
 
         $emails = $notification->groupRole->users->pluck('email')->toArray();
 
         if (! count($emails)) {
-            throw new GraphqlException('Email not found', '404');
+            throw new EmailException('Email not found', '404');
         }
 
         foreach (self::$staticParams as $k => $staticParam){
@@ -115,7 +116,7 @@ class EmailRepository implements EmailRepositoryInterface
     }
 
     /**
-     * @throws GraphqlException
+     * @throws EmailException
      */
     public function getTemplateContentAndSubjectByDto(
         EmailApplicantRequestDTO|EmailMemberRequestDTO|EmailMembersRequestDTO|EmailApplicantCompanyRequestDTO|EmailAccountMinMaxBalanceLimitRequestDTO $dto
@@ -127,7 +128,7 @@ class EmailRepository implements EmailRepositoryInterface
             ->first();
 
         if (! $emailTemplate) {
-            throw new GraphqlException('Email template not found', '404');
+            throw new EmailException('Email template not found', '404');
         }
 
         $content = $this->replaceObjectData($emailTemplate->getHtml(), $dto->data, '/\{(.*?)\}/');

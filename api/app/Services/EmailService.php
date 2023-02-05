@@ -9,6 +9,7 @@ use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\Email\SmtpConfigDTO;
 use App\DTO\TransformerDTO;
+use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
 use App\Models\Account;
@@ -20,18 +21,18 @@ class EmailService
 {
     public function __construct(
         protected EmailRepositoryInterface $emailRepository,
-        protected VerifyService $verifyService
+        protected VerifyService            $verifyService
     )
     {
     }
 
     /**
-     * @throws GraphqlException
+     * @throws EmailException
      */
     public function sendAccountStatusEmail(Account $account): void
     {
         //TODO make it so that after Account::Create work Global Scope "AccountIndividualsCompaniesScope"
-        $account =Account::find($account->id);
+        $account = Account::find($account->id);
 
         $account->load('group', 'company', 'paymentProvider', 'clientable', 'owner',
             'accountState', 'paymentBank.country', 'paymentSystem', 'currencies', 'groupRole',
@@ -44,10 +45,13 @@ class EmailService
         try {
             dispatch(new SendMailJob($config, $emailContentSubjectDto));
         } catch (\Throwable) {
-            throw new GraphqlException('Don\'t send email', '404');
+            throw new EmailException('Don\'t send email', '404');
         }
     }
 
+    /**
+     * @throws EmailException
+     */
     public function sendVerificationEmail(Members $member): void
     {
         $verifyToken = $this->verifyService->createVerifyToken($member);
@@ -66,6 +70,9 @@ class EmailService
         $this->sendMemberEmailByMemberDto($emailDTO, true);
     }
 
+    /**
+     * @throws EmailException
+     */
     public function sendChangePasswordEmail(Members $member): void
     {
         $verifyToken = $this->verifyService->createVerifyToken($member);
@@ -84,6 +91,9 @@ class EmailService
         $this->sendMemberEmailByMemberDto($emailDTO, true);
     }
 
+    /**
+     * @throws EmailException
+     */
     public function sendApplicantChangePasswordEmail(ApplicantIndividual $applicant): void
     {
         $verifyToken = $this->verifyService->createVerifyToken($applicant);
@@ -102,6 +112,9 @@ class EmailService
         $this->sendApplicantEmailByApplicantDto($emailDTO);
     }
 
+    /**
+     * @throws EmailException
+     */
     public function sendApplicantRegistrationLinkEmail(ApplicantIndividual $applicant): void
     {
         $verifyToken = $this->verifyService->createVerifyToken($applicant);
@@ -122,7 +135,7 @@ class EmailService
     }
 
     /**
-     * @throws GraphqlException
+     * @throws EmailException
      */
     public function sendApplicantEmailByApplicantDto(EmailApplicantRequestDTO|EmailMemberRequestDTO $dto): void
     {
@@ -133,12 +146,12 @@ class EmailService
         try {
             dispatch(new SendMailJob($config, $emailContentSubjectDto));
         } catch (\Throwable) {
-            throw new GraphqlException('Don\'t send email', '404');
+            throw new EmailException('Don\'t send email', '404');
         }
     }
 
     /**
-     * @throws GraphqlException
+     * @throws EmailException
      */
     public function sendApplicantCompanyEmailByApplicantDto(EmailApplicantCompanyRequestDTO $dto): void
     {
@@ -149,31 +162,31 @@ class EmailService
         try {
             dispatch(new SendMailJob($config, $emailContentSubjectDto));
         } catch (\Throwable) {
-            throw new GraphqlException('Don\'t send email', '404');
+            throw new EmailException('Don\'t send email', '404');
         }
     }
 
     /**
-     * @throws GraphqlException
+     * @throws EmailException
      */
     public function sendMemberEmailByMemberDto(EmailMembersRequestDTO $dto, bool $findByCompanyId = false): void
     {
-        $smtp = $findByCompanyId ?
-            $this->emailRepository->getSmtpByCompanyId($dto->members) :
-            $this->emailRepository->getSmtpByMemberId($dto->members);
-
-        $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
-        $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
-
         try {
+            $smtp = $findByCompanyId ?
+                $this->emailRepository->getSmtpByCompanyId($dto->members) :
+                $this->emailRepository->getSmtpByMemberId($dto->members);
+
+            $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
+            $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
+
             dispatch(new SendMailJob($config, $emailContentSubjectDto));
         } catch (\Throwable) {
-            throw new GraphqlException('Don\'t send email', '404');
+            throw new EmailException('Don\'t send email', '404');
         }
     }
 
     /**
-     * @throws GraphqlException
+     * @throws EmailException
      */
     public function sendAccountBalanceLimitDto(EmailAccountMinMaxBalanceLimitRequestDTO $dto): void
     {
@@ -184,7 +197,7 @@ class EmailService
         try {
             dispatch(new SendMailJob($config, $emailContentSubjectDto));
         } catch (\Throwable) {
-            throw new GraphqlException('Don\'t send email', '404');
+            throw new EmailException('Don\'t send email', '404');
         }
     }
 }

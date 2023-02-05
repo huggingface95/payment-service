@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use App\Exceptions\GraphqlException;
+use App\Exceptions\EmailException;
 
 trait ReplaceRegularExpressions
 {
@@ -27,7 +27,7 @@ trait ReplaceRegularExpressions
     }
 
     /**
-     * @throws GraphqlException
+     * @throws EmailException
      */
     public function replaceObjectData(string $content, object $object, string $regexp): string
     {
@@ -35,7 +35,7 @@ trait ReplaceRegularExpressions
     }
 
     /**
-     * @throws GraphqlException
+     * @throws EmailException
      */
     private function replaceData(string $content, array $d, string $regexp): string
     {
@@ -62,7 +62,7 @@ trait ReplaceRegularExpressions
                         })
                         : $k;
                 })->flatten(1)->implode(',');
-                throw new GraphqlException('PARAMETER ' . $m[1] . ' NOT FOUND IN THIS (' . $implodeData . ')  LIST', 'not found', 403);
+                throw new EmailException('PARAMETER ' . $m[1] . ' NOT FOUND IN THIS (' . $implodeData . ')  LIST', 'not found', 403);
             }
         }, $content);
     }
