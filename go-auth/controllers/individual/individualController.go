@@ -103,7 +103,11 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 
 	token := context.Request.URL.Query().Get("token")
 	data, _ := cache.Caching.ConfirmationEmailLinks.Get(token)
-	user = userRepository.GetUserById(data.Id, constants.Individual)
+	clientType := constants.Member
+	if data.Type == constants.Individual {
+		clientType = constants.Individual
+	}
+	user = userRepository.GetUserById(data.Id, clientType)
 	if user != nil {
 		if user.StructName() == constants.StructMember {
 			user.SetIsActivated(postgres.MemberStatusActive)

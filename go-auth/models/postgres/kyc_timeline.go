@@ -14,7 +14,7 @@ type KycTimeLine struct {
 	DocumentId    uint64    `gorm:"column:document_id"`
 	CompanyId     uint64    `gorm:"column:company_id"`
 	ApplicantId   uint64    `gorm:"column:applicant_id"`
-	ApplicantType uint64    `gorm:"column:applicant_type"`
+	ApplicantType string    `gorm:"column:applicant_type"`
 	CreatedAt     time.Time `gorm:"column:created_at"`
 }
 
