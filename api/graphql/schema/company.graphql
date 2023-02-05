@@ -32,6 +32,8 @@ type Company {
     "Количество проектов"
     projects_count: Int
     "Департаменты компании"
+    projects: [Project] @hasMany(relation: "projects")
+    "Департаменты компании"
     departments: [Department] @hasMany(relation: "departments")
     "Должности компании"
     positions: [DepartmentPosition] @hasMany(relation: "positions")

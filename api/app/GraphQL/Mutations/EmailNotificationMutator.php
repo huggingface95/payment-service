@@ -28,7 +28,7 @@ class EmailNotificationMutator extends BaseMutator
                 'group_role_id'=>$args['group_role_id'],
             ])->first();
             if ($notify) {
-                throw new GraphqlException('This notification already exist.', 'use', 409);
+                throw new GraphqlException('This notification already exists.', 'use', 409);
             }
         }
 

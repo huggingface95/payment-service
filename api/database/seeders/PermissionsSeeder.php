@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ModuleTagEnum;
 use App\Models\PermissionCategory;
 use App\Models\PermissionFilter;
 use App\Models\PermissionOperation;
@@ -4441,7 +4442,7 @@ class PermissionsSeeder extends Seeder
                 'action' => null,
                 'table' => 'email_templates',
                 'column' => 'service_type',
-                'value' => 'common',
+                'value' => ModuleTagEnum::BANKING_COMMON->value,
                 'binds' => ['Email Templates:Tag.Banking: Common'],
             ],
             [
@@ -4449,7 +4450,7 @@ class PermissionsSeeder extends Seeder
                 'action' => PermissionFilter::EVENT_CREATING,
                 'table' => 'email_templates',
                 'column' => 'service_type',
-                'value' => 'common',
+                'value' => ModuleTagEnum::BANKING_COMMON->value,
                 'binds' => ['Email Templates:Tag.Banking: Common'],
             ],
             [
@@ -4457,7 +4458,7 @@ class PermissionsSeeder extends Seeder
                 'action' => PermissionFilter::EVENT_UPDATING,
                 'table' => 'email_templates',
                 'column' => 'service_type',
-                'value' => 'common',
+                'value' => ModuleTagEnum::BANKING_COMMON->value,
                 'binds' => ['Email Templates:Tag.Banking: Common'],
             ],
             [
@@ -4465,7 +4466,7 @@ class PermissionsSeeder extends Seeder
                 'action' => PermissionFilter::EVENT_DELETING,
                 'table' => 'email_templates',
                 'column' => 'service_type',
-                'value' => 'common',
+                'value' => ModuleTagEnum::BANKING_COMMON->value,
                 'binds' => ['Email Templates:Tag.Banking: Common'],
             ],
             [
@@ -4505,7 +4506,7 @@ class PermissionsSeeder extends Seeder
                 'action' => null,
                 'table' => 'email_templates',
                 'column' => 'service_type',
-                'value' => 'system',
+                'value' => ModuleTagEnum::BANKING_SYSTEM->value,
                 'binds' => ['Email Templates:Tag.Banking: System'],
             ],
             [
@@ -4513,7 +4514,7 @@ class PermissionsSeeder extends Seeder
                 'action' => PermissionFilter::EVENT_CREATING,
                 'table' => 'email_templates',
                 'column' => 'service_type',
-                'value' => 'system',
+                'value' => ModuleTagEnum::BANKING_SYSTEM->value,
                 'binds' => ['Email Templates:Tag.Banking: System'],
             ],
             [
@@ -4521,7 +4522,7 @@ class PermissionsSeeder extends Seeder
                 'action' => PermissionFilter::EVENT_UPDATING,
                 'table' => 'email_templates',
                 'column' => 'service_type',
-                'value' => 'system',
+                'value' => ModuleTagEnum::BANKING_SYSTEM->value,
                 'binds' => ['Email Templates:Tag.Banking: System'],
             ],
             [
@@ -4529,7 +4530,7 @@ class PermissionsSeeder extends Seeder
                 'action' => PermissionFilter::EVENT_DELETING,
                 'table' => 'email_templates',
                 'column' => 'service_type',
-                'value' => 'system',
+                'value' => ModuleTagEnum::BANKING_SYSTEM->value,
                 'binds' => ['Email Templates:Tag.Banking: System'],
             ],
         ];
