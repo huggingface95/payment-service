@@ -12,27 +12,47 @@ class PaymentSystemQueryTest extends TestCase
      * @return void
      */
 
+    public function testQueryPaymentSystemNoAuth(): void
+    {
+        $this->graphQL('
+            {
+                paymentSystems {
+                    data {
+                         id
+                        name
+                        is_active
+                    }
+                }
+            }
+        ')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
     public function testQueryPaymentSystem(): void
     {
-        $this->login();
-
         $payment_system = DB::connection('pgsql_test')
             ->table('payment_system')
             ->orderBy('id')
             ->first();
 
-        $this->graphQL('
-            query PaymentSystem($id:ID!){
-                paymentSystem(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($payment_system->id),
+        $this->postGraphQL([
+            'query' => '
+                query PaymentSystem($id:ID!){
+                    paymentSystem(id: $id) {
+                        id
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $payment_system->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJson([
             'data' => [
                 'paymentSystem' => [
-                    'id' => strval($payment_system->id),
+                    'id' => (string) $payment_system->id,
                 ],
             ],
         ]);
@@ -40,27 +60,29 @@ class PaymentSystemQueryTest extends TestCase
 
     public function testQueryPaymentSystemsList(): void
     {
-        $this->login();
-
         $payment_system = DB::connection('pgsql_test')
             ->table('payment_system')
-            ->select('*')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-        query {
-            paymentSystems (orderBy: { column: ID, order: DESC }) {
-                data {
-                  id
-                  name
-                  is_active
-                }
-            }
-        }')->seeJsonContains([
+        $this->postGraphQL([
+            'query' => '
+                query {
+                    paymentSystems (orderBy: { column: ID, order: DESC }) {
+                        data {
+                          id
+                          name
+                          is_active
+                        }
+                    }
+                }',
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
+        ])->seeJsonContains([
             [
-                'id' => strval($payment_system[0]->id),
-                'name' => strval($payment_system[0]->name),
+                'id' => (string) $payment_system[0]->id,
+                'name' => (string) $payment_system[0]->name,
                 'is_active' => $payment_system[0]->is_active,
             ],
         ]);
@@ -68,27 +90,32 @@ class PaymentSystemQueryTest extends TestCase
 
     public function testQueryPaymentSystemsFilterById(): void
     {
-        $this->login();
-
         $payment_system = DB::connection('pgsql_test')
             ->table('payment_system')
-            ->select('*')
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->graphQL('
-        query {
-            paymentSystems (filter:{column:ID, value:1}) {
-                data {
-                  id
-                  name
-                  is_active
-                }
-            }
-        }')->seeJsonContains([
+        $this->postGraphQL([
+            'query' => '
+                query PaymentSystems ($id: Mixed) {
+                    paymentSystems (filter: {column: ID, value: $id}) {
+                        data {
+                          id
+                          name
+                          is_active
+                        }
+                    }
+                }',
+            'variables' => [
+                'id' => $payment_system[0]->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
+        ])->seeJsonContains([
             [
-                'id' => strval($payment_system[0]->id),
-                'name' => strval($payment_system[0]->name),
+                'id' => (string) $payment_system[0]->id,
+                'name' => (string) $payment_system[0]->name,
                 'is_active' => $payment_system[0]->is_active,
             ],
         ]);
@@ -96,28 +123,31 @@ class PaymentSystemQueryTest extends TestCase
 
     public function testQueryPaymentSystemsFilterHasProvider(): void
     {
-        $this->login();
-
         $payment_system = DB::connection('pgsql_test')
             ->table('payment_system')
-            ->select('*')
             ->first();
 
-        $this->graphQL('
-        query PaymentSystems($id: Mixed) {
-            paymentSystems(filter: { column: HAS_PROVIDERS_FILTER_BY_ID, value: $id }) {
-                data {
-                    id
-                    name
-                    is_active
-                }
-            }
-        }', [
+        $this->postGraphQL([
+            'query' => '
+                query PaymentSystems($id: Mixed) {
+                    paymentSystems(filter: { column: HAS_PROVIDERS_FILTER_BY_ID, value: $id }) {
+                        data {
+                            id
+                            name
+                            is_active
+                        }
+                    }
+                }',
+            'variables' => [
                 'id' => $payment_system->payment_provider_id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
             [
-                'id' => strval($payment_system->id),
-                'name' => strval($payment_system->name),
+                'id' => (string) $payment_system->id,
+                'name' => (string) $payment_system->name,
                 'is_active' => $payment_system->is_active,
             ],
         ]);
@@ -125,27 +155,29 @@ class PaymentSystemQueryTest extends TestCase
 
     public function testQueryPaymentSystemsFilterHasCompany(): void
     {
-        $this->login();
-
         $payment_system = DB::connection('pgsql_test')
             ->table('payment_system')
-            ->select('*')
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->graphQL('
-        query {
-            paymentSystems (filter:{column:HAS_COMPANIES_FILTER_BY_ID, value:1}) {
-                data {
-                  id
-                  name
-                  is_active
-                }
-            }
-        }')->seeJsonContains([
+        $this->postGraphQL([
+            'query' => '
+                {
+                    paymentSystems (filter: { column: HAS_COMPANIES_FILTER_BY_ID, value: 1 }) {
+                        data {
+                          id
+                          name
+                          is_active
+                        }
+                    }
+                }'
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
+        ])->seeJsonContains([
             [
-                'id' => strval($payment_system[0]->id),
-                'name' => strval($payment_system[0]->name),
+                'id' => (string) $payment_system[0]->id,
+                'name' => (string) $payment_system[0]->name,
                 'is_active' => $payment_system[0]->is_active,
             ],
         ]);

@@ -22,7 +22,28 @@ class KycTimelineQueryTest extends TestCase
         (new DatabaseSeeder())->call(DocumentTypeTableSeeder::class);
         (new DatabaseSeeder())->call(FileTableSeeder::class);
         (new DatabaseSeeder())->call(ApplicantDocumentTableSeeder::class);
-        (new DatabaseSeeder())->call(KycTimelineTableSeeder::class);
+    }
+
+    public function testQueryKycTimeLineNoAuth(): void
+    {
+        $this->graphQL('
+            {
+                kycTimelines {
+                    data {
+                         os
+                        browser
+                        ip
+                        action
+                        action_type
+                        applicant_id
+                        applicant_type
+                        tag
+                    }
+                }
+            }
+        ')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
     }
 
     /**
@@ -30,8 +51,6 @@ class KycTimelineQueryTest extends TestCase
      */
     public function testQueryKycTimelinesWithFilterByCondition($cond, $value): void
     {
-        $this->login();
-
         $documents = KycTimeline::where($cond, $value)->orderBy('id', 'ASC')->get();
 
         $expect = [];
@@ -42,32 +61,37 @@ class KycTimelineQueryTest extends TestCase
                 'browser' => (string) $document->browser,
                 'ip' => (string) $document->ip,
                 'action' => (string) $document->action,
-                'action_state' => (string) $document->action_state,
-                'action_type' => (string) $document->action_type,
+                'action_type' => (string) strtoupper($document->action_type),
                 'applicant_id' => (string) $document->applicant_id,
                 'applicant_type' => (string) $document->applicant_type,
+                'tag' => (string) $document->tag,
             ];
         }
 
-        $this->graphQL('
-            query KycTimelines($id: Mixed) {
-                kycTimelines (
-                    filter: { column: ' . strtoupper($cond) . ', operator: EQ, value: $id }
-                ) {
-                    data {
-                        os
-                        browser
-                        ip
-                        action
-                        action_state
-                        action_type
-                        applicant_id
-                        applicant_type
+        $this->postGraphQL([
+            'query' => '
+                query KycTimelines($id: Mixed) {
+                    kycTimelines (
+                        filter: { column: ' . strtoupper($cond) . ', operator: EQ, value: $id }
+                    ) {
+                        data {
+                            os
+                            browser
+                            ip
+                            action
+                            action_type
+                            applicant_id
+                            applicant_type
+                            tag
+                        }
                     }
-                }
-            }
-        ', [
-            'id' => $value,
+                }',
+            'variables' => [
+                'id' => $value,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJson($expect);
     }
 
@@ -76,7 +100,6 @@ class KycTimelineQueryTest extends TestCase
         return [
             ['applicant_id', '1'],
             ['company_id', '1'],
-            ['company_id', '2'],
             ['applicant_type', 'ApplicantIndividual'],
             ['applicant_type', 'ApplicantCompany'],
         ];

@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PaymentStatusSeed::class);
         $this->call(FeeTypeSeeder::class);
         $this->call(FeePeriodSeeder::class);
+        $this->call(TransferTypeTableSeeder::class);
         $this->call(OperationTypeSeeder::class);
         $this->call(AccountStatesTableSeeder::class);
         $this->call(DepartmentSeeder::class);
@@ -43,9 +44,11 @@ class DatabaseSeeder extends Seeder
         $this->call(GroupRoleTableSeeder::class);
         $this->call(GroupRoleMembersIndividualsTableSeeder::class);
         $this->call(ApplicantIndividualTableSeeder::class);
-        $this->call(ApplicantCompaniesTableSeeder::class);
         $this->call(EmailSmtpsTableSeeder::class);
         $this->call(EmailTemplatesTableSeeder::class);
+        $this->call(ApplicantIndividualCompanyPositionTableSeeder::class);
+        $this->call(ApplicantIndividualCompanyRelationTableSeeder::class);
+        $this->call(ApplicantCompaniesTableSeeder::class);
         $this->call(ApplicantIndividualCompanyTableSeeder::class);
         $this->call(EmailNotificationsTableSeeder::class);
         $this->call(EmailNotificationTemplatesTableSeeder::class);
@@ -53,8 +56,10 @@ class DatabaseSeeder extends Seeder
         $this->call(RegionCountriesTableSeeder::class);
         $this->call(PermissionsSeeder::class);
         $this->call(ActiveSessionTableSeeder::class);
+        $this->call(ActiveSessionTestDbTableSeeder::class);
         $this->call(AuthenticationLogTableSeeder::class);
         $this->call(ActivityLogTableSeeder::class);
+        $this->call(ActivityLogTestDbTableSeeder::class);
         $this->call(FeeModesSeeder::class);
         $this->call(CommissionPriceListTableSeeder::class);
         $this->call(PriceListFeesTableSeeder::class);
@@ -67,8 +72,8 @@ class DatabaseSeeder extends Seeder
         $this->call(CommissionTemplateBusinessActivityTableSeeder::class);
         $this->call(RoleActionsSeeder::class);
         $this->call(ModulesTableSeeder::class);
-        $this->call(ApplicantIndividualCompanyPositionTableSeeder::class);
-        $this->call(ApplicantIndividualCompanyRelationTableSeeder::class);
         $this->call(OuthClientsTableSeeder::class);
+        $this->call(PaymentsTableSeeder::class);
+        $this->call(ProjectTableSeeder::class);
     }
 }

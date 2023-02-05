@@ -23,8 +23,6 @@ class FeeModesQueryTest extends TestCase
 
     public function testQueryFeeModesList(): void
     {
-        $this->login();
-
         $feeModes = FeeMode::get();
 
         $expect = [
@@ -40,13 +38,17 @@ class FeeModesQueryTest extends TestCase
             ];
         }
 
-        $this->graphQL('
-            {
-                feeModes {
-                    id
-                    name
-                }
-            }
-        ')->seeJson($expect);
+        $this->PostGraphQL([
+            'query' => '
+                {
+                    feeModes {
+                        id
+                        name
+                    }
+                }',
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
+        ])->seeJson($expect);
     }
 }

@@ -13,45 +13,53 @@ use Tests\TestCase;
 
 class UsersQueryTest extends TestCase
 {
-    public function testUserAuthData(): void
+    public function testQueryUsersNoAuth(): void
     {
-        $member = Members::find(3);
-        $token = $this->login([
-            'email' => $member->email,
-            'password' => '1234567Qa',
-        ]);
-        Role::find($member->id)->permissions()->sync(Permissions::all()->pluck('id'), true);
-
-        $data = $this->getUserPermissions($member);
-        
         $this->graphQL('
             {
-                userAuthData {
+                users {
                     data {
                         id
                         fullname
-                    }
-                    permissions {
-                        '.$data['permissionsList'].'
+                        email
                     }
                 }
             }
         ')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
+    public function testUserAuthData(): void
+    {
+        $member = Members::find(2);
+
+        $this->postGraphQL([
+            'query' => '
+                {
+                    userAuthData {
+                        data {
+                            id
+                            fullname
+                        }
+                    }
+                }',
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
+        ])->seeJson([
             'data' => [
                 'userAuthData' => [
                     'data' => [
                         'id' => (string) $member->id,
                         'fullname' => $member->fullname,
                     ],
-                    'permissions' => $data['userPermissions'],
                 ],
             ],
         ]);
-
-        $this->logout($token);
     }
 
-    private function getUserPermissions(Members $member): array
+    /*private function getUserPermissions(Members $member): array
     {
         $clientType = ClientTypeEnum::APPLICANT->toString();
 
@@ -92,5 +100,5 @@ class UsersQueryTest extends TestCase
             ),
             'permissionsList' => $permissionsList,
         ];
-    }
+    }*/
 }

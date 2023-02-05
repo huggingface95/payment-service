@@ -26,7 +26,7 @@ class AuthenticationLogTableSeeder extends Seeder
                     'id' => $faker->uuid(),
                     'company' => $faker->randomElement(['Nginx', 'Apple', 'Nike']),
                     'email' => $faker->randomElement(['feder@gmail.com', 'jover@gmail.com', 'dan@gmail.com']),
-                    'client_type' => $faker->randomElement([ClientTypeEnum::MEMBER->toString(), ClientTypeEnum::APPLICANT->toString()]),
+                    'provider' => $faker->randomElement([ClientTypeEnum::MEMBER->toString(), ClientTypeEnum::APPLICANT->toString()]),
                     'domain' => $faker->domainName,
                     'ip' => $faker->ipv4,
                     'country' => $faker->country,

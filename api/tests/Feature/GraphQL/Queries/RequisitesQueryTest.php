@@ -8,10 +8,22 @@ use Tests\TestCase;
 class RequisitesQueryTest extends TestCase
 {
 
+    public function testQueryRequisitesNoAuth(): void
+    {
+        $this->graphQL('
+            {
+                requisites {
+                    id
+                    account_number
+                }
+            }
+        ')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
     public function testQueryRequisites(): void
     {
-        $this->login();
-
         $requisites = DB::connection('pgsql_test')
             ->table('accounts')
             ->first();
@@ -32,29 +44,34 @@ class RequisitesQueryTest extends TestCase
             ->table('countries')->where('id',$bank->country_id)
             ->first();
 
-        $this->graphQL('
-            query Requisite($account_number: String){
-              requisite(account_number: $account_number) {
-                id
-                owner {
-                  fullname
-                  address
-                  country {
-                    name
+        $this->postGraphQL([
+            'query' => '
+                query Requisite($id: ID){
+                  requisite(id: $id) {
+                    id
+                    owner {
+                      fullname
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    bank {
+                      name
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    account_number
                   }
-                }
-                bank {
-                  name
-                  address
-                  country {
-                    name
-                  }
-                }
-                account_number
-              }
-           }
-        ', [
-            'account_number' => (string) $requisites->account_number,
+               }',
+            'variables' => [
+                'id' => (string) $requisites->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
             'data' => [
                 'requisite' => [
@@ -81,8 +98,6 @@ class RequisitesQueryTest extends TestCase
 
     public function testQueryRequisitesFilterByName(): void
     {
-        $this->login();
-
         $requisites = DB::connection('pgsql_test')
             ->table('accounts')
             ->first();
@@ -103,29 +118,33 @@ class RequisitesQueryTest extends TestCase
             ->table('countries')->where('id',$bank->country_id)
             ->first();
 
-        $this->graphQL('
-            query RequisitesFilter($account_number: Mixed){
-              requisites(filter: { column: ACCOUNT_NUMBER, operator: EQ, value: $account_number }) {
-                id
-                owner {
-                  fullname
-                  address
-                  country {
-                    name
+        $this->postGraphQL([
+            'query' => '
+                query RequisitesFilter($account_number: Mixed){
+                  requisites(filter: { column: ACCOUNT_NUMBER, operator: EQ, value: $account_number }) {
+                    id
+                    owner {
+                      fullname
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    bank {
+                      name
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    account_number
                   }
-                }
-                bank {
-                  name
-                  address
-                  country {
-                    name
-                  }
-                }
-                account_number
-              }
-           }
-        ', [
-            'account_number' => (string) $requisites->account_number,
+               }',
+            'variables' => [
+                'account_number' => (string) $requisites->account_number,
+            ]
+        ],[
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
             'data' => [
                 'requisites' => [[
@@ -152,8 +171,6 @@ class RequisitesQueryTest extends TestCase
 
     public function testQueryRequisitesFilterByCompany(): void
     {
-        $this->login();
-
         $requisites = DB::connection('pgsql_test')
             ->table('accounts')
             ->first();
@@ -174,29 +191,34 @@ class RequisitesQueryTest extends TestCase
             ->table('countries')->where('id',$bank->country_id)
             ->first();
 
-        $this->graphQL('
-            query RequisitesFilter($id: Mixed){
-              requisites(filter: { column: COMPANY_ID, operator: EQ, value: $id }) {
-                id
-                owner {
-                  fullname
-                  address
-                  country {
-                    name
+        $this->postGraphQL([
+            'query' => '
+                query RequisitesFilter($id: Mixed){
+                  requisites(filter: { column: COMPANY_ID, operator: EQ, value: $id }) {
+                    id
+                    owner {
+                      fullname
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    bank {
+                      name
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    account_number
                   }
-                }
-                bank {
-                  name
-                  address
-                  country {
-                    name
-                  }
-                }
-                account_number
-              }
-           }
-        ', [
-            'id' => (string) $requisites->company_id,
+               }',
+            'variables' => [
+                'id' => (string) $requisites->company_id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
             'id' => (string) $requisites->id,
             'account_number' => (string) $requisites->account_number,
@@ -219,8 +241,6 @@ class RequisitesQueryTest extends TestCase
 
     public function testQueryRequisitesFilterByPaymentProvider(): void
     {
-        $this->login();
-
         $requisites = DB::connection('pgsql_test')
             ->table('accounts')
             ->first();
@@ -241,29 +261,34 @@ class RequisitesQueryTest extends TestCase
             ->table('countries')->where('id',$bank->country_id)
             ->first();
 
-        $this->graphQL('
-            query RequisitesFilter($id: Mixed){
-              requisites(filter: { column: PAYMENT_PROVIDER_ID, operator: EQ, value: $id }) {
-                id
-                owner {
-                  fullname
-                  address
-                  country {
-                    name
+        $this->postGraphQL([
+            'query' => '
+                query RequisitesFilter($id: Mixed){
+                  requisites(filter: { column: PAYMENT_PROVIDER_ID, operator: EQ, value: $id }) {
+                    id
+                    owner {
+                      fullname
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    bank {
+                      name
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    account_number
                   }
-                }
-                bank {
-                  name
-                  address
-                  country {
-                    name
-                  }
-                }
-                account_number
-              }
-           }
-        ', [
-            'id' => (string) $requisites->payment_provider_id,
+               }',
+            'variables' => [
+                'id' => (string) $requisites->payment_provider_id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
             'id' => (string) $requisites->id,
             'account_number' => (string) $requisites->account_number,
@@ -286,8 +311,6 @@ class RequisitesQueryTest extends TestCase
 
     public function testQueryRequisitesFilterByPaymentSystem(): void
     {
-        $this->login();
-
         $requisites = DB::connection('pgsql_test')
             ->table('accounts')
             ->first();
@@ -308,29 +331,34 @@ class RequisitesQueryTest extends TestCase
             ->table('countries')->where('id',$bank->country_id)
             ->first();
 
-        $this->graphQL('
-            query RequisitesFilter($id: Mixed){
-              requisites(filter: { column: PAYMENT_SYSTEM_ID, operator: EQ, value: $id }) {
-                id
-                owner {
-                  fullname
-                  address
-                  country {
-                    name
+        $this->postGraphQL([
+            'query' => '
+                query RequisitesFilter($id: Mixed){
+                  requisites(filter: { column: PAYMENT_SYSTEM_ID, operator: EQ, value: $id }) {
+                    id
+                    owner {
+                      fullname
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    bank {
+                      name
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    account_number
                   }
-                }
-                bank {
-                  name
-                  address
-                  country {
-                    name
-                  }
-                }
-                account_number
-              }
-           }
-        ', [
-            'id' => (string) $requisites->payment_system_id,
+               }',
+            'variables' => [
+                'id' => (string) $requisites->payment_system_id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
             'id' => (string) $requisites->id,
             'account_number' => (string) $requisites->account_number,
@@ -353,8 +381,6 @@ class RequisitesQueryTest extends TestCase
 
     public function testQueryRequisitesFilterByPaymentBank(): void
     {
-        $this->login();
-
         $requisites = DB::connection('pgsql_test')
             ->table('accounts')
             ->first();
@@ -375,29 +401,34 @@ class RequisitesQueryTest extends TestCase
             ->table('countries')->where('id',$bank->country_id)
             ->first();
 
-        $this->graphQL('
-            query RequisitesFilter($id: Mixed){
-              requisites(filter: { column: PAYMENT_BANK_ID, operator: EQ, value: $id }) {
-                id
-                owner {
-                  fullname
-                  address
-                  country {
-                    name
+        $this->postGraphQL([
+            'query' => '
+                query RequisitesFilter($id: Mixed){
+                  requisites(filter: { column: PAYMENT_BANK_ID, operator: EQ, value: $id }) {
+                    id
+                    owner {
+                      fullname
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    bank {
+                      name
+                      address
+                      country {
+                        name
+                      }
+                    }
+                    account_number
                   }
-                }
-                bank {
-                  name
-                  address
-                  country {
-                    name
-                  }
-                }
-                account_number
-              }
-           }
-        ', [
-            'id' => (string) $requisites->payment_bank_id,
+               }',
+            'variables' => [
+                'id' => (string) $requisites->payment_bank_id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
             'id' => (string) $requisites->id,
             'account_number' => (string) $requisites->account_number,
@@ -417,5 +448,4 @@ class RequisitesQueryTest extends TestCase
             ],
         ]);
     }
-
 }

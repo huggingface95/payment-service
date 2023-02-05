@@ -7,7 +7,7 @@ use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class ActiveSessionTableSeeder extends Seeder
+class ActiveSessionTestDbTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -19,7 +19,7 @@ class ActiveSessionTableSeeder extends Seeder
         $faker = Faker::create();
 
         for ($i = 1; $i <= 30; $i++) {
-            DB::connection('clickhouse')
+            DB::connection('clickhouse_test')
                 ->table((new ActiveSession)->getTable())
                 ->insert([
                     'id' => $faker->uuid(),

@@ -12,28 +12,46 @@ class DepartmentsQueryTest extends TestCase
      * @return void
      */
 
+    public function testDepartmentsNoAuth(): void
+    {
+        $this->graphQL('
+             {
+                departments
+                 {
+                    data {
+                        id
+                        name
+                    }
+                }
+             }')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
     public function testQueryDepartmentById(): void
     {
-        $this->login();
-
         $department = DB::connection('pgsql_test')
             ->table('departments')
             ->orderBy('id')
-            ->latest('id')
             ->first();
 
-        $this->graphQL('
-            query Department($id:ID!){
-                department(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($department->id),
+        $this->postGraphQL([
+            'query' => '
+                query Department($id:ID!){
+                    department(id: $id) {
+                        id
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $department->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJson([
             'data' => [
                 'department' => [
-                    'id' => strval($department->id),
+                    'id' => (string) $department->id,
                 ],
             ],
         ]);
@@ -41,112 +59,123 @@ class DepartmentsQueryTest extends TestCase
 
     public function testQueryDepartmentOrderBy(): void
     {
-        $this->login();
-
         $department = DB::connection('pgsql_test')
             ->table('departments')
-            ->select('*')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            query {
-                departments(orderBy: { column: ID, order: DESC }) {
-                    data {
-                        id
-                        name
+        $this->postGraphQL([
+            'query' => '
+                query {
+                    departments(orderBy: { column: ID, order: DESC }) {
+                        data {
+                            id
+                            name
+                        }
                     }
-                }
-            }
-        ')->seeJsonContains([
+                }',
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
+        ]
+        )->seeJsonContains([
             [
-                'id' => strval($department[0]->id),
-                'name' => strval($department[0]->name),
+                'id' => (string) $department[0]->id,
+                'name' => (string) $department[0]->name,
             ],
         ]);
     }
 
     public function testQueryDepartmentsByName(): void
     {
-        $this->login();
-
         $department = DB::connection('pgsql_test')
             ->table('departments')
-            ->select('*')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            query Department($name: Mixed){
-                departments(
-                    filter: { column: NAME, operator: ILIKE, value: $name }
-                ) {
-                    data {
-                        id
-                        name
+        $this->postGraphQL([
+            'query' => '
+                query Department($name: Mixed){
+                    departments(
+                        filter: { column: NAME, operator: ILIKE, value: $name }
+                    ) {
+                        data {
+                            id
+                            name
+                        }
                     }
-                }
-            }
-    ', [
-            'name' => $department[0]->name,
+                }',
+            'variables' => [
+                'name' => $department[0]->name,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
             [
-                'id' => strval($department[0]->id),
-                'name' => strval($department[0]->name),
+                'id' => (string) $department[0]->id,
+                'name' => (string) $department[0]->name,
             ],
         ]);
     }
 
     public function testQueryDepartmentsByCompanyId(): void
     {
-        $this->login();
-
         $department = DB::connection('pgsql_test')
             ->table('departments')
-            ->select('*')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            query {
-                departments(
-                    filter: { column:HAS_COMPANY_FILTER_BY_ID,value: 1}
-                ) {
-                    data {
-                        id
-                        name
+        $this->postGraphQL([
+            'query' => '
+                query Departments($id: Mixed) {
+                    departments(
+                        filter: { column:HAS_COMPANY_FILTER_BY_ID,value: $id}
+                    ) {
+                        data {
+                            id
+                            name
+                        }
                     }
-                }
-            }
-        ')->seeJsonContains([
+                }',
+            'variables' => [
+                'id' => (string) $department[0]->company_id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
+        ])->seeJsonContains([
             [
-                'id' => strval($department[0]->id),
-                'name' => strval($department[0]->name),
+                'id' => (string) $department[0]->id,
+                'name' => (string) $department[0]->name,
             ],
         ]);
     }
 
     public function testQueryDepartmentPositionById(): void
     {
-        $this->login();
-
         $departmentPosition = DB::connection('pgsql_test')
             ->table('department_position')
             ->orderBy('id')
             ->first();
 
-        $this->graphQL('
-            query DepartmentPosition($id:ID!){
-                departmentPosition(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($departmentPosition->id),
+        $this->postGraphQL([
+            'query' => '
+                query DepartmentPosition($id:ID!){
+                    departmentPosition(id: $id) {
+                        id
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $departmentPosition->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJson([
             'data' => [
                 'departmentPosition' => [
-                    'id' => strval($departmentPosition->id),
+                    'id' => (string) $departmentPosition->id,
                 ],
             ],
         ]);
@@ -154,81 +183,86 @@ class DepartmentsQueryTest extends TestCase
 
     public function testQueryDepartmentPositionsOrderBy(): void
     {
-        $this->login();
-
         $departmentPositions = DB::connection('pgsql_test')
             ->table('department_position')
-            ->select('*')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            query {
-                departmentPositions(orderBy: { column: ID, order: DESC }) {
-                    data {
-                        id
-                        name
+        $this->postGraphQL([
+            'query' => '
+                query {
+                    departmentPositions(orderBy: { column: ID, order: DESC }) {
+                        data {
+                            id
+                            name
+                        }
                     }
-                }
-            }
-        ')->seeJsonContains([
+                }',
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
+        ])->seeJsonContains([
             [
-                'id' => strval($departmentPositions[0]->id),
-                'name' => strval($departmentPositions[0]->name),
+                'id' => (string) $departmentPositions[0]->id,
+                'name' => (string) $departmentPositions[0]->name,
             ],
         ]);
     }
 
     public function testQueryDepartmentPositionsHasDepartment(): void
     {
-        $this->login();
-
         $departmentPositions = DB::connection('pgsql_test')
             ->table('department_position')
-            ->select('*')
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->graphQL('
-            query {
-                departmentPositions(hasDepartment: { column: ID, value: 1 }) {
-                    data {
-                        id
-                        name
-                    }
-               }
-            }
-        ')->seeJsonContains([
+        $this->postGraphQL([
+            'query' => '
+                query DepartmentPositions($id: Mixed) {
+                    departmentPositions(hasDepartment: { column: ID, value: $id }) {
+                        data {
+                            id
+                            name
+                        }
+                   }
+                }',
+            'variables' => [
+                'id' => $departmentPositions[0]->id
+            ]
+        ], [
+            "Authorization" => "Bearer " . $this->login()
+        ])->seeJsonContains([
             [
-                'id' => strval($departmentPositions[0]->id),
-                'name' => strval($departmentPositions[0]->name),
+                'id' => (string) $departmentPositions[0]->id,
+                'name' => (string) $departmentPositions[0]->name,
             ],
         ]);
     }
 
     public function testQueryDepartmentPositionsIsActive(): void
     {
-        $this->login();
-
         $departmentPositions = DB::connection('pgsql_test')
             ->table('department_position')
-            ->select('*')
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->graphQL('
-            query {
-                departmentPositions(filter: { column: IS_ACTIVE, value: true }) {
-                    data {
-                        id
-                        name
+        $this->postGraphQL([
+            'query' => '
+                query {
+                    departmentPositions(filter: { column: IS_ACTIVE, value: true }) {
+                        data {
+                            id
+                            name
+                        }
                     }
-                }
-            }
-        ')->seeJsonContains([
+                }',
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
+        ])->seeJsonContains([
             [
-                'id' => strval($departmentPositions[0]->id),
-                'name' => strval($departmentPositions[0]->name),
+                'id' => (string) $departmentPositions[0]->id,
+                'name' => (string) $departmentPositions[0]->name,
             ],
         ]);
     }

@@ -11,28 +11,46 @@ class EmailTemplatesQueryTest extends TestCase
      * @return void
      */
 
+    public function testEmailTemplatesNoAuth(): void
+    {
+        $this->graphQL('
+             {
+                emailTemplates
+                 {
+                    id
+                    name
+                    subject
+                    type
+                 }
+             }')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
     public function testQueryEmailTemplateById(): void
     {
-        $this->login();
-
         $email_template = DB::connection('pgsql_test')
             ->table('email_templates')
             ->orderBy('id', 'DESC')
-            ->take(1)
             ->get();
 
-        $this->graphQL('
-            query EmailTemplate($id: ID!) {
-                emailTemplate(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($email_template[0]->id),
+        $this->postGraphQL([
+            'query' => '
+                query EmailTemplate($id: ID!) {
+                    emailTemplate(id: $id) {
+                        id
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $email_template[0]->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJson([
             'data' => [
                 'emailTemplate' => [
-                    'id' => strval($email_template[0]->id),
+                    'id' => (string) $email_template[0]->id,
                 ],
             ],
         ]);
@@ -40,130 +58,142 @@ class EmailTemplatesQueryTest extends TestCase
 
     public function testQueryEmailTemplatesByName(): void
     {
-        $this->login();
-
         $email = DB::connection('pgsql_test')
             ->table('email_templates')
             ->first();
 
-        $this->graphQL('
-            query EmailTemplates($name: Mixed) {
-                emailTemplates(
-                    filter: {
-                        column: NAME
-                        operator: ILIKE
-                        value: $name
+        $this->postGraphQL([
+            'query' => '
+                query EmailTemplates($name: Mixed) {
+                    emailTemplates(
+                        filter: {
+                            column: NAME
+                            operator: ILIKE
+                            value: $name
+                        }
+                    ) {
+                        id
+                        name
+                        subject
+                        type
                     }
-                ) {
-                    id
-                    name
-                    subject
-                    type
-                }
-            }
-        ', [
-            'name' => $email->name
+                }',
+            'variables' => [
+                'name' => $email->name
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
-            'id' => strval($email->id),
-            'name' => strval(ucfirst($email->name)),
-            'subject' => strval($email->subject),
-            'type' => strval(ucfirst($email->type)),
+            'id' => (string) $email->id,
+            'name' => (string) ucfirst($email->name),
+            'subject' => (string) $email->subject,
+            'type' => (string) ucfirst($email->type),
         ]);
     }
 
     public function testQueryEmailTemplatesByCompanyId(): void
     {
-        $this->login();
-
         $email = DB::connection('pgsql_test')
             ->table('email_templates')
             ->first();
 
-        $this->graphQL('
-            query EmailTemplates($id: Mixed) {
-                emailTemplates(
-                    filter: {
-                        column: COMPANY_ID
-                        value: $id
+        $this->postGraphQL([
+            'query' => '
+                query EmailTemplates($id: Mixed) {
+                    emailTemplates(
+                        filter: {
+                            column: COMPANY_ID
+                            value: $id
+                        }
+                    ) {
+                        id
+                        name
+                        subject
+                        type
                     }
-                ) {
-                    id
-                    name
-                    subject
-                    type
-                }
-            }
-        ', [
-            'id' => $email->company_id
+                }',
+            'variables' => [
+                'id' => $email->company_id
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
-            'id' => strval($email->id),
-            'name' => strval(ucfirst($email->name)),
-            'subject' => strval($email->subject),
-            'type' => strval(ucfirst($email->type)),
+            'id' => (string) $email->id,
+            'name' => (string) ucfirst($email->name),
+            'subject' => (string) $email->subject,
+            'type' => (string) ucfirst($email->type),
         ]);
     }
 
     public function testQueryEmailTemplatesByType(): void
     {
-        $this->login();
-
         $email = DB::connection('pgsql_test')
             ->table('email_templates')
             ->first();
 
-        $this->graphQL('
-            query EmailTemplates($type: Mixed) {
-                emailTemplates(
-                    filter: {
-                        column: TYPE
-                        value: $type
+        $this->postGraphQL([
+            'query' => '
+                query EmailTemplates($type: Mixed) {
+                    emailTemplates(
+                        filter: {
+                            column: TYPE
+                            value: $type
+                        }
+                    ) {
+                        id
+                        name
+                        subject
+                        type
                     }
-                ) {
-                    id
-                    name
-                    subject
-                    type
-                }
-            }
-        ', [
-            'type' => $email->type
+                }',
+            'variables' => [
+                'type' => $email->type
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
-            'id' => strval($email->id),
-            'name' => strval(ucfirst($email->name)),
-            'subject' => strval($email->subject),
-            'type' => strval(ucfirst($email->type)),
+            'id' => (string) $email->id,
+            'name' => (string) ucfirst($email->name),
+            'subject' => (string) $email->subject,
+            'type' => (string) ucfirst($email->type),
         ]);
     }
 
     public function testQueryEmailTemplatesByServiceType(): void
     {
-        $this->login();
-
         $email = DB::connection('pgsql_test')
             ->table('email_templates')
             ->first();
 
-        $this->graphQL('
-            query EmailTemplates($type: Mixed) {
-                emailTemplates(
-                    filter: {
-                        column: SERVICE_TYPE
-                        value: $type
+        $this->postGraphQL([
+            'query' => '
+                query EmailTemplates($type: Mixed) {
+                    emailTemplates(
+                        filter: {
+                            column: SERVICE_TYPE
+                            value: $type
+                        }
+                    ) {
+                        id
+                        name
+                        subject
+                        type
                     }
-                ) {
-                    id
-                    name
-                    subject
-                    type
-                }
-            }
-        ', [
-            'type' => $email->service_type
+                }',
+            'variables' => [
+                'type' => $email->service_type
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
-            'id' => strval($email->id),
-            'name' => strval(ucfirst($email->name)),
-            'subject' => strval($email->subject),
-            'type' => strval(ucfirst($email->type)),
+            'id' => (string) $email->id,
+            'name' => (string) ucfirst($email->name),
+            'subject' => (string) $email->subject,
+            'type' => (string) ucfirst($email->type),
         ]);
     }
 }

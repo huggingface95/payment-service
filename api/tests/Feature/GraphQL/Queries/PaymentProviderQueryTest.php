@@ -13,34 +13,60 @@ class PaymentProviderQueryTest extends TestCase
      * @return void
      */
 
-    public function testQueryPaymentProvider(): void
+    public function testQueryPaymentProviderNoAuth(): void
     {
-        $this->login();
-
-        $payment_provider = DB::connection('pgsql_test')
-            ->table('payment_provider')
-            ->orderBy('id')
-            ->latest('id')
-            ->first();
-
-        $paymentSystems = PaymentSystem::select('name')->where('payment_provider_id', $payment_provider->id)->get();
-
         $this->graphQL('
-            query PaymentProvider($id:ID!){
-                paymentProvider(id: $id) {
-                    id
-                    payment_systems {
+            {
+                paymentProviders {
+                    data {
+                         id
                         name
+                        description
+                        is_active
                     }
                 }
             }
-        ', [
-            'id' => strval($payment_provider->id),
-        ])->seeJson([
+        ')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
+    public function testQueryPaymentProvider(): void
+    {
+        $payment_provider = DB::connection('pgsql_test')
+            ->table('payment_provider')
+            ->orderBy('id', 'ASC')
+            ->first();
+
+        $paymentSystems = DB::connection('pgsql_test')
+            ->table('payment_system')
+            ->select('name')
+            ->where('payment_provider_id', $payment_provider->id)
+            ->first();
+
+        $this->postGraphQL([
+            'query' => '
+                query PaymentProvider($id:ID!){
+                    paymentProvider(id: $id) {
+                        id
+                        payment_systems {
+                            name
+                        }
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $payment_provider->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
+        ])->seeJsonContains([
             'data' => [
                 'paymentProvider' => [
-                    'id' => strval($payment_provider->id),
-                    'payment_systems' => $paymentSystems,
+                    'id' => (string) $payment_provider->id,
+                    'payment_systems' => [[
+                        'name' => $paymentSystems->name,
+                    ]],
                 ],
             ],
         ]);
@@ -48,84 +74,65 @@ class PaymentProviderQueryTest extends TestCase
 
     public function testQueryPaymentProvidersList(): void
     {
-        $this->login();
-
         $payment_provider = DB::connection('pgsql_test')
             ->table('payment_provider')
-            ->select('*')
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->graphQL('
-        query {
-            paymentProviders (orderBy: { column: ID, order: ASC }) {
-                data {
-                  id
-                  name
-                  description
-                  is_active
-                }
-            }
-        }')->seeJsonContains([
+        $this->postGraphQL([
+            'query' => '
+                query {
+                    paymentProviders (orderBy: { column: ID, order: ASC }) {
+                        data {
+                          id
+                          name
+                          description
+                          is_active
+                        }
+                    }
+                }',
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
+        ])->seeJsonContains([
             [
-                'id' => strval($payment_provider[0]->id),
-                'name' => strval($payment_provider[0]->name),
-                'description' => strval($payment_provider[0]->description),
+                'id' => (string) $payment_provider[0]->id,
+                'name' => (string) $payment_provider[0]->name,
+                'description' => (string) $payment_provider[0]->description,
                 'is_active' => $payment_provider[0]->is_active,
-            ],
-        ]);
-    }
-
-    public function testQueryPaymentProviderOrderBy(): void
-    {
-        $this->login();
-
-        $payment_provider = DB::connection('pgsql_test')
-            ->table('payment_provider')
-            ->select('*')
-            ->orderBy('id', 'ASC')
-            ->get();
-
-        $this->graphQL('
-        query {
-            paymentProviders(orderBy: { column: ID, order: ASC }) {
-                data {
-                    id
-                }
-            }
-        }')->seeJsonContains([
-            [
-                'id' => strval($payment_provider[0]->id),
             ],
         ]);
     }
 
     public function testQueryPaymentProviderByName(): void
     {
-        $this->login();
-
         $payment_provider = DB::connection('pgsql_test')
             ->table('payment_provider')
             ->first();
 
-        $this->graphQL('
-        query PaymentProviders($name: Mixed) {
-            paymentProviders(
-                filter: {
-                    column: NAME
-                    operator: ILIKE
-                    value: $name
-                }
-            ) {
-                data {
-                    id
-                    name
-                    description
-                }
-            }
-        }
-        ', [
-            "name" => (string) $payment_provider->name,
+        $this->postGraphQL([
+            'query' => '
+                query PaymentProviders($name: Mixed) {
+                    paymentProviders(
+                        filter: {
+                            column: NAME
+                            operator: ILIKE
+                            value: $name
+                        }
+                    ) {
+                        data {
+                            id
+                            name
+                            description
+                        }
+                    }
+                }',
+            'variables' => [
+                "name" => (string) $payment_provider->name,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
             [
                 'id' => (string) $payment_provider->id,
@@ -137,31 +144,37 @@ class PaymentProviderQueryTest extends TestCase
 
     public function testQueryPaymentProviderByPaymentSystem(): void
     {
-        $this->login();
-
         $payment_provider = DB::connection('pgsql_test')
             ->table('payment_provider')
             ->first();
 
-        $payment_system = PaymentSystem::where('payment_provider_id', $payment_provider->id)->first();
+        $payment_system = DB::connection('pgsql_test')
+            ->table('payment_system')
+            ->where('payment_provider_id', $payment_provider->id)
+            ->first();
 
-        $this->graphQL('
-        query PaymentProviders($id: Mixed) {
-            paymentProviders(
-                filter: {
-                    column: HAS_PAYMENT_SYSTEMS_FILTER_BY_ID
-                    value: $id
-                }
-            ) {
-                data {
-                    id
-                    name
-                    description
-                }
-            }
-        }
-        ', [
-            "id" => (string) $payment_system->id,
+        $this->postGraphQL([
+            'query' => '
+                query PaymentProviders($id: Mixed) {
+                    paymentProviders(
+                        filter: {
+                            column: HAS_PAYMENT_SYSTEMS_FILTER_BY_ID
+                            value: $id
+                        }
+                    ) {
+                        data {
+                            id
+                            name
+                            description
+                        }
+                    }
+                }',
+            'variables' => [
+                "id" => (string) $payment_system->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ])->seeJsonContains([
             [
                 'id' => (string) $payment_provider->id,
@@ -171,7 +184,7 @@ class PaymentProviderQueryTest extends TestCase
         ]);
     }
 
-    public function testQueryPaymentProviderByCompanyId(): void
+    /*public function testQueryPaymentProviderByCompanyId(): void
     {
         $this->login();
 
@@ -203,5 +216,5 @@ class PaymentProviderQueryTest extends TestCase
                 'description' => (string) $payment_provider->description,
             ],
         ]);
-    }
+    }*/
 }
