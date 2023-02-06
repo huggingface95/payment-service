@@ -45,6 +45,8 @@ type ProjectSettings {
     group_role: GroupRole @belongsTo(relation: "groupRole")
     "Связанный платежный провайдер"
     payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
+    "Связанный iban провайдер"
+    iban_provider: PaymentProvider @belongsTo(relation: "ibanProvider")
     "Связанный платежный шаблон"
     commission_template: CommissionTemplate @belongsTo(relation: "commissionTemplate")
 }
@@ -75,6 +77,7 @@ input InputProjectSettings @spread {
     group_role_id: ID
     commission_template_id: ID
     payment_provider_id: ID
+    iban_provider_id: ID
 }
 
 input InputProject {
