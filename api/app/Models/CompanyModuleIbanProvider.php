@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class CompanyModuleIbanProvider extends BaseModel
 {
@@ -11,18 +12,36 @@ class CompanyModuleIbanProvider extends BaseModel
     protected $fillable = [
         'company_module_id',
         'payment_provider_iban_id',
-        'wallet',
-        'api_key',
-        'password',
         'is_active',
-    ];
-
-    protected $hidden = [
-        'password',
     ];
 
     public function paymentIbanProvider(): BelongsTo
     {
         return $this->belongsTo(PaymentProviderIban::class, 'payment_provider_iban_id');
     }
+
+    public function projectApiSettings(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            ProjectApiSetting::class,
+            ProjectSettings::class,
+            'iban_provider_id',
+            'project_id',
+            'payment_provider_iban_id',
+            'project_id'
+        );
+    }
+
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Project::class,
+            ProjectSettings::class,
+            'iban_provider_id',
+            'project_id',
+            'payment_provider_iban_id',
+            'id'
+        );
+    }
+
 }
