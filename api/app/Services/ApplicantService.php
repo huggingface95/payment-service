@@ -16,12 +16,13 @@ class ApplicantService
         $applicantCompany = $account->owner->companies->first();
         $defaultLogoPath = storage_path('pdf') . self::DEFAULT_LOGO_PATH;
         $companyLogoPath = $account->company->companySettings->logo->link ?? $defaultLogoPath;
+        $country = $applicantCompany ? ($applicantCompany->country->name ?? '') : ($applicant->country->name ?? '');
 
         return [
             'currency' => $account->currencies->code,
             'beneficiary' => $applicantCompany ? $applicantCompany->name : $applicant->fullname,
             'address' => $applicantCompany ? $applicantCompany->address : $applicant->address,
-            'country' => $applicantCompany ? $applicantCompany->country->name : $applicant->country->name,
+            'country' => $country,
             'iban' => $account->account_number,
             'bank_name' => $bank->name ?? '',
             'swift_code' => $bank->bank_code ?? '',
