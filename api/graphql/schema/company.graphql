@@ -56,7 +56,7 @@ type Company {
     "Состояние"
     state: State @belongsTo(relation: "state")
     "Причина состояния"
-    state_reason: stateReason @belongsTo(relation: "stateReason")
+    state_reason: StateReason @belongsTo(relation: "stateReason")
     "Регистрационный номер"
     reg_number: String
     "Тип сущности"
