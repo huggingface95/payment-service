@@ -33,17 +33,17 @@ extend type Query @guard {
 
 input InputCompanyModuleIbanProvider {
     "ID модуля компании"
-    company_module_id: ID!
+    company_module_id: ID
     "ID IBAN провайдера"
-    payment_provider_iban_id: ID!
+    payment_provider_iban_id: ID
     "Кошелек"
-    wallet: String!
+    wallet: String
     "API ключ"
-    api_key: String!
+    api_key: String
     "Пароль"
-    password: String!
+    password: String
     "Активность"
-    is_active: Boolean!
+    is_active: Boolean
 }
 
 extend type Mutation @guard {
@@ -62,11 +62,11 @@ extend type Mutation @guard {
         "ID"
         id: ID!
         "Кошелек"
-        wallet: String!
+        wallet: String
         "API ключ"
-        api_key: String!
+        api_key: String
         "Пароль"
-        password: String!
+        password: String
         "Активность"
         is_active: Boolean!
     ): CompanyModuleIbanProvider

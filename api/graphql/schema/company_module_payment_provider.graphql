@@ -21,11 +21,11 @@ type CompanyModulePaymentProviderPassword {
 
 input InputCompanyModulePaymentProvider {
     "ID модуля компании"
-    company_module_id: ID!
+    company_module_id: ID
     "ID платежного провайдера"
-    payment_provider_id: ID!
+    payment_provider_id: ID
     "Активность"
-    is_active: Boolean!
+    is_active: Boolean
 }
 
 extend type Mutation @guard {
