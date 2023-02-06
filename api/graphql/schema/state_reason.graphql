@@ -1,4 +1,4 @@
-type stateReason {
+type StateReason {
     "ID"
     id: ID!
     "Название"
@@ -9,5 +9,5 @@ extend type Query @guard {
     """
     Получить список
     """
-    stateReasons: [stateReason!]! @all
+    stateReasons: [StateReason!]! @all
 }
