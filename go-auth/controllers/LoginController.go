@@ -7,6 +7,7 @@ import (
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/dto"
+	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/clickhouse"
 	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/repositories/oauthRepository"
@@ -75,7 +76,18 @@ func Login(context *gin.Context) {
 	}
 
 	if user.IsEmailVerify() == false {
-		context.JSON(http.StatusForbidden, gin.H{"error": "Verifyed your email"})
+		randomToken := helpers.GenerateRandomString(20)
+		data := &cache.ConfirmationEmailLinksData{
+			Id: user.GetId(), FullName: user.GetFullName(), ConfirmationLink: randomToken, Email: user.GetEmail(), CompanyId: user.GetCompanyId(), Type: clientType,
+		}
+		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
+		if ok == false {
+			context.JSON(http.StatusCreated, gin.H{"error": "An error occurred while sending your email `confirmation email`"})
+			return
+		}
+		cache.Caching.ConfirmationEmailLinks.Set(randomToken, data)
+
+		context.JSON(http.StatusForbidden, gin.H{"data": "An email has been sent to your email to confirm the email"})
 		return
 	}
 

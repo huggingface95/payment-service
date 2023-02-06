@@ -1,12 +1,14 @@
 package individual
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/dto"
 	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/postgres"
+	"jwt-authentication-golang/pkg"
 	"jwt-authentication-golang/repositories/individualRepository"
 	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/repositories/redisRepository"
@@ -82,9 +84,8 @@ func Register(c *gin.Context) {
 	}
 
 	randomToken := helpers.GenerateRandomString(20)
-	//TODO ADD COMPANY ID
 	data := &cache.ConfirmationEmailLinksData{
-		Id: user.ID, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email,
+		Id: user.ID, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.ID,
 	}
 	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 	if ok {
@@ -102,7 +103,11 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 
 	token := context.Request.URL.Query().Get("token")
 	data, _ := cache.Caching.ConfirmationEmailLinks.Get(token)
-	user = userRepository.GetUserById(data.Id, constants.Individual)
+	clientType := constants.Member
+	if data.Type == constants.Individual {
+		clientType = constants.Individual
+	}
+	user = userRepository.GetUserById(data.Id, clientType)
 	if user != nil {
 		if user.StructName() == constants.StructMember {
 			user.SetIsActivated(postgres.MemberStatusActive)
@@ -113,6 +118,13 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 		}
 		res := userRepository.SaveUser(user)
 		if res.Error == nil {
+
+			timeLineDto := dto.DTO.CreateTimeLineDto.Parse("Email Verified", "email", "Banking", data.CompanyId, data.Id, deviceInfo)
+			ok := redisRepository.SetRedisDataByBlPop(constants.QueueAddTimeLineLog, timeLineDto)
+			if ok == false {
+				pkg.Error().Err(errors.New("TimeLine redis error"))
+			}
+
 			cache.Caching.ConfirmationEmailLinks.Delete(token)
 			activeSessionLog := oauthRepository.InsertActiveSessionLog(constants.Individual, user.GetEmail(), true, true, deviceInfo)
 			if activeSessionLog != nil {

@@ -8,12 +8,14 @@ type Dto struct {
 	DeviceDetectorInfo   *DeviceDetectorInfo
 	CreateAuthLogDto     *CreateAuthLogDto
 	CreateAuthSessionDto *CreateAuthSessionDto
+	CreateTimeLineDto    *CreateTimeLineDto
 }
 
 func (d *Dto) Init() *Dto {
 	d.DeviceDetectorInfo = NewDeviceDetectorInfo()
 	d.CreateAuthLogDto = NewCreateAuthLogDto()
 	d.CreateAuthSessionDto = NewCreateAuthSessionDto()
+	d.CreateTimeLineDto = NewCreateTimeLineDto()
 	return d
 }
 
@@ -34,4 +36,8 @@ func NewCreateAuthLogDto() *CreateAuthLogDto {
 
 func NewCreateAuthSessionDto() *CreateAuthSessionDto {
 	return &CreateAuthSessionDto{}
+}
+
+func NewCreateTimeLineDto() *CreateTimeLineDto {
+	return &CreateTimeLineDto{}
 }

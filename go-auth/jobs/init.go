@@ -28,6 +28,10 @@ func sendConvertPasswordRecoveryLink() {
 	ProcessConvertPasswordRecoveryLinkEmailQueue()
 }
 
+func sendAddTimeLineLog() {
+	ProcessAddTimeLineLogQueue()
+}
+
 func Init() {
 	for range time.Tick(JobPeriod) {
 		sendChangedIpEmail()
@@ -35,6 +39,7 @@ func Init() {
 		sendConvertPasswordRecoveryLink()
 		sendNewDeviceEmail()
 		sendTrustedDeviceEmail()
+		sendAddTimeLineLog()
 	}
 }
 
