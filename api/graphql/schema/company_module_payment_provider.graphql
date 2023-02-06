@@ -19,6 +19,14 @@ type CompanyModulePaymentProviderPassword {
     password: String!
 }
 
+extend type Query @guard {
+    """
+    Получить пароль
+    """
+    companyModuleProviderPassword(id: ID! @eq): CompanyModulePaymentProviderPassword
+    @field(resolver: "CompanyModulePaymentProviderQuery@getPassword")
+}
+
 input InputCompanyModulePaymentProvider {
     "ID модуля компании"
     company_module_id: ID!
