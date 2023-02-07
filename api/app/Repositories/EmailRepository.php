@@ -81,10 +81,10 @@ class EmailRepository implements EmailRepositoryInterface
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = $this->template->newQuery()
             ->where('company_id', $account->company_id)
-            ->whereRaw("lower(subject) LIKE  '%".strtolower($account->accountState->name)."%'  ")
+            ->whereRaw("lower(subject) LIKE  '%" . strtolower($account->accountState->name) . "%'  ")
             ->first();
 
-        if (! $emailTemplate) {
+        if (!$emailTemplate) {
             throw new EmailException('Email template not found', '404');
         }
 
@@ -96,17 +96,17 @@ class EmailRepository implements EmailRepositoryInterface
             })
             ->first();
 
-        if (! $notification) {
+        if (!$notification) {
             throw new EmailException('Email Notification not found', '404');
         }
 
         $emails = $notification->groupRole->users->pluck('email')->toArray();
 
-        if (! count($emails)) {
+        if (!count($emails)) {
             throw new EmailException('Email not found', '404');
         }
 
-        foreach (self::$staticParams as $k => $staticParam){
+        foreach (self::$staticParams as $k => $staticParam) {
             $account->{$k} = $this->replaceStaticParams($staticParam, $account, '/\{(.*?)}/');
         }
 
@@ -125,11 +125,12 @@ class EmailRepository implements EmailRepositoryInterface
     {
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = $this->template->newQuery()
-            ->whereRaw("lower(subject) LIKE  '%".strtolower($dto->emailTemplateName)."%'  ")
+            ->where('company_id', $dto->companyId)
+            ->whereRaw("lower(subject) LIKE  '%" . strtolower($dto->emailTemplateName) . "%'  ")
             ->first();
 
-        if (! $emailTemplate) {
-            throw new EmailException('Email template not found', EmailExceptionCodeEnum::TEMPLATE->toString());
+        if (!$emailTemplate) {
+            throw new EmailException('Email template not found', '404');
         }
 
         $content = $this->replaceObjectData($emailTemplate->getHtml(), $dto->data, '/\{(.*?)\}/');

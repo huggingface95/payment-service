@@ -9,6 +9,7 @@ use App\Models\Company;
 class EmailApplicantRequestDTO
 {
     public string $emailTemplateName;
+    public int $companyId;
     public Account $account;
     public object $data;
     public string $email;
@@ -21,6 +22,7 @@ class EmailApplicantRequestDTO
         $account->company_id = $company->id;
 
         $dto->emailTemplateName = $emailTemplateName;
+        $dto->companyId = $company->id;
         $dto->account = $account;
         $dto->email = $applicant->email;
         $dto->data = (object) $data;
