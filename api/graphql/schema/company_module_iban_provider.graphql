@@ -8,10 +8,6 @@ type CompanyModuleIbanProvider {
     company_module_id: ID!
     "ID IBAN провайдера"
     payment_provider_iban: PaymentProviderIban! @belongsTo(relation: "paymentIbanProvider")
-    "Кошелек"
-    wallet: String!
-    "API ключ"
-    api_key: String!
     "Активность"
     is_active: Boolean!
 }
@@ -33,17 +29,11 @@ extend type Query @guard {
 
 input InputCompanyModuleIbanProvider {
     "ID модуля компании"
-    company_module_id: ID!
+    company_module_id: ID
     "ID IBAN провайдера"
-    payment_provider_iban_id: ID!
-    "Кошелек"
-    wallet: String!
-    "API ключ"
-    api_key: String!
-    "Пароль"
-    password: String!
+    payment_provider_iban_id: ID
     "Активность"
-    is_active: Boolean!
+    is_active: Boolean
 }
 
 extend type Mutation @guard {
@@ -61,12 +51,6 @@ extend type Mutation @guard {
     updateCompanyModuleIbanProvider(
         "ID"
         id: ID!
-        "Кошелек"
-        wallet: String!
-        "API ключ"
-        api_key: String!
-        "Пароль"
-        password: String!
         "Активность"
         is_active: Boolean!
     ): CompanyModuleIbanProvider

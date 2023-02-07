@@ -17,6 +17,7 @@ class ProjectSettings extends BaseModel
         'group_role_id',
         'commission_template_id',
         'payment_provider_id',
+        'iban_provider_id',
     ];
 
     public $timestamps = false;
@@ -46,4 +47,8 @@ class ProjectSettings extends BaseModel
         return $this->belongsTo(PaymentProvider::class, 'payment_provider_id');
     }
 
+    public function ibanProvider(): BelongsTo
+    {
+        return $this->belongsTo(PaymentProviderIban::class, 'iban_provider_id');
+    }
 }

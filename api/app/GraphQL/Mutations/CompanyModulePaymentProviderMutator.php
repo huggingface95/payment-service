@@ -9,6 +9,9 @@ use App\Models\ProjectApiSetting;
 
 class CompanyModulePaymentProviderMutator extends BaseMutator
 {
+    /**
+     * @throws GraphqlException
+     */
     public function create($root, array $args): CompanyModulePaymentProvider
     {
         $companyModule = CompanyModule::find($args['company_module_id']);

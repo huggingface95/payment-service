@@ -25,7 +25,10 @@ class RequisiteQuery
      */
     public function download($root, array $args)
     {
-        $account = Account::where('id', $args['account_id'])->first();
+        $account = Account::find($args['account_id']);
+        if(!$account) {
+            throw new GraphqlException('Account not found', 'Internal', 404);
+        }
         $applicant = $account->owner;
 
         $data = $this->applicantService->getApplicantRequisites($applicant, $account);
