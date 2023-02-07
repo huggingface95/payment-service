@@ -111,6 +111,7 @@ input QueryCompaniesFilterStatic @spread {
     url: String @ilike
     reg_number: String @ilike
     entity_type: String @ilike
+    country_id: ID @eq
     hasPaymentProvidersFilterById: ID @eq
     hasPaymentSystemFilterById: ID @eq
     hasRegionsFilterById: ID @eq
