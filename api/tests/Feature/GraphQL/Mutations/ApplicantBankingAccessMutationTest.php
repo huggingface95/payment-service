@@ -12,10 +12,8 @@ class ApplicantBankingAccessMutationTest extends TestCase
      * @return void
      */
 
-    public function testCreateBankingAccess(): void
+    public function testCreateBankingAccessNoAuth(): void
     {
-        $this->login();
-
         $this->graphQL('
             mutation CreateApplicantBankingAccess(
                 $applicant_individual_id: ID!
@@ -40,6 +38,42 @@ class ApplicantBankingAccessMutationTest extends TestCase
             'applicant_individual_id' =>  1,
             'applicant_company_id' => 2,
             'role_id' => 2,
+        ])->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
+    public function testCreateBankingAccess(): void
+    {
+        $this->postGraphQL([
+            'query' => '
+                mutation CreateApplicantBankingAccess(
+                    $applicant_individual_id: ID!
+                    $applicant_company_id: ID!
+                    $role_id: ID!
+                )
+                {
+                    createApplicantBankingAccess (
+                        applicant_individual_id: $applicant_individual_id
+                        applicant_company_id: $applicant_company_id
+                        role_id: $role_id
+                        daily_limit: 100.000
+                        monthly_limit: 500.000
+                        operation_limit: 5.000
+                        contact_administrator: false
+                    )
+                    {
+                        id
+                    }
+                }',
+            'variables' => [
+                'applicant_individual_id' =>  1,
+                'applicant_company_id' => 2,
+                'role_id' => 2,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -55,46 +89,52 @@ class ApplicantBankingAccessMutationTest extends TestCase
 
     public function testUpdateBankingAccess(): void
     {
-        $this->login();
+        $access = DB::connection('pgsql_test')
+            ->table('applicant_banking_access')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $access = DB::connection('pgsql_test')->table('applicant_banking_access')->orderBy('id', 'DESC')->get();
-
-        $this->graphQL('
-            mutation UpdateApplicantBankingAccess(
-                $id: ID!
-                $applicant_individual_id: ID!
-                $applicant_company_id: ID!
-                $role_id: ID!
-                $dl: Decimal!
-                $ml: Decimal!
-                $ol: Decimal!
-            )
-            {
-                updateApplicantBankingAccess (
-                    id: $id
-                    applicant_individual_id: $applicant_individual_id
-                    applicant_company_id: $applicant_company_id
-                    role_id: $role_id
-                    daily_limit: $dl
-                    monthly_limit: $ml
-                    operation_limit: $ol
-                    contact_administrator: false
+        $this->postGraphQL([
+            'query' => '
+                mutation UpdateApplicantBankingAccess(
+                    $id: ID!
+                    $applicant_individual_id: ID!
+                    $applicant_company_id: ID!
+                    $role_id: ID!
+                    $dl: Decimal!
+                    $ml: Decimal!
+                    $ol: Decimal!
                 )
                 {
-                    id
-                    daily_limit
-                    monthly_limit
-                    operation_limit
-                }
-            }
-        ', [
-            'id' => strval($access[0]->id),
-            'applicant_individual_id' =>  1,
-            'applicant_company_id' => 1,
-            'role_id' => 3,
-            'dl' => 1000.00,
-            'ml' => 5000.00,
-            'ol' => 50.00,
+                    updateApplicantBankingAccess (
+                        id: $id
+                        applicant_individual_id: $applicant_individual_id
+                        applicant_company_id: $applicant_company_id
+                        role_id: $role_id
+                        daily_limit: $dl
+                        monthly_limit: $ml
+                        operation_limit: $ol
+                        contact_administrator: false
+                    )
+                    {
+                        id
+                        daily_limit
+                        monthly_limit
+                        operation_limit
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $access[0]->id,
+                'applicant_individual_id' =>  1,
+                'applicant_company_id' => 1,
+                'role_id' => 3,
+                'dl' => 1000.00,
+                'ml' => 5000.00,
+                'ol' => 50.00,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -113,27 +153,30 @@ class ApplicantBankingAccessMutationTest extends TestCase
 
     public function testDeleteBankingAccess(): void
     {
-        $this->login();
-
         $access = DB::connection('pgsql_test')
             ->table('applicant_banking_access')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            mutation DeleteApplicantBankingAccess(
-                $id: ID!
-            )
-            {
-                deleteApplicantBankingAccess (
-                    id: $id
+        $this->postGraphQL([
+            'query' => '
+                mutation DeleteApplicantBankingAccess(
+                    $id: ID!
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($access[0]->id),
+                    deleteApplicantBankingAccess (
+                        id: $id
+                    )
+                    {
+                        id
+                    }
+                }',
+            'variables' => [
+                'id' => strval($access[0]->id),
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);

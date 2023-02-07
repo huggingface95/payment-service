@@ -12,10 +12,8 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
      * @return void
      */
 
-    public function testCreateApplicantCompanyLabel(): void
+    public function testCreateApplicantCompanyLabelNoAuth(): void
     {
-        $this->login();
-
         $this->graphQL('
             mutation CreateApplicantCompanyLabel(
                 $name: String!
@@ -33,6 +31,35 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
         ', [
             'name' => 'Label_'.\Illuminate\Support\Str::random(5),
             'hex_color_code' => '#'.mt_rand(100000, 999999),
+        ])->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
+    public function testCreateApplicantCompanyLabel(): void
+    {
+        $this->postGraphQL([
+            'query' => '
+                mutation CreateApplicantCompanyLabel(
+                    $name: String!
+                    $hex_color_code: String!
+                )
+                {
+                    createApplicantCompanyLabel (
+                        name: $name
+                        hex_color_code: $hex_color_code
+                    )
+                    {
+                        id
+                    }
+                }',
+            'variables' => [
+                'name' => 'Label_'.\Illuminate\Support\Str::random(5),
+                'hex_color_code' => '#'.mt_rand(100000, 999999),
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -48,30 +75,38 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
 
     public function testUpdateApplicantCompanyLabel(): void
     {
-        $this->login();
+        $label = DB::connection('pgsql_test')
+            ->table('applicant_company_labels')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $label = DB::connection('pgsql_test')->table('applicant_company_labels')->orderBy('id', 'DESC')->get();
-
-        $this->graphQL('
-            mutation UpdateApplicantCompanyLabel(
-                $id: ID!
-                $name: String!
-            )
-            {
-                updateApplicantCompanyLabel (
-                    id: $id
-                    name: $name
+        $this->postGraphQL([
+            'query' => '
+                mutation UpdateApplicantCompanyLabel(
+                    $id: ID!
+                    $name: String!
                 )
                 {
-                    id
-                    name
-                }
-            }
-        ', [
-            'id' => strval($label[0]->id),
-            'name' => 'Label_'.\Illuminate\Support\Str::random(5),
+                    updateApplicantCompanyLabel (
+                        id: $id
+                        name: $name
+                    )
+                    {
+                        id
+                        name
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $label[0]->id,
+                'name' => 'Label_'.\Illuminate\Support\Str::random(5),
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'updateApplicantCompanyLabel' => [
@@ -84,28 +119,38 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
 
     public function testAttachApplicantCompanyLabel(): void
     {
-        $this->login();
+        $applicant_company = DB::connection('pgsql_test')
+            ->table('applicant_companies')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $applicant_company = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
-        $label = DB::connection('pgsql_test')->table('applicant_company_labels')->orderBy('id', 'DESC')->get();
+        $label = DB::connection('pgsql_test')
+            ->table('applicant_company_labels')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $this->graphQL('
-            mutation AttachApplicantCompanyLabel(
-                $applicant_company_id: ID!
-                $applicant_company_label_id: [ID]
-            )
-            {
-                attachApplicantCompanyLabel (
-                    applicant_company_id: $applicant_company_id
-                    applicant_company_label_id: $applicant_company_label_id
+        $this->postGraphQL([
+            'query' => '
+                mutation AttachApplicantCompanyLabel(
+                    $applicant_company_id: ID!
+                    $applicant_company_label_id: [ID]
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'applicant_company_id' => strval($applicant_company[0]->id),
-            'applicant_company_label_id' => strval($label[0]->id),
+                    attachApplicantCompanyLabel (
+                        applicant_company_id: $applicant_company_id
+                        applicant_company_label_id: $applicant_company_label_id
+                    )
+                    {
+                        id
+                    }
+                }',
+            'variables' => [
+                'applicant_company_id' => (string) $applicant_company[0]->id,
+                'applicant_company_label_id' => (string) $label[0]->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -121,28 +166,38 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
 
     public function testDetachApplicantCompanyLabel():void
     {
-        $this->login();
+        $applicant_company = DB::connection('pgsql_test')
+            ->table('applicant_companies')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $applicant_company = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
-        $label = DB::connection('pgsql_test')->table('applicant_company_labels')->orderBy('id', 'DESC')->get();
+        $label = DB::connection('pgsql_test')
+            ->table('applicant_company_labels')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $this->graphQL('
-            mutation DetachApplicantCompanyLabel(
-                $applicant_company_id: ID!
-                $applicant_company_label_id: [ID]
-            )
-            {
-                detachApplicantCompanyLabel (
-                    applicant_company_id: $applicant_company_id
-                    applicant_company_label_id: $applicant_company_label_id
+        $this->postGraphQL([
+            'query' => '
+                mutation DetachApplicantCompanyLabel(
+                    $applicant_company_id: ID!
+                    $applicant_company_label_id: [ID]
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'applicant_company_id' => strval($applicant_company[0]->id),
-            'applicant_company_label_id' => strval($label[0]->id),
+                    detachApplicantCompanyLabel (
+                        applicant_company_id: $applicant_company_id
+                        applicant_company_label_id: $applicant_company_label_id
+                    )
+                    {
+                        id
+                    }
+                }',
+            'variables' => [
+                'applicant_company_id' => (string) $applicant_company[0]->id,
+                'applicant_company_label_id' => (string) $label[0]->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -158,24 +213,30 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
 
     public function testDeleteApplicantCompanyLabel(): void
     {
-        $this->login();
+        $label = DB::connection('pgsql_test')
+            ->table('applicant_company_labels')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $label = DB::connection('pgsql_test')->table('applicant_company_labels')->orderBy('id', 'DESC')->get();
-
-        $this->graphQL('
-            mutation DeleteApplicantCompanyLabel(
-                $id: ID!
-            )
-            {
-                deleteApplicantCompanyLabel (
-                    id: $id
+        $this->postGraphQL([
+            'query' => '
+                mutation DeleteApplicantCompanyLabel(
+                    $id: ID!
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($label[0]->id),
+                    deleteApplicantCompanyLabel (
+                        id: $id
+                    )
+                    {
+                        id
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $label[0]->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);

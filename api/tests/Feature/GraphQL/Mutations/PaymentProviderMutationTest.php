@@ -12,11 +12,11 @@ class PaymentProviderMutationTest extends TestCase
      * @return void
      */
 
-    public function testCreatePaymentProvider(): void
+    public function testCreatePaymentProviderNoAuth(): void
     {
-        $this->login();
+        $seq = DB::table('payment_provider')
+                ->max('id') + 1;
 
-        $seq = DB::table('payment_provider')->max('id') + 1;
         DB::select('ALTER SEQUENCE payment_provider_id_seq RESTART WITH '.$seq);
 
         $this->graphQL('
@@ -41,6 +41,45 @@ class PaymentProviderMutationTest extends TestCase
             'name' =>  'PaymentProvider_'.\Illuminate\Support\Str::random(3),
             'description' => 'ProviderDesc_'.\Illuminate\Support\Str::random(3),
             'company_id' => 1,
+        ])->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
+    public function testCreatePaymentProvider(): void
+    {
+        $seq = DB::table('payment_provider')
+                ->max('id') + 1;
+
+        DB::select('ALTER SEQUENCE payment_provider_id_seq RESTART WITH '.$seq);
+
+        $this->postGraphQL([
+            'query' => '
+                mutation CreatePaymentProvider(
+                    $name: String!
+                    $description: String
+                    $company_id: ID!
+                )
+                {
+                    createPaymentProvider (
+                        input: {
+                            name: $name
+                            description: $description
+                            company_id: $company_id
+                        }
+                    )
+                    {
+                        id
+                    }
+                }',
+            'variables' => [
+                'name' =>  'PaymentProvider_'.\Illuminate\Support\Str::random(3),
+                'description' => 'ProviderDesc_'.\Illuminate\Support\Str::random(3),
+                'company_id' => 1,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -56,36 +95,42 @@ class PaymentProviderMutationTest extends TestCase
 
     public function testUpdatePaymentProvider(): void
     {
-        $this->login();
+        $payment_provider = DB::connection('pgsql_test')
+            ->table('payment_provider')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $payment_provider = DB::connection('pgsql_test')->table('payment_provider')->orderBy('id', 'DESC')->get();
-
-        $this->graphQL('
-            mutation UpdatePaymentProvider(
-                $id: ID!
-                $name: String!
-                $description: String
-                $company_id: ID!
-            )
-            {
-                updatePaymentProvider (
-                    id: $id
-                    input: {
-                        name: $name
-                        description: $description
-                        company_id: $company_id
-                    }
+        $this->postGraphQL([
+            'query' => '
+                mutation UpdatePaymentProvider(
+                    $id: ID!
+                    $name: String!
+                    $description: String
+                    $company_id: ID!
                 )
                 {
-                    id
-                    name
-                }
-            }
-        ', [
-            'id' => strval($payment_provider[0]->id),
-            'name' => 'PaymentProviderName_Updated_'.\Illuminate\Support\Str::random(3),
-            'description' => 'PaymentProviderDescription_Updated_'.\Illuminate\Support\Str::random(3),
-            'company_id' => '1',
+                    updatePaymentProvider (
+                        id: $id
+                        input: {
+                            name: $name
+                            description: $description
+                            company_id: $company_id
+                        }
+                    )
+                    {
+                        id
+                        name
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $payment_provider[0]->id,
+                'name' => 'PaymentProviderName_Updated_'.\Illuminate\Support\Str::random(3),
+                'description' => 'PaymentProviderDescription_Updated_'.\Illuminate\Support\Str::random(3),
+                'company_id' => '1',
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -102,24 +147,30 @@ class PaymentProviderMutationTest extends TestCase
 
     public function testDeletePaymentProvider(): void
     {
-        $this->login();
+        $payment_provider = DB::connection('pgsql_test')
+            ->table('payment_provider')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $payment_provider = DB::connection('pgsql_test')->table('payment_provider')->orderBy('id', 'DESC')->get();
-
-        $this->graphQL('
-            mutation DeletePaymentProvider(
-                $id: ID!
-            )
-            {
-                deletePaymentProvider (
-                    id: $id
+        $this->postGraphQL([
+            'query' => '
+                mutation DeletePaymentProvider(
+                    $id: ID!
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($payment_provider[0]->id),
+                    deletePaymentProvider (
+                        id: $id
+                    )
+                    {
+                        id
+                    }
+                }',
+            'variables' => [
+                'id' => strval($payment_provider[0]->id),
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);

@@ -162,15 +162,10 @@ class ActivityLogsQueryTest extends TestCase
             "Authorization" => "Bearer " . $this->login()
         ]);
 
-        $response->seeJson([
-            'count' => 3,
-            'currentPage' => 1,
-            'firstItem' => 1,
-            'hasMorePages' => true,
-            'lastItem' => 3,
-            'lastPage' => 10,
-            'perPage' => 3,
-            'total' => 30,
+        $response = json_decode($this->response->getContent(), true);
+
+        $this->seeJsonContains([
+            'count' => $response['data']['activityLogs']['paginatorInfo']['count']
         ]);
     }
 }

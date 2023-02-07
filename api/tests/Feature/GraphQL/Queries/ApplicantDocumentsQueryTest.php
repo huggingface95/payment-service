@@ -13,17 +13,6 @@ use Tests\TestCase;
 
 class ApplicantDocumentsQueryTest extends TestCase
 {
-
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        (new DatabaseSeeder())->call(DocumentStateTableSeeder::class);
-        (new DatabaseSeeder())->call(DocumentTypeTableSeeder::class);
-        (new DatabaseSeeder())->call(FileTableSeeder::class);
-        (new DatabaseSeeder())->call(ApplicantDocumentTableSeeder::class);
-    }
-
     public function testApplicantCompanyNoAuth(): void
     {
         $this->graphQL('

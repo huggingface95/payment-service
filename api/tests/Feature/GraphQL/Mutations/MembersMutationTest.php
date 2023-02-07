@@ -11,11 +11,8 @@ class MembersMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateMember(): void
     {
-        $this->login();
-
         $seq = DB::table('members')->max('id') + 1;
         DB::select('ALTER SEQUENCE members_id_seq RESTART WITH '.$seq);
 

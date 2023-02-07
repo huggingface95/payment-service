@@ -12,11 +12,11 @@ class CompaniesMutationTest extends TestCase
      * @return void
      */
 
-    public function testCreateCompany(): void
+    public function testCreateCompanyNoAuth(): void
     {
-        $this->login();
+        $seq = DB::table('companies')
+                ->max('id') + 1;
 
-        $seq = DB::table('companies')->max('id') + 1;
         DB::select('ALTER SEQUENCE companies_id_seq RESTART WITH '.$seq);
 
         $this->graphQL('
@@ -47,6 +47,51 @@ class CompaniesMutationTest extends TestCase
             'email' => 'company_'.\Illuminate\Support\Str::random(3).'@gmail.com',
             'url' => 'company_'.\Illuminate\Support\Str::random(3).'.com',
             'country_id' => 1,
+        ])->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
+    public function testCreateCompany(): void
+    {
+        $seq = DB::table('companies')
+                ->max('id') + 1;
+
+        DB::select('ALTER SEQUENCE companies_id_seq RESTART WITH '.$seq);
+
+        $this->postGraphQL([
+            'query' => '
+                mutation CreateCompany(
+                    $name: String!
+                    $email: EMAIL!
+                    $url: String!
+                    $country_id: ID!
+                ) {
+                createCompany(
+                    name: $name
+                    email: $email
+                    url: $url
+                    country_id: $country_id
+                ) {
+                    id
+                    name
+                    url
+                    email
+                    country {
+                        id
+                        name
+                    }
+                }
+            }',
+            'variables' => [
+                'name' =>  'Company_'.\Illuminate\Support\Str::random(5),
+                'email' => 'company_'.\Illuminate\Support\Str::random(3).'@gmail.com',
+                'url' => 'company_'.\Illuminate\Support\Str::random(3).'.com',
+                'country_id' => 1,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -66,42 +111,45 @@ class CompaniesMutationTest extends TestCase
 
     public function testUpdateCompany(): void
     {
-        $this->login();
-
         $company = DB::connection('pgsql_test')
             ->table('companies')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            mutation UpdateCompany(
-                $id: ID!
-                $email: EMAIL!
-            )
-            {
-                updateCompany (
-                    id: $id
-                    email: $email
+        $this->postGraphQL([
+            'query' => '
+                mutation UpdateCompany(
+                    $id: ID!
+                    $email: EMAIL!
                 )
                 {
-                    id
-                    name
-                    url
-                    email
-                    zip
-                    address
-                    city
-                    country {
+                    updateCompany (
+                        id: $id
+                        email: $email
+                    )
+                    {
                         id
                         name
+                        url
+                        email
+                        zip
+                        address
+                        city
+                        country {
+                            id
+                            name
+                        }
+                        company_number
+                        contact_name
                     }
-                    company_number
-                    contact_name
-                }
-            }
-        ', [
-            'id' => strval($company[0]->id),
-            'email' => 'company_'.\Illuminate\Support\Str::random(3).'@gmail.com',
+                }',
+            'variables' => [
+                'id' => (string) $company[0]->id,
+                'email' => 'company_'.\Illuminate\Support\Str::random(3).'@gmail.com',
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -126,27 +174,30 @@ class CompaniesMutationTest extends TestCase
 
     public function testDeleteCompany(): void
     {
-        $this->login();
-
         $company = DB::connection('pgsql_test')
             ->table('companies')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            mutation DeleteCompany(
-                $id: ID!
-            )
-            {
-                deleteCompany (
-                    id: $id
+        $this->postGraphQL([
+            'query' => '
+                mutation DeleteCompany(
+                    $id: ID!
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($company[0]->id),
+                    deleteCompany (
+                        id: $id
+                    )
+                    {
+                        id
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $company[0]->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);

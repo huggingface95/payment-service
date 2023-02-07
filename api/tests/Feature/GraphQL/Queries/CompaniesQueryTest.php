@@ -164,7 +164,7 @@ class CompaniesQueryTest extends TestCase
     {
         $company = DB::connection('pgsql_test')
             ->table('companies')
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->get();
 
         $this->postGraphQL([
@@ -184,9 +184,9 @@ class CompaniesQueryTest extends TestCase
                         }
                 }
             }',
-        'variables' => [
-            'email' => (string) $company[0]->email,
-        ]
+            'variables' => [
+                'email' => (string) $company[0]->email,
+            ]
         ],
         [
             "Authorization" => "Bearer " . $this->login()
@@ -209,7 +209,7 @@ class CompaniesQueryTest extends TestCase
     {
         $company = DB::connection('pgsql_test')
             ->table('companies')
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->get();
 
         $this->postGraphQL([
@@ -237,15 +237,15 @@ class CompaniesQueryTest extends TestCase
                 "Authorization" => "Bearer " . $this->login()
             ])->seeJsonContains([
             [
-                'id' => (string)$company[0]->id,
-                'name' => (string)$company[0]->name,
-                'url' => (string)$company[0]->url,
-                'email' => (string)$company[0]->email,
-                'zip' => (string)$company[0]->zip,
-                'address' => (string)$company[0]->address,
-                'city' => (string)$company[0]->city,
-                'company_number' => (string)$company[0]->company_number,
-                'contact_name' => (string)$company[0]->contact_name,
+                'id' => (string) $company[0]->id,
+                'name' => (string) $company[0]->name,
+                'url' => (string) $company[0]->url,
+                'email' => (string) $company[0]->email,
+                'zip' => (string) $company[0]->zip,
+                'address' => (string) $company[0]->address,
+                'city' => (string) $company[0]->city,
+                'company_number' => (string) $company[0]->company_number,
+                'contact_name' => (string) $company[0]->contact_name,
             ],
         ]);
     }

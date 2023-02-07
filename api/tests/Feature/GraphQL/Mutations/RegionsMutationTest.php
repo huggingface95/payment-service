@@ -11,11 +11,11 @@ class RegionsMutationTest extends TestCase
      * @return void
      */
 
-    public function testCreateRegion(): void
+    public function testCreateRegionNoAuth(): void
     {
-        $this->login();
+        $seq = DB::table('regions')
+                ->max('id') + 1;
 
-        $seq = DB::table('regions')->max('id') + 1;
         DB::select('ALTER SEQUENCE regions_id_seq RESTART WITH '.$seq);
 
         $this->graphQL('
@@ -27,37 +27,65 @@ class RegionsMutationTest extends TestCase
         ', [
             'name' => 'EU',
             'company_id' => 1,
+        ])->seeJsonContains([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
+    public function testCreateRegion(): void
+    {
+        $seq = DB::table('regions')
+                ->max('id') + 1;
+
+        DB::select('ALTER SEQUENCE regions_id_seq RESTART WITH '.$seq);
+
+        $this->postGraphQL([
+            'query' => '
+                mutation CreateRegion($name: String!, $company_id: ID!) {
+                    createRegion(input: { name: $name, company_id: $company_id }) {
+                        id
+                    }
+                }',
+            'variables' => [
+                'name' => 'EU',
+                'company_id' => 1,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
 
         $this->seeJsonContains([
             [
-                   'id' => $id['data']['createRegion'][0]['id'],
+                'id' => $id['data']['createRegion']['id'],
             ],
         ]);
     }
 
     public function testUpdateRegion(): void
     {
-        $this->login();
-
         $region = DB::connection('pgsql_test')
             ->table('regions')
             ->orderBy('id', 'DESC')
-            ->take(1)
             ->get();
 
-        $this->graphQL('
-            mutation UpdateRegion($id:ID!, $name: String!, $company_id: ID!) {
-                updateRegion(id: $id, input: {name: $name, company_id: $company_id }) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($region[0]->id),
-            'name' =>  'US',
-            'company_id' => 2,
+        $this->postGraphQL([
+            'query' => '
+                mutation UpdateRegion($id:ID!, $name: String!, $company_id: ID!) {
+                    updateRegion(id: $id, input: {name: $name, company_id: $company_id }) {
+                        id
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $region[0]->id,
+                'name' =>  'US',
+                'company_id' => 2,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -73,22 +101,24 @@ class RegionsMutationTest extends TestCase
 
     public function testDeleteRegion(): void
     {
-        $this->login();
-
         $region = DB::connection('pgsql_test')
             ->table('regions')
             ->orderBy('id', 'DESC')
-            ->take(1)
             ->get();
 
-        $this->graphQL('
-            mutation DeleteRegion($id: ID!) {
-                deleteRegion(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($region[0]->id),
+        $this->postGraphQL([
+            'query' => '
+                mutation DeleteRegion($id: ID!) {
+                    deleteRegion(id: $id) {
+                        id
+                    }
+                }',
+            'variables' => [
+                'id' => (string) $region[0]->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);

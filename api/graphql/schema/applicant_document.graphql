@@ -8,6 +8,8 @@ type ApplicantDocument {
     added_from: String
     applicant_id: ID!
     applicant_type: ApplicantType!
+    document_type_id: ID
+    document_state_id: ID
     company: Company @belongsTo(relation: "company")
     "Получить страну"
     country: Country @belongsTo(relation: "country")

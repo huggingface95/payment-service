@@ -16,7 +16,7 @@ class PaymentsService extends AbstractService
     {
         return Payments::query()
             ->where('member_id', $payment->member_id)
-            ->whereIn('status_id', [PaymentStatusEnum::PENDING->value, PaymentStatusEnum::COMPLETED->value])
+            ->whereIn('status_id', [PaymentStatusEnum::PENDING->value, PaymentStatusEnum::SENT->value])
             ->get()
             ->push($payment);
     }

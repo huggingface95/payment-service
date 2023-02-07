@@ -11,11 +11,12 @@ class CommissionTemplateMutationTest extends TestCase
      *
      * @return void
      */
-    public function testCreateCommissionTemplate(): void
-    {
-        $this->login();
 
-        $seq = DB::table('commission_template')->max('id') + 1;
+    public function testCreateCommissionTemplateNoAuth(): void
+    {
+        $seq = DB::table('commission_template')
+                ->max('id') + 1;
+
         DB::select('ALTER SEQUENCE commission_template_id_seq RESTART WITH '.$seq);
 
         $this->graphQL('
@@ -41,6 +42,46 @@ class CommissionTemplateMutationTest extends TestCase
             'description' => 'TemplateDecs_'.\Illuminate\Support\Str::random(5),
             'payment_provider_id' => 1,
             'company_id' => 1,
+        ])->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
+
+    public function testCreateCommissionTemplate(): void
+    {
+        $seq = DB::table('commission_template')
+                ->max('id') + 1;
+
+        DB::select('ALTER SEQUENCE commission_template_id_seq RESTART WITH '.$seq);
+
+        $this->postGraphQL([
+            'query' => '
+                mutation CreateCommissionTemplate(
+                    $name: String!
+                    $description: String
+                    $payment_provider_id: ID!
+                    $company_id: ID!
+                ) {
+                createCommissionTemplate(
+                    input: {
+                        name: $name
+                        description: $description
+                        payment_provider_id: $payment_provider_id
+                        company_id: $company_id
+                    }
+                ) {
+                    id
+                }
+                }',
+            'variables' => [
+                'name' => 'TestCommissionTemplate_'.\Illuminate\Support\Str::random(5),
+                'description' => 'TemplateDecs_'.\Illuminate\Support\Str::random(5),
+                'payment_provider_id' => 1,
+                'company_id' => 1,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -56,31 +97,37 @@ class CommissionTemplateMutationTest extends TestCase
 
     public function testUpdateCommissionTemplate(): void
     {
-        $this->login();
+        $template = DB::connection('pgsql_test')
+            ->table('commission_template')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $template = DB::connection('pgsql_test')->table('commission_template')->orderBy('id', 'DESC')->get();
-
-        $this->graphQL('
-            mutation UpdateCommissionTemplate(
-                $id: ID!
-                $name: String!
-                $description: String!
-            ) {
-            updateCommissionTemplate(
-                id: $id
-                input: {
-                    name: $name
-                    description: $description
+        $this->postGraphQL([
+            'query' => '
+                mutation UpdateCommissionTemplate(
+                    $id: ID!
+                    $name: String!
+                    $description: String!
+                ) {
+                updateCommissionTemplate(
+                    id: $id
+                    input: {
+                        name: $name
+                        description: $description
+                    }
+                ) {
+                    id
+                    name
                 }
-            ) {
-                id
-                name
-            }
-            }
-        ', [
-            'id' => strval($template[0]->id),
-            'name' => 'Updated Commission Template',
-            'description' => 'Updated Description',
+                }',
+            'variables' => [
+                'id' => (string) $template[0]->id,
+                'name' => 'Updated Commission Template',
+                'description' => 'Updated Description',
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -97,22 +144,28 @@ class CommissionTemplateMutationTest extends TestCase
 
     public function testDeleteCommissionTemplate(): void
     {
-        $this->login();
+        $template = DB::connection('pgsql_test')
+            ->table('commission_template')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $getRecord = DB::connection('pgsql_test')->table('commission_template')->orderBy('id', 'DESC')->get();
-
-        $this->graphQL('
-            mutation DeleteCommissionTemplate(
-                $id: ID!
-            ) {
-            deleteCommissionTemplate(
-                id: $id
-            ) {
-                id
-            }
-            }
-        ', [
-            'id' => strval($getRecord[0]->id),
+        $this->postGraphQL([
+            'query' => '
+                mutation DeleteCommissionTemplate(
+                    $id: ID!
+                ) {
+                deleteCommissionTemplate(
+                    id: $id
+                ) {
+                    id
+                }
+                }',
+            'variables' => [
+                'id' => (string) $template[0]->id,
+            ]
+        ],
+        [
+            "Authorization" => "Bearer " . $this->login()
         ]);
 
         $id = json_decode($this->response->getContent(), true);
