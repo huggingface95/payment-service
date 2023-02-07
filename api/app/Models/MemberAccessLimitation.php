@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Collection;
 
 /**
@@ -30,6 +29,7 @@ class MemberAccessLimitation extends BaseModel
         'project_id',
         'payment_provider_id',
         'see_own_applicants',
+        'group_type_id',
     ];
 
     protected $casts = [
@@ -52,16 +52,9 @@ class MemberAccessLimitation extends BaseModel
         return $this->belongsTo(Module::class, 'module_id');
     }
 
-    public function group(): HasOneThrough
+    public function group(): BelongsTo
     {
-        return $this->hasOneThrough(
-            GroupType::class,
-            GroupRole::class,
-            'id',
-            'id',
-            'group_role_id',
-            'group_type_id'
-        );
+        return $this->belongsTo(GroupType::class, 'group_type_id');
     }
 
     public function groupRole(): BelongsTo
