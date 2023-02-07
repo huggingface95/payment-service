@@ -190,14 +190,13 @@ class EmailService
      */
     public function sendAccountBalanceLimitDto(EmailAccountMinMaxBalanceLimitRequestDTO $dto): void
     {
-        $smtp = $this->emailRepository->getSmtpByCompanyId($dto->account);
         $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
-        $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
-
         try {
+            $smtp = $this->emailRepository->getSmtpByCompanyId($dto->account);
+            $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
             dispatch(new SendMailJob($config, $emailContentSubjectDto));
         } catch (\Throwable) {
-            throw new EmailException('Don\'t send email', '404');
+            throw new EmailException('SMTP not found', '404');
         }
     }
 }
