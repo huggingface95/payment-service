@@ -10,6 +10,7 @@ use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\RespondentFeesEnum;
 use App\Enums\TransferOutgoingChannelEnum;
+use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\TransferOutgoingJob;
 use App\Models\Account;
@@ -28,6 +29,8 @@ use App\Models\Members;
 use App\Models\PriceListFeeCurrency;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -81,6 +84,9 @@ class TransferOutgoingService extends AbstractService
         };
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function commissionCalculation(TransferOutgoing $transfer): float
     {
         $amountDebt = 0;
@@ -133,8 +139,6 @@ class TransferOutgoingService extends AbstractService
         } else {
             return self::getFeeByFixMode($fee, $amount);
         }
-
-        return null;
     }
 
     private static function getFeeByFixMode(array $data, float $amount): ?float
@@ -142,8 +146,6 @@ class TransferOutgoingService extends AbstractService
         return collect($data)->map(function ($fee) use ($amount) {
             return self::getConstantFee($fee, $amount);
         })->sum();
-
-        return null;
     }
 
     private static function getFeeByRangeMode(array $data, int $modeKey, float $amount): ?float
@@ -304,7 +306,7 @@ class TransferOutgoingService extends AbstractService
         $applicantBankingAccess = ApplicantBankingAccess::where('applicant_individual_id', $transfer->requested_by_id)
             ->where('applicant_company_id', $transfer->sender_id)
             ->first();
-        
+
         $dailyLimit = $applicantBankingAccess->daily_limit - $applicantBankingAccess->used_daily_limit;
         $monthlyLimit = $applicantBankingAccess->monthly_limit - $applicantBankingAccess->used_monthly_limit;
 
@@ -334,6 +336,9 @@ class TransferOutgoingService extends AbstractService
         }
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function validateUpdateTransferStatus(TransferOutgoing $transfer, array $args): void
     {
         $date = Carbon::today();
@@ -370,15 +375,16 @@ class TransferOutgoingService extends AbstractService
                 break;
             case PaymentStatusEnum::CANCELED->value:
                 throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-
-                break;
             case PaymentStatusEnum::EXECUTED->value:
                 throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-
-                break;
         }
     }
 
+
+    /**
+     * @throws EmailException
+     * @throws GraphqlException
+     */
     public function checkLimits(TransferOutgoing $transfer): void
     {
         $allAmount = $this->getAllProcessedAmount($transfer);
@@ -394,6 +400,7 @@ class TransferOutgoingService extends AbstractService
     }
 
     /**
+     * @throws EmailException
      * @throws GraphqlException
      */
     public function updateTransferStatusToSent(TransferOutgoing $transfer): void
@@ -418,6 +425,10 @@ class TransferOutgoingService extends AbstractService
         });
     }
 
+    /**
+     * @throws EmailException
+     * @throws GraphqlException
+     */
     public function updateTransferFeeAmount(TransferOutgoing $transfer, float $amount): void
     {
         DB::transaction(function () use ($transfer) {
@@ -442,6 +453,10 @@ class TransferOutgoingService extends AbstractService
         });
     }
 
+    /**
+     * @throws EmailException
+     * @throws GraphqlException
+     */
     public function updateTransferFeeStatusToSent(TransferOutgoing $transfer): void
     {
         $this->checkLimits($transfer);
@@ -468,7 +483,7 @@ class TransferOutgoingService extends AbstractService
         });
     }
 
-    public function createTransfer(array $args, int $operationType): TransferOutgoing
+    public function createTransfer(array $args, int $operationType): Builder|Model
     {
         $date = Carbon::now();
 
@@ -501,7 +516,7 @@ class TransferOutgoingService extends AbstractService
     }
 
     /**
-     * @throws GraphqlException
+     * @throws EmailException
      */
     protected function checkAccountBalanceLimit(TransferOutgoing $transferOutgoing): bool
     {
@@ -513,14 +528,18 @@ class TransferOutgoingService extends AbstractService
             $transferOutgoing->account->account_state_id = AccountState::SUSPENDED;
             $transferOutgoing->account->save();
 
-            $emailAccountMinMaxBalanceDto = TransformerDTO::transform(EmailAccountMinMaxBalanceLimitRequestDTO::class, $transferOutgoing->account, $isMinLimit);
-            $this->emailService->sendAccountBalanceLimitDto($emailAccountMinMaxBalanceDto);
+            $iDto = TransformerDTO::transform(EmailAccountMinMaxBalanceLimitRequestDTO::class, $transferOutgoing->account, $isMinLimit);
+            $this->emailService->sendAccountBalanceLimitDto($iDto);
+
+            $mDto = TransformerDTO::transform(EmailAccountMinMaxBalanceLimitRequestDTO::class, $transferOutgoing->account, $isMinLimit, EmailAccountMinMaxBalanceLimitRequestDTO::MEMBER);
+            $this->emailService->sendAccountBalanceLimitDto($mDto);
+
             return false;
         }
 
         return true;
     }
-    
+
     public function attachFileById(TransferOutgoing $transfer, array $fileIds): void
     {
         $this->transferRepository->attachFileById($transfer, $fileIds);
