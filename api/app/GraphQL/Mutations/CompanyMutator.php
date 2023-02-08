@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
 use App\Models\Company;
+use Illuminate\Support\Carbon;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class CompanyMutator extends BaseMutator
@@ -19,6 +20,7 @@ class CompanyMutator extends BaseMutator
      */
     public function update($root, array $args, GraphQLContext $context)
     {
+        $date = Carbon::now();
         $company = Company::find($args['id']);
         if (isset($args['additional_fields_info'])) {
             $args['additional_fields_info'] = $this->setAdditionalField($args['additional_fields_info']);
@@ -31,6 +33,11 @@ class CompanyMutator extends BaseMutator
         }
         if (isset($args['additional_fields_data'])) {
             $args['additional_fields_data'] = $this->setAdditionalField($args['additional_fields_data']);
+        }
+        if (isset($args['incorporate_date'])) {
+            if (Carbon::parse($args['incorporate_date'])->gt($date)) {
+                throw new GraphqlException('incorporate_date cannot be greater than current date and time', 'use');
+            }
         }
         $company->update($args);
 
