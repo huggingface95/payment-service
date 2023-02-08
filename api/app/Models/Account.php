@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property float max_limit_balance
  * @property float current_balance
  * @property AccountState $accountState
+ * @property Members $member
  * @property Groups $group
  * @property CommissionTemplate $commissionTemplate
  * @property AccountLimit $limits
