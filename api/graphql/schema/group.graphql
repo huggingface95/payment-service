@@ -63,38 +63,6 @@ type GroupRole {
 
 }
 
-type GroupRoleView @model(class: "\\App\\Models\\GroupRoleView") {
-    id: ID!
-    "Название группы"
-    name: String
-    "ID типа группы"
-    group_type_id: ID
-    "ID роли"
-    role_id: ID
-    "ID модуля"
-    module_id: ID
-    "Описание группы"
-    description: String
-    "Активная и не активная группа"
-    is_active: Boolean
-    "Получить тип группы"
-    group_type: GroupType @belongsTo(relation: "groupType")
-    "Получить связанную роль"
-    role: Role @belongsTo(relation: "role")
-    "ID шаблона коммиссии"
-    commission_template_id: ID
-    "Имя шаблона коммиссии"
-    commission_template_name: String
-    "ID провайдера"
-    payment_provider_id: ID
-    "Имя провайдера"
-    payment_provider_name: String
-    "Получить компанию"
-    company: Company @belongsTo(relation: "company")
-    "Получить связанный модуль"
-    module: Module @belongsTo(relation: "modules")
-
-}
 
 type GroupRoleView @model(class: "\\App\\Models\\GroupRoleView") {
     id: ID!
