@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ModuleEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -73,6 +74,16 @@ class Company extends BaseModel
     ];
 
     public const DEFAULT_LOGO_PATH = '/img/logo.png';
+
+    protected static function booting()
+    {
+        self::created(function (Company $model) {
+            $model->modules()->saveMany([new CompanyModule([
+                'module_id' => ModuleEnum::KYC->value
+            ])]);
+        });
+        parent::booting();
+    }
 
     public function getLogoLinkAttribute(): string
     {
