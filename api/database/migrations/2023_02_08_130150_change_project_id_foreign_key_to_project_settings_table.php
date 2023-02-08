@@ -14,7 +14,7 @@ class ChangeProjectIdForeignKeyToProjectSettingsTable extends Migration
     public function up()
     {
         Schema::table('project_settings', function (Blueprint $table) {
-            $table->dropForeign('project_settings_project_id_fkey');
+            $table->dropForeign(['project_id']);
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade')->onUpdate('cascade');
         });
     }
