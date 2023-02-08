@@ -13,7 +13,7 @@ type MemberAccessLimitation {
     "Получить GroupType"
     group: GroupType @belongsTo(relation: "group")
     "Получить groupRole"
-    group_role: GroupRole @belongsTo(relation: "groupRole")
+    group_roles: [GroupRole] @belongsToMany(relation: "groupRoles")
     "Получить проект"
     project: Project @belongsTo(relation: "project")
     "Получить связанный платежный провайдер"
@@ -40,7 +40,7 @@ extend type Query @guard {
 
 input QueryMemberAccessLimitationsFilterStatic @spread{
     hasGroupFilterById: ID @eq
-    hasGroupRoleMixedIdOrName: Mixed @eq
+    hasGroupRolesMixedIdOrName: Mixed @eq
     hasProviderMixedIdOrName: Mixed @eq
     hasModuleMixedIdOrName: Mixed @eq
     hasProjectMixedIdOrName: Mixed @eq
@@ -50,7 +50,7 @@ input InputMemberAccessLimitation{
     "ID Мембера"
     member_id: ID!
     "ID Груп Роль"
-    group_role_id: ID
+    groupRoles: PivotTable
     "ID Груп type"
     group_type_id: ID
     "ID компании"
