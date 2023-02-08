@@ -58,14 +58,13 @@ class MembersMutator extends BaseMutator
 
             return $member;
         }
-        catch (EmailException){
-            DB::commit();
-
-            return $member ?? null;
+        catch (EmailException $e){
+            DB::rollBack();
+            throw new GraphqlException($e->getMessage(), $e->getCode());
         }
         catch (\Throwable){
             DB::rollBack();
-            throw new GraphqlException("Member create error", "internal");
+            throw new GraphqlException("Internal server error", "internal");
         }
     }
 

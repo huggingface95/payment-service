@@ -11,7 +11,7 @@ type MemberAccessLimitation {
     "Получить модуль"
     module: Module @belongsTo(relation: "module")
     "Получить GroupType"
-    group: GroupType @hasOne(relation: "group")
+    group: GroupType @belongsTo(relation: "group")
     "Получить groupRole"
     group_role: GroupRole @belongsTo(relation: "groupRole")
     "Получить проект"
@@ -46,46 +46,40 @@ input QueryMemberAccessLimitationsFilterStatic @spread{
     hasProjectMixedIdOrName: Mixed @eq
 }
 
+input InputMemberAccessLimitation{
+    "ID Мембера"
+    member_id: ID!
+    "ID Груп Роль"
+    group_role_id: ID
+    "ID Груп type"
+    group_type_id: ID
+    "ID компании"
+    company_id: ID!
+    "ID модуля"
+    module_id: ID!
+    "ID проекта"
+    project_id: ID
+    "ID платежного провайдера"
+    payment_provider_id: ID
+    "Показать только своих аппликантов"
+    see_own_applicants: Boolean
+}
+
 extend type Mutation  {
     """
     Создать ограничение доступа
     """
     createMemberAccessLimitation(
-        "ID Мембера"
-        member_id: ID!
-        "ID Груп Роль"
-        group_role_id: ID!
-        "ID компании"
-        company_id: ID!
-        "ID модуля"
-        module_id: ID!
-        "ID проекта"
-        project_id: ID
-        "ID платежного провайдера"
-        payment_provider_id: ID
-        "Показать только своих аппликантов"
-        see_own_applicants: Boolean
+        input: InputMemberAccessLimitation! @spread
     ): MemberAccessLimitation @create
 
     """
     Обновить ограничение доступа
     """
     updateMemberAccessLimitation(
+        "ID шаблона"
         id: ID!
-        "ID Мембера"
-        member_id: ID!
-        "ID Груп Роль"
-        group_role_id: ID
-        "ID компании"
-        company_id: ID!
-        "ID модуля"
-        module_id: ID!
-        "ID проекта"
-        project_id: ID
-        "ID платежного провайдера"
-        payment_provider_id: ID
-        "Показать только своих аппликантов"
-        see_own_applicants: Boolean
+        input: InputMemberAccessLimitation! @spread
     ): MemberAccessLimitation @update
 
     """
