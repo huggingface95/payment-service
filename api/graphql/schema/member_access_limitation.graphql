@@ -39,11 +39,14 @@ extend type Query @guard {
 }
 
 input QueryMemberAccessLimitationsFilterStatic @spread{
+    doesntHaveGroupRoles: Boolean @eq
+    doesntHaveProvider: Boolean @eq
+    doesntHaveGroup: Boolean @eq
+    hasGroupRolesFilterById: ID @eq
     hasGroupFilterById: ID @eq
-    hasGroupRolesMixedIdOrName: Mixed @eq
-    hasProviderMixedIdOrName: Mixed @eq
-    hasModuleMixedIdOrName: Mixed @eq
-    hasProjectMixedIdOrName: Mixed @eq
+    hasProviderFilterById: ID @eq
+    hasModuleFilterById: ID @eq
+    hasProjectFilterById: ID @eq
 }
 
 input InputMemberAccessLimitation{
