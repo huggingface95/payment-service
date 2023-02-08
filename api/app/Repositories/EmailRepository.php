@@ -9,6 +9,7 @@ use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\Email\SmtpDataDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\EmailExceptionCodeEnum;
 use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
@@ -128,7 +129,7 @@ class EmailRepository implements EmailRepositoryInterface
             ->first();
 
         if (! $emailTemplate) {
-            throw new EmailException('Email template not found', '404');
+            throw new EmailException('Email template not found', EmailExceptionCodeEnum::TEMPLATE->toString());
         }
 
         $content = $this->replaceObjectData($emailTemplate->getHtml(), $dto->data, '/\{(.*?)\}/');
