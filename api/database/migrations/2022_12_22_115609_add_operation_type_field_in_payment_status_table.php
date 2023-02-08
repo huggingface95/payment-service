@@ -18,7 +18,6 @@ class AddOperationTypeFieldInPaymentStatusTable extends Migration
             $table->string('operation_type', 255)->nullable();
         });
         DB::statement('ALTER TABLE payment_status ALTER COLUMN operation_type TYPE text[] USING ARRAY[operation_type]');
-
     }
 
     /**

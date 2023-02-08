@@ -15,7 +15,7 @@ class CompanyModuleIbanProviderMutator extends BaseMutator
     public function create($root, array $args): CompanyModuleIbanProvider
     {
         $companyModule = CompanyModule::find($args['company_module_id']);
-        if (!$companyModule) {
+        if (! $companyModule) {
             throw new GraphqlException('Company module not found', 'not found', 404);
         }
 
@@ -29,7 +29,7 @@ class CompanyModuleIbanProviderMutator extends BaseMutator
     {
         /** @var CompanyModuleIbanProvider $companyModuleProvider */
         $companyModuleProvider = CompanyModuleIbanProvider::find($args['id']);
-        if (!$companyModuleProvider) {
+        if (! $companyModuleProvider) {
             throw new GraphqlException('Company module IBAN provider not found', 'not found', 404);
         }
 
@@ -41,7 +41,6 @@ class CompanyModuleIbanProviderMutator extends BaseMutator
         } else {
             $companyModuleProvider->projectApiSettings()->delete();
         }
-
 
         $companyModuleProvider->update($args);
 

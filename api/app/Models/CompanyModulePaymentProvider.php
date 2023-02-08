@@ -43,5 +43,4 @@ class CompanyModulePaymentProvider extends BaseModel
             'id'
         );
     }
-
 }

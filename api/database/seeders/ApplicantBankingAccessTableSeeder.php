@@ -29,7 +29,7 @@ class ApplicantBankingAccessTableSeeder extends Seeder
                     'monthly_limit' => str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
                     'operation_limit' => str_pad(mt_rand(1, 99), 5, '0', STR_PAD_LEFT),
                     'contact_administrator' => $faker->boolean,
-                    'role_id' => 1
+                    'role_id' => 1,
                 ]
             );
         }

@@ -10,12 +10,12 @@ use Illuminate\Support\Traits\Macroable;
 
 class JwtGuard implements Guard
 {
-
     use GuardHelpers, Macroable {
         __call as macroCall;
     }
 
     protected $provider;
+
     protected Credentials $credentials;
 
     public function __construct(EloquentUserProvider $provider, Credentials $credentials)

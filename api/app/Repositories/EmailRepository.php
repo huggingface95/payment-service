@@ -9,19 +9,17 @@ use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\Email\SmtpDataDTO;
 use App\DTO\TransformerDTO;
-use App\Enums\EmailExceptionCodeEnum;
 use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
-use App\Models\Members;
 use App\Models\EmailNotification;
 use App\Models\EmailSmtp;
 use App\Models\EmailTemplate;
+use App\Models\Members;
 use App\Repositories\Interfaces\EmailRepositoryInterface;
 use App\Traits\ReplaceRegularExpressions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-
 
 class EmailRepository implements EmailRepositoryInterface
 {
@@ -51,7 +49,7 @@ class EmailRepository implements EmailRepositoryInterface
     {
         $smtp = $this->smtp->newQuery()->where('company_id', $account->company_id)->first();
 
-        if (!$smtp) {
+        if (! $smtp) {
             throw new GraphqlException('SMTP configuration for this company not found', 'Not found', '404');
         }
 
@@ -65,13 +63,12 @@ class EmailRepository implements EmailRepositoryInterface
     {
         $smtp = $this->smtp->newQuery()->where('member_id', $members->id)->first();
 
-        if (!$smtp) {
+        if (! $smtp) {
             throw new GraphqlException('SMTP configuration for this company not found', 'Not found', '404');
         }
 
         return $smtp;
     }
-
 
     /**
      * @throws EmailException
@@ -81,10 +78,10 @@ class EmailRepository implements EmailRepositoryInterface
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = $this->template->newQuery()
             ->where('company_id', $account->company_id)
-            ->whereRaw("lower(subject) LIKE  '%" . strtolower($account->accountState->name) . "%'  ")
+            ->whereRaw("lower(subject) LIKE  '%".strtolower($account->accountState->name)."%'  ")
             ->first();
 
-        if (!$emailTemplate) {
+        if (! $emailTemplate) {
             throw new EmailException('Email template not found', '404');
         }
 
@@ -96,13 +93,13 @@ class EmailRepository implements EmailRepositoryInterface
             })
             ->first();
 
-        if (!$notification) {
+        if (! $notification) {
             throw new EmailException('Email Notification not found', '404');
         }
 
         $emails = $notification->groupRole->users->pluck('email')->toArray();
 
-        if (!count($emails)) {
+        if (! count($emails)) {
             throw new EmailException('Email not found', '404');
         }
 
@@ -121,15 +118,14 @@ class EmailRepository implements EmailRepositoryInterface
      */
     public function getTemplateContentAndSubjectByDto(
         EmailApplicantRequestDTO|EmailMemberRequestDTO|EmailMembersRequestDTO|EmailApplicantCompanyRequestDTO|EmailAccountMinMaxBalanceLimitRequestDTO $dto
-    ): SmtpDataDTO
-    {
+    ): SmtpDataDTO {
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = $this->template->newQuery()
             ->where('company_id', $dto->companyId)
-            ->whereRaw("lower(subject) LIKE  '%" . strtolower($dto->emailTemplateName) . "%'  ")
+            ->whereRaw("lower(subject) LIKE  '%".strtolower($dto->emailTemplateName)."%'  ")
             ->first();
 
-        if (!$emailTemplate) {
+        if (! $emailTemplate) {
             throw new EmailException('Email template not found', '404');
         }
 

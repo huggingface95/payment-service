@@ -28,7 +28,7 @@ class PaymentUpdatedListener
     {
         $payment = $event->payment;
 
-        if ($payment->status_id === PaymentStatusEnum::COMPLETED->value) {
+        if ($payment->status_id === PaymentStatusEnum::SENT->value) {
             $this->accountService->withdrawFromBalance($payment);
         }
 

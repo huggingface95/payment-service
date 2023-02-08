@@ -20,13 +20,12 @@ class ActiveSessionTableSeeder extends Seeder
 
         for ($i = 1; $i <= 30; $i++) {
             DB::connection('clickhouse')
-                ->table((new ActiveSession)->getTable())
+                ->table((new ActiveSession())->getTable())
                 ->insert([
-                    'id' => $i,
+                    'id' => $faker->uuid(),
                     'company' => $faker->randomElement(['Nginx', 'Apple', 'Nike']),
-                    'member' => $faker->randomElement(['feder@gmail.com', 'jover@gmail.com', 'dan@gmail.com']),
-                    'group' => $faker->randomElement(['Member', 'Admin']),
-                    'domain' => $faker->domainName,
+                    'email' => $faker->randomElement(['feder@gmail.com', 'jover@gmail.com', 'dan@gmail.com']),
+                    'provider' => $faker->randomElement(['Member', 'Admin', 'individual']),
                     'ip' => $faker->ipv4,
                     'country' => $faker->country,
                     'city' => $faker->city,
@@ -34,7 +33,6 @@ class ActiveSessionTableSeeder extends Seeder
                     'browser' => $faker->randomElement(['Opera', 'Chrome', 'Firefox']),
                     'device_type' => $faker->randomElement(['Desktop', 'Tablet']),
                     'model' => $faker->randomElement(['Android', 'iOS', 'Windows Desktop']),
-                    'expired_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                     'created_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                 ]);
         }

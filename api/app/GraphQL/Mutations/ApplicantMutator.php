@@ -4,8 +4,8 @@ namespace App\GraphQL\Mutations;
 
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\TransformerDTO;
-use App\Enums\ModuleEnum;
 use App\Enums\ApplicantVerificationStatusEnum;
+use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantIndividualSentEmailVerificationEvent;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividual;
@@ -21,8 +21,7 @@ class ApplicantMutator extends BaseMutator
     public function __construct(
         protected EmailService $emailService,
         protected VerifyService $verifyService
-    )
-    {
+    ) {
     }
 
     /**
@@ -137,7 +136,7 @@ class ApplicantMutator extends BaseMutator
         $emailTemplateName = 'Welcome! Confirm your email address';
         $emailData = [
             'client_name' => $applicant->first_name,
-            'email_confirm_url' => $company->companySettings->client_url . '/email/registration/verify/' . $verifyToken->token,
+            'email_confirm_url' => $company->companySettings->client_url.'/email/registration/verify/'.$verifyToken->token,
             'member_company_name' => $company->name,
         ];
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $company, $emailTemplateName, $emailData);

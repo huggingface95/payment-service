@@ -4,8 +4,8 @@ namespace App\GraphQL\Mutations;
 
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
-use App\Exceptions\GraphqlException;
 use App\Enums\TransferTypeEnum;
+use App\Exceptions\GraphqlException;
 use App\Models\OperationType;
 use App\Models\TransferOutgoing;
 use App\Repositories\AccountRepository;
@@ -95,13 +95,13 @@ class TransferOutgoingMutator extends BaseMutator
     public function updateFee($_, array $args): TransferOutgoing
     {
         $transfer = $this->transferRepository->findById($args['id']);
-        if (!$transfer) {
+        if (! $transfer) {
             throw new GraphqlException('Transfer not found');
         }
         if ($transfer->status_id !== PaymentStatusEnum::SENT->value) {
             throw new GraphqlException('Transfer status is not Sent');
         }
-  
+
         $this->transferService->attachFileById($transfer, $args['file_id'] ?? []);
         $this->transferService->updateTransferFeeAmount($transfer, $args['amount']);
 

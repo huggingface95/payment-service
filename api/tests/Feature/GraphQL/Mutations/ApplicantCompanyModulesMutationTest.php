@@ -11,11 +11,8 @@ class ApplicantCompanyModulesMutationTest extends TestCase
      *
      * @return void
      */
-
-    public function testCreateApplicantCompanyModule(): void
+    public function testCreateApplicantCompanyModuleNoAuth(): void
     {
-        $this->loginAsSuperAdmin();
-
         $this->graphQL('
             mutation CreateModule(
                 $name: String!
@@ -30,45 +27,49 @@ class ApplicantCompanyModulesMutationTest extends TestCase
             }
         ', [
             'name' => 'Module_'.\Illuminate\Support\Str::random(7),
-        ]);
-
-        $id = json_decode($this->response->getContent(), true);
-
-        $this->seeJson([
-            'data' => [
-                'createModule' => [
-                    'id' => $id['data']['createModule']['id'],
-                ],
-            ],
+        ])->seeJson([
+            'message' => 'Unauthenticated.',
         ]);
     }
 
     public function testAttachApplicantCompanyModule(): void
     {
-        $this->login();
+        $applicant_company = DB::connection('pgsql_test')
+            ->table('applicant_companies')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $applicant_company = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
-        $module = DB::connection('pgsql_test')->table('modules')->orderBy('id', 'DESC')->get();
+        $module = DB::connection('pgsql_test')
+            ->table('modules')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $this->graphQL('
-            mutation CreateApplicantCompanyModule(
-                $applicant_company_id: ID!
-                $module_id: [ID]
-            )
-            {
-                createApplicantCompanyModule (
-                    applicant_company_id: $applicant_company_id
-                    module_id: $module_id
-                    is_active: true
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation CreateApplicantCompanyModule(
+                    $applicant_company_id: ID!
+                    $module_id: [ID]
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'applicant_company_id' => strval($applicant_company[0]->id),
-            'module_id' => strval($module[0]->id),
-        ]);
+                    createApplicantCompanyModule (
+                        applicant_company_id: $applicant_company_id
+                        module_id: $module_id
+                        is_active: true
+                    )
+                    {
+                        id
+                    }
+                }',
+                'variables' => [
+                    'applicant_company_id' => (string) $applicant_company[0]->id,
+                    'module_id' => (string) $module[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -83,29 +84,41 @@ class ApplicantCompanyModulesMutationTest extends TestCase
 
     public function testDetachApplicantCompanyModule(): void
     {
-        $this->login();
+        $applicant_company = DB::connection('pgsql_test')
+            ->table('applicant_companies')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $applicant_company = DB::connection('pgsql_test')->table('applicant_companies')->orderBy('id', 'DESC')->get();
-        $module = DB::connection('pgsql_test')->table('modules')->orderBy('id', 'DESC')->get();
+        $module = DB::connection('pgsql_test')
+            ->table('modules')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $this->graphQL('
-            mutation DeleteApplicantCompanyModule(
-                $applicant_company_id: ID!
-                $module_id: [ID]
-            )
-            {
-                deleteApplicantCompanyModule (
-                    applicant_company_id: $applicant_company_id
-                    module_id: $module_id
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation DeleteApplicantCompanyModule(
+                    $applicant_company_id: ID!
+                    $module_id: [ID]
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'applicant_company_id' => strval($applicant_company[0]->id),
-            'module_id' => strval($module[0]->id),
-        ]);
+                    deleteApplicantCompanyModule (
+                        applicant_company_id: $applicant_company_id
+                        module_id: $module_id
+                    )
+                    {
+                        id
+                    }
+                }',
+                'variables' => [
+                    'applicant_company_id' => (string) $applicant_company[0]->id,
+                    'module_id' => (string) $module[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

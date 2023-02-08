@@ -29,6 +29,7 @@ type Payments {
     "Сумма"
     amount: Decimal!
     amount_real: Decimal!
+    status_id: ID
     "Комиссия"
     fee: Decimal
     fee_type: FeeType @belongsTo(relation: "feeType")
@@ -113,6 +114,8 @@ extend type Mutation @guard {
         beneficiary_additional_data: JSON
         "Сумма"
         amount: Decimal! @rules(apply: ["required", "gt:0"])
+        amount_real: Decimal
+        fee: Decimal
         "Комиссия"
         fee_type_id: ID!
         "Срочность"
@@ -131,7 +134,7 @@ extend type Mutation @guard {
     updatePayment(
         id: ID!
         "Статус"
-        status_id: Int!
+        status_id: ID!
     ):Payments   @field(resolver: "PaymentsMutator@update")
 
     "Удалить платеж"

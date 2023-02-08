@@ -14,7 +14,7 @@ class ApplicantService
         $bank = $account->paymentBank;
         $bankCorrespondent = $bank->bankCorrespondent;
         $applicantCompany = $account->owner->companies->first();
-        $defaultLogoPath = storage_path('pdf') . self::DEFAULT_LOGO_PATH;
+        $defaultLogoPath = storage_path('pdf').self::DEFAULT_LOGO_PATH;
         $companyLogoPath = $account->company->companySettings->logo->link ?? $defaultLogoPath;
         $country = $applicantCompany ? ($applicantCompany->country->name ?? '') : ($applicant->country->name ?? '');
 

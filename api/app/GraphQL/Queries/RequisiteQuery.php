@@ -26,7 +26,7 @@ class RequisiteQuery
     public function download($root, array $args)
     {
         $account = Account::find($args['account_id']);
-        if(!$account) {
+        if (! $account) {
             throw new GraphqlException('Account not found', 'Internal', 404);
         }
         $applicant = $account->owner;
@@ -43,6 +43,7 @@ class RequisiteQuery
     /**
      * @param  null  $_
      * @param  array<string, mixed>  $args
+     *
      * @throws GraphqlException
      */
     public function sendEmail($root, array $args)

@@ -60,7 +60,9 @@ type GroupRole {
     company: Company @belongsTo(relation: "company")
     "Получить связанный модуль"
     module: Module @belongsTo(relation: "modules")
+
 }
+
 
 type GroupRoleView @model(class: "\\App\\Models\\GroupRoleView") {
     id: ID!

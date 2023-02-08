@@ -20,11 +20,11 @@ class ApplicantProfileMutator extends BaseMutator
     {
         $applicant = auth()->user();
 
-        if (!empty($args['photo_id'])) {
+        if (! empty($args['photo_id'])) {
             $file = Files::where('id', $args['photo_id'])
                 ->where('entity_type', ClientTypeEnum::APPLICANT->toString())
                 ->first();
-            
+
             if (! $file) {
                 throw new GraphqlException('The photo is not associated with the Applicant', 'use');
             }
@@ -34,5 +34,4 @@ class ApplicantProfileMutator extends BaseMutator
 
         return $applicant;
     }
-
 }

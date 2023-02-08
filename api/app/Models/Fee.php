@@ -67,5 +67,4 @@ class Fee extends BaseModel
     {
         return $this->belongsTo(TransferOutgoing::class, 'transfer_id');
     }
-
 }

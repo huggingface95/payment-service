@@ -26,16 +26,16 @@ class AuthenticationLogsQueryTest extends TestCase
 
     public function testAuthenticationLogsList(): void
     {
-        $this->login();
-
         $authentication_logs = DB::connection('clickhouse')
-            ->table((new AuthenticationLog)->getTable())
+            ->table((new AuthenticationLog())->getTable())
             ->select(['id', 'company'])
             ->limit(10)
             ->orderBy('id', 'DESC')
             ->get();
 
-        $response = $this->graphQL('
+        $response = $this->postGraphQL(
+            [
+                'query' => '
             {
                 authenticationLogs {
                     data {
@@ -54,7 +54,11 @@ class AuthenticationLogsQueryTest extends TestCase
                     }
                 }
             }
-        ');
+        ', ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         foreach ($authentication_logs as $authentication_log) {
             $response->seeJson([
@@ -66,18 +70,16 @@ class AuthenticationLogsQueryTest extends TestCase
 
     public function testAuthenticationLogsListWithQuery(): void
     {
-        $this->login();
-
         $authentication_log = DB::connection('clickhouse')
-            ->table((new AuthenticationLog)->getTable())
+            ->table((new AuthenticationLog())->getTable())
             ->limit(1)
             ->first();
 
         $authentication_logs = DB::connection('clickhouse')
-            ->table((new AuthenticationLog)->getTable())
+            ->table((new AuthenticationLog())->getTable())
             ->where('company', $authentication_log['company'])
-            ->where('member', $authentication_log['member'])
-            ->where('group', $authentication_log['group'])
+            ->where('email', $authentication_log['email'])
+            ->where('provider', $authentication_log['provider'])
             ->where('domain', $authentication_log['domain'])
             ->where('ip', $authentication_log['ip'])
             ->where('expired_at', $authentication_log['expired_at'])
@@ -87,66 +89,67 @@ class AuthenticationLogsQueryTest extends TestCase
         $expired_at = substr($authentication_log['expired_at'], 0, 10);
         $created_at = substr($authentication_log['created_at'], 0, 10);
 
-        $response = $this->graphQL('
-        query(
-            $company: String!, $member: String!, $group: String!, $domain: String!,
-            $ip: String!, $country: String!, $city: String!, $platform: String!,
-            $browser: String!, $device_type: String!, $model: String!, $status: String!,
-            $expired_at: Date!, $created_at: Date!
-        ) {
-            authenticationLogs(
-                query: {
-                    company: $company
-                    member: $member
-                    group: $group
-                    domain: $domain
-                    ip: $ip
-                    country: $country
-                    city: $city
-                    platform: $platform
-                    browser: $browser
-                    device_type: $device_type
-                    model: $model
-                    status: $status
-                    expired_at: $expired_at
-                    created_at: $created_at
-                }
-            ) {
-                data {
-                    id
-                    company
-                    member
-                    group
-                    created_at
-                }
-                paginatorInfo {
-                    count
-                    currentPage
-                    firstItem
-                    hasMorePages
-                    lastItem
-                    lastPage
-                    perPage
-                    total
-                }
-            }
-        }
-        ', [
-            'company' => $authentication_log['company'],
-            'member' => $authentication_log['member'],
-            'group' => $authentication_log['group'],
-            'domain' => $authentication_log['domain'],
-            'ip' => $authentication_log['ip'],
-            'country' => $authentication_log['country'],
-            'city' => $authentication_log['city'],
-            'platform' => $authentication_log['platform'],
-            'browser' => $authentication_log['browser'],
-            'device_type' => $authentication_log['device_type'],
-            'model' => $authentication_log['model'],
-            'status' => $authentication_log['status'],
-            'created_at' => $created_at,
-            'expired_at' => $expired_at,
-        ]);
+        $response = $this->postGraphQL(
+            [
+                'query' => '
+                query(
+                    $company: String!, $email: String!, $provider: String!, $domain: String!,
+                    $ip: String!, $country: String!, $city: String!, $platform: String!,
+                    $browser: String!, $device_type: String!, $model: String!, $status: String!,
+                ) {
+                    authenticationLogs(
+                        query: {
+                            company: $company
+                            email: $email
+                            provider: $provider
+                            domain: $domain
+                            ip: $ip
+                            country: $country
+                            city: $city
+                            platform: $platform
+                            browser: $browser
+                            device_type: $device_type
+                            model: $model
+                            status: $status
+                        }
+                    ) {
+                        data {
+                            id
+                            company
+                            email
+                            provider
+                        }
+                        paginatorInfo {
+                            count
+                            currentPage
+                            firstItem
+                            hasMorePages
+                            lastItem
+                            lastPage
+                            perPage
+                            total
+                        }
+                    }
+                }',
+                'variables' => [
+                    'company' => $authentication_log['company'],
+                    'email' => $authentication_log['email'],
+                    'provider' => $authentication_log['provider'],
+                    'domain' => $authentication_log['domain'],
+                    'ip' => $authentication_log['ip'],
+                    'country' => $authentication_log['country'],
+                    'city' => $authentication_log['city'],
+                    'platform' => $authentication_log['platform'],
+                    'browser' => $authentication_log['browser'],
+                    'device_type' => $authentication_log['device_type'],
+                    'model' => $authentication_log['model'],
+                    'status' => $authentication_log['status'],
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         foreach ($authentication_logs as $authentication_log) {
             $response->seeJson([
@@ -158,11 +161,11 @@ class AuthenticationLogsQueryTest extends TestCase
 
     public function testAuthenticationLogsListPaginate(): void
     {
-        $this->login();
-
-        $response = $this->graphQL('
+        $response = $this->postGraphQL(
+            [
+                'query' => '
         {
-            authenticationLogs(page: 1, count: 3) {
+            authenticationLogs(page: 1, first: 3) {
               data {
                 id
                 company
@@ -179,7 +182,11 @@ class AuthenticationLogsQueryTest extends TestCase
               }
             }
         }
-        ');
+        ', ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         $response->seeJson([
             'count' => 3,

@@ -16,9 +16,9 @@ class FilterByCompanyScope implements Scope
                 return sprintf('%s%s', $table, '(?=[\.\"\' ])');
             }, array_keys(BaseModel::FILTER_BY_COMPANY_TABLES));
 
-            if (preg_match(sprintf("/%s/", implode('|', $filteredTables)), $builder->getQuery()->toSql(), $matches)) {
+            if (preg_match(sprintf('/%s/', implode('|', $filteredTables)), $builder->getQuery()->toSql(), $matches)) {
                 foreach ($matches as $match) {
-                    $column = $match . '.' . BaseModel::FILTER_BY_COMPANY_TABLES[$match];
+                    $column = $match.'.'.BaseModel::FILTER_BY_COMPANY_TABLES[$match];
                     $builder->where($column, BaseModel::$currentCompanyId);
                 }
             }

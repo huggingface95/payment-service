@@ -9,6 +9,8 @@ type AuthenticationLog {
     member: String!
     "Тип"
     client_type: String!
+    "Тип"
+    provider: String!
     "Группа"
     group: String!
     "Домен"
@@ -89,7 +91,9 @@ extend type Query @guard {
 input QueryAuthenticationLogsStatic @spread {
     company: String @eq
     member: String @eq
+    email: String @eq
     client_type: String @eq
+    provider: String @eq
     group: String @eq
     domain: String @eq
     ip: String @eq

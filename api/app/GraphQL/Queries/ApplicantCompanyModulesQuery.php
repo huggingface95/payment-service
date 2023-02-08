@@ -15,7 +15,7 @@ class ApplicantCompanyModulesQuery
         $modules = [];
 
         $applicantModules = ApplicantCompany::find($args['applicant_company_id'])->modules ?? null;
-        
+
         if (! $applicantModules) {
             return $modules;
         }

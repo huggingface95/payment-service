@@ -4,8 +4,8 @@ namespace App\Repositories;
 
 use App\Models\Account;
 use App\Repositories\Interfaces\AccountRepositoryInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class AccountRepository extends Repository implements AccountRepositoryInterface
 {

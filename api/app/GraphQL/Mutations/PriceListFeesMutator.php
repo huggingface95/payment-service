@@ -19,7 +19,9 @@ class PriceListFeesMutator
      */
     public function create($_, array $args)
     {
-        $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args);
+        if (isset($args['fee_ranges'])) {
+            $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args);
+        }
 
         $priceListFee = PriceListFee::create($args);
 
@@ -36,7 +38,10 @@ class PriceListFeesMutator
      */
     public function update($_, array $args)
     {
-        $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args);
+        if (isset($args['fee_ranges'])) {
+            $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args);
+        }
+
         $priceListFee = PriceListFee::find($args['id']);
 
         if ($priceListFee) {

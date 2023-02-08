@@ -27,14 +27,14 @@ class CommissionTemplate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'name', 'is_active', 'description', 'payment_provider_id', 'country_id', 'currency_id', 'commission_template_limit_id', 'member_id','company_id'
+        'name', 'is_active', 'description', 'payment_provider_id', 'country_id', 'currency_id', 'commission_template_limit_id', 'member_id', 'company_id',
     ];
 
     protected static function booted()
     {
         parent::booted();
         static::addGlobalScope(new MemberScope());
-        static::addGlobalScope(new ApplicantFilterByMemberScope);
+        static::addGlobalScope(new ApplicantFilterByMemberScope());
     }
 
     /**
@@ -106,6 +106,6 @@ class CommissionTemplate extends BaseModel
 
     public function company(): BelongsTo
     {
-        return $this->belongsTo(Company::class,'company_id');
+        return $this->belongsTo(Company::class, 'company_id');
     }
 }

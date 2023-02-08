@@ -34,6 +34,7 @@ class IbanIndividualStatusCommand extends Command
 
     /**
      * Execute the console command.
+     *
      * @throws GraphqlException
      */
     public function handle(EmailService $emailService)

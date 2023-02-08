@@ -7,13 +7,21 @@ use App\Models\ApplicantIndividual;
 class EmailTrustedDeviceRequestDTO
 {
     public int $companyId;
+
     public string $fullName;
+
     public string $email;
+
     public string $createdAt;
+
     public string $ip;
+
     public string $os;
+
     public string $type;
+
     public string $model;
+
     public string $browser;
 
     public static function transform(array $activeSession, ApplicantIndividual $user): self

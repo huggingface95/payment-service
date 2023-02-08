@@ -19,8 +19,7 @@ class PaymentProviderMutator
             $getSystem = PaymentSystem::whereIn('id', $paymentSystems)->get();
             if ($getSystem->isEmpty()) {
                 throw new GraphqlException('Payment System does not exist', 'use');
-            }
-            else {
+            } else {
                 unset($args['payment_systems']);
                 $paymentProvider = PaymentProvider::create($args);
                 $paymentProvider->paymentSystems()->saveMany($getSystem);
@@ -44,8 +43,7 @@ class PaymentProviderMutator
             $getSystem = PaymentSystem::whereIn('id', $paymentSystems)->get();
             if ($getSystem->isEmpty()) {
                 throw new GraphqlException('Payment System does not exist', 'use');
-            }
-            else {
+            } else {
                 unset($args['payment_systems']);
                 $paymentProvider->paymentSystems()->saveMany($getSystem);
             }

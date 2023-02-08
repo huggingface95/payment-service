@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 
 interface VvRepositoryInterface
 {
-
     public function findByToken(string $token): Model|Builder|null;
 
     public function findById(int $id): Model|Builder|null;
@@ -22,6 +21,4 @@ interface VvRepositoryInterface
     public function getDtoRegisterCompanyRequest(int $id, VvConfig $config): VvRegisterRequest;
 
     public function getDtoGetLinkRequest(int $id, string $action, VvConfig $config): VvGetLinkRequest;
-
 }
-

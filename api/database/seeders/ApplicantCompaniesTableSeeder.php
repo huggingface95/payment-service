@@ -21,11 +21,11 @@ class ApplicantCompaniesTableSeeder extends Seeder
             ApplicantCompany::firstOrCreate(
                 [
                     'id' => $i,
-                    'name' => 'Applicant Company Test ' . $i,
+                    'name' => 'Applicant Company Test '.$i,
                 ],
                 [
-                    'email' => 'applicant' . $i . '@test.com',
-                    'url' => 'https://applicant-company-test' . $i . '.com',
+                    'email' => 'applicant'.$i.'@test.com',
+                    'url' => 'https://applicant-company-test'.$i.'.com',
                     'phone' => $faker->phoneNumber(),
                     'country_id' => 1,
                     'city' => $faker->city(),

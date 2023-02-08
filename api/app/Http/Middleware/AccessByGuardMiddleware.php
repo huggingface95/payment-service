@@ -8,11 +8,9 @@ use Illuminate\Http\Request;
 
 class AccessByGuardMiddleware
 {
-
     public function __construct(
         protected AuthService $authService
     ) {
-
     }
 
     /**
@@ -27,10 +25,8 @@ class AccessByGuardMiddleware
 
         if ($guard === 'api_client') {
             config(['auth.providers.members.model' => \App\Models\ApplicantIndividual::class]);
-
         } else {
             config(['auth.providers.members.model' => \App\Models\Members::class]);
-
         }
 
         return $next($request);

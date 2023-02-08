@@ -2,8 +2,6 @@
 
 namespace App\DTO\Email;
 
-use App\Models\EmailSmtp;
-
 class SmtpDataDTO
 {
     public string|array $to;

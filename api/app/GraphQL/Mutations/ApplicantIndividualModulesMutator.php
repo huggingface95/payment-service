@@ -19,7 +19,7 @@ class ApplicantIndividualModulesMutator extends BaseMutator
         $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
 
         if (isset($args['module_id'])) {
-            $applicant->modules()->delete();
+            $applicant->modules()->detach();
             foreach ($args['module_id'] as $module) {
                 ApplicantIndividualModules::insert(['module_id'=> $module, 'applicant_individual_id' => $args['applicant_individual_id']]);
             }
@@ -31,7 +31,7 @@ class ApplicantIndividualModulesMutator extends BaseMutator
     public function detach($root, array $args)
     {
         $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
-        $applicant->modules()->delete();
+        $applicant->modules()->detach();
 
         return $applicant;
     }

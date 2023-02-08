@@ -18,7 +18,7 @@ use Spatie\Permission\PermissionRegistrar;
  */
 class Role extends SpatieRole
 {
-    const SUPER_ADMIN_ID = 35;
+    public const SUPER_ADMIN_ID = 35;
 
     protected $fillable = [
         'name', 'guard_name', 'description', 'company_id', 'group_type_id',

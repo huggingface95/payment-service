@@ -7,9 +7,13 @@ use App\Models\Members;
 class EmailMembersRequestDTO
 {
     public string $emailTemplateName;
+
     public int $companyId;
+
     public Members $members;
+
     public object $data;
+
     public string $email;
 
     public static function transform(Members $members, array $data, string $emailTemplateName): self

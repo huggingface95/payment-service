@@ -16,8 +16,8 @@ final class CreatePriceListFeesValidator extends Validator
     public function rules(): array
     {
         return [
-            'input.fees.*.fee' => [new CurrencyMode],
-            'input.fees.*' => [new CurrencyRangeMatches],
+            'input.fees.*.fee' => [new CurrencyMode()],
+            'input.fees.*' => [new CurrencyRangeMatches()],
         ];
     }
 }

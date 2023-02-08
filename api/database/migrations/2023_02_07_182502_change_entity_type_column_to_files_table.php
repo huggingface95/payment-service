@@ -13,7 +13,7 @@ class ChangeEntityTypeColumnToFilesTable extends Migration
      */
     public function up()
     {
-        $enums = join(', ', array_map(function ($enum) {
+        $enums = implode(', ', array_map(function ($enum) {
             return sprintf("'%s'::character varying", $enum->toString());
         }, FileEntityTypeEnum::cases()));
 
@@ -27,6 +27,6 @@ class ChangeEntityTypeColumnToFilesTable extends Migration
      */
     public function down()
     {
-        DB::statement("ALTER TABLE files DROP CONSTRAINT entity_type_check");
+        DB::statement('ALTER TABLE files DROP CONSTRAINT entity_type_check');
     }
 }

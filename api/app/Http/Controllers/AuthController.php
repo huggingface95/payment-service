@@ -19,7 +19,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-
     private string $guard = '';
 
     /**
@@ -43,7 +42,7 @@ class AuthController extends Controller
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required',
-            'client_type' => 'nullable|string'
+            'client_type' => 'nullable|string',
         ]);
 
         $this->guard = $this->authService->getGuardByClientType($request->client_type);
@@ -55,7 +54,7 @@ class AuthController extends Controller
 
         if (Cache::get($attemptCacheKey)) {
             if ($this->guard == 'api') {
-                $user = Members::select('id','member_status_id')->where('email', $request->email)->first();
+                $user = Members::select('id', 'member_status_id')->where('email', $request->email)->first();
             } else {
                 $user = ApplicantIndividual::select('id', 'is_active')->where('email', $request->email)->first();
             }
@@ -606,7 +605,7 @@ class AuthController extends Controller
         $user = auth($this->guard)->user();
 
         DB::connection('clickhouse')
-            ->table((new AuthenticationLog)->getTable())
+            ->table((new AuthenticationLog())->getTable())
             ->insert([
                 'id' => rand(0, 4294967295),
                 'member' => $user->email,
@@ -624,7 +623,7 @@ class AuthController extends Controller
     private function getAuthUserIp(string $email): string
     {
         $getIp = DB::connection('clickhouse')
-            ->table((new AuthenticationLog)->getTable())
+            ->table((new AuthenticationLog())->getTable())
             ->select(['ip'])
             ->where('member', '=', (string) $email)
             ->where('client_type', '=', (string) $this->guard == 'api' ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString())
@@ -643,7 +642,7 @@ class AuthController extends Controller
     private function getAuthUser(string $email): string
     {
         $getStatus = DB::connection('clickhouse')
-            ->table((new AuthenticationLog)->getTable())
+            ->table((new AuthenticationLog())->getTable())
             ->select(['status'])
             ->where('member', '=', (string) $email)
             ->where('client_type', '=', (string) $this->guard == 'api' ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString())
@@ -657,7 +656,7 @@ class AuthController extends Controller
             $this->writeToAuthLog('logout');
 
             $getStatus = DB::connection('clickhouse')
-                ->table((new AuthenticationLog)->getTable())
+                ->table((new AuthenticationLog())->getTable())
                 ->select(['status'])
                 ->where('member', '=', (string) $email)
                 ->where('client_type', '=', (string) $this->guard == 'api' ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString())
@@ -672,7 +671,7 @@ class AuthController extends Controller
     private function getAuthUserBrowser(string $email)
     {
         $getBrowser = DB::connection('clickhouse')
-            ->table((new AuthenticationLog)->getTable())
+            ->table((new AuthenticationLog())->getTable())
             ->select(['browser'])
             ->where('member', '=', (string) $email)
             ->where('client_type', '=', (string) $this->guard == 'api' ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString())

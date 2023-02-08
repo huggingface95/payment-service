@@ -13,7 +13,6 @@ enum FileEntityTypeEnum: int
     case PROJECT = 7;
     case FILE = 8;
 
-
     public function toString(): string
     {
         return match ($this) {

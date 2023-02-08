@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Enums\PaymentStatusEnum;
 use App\Models\PaymentStatus;
-use App\Models\PaymentSystem;
 use Illuminate\Database\Seeder;
 
 class PaymentStatusSeed extends Seeder
@@ -37,7 +36,7 @@ class PaymentStatusSeed extends Seeder
             ]);
         }
 
-       foreach ($operationTypeRest as $item => $value) {
+        foreach ($operationTypeRest as $item => $value) {
             PaymentStatus::firstOrCreate([
                 'id' => $item,
                 'name' => $value,

@@ -16,7 +16,6 @@ use PragmaRX\Google2FALaravel\Facade as Google2FA;
 
 class ApplicantSettingsMutator extends BaseMutator
 {
-
     public function __construct(
         protected AuthService $authService,
         protected EmailService $emailService
@@ -24,7 +23,7 @@ class ApplicantSettingsMutator extends BaseMutator
     }
 
     /**
-     * @param  $_
+     * @param    $_
      * @param  array  $args
      * @return array
      */
@@ -47,7 +46,7 @@ class ApplicantSettingsMutator extends BaseMutator
     }
 
     /**
-     * @param  $_
+     * @param    $_
      * @param  array  $args
      * @return array
      */
@@ -58,7 +57,7 @@ class ApplicantSettingsMutator extends BaseMutator
         $this->checkCurrentPassword($args, $applicant);
 
         $valid = Google2FA::verifyGoogle2FA($applicant->google2fa_secret, $args['code']);
-        if (!$valid) {
+        if (! $valid) {
             throw new GraphqlException('Unable to verify your code', 'use');
         }
 
@@ -84,7 +83,7 @@ class ApplicantSettingsMutator extends BaseMutator
 
     private function checkCurrentPassword(array $args, ApplicantIndividual $applicant)
     {
-        if (!Hash::check($args['current_password'], $applicant->password_hash)) {
+        if (! Hash::check($args['current_password'], $applicant->password_hash)) {
             throw new GraphqlException('The current password is wrong', 'use');
         }
     }

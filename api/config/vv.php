@@ -8,5 +8,5 @@ return [
         'register' => '%s/register/%s/%d',
         'preparation' => '%s/preparation',
     ],
-    'post_back_url' => 'https://dev.admin.docudots.com/esimna'
+    'post_back_url' => 'https://dev.admin.docudots.com/esimna',
 ];

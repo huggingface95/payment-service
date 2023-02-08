@@ -22,7 +22,6 @@ use Illuminate\Support\Collection;
 
 class PaymentsMutator
 {
-
     public function __construct(protected PaymentsService $paymentsService)
     {
     }
@@ -204,5 +203,4 @@ class PaymentsMutator
 
         return $allLimits;
     }
-
 }

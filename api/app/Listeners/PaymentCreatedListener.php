@@ -32,5 +32,4 @@ class PaymentCreatedListener
             $this->accountService->setAmmountReserveOnBalance($payment);
         }
     }
-
 }

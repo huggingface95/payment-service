@@ -125,7 +125,7 @@ class TransferOutgoing extends BaseModel
     public function files(): BelongsToMany
     {
         return $this->belongsToMany(Files::class, 'transfer_file_relation', 'transfer_id', 'file_id')
-            ->where('transfer_type', class_basename(TransferOutgoing::class));
+            ->where('transfer_type', class_basename(self::class));
     }
 
     public function paymentBank(): BelongsTo

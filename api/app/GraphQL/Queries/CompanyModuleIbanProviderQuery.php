@@ -9,16 +9,15 @@ use Illuminate\Support\Facades\Crypt;
 
 class CompanyModuleIbanProviderQuery
 {
-
     public function getPassword($root, array $args): array
     {
         $provider = CompanyModuleIbanProvider::find($args['id']);
-        if (!$provider) {
+        if (! $provider) {
             throw new GraphqlException('Company module IBAN provider not found', 'not found', 404);
         }
 
         try {
-            if (!empty($provider->password)) {
+            if (! empty($provider->password)) {
                 $decryptedPassword = Crypt::decryptString($provider->password);
             }
         } catch (DecryptException $e) {
@@ -30,5 +29,4 @@ class CompanyModuleIbanProviderQuery
             'password' => $decryptedPassword,
         ];
     }
-
 }

@@ -17,7 +17,6 @@ use PragmaRX\Google2FALaravel\Facade as Google2FA;
 
 class ApplicantDeviceMutator extends BaseMutator
 {
-
     public function __construct(
         protected AuthService $authService,
         protected EmailService $emailService
@@ -25,22 +24,21 @@ class ApplicantDeviceMutator extends BaseMutator
     }
 
     /**
-     * @param  $_
+     * @param    $_
      * @param  array  $args
      * @return array
      */
     public function update($_, array $args)
     {
-
         $applicant = auth()->user();
 
         $device = DB::connection('clickhouse')
-            ->table((new ActiveSession)->getTable())
+            ->table((new ActiveSession())->getTable())
             ->where('id', $args['id'])
             ->where('member', $applicant->email)
             ->get();
 
-        if (!$device) {
+        if (! $device) {
             throw new GraphqlException('Device not found', 'use');
         }
 
@@ -57,7 +55,7 @@ class ApplicantDeviceMutator extends BaseMutator
     }
 
     /**
-     * @param  $_
+     * @param    $_
      * @param  array  $args
      * @return array
      */
@@ -66,18 +64,18 @@ class ApplicantDeviceMutator extends BaseMutator
         $applicant = auth()->user();
 
         $valid = Google2FA::verifyGoogle2FA($applicant->google2fa_secret, $args['code']);
-        if (!$valid) {
+        if (! $valid) {
             throw new GraphqlException('Unable to verify your code', 'use');
         }
 
         $trusted = $args['trusted'] == true ? 'true' : 'false';
         $id = intval($args['id']);
-        $rawSql = 'ALTER TABLE ' . (new ActiveSession)->getTable() . ' UPDATE trusted=' . $trusted . ' WHERE id=' . $id . ' AND member=\'' . $applicant->email . '\'';
+        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' UPDATE trusted='.$trusted.' WHERE id='.$id.' AND member=\''.$applicant->email.'\'';
 
         DB::connection('clickhouse')->statement($rawSql);
 
         $device = DB::connection('clickhouse')
-            ->table((new ActiveSession)->getTable())
+            ->table((new ActiveSession())->getTable())
             ->where('id', $args['id'])
             ->where('member', $applicant->email)
             ->first();
@@ -87,7 +85,7 @@ class ApplicantDeviceMutator extends BaseMutator
             'client_name' => $applicant->first_name,
             'created_at' => $device['created_at'],
             'ip' => $device['ip'],
-            'device_details' => $device['platform'] . ' ' . $device['browser'],
+            'device_details' => $device['platform'].' '.$device['browser'],
             'login_page_url' => $applicant->company->companySettings->client_url,
         ];
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $applicant->company, $emailTemplateSubject, $emailData);
@@ -100,7 +98,7 @@ class ApplicantDeviceMutator extends BaseMutator
     }
 
     /**
-     * @param  $_
+     * @param    $_
      * @param  array  $args
      * @return array
      */
@@ -109,24 +107,24 @@ class ApplicantDeviceMutator extends BaseMutator
         $applicant = auth()->user();
 
         $device = DB::connection('clickhouse')
-            ->table((new ActiveSession)->getTable())
+            ->table((new ActiveSession())->getTable())
             ->where('id', $args['id'])
             ->where('member', $applicant->email)
             ->first();
 
         $id = intval($args['id']);
-        $rawSql = 'ALTER TABLE ' . (new ActiveSession)->getTable() . ' DELETE WHERE id=' . $id . ' AND member=\'' . $applicant->email . '\'';
+        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' DELETE WHERE id='.$id.' AND member=\''.$applicant->email.'\'';
 
         DB::connection('clickhouse')->statement($rawSql);
 
-        $date = new \DateTime;
+        $date = new \DateTime();
         $emailTemplateSubject = 'You have removed a Trusted device';
         $emailData = [
             'client_name' => $applicant->first_name,
             'date' => $date->format('Y-m-d'),
             'time_and_timezone' => $date->format('H:s:i e'),
             'ip' => $device['ip'],
-            'client_device' => $device['platform'] . ' ' . $device['browser'],
+            'client_device' => $device['platform'].' '.$device['browser'],
             'login_page_url' => $applicant->company->companySettings->client_url,
         ];
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $applicant->company, $emailTemplateSubject, $emailData);
@@ -137,5 +135,4 @@ class ApplicantDeviceMutator extends BaseMutator
 
         return $device;
     }
-
 }

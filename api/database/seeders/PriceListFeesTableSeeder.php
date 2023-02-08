@@ -22,7 +22,7 @@ class PriceListFeesTableSeeder extends Seeder
 
         for ($i = 1; $i <= 3; $i++) {
             PriceListFee::firstOrCreate([
-                'name' => 'Test fee ' .$i,
+                'name' => 'Test fee '.$i,
                 'price_list_id' => $commissionPriceList->id,
             ], [
                 'type_id' => 1,

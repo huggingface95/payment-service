@@ -25,14 +25,14 @@ class OperationTypeSeeder extends Seeder
             TransferTypeEnum::BETWEEN_USERS->toString() => [OperationTypeEnum::BETWEEN_USERS->toString()],
             TransferTypeEnum::EXCHANGE->toString() => [OperationTypeEnum::EXCHANGE->toString()],
             TransferTypeEnum::FEE->toString() => [
-                OperationTypeEnum::DEBIT->toString(), 
-                OperationTypeEnum::CREDIT->toString(), 
+                OperationTypeEnum::DEBIT->toString(),
+                OperationTypeEnum::CREDIT->toString(),
                 OperationTypeEnum::SCHEDULED_FEE->toString(),
             ],
         ];
 
         $feeTypeFee = FeeType::where('name', FeeType::FEES)->first();
-        
+
         $i = 1;
         foreach ($types as $k => $values) {
             foreach ($values as $v) {

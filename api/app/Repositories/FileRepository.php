@@ -9,7 +9,6 @@ use App\Repositories\Interfaces\FileRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-
 class FileRepository extends Repository implements FileRepositoryInterface
 {
     protected function model(): string
@@ -26,12 +25,11 @@ class FileRepository extends Repository implements FileRepositoryInterface
             'file_name' => $response->data->file_name,
             'mime_type' => $response->data->mime_type,
             'size' => $response->data->size,
-            'entity_type' => "file",
+            'entity_type' => 'file',
             'author_id' => $response->authorId,
             'storage_path' => $response->data->storage_path,
             'storage_name' => $response->data->storage_name,
-            'link' => 'https://dev.storage.docudots.com/' . $response->data->full_name,
+            'link' => 'https://dev.storage.docudots.com/'.$response->data->full_name,
         ]);
     }
-
 }

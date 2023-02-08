@@ -2,10 +2,8 @@
 
 namespace App\GraphQL\Queries;
 
-use App\Models\OperationType;
 use App\Models\PaymentStatus;
 use GraphQL\Type\Definition\ResolveInfo;
-use Illuminate\Database\Eloquent\Builder;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class PaymentStatusQuery
@@ -20,7 +18,7 @@ class PaymentStatusQuery
 
         if (isset($args['filter']['column']) && $args['filter']['column'] === 'operation_type') {
             $transfer_type = $args['filter']['value'];
-            $paymentStatus->where('operation_type', 'ilike', '%' . $transfer_type . '%')->get();
+            $paymentStatus->where('operation_type', 'ilike', '%'.$transfer_type.'%')->get();
         }
 
         return $paymentStatus->orderBy('id', 'ASC')->get();

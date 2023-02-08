@@ -59,7 +59,7 @@ class MemberAccessLimitation extends BaseModel
 
     public function groupRoles(): BelongsToMany
     {
-        return $this->belongsToMany(GroupRole::class, 'member_access_limitation_group_roles','access_limitation_id', 'group_role_id');
+        return $this->belongsToMany(GroupRole::class, 'member_access_limitation_group_roles', 'access_limitation_id', 'group_role_id');
     }
 
     public function project(): BelongsTo

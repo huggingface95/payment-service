@@ -29,7 +29,7 @@ class AddLogoToPaymentProviderTable extends Migration
     public function down()
     {
         Schema::table('payment_provider', function (Blueprint $table) {
-            $table->string('logo_key',256)->nullable();
+            $table->string('logo_key', 256)->nullable();
             $table->dropColumn('logo_id');
         });
     }

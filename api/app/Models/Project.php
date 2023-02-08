@@ -69,5 +69,4 @@ class Project extends BaseModel
     {
         return $this->belongsTo(State::class, 'state_id');
     }
-
 }

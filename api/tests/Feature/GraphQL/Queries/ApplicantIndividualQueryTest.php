@@ -11,28 +11,49 @@ class ApplicantIndividualQueryTest extends TestCase
      *
      * @return void
      */
+    public function testApplicantIndividualNoAuth(): void
+    {
+        $this->graphQL('
+             {
+                applicantIndividuals
+                 {
+                    data {
+                        id
+                        fullname
+                        email
+                        url
+                    }
+                }
+             }')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
 
     public function testQueryApplicantIndividual(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->get();
 
-        $this->graphQL('
-            query ApplicantIndividual($id:ID!){
-                applicantIndividual(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($applicant[0]->id),
-        ])->seeJson([
+        $this->postGraphQL(
+            [
+                'query' => 'query ApplicantIndividual($id:ID!){
+                    applicantIndividual(id: $id) {
+                        id
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'applicantIndividual' => [
-                    'id' => strval($applicant[0]->id),
+                    'id' => (string) $applicant[0]->id,
                 ],
             ],
         ]);
@@ -40,34 +61,39 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testSetApplicantIndividualPassword(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            mutation SetApplicantIndividualPassword(
-                $id: ID!
-                $password: String!
-                $password_confirmation: String!
-            )
-            {
-                setApplicantIndividualPassword (
-                    id: $id
-                    password: $password
-                    password_confirmation: $password_confirmation
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation SetApplicantIndividualPassword(
+                    $id: ID!
+                    $password: String!
+                    $password_confirmation: String!
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($applicant[0]->id),
-            'password' => '1234567Za',
-            'password_confirmation' => '1234567Za',
-        ]);
+                    setApplicantIndividualPassword (
+                        id: $id
+                        password: $password
+                        password_confirmation: $password_confirmation
+                    )
+                    {
+                        id
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                    'password' => '1234567Za',
+                    'password_confirmation' => '1234567Za',
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -82,80 +108,95 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualOrderBy(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-        query {
-            applicantIndividuals(orderBy: { column: ID, order: DESC }) {
-                data {
-                    id
-                }
-                }
-        }')->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant[0]->id),
+                'query' => 'query {
+                    applicantIndividuals(orderBy: { column: ID, order: DESC }) {
+                        data {
+                            id
+                        }
+                        }
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant[0]->id,
             ],
         ]);
     }
 
     public function testQueryApplicantIndividualWhere(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
             ->where('id', 1)
             ->first();
 
-        $this->graphQL('
-        query {
-            applicantIndividuals(where: { column: ID, value: 1}) {
-                data {
-                    id
-                }
-            }
-        }')->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant->id),
+                'query' => 'query ApplicantIndividuals($id: Mixed) {
+                    applicantIndividuals(where: { column: ID, value: $id}) {
+                        data {
+                            id
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => $applicant->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant->id,
             ],
         ]);
     }
 
     public function testQueryApplicantIndividualFilterById(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
             ->first();
 
-        $this->graphQL('
-            query TestApplicantIndividualFilters($id: Mixed) {
-                applicantIndividuals(filter: { column: ID, value: $id }) {
-                    data {
-                        id
-                        first_name
-                        email
-                        url
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantIndividualFilters($id: Mixed) {
+                    applicantIndividuals(filter: { column: ID, value: $id }) {
+                        data {
+                            id
+                            first_name
+                            email
+                            url
+                        }
                     }
-                }
-            }
-        ', [
-            'id' => strval($applicant->id),
-        ])->seeJson([
+                }',
+                'variables' => [
+                    'id' => (string) $applicant->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'applicantIndividuals' => [
                     'data' => [[
-                        'id' => strval($applicant->id),
-                        'first_name' => strval($applicant->first_name),
-                        'email' => strval($applicant->email),
-                        'url' => strval($applicant->url),
-                    ]]
+                        'id' => (string) $applicant->id,
+                        'first_name' => (string) $applicant->first_name,
+                        'email' => (string) $applicant->email,
+                        'url' => (string) $applicant->url,
+                    ]],
                 ],
             ],
         ]);
@@ -163,36 +204,38 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualFilterByEmail(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
             ->first();
 
-        $this->graphQL('
-            query TestApplicantIndividualFilters($email: Mixed) {
-                applicantIndividuals(
-                    filter: { column: EMAIL, operator: ILIKE, value: $email }
-                ) {
-                    data {
-                        id
-                        first_name
-                        email
-                        url
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantIndividualFilters($email: Mixed) {
+                    applicantIndividuals(filter: { column: EMAIL, operator: ILIKE, value: $email }) {
+                        data {
+                            id
+                            first_name
+                            email
+                            url
+                        }
                     }
-                }
-            }
-        ', [
-            'email' => strval($applicant->email),
-        ])->seeJson([
+                }',
+                'variables' => [
+                    'email' => (string) $applicant->email,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'applicantIndividuals' => [
                     'data' => [[
-                        'id' => strval($applicant->id),
-                        'first_name' => strval($applicant->first_name),
-                        'email' => strval($applicant->email),
-                        'url' => strval($applicant->url),
-                    ]]
+                        'id' => (string) $applicant->id,
+                        'first_name' => (string) $applicant->first_name,
+                        'email' => (string) $applicant->email,
+                        'url' => (string) $applicant->url,
+                    ]],
                 ],
             ],
         ]);
@@ -200,50 +243,39 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualFilterByCompanyId(): void
     {
-        $this->login();
-
-        $applicants = DB::connection('pgsql_test')
+        $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
-            ->where('company_id', 1)
-            ->get();
+            ->first();
 
-        foreach($applicants as $applicant) {
-            $data[] = [
-                'id' => strval($applicant->id),
-                'first_name' => strval($applicant->first_name),
-                'email' => strval($applicant->email),
-                'url' => strval($applicant->url),
-            ];
-        }
-
-        $this->graphQL('
-            query TestApplicantIndividualFilters($company_id: Mixed) {
-                applicantIndividuals(
-                    filter: { column: COMPANY_ID, value: $company_id }
-                ) {
-                    data {
-                        id
-                        first_name
-                        email
-                        url
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantIndividualFilters($id: Mixed) {
+                    applicantIndividuals(filter: { column: COMPANY_ID, value: $id }) {
+                        data {
+                            id
+                            first_name
+                            email
+                            url
+                        }
                     }
-                }
-            }
-        ', [
-            'company_id' => 1,
-        ])->seeJson([
-            'data' => [
-                'applicantIndividuals' => [
-                    'data' => $data
+                }',
+                'variables' => [
+                    'id' => (string) $applicant->company_id,
                 ],
             ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $applicant->id,
+            'first_name' => (string) $applicant->first_name,
+            'email' => (string) $applicant->email,
+            'url' => (string) $applicant->url,
         ]);
     }
 
     public function testQueryApplicantIndividualFilterByHasRiskLevel(): void
     {
-        $this->login();
-
         $applicants = DB::connection('pgsql_test')
             ->table('applicant_individual')
             ->where('applicant_risk_level_id', 1)
@@ -251,32 +283,39 @@ class ApplicantIndividualQueryTest extends TestCase
 
         foreach ($applicants as $applicant) {
             $data[] = [
-                'id' => strval($applicant->id),
-                'first_name' => strval($applicant->first_name),
-                'email' => strval($applicant->email),
-                'url' => strval($applicant->url),
+                'id' => (string) $applicant->id,
+                'first_name' => (string) $applicant->first_name,
+                'email' => (string) $applicant->email,
+                'url' => (string) $applicant->url,
             ];
         }
 
-        $this->graphQL('
-            query TestApplicantIndividualFilters($id: Mixed) {
-                applicantIndividuals(
-                    filter: { column: HAS_RISK_LEVEL_FILTER_BY_ID, value: $id }
-                ) {
-                    data {
-                        id
-                        first_name
-                        email
-                        url
+        $this->postGraphQL(
+            [
+                'query' => '
+                query TestApplicantIndividualFilters($id: Mixed) {
+                    applicantIndividuals(
+                        filter: { column: HAS_RISK_LEVEL_FILTER_BY_ID, value: $id }
+                    ) {
+                        data {
+                            id
+                            first_name
+                            email
+                            url
+                        }
                     }
-                }
-            }
-        ', [
-            'id' => strval($applicant->applicant_risk_level_id),
-        ])->seeJson([
+                }',
+                'variables' => [
+                    'id' => (string) $applicant->applicant_risk_level_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'applicantIndividuals' => [
-                    'data' => $data
+                    'data' => $data,
                 ],
             ],
         ]);
@@ -284,8 +323,6 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualFilterByHasStateReason(): void
     {
-        $this->login();
-
         $applicants = DB::connection('pgsql_test')
             ->table('applicant_individual')
             ->where('applicant_state_reason_id', 1)
@@ -293,32 +330,39 @@ class ApplicantIndividualQueryTest extends TestCase
 
         foreach ($applicants as $applicant) {
             $data[] = [
-                'id' => strval($applicant->id),
-                'first_name' => strval($applicant->first_name),
-                'email' => strval($applicant->email),
-                'url' => strval($applicant->url),
+                'id' => (string) $applicant->id,
+                'first_name' => (string) $applicant->first_name,
+                'email' => (string) $applicant->email,
+                'url' => (string) $applicant->url,
             ];
         }
 
-        $this->graphQL('
-            query TestApplicantIndividualFilters($id: Mixed) {
-                applicantIndividuals(
-                    filter: { column: HAS_STATE_REASON_FILTER_BY_ID, value: $id }
-                ) {
-                    data {
-                        id
-                        first_name
-                        email
-                        url
+        $this->postGraphQL(
+            [
+                'query' => '
+                query TestApplicantIndividualFilters($id: Mixed) {
+                    applicantIndividuals(
+                        filter: { column: HAS_STATE_REASON_FILTER_BY_ID, value: $id }
+                    ) {
+                        data {
+                            id
+                            first_name
+                            email
+                            url
+                        }
                     }
-                }
-            }
-        ', [
-            'id' => 1,
-        ])->seeJson([
+                }',
+                'variables' => [
+                    'id' => $applicant->applicant_state_reason_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'applicantIndividuals' => [
-                    'data' => $data
+                    'data' => $data,
                 ],
             ],
         ]);
@@ -326,26 +370,29 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualFilterByOwners(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
             ->first();
 
-        $this->graphQL('
-            query {
-                owners(orderBy: { column: ID, order: ASC }) {
-                    id
-                    first_name
-                    email
-                    url
-                }
-            }
-        ')->seeJsonContains([
-            'id' => strval($applicant->id),
-            'first_name' => strval($applicant->first_name),
-            'email' => strval($applicant->email),
-            'url' => strval($applicant->url),
+        $this->postGraphQL(
+            [
+                'query' => 'query {
+                    owners(orderBy: { column: ID, order: ASC }) {
+                        id
+                        first_name
+                        email
+                        url
+                    }
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $applicant->id,
+            'first_name' => (string) $applicant->first_name,
+            'email' => (string) $applicant->email,
+            'url' => (string) $applicant->url,
         ]);
     }
 }
