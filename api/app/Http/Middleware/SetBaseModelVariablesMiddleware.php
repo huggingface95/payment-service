@@ -33,7 +33,11 @@ class SetBaseModelVariablesMiddleware
         if ($member && $member->accessLimitations()->count()) {
             $ids = $member->accessLimitations()->get()
                 ->map(function ($limitation) {
-                    return $limitation->groupRole->users()->get();
+                    $limitation->load('groupRoles.users');
+                    return $limitation->groupRoles->pluck('users')->flatten(0)->unique();
+                })
+                ->filter(function ($l){
+                    return $l;
                 })
                 ->flatten(1)
                 ->groupBy(function ($v) {

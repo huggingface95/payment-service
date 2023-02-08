@@ -6,6 +6,8 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\RoleFilterSuperAdminScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * Class ApplicantBankingAccess
@@ -17,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class ApplicantBankingAccess extends BaseModel
 {
-    use HasFactory;
+    use HasFactory, HasRelationships;
 
     public $day_used_limit = 0;
 
@@ -25,6 +27,7 @@ class ApplicantBankingAccess extends BaseModel
 
     protected $table = 'applicant_banking_access';
 
+    private array $permissionsList;
     /**
      * The attributes that are mass assignable.
      *
@@ -51,6 +54,24 @@ class ApplicantBankingAccess extends BaseModel
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope);
+    }
+
+    public function getCreatePaymentsAttribute(): bool
+    {
+        if (!isset($this->permissionsList)) {
+            $this->permissionsList = $this->permissions()->pluck('upname')->toArray();
+        }
+
+        return in_array('CREATE_PAYMENTS', $this->permissionsList);
+    }
+
+    public function getSignPaymentsAttribute(): bool
+    {
+        if (!isset($this->permissionsList)) {
+            $this->permissionsList = $this->permissions()->pluck('upname')->toArray();
+        }
+
+        return in_array('SIGN_PAYMENTS', $this->permissionsList);
     }
 
     /**
@@ -86,5 +107,23 @@ class ApplicantBankingAccess extends BaseModel
     public function role(): HasOne
     {
         return $this->hasOne(Role::class, 'id', 'role_id')->withoutGlobalScope(RoleFilterSuperAdminScope::class);
+    }
+
+    public function permissions(): HasManyDeep
+    {
+        return $this->hasManyDeep(
+            Permissions::class,
+            [Role::class, 'role_has_permissions'],
+            [
+                'id',
+                'role_id',
+                'id',
+            ],
+            [
+                'role_id',
+                'id',
+                'permission_id',
+            ],
+        );
     }
 }

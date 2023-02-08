@@ -131,4 +131,12 @@ extend type Mutation @guard {
     ): Project
         @field(resolver:"ProjectMutator@update")
         @validator
+    
+    """
+    Удалить проект
+    """
+    deleteProject(
+        "ID проекта"
+        id: ID!
+    ): Project @delete
 }

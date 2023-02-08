@@ -11,7 +11,7 @@ class ProjectMutator extends BaseMutator
      * @param  array  $args
      * @return mixed
      */
-    public function create($root, array $args)
+    public function create($root, array $args): Project
     {
         $project = Project::create($args);
 
@@ -29,7 +29,7 @@ class ProjectMutator extends BaseMutator
      * @param  array  $args
      * @return mixed
      */
-    public function update($root, array $args)
+    public function update($root, array $args): Project
     {
         $project = Project::find($args['id']);
 

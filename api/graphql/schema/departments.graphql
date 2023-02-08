@@ -38,6 +38,7 @@ extend type Query @guard {
     """
     departments(
         filter: _ @filterConditions(static: QueryDepartmentsFilterStatic),
+        created_at: DateTimeRange @whereBetween,
         hasCompany: _ @whereHasConditions(columns: ["id"]),
         where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id","name"])
@@ -53,7 +54,6 @@ extend type Query @guard {
     departmentPositions(
         company_id: ID @eq,
         filter: _ @filterConditions(static: QueryDepartmentPositionsFilterStatic),
-        created_at: DateTimeRange @whereBetween,
         hasDepartment: _ @whereHasConditions(columns: ["id"]),
         where: _ @whereConditions(columns: ["name","is_active"]),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])

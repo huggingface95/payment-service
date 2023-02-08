@@ -10,7 +10,7 @@ class EmailException extends Exception implements RendersErrorsExtensions
     /**
      * @var @string
      */
-    protected $category;
+    protected string $category;
 
     protected $code;
 

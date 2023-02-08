@@ -9,6 +9,7 @@ use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\Email\SmtpConfigDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\EmailExceptionCodeEnum;
 use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
@@ -171,17 +172,19 @@ class EmailService
      */
     public function sendMemberEmailByMemberDto(EmailMembersRequestDTO $dto, bool $findByCompanyId = false): void
     {
+        $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
+
         try {
             $smtp = $findByCompanyId ?
                 $this->emailRepository->getSmtpByCompanyId($dto->members) :
                 $this->emailRepository->getSmtpByMemberId($dto->members);
 
-            $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
             $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
 
             dispatch(new SendMailJob($config, $emailContentSubjectDto));
-        } catch (\Throwable) {
-            throw new EmailException('Don\'t send email', '404');
+        }
+        catch (\Throwable) {
+            throw new EmailException('SMTP NOT FOUND', EmailExceptionCodeEnum::SMTP->toString());
         }
     }
 
@@ -190,14 +193,13 @@ class EmailService
      */
     public function sendAccountBalanceLimitDto(EmailAccountMinMaxBalanceLimitRequestDTO $dto): void
     {
-        $smtp = $this->emailRepository->getSmtpByCompanyId($dto->account);
         $emailContentSubjectDto = $this->emailRepository->getTemplateContentAndSubjectByDto($dto);
-        $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
-
         try {
+            $smtp = $this->emailRepository->getSmtpByCompanyId($dto->account);
+            $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
             dispatch(new SendMailJob($config, $emailContentSubjectDto));
         } catch (\Throwable) {
-            throw new EmailException('Don\'t send email', '404');
+            throw new EmailException('SMTP not found', '404');
         }
     }
 }

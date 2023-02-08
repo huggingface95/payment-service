@@ -7,6 +7,7 @@ use App\Models\Account;
 class EmailMemberRequestDTO
 {
     public string $emailTemplateName;
+    public int $companyId;
     public Account $account;
     public object $data;
     public string $email;
@@ -16,6 +17,7 @@ class EmailMemberRequestDTO
         $dto = new self();
 
         $dto->emailTemplateName = $emailTemplateName;
+        $dto->companyId = $account->company_id;
         $dto->account = $account;
         $dto->email = $data['email'];
         $dto->data = (object) $data;
