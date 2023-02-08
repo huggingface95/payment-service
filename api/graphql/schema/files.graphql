@@ -5,12 +5,12 @@ type Files {
     id: ID!
     "Исходное имя файла"
     file_name: String!
-	"Тип файла"
+    "Тип файла"
     mime_type: String!
-	"Размер загружаемого файла"
+    "Размер загружаемого файла"
     size: Int!
     "Тип сущности для которой загружается файл"
-    entity_type: String!
+    entity_type: FileEntityTypeEnum!
     "Кто загружал файл"
     author_id: Int!
     "Путь к загруженному файлу на ovh"
@@ -23,6 +23,18 @@ type Files {
     updated_at: DateTimeUtc
 }
 
+
+enum FileEntityTypeEnum {
+    MEMBER               @enum(value: "member")
+    COMPANY              @enum(value: "company")
+    DOCUMENT             @enum(value: "document")
+    APPLICANT_INDIVIDUAL @enum(value: "applicant_individual")
+    APPLICANT_COMPANY    @enum(value: "applicant_company")
+    APPLICANT            @enum(value: "applicant")
+    PROJECT              @enum(value: "project")
+    FILE                 @enum(value: "file")
+}
+
 extend type Query @guard {
     "Получить файл по ID"
     file(id: ID @eq): Files   @find
@@ -31,14 +43,14 @@ extend type Query @guard {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     files(
-            where: _ @whereConditions(columns: ["author_id","entity_type"]),
-            orderBy: _ @orderBy(columns: ["id", "author_id"])
-        ): [Files!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+        where: _ @whereConditions(columns: ["author_id","entity_type"]),
+        orderBy: _ @orderBy(columns: ["id", "author_id"])
+    ): [Files!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
-        "Удалить файл"
-            deleteFile(
-                id: ID!
-            ): Files   @delete
+    "Удалить файл"
+    deleteFile(
+        id: ID!
+    ): Files   @delete
 }
