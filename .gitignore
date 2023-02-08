@@ -2,3 +2,5 @@
 .env
 docker/logs
 docker/data
+*.sql
+/docker/clickhouse
