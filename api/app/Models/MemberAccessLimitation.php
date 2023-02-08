@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 
 /**
@@ -23,7 +24,6 @@ class MemberAccessLimitation extends BaseModel
 {
     protected $fillable = [
         'member_id',
-        'group_role_id',
         'company_id',
         'module_id',
         'project_id',
@@ -57,9 +57,9 @@ class MemberAccessLimitation extends BaseModel
         return $this->belongsTo(GroupType::class, 'group_type_id');
     }
 
-    public function groupRole(): BelongsTo
+    public function groupRoles(): BelongsToMany
     {
-        return $this->belongsTo(GroupRole::class, 'group_role_id');
+        return $this->belongsToMany(GroupRole::class, 'member_access_limitation_group_roles','access_limitation_id', 'group_role_id');
     }
 
     public function project(): BelongsTo
