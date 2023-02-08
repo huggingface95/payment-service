@@ -169,6 +169,8 @@ extend type Mutation  {
         language_id: ID
         "ID роли участника"
         group_id: ID
+        "Статус участника"
+        member_status_id: ID
         "Активен не активен"
         is_active: Boolean
         "ID должности"
