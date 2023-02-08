@@ -7,7 +7,6 @@ use App\Models\Company;
 
 class VvGetLinkRequest
 {
-
     public string $url;
 
     public array $headers;

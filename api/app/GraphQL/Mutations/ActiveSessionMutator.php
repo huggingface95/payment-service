@@ -25,26 +25,28 @@ class ActiveSessionMutator
         $record = DB::connection('clickhouse')
             ->query()
             ->from((new ActiveSession())->getTable())
-            ->where('id', '=',  $args['id'])
+            ->where('id', '=', $args['id'])
             ->orderBy('created_at')
             ->first();
 
-        if ($record){
-            $recordDTO  = (array) TransformerDTO::transform(ActiveSessionCloneDTO::class, $record, true);
+        if ($record) {
+            $recordDTO = (array) TransformerDTO::transform(ActiveSessionCloneDTO::class, $record, true);
 
-             if (DB::connection('clickhouse')
+            if (DB::connection('clickhouse')
                  ->query()
                  ->from((new ActiveSession())->getTable())
-                 ->insert($recordDTO)){
-                 $redis = Redis::connection('go-auth');
+                 ->insert($recordDTO)) {
+                $redis = Redis::connection('go-auth');
 
-                 $redis->rpush(
-                     config('mail.redis.device'),
-                     json_encode(TransformerDTO::transform(EmailTrustedDeviceRequestDTO::class, $recordDTO, auth()->user()))
-                 );
-                 return TransformerDTO::transform(ActiveSessionMutatorResponse::class, true);
-             }
+                $redis->rpush(
+                    config('mail.redis.device'),
+                    json_encode(TransformerDTO::transform(EmailTrustedDeviceRequestDTO::class, $recordDTO, auth()->user()))
+                );
+
+                return TransformerDTO::transform(ActiveSessionMutatorResponse::class, true);
+            }
         }
+
         return TransformerDTO::transform(ActiveSessionMutatorResponse::class, false);
     }
 }

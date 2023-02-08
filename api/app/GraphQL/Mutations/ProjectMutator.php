@@ -7,7 +7,7 @@ use App\Models\Project;
 class ProjectMutator extends BaseMutator
 {
     /**
-     * @param  $root
+     * @param    $root
      * @param  array  $args
      * @return mixed
      */
@@ -25,7 +25,7 @@ class ProjectMutator extends BaseMutator
     }
 
     /**
-     * @param  $root
+     * @param    $root
      * @param  array  $args
      * @return mixed
      */

@@ -7,13 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class CommissionPriceListMutationTest extends TestCase
 {
-
     /**
      * CommissionPriceList Mutation Testing
      *
      * @return void
      */
-
     public function testCreateCommissionPriceListNoAuth(): void
     {
         $this->graphQL('
@@ -50,8 +48,9 @@ class CommissionPriceListMutationTest extends TestCase
 
     public function testCreateCommissionPriceList(): void
     {
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation (
                     $name: String!
                     $provider_id: ID!
@@ -71,18 +70,19 @@ class CommissionPriceListMutationTest extends TestCase
                     id
                 }
                 }',
-            'variables' => [
-                'name' => 'Test Commission Price List',
-                'provider_id' => 1,
-                'payment_system_id' => 1,
-                'commission_template_id' => 1,
-                'company_id' => 1,
-                'region_id' => 1,
+                'variables' => [
+                    'name' => 'Test Commission Price List',
+                    'provider_id' => 1,
+                    'payment_system_id' => 1,
+                    'commission_template_id' => 1,
+                    'company_id' => 1,
+                    'region_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -102,8 +102,9 @@ class CommissionPriceListMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation (
                     $id: ID!
                     $name: String!
@@ -122,17 +123,18 @@ class CommissionPriceListMutationTest extends TestCase
                     name
                 }
                 }',
-            'variables' => [
-                'id' => (string) $commissionPriceList[0]->id,
-                'name' => 'Updated Commission Price List',
-                'provider_id' => 1,
-                'payment_system_id' => 1,
-                'commission_template_id' => 1,
+                'variables' => [
+                    'id' => (string) $commissionPriceList[0]->id,
+                    'name' => 'Updated Commission Price List',
+                    'provider_id' => 1,
+                    'payment_system_id' => 1,
+                    'commission_template_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -153,8 +155,9 @@ class CommissionPriceListMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation (
                     $id: ID!
                 ) {
@@ -164,13 +167,14 @@ class CommissionPriceListMutationTest extends TestCase
                     id
                 }
                 }',
-            'variables' => [
-                'id' => (string) $commissionPriceList[0]->id,
+                'variables' => [
+                    'id' => (string) $commissionPriceList[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

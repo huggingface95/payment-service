@@ -48,7 +48,6 @@ class VerifyController extends Controller
                 $applicantCompany->save();
             }
 
-
             $this->verifyService->deleteVerifyCode($request->token);
 
             return response()->json(['data' => 'Email successfully verified']);
@@ -74,7 +73,7 @@ class VerifyController extends Controller
                 'client_name' => $user->first_name,
                 'client_email' => $user->email,
                 'login_page_url' => $user->company->backoffice_login_url,
-                'forgot_page_url' => $user->company->backoffice_forgot_password_url . '/forgot_password',
+                'forgot_page_url' => $user->company->backoffice_forgot_password_url.'/forgot_password',
                 'customer_support_url' => $user->company->backoffice_support_url,
             ];
             $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $user, $user->company, $emailTemplateName, $emailData);

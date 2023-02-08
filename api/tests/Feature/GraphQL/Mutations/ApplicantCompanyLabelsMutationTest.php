@@ -11,7 +11,6 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateApplicantCompanyLabelNoAuth(): void
     {
         $this->graphQL('
@@ -38,8 +37,9 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
 
     public function testCreateApplicantCompanyLabel(): void
     {
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateApplicantCompanyLabel(
                     $name: String!
                     $hex_color_code: String!
@@ -53,14 +53,15 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'name' => 'Label_'.\Illuminate\Support\Str::random(5),
-                'hex_color_code' => '#'.mt_rand(100000, 999999),
+                'variables' => [
+                    'name' => 'Label_'.\Illuminate\Support\Str::random(5),
+                    'hex_color_code' => '#'.mt_rand(100000, 999999),
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -80,8 +81,9 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateApplicantCompanyLabel(
                     $id: ID!
                     $name: String!
@@ -96,14 +98,15 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
                         name
                     }
                 }',
-            'variables' => [
-                'id' => (string) $label[0]->id,
-                'name' => 'Label_'.\Illuminate\Support\Str::random(5),
+                'variables' => [
+                    'id' => (string) $label[0]->id,
+                    'name' => 'Label_'.\Illuminate\Support\Str::random(5),
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -129,8 +132,9 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation AttachApplicantCompanyLabel(
                     $applicant_company_id: ID!
                     $applicant_company_label_id: [ID]
@@ -144,14 +148,15 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'applicant_company_id' => (string) $applicant_company[0]->id,
-                'applicant_company_label_id' => (string) $label[0]->id,
+                'variables' => [
+                    'applicant_company_id' => (string) $applicant_company[0]->id,
+                    'applicant_company_label_id' => (string) $label[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -164,7 +169,7 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
         ]);
     }
 
-    public function testDetachApplicantCompanyLabel():void
+    public function testDetachApplicantCompanyLabel(): void
     {
         $applicant_company = DB::connection('pgsql_test')
             ->table('applicant_companies')
@@ -176,8 +181,9 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DetachApplicantCompanyLabel(
                     $applicant_company_id: ID!
                     $applicant_company_label_id: [ID]
@@ -191,14 +197,15 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'applicant_company_id' => (string) $applicant_company[0]->id,
-                'applicant_company_label_id' => (string) $label[0]->id,
+                'variables' => [
+                    'applicant_company_id' => (string) $applicant_company[0]->id,
+                    'applicant_company_label_id' => (string) $label[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -218,8 +225,9 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeleteApplicantCompanyLabel(
                     $id: ID!
                 )
@@ -231,13 +239,14 @@ class ApplicantCompanyLabelsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $label[0]->id,
+                'variables' => [
+                    'id' => (string) $label[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

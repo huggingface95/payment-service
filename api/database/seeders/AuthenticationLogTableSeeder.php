@@ -21,7 +21,7 @@ class AuthenticationLogTableSeeder extends Seeder
 
         for ($i = 1; $i <= 30; $i++) {
             DB::connection('clickhouse')
-                ->table((new AuthenticationLog)->getTable())
+                ->table((new AuthenticationLog())->getTable())
                 ->insert([
                     'id' => $faker->uuid(),
                     'company' => $faker->randomElement(['Nginx', 'Apple', 'Nike']),

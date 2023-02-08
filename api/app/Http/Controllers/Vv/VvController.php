@@ -8,7 +8,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
-
 class VvController extends Controller
 {
     protected VvService $vvService;
@@ -32,16 +31,17 @@ class VvController extends Controller
     /** Example register move to graphql
      * @throws GuzzleException
      */
-    public function register(){
+    public function register()
+    {
         $this->vvService->registerCompany(3);
     }
 
     /** Example getLink move to graphql
      * @throws GuzzleException
      */
-    public function getLink(){
-        echo $this->vvService->getLink(3, "detection");
+    public function getLink()
+    {
+        echo $this->vvService->getLink(3, 'detection');
         exit();
     }
-
 }

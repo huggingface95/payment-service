@@ -2,13 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Enums\FeeTransferTypeEnum;
 use App\Models\Fee;
 use Illuminate\Database\Seeder;
 
 class FeeTableSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *

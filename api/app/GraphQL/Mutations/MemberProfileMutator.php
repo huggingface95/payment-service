@@ -6,7 +6,6 @@ use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\EmailVerificationStatusEnum;
 use App\Exceptions\GraphqlException;
-use App\GraphQL\Mutations\BaseMutator;
 use App\Services\EmailService;
 use App\Services\VerifyService;
 
@@ -17,6 +16,7 @@ class MemberProfileMutator extends BaseMutator
         protected VerifyService $verifyService
     ) {
     }
+
     /**
      * Return a value for the field.
      *
@@ -42,27 +42,26 @@ class MemberProfileMutator extends BaseMutator
         $member = auth()->user();
 
         try {
-                $verifyToken = $this->verifyService->createVerifyToken($member);
+            $verifyToken = $this->verifyService->createVerifyToken($member);
 
-                $confirmUrl = 'https://dev.admin.docudots.com';
-                // TODO: Create Email Template with subject 'Confirm change email'
-                $emailTemplateSubject = 'Confirm change email';
-                $emailData = [
-                    'client_name' => $member->first_name,
-                    'email_confirm_url' => $confirmUrl . '/email/change/verify/' . $verifyToken->token . '?email='.$args['email'],
-                ];
-                $data = array_merge($args, $emailData);
-                $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $data, $emailTemplateSubject);
+            $confirmUrl = 'https://dev.admin.docudots.com';
+            // TODO: Create Email Template with subject 'Confirm change email'
+            $emailTemplateSubject = 'Confirm change email';
+            $emailData = [
+                'client_name' => $member->first_name,
+                'email_confirm_url' => $confirmUrl.'/email/change/verify/'.$verifyToken->token.'?email='.$args['email'],
+            ];
+            $data = array_merge($args, $emailData);
+            $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $data, $emailTemplateSubject);
 
-                $this->emailService->sendMemberEmailByMemberDto($emailDTO);
+            $this->emailService->sendMemberEmailByMemberDto($emailDTO);
 
-                return [
-                    'status' => 'OK',
-                    'message' => 'Email sent for processing',
-                ];
+            return [
+                'status' => 'OK',
+                'message' => 'Email sent for processing',
+            ];
         } catch (\Throwable $e) {
             throw new GraphqlException($e->getMessage(), 'Internal', $e->getCode());
         }
     }
-
 }

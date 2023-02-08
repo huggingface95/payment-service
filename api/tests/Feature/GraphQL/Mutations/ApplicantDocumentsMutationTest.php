@@ -2,10 +2,6 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
-use Database\Seeders\DatabaseSeeder;
-use Database\Seeders\DocumentStateTableSeeder;
-use Database\Seeders\DocumentTypeTableSeeder;
-use Database\Seeders\FileTableSeeder;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -55,8 +51,9 @@ class ApplicantDocumentsMutationTest extends TestCase
 
         DB::select('ALTER SEQUENCE applicant_documents_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateApplicantDocument(
                     $company_id: ID!
                     $applicant_id: ID!
@@ -79,18 +76,19 @@ class ApplicantDocumentsMutationTest extends TestCase
                         document_state_id
                     }
                }',
-            'variables' => [
-                'company_id' => 1,
-                'applicant_id' => 1,
-                'applicant_type' => 'ApplicantIndividual',
-                'document_type_id' => 1,
-                'document_state_id' => 1,
-                'file_id' => 1,
+                'variables' => [
+                    'company_id' => 1,
+                    'applicant_id' => 1,
+                    'applicant_type' => 'ApplicantIndividual',
+                    'document_type_id' => 1,
+                    'document_state_id' => 1,
+                    'file_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $response = json_decode($this->response->getContent(), true);
 
@@ -104,5 +102,4 @@ class ApplicantDocumentsMutationTest extends TestCase
             ],
         ]);
     }
-
 }

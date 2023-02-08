@@ -11,10 +11,10 @@ class ApplicantBankingAccessQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testApplicantBankingAccessNoAuth(): void
     {
-        $this->graphQL('
+        $this->graphQL(
+            '
              query ApplicantBankingAccesses($applicant_company_id: ID!) {
                 applicantBankingAccesses (
                     applicant_company_id: $applicant_company_id
@@ -24,9 +24,10 @@ class ApplicantBankingAccessQueryTest extends TestCase
                     }
                 }
              }',
-        [
-            'applicant_company_id' => 1
-        ])->seeJson([
+            [
+                'applicant_company_id' => 1,
+            ]
+        )->seeJson([
             'message' => 'Unauthenticated.',
         ]);
     }
@@ -38,25 +39,26 @@ class ApplicantBankingAccessQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' =>
-                'query ApplicantBankingAccesses($applicant_company_id: ID!) {
+        $this->postGraphQL(
+            [
+                'query' => 'query ApplicantBankingAccesses($applicant_company_id: ID!) {
                         applicantBankingAccesses( applicant_company_id: $applicant_company_id, orderBy: { column: ID, order: ASC }) {
                             data {
                                 id
                             }
                         }
                 }',
-            'variables' => [
-                'applicant_company_id' => (string) $access[0]->applicant_company_id,
+                'variables' => [
+                    'applicant_company_id' => (string) $access[0]->applicant_company_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
-                [
-                    'id' => (string) $access[0]->id,
-                ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $access[0]->id,
+            ],
         ]);
     }
 
@@ -67,26 +69,27 @@ class ApplicantBankingAccessQueryTest extends TestCase
             ->where('member_id', 2)
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query ApplicantBankingAccesses($applicant_company_id: ID!, $member_id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query ApplicantBankingAccesses($applicant_company_id: ID!, $member_id: Mixed) {
                         applicantBankingAccesses( applicant_company_id: $applicant_company_id, filter: { column: MEMBER_ID, value: $member_id }) {
                             data {
                                 id
                             }
                         }
                 }',
-            'variables' => [
-                'applicant_company_id' => (string) $access->applicant_company_id,
-                'member_id' => (string) $access->member_id,
-            ]
-        ],
+                'variables' => [
+                    'applicant_company_id' => (string) $access->applicant_company_id,
+                    'member_id' => (string) $access->member_id,
+                ],
+            ],
             [
-                "Authorization" => "Bearer " . $this->login()
-            ])->seeJsonContains([
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $access->id,
-            ]
+            ],
         ]);
     }
 
@@ -96,23 +99,24 @@ class ApplicantBankingAccessQueryTest extends TestCase
             ->table('applicant_banking_access')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query ApplicantBankingAccess($id: ID) {
+        $this->postGraphQL(
+            [
+                'query' => 'query ApplicantBankingAccess($id: ID) {
                         applicantBankingAccess(id: $id) {
                                 id
                         }
                 }',
-            'variables' => [
-                'id' => (string) $access->id,
-            ]
-        ],
+                'variables' => [
+                    'id' => (string) $access->id,
+                ],
+            ],
             [
-                "Authorization" => "Bearer " . $this->login()
-            ])->seeJsonContains([
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $access->id,
-            ]
+            ],
         ]);
     }
 
@@ -122,9 +126,9 @@ class ApplicantBankingAccessQueryTest extends TestCase
             ->table('applicant_banking_access')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query GrantedBankingAccess ($applicant_individual_id: ID!, $applicant_company_id: ID!) {
+        $this->postGraphQL(
+            [
+                'query' => 'query GrantedBankingAccess ($applicant_individual_id: ID!, $applicant_company_id: ID!) {
                         grantedBankingAccess (
                             applicant_individual_id: $applicant_individual_id
                             applicant_company_id: $applicant_company_id
@@ -135,17 +139,18 @@ class ApplicantBankingAccessQueryTest extends TestCase
                             }
                         }
                 }',
-            'variables' => [
-                'applicant_individual_id' => (string) $access->applicant_individual_id,
-                'applicant_company_id' => (string) $access->applicant_company_id,
-            ]
-        ],
+                'variables' => [
+                    'applicant_individual_id' => (string) $access->applicant_individual_id,
+                    'applicant_company_id' => (string) $access->applicant_company_id,
+                ],
+            ],
             [
-                "Authorization" => "Bearer " . $this->login()
-            ])->seeJsonContains([
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $access->id,
-            ]
+            ],
         ]);
     }
 
@@ -155,9 +160,9 @@ class ApplicantBankingAccessQueryTest extends TestCase
             ->table('applicant_banking_access')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query GrantedBankingAccess ($applicant_individual_id: ID!, $applicant_company_id: ID!, $member_id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query GrantedBankingAccess ($applicant_individual_id: ID!, $applicant_company_id: ID!, $member_id: Mixed) {
                         grantedBankingAccess (
                             applicant_individual_id: $applicant_individual_id
                             applicant_company_id: $applicant_company_id
@@ -169,18 +174,19 @@ class ApplicantBankingAccessQueryTest extends TestCase
                             }
                         }
                 }',
-            'variables' => [
-                'applicant_individual_id' => (string) $access->applicant_individual_id,
-                'applicant_company_id' => (string) $access->applicant_company_id,
-                'member_id' => (string) $access->member_id,
-            ]
-        ],
+                'variables' => [
+                    'applicant_individual_id' => (string) $access->applicant_individual_id,
+                    'applicant_company_id' => (string) $access->applicant_company_id,
+                    'member_id' => (string) $access->member_id,
+                ],
+            ],
             [
-                "Authorization" => "Bearer " . $this->login()
-            ])->seeJsonContains([
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $access->id,
-            ]
+            ],
         ]);
     }
 }

@@ -37,7 +37,7 @@ class CreateFeesTable extends Migration
             $table->foreign('status_id')->references('id')->on('payment_status');
         });
 
-        DB::statement("alter table fees add column fee_amount numeric(15,5) generated always as (fee + fee_pp) stored;");
+        DB::statement('alter table fees add column fee_amount numeric(15,5) generated always as (fee + fee_pp) stored;');
     }
 
     /**

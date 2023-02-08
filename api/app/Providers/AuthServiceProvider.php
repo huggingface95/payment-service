@@ -6,10 +6,10 @@ use App\DTO\Auth\Credentials;
 use App\DTO\TransformerDTO;
 use App\Services\Jwt\Guards\JwtGuard;
 use App\Services\JwtService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Http\Request;
 use Laravel\Lumen\Application;
 
 class AuthServiceProvider extends ServiceProvider
@@ -41,9 +41,11 @@ class AuthServiceProvider extends ServiceProvider
             try {
                 $credentials = $jwtService->parseJWT($token);
                 $credentialsDto = TransformerDTO::transform(Credentials::class, $credentials);
+
                 return $credentialsDto->model;
             } catch (\Throwable $e) {
-                Log::log('error',$e->getMessage());
+                Log::log('error', $e->getMessage());
+
                 return null;
             }
         });
@@ -54,9 +56,11 @@ class AuthServiceProvider extends ServiceProvider
             try {
                 $credentials = $jwtService->parseJWT($token);
                 $credentialsDto = TransformerDTO::transform(Credentials::class, $credentials);
+
                 return new JwtGuard(Auth::createUserProvider($config['provider']), $credentialsDto);
             } catch (\Throwable $e) {
-                $credentialsDto = TransformerDTO::transform(Credentials::class, (object)[]);
+                $credentialsDto = TransformerDTO::transform(Credentials::class, (object) []);
+
                 return new JwtGuard(Auth::createUserProvider($config['provider']), $credentialsDto);
             }
         });

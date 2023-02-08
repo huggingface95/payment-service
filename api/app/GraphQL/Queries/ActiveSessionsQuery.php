@@ -17,7 +17,7 @@ final class ActiveSessionsQuery
     {
         $query = DB::connection('clickhouse')
             ->query()
-            ->from((new ActiveSession)->getTable())
+            ->from((new ActiveSession())->getTable())
             ->orderBy('created_at', 'DESC');
 
         if (isset($args['query']) && count($args['query']) > 0) {

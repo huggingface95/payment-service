@@ -50,7 +50,7 @@ class ChangeServiceTypeFieldToEmailTemplatesTable extends Migration
         ];
 
         foreach ($bankingSystemSubjects as $subject) {
-            EmailTemplate::whereRaw("lower(subject) LIKE '%" . strtolower($subject) . "%'")
+            EmailTemplate::whereRaw("lower(subject) LIKE '%".strtolower($subject)."%'")
                 ->where('service_type', EmailTemplate::BANKING)
                 ->update([
                     'service_type' => ModuleTagEnum::BANKING_SYSTEM->value,
@@ -58,7 +58,7 @@ class ChangeServiceTypeFieldToEmailTemplatesTable extends Migration
         }
 
         foreach ($bankingCommonSubjects as $subject) {
-            EmailTemplate::whereRaw("lower(subject) LIKE '%" . strtolower($subject) . "%'")
+            EmailTemplate::whereRaw("lower(subject) LIKE '%".strtolower($subject)."%'")
                 ->where('service_type', EmailTemplate::COMMON)
                 ->update([
                     'service_type' => ModuleTagEnum::BANKING_COMMON->value,
@@ -96,7 +96,7 @@ class ChangeServiceTypeFieldToEmailTemplatesTable extends Migration
         ];
 
         foreach ($bankingSystemSubjects as $subject) {
-            EmailTemplate::whereRaw("lower(subject) LIKE '%" . strtolower($subject) . "%'")
+            EmailTemplate::whereRaw("lower(subject) LIKE '%".strtolower($subject)."%'")
                 ->where('service_type', ModuleTagEnum::BANKING_SYSTEM->value)
                 ->update([
                     'service_type' => EmailTemplate::BANKING,
@@ -104,7 +104,7 @@ class ChangeServiceTypeFieldToEmailTemplatesTable extends Migration
         }
 
         foreach ($bankingCommonSubjects as $subject) {
-            EmailTemplate::whereRaw("lower(subject) LIKE '%" . strtolower($subject) . "%'")
+            EmailTemplate::whereRaw("lower(subject) LIKE '%".strtolower($subject)."%'")
                 ->where('service_type', ModuleTagEnum::BANKING_COMMON->value)
                 ->update([
                     'service_type' => EmailTemplate::COMMON,
@@ -120,12 +120,12 @@ class ChangeServiceTypeFieldToEmailTemplatesTable extends Migration
 
     private function changeEnum(string $field, array $types): void
     {
-        DB::statement("ALTER TABLE email_templates DROP CONSTRAINT email_templates_" . $field . "_check");
+        DB::statement('ALTER TABLE email_templates DROP CONSTRAINT email_templates_'.$field.'_check');
 
-        $result = join(', ', array_map(function ($value) {
+        $result = implode(', ', array_map(function ($value) {
             return sprintf("'%s'::character varying", $value);
         }, $types));
 
-        DB::statement("ALTER TABLE email_templates ADD CONSTRAINT email_templates_" . $field . "_check CHECK (" . $field . "::text = ANY (ARRAY[$result]::text[]))");
+        DB::statement('ALTER TABLE email_templates ADD CONSTRAINT email_templates_'.$field.'_check CHECK ('.$field."::text = ANY (ARRAY[$result]::text[]))");
     }
 }

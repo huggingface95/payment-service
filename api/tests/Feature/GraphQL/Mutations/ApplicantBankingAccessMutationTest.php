@@ -11,7 +11,6 @@ class ApplicantBankingAccessMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateBankingAccessNoAuth(): void
     {
         $this->graphQL('
@@ -45,8 +44,9 @@ class ApplicantBankingAccessMutationTest extends TestCase
 
     public function testCreateBankingAccess(): void
     {
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateApplicantBankingAccess(
                     $applicant_individual_id: ID!
                     $applicant_company_id: ID!
@@ -66,15 +66,16 @@ class ApplicantBankingAccessMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'applicant_individual_id' =>  1,
-                'applicant_company_id' => 2,
-                'role_id' => 2,
+                'variables' => [
+                    'applicant_individual_id' =>  1,
+                    'applicant_company_id' => 2,
+                    'role_id' => 2,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -94,8 +95,9 @@ class ApplicantBankingAccessMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateApplicantBankingAccess(
                     $id: ID!
                     $applicant_individual_id: ID!
@@ -123,19 +125,20 @@ class ApplicantBankingAccessMutationTest extends TestCase
                         operation_limit
                     }
                 }',
-            'variables' => [
-                'id' => (string) $access[0]->id,
-                'applicant_individual_id' =>  1,
-                'applicant_company_id' => 1,
-                'role_id' => 3,
-                'dl' => 1000.00,
-                'ml' => 5000.00,
-                'ol' => 50.00,
+                'variables' => [
+                    'id' => (string) $access[0]->id,
+                    'applicant_individual_id' =>  1,
+                    'applicant_company_id' => 1,
+                    'role_id' => 3,
+                    'dl' => 1000.00,
+                    'ml' => 5000.00,
+                    'ol' => 50.00,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -158,8 +161,9 @@ class ApplicantBankingAccessMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeleteApplicantBankingAccess(
                     $id: ID!
                 )
@@ -171,13 +175,14 @@ class ApplicantBankingAccessMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => strval($access[0]->id),
+                'variables' => [
+                    'id' => strval($access[0]->id),
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

@@ -23,7 +23,7 @@ class ApplicantAccountMutator extends BaseMutator
         if (! $account) {
             throw new GraphqlException('Applicant account not found', 'use');
         }
-        
+
         $account->update([
             'is_show' => $args['is_show'],
         ]);

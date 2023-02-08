@@ -8,7 +8,7 @@ namespace App\Models;
 class TicketStatus extends BaseModel
 {
     public $timestamps = false;
-    
+
     /**
      * The attributes that are mass assignable.
      *

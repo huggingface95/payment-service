@@ -11,7 +11,6 @@ class RegionsQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testRegionsNoAuth(): void
     {
         $this->graphQL('
@@ -34,21 +33,22 @@ class RegionsQueryTest extends TestCase
             ->table('regions')
             ->first();
 
-        $this->postGraphQL([
-             'query' =>
-                'query Region($id: ID!) {
+        $this->postGraphQL(
+            [
+                'query' => 'query Region($id: ID!) {
                     region(id: $id) {
                         id
                         name
                     }
                 }',
-            'variables' => [
-                'id' => (string) $region->id,
+                'variables' => [
+                    'id' => (string) $region->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-          "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'region' => [
                     'id' => (string) $region->id,
@@ -64,9 +64,9 @@ class RegionsQueryTest extends TestCase
             ->table('regions')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query Regions ($id: Mixed){
+        $this->postGraphQL(
+            [
+                'query' => 'query Regions ($id: Mixed){
                     regions(filter: { column: COMPANY_ID, value: $id }) {
                         data {
                             id
@@ -74,18 +74,19 @@ class RegionsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $region->company_id
-            ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
-                [
-                    'id' => (string) $region->id,
-                    'name' => (string) $region->name,
+                'variables' => [
+                    'id' => $region->company_id,
                 ],
-            ]);
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $region->id,
+                'name' => (string) $region->name,
+            ],
+        ]);
     }
 
     public function testQueryRegionsByCountryId(): void
@@ -102,8 +103,9 @@ class RegionsQueryTest extends TestCase
             ->table('region_countries')
             ->first();
 
-        $this->postGraphQL([
-             'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Region ($id: Mixed) {
                     regions(filter: { column: , HAS_COUNTRIES_FILTER_BY_ID, value: $id }) {
                         data {
@@ -112,16 +114,17 @@ class RegionsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $country->country_id
-            ]],
+                'variables' => [
+                    'id' => $country->country_id,
+                ], ],
             [
-                "Authorization" => "Bearer " . $this->login()
-            ])->seeJsonContains([
-                [
-                    'id' => strval($region[0]->id),
-                    'name' => strval($region[0]->name),
-                ],
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => strval($region[0]->id),
+                'name' => strval($region[0]->name),
+            ],
         ]);
     }
 
@@ -135,8 +138,9 @@ class RegionsQueryTest extends TestCase
             ->take(1)
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Regions ($name: Mixed) {
                     regions(
                         filter: { column: HAS_COUNTRIES_FILTER_BY_NAME, operator: LIKE, value: $name }
@@ -147,12 +151,13 @@ class RegionsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'name' => 'Afghanistan',
-            ]],
+                'variables' => [
+                    'name' => 'Afghanistan',
+                ], ],
             [
-                "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => strval($region[0]->id),
                 'name' => strval($region[0]->name),

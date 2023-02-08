@@ -13,7 +13,6 @@ class ProjectsMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateProjectNoAuth(): void
     {
         $this->graphQL('
@@ -67,8 +66,9 @@ class ProjectsMutationTest extends TestCase
 
         DB::select('ALTER SEQUENCE projects_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateProject(
                     $name: String!
                     $url: String
@@ -97,21 +97,22 @@ class ProjectsMutationTest extends TestCase
                         id
                     }
                }',
-            'variables' => [
-                'name' => 'Test Co',
-                'url' => 'https://test.co',
-                'description' => 'Description of company',
-                'support_email' => 'test@test.co',
-                'login_url' => 'https://client.test.co/login',
-                'sms_sender_name' => 'SMS Testco',
-                'client_url' => 'https://client.test.co',
-                'company_id' => 1,
-                'module_id' => 1,
+                'variables' => [
+                    'name' => 'Test Co',
+                    'url' => 'https://test.co',
+                    'description' => 'Description of company',
+                    'support_email' => 'test@test.co',
+                    'login_url' => 'https://client.test.co/login',
+                    'sms_sender_name' => 'SMS Testco',
+                    'client_url' => 'https://client.test.co',
+                    'company_id' => 1,
+                    'module_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $response = json_decode($this->response->getContent(), true);
 
@@ -119,7 +120,7 @@ class ProjectsMutationTest extends TestCase
             'data' => [
                 'createProject' => [
                     'id' => $response['data']['createProject']['id'],
-                ]
+                ],
             ],
         ]);
     }
@@ -128,8 +129,9 @@ class ProjectsMutationTest extends TestCase
     {
         $project = Project::latest()->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateProject(
                     $id: ID!
                     $name: String!
@@ -159,19 +161,20 @@ class ProjectsMutationTest extends TestCase
                         support_email
                     }
                 }',
-            'variables' => [
-                'id' => (string) $project->id,
-                'name' => 'New Test co',
-                'url' => 'https://new-test.co',
-                'description' => 'Updated description',
-                'support_email' => 'updt@test.co',
-                'company_id' => 2,
-                'module_id' => 2,
+                'variables' => [
+                    'id' => (string) $project->id,
+                    'name' => 'New Test co',
+                    'url' => 'https://new-test.co',
+                    'description' => 'Updated description',
+                    'support_email' => 'updt@test.co',
+                    'company_id' => 2,
+                    'module_id' => 2,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $response = json_decode($this->response->getContent(), true);
 

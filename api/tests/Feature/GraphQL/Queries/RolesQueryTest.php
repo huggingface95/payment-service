@@ -12,7 +12,6 @@ class RolesQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testQueryRolesNoAuth(): void
     {
         $this->graphQL('
@@ -38,21 +37,23 @@ class RolesQueryTest extends TestCase
             ->where('id', '!=', Role::SUPER_ADMIN_ID)
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Role($id: ID!) {
                     role(id: $id) {
                         id
                         name
                     }
                 }',
-            'variables' => [
-                'id' => (string) $role[0]->id,
+                'variables' => [
+                    'id' => (string) $role[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'role' => [
                     'id' => (string) $role[0]->id,
@@ -70,15 +71,16 @@ class RolesQueryTest extends TestCase
             ->where('id', '!=', Role::SUPER_ADMIN_ID)
             ->get();
 
-        foreach($roles as $role) {
+        foreach ($roles as $role) {
             $data[] = [
                 'id' => (string) $role->id,
                 'name' => (string) $role->name,
             ];
         }
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     roles(filter: { column: HAS_GROUP_TYPE_MIXED_ID_OR_NAME, value: 1 }) {
                         data {
@@ -87,15 +89,16 @@ class RolesQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'roles' => [
                     'data' => $data,
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 
@@ -105,8 +108,9 @@ class RolesQueryTest extends TestCase
             ->table('roles')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     roles(filter: { column: COMPANY_ID, value: 1 }) {
                         data {
@@ -115,10 +119,11 @@ class RolesQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             'id' => (string) $role->id,
             'name' => (string) $role->name,
         ]);
@@ -131,8 +136,9 @@ class RolesQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Roles($name: Mixed) {
                     roles(filter: { column: NAME, operator: ILIKE, value: $name }) {
                         data {
@@ -141,13 +147,14 @@ class RolesQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'name' => (string) $role[0]->name,
+                'variables' => [
+                    'name' => (string) $role[0]->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'roles' => [
                     'data' => [[
@@ -165,8 +172,9 @@ class RolesQueryTest extends TestCase
             ->table('roles')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Roles($id:Mixed){
                     roles(where:{column:GROUP_TYPE_ID, value: $id}) {
                         data {
@@ -175,13 +183,14 @@ class RolesQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $role->group_type_id,
+                'variables' => [
+                    'id' => $role->group_type_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $role->id,
             'name' => (string) $role->name,
         ]);

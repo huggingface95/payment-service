@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,6 @@ class RolesMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateRoleNoAuth(): void
     {
         $seq = DB::table('roles')
@@ -51,8 +51,9 @@ class RolesMutationTest extends TestCase
 
         DB::select('ALTER SEQUENCE roles_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateRole(
                     $name: String!
                     $group_type_id: ID
@@ -68,16 +69,17 @@ class RolesMutationTest extends TestCase
                     id
                 }
             }',
-            'variables' => [
-                'name' => 'Test Role Test',
-                'group_type_id' => 1,
-                'description' => 'Test Role Desc',
-                'company_id' => 1,
+                'variables' => [
+                    'name' => 'Test Role Test',
+                    'group_type_id' => 1,
+                    'description' => 'Test Role Desc',
+                    'company_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -95,8 +97,9 @@ class RolesMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateRole(
                     $id: ID!
                     $name: String!
@@ -108,14 +111,15 @@ class RolesMutationTest extends TestCase
                     id
                 }
                 }',
-            'variables' => [
-                'id' => (string) $role[0]->id,
-                'name' => 'Test updated role',
+                'variables' => [
+                    'id' => (string) $role[0]->id,
+                    'name' => 'Test updated role',
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -135,20 +139,22 @@ class RolesMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeleteRole($id: ID!) {
                     deleteRole(id: $id) {
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $role[0]->id,
+                'variables' => [
+                    'id' => (string) $role[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

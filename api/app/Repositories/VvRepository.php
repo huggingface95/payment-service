@@ -37,24 +37,26 @@ class VvRepository extends Repository implements VvRepositoryInterface
     /**
      * @throws RepositoryException
      */
-    public function saveToken(int $id, string $token): bool{
+    public function saveToken(int $id, string $token): bool
+    {
         return (bool) $this->query()->updateOrCreate([
             'company_id'   => $id,
-        ],[
+        ], [
             'vv_token'     => $token,
         ]);
     }
 
-    public function getDtoRegisterCompanyRequest(int $id, VvConfig $config): VvRegisterRequest{
+    public function getDtoRegisterCompanyRequest(int $id, VvConfig $config): VvRegisterRequest
+    {
         $company = $this->findById($id);
 
         return TransformerDTO::transform(VvRegisterRequest::class, $config, $company);
     }
 
-    public function getDtoGetLinkRequest(int $id, string $action, VvConfig $config): VvGetLinkRequest{
+    public function getDtoGetLinkRequest(int $id, string $action, VvConfig $config): VvGetLinkRequest
+    {
         $company = $this->findById($id);
 
         return TransformerDTO::transform(VvGetLinkRequest::class, $config, $company, $action);
     }
-
 }

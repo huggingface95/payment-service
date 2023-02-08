@@ -15,5 +15,4 @@ class BankCorrespondentRegion extends BaseModel
     ];
 
     public $timestamps = false;
-
 }

@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class ChangePaymentProviderInGroupRoleViewTable extends Migration
 {
@@ -16,7 +14,7 @@ class ChangePaymentProviderInGroupRoleViewTable extends Migration
     {
         DB::statement('DROP VIEW IF EXISTS group_role_view');
 
-        DB::statement("
+        DB::statement('
             CREATE VIEW group_role_view AS
                 SELECT
                     group_role.*,
@@ -32,7 +30,7 @@ class ChangePaymentProviderInGroupRoleViewTable extends Migration
                     group_role_providers.payment_provider_id = payment_provider.id
                 LEFT JOIN commission_template ON
                     group_role_providers.commission_template_id = commission_template.id
-        ");
+        ');
     }
 
     /**
@@ -44,7 +42,7 @@ class ChangePaymentProviderInGroupRoleViewTable extends Migration
     {
         DB::statement('DROP VIEW IF EXISTS group_role_view');
 
-        DB::statement("
+        DB::statement('
             CREATE VIEW group_role_view AS
                 SELECT
                     group_role.*,
@@ -60,6 +58,6 @@ class ChangePaymentProviderInGroupRoleViewTable extends Migration
                     group_role_providers.payment_provider_id = payment_provider.id
                 LEFT JOIN commission_template ON
                     group_role_providers.commission_template_id = commission_template.id
-        ");
+        ');
     }
 }

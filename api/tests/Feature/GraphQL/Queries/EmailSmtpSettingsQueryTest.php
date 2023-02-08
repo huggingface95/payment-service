@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,6 @@ class EmailSmtpSettingsQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testEmailSmtpSettingsNoAuth(): void
     {
         $this->graphQL('
@@ -31,20 +31,22 @@ class EmailSmtpSettingsQueryTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailSmtp($id: ID!) {
                     emailSmtp(id: $id) {
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $smtp_settings[0]->id,
+                'variables' => [
+                    'id' => (string) $smtp_settings[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'emailSmtp' => [
                     'id' => (string) $smtp_settings[0]->id,
@@ -60,20 +62,22 @@ class EmailSmtpSettingsQueryTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailSmtps($company_id: ID!) {
                     emailSmtps(company_id: $company_id) {
                         id
                     }
                 }',
-            'variables' => [
-                'company_id' => $smtp_settings[0]->company_id,
+                'variables' => [
+                    'company_id' => $smtp_settings[0]->company_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $smtp_settings[0]->id,
             ],

@@ -18,7 +18,7 @@ class SetBaseModelVariablesMiddleware
      */
     public function handle(Request $request, Closure $next, string $guard = null): mixed
     {
-        if (Auth::guard('api')->check() || Auth::guard('api_client')->check()){
+        if (Auth::guard('api')->check() || Auth::guard('api_client')->check()) {
             /** @var Members $user */
             $user = Auth::guard('api')->user() ?? Auth::guard('api_client')->user();
             BaseModel::$applicantIds = $this->getApplicantIdsByAuthMember($user);
@@ -34,9 +34,10 @@ class SetBaseModelVariablesMiddleware
             $ids = $member->accessLimitations()->get()
                 ->map(function ($limitation) {
                     $limitation->load('groupRoles.users');
+
                     return $limitation->groupRoles->pluck('users')->flatten(0)->unique();
                 })
-                ->filter(function ($l){
+                ->filter(function ($l) {
                     return $l;
                 })
                 ->flatten(1)

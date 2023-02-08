@@ -2,7 +2,6 @@
 
 namespace Tests;
 
-use App\Models\Account;
 use App\Models\Payments;
 
 class PaymentsQueryTest extends TestCase
@@ -35,8 +34,9 @@ class PaymentsQueryTest extends TestCase
             ];
         }
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     payments {
                         data {
@@ -45,31 +45,34 @@ class PaymentsQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson($expect);
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson($expect);
     }
 
     public function testQueryPayment(): void
     {
         $payment = Payments::first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query payment($id: ID!) {
                     payment(id: $id) {
                         id
                         amount
                     }
                 }',
-            'variables' => [
-                'id' => $payment->id,
+                'variables' => [
+                    'id' => $payment->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'payment' => [
                     'id' => (string) $payment->id,

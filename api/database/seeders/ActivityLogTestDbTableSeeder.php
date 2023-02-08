@@ -20,7 +20,7 @@ class ActivityLogTestDbTableSeeder extends Seeder
 
         for ($i = 1; $i <= 30; $i++) {
             DB::connection('clickhouse_test')
-                ->table((new ActivityLog)->getTable())
+                ->table((new ActivityLog())->getTable())
                 ->insert([
                     'id' => $faker->uuid(),
                     'company' => $faker->randomElement(['Nginx', 'Apple', 'Nike']),

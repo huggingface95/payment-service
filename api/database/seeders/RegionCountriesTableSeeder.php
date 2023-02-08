@@ -15,8 +15,8 @@ class RegionCountriesTableSeeder extends Seeder
     public function run()
     {
         $row = DB::table('region_countries')->where(['region_id' => 1, 'country_id' => 1])->first();
-        
-        if (!$row) {
+
+        if (! $row) {
             DB::table('region_countries')
                 ->insert(['region_id' => 1, 'country_id' => 1]);
         }

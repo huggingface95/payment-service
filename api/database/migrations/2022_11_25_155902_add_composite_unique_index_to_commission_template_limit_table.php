@@ -15,10 +15,10 @@ class AddCompositeUniqueIndexToCommissionTemplateLimitTable extends Migration
     {
         Schema::table('commission_template_limit', function (Blueprint $table) {
             $table->unique(['commission_template_id',
-                    'commission_template_limit_type_id',
-                    'commission_template_limit_transfer_direction_id',
-                    'commission_template_limit_period_id',
-                    'commission_template_limit_action_type_id'
+                'commission_template_limit_type_id',
+                'commission_template_limit_transfer_direction_id',
+                'commission_template_limit_period_id',
+                'commission_template_limit_action_type_id',
             ], 'composite_unique_commission_template_limit');
         });
     }

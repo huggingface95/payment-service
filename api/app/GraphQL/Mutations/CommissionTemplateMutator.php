@@ -5,7 +5,6 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphqlException;
 use App\Models\CommissionTemplate;
 use App\Models\CommissionTemplateLimit;
-use App\Models\PaymentProvider;
 use App\Models\PaymentSystem;
 
 class CommissionTemplateMutator
@@ -22,7 +21,7 @@ class CommissionTemplateMutator
         $commissionTemplate = CommissionTemplate::create($args);
 
         if (isset($args['payment_provider_id']) && isset($args['payment_system_id'])) {
-                $this->updatePaymentProvider($args);
+            $this->updatePaymentProvider($args);
         }
 
         return $commissionTemplate;
@@ -63,7 +62,7 @@ class CommissionTemplateMutator
         return $commissionTemplate;
     }
 
-    public function updatePaymentProvider ($args)
+    public function updatePaymentProvider($args)
     {
         $paymentSystem = PaymentSystem::whereIn('id', $args['payment_system_id'])->count();
         if (count($args['payment_system_id']) != $paymentSystem) {

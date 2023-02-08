@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property AccountReachedLimit $reachedLimits
  * @property ApplicantIndividual | ApplicantCompany clientable
  * @property Currencies currencies
+ *
  * @method static find(int $id)
  * @method static findOrFail(int $id)
  */
@@ -96,15 +97,15 @@ class Account extends BaseModel implements BaseModelInterface
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new AccountIndividualsCompaniesScope);
-        static::addGlobalScope(new ApplicantFilterByMemberScope);
+        static::addGlobalScope(new AccountIndividualsCompaniesScope());
+        static::addGlobalScope(new ApplicantFilterByMemberScope());
     }
 
     public function newModelQuery(): Builder|Account
     {
         return $this->newEloquentBuilder(
             $this->newBaseQueryBuilder()
-        )->withGlobalScope(AccountIndividualsCompaniesScope::class, new AccountIndividualsCompaniesScope)->setModel($this);
+        )->withGlobalScope(AccountIndividualsCompaniesScope::class, new AccountIndividualsCompaniesScope())->setModel($this);
     }
 
     public function getClientAccountsAttribute(): array
@@ -222,7 +223,6 @@ class Account extends BaseModel implements BaseModelInterface
     public function clientableAttach(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
         if ($this->account_type == self::BUSINESS) {
-
             return $this->applicantCompany();
         }
 

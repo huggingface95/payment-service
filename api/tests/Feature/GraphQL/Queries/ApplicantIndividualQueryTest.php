@@ -11,7 +11,6 @@ class ApplicantIndividualQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testApplicantIndividualNoAuth(): void
     {
         $this->graphQL('
@@ -37,20 +36,21 @@ class ApplicantIndividualQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' =>
-                'query ApplicantIndividual($id:ID!){
+        $this->postGraphQL(
+            [
+                'query' => 'query ApplicantIndividual($id:ID!){
                     applicantIndividual(id: $id) {
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $applicant[0]->id,
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'applicantIndividual' => [
                     'id' => (string) $applicant[0]->id,
@@ -66,8 +66,9 @@ class ApplicantIndividualQueryTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation SetApplicantIndividualPassword(
                     $id: ID!
                     $password: String!
@@ -83,15 +84,16 @@ class ApplicantIndividualQueryTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $applicant[0]->id,
-                'password' => '1234567Za',
-                'password_confirmation' => '1234567Za',
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                    'password' => '1234567Za',
+                    'password_confirmation' => '1234567Za',
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -111,19 +113,20 @@ class ApplicantIndividualQueryTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' =>
-                'query {
+        $this->postGraphQL(
+            [
+                'query' => 'query {
                     applicantIndividuals(orderBy: { column: ID, order: DESC }) {
                         data {
                             id
                         }
                         }
-                }'
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $applicant[0]->id,
             ],
@@ -137,22 +140,23 @@ class ApplicantIndividualQueryTest extends TestCase
             ->where('id', 1)
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query ApplicantIndividuals($id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query ApplicantIndividuals($id: Mixed) {
                     applicantIndividuals(where: { column: ID, value: $id}) {
                         data {
                             id
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $applicant->id
+                'variables' => [
+                    'id' => $applicant->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $applicant->id,
             ],
@@ -165,9 +169,9 @@ class ApplicantIndividualQueryTest extends TestCase
             ->table('applicant_individual')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query TestApplicantIndividualFilters($id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantIndividualFilters($id: Mixed) {
                     applicantIndividuals(filter: { column: ID, value: $id }) {
                         data {
                             id
@@ -177,13 +181,14 @@ class ApplicantIndividualQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $applicant->id,
+                'variables' => [
+                    'id' => (string) $applicant->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'applicantIndividuals' => [
                     'data' => [[
@@ -191,7 +196,7 @@ class ApplicantIndividualQueryTest extends TestCase
                         'first_name' => (string) $applicant->first_name,
                         'email' => (string) $applicant->email,
                         'url' => (string) $applicant->url,
-                    ]]
+                    ]],
                 ],
             ],
         ]);
@@ -203,9 +208,9 @@ class ApplicantIndividualQueryTest extends TestCase
             ->table('applicant_individual')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query TestApplicantIndividualFilters($email: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantIndividualFilters($email: Mixed) {
                     applicantIndividuals(filter: { column: EMAIL, operator: ILIKE, value: $email }) {
                         data {
                             id
@@ -215,13 +220,14 @@ class ApplicantIndividualQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'email' => (string) $applicant->email,
+                'variables' => [
+                    'email' => (string) $applicant->email,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'applicantIndividuals' => [
                     'data' => [[
@@ -229,7 +235,7 @@ class ApplicantIndividualQueryTest extends TestCase
                         'first_name' => (string) $applicant->first_name,
                         'email' => (string) $applicant->email,
                         'url' => (string) $applicant->url,
-                    ]]
+                    ]],
                 ],
             ],
         ]);
@@ -241,9 +247,9 @@ class ApplicantIndividualQueryTest extends TestCase
             ->table('applicant_individual')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query TestApplicantIndividualFilters($id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantIndividualFilters($id: Mixed) {
                     applicantIndividuals(filter: { column: COMPANY_ID, value: $id }) {
                         data {
                             id
@@ -253,13 +259,14 @@ class ApplicantIndividualQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $applicant->company_id,
+                'variables' => [
+                    'id' => (string) $applicant->company_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $applicant->id,
             'first_name' => (string) $applicant->first_name,
             'email' => (string) $applicant->email,
@@ -283,8 +290,9 @@ class ApplicantIndividualQueryTest extends TestCase
             ];
         }
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query TestApplicantIndividualFilters($id: Mixed) {
                     applicantIndividuals(
                         filter: { column: HAS_RISK_LEVEL_FILTER_BY_ID, value: $id }
@@ -297,16 +305,17 @@ class ApplicantIndividualQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $applicant->applicant_risk_level_id,
+                'variables' => [
+                    'id' => (string) $applicant->applicant_risk_level_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'applicantIndividuals' => [
-                    'data' => $data
+                    'data' => $data,
                 ],
             ],
         ]);
@@ -328,8 +337,9 @@ class ApplicantIndividualQueryTest extends TestCase
             ];
         }
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query TestApplicantIndividualFilters($id: Mixed) {
                     applicantIndividuals(
                         filter: { column: HAS_STATE_REASON_FILTER_BY_ID, value: $id }
@@ -342,16 +352,17 @@ class ApplicantIndividualQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $applicant->applicant_state_reason_id,
+                'variables' => [
+                    'id' => $applicant->applicant_state_reason_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'applicantIndividuals' => [
-                    'data' => $data
+                    'data' => $data,
                 ],
             ],
         ]);
@@ -363,9 +374,9 @@ class ApplicantIndividualQueryTest extends TestCase
             ->table('applicant_individual')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query {
+        $this->postGraphQL(
+            [
+                'query' => 'query {
                     owners(orderBy: { column: ID, order: ASC }) {
                         id
                         first_name
@@ -373,10 +384,11 @@ class ApplicantIndividualQueryTest extends TestCase
                         url
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             'id' => (string) $applicant->id,
             'first_name' => (string) $applicant->first_name,
             'email' => (string) $applicant->email,

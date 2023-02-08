@@ -33,9 +33,9 @@ class CreateTransferIncomingTable extends Migration
             $table->string('system_message', 255);
             $table->string('reason', 255);
             $table->enum('channel', [
-                TransferOutgoingChannelEnum::CLIENT_DASHBOARD->toString(), 
-                TransferOutgoingChannelEnum::BACK_OFFICE->toString(), 
-                TransferOutgoingChannelEnum::CLIENT_MOBILE_APPLICATION->toString()
+                TransferOutgoingChannelEnum::CLIENT_DASHBOARD->toString(),
+                TransferOutgoingChannelEnum::BACK_OFFICE->toString(),
+                TransferOutgoingChannelEnum::CLIENT_MOBILE_APPLICATION->toString(),
             ]);
             $table->string('bank_message', 255);
             $table->string('sender_account', 255);

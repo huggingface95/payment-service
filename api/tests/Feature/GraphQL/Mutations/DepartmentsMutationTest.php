@@ -12,13 +12,12 @@ class DepartmentsMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateDepartmentNoAuth(): void
     {
         $seq = DB::table('departments')
                 ->max('id') + 1;
 
-        DB::select('ALTER SEQUENCE departments_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE departments_id_seq RESTART WITH '.$seq);
 
         $this->graphQL('
             mutation CreateDepartment($name: String!, $company_id: ID!, $dep_pos:[ID]) {
@@ -51,10 +50,11 @@ class DepartmentsMutationTest extends TestCase
         $seq = DB::table('departments')
                 ->max('id') + 1;
 
-        DB::select('ALTER SEQUENCE departments_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE departments_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateDepartment($name: String!, $company_id: ID!, $dep_pos:[ID]) {
                     createDepartment(
                         name: $name
@@ -68,18 +68,19 @@ class DepartmentsMutationTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'name' => 'Test Department',
-                'company_id' => 1,
-                'dep_pos' => [
-                    1,
-                    2,
+                'variables' => [
+                    'name' => 'Test Department',
+                    'company_id' => 1,
+                    'dep_pos' => [
+                        1,
+                        2,
+                    ],
                 ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -104,10 +105,11 @@ class DepartmentsMutationTest extends TestCase
         $seq = DB::table('department_position')
                 ->max('id') + 1;
 
-        DB::select('ALTER SEQUENCE department_position_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE department_position_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateDepartmentPosition($name: String!, $company_id: ID!) {
                     createDepartmentPosition(
                         name: $name
@@ -117,14 +119,15 @@ class DepartmentsMutationTest extends TestCase
                         name
                     }
                 }',
-            'variables' => [
-                'name' => 'Test Department Position',
-                'company_id' => 1,
+                'variables' => [
+                    'name' => 'Test Department Position',
+                    'company_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -145,22 +148,24 @@ class DepartmentsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateDepartment($id: ID!, $name: String) {
                     updateDepartment(id: $id, name: $name) {
                         id
                         name
                     }
                 }',
-            'variables' => [
-                'id' => strval($department[0]->id),
-                'name' => 'Updated department',
+                'variables' => [
+                    'id' => strval($department[0]->id),
+                    'name' => 'Updated department',
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -181,8 +186,9 @@ class DepartmentsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeleteDepartment(
                     $id: ID!
                 )
@@ -194,13 +200,14 @@ class DepartmentsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $department[0]->id,
+                'variables' => [
+                    'id' => (string) $department[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -220,8 +227,9 @@ class DepartmentsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeleteDepartmentPosition(
                     $id: ID!
                 )
@@ -233,13 +241,14 @@ class DepartmentsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $departmentPosition[0]->id,
+                'variables' => [
+                    'id' => (string) $departmentPosition[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

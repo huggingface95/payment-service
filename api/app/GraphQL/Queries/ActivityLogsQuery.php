@@ -18,7 +18,7 @@ final class ActivityLogsQuery
     {
         $query = DB::connection('clickhouse')
             ->query()
-            ->from((new ActivityLog)->getTable());
+            ->from((new ActivityLog())->getTable());
 
         if (isset($args['query']) && count($args['query']) > 0) {
             $fields = $args['query'];

@@ -11,7 +11,6 @@ class DepartmentsQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testDepartmentsNoAuth(): void
     {
         $this->graphQL('
@@ -35,20 +34,22 @@ class DepartmentsQueryTest extends TestCase
             ->orderBy('id')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Department($id:ID!){
                     department(id: $id) {
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $department->id,
+                'variables' => [
+                    'id' => (string) $department->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'department' => [
                     'id' => (string) $department->id,
@@ -64,8 +65,9 @@ class DepartmentsQueryTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     departments(orderBy: { column: ID, order: DESC }) {
                         data {
@@ -74,10 +76,10 @@ class DepartmentsQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
         )->seeJsonContains([
             [
                 'id' => (string) $department[0]->id,
@@ -93,8 +95,9 @@ class DepartmentsQueryTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Department($name: Mixed){
                     departments(
                         filter: { column: NAME, operator: ILIKE, value: $name }
@@ -105,13 +108,14 @@ class DepartmentsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'name' => $department[0]->name,
+                'variables' => [
+                    'name' => $department[0]->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $department[0]->id,
                 'name' => (string) $department[0]->name,
@@ -126,8 +130,9 @@ class DepartmentsQueryTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Departments($id: Mixed) {
                     departments(
                         filter: { column:HAS_COMPANY_FILTER_BY_ID,value: $id}
@@ -138,13 +143,14 @@ class DepartmentsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $department[0]->company_id,
+                'variables' => [
+                    'id' => (string) $department[0]->company_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $department[0]->id,
                 'name' => (string) $department[0]->name,
@@ -159,20 +165,22 @@ class DepartmentsQueryTest extends TestCase
             ->orderBy('id')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query DepartmentPosition($id:ID!){
                     departmentPosition(id: $id) {
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $departmentPosition->id,
+                'variables' => [
+                    'id' => (string) $departmentPosition->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'departmentPosition' => [
                     'id' => (string) $departmentPosition->id,
@@ -188,8 +196,9 @@ class DepartmentsQueryTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     departmentPositions(orderBy: { column: ID, order: DESC }) {
                         data {
@@ -198,10 +207,11 @@ class DepartmentsQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $departmentPositions[0]->id,
                 'name' => (string) $departmentPositions[0]->name,
@@ -227,10 +237,10 @@ class DepartmentsQueryTest extends TestCase
                    }
                 }',
             'variables' => [
-                'id' => $departmentPositions[0]->id
-            ]
+                'id' => $departmentPositions[0]->id,
+            ],
         ], [
-            "Authorization" => "Bearer " . $this->login()
+            'Authorization' => 'Bearer '.$this->login(),
         ])->seeJsonContains([
             [
                 'id' => (string) $departmentPositions[0]->id,
@@ -246,8 +256,9 @@ class DepartmentsQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     departmentPositions(filter: { column: IS_ACTIVE, value: true }) {
                         data {
@@ -256,10 +267,11 @@ class DepartmentsQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $departmentPositions[0]->id,
                 'name' => (string) $departmentPositions[0]->name,

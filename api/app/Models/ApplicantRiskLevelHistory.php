@@ -27,7 +27,7 @@ class ApplicantRiskLevelHistory extends BaseModel
     {
         parent::booted();
         static::addGlobalScope(new MemberScope());
-        static::addGlobalScope(new ApplicantFilterByMemberScope);
+        static::addGlobalScope(new ApplicantFilterByMemberScope());
     }
 
     public function applicantIndividual()

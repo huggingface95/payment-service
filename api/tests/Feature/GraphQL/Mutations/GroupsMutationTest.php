@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,6 @@ class GroupsMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateGroupNoAuth(): void
     {
         $seq = DB::table('group_role')
@@ -59,8 +59,9 @@ class GroupsMutationTest extends TestCase
 
         DB::select('ALTER SEQUENCE group_role_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateGroup(
                     $name: String!
                     $group_type_id: ID!
@@ -83,17 +84,18 @@ class GroupsMutationTest extends TestCase
                     is_active
                 }
                 }',
-            'variables' => [
-                'name' => 'Test Group Role Mutation',
-                'group_type_id' => 2,
-                'description' => 'Description Group Role',
-                'role_id' => 2,
-                'company_id' => 1,
+                'variables' => [
+                    'name' => 'Test Group Role Mutation',
+                    'group_type_id' => 2,
+                    'description' => 'Description Group Role',
+                    'role_id' => 2,
+                    'company_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -115,8 +117,9 @@ class GroupsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateGroup(
                     $id: ID!
                     $name: String!
@@ -136,16 +139,17 @@ class GroupsMutationTest extends TestCase
                     is_active
                 }
                 }',
-            'variables' => [
-                'id' => (string) $group[0]->id,
-                'name' => 'Test updated group',
-                'description' => 'Descr updated group',
-                'group_type_id' => 2,
+                'variables' => [
+                    'id' => (string) $group[0]->id,
+                    'name' => 'Test updated group',
+                    'description' => 'Descr updated group',
+                    'group_type_id' => 2,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -169,20 +173,22 @@ class GroupsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeleteGroup($id: ID!) {
                     deleteGroup(id: $id) {
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $group[0]->id,
+                'variables' => [
+                    'id' => (string) $group[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

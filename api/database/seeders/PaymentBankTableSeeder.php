@@ -23,7 +23,7 @@ class PaymentBankTableSeeder extends Seeder
                     'id' => $i,
                 ],
                 [
-                    'name' => 'Bank ' . $i,
+                    'name' => 'Bank '.$i,
                     'address' => $faker->address(),
                     'bank_code' => $faker->numberBetween(1000000, 2000000),
                     'payment_system_code' => $faker->numberBetween(300000000, 400000000),

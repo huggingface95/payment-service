@@ -8,7 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 
 interface FileRepositoryInterface
 {
-
     public function saveFile(VvPostBackResponse $response): Model|Builder;
-
 }

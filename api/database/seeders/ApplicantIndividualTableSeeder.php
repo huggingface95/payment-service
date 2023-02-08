@@ -59,9 +59,8 @@ class ApplicantIndividualTableSeeder extends Seeder
         foreach ($applicants as $id => $applicant) {
             ApplicantIndividual::firstOrCreate([
                 'id' => $id,
-                'email' => 'applicant' . $id . '@test.com',
+                'email' => 'applicant'.$id.'@test.com',
             ], $applicant);
-
         }
     }
 }

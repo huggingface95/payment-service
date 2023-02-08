@@ -11,7 +11,6 @@ class EmailNotificationsMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateEmailNotificationNoAuth(): void
     {
         $seq = DB::table('email_notifications')
@@ -51,8 +50,9 @@ class EmailNotificationsMutationTest extends TestCase
 
         DB::select('ALTER SEQUENCE email_notifications_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateEmailNotification(
                           $group_type_id: ID!
                           $group_role_id: ID!
@@ -68,15 +68,16 @@ class EmailNotificationsMutationTest extends TestCase
                      id
                   }
                }',
-            'variables' => [
-                'group_type_id' => 2,
-                'group_role_id' =>  1,
-                'company_id' => 1,
+                'variables' => [
+                    'group_type_id' => 2,
+                    'group_role_id' =>  1,
+                    'company_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -96,8 +97,9 @@ class EmailNotificationsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateEmailNotification(
                       $id: ID!
                       $group_type_id: ID!
@@ -116,16 +118,17 @@ class EmailNotificationsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $email_notification[0]->id,
-                'group_type_id' => 2,
-                'group_role_id' =>  1,
-                'company_id' => 2,
+                'variables' => [
+                    'id' => (string) $email_notification[0]->id,
+                    'group_type_id' => 2,
+                    'group_role_id' =>  1,
+                    'company_id' => 2,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

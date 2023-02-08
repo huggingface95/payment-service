@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
-use function Aws\boolean_value;
 
 class MembersQueryTest extends TestCase
 {
@@ -12,7 +11,6 @@ class MembersQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testQueryMembersNoAuth(): void
     {
         $this->graphQL('
@@ -37,20 +35,22 @@ class MembersQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Member($id:ID!){
                     member(id: $id) {
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $member[0]->id,
+                'variables' => [
+                    'id' => (string) $member[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'member' => [
                     'id' => (string) $member[0]->id,
@@ -66,8 +66,9 @@ class MembersQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     members(orderBy: { column: ID, order: ASC }) {
                         data {
@@ -75,10 +76,10 @@ class MembersQueryTest extends TestCase
                         }
                         }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
         )->seeJsonContains([
             [
                 'id' => (string) $member[0]->id,
@@ -93,8 +94,9 @@ class MembersQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Members ($id: Mixed) {
                     members(where: { column: ID, value: $id}) {
                         data {
@@ -102,27 +104,29 @@ class MembersQueryTest extends TestCase
                         }
                         }
                 }',
-            'variables' => [
-                'id' => (string) $member[0]->id
+                'variables' => [
+                    'id' => (string) $member[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $member[0]->id,
             ],
         ]);
     }
 
-   public function testQueryMembersByDepartmentPosition(): void
+    public function testQueryMembersByDepartmentPosition(): void
     {
         $member = DB::connection('pgsql_test')
             ->table('members')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Members($id: Mixed) {
                     members(
                         filter: {
@@ -137,13 +141,14 @@ class MembersQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $member->department_position_id
+                'variables' => [
+                    'id' => $member->department_position_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $member->id,
             'first_name' => (string) $member->first_name,
             'email' => (string) $member->email,
@@ -156,8 +161,9 @@ class MembersQueryTest extends TestCase
             ->table('members')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Members($id: Mixed) {
                     members(
                         filter: {
@@ -172,13 +178,14 @@ class MembersQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $member->id
+                'variables' => [
+                    'id' => $member->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $member->id,
             'first_name' => (string) $member->first_name,
             'email' => (string) $member->email,
@@ -191,8 +198,9 @@ class MembersQueryTest extends TestCase
             ->table('members')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Members($name: Mixed) {
                     members(
                         filter: {
@@ -208,13 +216,14 @@ class MembersQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'name' => $member->fullname
+                'variables' => [
+                    'name' => $member->fullname,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $member->id,
             'first_name' => (string) $member->first_name,
             'email' => (string) $member->email,
@@ -227,8 +236,9 @@ class MembersQueryTest extends TestCase
             ->table('members')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Members($id: Mixed) {
                     members(
                         filter: {
@@ -243,13 +253,14 @@ class MembersQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $member->company_id
+                'variables' => [
+                    'id' => $member->company_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $member->id,
             'first_name' => (string) $member->first_name,
             'email' => (string) $member->email,
@@ -262,8 +273,9 @@ class MembersQueryTest extends TestCase
             ->table('members')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Members($email: Mixed) {
                     members(
                         filter: {
@@ -279,13 +291,14 @@ class MembersQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'email' => $member->email
+                'variables' => [
+                    'email' => $member->email,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $member->id,
             'first_name' => (string) $member->first_name,
             'email' => (string) $member->email,
@@ -298,8 +311,9 @@ class MembersQueryTest extends TestCase
             ->table('members')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Members($id: Mixed) {
                     members(
                         filter: {
@@ -314,13 +328,14 @@ class MembersQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $member->department_position_id
+                'variables' => [
+                    'id' => $member->department_position_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $member->id,
             'first_name' => (string) $member->first_name,
             'email' => (string) $member->email,

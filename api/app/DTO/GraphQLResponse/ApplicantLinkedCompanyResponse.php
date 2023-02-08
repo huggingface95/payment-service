@@ -10,7 +10,9 @@ use App\Models\ApplicantIndividualCompanyRelation;
 class ApplicantLinkedCompanyResponse
 {
     public ?ApplicantCompany $company;
+
     public ?ApplicantIndividualCompanyPosition $company_position;
+
     public ?ApplicantIndividualCompanyRelation $company_relation;
 
     public static function transform(ApplicantIndividualCompany $applicantIndividualCompany): self

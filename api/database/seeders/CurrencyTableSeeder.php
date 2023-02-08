@@ -14,7 +14,7 @@ class CurrencyTableSeeder extends Seeder
      */
     public function run()
     {
-        $path = base_path() . '/data/currency_codes.csv';
+        $path = base_path().'/data/currency_codes.csv';
         $dataCsv = array_map('str_getcsv', file($path));
 
         foreach ($dataCsv as $item) {

@@ -11,13 +11,12 @@ class ApplicantCompanyMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateApplicantCompanNoAuth(): void
     {
         $seq = DB::table('applicant_companies')
                 ->max('id') + 1;
 
-        DB::select('ALTER SEQUENCE applicant_companies_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE applicant_companies_id_seq RESTART WITH '.$seq);
 
         $this->graphQL('
             mutation CreateApplicantCompany(
@@ -41,8 +40,8 @@ class ApplicantCompanyMutationTest extends TestCase
                 }
             }
         ', [
-            'name' => 'AppCompany' . \Illuminate\Support\Str::random(3),
-            'email' => 'applicant' . \Illuminate\Support\Str::random(3) . '@gmail.com',
+            'name' => 'AppCompany'.\Illuminate\Support\Str::random(3),
+            'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
             'company_id' => 1,
             'group_id' => 1,
             'project_id' => 1,
@@ -56,10 +55,11 @@ class ApplicantCompanyMutationTest extends TestCase
         $seq = DB::table('applicant_companies')
                 ->max('id') + 1;
 
-        DB::select('ALTER SEQUENCE applicant_companies_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE applicant_companies_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateApplicantCompany(
                     $name: String!
                     $email: EMAIL!
@@ -80,17 +80,18 @@ class ApplicantCompanyMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'name' => 'AppCompany' . \Illuminate\Support\Str::random(3),
-                'email' => 'applicant' . \Illuminate\Support\Str::random(3) . '@gmail.com',
-                'company_id' => 1,
-                'group_id' => 1,
-                'project_id' => 1,
+                'variables' => [
+                    'name' => 'AppCompany'.\Illuminate\Support\Str::random(3),
+                    'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
+                    'company_id' => 1,
+                    'group_id' => 1,
+                    'project_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -110,8 +111,9 @@ class ApplicantCompanyMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateApplicantCompany(
                     $id: ID!
                     $name: String!
@@ -135,18 +137,19 @@ class ApplicantCompanyMutationTest extends TestCase
                         email
                     }
                 }',
-            'variables' => [
-                'id' => strval($applicant[0]->id),
-                'name' => 'Updated name',
-                'email' => 'applicant' . \Illuminate\Support\Str::random(3) . '@gmail.com',
-                'company_id' => 2,
-                'group_id' => 2,
-                'project_id' => 2,
+                'variables' => [
+                    'id' => strval($applicant[0]->id),
+                    'name' => 'Updated name',
+                    'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
+                    'company_id' => 2,
+                    'group_id' => 2,
+                    'project_id' => 2,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -167,8 +170,9 @@ class ApplicantCompanyMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeleteApplicantCompany(
                     $id: ID!
                 )
@@ -180,13 +184,14 @@ class ApplicantCompanyMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => strval($applicant[0]->id),
+                'variables' => [
+                    'id' => strval($applicant[0]->id),
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

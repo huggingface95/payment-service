@@ -65,7 +65,7 @@ class MembersTableSeeder extends Seeder
         foreach ($members as $id => $member) {
             Members::firstOrCreate([
                 'id' => $id,
-                'first_name' => 'Member' . $id,
+                'first_name' => 'Member'.$id,
             ], $member);
         }
     }

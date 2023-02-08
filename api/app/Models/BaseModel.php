@@ -15,6 +15,7 @@ class BaseModel extends Model
     public const DEFAULT_MEMBER_ID = 2;
 
     public const SUPER_COMPANY_ID = 1;
+
     public const FILTER_BY_COMPANY_TABLES = [
         'departments' => 'company_id',
         'members' => 'company_id',
@@ -22,7 +23,7 @@ class BaseModel extends Model
         'applicant_companies' => 'company_id',
         'accounts' => 'company_id',
         'group_role' => 'company_id',
-        'companies' => 'id'
+        'companies' => 'id',
     ];
 
     public const FILTER_BY_COMPANY_SKIP_ACTIONS = [
@@ -37,6 +38,7 @@ class BaseModel extends Model
 
     //Access limitation applicant ids
     public static ?array $applicantIds = null;
+
     public static ?int $currentCompanyId = null;
 
     protected static function booted()
@@ -50,24 +52,28 @@ class BaseModel extends Model
         self::creating(function ($model) {
             /** @var Members|ApplicantIndividual $user */
             $user = Auth::user();
+
             return self::filterByPermissionFilters($user, 'creating', $model)
                 && self::filterByRoleActions($user, 'creating', $model)
                 && self::filterByCompany($user, 'creating', $model);
         });
         self::saving(function ($model) {
             $user = Auth::user();
+
             return self::filterByPermissionFilters($user, 'saving', $model)
                 && self::filterByRoleActions($user, 'saving', $model)
                 && self::filterByCompany($user, 'saving', $model);
         });
         self::updating(function ($model) {
             $user = Auth::user();
+
             return self::filterByPermissionFilters($user, 'updating', $model)
                 && self::filterByRoleActions($user, 'updating', $model)
                 && self::filterByCompany($user, 'updating', $model);
         });
         self::deleting(function ($model) {
             $user = Auth::user();
+
             return self::filterByPermissionFilters($user, 'deleting', $model)
                 && self::filterByRoleActions($user, 'deleting', $model)
                 && self::filterByCompany($user, 'deleting', $model);
@@ -136,6 +142,7 @@ class BaseModel extends Model
                     if (in_array($action, self::FILTER_BY_COMPANY_SKIP_ACTIONS[$table])) {
                         return true;
                     }
+
                     return in_array($key, [self::SUPER_COMPANY_ID, $user->company_id]);
                 }
             }

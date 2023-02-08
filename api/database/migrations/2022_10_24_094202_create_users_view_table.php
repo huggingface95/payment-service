@@ -1,9 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class CreateUsersViewTable extends Migration
 {
@@ -15,7 +13,7 @@ class CreateUsersViewTable extends Migration
     public function up()
     {
         DB::statement('DROP VIEW IF EXISTS users_view');
-        DB::statement("
+        DB::statement('
           CREATE VIEW users_view AS  SELECT m.id,
                 m.fullname,
                 m.first_name,
@@ -41,7 +39,7 @@ class CreateUsersViewTable extends Migration
                FROM ((applicant_individual ai
                  JOIN group_role_members_individuals grmi ON ((ai.id = grmi.user_id)))
                  JOIN group_role gr ON ((gr.id = grmi.group_role_id)))
-        ");
+        ');
     }
 
     /**

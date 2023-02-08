@@ -7,11 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Passport\Client;
 
-
-
 class JWTRepository implements JWTRepositoryInterface
 {
-
     protected Client $client;
 
     public function __construct(Client $client)

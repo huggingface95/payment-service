@@ -16,7 +16,7 @@ class DepartmentSeeder extends Seeder
     {
         for ($i = 1; $i <= 5; $i++) {
             Department::firstOrCreate([
-                'name' => 'Department ' . $i,
+                'name' => 'Department '.$i,
                 'company_id' => $i,
             ]);
         }

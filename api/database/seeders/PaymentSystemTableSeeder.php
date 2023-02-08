@@ -23,7 +23,7 @@ class PaymentSystemTableSeeder extends Seeder
             PaymentSystem::firstOrCreate([
                 'id' => $i,
             ], [
-                'name' => $faker->company() . 'Pay',
+                'name' => $faker->company().'Pay',
                 'is_active' => true,
                 'payment_provider_id' => $i,
             ]);

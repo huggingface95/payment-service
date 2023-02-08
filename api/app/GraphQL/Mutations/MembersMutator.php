@@ -17,18 +17,17 @@ use Illuminate\Support\Str;
 
 class MembersMutator extends BaseMutator
 {
-
     public function __construct(
         protected EmailService $emailService,
         protected VerifyService $verifyService
-    )
-    {
+    ) {
     }
 
     /**
      * @param $_
-     * @param array $args
+     * @param  array  $args
      * @return mixed
+     *
      * @throws GraphqlException
      */
     public function create($_, array $args): mixed
@@ -57,14 +56,12 @@ class MembersMutator extends BaseMutator
             DB::commit();
 
             return $member;
-        }
-        catch (EmailException $e){
+        } catch (EmailException $e) {
             DB::rollBack();
             throw new GraphqlException($e->getMessage(), $e->getCode());
-        }
-        catch (\Throwable){
+        } catch (\Throwable) {
             DB::rollBack();
-            throw new GraphqlException("Internal server error", "internal");
+            throw new GraphqlException('Internal server error', 'internal');
         }
     }
 
@@ -139,7 +136,7 @@ class MembersMutator extends BaseMutator
     }
 
     /**
-     * @param  $_
+     * @param    $_
      * @param  array  $args
      * @return mixed
      */
@@ -162,7 +159,7 @@ class MembersMutator extends BaseMutator
     }
 
     /**
-     * @param  $_
+     * @param    $_
      * @param  array  $args
      * @return mixed
      */
@@ -174,14 +171,14 @@ class MembersMutator extends BaseMutator
         }
 
         $member->update([
-            'member_status_id' => MemberStatusEnum::SUSPENDED->value
+            'member_status_id' => MemberStatusEnum::SUSPENDED->value,
         ]);
 
         return $member;
     }
 
     /**
-     * @param  $_
+     * @param    $_
      * @param  array  $args
      * @return mixed
      */
@@ -193,7 +190,7 @@ class MembersMutator extends BaseMutator
         }
 
         $member->update([
-            'member_status_id' => MemberStatusEnum::INACTIVE->value
+            'member_status_id' => MemberStatusEnum::INACTIVE->value,
         ]);
 
         $this->emailService->sendVerificationEmail($member);
@@ -202,7 +199,7 @@ class MembersMutator extends BaseMutator
     }
 
     /**
-     * @param  $_
+     * @param    $_
      * @param  array  $args
      * @return mixed
      */

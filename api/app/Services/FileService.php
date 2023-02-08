@@ -14,7 +14,7 @@ class FileService extends AbstractService
         $original_name = $file->getClientOriginalName();
         $entity_type = $request->post('entity_type');
         $author_id = $request->post('author_id');
-        $filepath = $author_id . '/' . $entity_type;
+        $filepath = $author_id.'/'.$entity_type;
         $store = $file->store($filepath, 's3');
         $filename = explode('/', $store);
         $data = [
@@ -24,16 +24,16 @@ class FileService extends AbstractService
             'size' => $file->getSize(),
             'entity_type' => $entity_type,
             'author_id' => $author_id,
-            'storage_path' => '/' . $filepath . '/',
+            'storage_path' => '/'.$filepath.'/',
             'storage_name' => $filename[2],
-            'link' => 'https://dev.storage.docudots.com/' . $filepath . '/' . $filename[2],
+            'link' => 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename[2],
             'member_id' => $this->getMemberId(),
         ];
 
         $fileDb = Files::create($data);
 
-        $exists = Storage::disk('s3')->exists($filepath . '/' . $filename[2]);
-        ($exists and $fileDb) ? $link = 'https://dev.storage.docudots.com/' . $filepath . '/' . $filename[2] . '' : Storage::disk('s3')->delete($filepath . '/' . $filename[2]);
+        $exists = Storage::disk('s3')->exists($filepath.'/'.$filename[2]);
+        ($exists and $fileDb) ? $link = 'https://dev.storage.docudots.com/'.$filepath.'/'.$filename[2].'' : Storage::disk('s3')->delete($filepath.'/'.$filename[2]);
 
         return $fileDb;
     }
@@ -42,7 +42,7 @@ class FileService extends AbstractService
     {
         $resolution = getimagesize($file);
 
-        return !empty($resolution) ? $resolution[0] . 'x' . $resolution[1] : null;
+        return ! empty($resolution) ? $resolution[0].'x'.$resolution[1] : null;
     }
 
     public function getMemberId(): int | null
@@ -54,5 +54,4 @@ class FileService extends AbstractService
 
         return null;
     }
-
 }

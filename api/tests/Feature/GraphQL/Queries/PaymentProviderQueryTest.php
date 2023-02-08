@@ -2,7 +2,6 @@
 
 namespace Tests;
 
-use App\Models\PaymentSystem;
 use Illuminate\Support\Facades\DB;
 
 class PaymentProviderQueryTest extends TestCase
@@ -12,7 +11,6 @@ class PaymentProviderQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testQueryPaymentProviderNoAuth(): void
     {
         $this->graphQL('
@@ -44,8 +42,9 @@ class PaymentProviderQueryTest extends TestCase
             ->where('payment_provider_id', $payment_provider->id)
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query PaymentProvider($id:ID!){
                     paymentProvider(id: $id) {
                         id
@@ -54,13 +53,14 @@ class PaymentProviderQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $payment_provider->id,
+                'variables' => [
+                    'id' => (string) $payment_provider->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'data' => [
                 'paymentProvider' => [
                     'id' => (string) $payment_provider->id,
@@ -79,8 +79,9 @@ class PaymentProviderQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     paymentProviders (orderBy: { column: ID, order: ASC }) {
                         data {
@@ -91,10 +92,11 @@ class PaymentProviderQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $payment_provider[0]->id,
                 'name' => (string) $payment_provider[0]->name,
@@ -110,8 +112,9 @@ class PaymentProviderQueryTest extends TestCase
             ->table('payment_provider')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query PaymentProviders($name: Mixed) {
                     paymentProviders(
                         filter: {
@@ -127,13 +130,14 @@ class PaymentProviderQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                "name" => (string) $payment_provider->name,
+                'variables' => [
+                    'name' => (string) $payment_provider->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $payment_provider->id,
                 'name' => (string) $payment_provider->name,
@@ -153,8 +157,9 @@ class PaymentProviderQueryTest extends TestCase
             ->where('payment_provider_id', $payment_provider->id)
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query PaymentProviders($id: Mixed) {
                     paymentProviders(
                         filter: {
@@ -169,13 +174,14 @@ class PaymentProviderQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                "id" => (string) $payment_system->id,
+                'variables' => [
+                    'id' => (string) $payment_system->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $payment_provider->id,
                 'name' => (string) $payment_provider->name,

@@ -11,7 +11,6 @@ class ApplicantIndividualModulesMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateApplicantIndividualModuleNoAuth(): void
     {
         $this->graphQL('
@@ -45,8 +44,9 @@ class ApplicantIndividualModulesMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateApplicantIndividualModule(
                     $applicant_individual_id: ID!
                     $module_id: [ID]
@@ -61,14 +61,15 @@ class ApplicantIndividualModulesMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'applicant_individual_id' => $applicant[0]->id,
-                'module_id' => $module[0]->id,
+                'variables' => [
+                    'applicant_individual_id' => $applicant[0]->id,
+                    'module_id' => $module[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -93,8 +94,9 @@ class ApplicantIndividualModulesMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeleteApplicantIndividualModule(
                     $applicant_individual_id: ID!
                     $module_id: [ID]
@@ -108,14 +110,15 @@ class ApplicantIndividualModulesMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'applicant_individual_id' => (string) $applicant[0]->id,
-                'module_id' => (string) $module[0]->id,
+                'variables' => [
+                    'applicant_individual_id' => (string) $applicant[0]->id,
+                    'module_id' => (string) $module[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

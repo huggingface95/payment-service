@@ -20,7 +20,7 @@ final class ApplicantLinkedCompanies
         if ($individual = ApplicantIndividual::query()->find($args['applicant_individual_id'])) {
             $applicantLinkedCompaniesResponseList = $individual->applicantIndividualCompanies()
                 ->get()
-                ->map(function (ApplicantIndividualCompany $applicantIndividualCompany){
+                ->map(function (ApplicantIndividualCompany $applicantIndividualCompany) {
                     return TransformerDTO::transform(ApplicantLinkedCompanyResponse::class, $applicantIndividualCompany);
                 });
         }

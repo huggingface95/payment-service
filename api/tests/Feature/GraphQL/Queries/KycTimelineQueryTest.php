@@ -8,12 +8,10 @@ use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\DocumentStateTableSeeder;
 use Database\Seeders\DocumentTypeTableSeeder;
 use Database\Seeders\FileTableSeeder;
-use Database\Seeders\KycTimelineTableSeeder;
 use Tests\TestCase;
 
 class KycTimelineQueryTest extends TestCase
 {
-
     public function setUp(): void
     {
         parent::setUp();
@@ -68,11 +66,12 @@ class KycTimelineQueryTest extends TestCase
             ];
         }
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query KycTimelines($id: Mixed) {
                     kycTimelines (
-                        filter: { column: ' . strtoupper($cond) . ', operator: EQ, value: $id }
+                        filter: { column: '.strtoupper($cond).', operator: EQ, value: $id }
                     ) {
                         data {
                             os
@@ -86,13 +85,14 @@ class KycTimelineQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $value,
+                'variables' => [
+                    'id' => $value,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson($expect);
+        )->seeJson($expect);
     }
 
     public function provide_testQueryKycTimelinesWithFilterByCondition()
@@ -104,5 +104,4 @@ class KycTimelineQueryTest extends TestCase
             ['applicant_type', 'ApplicantCompany'],
         ];
     }
-
 }

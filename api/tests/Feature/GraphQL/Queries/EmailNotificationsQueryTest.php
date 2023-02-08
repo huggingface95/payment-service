@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,6 @@ class EmailNotificationsQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testEmailNotificationsNoAuth(): void
     {
         $this->graphQL('
@@ -33,8 +33,9 @@ class EmailNotificationsQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailNotification(
                 $company_id: ID!
                 $group_type_id: ID!
@@ -48,15 +49,16 @@ class EmailNotificationsQueryTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'group_type_id' => $email_notification[0]->group_type_id,
-                'group_role_id' =>  $email_notification[0]->group_role_id,
-                'company_id' => $email_notification[0]->company_id,
+                'variables' => [
+                    'group_type_id' => $email_notification[0]->group_type_id,
+                    'group_role_id' =>  $email_notification[0]->group_role_id,
+                    'company_id' => $email_notification[0]->company_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'emailNotification' => [
                     'id' => (string) $email_notification[0]->id,
@@ -71,8 +73,9 @@ class EmailNotificationsQueryTest extends TestCase
             ->table('email_notifications')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailNotifications ($id: Mixed) {
                     emailNotifications(hasGroupRole: { column: ID, value: $id }) {
                         data {
@@ -80,13 +83,14 @@ class EmailNotificationsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $email_notification->group_role_id,
+                'variables' => [
+                    'id' => (string) $email_notification->group_role_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $email_notification->id,
             ],
@@ -99,8 +103,9 @@ class EmailNotificationsQueryTest extends TestCase
             ->table('email_notifications')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailNotifications($id: Mixed) {
                     emailNotifications(
                         filter: { column: COMPANY_ID, value: $id }
@@ -112,13 +117,14 @@ class EmailNotificationsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $email->company_id
+                'variables' => [
+                    'id' => $email->company_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $email->id,
             'type' => (string) ucfirst($email->type),
             'recipient_type' => (string) strtoupper($email->recipient_type),
@@ -131,8 +137,9 @@ class EmailNotificationsQueryTest extends TestCase
             ->table('email_notifications')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailNotifications($type: Mixed) {
                     emailNotifications(
                         filter: { column: TYPE, value: $type }
@@ -144,13 +151,14 @@ class EmailNotificationsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'type' => $email->type
+                'variables' => [
+                    'type' => $email->type,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $email->id,
             'type' => (string) ucfirst($email->type),
             'recipient_type' => (string) strtoupper($email->recipient_type),
@@ -163,8 +171,9 @@ class EmailNotificationsQueryTest extends TestCase
             ->table('email_notifications')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailNotifications($id: Mixed) {
                     emailNotifications(
                         filter: { column: HAS_GROUP_ROLE_MIXED_ID_OR_NAME, value: $id }
@@ -176,13 +185,14 @@ class EmailNotificationsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $email->group_role_id
+                'variables' => [
+                    'id' => $email->group_role_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $email->id,
             'type' => (string) ucfirst($email->type),
             'recipient_type' => (string) strtoupper($email->recipient_type),
@@ -195,8 +205,9 @@ class EmailNotificationsQueryTest extends TestCase
             ->table('email_notifications')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailNotifications($id: Mixed) {
                     emailNotifications(
                         filter: { column: HAS_GROUP_TYPE_MIXED_ID_OR_NAME, value: $id }
@@ -208,13 +219,14 @@ class EmailNotificationsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $email->group_type_id
+                'variables' => [
+                    'id' => $email->group_type_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $email->id,
             'type' => (string) ucfirst($email->type),
             'recipient_type' => (string) strtoupper($email->recipient_type),
@@ -231,8 +243,9 @@ class EmailNotificationsQueryTest extends TestCase
             ->table('email_templates')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailNotifications($subject: Mixed) {
                     emailNotifications(
                         filter: {
@@ -248,13 +261,14 @@ class EmailNotificationsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'subject' => $subject->subject
+                'variables' => [
+                    'subject' => $subject->subject,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $email->id,
             'type' => (string) ucfirst($email->type),
             'recipient_type' => (string) strtoupper($email->recipient_type),

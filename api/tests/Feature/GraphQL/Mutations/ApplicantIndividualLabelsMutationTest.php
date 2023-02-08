@@ -37,8 +37,9 @@ class ApplicantIndividualLabelsMutationTest extends TestCase
 
     public function testCreateApplicantIndividualLabel(): void
     {
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateApplicantIndividualLabel(
                     $name: String!
                     $hex_color_code: String!
@@ -52,14 +53,15 @@ class ApplicantIndividualLabelsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'name' => 'Label_'.\Illuminate\Support\Str::random(5),
-                'hex_color_code' => '#'.mt_rand(100000, 999999),
+                'variables' => [
+                    'name' => 'Label_'.\Illuminate\Support\Str::random(5),
+                    'hex_color_code' => '#'.mt_rand(100000, 999999),
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -79,8 +81,9 @@ class ApplicantIndividualLabelsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateApplicantIndividualLabel(
                     $id: ID!
                     $name: String!
@@ -95,14 +98,15 @@ class ApplicantIndividualLabelsMutationTest extends TestCase
                         name
                     }
                 }',
-            'variables' => [
-                'id' => (string) $label[0]->id,
-                'name' => 'Label_'.\Illuminate\Support\Str::random(5),
+                'variables' => [
+                    'id' => (string) $label[0]->id,
+                    'name' => 'Label_'.\Illuminate\Support\Str::random(5),
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-    ],
-    [
-        "Authorization" => "Bearer " . $this->login()
-    ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -128,8 +132,9 @@ class ApplicantIndividualLabelsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation AttachApplicantIndividualLabel(
                     $applicant_individual_id: ID!
                     $applicant_individual_label_id: [ID]
@@ -143,14 +148,15 @@ class ApplicantIndividualLabelsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'applicant_individual_id' => (string) $applicant[0]->id,
-                'applicant_individual_label_id' => (string) $label[0]->id,
+                'variables' => [
+                    'applicant_individual_id' => (string) $applicant[0]->id,
+                    'applicant_individual_label_id' => (string) $label[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -175,8 +181,9 @@ class ApplicantIndividualLabelsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DetachApplicantIndividualLabel(
                     $applicant_individual_id: ID!
                     $applicant_individual_label_id: [ID]
@@ -190,14 +197,15 @@ class ApplicantIndividualLabelsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'applicant_individual_id' => (string) $applicant[0]->id,
-                'applicant_individual_label_id' => (string) $label[0]->id,
+                'variables' => [
+                    'applicant_individual_id' => (string) $applicant[0]->id,
+                    'applicant_individual_label_id' => (string) $label[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -217,8 +225,9 @@ class ApplicantIndividualLabelsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeleteApplicantIndividualLabel(
                     $id: ID!
                 )
@@ -230,13 +239,14 @@ class ApplicantIndividualLabelsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $label[0]->id,
+                'variables' => [
+                    'id' => (string) $label[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

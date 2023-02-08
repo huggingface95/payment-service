@@ -11,7 +11,6 @@ class ApplicantCompanyQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testApplicantCompanyNoAuth(): void
     {
         $this->graphQL('
@@ -37,20 +36,20 @@ class ApplicantCompanyQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' =>
-                'query ApplicantCompany($id:ID!){
+        $this->postGraphQL(
+            [
+                'query' => 'query ApplicantCompany($id:ID!){
                     applicantCompany(id: $id) {
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $applicant[0]->id,
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]
         )->seeJson([
             'data' => [
                 'applicantCompany' => [
@@ -69,19 +68,21 @@ class ApplicantCompanyQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     applicantCompanies(orderBy: { column: ID, order: ASC }) {
                         data {
                             id
                         }
                         }
-                }'
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $applicant[0]->id,
             ],
@@ -94,9 +95,9 @@ class ApplicantCompanyQueryTest extends TestCase
             ->table('applicant_companies')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query applicantCompanies ($id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query applicantCompanies ($id: Mixed) {
                     applicantCompanies(where: { column: ID, value: $id}) {
                         data {
                             id
@@ -105,11 +106,11 @@ class ApplicantCompanyQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => (string) $applicant->id,
-                ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
         )->seeJsonContains([
             [
                 'id' => (string) $applicant->id,
@@ -124,20 +125,21 @@ class ApplicantCompanyQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' =>
-                'query GetMatchedUsers($applicant_company_id:ID!){
+        $this->postGraphQL(
+            [
+                'query' => 'query GetMatchedUsers($applicant_company_id:ID!){
                     getMatchedUsers(applicant_company_id: $applicant_company_id) {
                         applicant_id
                     }
                 }',
-            'variables' => [
-                'applicant_company_id' => (string) $applicant[0]->id,
+                'variables' => [
+                    'applicant_company_id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'applicant_id' => (string) $applicant[0]->id,
             ],
@@ -150,9 +152,9 @@ class ApplicantCompanyQueryTest extends TestCase
             ->table('applicant_companies')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query TestApplicantCompanyFilters($id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantCompanyFilters($id: Mixed) {
                     applicantCompanies(filter: { column: ID, value: $id }) {
                         data {
                             id
@@ -162,13 +164,14 @@ class ApplicantCompanyQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $applicant->id,
+                'variables' => [
+                    'id' => (string) $applicant->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $applicant->id,
                 'name' => (string) $applicant->name,
@@ -184,9 +187,9 @@ class ApplicantCompanyQueryTest extends TestCase
             ->table('applicant_companies')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query TestApplicantCompanyFilters($company_id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantCompanyFilters($company_id: Mixed) {
                     applicantCompanies(filter: { column: COMPANY_ID, value: $company_id }) {
                         data {
                             id
@@ -196,13 +199,14 @@ class ApplicantCompanyQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'company_id' => (string) $applicant->company_id,
+                'variables' => [
+                    'company_id' => (string) $applicant->company_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $applicant->id,
                 'name' => (string) $applicant->name,
@@ -218,9 +222,9 @@ class ApplicantCompanyQueryTest extends TestCase
             ->table('applicant_companies')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query TestApplicantCompanyFilters($id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantCompanyFilters($id: Mixed) {
                     applicantCompanies(filter: { column: ACCOUNT_MANAGER_MEMBER_ID, value: $id }) {
                         data {
                             id
@@ -230,13 +234,14 @@ class ApplicantCompanyQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $applicant->account_manager_member_id,
+                'variables' => [
+                    'id' => (string) $applicant->account_manager_member_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $applicant->id,
                 'name' => (string) $applicant->name,
@@ -252,9 +257,9 @@ class ApplicantCompanyQueryTest extends TestCase
             ->table('applicant_companies')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query TestApplicantCompanyFilters($id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantCompanyFilters($id: Mixed) {
                     applicantCompanies(filter: { column: HAS_STATE_REASON_MIXED_ID_OR_NAME, value: $id }) {
                         data {
                             id
@@ -264,13 +269,14 @@ class ApplicantCompanyQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $applicant->applicant_state_reason_id,
+                'variables' => [
+                    'id' => (string) $applicant->applicant_state_reason_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $applicant->id,
                 'name' => (string) $applicant->name,
@@ -286,9 +292,9 @@ class ApplicantCompanyQueryTest extends TestCase
             ->table('applicant_companies')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query TestApplicantCompanyFilters($id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantCompanyFilters($id: Mixed) {
                     applicantCompanies(filter: { column: HAS_OWNER_MIXED_ID_OR_FULLNAME, value: $id }) {
                         data {
                             id
@@ -298,13 +304,14 @@ class ApplicantCompanyQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $applicant->owner_id,
+                'variables' => [
+                    'id' => (string) $applicant->owner_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $applicant->id,
                 'name' => (string) $applicant->name,
@@ -320,9 +327,9 @@ class ApplicantCompanyQueryTest extends TestCase
             ->table('applicant_companies')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query TestApplicantCompanyFilters($name: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantCompanyFilters($name: Mixed) {
                     applicantCompanies(filter: { column: NAME, operator: ILIKE, value: $name }) {
                         data {
                             id
@@ -332,13 +339,14 @@ class ApplicantCompanyQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'name' => (string) $applicant->name,
+                'variables' => [
+                    'name' => (string) $applicant->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $applicant->id,
                 'name' => (string) $applicant->name,
@@ -354,9 +362,9 @@ class ApplicantCompanyQueryTest extends TestCase
             ->table('applicant_companies')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query TestApplicantCompanyFilters($url: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantCompanyFilters($url: Mixed) {
                     applicantCompanies(filter: { column: URL, operator: ILIKE, value: $url }) {
                         data {
                             id
@@ -366,13 +374,14 @@ class ApplicantCompanyQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'url' => (string) $applicant->url,
+                'variables' => [
+                    'url' => (string) $applicant->url,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $applicant->id,
                 'name' => (string) $applicant->name,
@@ -388,9 +397,9 @@ class ApplicantCompanyQueryTest extends TestCase
             ->table('applicant_companies')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query TestApplicantCompanyFilters($email: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query TestApplicantCompanyFilters($email: Mixed) {
                     applicantCompanies(filter: { column: EMAIL, operator: ILIKE, value: $email }) {
                         data {
                             id
@@ -400,13 +409,14 @@ class ApplicantCompanyQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'email' => (string) $applicant->email,
+                'variables' => [
+                    'email' => (string) $applicant->email,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $applicant->id,
                 'name' => (string) $applicant->name,

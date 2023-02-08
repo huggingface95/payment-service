@@ -11,7 +11,6 @@ class PaymentSystemQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testQueryPaymentSystemNoAuth(): void
     {
         $this->graphQL('
@@ -36,20 +35,22 @@ class PaymentSystemQueryTest extends TestCase
             ->orderBy('id')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query PaymentSystem($id:ID!){
                     paymentSystem(id: $id) {
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $payment_system->id,
+                'variables' => [
+                    'id' => (string) $payment_system->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'paymentSystem' => [
                     'id' => (string) $payment_system->id,
@@ -65,8 +66,9 @@ class PaymentSystemQueryTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     paymentSystems (orderBy: { column: ID, order: DESC }) {
                         data {
@@ -76,10 +78,11 @@ class PaymentSystemQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $payment_system[0]->id,
                 'name' => (string) $payment_system[0]->name,
@@ -95,8 +98,9 @@ class PaymentSystemQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query PaymentSystems ($id: Mixed) {
                     paymentSystems (filter: {column: ID, value: $id}) {
                         data {
@@ -106,13 +110,14 @@ class PaymentSystemQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $payment_system[0]->id,
+                'variables' => [
+                    'id' => $payment_system[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $payment_system[0]->id,
                 'name' => (string) $payment_system[0]->name,
@@ -127,8 +132,9 @@ class PaymentSystemQueryTest extends TestCase
             ->table('payment_system')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query PaymentSystems($id: Mixed) {
                     paymentSystems(filter: { column: HAS_PROVIDERS_FILTER_BY_ID, value: $id }) {
                         data {
@@ -138,13 +144,14 @@ class PaymentSystemQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $payment_system->payment_provider_id,
+                'variables' => [
+                    'id' => $payment_system->payment_provider_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $payment_system->id,
                 'name' => (string) $payment_system->name,
@@ -160,8 +167,9 @@ class PaymentSystemQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 {
                     paymentSystems (filter: { column: HAS_COMPANIES_FILTER_BY_ID, value: 1 }) {
                         data {
@@ -170,11 +178,12 @@ class PaymentSystemQueryTest extends TestCase
                           is_active
                         }
                     }
-                }'
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $payment_system[0]->id,
                 'name' => (string) $payment_system[0]->name,

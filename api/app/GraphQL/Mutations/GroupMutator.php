@@ -38,7 +38,7 @@ class GroupMutator extends BaseMutator
         }
 
         $groupRole = GroupRole::create($args);
-        if (!$groupRole) {
+        if (! $groupRole) {
             throw new GraphqlException('Create group error', 'internal', 500);
         }
 

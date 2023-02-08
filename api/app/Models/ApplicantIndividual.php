@@ -16,7 +16,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Laravel\Lumen\Auth\Authorizable;
 use Laravel\Passport\HasApiTokens;
@@ -125,7 +124,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new ApplicantFilterByMemberScope);
+        static::addGlobalScope(new ApplicantFilterByMemberScope());
     }
 
     public function getAuthPassword()
@@ -298,7 +297,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 
     public function ipAddress(): HasMany
     {
-        return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', class_basename(ApplicantIndividual::class));
+        return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', class_basename(self::class));
     }
 
     public function applicantBankingAccess(): \Ankurk91\Eloquent\Relations\BelongsToOne

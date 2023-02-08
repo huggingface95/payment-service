@@ -3,8 +3,8 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
-use App\Models\DepartmentPosition;
 use App\Models\Department;
+use App\Models\DepartmentPosition;
 
 class DepartmentPositionMutator extends BaseMutator
 {

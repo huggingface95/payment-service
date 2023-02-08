@@ -15,7 +15,7 @@ class ChangeForeignKeysOnApplicantDocumentRelatedTables extends Migration
     {
         Schema::table('applicant_document_internal_notes', function (Blueprint $table) {
             $table->dropForeign(['applicant_document_id']);
-            
+
             $table->foreign('applicant_document_id', 'applicant_document_id')
                 ->references('id')
                 ->on('applicant_documents')

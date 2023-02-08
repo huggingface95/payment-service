@@ -11,7 +11,6 @@ class ApplicantIndividualMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateApplicantIndividualNoAuth(): void
     {
         $seq = DB::table('applicant_individual')
@@ -58,8 +57,9 @@ class ApplicantIndividualMutationTest extends TestCase
 
         DB::select('ALTER SEQUENCE applicant_individual_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateApplicantIndividual(
                     $first_name: String!
                     $last_name: String!
@@ -80,17 +80,18 @@ class ApplicantIndividualMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'first_name' =>  'Applicant_'.\Illuminate\Support\Str::random(3),
-                'last_name' => 'ApplicantLast_'.\Illuminate\Support\Str::random(3),
-                'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
-                'company_id' => 1,
-                'phone' => '098'.str_pad(mt_rand(1, 9), 6, '0', STR_PAD_LEFT),
+                'variables' => [
+                    'first_name' =>  'Applicant_'.\Illuminate\Support\Str::random(3),
+                    'last_name' => 'ApplicantLast_'.\Illuminate\Support\Str::random(3),
+                    'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
+                    'company_id' => 1,
+                    'phone' => '098'.str_pad(mt_rand(1, 9), 6, '0', STR_PAD_LEFT),
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -110,8 +111,9 @@ class ApplicantIndividualMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateApplicantIndividual(
                     $id: ID!
                     $first_name: String!
@@ -135,18 +137,19 @@ class ApplicantIndividualMutationTest extends TestCase
                         email
                     }
                 }',
-            'variables' => [
-                'id' => strval($applicant[0]->id),
-                'first_name' => 'First test',
-                'last_name' => 'Last_name test',
-                'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
-                'phone' => '+938276532222',
-                'company_id' => 1,
+                'variables' => [
+                    'id' => strval($applicant[0]->id),
+                    'first_name' => 'First test',
+                    'last_name' => 'Last_name test',
+                    'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
+                    'phone' => '+938276532222',
+                    'company_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -167,8 +170,9 @@ class ApplicantIndividualMutationTest extends TestCase
             ->orderByDesc('id')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeleteApplicantIndividual(
                     $id: ID!
                 )
@@ -180,13 +184,14 @@ class ApplicantIndividualMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $applicant[0]->id,
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

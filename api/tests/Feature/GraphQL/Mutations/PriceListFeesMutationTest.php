@@ -68,7 +68,7 @@ class PriceListFeesMutationTest extends TestCase
                     ['mode' => 'Fix', 'fee' => 10, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
                     ['mode' => 'Range', 'fee' => null, 'amount_from' => 100, 'amount_to' => 300, 'percent' => null],
                     ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 15],
-                ]
+                ],
             ],
             [
                 'currency_id' => '2',
@@ -76,18 +76,19 @@ class PriceListFeesMutationTest extends TestCase
                     ['mode' => 'Fix', 'fee' => 5, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
                     ['mode' => 'Range', 'fee' => null, 'amount_from' => 20, 'amount_to' => 200, 'percent' => null],
                     ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 10],
-                ]
+                ],
             ],
             [
                 'currency_id' => '2',
                 'fee' => [
                     ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 5],
-                ]
+                ],
             ],
         ];
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
             mutation (
                 $name: String!
                 $type_id: ID!
@@ -146,11 +147,12 @@ class PriceListFeesMutationTest extends TestCase
                     }
                 }
             }',
-        'variables' => $data
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+                'variables' => $data,
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -188,7 +190,7 @@ class PriceListFeesMutationTest extends TestCase
                     ['mode' => 'Fix', 'fee' => 13, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
                     ['mode' => 'Range', 'fee' => null, 'amount_from' => 250, 'amount_to' => 550, 'percent' => null],
                     ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 17],
-                ]
+                ],
             ],
             [
                 'currency_id' => '2',
@@ -196,18 +198,19 @@ class PriceListFeesMutationTest extends TestCase
                     ['mode' => 'Fix', 'fee' => 3, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
                     ['mode' => 'Range', 'fee' => null, 'amount_from' => 70, 'amount_to' => 700, 'percent' => null],
                     ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 10],
-                ]
+                ],
             ],
             [
                 'currency_id' => '2',
                 'fee' => [
                     ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 7],
-                ]
+                ],
             ],
         ];
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
             mutation (
                 $id: ID!
                 $name: String!
@@ -268,11 +271,12 @@ class PriceListFeesMutationTest extends TestCase
                     }
                 }
             }',
-        'variables' => $data,
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+                'variables' => $data,
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         $this->seeJson([
             'data' => [
@@ -298,8 +302,9 @@ class PriceListFeesMutationTest extends TestCase
             'percent' => 'Percent',
         ];
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
             mutation (
                 $name: String!
                 $type_id: ID!
@@ -349,11 +354,12 @@ class PriceListFeesMutationTest extends TestCase
                     }
                 }
             }',
-        'variables' => $data,
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+                'variables' => $data,
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             ['The amount_from and amount_to have an intersection range.'],
         ]);
     }
@@ -362,20 +368,22 @@ class PriceListFeesMutationTest extends TestCase
     {
         $priceListFee = PriceListFee::first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation ($id: ID!) {
                     deletePriceListFees(id: $id) {
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $priceListFee->id,
+                'variables' => [
+                    'id' => (string) $priceListFee->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $this->seeJson([
             'data' => [

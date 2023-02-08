@@ -4,9 +4,7 @@ namespace Tests\Feature\GraphQL\Queries;
 
 use App\Enums\ClientTypeEnum;
 use App\Models\Members;
-use App\Models\Permissions;
 use App\Models\PermissionsList;
-use App\Models\Role;
 use App\Services\PermissionsService;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -34,8 +32,9 @@ class UsersQueryTest extends TestCase
     {
         $member = Members::find(2);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 {
                     userAuthData {
                         data {
@@ -44,10 +43,11 @@ class UsersQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'userAuthData' => [
                     'data' => [

@@ -12,12 +12,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class Company
  *
  * @property int id
- *
  * @property string backoffice_support_url
  */
 class Company extends BaseModel
 {
     use SoftDeletes;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -76,7 +76,7 @@ class Company extends BaseModel
 
     public function getLogoLinkAttribute(): string
     {
-        $defaultLogoPath = storage_path('app') . self::DEFAULT_LOGO_PATH;
+        $defaultLogoPath = storage_path('app').self::DEFAULT_LOGO_PATH;
 
         return $this->logo->link ?? $defaultLogoPath;
     }

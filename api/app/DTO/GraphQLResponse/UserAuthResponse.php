@@ -26,7 +26,7 @@ class UserAuthResponse
         })->toArray() ?? [];
 
         $permissions = PermissionsList::get();
-        $permissionsList = (new PermissionsService)->getPermissionsList($permissions);
+        $permissionsList = (new PermissionsService())->getPermissionsList($permissions);
 
         $basePermissions = [];
         foreach ($permissionsList as $permission) {

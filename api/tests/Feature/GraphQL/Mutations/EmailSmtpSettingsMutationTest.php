@@ -2,10 +2,10 @@
 
 namespace Tests;
 
+use App\DTO\Email\SmtpDataDTO;
 use App\Mail\SomeMailable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use App\DTO\Email\SmtpDataDTO;
 
 class EmailSmtpSettingsMutationTest extends TestCase
 {
@@ -14,7 +14,6 @@ class EmailSmtpSettingsMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateEmailSmtpSettingsNoAuth(): void
     {
         $seq = DB::table('email_smtps')
@@ -71,8 +70,9 @@ class EmailSmtpSettingsMutationTest extends TestCase
 
         DB::select('ALTER SEQUENCE email_smtps_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateEmailSmtp(
                           $name: String!
                           $host_name: String!
@@ -100,20 +100,21 @@ class EmailSmtpSettingsMutationTest extends TestCase
                      id
                   }
                }',
-            'variables' => [
-                'name' => 'Test Email Smtp',
-                'host_name' =>  'mail.lavachange.com',
-                'from_name' => 'Docutestststs',
-                'from_email' => 'test@lavachange.com',
-                'username' => 'test@lavachange.com',
-                'password' => 'test@test@123',
-                'replay_to' => 'test@lavachange.com',
-                'company_id' => 1,
+                'variables' => [
+                    'name' => 'Test Email Smtp',
+                    'host_name' =>  'mail.lavachange.com',
+                    'from_name' => 'Docutestststs',
+                    'from_email' => 'test@lavachange.com',
+                    'username' => 'test@lavachange.com',
+                    'password' => 'test@test@123',
+                    'replay_to' => 'test@lavachange.com',
+                    'company_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -133,8 +134,9 @@ class EmailSmtpSettingsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateEmailSmtp(
                       $id: ID!
                       $host_name: String!
@@ -161,19 +163,20 @@ class EmailSmtpSettingsMutationTest extends TestCase
                         username
                     }
                 }',
-            'variables' => [
-                'id' => (string) $smtp_settings[0]->id,
-                'host_name' =>  'mail.lavachange.com',
-                'from_name' => 'Docutest_updated',
-                'from_email' => 'test@lavachange.com',
-                'username' => 'test@lavachange.com',
-                'password' => 'test@test@123',
-                'replay_to' => 'test@lavachange.com',
+                'variables' => [
+                    'id' => (string) $smtp_settings[0]->id,
+                    'host_name' =>  'mail.lavachange.com',
+                    'from_name' => 'Docutest_updated',
+                    'from_email' => 'test@lavachange.com',
+                    'username' => 'test@lavachange.com',
+                    'password' => 'test@test@123',
+                    'replay_to' => 'test@lavachange.com',
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -192,8 +195,8 @@ class EmailSmtpSettingsMutationTest extends TestCase
         $this->login();
 
         Mail::fake();
-        Mail::to('test@lavachange.com')->send(New SomeMailable(SmtpDataDTO::transform('test@lavachange.com', '<html><body>test</body></html>', 'test subj')));
-        Mail::assertSent(SomeMailable::class, function($mail) {
+        Mail::to('test@lavachange.com')->send(new SomeMailable(SmtpDataDTO::transform('test@lavachange.com', '<html><body>test</body></html>', 'test subj')));
+        Mail::assertSent(SomeMailable::class, function ($mail) {
             $mail->from('test@lavachange.com');
             $mail->build();
 

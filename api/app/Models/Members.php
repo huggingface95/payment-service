@@ -112,12 +112,12 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new ApplicantFilterByMemberScope);
+        static::addGlobalScope(new ApplicantFilterByMemberScope());
     }
 
     public function getFullnameAttribute()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name.' '.$this->last_name;
     }
 
     public function getTwoFactorAttribute()
@@ -214,7 +214,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function ipAddress()
     {
-        return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', class_basename(Members::class));
+        return $this->hasMany(ClientIpAddress::class, 'client_id')->where('client_type', '=', class_basename(self::class));
     }
 
     public function roles()

@@ -2,27 +2,17 @@
 
 namespace Tests;
 
-use App\DTO\Auth\Credentials;
-use App\DTO\TransformerDTO;
-use App\Models\Members;
 use App\Repositories\JWTRepository;
-use App\Services\AuthService;
-use App\Services\JwtService;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
 use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequestsLumen;
-use Illuminate\Support\Facades\Http;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use Tymon\JWTAuth\Token;
-use App\Repositories\Interfaces\JWTRepositoryInterface;
-use Laravel\Passport\ClientRepository;
 
 abstract class TestCase extends BaseTestCase
 {
-    use MakesGraphQLRequestsLumen,
-        ClearsSchemaCache;
+    use MakesGraphQLRequestsLumen;
+    use ClearsSchemaCache;
 
     public JWTRepository $repository;
 
@@ -36,10 +26,12 @@ abstract class TestCase extends BaseTestCase
                 'migrate:droptables'
             );
             Artisan::call(
-                'migrate', ['--database' => 'pgsql_test']
+                'migrate',
+                ['--database' => 'pgsql_test']
             );
             Artisan::call(
-                'db:seed', ['--database' => 'pgsql_test']
+                'db:seed',
+                ['--database' => 'pgsql_test']
             );
 
             static::$setUpHasRunOnce = true;
@@ -53,7 +45,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function createApplication()
     {
-        return require __DIR__ . '/../bootstrap/app.php';
+        return require __DIR__.'/../bootstrap/app.php';
     }
 
     /**

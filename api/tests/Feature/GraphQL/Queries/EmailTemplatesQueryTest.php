@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,6 @@ class EmailTemplatesQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testEmailTemplatesNoAuth(): void
     {
         $this->graphQL('
@@ -34,20 +34,22 @@ class EmailTemplatesQueryTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailTemplate($id: ID!) {
                     emailTemplate(id: $id) {
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $email_template[0]->id,
+                'variables' => [
+                    'id' => (string) $email_template[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'emailTemplate' => [
                     'id' => (string) $email_template[0]->id,
@@ -62,8 +64,9 @@ class EmailTemplatesQueryTest extends TestCase
             ->table('email_templates')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailTemplates($name: Mixed) {
                     emailTemplates(
                         filter: {
@@ -78,13 +81,14 @@ class EmailTemplatesQueryTest extends TestCase
                         type
                     }
                 }',
-            'variables' => [
-                'name' => $email->name
+                'variables' => [
+                    'name' => $email->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $email->id,
             'name' => (string) ucfirst($email->name),
             'subject' => (string) $email->subject,
@@ -98,8 +102,9 @@ class EmailTemplatesQueryTest extends TestCase
             ->table('email_templates')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailTemplates($id: Mixed) {
                     emailTemplates(
                         filter: {
@@ -113,13 +118,14 @@ class EmailTemplatesQueryTest extends TestCase
                         type
                     }
                 }',
-            'variables' => [
-                'id' => $email->company_id
+                'variables' => [
+                    'id' => $email->company_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $email->id,
             'name' => (string) ucfirst($email->name),
             'subject' => (string) $email->subject,
@@ -133,8 +139,9 @@ class EmailTemplatesQueryTest extends TestCase
             ->table('email_templates')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailTemplates($type: Mixed) {
                     emailTemplates(
                         filter: {
@@ -148,13 +155,14 @@ class EmailTemplatesQueryTest extends TestCase
                         type
                     }
                 }',
-            'variables' => [
-                'type' => $email->type
+                'variables' => [
+                    'type' => $email->type,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $email->id,
             'name' => (string) ucfirst($email->name),
             'subject' => (string) $email->subject,
@@ -168,8 +176,9 @@ class EmailTemplatesQueryTest extends TestCase
             ->table('email_templates')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query EmailTemplates($type: Mixed) {
                     emailTemplates(
                         filter: {
@@ -183,13 +192,14 @@ class EmailTemplatesQueryTest extends TestCase
                         type
                     }
                 }',
-            'variables' => [
-                'type' => $email->service_type
+                'variables' => [
+                    'type' => $email->service_type,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $email->id,
             'name' => (string) ucfirst($email->name),
             'subject' => (string) $email->subject,

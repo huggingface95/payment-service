@@ -6,13 +6,11 @@ use Illuminate\Support\Facades\DB;
 
 class CommissionTemplateQueryTest extends TestCase
 {
-
     /**
      * CommissionTemplate Query Testing
      *
      * @return void
      */
-
     public function testCommissionTemplateNoAuth(): void
     {
         $this->graphQL('
@@ -49,8 +47,9 @@ class CommissionTemplateQueryTest extends TestCase
                 ],
             ];
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 {
                     commissionTemplates(first: 1) {
                         data {
@@ -60,10 +59,11 @@ class CommissionTemplateQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson($data);
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson($data);
     }
 
     public function testQueryCommissionTemplate(): void
@@ -73,8 +73,9 @@ class CommissionTemplateQueryTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query CommissionTemplate($id:ID!)
                 {
                     commissionTemplate(id: $id)
@@ -84,13 +85,14 @@ class CommissionTemplateQueryTest extends TestCase
                         description
                     }
                 }',
-            'variables' => [
-                'id' => (string) $commissionTemplate[0]->id,
+                'variables' => [
+                    'id' => (string) $commissionTemplate[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'commissionTemplate' => [
                     'id' => (string) $commissionTemplate[0]->id,
@@ -119,8 +121,9 @@ class CommissionTemplateQueryTest extends TestCase
                 ],
             ];
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 {
                      commissionTemplates (orderBy: {column:ID, order:DESC}) {
                         data {
@@ -130,10 +133,11 @@ class CommissionTemplateQueryTest extends TestCase
                         }
                      }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains($data);
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains($data);
     }
 
     public function testQueryCommissionTemplateById(): void
@@ -142,8 +146,9 @@ class CommissionTemplateQueryTest extends TestCase
             ->table('commission_template')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query CommissionTemplate($id: Mixed) {
                     commissionTemplates(filter: { column: ID, value: $id }) {
                         data {
@@ -153,13 +158,14 @@ class CommissionTemplateQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $commissionTemplate->id
+                'variables' => [
+                    'id' => $commissionTemplate->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $commissionTemplate->id,
             'name' => (string) $commissionTemplate->name,
             'description' => (string) $commissionTemplate->description,
@@ -172,8 +178,9 @@ class CommissionTemplateQueryTest extends TestCase
             ->table('commission_template')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query CommissionTemplate($name: Mixed) {
                     commissionTemplates(filter: { column: NAME, operator: LIKE, value: $name }) {
                         data {
@@ -183,13 +190,14 @@ class CommissionTemplateQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'name' => $commissionTemplate->name
+                'variables' => [
+                    'name' => $commissionTemplate->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $commissionTemplate->id,
             'name' => (string) $commissionTemplate->name,
             'description' => (string) $commissionTemplate->description,
@@ -202,8 +210,9 @@ class CommissionTemplateQueryTest extends TestCase
             ->table('commission_template')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query CommissionTemplate($id: Mixed) {
                     commissionTemplates(
                         filter: { column: HAS_PAYMENT_PROVIDER_FILTER_BY_ID, value: $id }
@@ -215,13 +224,14 @@ class CommissionTemplateQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $commissionTemplate->payment_provider_id
+                'variables' => [
+                    'id' => $commissionTemplate->payment_provider_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $commissionTemplate->id,
             'name' => (string) $commissionTemplate->name,
             'description' => (string) $commissionTemplate->description,
@@ -238,8 +248,9 @@ class CommissionTemplateQueryTest extends TestCase
             ->table('commission_template_business_activity')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query CommissionTemplate($id: Mixed) {
                     commissionTemplates(
                         filter: { column: HAS_BUSINESS_ACTIVITY_FILTER_BY_ID, value: $id }
@@ -251,13 +262,14 @@ class CommissionTemplateQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' =>  [
-                'id' => $activity->commission_template_id
+                'variables' =>  [
+                    'id' => $activity->commission_template_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             'id' => (string) $commissionTemplate->id,
             'name' => (string) $commissionTemplate->name,
             'description' => (string) $commissionTemplate->description,

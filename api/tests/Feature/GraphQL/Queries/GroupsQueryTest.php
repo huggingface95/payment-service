@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -10,7 +11,6 @@ class GroupsQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testQueryGroupListNoAuth(): void
     {
         $this->graphQL('
@@ -29,25 +29,27 @@ class GroupsQueryTest extends TestCase
 
     public function testQueryGroupType(): void
     {
-        $group= DB::connection('pgsql_test')
+        $group = DB::connection('pgsql_test')
             ->table('group_types')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query GetGroupType($id: ID) {
                     group_type(id: $id) {
                         id
                         name
                     }
                 }',
-            'variables' => [
-                'id' => (string) $group->id,
+                'variables' => [
+                    'id' => (string) $group->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'group_type' => [
                     'id' => (string) $group->id,
@@ -63,8 +65,9 @@ class GroupsQueryTest extends TestCase
             ->table('group_role')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query GetGroupType($id: Mixed) {
                     groupList(filter: { column: ID, value: $id }) {
                         data {
@@ -74,13 +77,14 @@ class GroupsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $group->id,
+                'variables' => [
+                    'id' => (string) $group->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-    ],
-    [
-        "Authorization" => "Bearer " . $this->login()
-    ])->seeJson([
+        )->seeJson([
             'data' => [
                 'groupList' => [
                     'data' => [[
@@ -99,8 +103,9 @@ class GroupsQueryTest extends TestCase
             ->table('group_role')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query GetGroupByCompanyId($id: Mixed) {
                     groupList(filter: { column: COMPANY_ID, value: $id }) {
                         data {
@@ -110,16 +115,17 @@ class GroupsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $group->id,
+                'variables' => [
+                    'id' => (string) $group->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
-           'id' => (string) $group->id,
-           'name' => (string) $group->name,
-           'description' => (string) $group->description,
+        )->seeJsonContains([
+            'id' => (string) $group->id,
+            'name' => (string) $group->name,
+            'description' => (string) $group->description,
         ]);
     }
 
@@ -129,8 +135,9 @@ class GroupsQueryTest extends TestCase
             ->table('group_role')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query GetGroup($id: Mixed) {
                     groupList(filter: { column: ROLE_ID, value: $id }) {
                         data {
@@ -140,13 +147,14 @@ class GroupsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => (string) $group->role_id,
+                'variables' => [
+                    'id' => (string) $group->role_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'groupList' => [
                     'data' => [[
@@ -165,8 +173,9 @@ class GroupsQueryTest extends TestCase
             ->table('group_role')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query GetGroup($name: Mixed) {
                     groupList(filter: { column: NAME, operator: LIKE, value: $name }) {
                         data {
@@ -176,13 +185,14 @@ class GroupsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'name' => (string) $group->name,
+                'variables' => [
+                    'name' => (string) $group->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'groupList' => [
                     'data' => [[

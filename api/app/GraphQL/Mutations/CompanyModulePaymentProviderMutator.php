@@ -15,7 +15,7 @@ class CompanyModulePaymentProviderMutator extends BaseMutator
     public function create($root, array $args): CompanyModulePaymentProvider
     {
         $companyModule = CompanyModule::find($args['company_module_id']);
-        if (!$companyModule) {
+        if (! $companyModule) {
             throw new GraphqlException('Company module not found', 'not found', 404);
         }
 
@@ -29,7 +29,7 @@ class CompanyModulePaymentProviderMutator extends BaseMutator
     {
         /** @var CompanyModulePaymentProvider $companyModuleProvider */
         $companyModuleProvider = CompanyModulePaymentProvider::find($args['id']);
-        if (!$companyModuleProvider) {
+        if (! $companyModuleProvider) {
             throw new GraphqlException('Company module payment provider not found', 'not found', 404);
         }
 

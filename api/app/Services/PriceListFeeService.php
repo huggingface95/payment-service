@@ -6,7 +6,6 @@ use App\Enums\FeeModeEnum;
 
 class PriceListFeeService extends AbstractService
 {
-
     public function convertFeeRangesToFees(array $args): array
     {
         $feeRanges = $args['fee_ranges'];
@@ -32,7 +31,7 @@ class PriceListFeeService extends AbstractService
                                     'mode' => FeeModeEnum::PERCENT->toString(),
                                     'percent' => $feeValue->value,
                                 ];
-                            } else if ($feeValue->mode == 'fix') {
+                            } elseif ($feeValue->mode == 'fix') {
                                 $fees[$currency]['fee'][$r][] = [
                                     'mode' => FeeModeEnum::FIX->toString(),
                                     'fee' => $feeValue->value,
@@ -60,7 +59,7 @@ class PriceListFeeService extends AbstractService
                                     'mode' => FeeModeEnum::PERCENT->toString(),
                                     'percent' => $feeValue->value,
                                 ];
-                            } else if ($feeValue->mode == 'fix') {
+                            } elseif ($feeValue->mode == 'fix') {
                                 $fees[$currency]['fee'][$r][] = [
                                     'mode' => FeeModeEnum::FIX->toString(),
                                     'fee' => $feeValue->value,
@@ -103,7 +102,7 @@ class PriceListFeeService extends AbstractService
                     $multiFees[$key]['fees']['currencies_destination'] = $currenciesDestination;
                 }
 
-                if (!in_array($feeItems['fee'], $multiFees[$key]['fees']['feeValues'] ?? [], true)) {
+                if (! in_array($feeItems['fee'], $multiFees[$key]['fees']['feeValues'] ?? [], true)) {
                     $multiFees[$key]['fees']['feeValues'] = $feeItems['fee'];
                 }
             }
@@ -122,7 +121,7 @@ class PriceListFeeService extends AbstractService
                         'mode' => '%',
                         'value' => $fee['percent'],
                     ];
-                } else if ($fee['mode'] == FeeModeEnum::FIX->toString()) {
+                } elseif ($fee['mode'] == FeeModeEnum::FIX->toString()) {
                     $newMultiFees['feeValues'][] = [
                         'mode' => 'fix',
                         'value' => $fee['fee'],
@@ -157,7 +156,7 @@ class PriceListFeeService extends AbstractService
                     $feeRanges[$key]['fees']['currencies_destination'] = $currenciesDestination;
                 }
 
-                if (!in_array($feeItems['fee'], $feeRanges[$key]['fees']['feeValues'] ?? [], true)) {
+                if (! in_array($feeItems['fee'], $feeRanges[$key]['fees']['feeValues'] ?? [], true)) {
                     $feeRanges[$key]['fees']['feeValues'][] = $feeItems['fee'];
                 }
             }
@@ -174,7 +173,7 @@ class PriceListFeeService extends AbstractService
                             'mode' => '%',
                             'value' => $fee['percent'],
                         ];
-                    } else if ($fee['mode'] == FeeModeEnum::FIX->toString()) {
+                    } elseif ($fee['mode'] == FeeModeEnum::FIX->toString()) {
                         $newFeeValues[] = [
                             'mode' => 'fix',
                             'value' => $fee['fee'],
@@ -191,7 +190,7 @@ class PriceListFeeService extends AbstractService
         // group fees by range value
         foreach ($f as $feeRange) {
             if ($feeRange['feeState'] == 'Range') {
-                $k = $feeRange['range']['from'] . '_' . $feeRange['range']['to'];
+                $k = $feeRange['range']['from'].'_'.$feeRange['range']['to'];
 
                 $ranges[$k]['feeState'] = 'Range';
                 $ranges[$k]['range'] = [
@@ -209,5 +208,4 @@ class PriceListFeeService extends AbstractService
     {
         return str_replace(['{', '}', ':', '"', ' ', ',', ']', '['], '_', $string);
     }
-
 }

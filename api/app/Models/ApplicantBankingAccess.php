@@ -19,7 +19,8 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  */
 class ApplicantBankingAccess extends BaseModel
 {
-    use HasFactory, HasRelationships;
+    use HasFactory;
+    use HasRelationships;
 
     public $day_used_limit = 0;
 
@@ -28,6 +29,7 @@ class ApplicantBankingAccess extends BaseModel
     protected $table = 'applicant_banking_access';
 
     private array $permissionsList;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -53,12 +55,12 @@ class ApplicantBankingAccess extends BaseModel
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new ApplicantFilterByMemberScope);
+        static::addGlobalScope(new ApplicantFilterByMemberScope());
     }
 
     public function getCreatePaymentsAttribute(): bool
     {
-        if (!isset($this->permissionsList)) {
+        if (! isset($this->permissionsList)) {
             $this->permissionsList = $this->permissions()->pluck('upname')->toArray();
         }
 
@@ -67,7 +69,7 @@ class ApplicantBankingAccess extends BaseModel
 
     public function getSignPaymentsAttribute(): bool
     {
-        if (!isset($this->permissionsList)) {
+        if (! isset($this->permissionsList)) {
             $this->permissionsList = $this->permissions()->pluck('upname')->toArray();
         }
 

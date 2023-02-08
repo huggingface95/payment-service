@@ -9,19 +9,18 @@ use Illuminate\Support\Facades\Crypt;
 
 class CompanyModulePaymentProviderQuery
 {
-
     /**
      * @throws GraphqlException
      */
     public function getPassword($root, array $args): array
     {
         $provider = CompanyModulePaymentProvider::find($args['id']);
-        if (!$provider) {
+        if (! $provider) {
             throw new GraphqlException('Company module PAYMENT provider not found', 'not found', 404);
         }
 
         try {
-            if (!empty($provider->password)) {
+            if (! empty($provider->password)) {
                 $decryptedPassword = Crypt::decryptString($provider->password);
             }
         } catch (DecryptException $e) {
@@ -33,5 +32,4 @@ class CompanyModulePaymentProviderQuery
             'password' => $decryptedPassword,
         ];
     }
-
 }

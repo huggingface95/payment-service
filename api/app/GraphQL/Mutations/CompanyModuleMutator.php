@@ -8,20 +8,19 @@ use App\Models\CompanyModule;
 
 class CompanyModuleMutator extends BaseMutator
 {
-
     public function attach($root, array $args): Company
     {
         $company = Company::find($args['company_id']);
-        if (!$company) {
+        if (! $company) {
             throw new GraphqlException('Company does not exist', 'not found', 404);
         }
 
         if (isset($args['module_id'])) {
-            CompanyModule::where('company_id',$args['company_id'])->delete();
+            CompanyModule::where('company_id', $args['company_id'])->delete();
             foreach ($args['module_id'] as $module) {
                 CompanyModule::create([
-                   'company_id' =>  $args['company_id'],
-                    'module_id' => $module
+                    'company_id' =>  $args['company_id'],
+                    'module_id' => $module,
                 ]);
             }
         }
@@ -36,5 +35,4 @@ class CompanyModuleMutator extends BaseMutator
 
         return $company;
     }
-
 }

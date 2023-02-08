@@ -11,7 +11,6 @@ class PaymentProviderMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreatePaymentProviderNoAuth(): void
     {
         $seq = DB::table('payment_provider')
@@ -53,8 +52,9 @@ class PaymentProviderMutationTest extends TestCase
 
         DB::select('ALTER SEQUENCE payment_provider_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreatePaymentProvider(
                     $name: String!
                     $description: String
@@ -72,15 +72,16 @@ class PaymentProviderMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'name' =>  'PaymentProvider_'.\Illuminate\Support\Str::random(3),
-                'description' => 'ProviderDesc_'.\Illuminate\Support\Str::random(3),
-                'company_id' => 1,
+                'variables' => [
+                    'name' =>  'PaymentProvider_'.\Illuminate\Support\Str::random(3),
+                    'description' => 'ProviderDesc_'.\Illuminate\Support\Str::random(3),
+                    'company_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -100,8 +101,9 @@ class PaymentProviderMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdatePaymentProvider(
                     $id: ID!
                     $name: String!
@@ -122,16 +124,17 @@ class PaymentProviderMutationTest extends TestCase
                         name
                     }
                 }',
-            'variables' => [
-                'id' => (string) $payment_provider[0]->id,
-                'name' => 'PaymentProviderName_Updated_'.\Illuminate\Support\Str::random(3),
-                'description' => 'PaymentProviderDescription_Updated_'.\Illuminate\Support\Str::random(3),
-                'company_id' => '1',
+                'variables' => [
+                    'id' => (string) $payment_provider[0]->id,
+                    'name' => 'PaymentProviderName_Updated_'.\Illuminate\Support\Str::random(3),
+                    'description' => 'PaymentProviderDescription_Updated_'.\Illuminate\Support\Str::random(3),
+                    'company_id' => '1',
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -152,8 +155,9 @@ class PaymentProviderMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeletePaymentProvider(
                     $id: ID!
                 )
@@ -165,13 +169,14 @@ class PaymentProviderMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => strval($payment_provider[0]->id),
+                'variables' => [
+                    'id' => strval($payment_provider[0]->id),
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

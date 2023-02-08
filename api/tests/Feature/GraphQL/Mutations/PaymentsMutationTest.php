@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
-use App\Enums\PaymentStatusEnum;
 use App\Models\Account;
 use App\Models\Country;
 use App\Models\FeeType;
@@ -46,7 +45,7 @@ class PaymentsMutationTest extends TestCase
             'payment_provider_id' => 1,
             'respondent_fees_id' => 3,
             'company_id' => 1,
-            # 'execution_at' => DateTime
+            // 'execution_at' => DateTime
         ];
 
         $this->graphQL('
@@ -90,7 +89,7 @@ class PaymentsMutationTest extends TestCase
                 beneficiary_address: $beneficiary_address
                 beneficiary_city: $beneficiary_city
                 beneficiary_zip: $beneficiary_zip
-                amount: ' . $data['amount'] . '
+                amount: '.$data['amount'].'
                 fee_type_id: $fee_type_id
                 urgency_id: $urgency_id
                 operation_type_id: $operation_type_id
@@ -324,8 +323,9 @@ class PaymentsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation(
                     $id: ID!
                     $status_id: ID!
@@ -338,14 +338,15 @@ class PaymentsMutationTest extends TestCase
                         status_id
                     }
                 }',
-            'variables' => [
-                'id' => $payment->id,
-                'status_id' => $payment->status_id,
+                'variables' => [
+                    'id' => $payment->id,
+                    'status_id' => $payment->status_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $this->seeJson([
             'data' => [
@@ -364,8 +365,9 @@ class PaymentsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation(
                     $id: ID!
                 ) {
@@ -375,13 +377,14 @@ class PaymentsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $payment->id,
+                'variables' => [
+                    'id' => (string) $payment->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $this->seeJson([
             'data' => [
@@ -390,6 +393,5 @@ class PaymentsMutationTest extends TestCase
                 ],
             ],
         ]);
-
     }
 }

@@ -38,17 +38,19 @@ class FeeModesQueryTest extends TestCase
             ];
         }
 
-        $this->PostGraphQL([
-            'query' => '
+        $this->PostGraphQL(
+            [
+                'query' => '
                 {
                     feeModes {
                         id
                         name
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson($expect);
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson($expect);
     }
 }

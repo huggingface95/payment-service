@@ -20,7 +20,7 @@ class CommissionTemplateTableSeeder extends Seeder
         for ($i = 1; $i <= 10; $i++) {
             CommissionTemplate::firstOrCreate(
                 [
-                    'name' => 'Template ' . $i
+                    'name' => 'Template '.$i,
                 ],
                 [
                     'description' => $faker->name(),

@@ -12,7 +12,6 @@ class AccountsMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateAccountNoAuth(): void
     {
         $this->graphQL('
@@ -53,7 +52,7 @@ class AccountsMutationTest extends TestCase
             'owner_id' => 2,
             'account_number' => '2566'.str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
             'commission_template_id' => 1,
-            'account_name' => 'Test_account_' . \Illuminate\Support\Str::random(6),
+            'account_name' => 'Test_account_'.\Illuminate\Support\Str::random(6),
             'group_type_id' => 2,
             'group_role_id' => 1,
             'payment_system_id' => 1,
@@ -65,8 +64,9 @@ class AccountsMutationTest extends TestCase
 
     public function testCreateAccount(): void
     {
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation CreateAccount(
                         $company_id: ID!
                         $currency_id: ID!
@@ -98,22 +98,23 @@ class AccountsMutationTest extends TestCase
                     id
                   }
                }',
-            'variables' => [
-                'company_id' => 1,
-                'currency_id' => 1,
-                'owner_id' => 2,
-                'account_number' => '2566'.str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
-                'commission_template_id' => 1,
-                'account_name' => 'Test_account_' . \Illuminate\Support\Str::random(6),
-                'group_type_id' => 2,
-                'group_role_id' => 1,
-                'payment_system_id' => 1,
-                'payment_provider_id' => 1,
+                'variables' => [
+                    'company_id' => 1,
+                    'currency_id' => 1,
+                    'owner_id' => 2,
+                    'account_number' => '2566'.str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
+                    'commission_template_id' => 1,
+                    'account_name' => 'Test_account_'.\Illuminate\Support\Str::random(6),
+                    'group_type_id' => 2,
+                    'group_role_id' => 1,
+                    'payment_system_id' => 1,
+                    'payment_provider_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -131,8 +132,9 @@ class AccountsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateAccount(
                     $id: ID!
                     $account_state_id: ID!
@@ -150,15 +152,16 @@ class AccountsMutationTest extends TestCase
                         account_name
                     }
                 }',
-            'variables' => [
-                'id' => (string) $account->id,
-                'account_state_id' => '1',
-                'account_name' => 'Test_update_'.\Illuminate\Support\Str::random(3),
+                'variables' => [
+                    'id' => (string) $account->id,
+                    'account_state_id' => '1',
+                    'account_name' => 'Test_update_'.\Illuminate\Support\Str::random(3),
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -179,8 +182,9 @@ class AccountsMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation DeleteAccount(
                     $id: ID!
                 )
@@ -192,13 +196,14 @@ class AccountsMutationTest extends TestCase
                         id
                     }
                 }',
-            'variables' => [
-                'id' => (string) $account->id,
+                'variables' => [
+                    'id' => (string) $account->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

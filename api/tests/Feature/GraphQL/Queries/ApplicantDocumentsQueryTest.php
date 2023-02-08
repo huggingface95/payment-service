@@ -3,12 +3,6 @@
 namespace Tests\Feature\GraphQL\Queries;
 
 use App\Models\ApplicantDocument;
-use App\Models\ApplicantIndividual;
-use Database\Seeders\ApplicantDocumentTableSeeder;
-use Database\Seeders\DatabaseSeeder;
-use Database\Seeders\DocumentStateTableSeeder;
-use Database\Seeders\DocumentTypeTableSeeder;
-use Database\Seeders\FileTableSeeder;
 use Tests\TestCase;
 
 class ApplicantDocumentsQueryTest extends TestCase
@@ -45,12 +39,12 @@ class ApplicantDocumentsQueryTest extends TestCase
             ];
         }
 
-        $this->postGraphQL([
-            'query' =>
-                'query ApplicantDocuments($id: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query ApplicantDocuments($id: Mixed) {
                     applicantDocuments (
                         applicant_type: ApplicantIndividual
-                        filter: { column: ' . strtoupper($cond) . ', operator: EQ, value: $id }
+                        filter: { column: '.strtoupper($cond).', operator: EQ, value: $id }
                     ) {
                         data {
                             applicant_id
@@ -58,13 +52,14 @@ class ApplicantDocumentsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => $value,
+                'variables' => [
+                    'id' => $value,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains($expect);
+        )->seeJsonContains($expect);
     }
 
     public function provide_testQueryApplicantDocumentsWithFilterByCondition()
@@ -76,5 +71,4 @@ class ApplicantDocumentsQueryTest extends TestCase
             ['document_state_id', '1'],
         ];
     }
-
 }

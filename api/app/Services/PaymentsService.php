@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 
 class PaymentsService extends AbstractService
 {
-
     public function getAllProcessedAmount(Payments $payment): Collection
     {
         return Payments::query()
@@ -30,7 +29,7 @@ class PaymentsService extends AbstractService
      */
     public function getBankAmountRealWithCommission(Payments $payment, float $paymentFee): ?float
     {
-        return match((int) $payment->respondent_fees_id) {
+        return match ((int) $payment->respondent_fees_id) {
             RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $payment->amount,
             RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $payment->amount - $paymentFee,
             RespondentFeesEnum::SHARED_FEES->value => $payment->amount - $paymentFee / 2,
@@ -41,7 +40,7 @@ class PaymentsService extends AbstractService
 
     public function getAccountAmountRealWithCommission(Payments $payment, float $paymentFee): ?float
     {
-        return match((int) $payment->respondent_fees_id) {
+        return match ((int) $payment->respondent_fees_id) {
             RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $payment->amount + $paymentFee,
             RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $payment->amount,
             RespondentFeesEnum::SHARED_FEES->value => $payment->amount + $paymentFee / 2,

@@ -65,6 +65,6 @@ class FilesController extends Controller
             $message->attachData($pdf->output(), 'requisites.pdf');
         });
 
-        return response()->json(['message' => 'Requisites has been send to ' . $email], 200);
+        return response()->json(['message' => 'Requisites has been send to '.$email], 200);
     }
 }

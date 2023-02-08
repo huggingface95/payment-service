@@ -20,7 +20,7 @@ class ActiveSessionTableSeeder extends Seeder
 
         for ($i = 1; $i <= 30; $i++) {
             DB::connection('clickhouse')
-                ->table((new ActiveSession)->getTable())
+                ->table((new ActiveSession())->getTable())
                 ->insert([
                     'id' => $faker->uuid(),
                     'company' => $faker->randomElement(['Nginx', 'Apple', 'Nike']),

@@ -6,7 +6,6 @@ use App\DTO\Email\SmtpDataDTO;
 use App\Mail\SomeMailable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Mockery;
 
 class EmailTemplatesMutationTest extends TestCase
 {
@@ -15,7 +14,6 @@ class EmailTemplatesMutationTest extends TestCase
      *
      * @return void
      */
-
     public function testCreateEmailTemplateNoAuth(): void
     {
         $seq = DB::table('email_templates')
@@ -115,8 +113,9 @@ class EmailTemplatesMutationTest extends TestCase
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 mutation UpdateEmailTemplate(
                       $id: ID!
                       $subject: String!
@@ -139,16 +138,17 @@ class EmailTemplatesMutationTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => strval($email_template[0]->id),
-                'subject' =>  'updated_subject',
-                'content' => '<html></html>',
-                'company_id' => 1,
+                'variables' => [
+                    'id' => strval($email_template[0]->id),
+                    'subject' =>  'updated_subject',
+                    'content' => '<html></html>',
+                    'company_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -164,8 +164,8 @@ class EmailTemplatesMutationTest extends TestCase
     public function testSendEmail(): void
     {
         Mail::fake();
-        Mail::to('test@lavachange.com')->send(New SomeMailable(SmtpDataDTO::transform('test@lavachange.com', '<html><body>test</body></html>', 'test subj')));
-        Mail::assertSent(SomeMailable::class, function($mail) {
+        Mail::to('test@lavachange.com')->send(new SomeMailable(SmtpDataDTO::transform('test@lavachange.com', '<html><body>test</body></html>', 'test subj')));
+        Mail::assertSent(SomeMailable::class, function ($mail) {
             $mail->from('test@lavachange.com');
             $mail->build();
 

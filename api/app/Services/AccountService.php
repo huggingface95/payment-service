@@ -10,12 +10,10 @@ use App\Repositories\Interfaces\AccountRepositoryInterface;
 
 class AccountService extends AbstractService
 {
-
     public function __construct(
         protected PaymentsService $paymentsService,
         protected AccountRepositoryInterface $accountRepository
-    )
-    {
+    ) {
     }
 
     public function withdrawFromBalance(Payments $payment)

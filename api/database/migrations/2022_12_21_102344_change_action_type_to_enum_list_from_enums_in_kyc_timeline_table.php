@@ -55,12 +55,12 @@ class ChangeActionTypeToEnumListFromEnumsInKycTimelineTable extends Migration
 
     private function changeEnum(string $field, array $types): void
     {
-        DB::statement("ALTER TABLE kyc_timeline DROP CONSTRAINT kyc_timeline_" . $field . "_check");
+        DB::statement('ALTER TABLE kyc_timeline DROP CONSTRAINT kyc_timeline_'.$field.'_check');
 
-        $result = join(', ', array_map(function ($value) {
+        $result = implode(', ', array_map(function ($value) {
             return sprintf("'%s'::character varying", $value);
         }, $types));
 
-        DB::statement("ALTER TABLE kyc_timeline ADD CONSTRAINT kyc_timeline_" . $field . "_check CHECK (" . $field . "::text = ANY (ARRAY[$result]::text[]))");
+        DB::statement('ALTER TABLE kyc_timeline ADD CONSTRAINT kyc_timeline_'.$field.'_check CHECK ('.$field."::text = ANY (ARRAY[$result]::text[]))");
     }
 }

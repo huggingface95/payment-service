@@ -11,7 +11,6 @@ class CompaniesQueryTest extends TestCase
      *
      * @return void
      */
-
     public function testCompaniesNoAuth(): void
     {
         $this->graphQL('
@@ -34,9 +33,9 @@ class CompaniesQueryTest extends TestCase
             ->table('companies')
             ->first();
 
-        $this->postGraphQL([
-            'query' =>
-                'query Company($id:ID!){
+        $this->postGraphQL(
+            [
+                'query' => 'query Company($id:ID!){
                     company(id: $id) {
                         id
                         name
@@ -49,13 +48,14 @@ class CompaniesQueryTest extends TestCase
                         contact_name
                     }
                 }',
-            'variables' => [
-                'id' => (string) $company->id
+                'variables' => [
+                    'id' => (string) $company->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'company' => [
                     'id' => (string) $company->id,
@@ -79,8 +79,9 @@ class CompaniesQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     companies(orderBy: { column: ID, order: ASC }) {
                         data {
@@ -95,11 +96,12 @@ class CompaniesQueryTest extends TestCase
                             contact_name
                         }
                         }
-                }'
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $company[0]->id,
                 'name' => (string) $company[0]->name,
@@ -121,9 +123,9 @@ class CompaniesQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' =>
-                'query Company($name: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query Company($name: Mixed) {
                     companies(filter: { column: NAME, operator: ILIKE, value: $name }) {
                         data {
                             id
@@ -139,13 +141,14 @@ class CompaniesQueryTest extends TestCase
                     }
                 }
                 ',
-            'variables' => [
-                'name' => (string) $company[0]->name,
+                'variables' => [
+                    'name' => (string) $company[0]->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $company[0]->id,
                 'name' => (string) $company[0]->name,
@@ -154,7 +157,7 @@ class CompaniesQueryTest extends TestCase
                 'zip' => (string) $company[0]->zip,
                 'address' => (string) $company[0]->address,
                 'city' => (string) $company[0]->city,
-                'company_number' => (string) $company[0]->company_number ,
+                'company_number' => (string) $company[0]->company_number,
                 'contact_name' => (string) $company[0]->contact_name,
             ],
         ]);
@@ -167,9 +170,9 @@ class CompaniesQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' =>
-                'query Company($email: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query Company($email: Mixed) {
                     companies(filter: { column: EMAIL, operator: ILIKE, value: $email }) {
                         data {
                             id
@@ -184,13 +187,14 @@ class CompaniesQueryTest extends TestCase
                         }
                 }
             }',
-            'variables' => [
-                'email' => (string) $company[0]->email,
+                'variables' => [
+                    'email' => (string) $company[0]->email,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJsonContains([
+        )->seeJsonContains([
             [
                 'id' => (string) $company[0]->id,
                 'name' => (string) $company[0]->name,
@@ -212,9 +216,9 @@ class CompaniesQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->postGraphQL([
-            'query' =>
-                'query Company($url: Mixed) {
+        $this->postGraphQL(
+            [
+                'query' => 'query Company($url: Mixed) {
                     companies(filter: { column: URL, operator: ILIKE, value: $url }) {
                         data {
                             id
@@ -229,13 +233,14 @@ class CompaniesQueryTest extends TestCase
                         }
                 }
             }',
-            'variables' => [
-                'url' => (string) $company[0]->url,
-            ]
-        ],
+                'variables' => [
+                    'url' => (string) $company[0]->url,
+                ],
+            ],
             [
-                "Authorization" => "Bearer " . $this->login()
-            ])->seeJsonContains([
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $company[0]->id,
                 'name' => (string) $company[0]->name,

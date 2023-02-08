@@ -79,6 +79,5 @@ class DatabaseSeeder extends Seeder
         $this->call(DocumentTypeTableSeeder::class);
         $this->call(FileTableSeeder::class);
         $this->call(ApplicantDocumentTableSeeder::class);
-
     }
 }

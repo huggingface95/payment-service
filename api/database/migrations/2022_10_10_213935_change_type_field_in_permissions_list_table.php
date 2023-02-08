@@ -36,9 +36,9 @@ class ChangeTypeFieldInPermissionsListTable extends Migration
 
     private function changeEnum(array $types): void
     {
-        DB::statement("ALTER TABLE permissions_list DROP CONSTRAINT permissions_list_type_check");
+        DB::statement('ALTER TABLE permissions_list DROP CONSTRAINT permissions_list_type_check');
 
-        $result = join(', ', array_map(function ($value) {
+        $result = implode(', ', array_map(function ($value) {
             return sprintf("'%s'::character varying", $value);
         }, $types));
 

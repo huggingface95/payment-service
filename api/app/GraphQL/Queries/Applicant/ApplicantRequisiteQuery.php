@@ -73,6 +73,7 @@ class ApplicantRequisiteQuery
     /**
      * @param  null  $_
      * @param  array<string, mixed>  $args
+     *
      * @throws GraphqlException
      */
     public function sendEmail($root, array $args)

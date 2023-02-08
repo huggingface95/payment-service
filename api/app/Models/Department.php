@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Department extends BaseModel
 {
-    const UPDATED_AT = null;
+    public const UPDATED_AT = null;
 
     /**
      * The attributes that are mass assignable.

@@ -3,9 +3,6 @@
 namespace Tests\Feature\GraphQL\Queries;
 
 use App\Models\Project;
-use Database\Seeders\ModulesTableSeeder;
-use Database\Seeders\DatabaseSeeder;
-use Database\Seeders\ProjectTableSeeder;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -33,21 +30,23 @@ class ProjectsQueryTest extends TestCase
             ->table('projects')
             ->first();
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Project($id:ID!){
                     project(id: $id) {
                         id
                         name
                     }
                 }',
-            'variables' =>  [
-                'id' => (string) $project->id,
+                'variables' =>  [
+                    'id' => (string) $project->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson([
+        )->seeJson([
             'data' => [
                 'project' => [
                     'id' => (string) $project->id,
@@ -70,8 +69,9 @@ class ProjectsQueryTest extends TestCase
             ];
         }
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query {
                     projects{
                         data {
@@ -80,10 +80,11 @@ class ProjectsQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson($expect);
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson($expect);
     }
 
     public function testQueryProjectsWithFilterById(): void
@@ -99,8 +100,9 @@ class ProjectsQueryTest extends TestCase
             ];
         }
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Projects($id: Mixed) {
                     projects (
                         filter: { column: ID, operator: EQ, value: $id }
@@ -111,13 +113,14 @@ class ProjectsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'id' => 1,
+                'variables' => [
+                    'id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson($expect);
+        )->seeJson($expect);
     }
 
     public function testQueryProjectsWithFilterByModuleId(): void
@@ -133,8 +136,9 @@ class ProjectsQueryTest extends TestCase
             ];
         }
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Projects($module_id: Mixed) {
                     projects (
                         filter: { column: MODULE_ID, operator: EQ, value: $module_id }
@@ -145,13 +149,14 @@ class ProjectsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'module_id' => 1,
+                'variables' => [
+                    'module_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson($expect);
+        )->seeJson($expect);
     }
 
     public function testQueryProjectsWithFilterByCompanyId(): void
@@ -167,8 +172,9 @@ class ProjectsQueryTest extends TestCase
             ];
         }
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 query Projects($company_id: Mixed) {
                     projects (
                         filter: { column: COMPANY_ID, operator: EQ, value: $company_id }
@@ -179,12 +185,13 @@ class ProjectsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'company_id' => 1,
+                'variables' => [
+                    'company_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson($expect);
+        )->seeJson($expect);
     }
 }

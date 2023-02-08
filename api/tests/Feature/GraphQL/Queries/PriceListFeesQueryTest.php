@@ -44,8 +44,9 @@ class PriceListFeesQueryTest extends TestCase
             ];
         }
 
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 {
                     priceListFees {
                         id
@@ -58,9 +59,10 @@ class PriceListFeesQueryTest extends TestCase
                         }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ])->seeJson($expect);
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson($expect);
     }
 }

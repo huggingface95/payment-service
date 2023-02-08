@@ -3,7 +3,6 @@
 use App\Enums\OperationTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class CreateTransferBetweenUsersViewTable extends Migration
 {
@@ -14,7 +13,7 @@ class CreateTransferBetweenUsersViewTable extends Migration
      */
     public function up()
     {
-        DB::statement("
+        DB::statement('
             CREATE VIEW transfer_between_users_view AS
                 SELECT
                     payment_status.name as status_name,
@@ -27,7 +26,7 @@ class CreateTransferBetweenUsersViewTable extends Migration
                     created_at::date
                 FROM transfer_outgoings
                 JOIN payment_status ON (transfer_outgoings.status_id=payment_status.id)
-                WHERE transfer_outgoings.operation_type_id=" . OperationTypeEnum::BETWEEN_USERS->value . "
+                WHERE transfer_outgoings.operation_type_id='.OperationTypeEnum::BETWEEN_USERS->value.'
                     UNION ALL
                 SELECT
                     payment_status.name as status_name,
@@ -40,8 +39,8 @@ class CreateTransferBetweenUsersViewTable extends Migration
                     created_at::date
                 FROM transfer_incomings
                 JOIN payment_status ON (transfer_incomings.status_id=payment_status.id)
-                WHERE transfer_incomings.operation_type_id=" . OperationTypeEnum::BETWEEN_USERS->value . "
-        ");
+                WHERE transfer_incomings.operation_type_id='.OperationTypeEnum::BETWEEN_USERS->value.'
+        ');
     }
 
     /**

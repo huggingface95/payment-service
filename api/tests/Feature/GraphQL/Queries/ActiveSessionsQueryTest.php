@@ -27,15 +27,15 @@ class ActiveSessionsQueryTest extends TestCase
     public function testActiveSessionsList(): void
     {
         $active_sessions = DB::connection('clickhouse')
-            ->table((new ActiveSession)->getTable())
+            ->table((new ActiveSession())->getTable())
             ->select(['id', 'company'])
             ->limit(10)
             ->orderBy('created_at', 'DESC')
             ->get();
 
-        $response = $this->postGraphQL([
-            'query' =>
-            '{
+        $response = $this->postGraphQL(
+            [
+                'query' => '{
                 activeSessions {
                     data {
                         id
@@ -53,10 +53,11 @@ class ActiveSessionsQueryTest extends TestCase
                     }
                 }
             }
-        '],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        ', ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         foreach ($active_sessions as $session) {
             $response->seeJsonContains([
@@ -66,15 +67,15 @@ class ActiveSessionsQueryTest extends TestCase
         }
     }
 
-   public function testActiveSessionsListWithQuery(): void
+    public function testActiveSessionsListWithQuery(): void
     {
         $active_session = DB::connection('clickhouse')
-            ->table((new ActiveSession)->getTable())
+            ->table((new ActiveSession())->getTable())
             ->limit(1)
             ->get();
 
         $active_sessions = DB::connection('clickhouse')
-            ->table((new ActiveSession)->getTable())
+            ->table((new ActiveSession())->getTable())
             ->where('company', $active_session[0]['company'])
             ->where('provider', $active_session[0]['provider'])
             ->where('created_at', $active_session[0]['created_at'])
@@ -82,9 +83,9 @@ class ActiveSessionsQueryTest extends TestCase
 
         $created_at = substr($active_session[0]['created_at'], 0, 10);
 
-        $response = $this->postGraphQL([
-            'query' =>
-                'query($company: String!, $provider: String!, $created_at: Date!) {
+        $response = $this->postGraphQL(
+            [
+                'query' => 'query($company: String!, $provider: String!, $created_at: Date!) {
                     activeSessions(
                         query: {
                             company: $company
@@ -108,16 +109,17 @@ class ActiveSessionsQueryTest extends TestCase
                         }
                     }
                 }',
-            'variables' => [
-                'company' => $active_session[0]['company'],
-                'provider' => $active_session[0]['provider'],
-                'created_at' => $created_at,
+                'variables' => [
+                    'company' => $active_session[0]['company'],
+                    'provider' => $active_session[0]['provider'],
+                    'created_at' => $created_at,
 
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+        );
 
         foreach ($active_sessions as $session) {
             $response->seeJsonContains([
@@ -129,8 +131,9 @@ class ActiveSessionsQueryTest extends TestCase
 
     public function testActiveSessionsListPaginate(): void
     {
-        $this->postGraphQL([
-            'query' => '
+        $this->postGraphQL(
+            [
+                'query' => '
                 {
                     activeSessions(page: 1, count: 3) {
                       paginatorInfo {
@@ -145,15 +148,16 @@ class ActiveSessionsQueryTest extends TestCase
                       }
                     }
                 }',
-        ],
-        [
-            "Authorization" => "Bearer " . $this->login()
-        ]);
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         $response = json_decode($this->response->getContent(), true);
 
         $this->seeJsonContains([
-            'count' => $response['data']['activeSessions']['paginatorInfo']['count']
+            'count' => $response['data']['activeSessions']['paginatorInfo']['count'],
         ]);
     }
 }

@@ -52,7 +52,7 @@ class PriceListFee extends BaseModel
     {
         $fees = $this->fees()->get();
 
-        return (new PriceListFeeService)->convertFeesToFeeRanges($fees);
+        return (new PriceListFeeService())->convertFeesToFeeRanges($fees);
     }
 
 //    protected function getFeeAttribute($value)

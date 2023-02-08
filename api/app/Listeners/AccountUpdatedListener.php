@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Events\AccountUpdatedEvent;
 use App\Exceptions\GraphqlException;
 use App\Services\EmailService;
-use App\Traits\ReplaceRegularExpressions;
 
 class AccountUpdatedListener
 {
