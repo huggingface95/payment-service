@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"jwt-authentication-golang/constants"
@@ -40,13 +39,13 @@ func GenerateBackupCodes(context *gin.Context) {
 		codes[k] = helpers.GenerateRandomString(3)
 	}
 
-	jsonCodes, err := json.Marshal(codes)
-	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
+	//jsonCodes, err := json.Marshal(codes)
+	//if err != nil {
+	//	context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	//	return
+	//}
 
-	context.JSON(http.StatusOK, gin.H{"backup_codes": jsonCodes, "user_id": user.GetId(), "2fa_secret": user.GetGoogle2FaSecret()})
+	context.JSON(http.StatusOK, gin.H{"backup_codes": codes, "user_id": user.GetId(), "2fa_secret": user.GetGoogle2FaSecret()})
 	return
 
 }
