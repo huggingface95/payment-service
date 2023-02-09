@@ -203,6 +203,26 @@ class MembersMutator extends BaseMutator
      * @param  array  $args
      * @return mixed
      */
+    public function setActive($_, array $args)
+    {
+        $member = Members::find($args['id']);
+        if (! $member) {
+            throw new GraphqlException('Member not found', 'not found', 404);
+        }
+
+        $member->update([
+            'member_status_id' => MemberStatusEnum::ACTIVE->value,
+        ]);
+
+
+        return $member;
+    }
+
+    /**
+     * @param    $_
+     * @param  array  $args
+     * @return mixed
+     */
     public function sendEmailVerification($_, array $args)
     {
         $member = Members::find($args['id']);

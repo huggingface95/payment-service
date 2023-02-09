@@ -35,6 +35,11 @@ type KycTimeline {
     created_at: DateTimeUtc!
 }
 
+type KycTimelines {
+    data: [KycTimeline!]
+    paginatorInfo: PaginatorInfo
+}
+
 enum KycTimelineActionType {
     DOCUMENT_UPLOAD @enum(value: "document_upload")
     DOCUMENT_STATE @enum(value: "document_state")
@@ -58,15 +63,12 @@ extend type Query @guard {
     Получить список
     """
     kycTimelines(
-        filter: _ @filterConditions(static: QueryKycTimelinesFilterStatic),
+        applicant_id: ID! @eq,
+        applicant_type: ApplicantType! @eq,
+        company_id: ID! @eq,
+        page: Int = 1,
+        first: Int = 15,
         orderBy: _ @orderBy(columns: ["id", "created_at"])
-    ): [KycTimeline!]!
-        @paginate(defaultCount: 10)
-        @orderBy(column: "id", direction: ASC)
-}
-
-input QueryKycTimelinesFilterStatic @spread {
-    applicant_id: ID @eq
-    company_id: ID @eq
-    applicant_type: ApplicantType @eq
+    ): KycTimelines
+        @field(resolver: "KycTimelineQuery@get")
 }

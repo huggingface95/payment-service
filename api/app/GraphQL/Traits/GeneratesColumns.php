@@ -47,8 +47,8 @@ trait GeneratesColumns
 
     private function getColumnsForOperatorEnum(Collection $fields): array
     {
-        return $fields->pluck('directives', 'name.value')->map(function ($fieldDirective, $column) {
-            return $fieldDirective[0]['name']['value'];
+        return $fields->pluck('directives', 'name.value')->map(function ($fieldDirective) {
+            return ($opt = collect($fieldDirective)->pluck('name.value')) && $opt->count() > 1 ? $opt->toArray() : $opt->first();
         })->toArray();
     }
 
@@ -71,7 +71,8 @@ trait GeneratesColumns
             return [$field['name']['value'] => [
                 'value' => $value,
                 'required' => $field['type']['kind'] == 'NonNullType' ? '!' : '',
-                'operator' => $field['directives'][0]['name']['value'],
+                'operator' => ($ops = collect($field['directives'])->pluck('name.value')) && $ops->count() > 1
+                    ? $ops->toArray() : $ops->first()
             ],
             ];
         })->toArray();
@@ -170,7 +171,10 @@ trait GeneratesColumns
             );
         } elseif ($type == self::OPERATOR_ENUM || $type == self::TYPE_ENUM) {
             $enumValues = array_map(
-                function (string $columnName, string $v): string {
+                function (string $columnName, string|array $v): string {
+                    if (is_array($v)){
+                        $v = implode('|', $v);
+                    }
                     return
                         $columnName
                         .' @enum(value: "'.$v.'")';
@@ -212,7 +216,12 @@ GRAPHQL
     ): ?InputObjectTypeDefinitionNode {
         $inputValues = array_map(
             function (string $column, array $data): string {
-                return "{$column}: {$data['value']}{$data['required']} @{$data['operator']}";
+                if (is_array($data['operator'])){
+                    $operator = '@'.implode(' @', $data['operator']);
+                } else{
+                    $operator = '@'.$data['operator'];
+                }
+                return "{$column}: {$data['value']}{$data['required']} {$operator}";
             },
             array_keys($columns),
             $columns
