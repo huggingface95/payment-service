@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
-use App\Models\Scopes\PivotModuleScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -28,7 +27,6 @@ class ApplicantIndividualModules extends BaseModel
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope);
-        static::addGlobalScope(new PivotModuleScope);
     }
 
     public function ApplicantIndividual(): BelongsToMany

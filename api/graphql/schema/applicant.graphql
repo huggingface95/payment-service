@@ -172,7 +172,7 @@ extend type Mutation @guard {
         "ID photo"
         photo_id: ID
         "ID модулей"
-        module_ids: [ID]!
+        module_ids: [ID]
         "ID Проекта"
         project_id: ID
         "ID группы"
