@@ -90,12 +90,18 @@ class FilterConditionsHandler
             $builder->addNestedWhereQuery($nestedBuilder, $boolean);
         }
 
+        if (isset($whereConditions['column']) && preg_match('/^doesntHave(.*)/', $whereConditions['column'], $hasNotCondition)) {
+            $relation = $hasNotCondition[1];
+            $nestedBuilder = $this->handleDoesntHaveCondition($model, $relation);
+            $builder->addNestedWhereQuery($nestedBuilder, $boolean);
+        }
+
         if (isset($whereConditions['column']) && preg_match('/^Mixed(.*)/', $whereConditions['column'], $mixedColumns)) {
             $condition = $this->getMixedColumns($mixedColumns[1], $whereConditions, $model->getTable());
             $this->__invoke($builder, $condition, $model);
         }
 
-        if (! preg_match('/^(has)|(Mixed)/', $whereConditions['column'] ?? 'null')) {
+        if (! preg_match('/^(has)|(Mixed)|(doesntHave)/', $whereConditions['column'] ?? 'null')) {
             if ($column = $whereConditions['column'] ?? null) {
                 $this->assertValidColumnReference($column);
 
@@ -133,6 +139,16 @@ class FilterConditionsHandler
                 $operator,
                 $amount
             )
+            ->getQuery();
+    }
+
+    public function handleDoesntHaveCondition(
+        Model $model,
+        string $relation,
+    ): QueryBuilder {
+        return $model
+            ->newQuery()
+            ->whereDoesntHave($relation)
             ->getQuery();
     }
 
