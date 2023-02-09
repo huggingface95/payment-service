@@ -210,8 +210,8 @@ class KycTimelineService extends AbstractService
             'action_old_value' => $oldValues,
             'action_new_value' => $newValues,
             'company_id' => $applicantCompany->company_id,
-            'applicant_id' => $applicantCompany->applicantIndividualCompany->applicant_id,
-            'applicant_type' => $applicantCompany->applicantIndividualCompany->applicant_type,
+            'applicant_id' => $applicantCompany->id,
+            'applicant_type' => class_basename(ApplicantCompany::class),
         ]);
     }
 
