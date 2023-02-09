@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantIndividualUpdatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\UserPermission;
@@ -125,6 +126,16 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope());
+    }
+
+    protected static function booting()
+    {
+        self::created(function (ApplicantIndividual $model) {
+            $model->modules()->saveMany([new ApplicantIndividualModules([
+                'module_id' => ModuleEnum::KYC->value
+            ])]);
+        });
+        parent::booting();
     }
 
     public function getAuthPassword()
