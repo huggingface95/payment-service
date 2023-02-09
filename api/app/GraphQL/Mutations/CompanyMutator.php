@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
 use App\Models\Company;
+use App\Models\State;
 use Illuminate\Support\Carbon;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
@@ -18,7 +19,7 @@ class CompanyMutator extends BaseMutator
     {
         $company = Company::create($args);
 
-        $company->state_id = 1;
+        $company->state_id = State::INACTIVE;
         $company->save();
 
         return $company;
