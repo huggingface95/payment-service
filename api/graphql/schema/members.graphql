@@ -214,6 +214,13 @@ extend type Mutation  {
     ): Members   @field(resolver: "MembersMutator@setInactive")
 
     """
+    Установить статус aActive
+    """
+    setMemberActive(
+        id: ID!
+    ): Members   @field(resolver: "MembersMutator@setActive")
+
+    """
     Установить пароль участника
     """
     setMemberPassword(
