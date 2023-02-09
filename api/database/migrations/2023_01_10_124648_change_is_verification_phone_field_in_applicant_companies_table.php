@@ -20,11 +20,8 @@ class ChangeIsVerificationPhoneFieldInApplicantCompaniesTable extends Migration
             $table->unsignedInteger('email_verification_status_id')->default(ApplicantVerificationStatusEnum::NOT_VERIFIED->value);
             $table->unsignedInteger('phone_verification_status_id')->default(ApplicantVerificationStatusEnum::NOT_VERIFIED->value);
 
-
             $table->foreign('email_verification_status_id')->references('id')->on('applicant_verification_statuses');
             $table->foreign('phone_verification_status_id')->references('id')->on('applicant_verification_statuses');
-
-
         });
     }
 

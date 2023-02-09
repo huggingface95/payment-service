@@ -6,18 +6,30 @@ use Illuminate\Support\Facades\DB;
 
 class CommissionTemplateQueryTest extends TestCase
 {
-
     /**
      * CommissionTemplate Query Testing
      *
      * @return void
      */
+    public function testCommissionTemplateNoAuth(): void
+    {
+        $this->graphQL('
+             {
+                commissionTemplates
+                 {
+                    data {
+                        id
+                        name
+                    }
+                }
+             }')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
 
     public function testQueryCommissionTemplatesFirst(): void
     {
-        $this->login();
-
-        $getRecord = DB::connection('pgsql_test')
+        $commissionTemplate = DB::connection('pgsql_test')
             ->table('commission_template')
             ->orderBy('id', 'ASC')
             ->get();
@@ -27,54 +39,65 @@ class CommissionTemplateQueryTest extends TestCase
                 'data' => [
                     'commissionTemplates' => [
                         'data' => [[
-                            'id' => strval($getRecord[0]->id),
-                            'name' => $getRecord[0]->name,
-                            'description' => $getRecord[0]->description,
+                            'id' => (string) $commissionTemplate[0]->id,
+                            'name' => $commissionTemplate[0]->name,
+                            'description' => $commissionTemplate[0]->description,
                         ]],
                     ],
                 ],
             ];
 
-        $this->graphQL('
-        {
-            commissionTemplates(first: 1) {
-                data {
-                    id
-                    name
-                    description
-                }
-            }
-        }
-        ')->seeJson($data);
+        $this->postGraphQL(
+            [
+                'query' => '
+                {
+                    commissionTemplates(first: 1) {
+                        data {
+                            id
+                            name
+                            description
+                        }
+                    }
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson($data);
     }
 
     public function testQueryCommissionTemplate(): void
     {
-        $this->login();
-
-        $getRecord = DB::connection('pgsql_test')
+        $commissionTemplate = DB::connection('pgsql_test')
             ->table('commission_template')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            query CommissionTemplate($id:ID!)
-            {
-                commissionTemplate(id: $id)
+        $this->postGraphQL(
+            [
+                'query' => '
+                query CommissionTemplate($id:ID!)
                 {
-                    id
-                    name
-                    description
-                }
-            }
-        ', [
-            'id' => strval($getRecord[0]->id),
-        ])->seeJson([
+                    commissionTemplate(id: $id)
+                    {
+                        id
+                        name
+                        description
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $commissionTemplate[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'commissionTemplate' => [
-                    'id' => strval($getRecord[0]->id),
-                    'name' => $getRecord[0]->name,
-                    'description' => $getRecord[0]->description,
+                    'id' => (string) $commissionTemplate[0]->id,
+                    'name' => $commissionTemplate[0]->name,
+                    'description' => $commissionTemplate[0]->description,
 
                 ],
             ],
@@ -83,9 +106,7 @@ class CommissionTemplateQueryTest extends TestCase
 
     public function testQueryOrderByCommissionTemplate(): void
     {
-        $this->login();
-
-        $getRecord = DB::connection('pgsql_test')
+        $commissionTemplate = DB::connection('pgsql_test')
             ->table('commission_template')
             ->orderBy('id', 'DESC')
             ->get();
@@ -93,114 +114,133 @@ class CommissionTemplateQueryTest extends TestCase
         $data =
             [
                 [
-                    'id' => strval($getRecord[0]->id),
-                    'name' => $getRecord[0]->name,
-                    'description' => $getRecord[0]->description,
+                    'id' => (string) $commissionTemplate[0]->id,
+                    'name' => $commissionTemplate[0]->name,
+                    'description' => $commissionTemplate[0]->description,
 
                 ],
             ];
 
-        $this->graphQL('
-        {
-             commissionTemplates (orderBy: {column:ID, order:DESC}) {
-                data {
-                    id
-                    name
-                    description
-                }
-             }
-        }
-        ')->seeJsonContains($data);
+        $this->postGraphQL(
+            [
+                'query' => '
+                {
+                     commissionTemplates (orderBy: {column:ID, order:DESC}) {
+                        data {
+                            id
+                            name
+                            description
+                        }
+                     }
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains($data);
     }
 
     public function testQueryCommissionTemplateById(): void
     {
-        $this->login();
-
-        $list = DB::connection('pgsql_test')
+        $commissionTemplate = DB::connection('pgsql_test')
             ->table('commission_template')
             ->first();
 
-        $this->graphQL('
-            query CommissionTemplate($id: Mixed) {
-                commissionTemplates(filter: { column: ID, value: $id }) {
-                    data {
-                        id
-                        name
-                        description
+        $this->postGraphQL(
+            [
+                'query' => '
+                query CommissionTemplate($id: Mixed) {
+                    commissionTemplates(filter: { column: ID, value: $id }) {
+                        data {
+                            id
+                            name
+                            description
+                        }
                     }
-                }
-            }
-        ', [
-            'id' => $list->id
-        ])->seeJsonContains([
-            'id' => strval($list->id),
-            'name' => strval($list->name),
-            'description' => strval($list->description),
+                }',
+                'variables' => [
+                    'id' => $commissionTemplate->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $commissionTemplate->id,
+            'name' => (string) $commissionTemplate->name,
+            'description' => (string) $commissionTemplate->description,
         ]);
     }
 
     public function testQueryCommissionTemplateByName(): void
     {
-        $this->login();
-
-        $list = DB::connection('pgsql_test')
+        $commissionTemplate = DB::connection('pgsql_test')
             ->table('commission_template')
             ->first();
 
-        $this->graphQL('
-            query CommissionTemplate($name: Mixed) {
-                commissionTemplates(filter: { column: NAME, operator: LIKE, value: $name }) {
-                    data {
-                        id
-                        name
-                        description
+        $this->postGraphQL(
+            [
+                'query' => '
+                query CommissionTemplate($name: Mixed) {
+                    commissionTemplates(filter: { column: NAME, operator: LIKE, value: $name }) {
+                        data {
+                            id
+                            name
+                            description
+                        }
                     }
-                }
-            }
-        ', [
-            'name' => $list->name
-        ])->seeJsonContains([
-            'id' => strval($list->id),
-            'name' => strval($list->name),
-            'description' => strval($list->description),
+                }',
+                'variables' => [
+                    'name' => $commissionTemplate->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $commissionTemplate->id,
+            'name' => (string) $commissionTemplate->name,
+            'description' => (string) $commissionTemplate->description,
         ]);
     }
 
     public function testQueryCommissionTemplateByPaymentProvider(): void
     {
-        $this->login();
-
-        $list = DB::connection('pgsql_test')
+        $commissionTemplate = DB::connection('pgsql_test')
             ->table('commission_template')
             ->first();
 
-        $this->graphQL('
-            query CommissionTemplate($id: Mixed) {
-                commissionTemplates(
-                    filter: { column: HAS_PAYMENT_PROVIDER_FILTER_BY_ID, value: $id }
-                ) {
-                    data {
-                        id
-                        name
-                        description
+        $this->postGraphQL(
+            [
+                'query' => '
+                query CommissionTemplate($id: Mixed) {
+                    commissionTemplates(
+                        filter: { column: HAS_PAYMENT_PROVIDER_FILTER_BY_ID, value: $id }
+                    ) {
+                        data {
+                            id
+                            name
+                            description
+                        }
                     }
-                }
-            }
-        ', [
-            'id' => $list->payment_provider_id
-        ])->seeJsonContains([
-            'id' => strval($list->id),
-            'name' => strval($list->name),
-            'description' => strval($list->description),
+                }',
+                'variables' => [
+                    'id' => $commissionTemplate->payment_provider_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $commissionTemplate->id,
+            'name' => (string) $commissionTemplate->name,
+            'description' => (string) $commissionTemplate->description,
         ]);
     }
 
     public function testQueryCommissionTemplateByBusinessActivity(): void
     {
-        $this->login();
-
-        $list = DB::connection('pgsql_test')
+        $commissionTemplate = DB::connection('pgsql_test')
             ->table('commission_template')
             ->first();
 
@@ -208,24 +248,31 @@ class CommissionTemplateQueryTest extends TestCase
             ->table('commission_template_business_activity')
             ->first();
 
-        $this->graphQL('
-            query CommissionTemplate($id: Mixed) {
-                commissionTemplates(
-                    filter: { column: HAS_BUSINESS_ACTIVITY_FILTER_BY_ID, value: $id }
-                ) {
-                    data {
-                        id
-                        name
-                        description
+        $this->postGraphQL(
+            [
+                'query' => '
+                query CommissionTemplate($id: Mixed) {
+                    commissionTemplates(
+                        filter: { column: HAS_BUSINESS_ACTIVITY_FILTER_BY_ID, value: $id }
+                    ) {
+                        data {
+                            id
+                            name
+                            description
+                        }
                     }
-                }
-            }
-        ', [
-            'id' => $activity->commission_template_id
-        ])->seeJsonContains([
-            'id' => strval($list->id),
-            'name' => strval($list->name),
-            'description' => strval($list->description),
+                }',
+                'variables' =>  [
+                    'id' => $activity->commission_template_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $commissionTemplate->id,
+            'name' => (string) $commissionTemplate->name,
+            'description' => (string) $commissionTemplate->description,
         ]);
     }
 }

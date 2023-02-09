@@ -6,7 +6,6 @@ use App\DTO\Email\Request\EmailAccountMinMaxBalanceLimitRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
-use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\RespondentFeesEnum;
 use App\Enums\TransferOutgoingChannelEnum;
@@ -39,11 +38,10 @@ use Illuminate\Support\Facades\DB;
 class TransferOutgoingService extends AbstractService
 {
     public function __construct(
-        protected EmailService                        $emailService,
-        protected AccountService                      $accountService,
+        protected EmailService $emailService,
+        protected AccountService $accountService,
         protected TransferOutgoingRepositoryInterface $transferRepository
-    )
-    {
+    ) {
     }
 
     public function getAllProcessedAmount(TransferOutgoing $transfer): Collection
@@ -61,7 +59,7 @@ class TransferOutgoingService extends AbstractService
      */
     public function getTransferAmountDebt(TransferOutgoing $transfer, float $paymentFee): ?float
     {
-        return match ((int)$transfer->respondent_fees_id) {
+        return match ((int) $transfer->respondent_fees_id) {
             RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount,
             RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount + $paymentFee,
             RespondentFeesEnum::SHARED_FEES->value => $transfer->amount + $paymentFee / 2,
@@ -75,7 +73,7 @@ class TransferOutgoingService extends AbstractService
      */
     public function getAccountAmountRealWithCommission(TransferOutgoing $transfer, float $paymentFee): ?float
     {
-        return match ((int)$transfer->respondent_fees_id) {
+        return match ((int) $transfer->respondent_fees_id) {
             RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount + $paymentFee,
             RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount,
             RespondentFeesEnum::SHARED_FEES->value => $transfer->amount + $paymentFee / 2,
@@ -104,7 +102,7 @@ class TransferOutgoingService extends AbstractService
 
         $this->createFee($transfer, $paymentFee);
 
-        return (float)$amountDebt;
+        return (float) $amountDebt;
     }
 
     public function createFee(TransferOutgoing $transfer, float $paymentFee): void
@@ -151,7 +149,7 @@ class TransferOutgoingService extends AbstractService
     private static function getFeeByRangeMode(array $data, int $modeKey, float $amount): ?float
     {
         $fees = null;
-        if ((float)$data[$modeKey]['amount_from'] <= $amount && $amount <= (float)$data[$modeKey]['amount_to']) {
+        if ((float) $data[$modeKey]['amount_from'] <= $amount && $amount <= (float) $data[$modeKey]['amount_to']) {
             unset($data[$modeKey]);
 
             foreach ($data as $fee) {
@@ -180,9 +178,9 @@ class TransferOutgoingService extends AbstractService
         }) as $limit) {
             if ($limit instanceof ApplicantBankingAccess) {
                 if ($limit->daily_limit < $allProcessedAmount->whereBetween(
-                        'created_at',
-                        [Carbon::now()->startOfDay()->format('Y-m-d H:i:s'), Carbon::now()->endOfDay()->format('Y-m-d H:i:s')]
-                    )->sum('amount')
+                    'created_at',
+                    [Carbon::now()->startOfDay()->format('Y-m-d H:i:s'), Carbon::now()->endOfDay()->format('Y-m-d H:i:s')]
+                )->sum('amount')
                     || $limit->monthly_limit < $allProcessedAmount->whereBetween(
                         'created_at',
                         [Carbon::now()->startOfMonth()->format('Y-m-d H:i:s'), Carbon::now()->endOfMonth()->format('Y-m-d H:i:s')]
@@ -380,7 +378,6 @@ class TransferOutgoingService extends AbstractService
         }
     }
 
-
     /**
      * @throws EmailException
      * @throws GraphqlException
@@ -433,7 +430,7 @@ class TransferOutgoingService extends AbstractService
     {
         DB::transaction(function () use ($transfer) {
             $this->transferRepository->update($transfer, [
-                'status_id' => PaymentStatusEnum::PENDING->value
+                'status_id' => PaymentStatusEnum::PENDING->value,
             ]);
 
             $this->accountService->unsetAmmountReserveOnAccountBalance($transfer);

@@ -20,5 +20,6 @@ class DepartmentPositionRelation extends BaseModel
     ];
 
     public $incrementing = false;
+
     public $timestamps = false;
 }

@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
@@ -30,7 +29,8 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
         if (isset($data)) {
             $model->files()->detach();
             $model->files()->attach(
-                $data, ['transfer_type' => class_basename(TransferOutgoing::class)]
+                $data,
+                ['transfer_type' => class_basename(TransferOutgoing::class)]
             );
         }
 

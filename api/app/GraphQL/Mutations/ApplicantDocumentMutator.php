@@ -10,7 +10,7 @@ class ApplicantDocumentMutator
     public function attachTag($root, array $args): ApplicantDocument
     {
         $note = ApplicantDocument::find($args['applicant_document_id']);
-        if (!$note) {
+        if (! $note) {
             throw new GraphqlException('Applicant document not found', 'not found', 404);
         }
 
@@ -23,7 +23,7 @@ class ApplicantDocumentMutator
     public function detachTag($root, array $args): ApplicantDocument
     {
         $note = ApplicantDocument::find($args['applicant_document_id']);
-        if (!$note) {
+        if (! $note) {
             throw new GraphqlException('Applicant document not found', 'not found', 404);
         }
 

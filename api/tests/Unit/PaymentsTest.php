@@ -7,7 +7,6 @@ use Tests\TestCase;
 
 class PaymentsTest extends TestCase
 {
-
     /**
      * @dataProvider provideTestGetFee
      *
@@ -97,5 +96,4 @@ class PaymentsTest extends TestCase
             [10, 40.2],
         ];
     }
-
 }

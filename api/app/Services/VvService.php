@@ -9,23 +9,23 @@ use App\DTO\Vv\Response\VvGetLinkResponse;
 use App\DTO\Vv\Response\VvRegisterResponse;
 use App\DTO\Vv\VvConfig;
 use App\DTO\Vv\VvPostBackResponse;
-use App\Models\Files;
 use App\Repositories\Interfaces\FileRepositoryInterface;
 use App\Repositories\Interfaces\VvRepositoryInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Routing\ProvidesConvenienceMethods;
-use GuzzleHttp\Exception\RequestException;
 
 class VvService
 {
-    const DETECTION = "detection";
-    const RECORDING = "recording";
-
     use ProvidesConvenienceMethods;
+
+    public const DETECTION = 'detection';
+
+    public const RECORDING = 'recording';
 
     protected VvRepositoryInterface $vvRepository;
 
@@ -95,7 +95,6 @@ class VvService
         return '';
     }
 
-
     /**
      * @throws GuzzleException
      */
@@ -125,7 +124,6 @@ class VvService
         return Str::random(32);
     }
 
-
     /**
      * @throws ValidationException
      */
@@ -148,12 +146,9 @@ class VvService
         $response = TransformerDTO::transform(VvPostBackResponse::class, $request->all());
 
         if ($response->action == self::RECORDING) {
-
             $this->fileRepository->saveFile($response);
-
         } elseif ($response->action == self::DETECTION) {
             //TODO Save if detection true
         }
-
     }
 }

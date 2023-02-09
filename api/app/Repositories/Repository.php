@@ -1,16 +1,13 @@
 <?php
 
-
 namespace App\Repositories;
 
 use App\Exceptions\RepositoryException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-
 /**
  * Class Repository
- * @package App\Repositories
  */
 abstract class Repository
 {
@@ -41,7 +38,7 @@ abstract class Repository
     {
         $model = app($this->model());
 
-        if (!$model instanceof Model) {
+        if (! $model instanceof Model) {
             throw new RepositoryException(
                 "Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model",
             );

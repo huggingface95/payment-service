@@ -13,11 +13,12 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthService extends AbstractService
 {
     public const GUARD_TYPE_MEMBER = 'api';
+
     public const GUARD_TYPE_APPLICANT = 'api_client';
 
     public function getUserByClientId(int $client_type_id, int $id): Members|ApplicantIndividual|null
     {
-        return match($client_type_id) {
+        return match ($client_type_id) {
             2 => Members::find($id),
             3 => ApplicantIndividual::find($id),
 
@@ -27,7 +28,7 @@ class AuthService extends AbstractService
 
     public function getUserByGuard(string $client_type, int $id): Members|ApplicantIndividual|null
     {
-        return match($client_type) {
+        return match ($client_type) {
             self::GUARD_TYPE_MEMBER => Members::find($id),
             self::GUARD_TYPE_APPLICANT => ApplicantIndividual::find($id),
 
@@ -37,7 +38,7 @@ class AuthService extends AbstractService
 
     public function getClientTypeIdByGuard(string $guard): int|null
     {
-        return match($guard) {
+        return match ($guard) {
             self::GUARD_TYPE_MEMBER => 2,
             self::GUARD_TYPE_APPLICANT => 3,
 
@@ -58,20 +59,20 @@ class AuthService extends AbstractService
         } catch (\Exception) {
             return null;
         }
-        
+
         return $clientType;
     }
 
     public function getTwoFactorAuthToken(Members|ApplicantIndividual $user, $clientId): string
     {
         OauthCodes::insert([
-            'id' => $this->generateUniqueCode(), 
-            'user_id' => $user->id, 
-            'client_id' => $clientId, 
-            'revoked' => 'true', 
-            'expires_at' => now()->addMinutes(15)
+            'id' => $this->generateUniqueCode(),
+            'user_id' => $user->id,
+            'client_id' => $clientId,
+            'revoked' => 'true',
+            'expires_at' => now()->addMinutes(15),
         ]);
-        
+
         return OauthTokens::select('id')
             ->where('user_id', $user->id)
             ->where('client_id', $clientId)
@@ -91,7 +92,7 @@ class AuthService extends AbstractService
         while (strlen($code) < $codeLength) {
             $position = rand(0, $charactersNumber - 1);
             $character = $characters[$position];
-            $code = $code . $character;
+            $code = $code.$character;
         }
 
         return $code;

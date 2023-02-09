@@ -8,7 +8,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PdfService
 {
-
     public function getPdfRequisites(array $args)
     {
         $requisiteSendEmailDTO = TransformerDTO::transform(RequisiteSendEmailDTO::class, $args);
@@ -16,5 +15,4 @@ class PdfService
 
         return $pdf->output();
     }
-
 }

@@ -15,7 +15,7 @@ class ProjectApiSettingQuery
     public function getPassword($root, array $args): array
     {
         $setting = ProjectApiSetting::find($args['id']);
-        if (!$setting) {
+        if (! $setting) {
             throw new GraphqlException('Project api setting not found', 'not found', 404);
         }
 
@@ -32,5 +32,4 @@ class ProjectApiSettingQuery
             'password' => $decryptedPassword,
         ];
     }
-
 }

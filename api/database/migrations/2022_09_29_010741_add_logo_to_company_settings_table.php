@@ -29,7 +29,7 @@ class AddLogoToCompanySettingsTable extends Migration
     public function down()
     {
         Schema::table('company_settings', function (Blueprint $table) {
-            $table->string('logo_object_key',256)->nullable();
+            $table->string('logo_object_key', 256)->nullable();
             $table->dropColumn('logo_id');
         });
     }

@@ -18,20 +18,20 @@ use Nuwave\Lighthouse\Events\ManipulateAST;
 class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 {
     protected AuthService $authService;
+
     protected PermissionsService $permissionsService;
 
     public function __construct()
     {
-        $this->authService = new AuthService;
-        $this->permissionsService = new PermissionsService;
+        $this->authService = new AuthService();
+        $this->permissionsService = new PermissionsService();
     }
 
     public function boot(Dispatcher $dispatcher): void
     {
         $dispatcher->listen(
             ManipulateAST::class,
-            function (ManipulateAST $manipulateAST): void 
-            {
+            function (ManipulateAST $manipulateAST): void {
                 $clientType = $this->authService->getClientTypeByToken() ?? ClientTypeEnum::APPLICANT->toString();
 
                 // PermissionType
@@ -47,7 +47,7 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
                     ->map(function ($permissions) {
                         return $permissions->pluck('display_name', 'id')->toArray();
                     });
-                
+
                 $manipulateAST->documentAST
                     ->setTypeDefinition(
                         $this->createObjectType($permissions->keys()->toArray())

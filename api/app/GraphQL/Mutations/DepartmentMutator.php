@@ -3,7 +3,6 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
-use App\Models\DepartmentPosition;
 use App\Models\Department;
 
 class DepartmentMutator extends BaseMutator
@@ -11,7 +10,7 @@ class DepartmentMutator extends BaseMutator
     /**
      * Create department
      *
-     * @param  $root
+     * @param    $root
      * @param  array  $args
      * @return mixed
      */
@@ -35,7 +34,7 @@ class DepartmentMutator extends BaseMutator
     /**
      * Update department
      *
-     * @param  $root
+     * @param    $root
      * @param  array  $args
      * @return mixed
      */
@@ -58,7 +57,7 @@ class DepartmentMutator extends BaseMutator
     /**
      * Delete department
      *
-     * @param  $root
+     * @param    $root
      * @param  array  $args
      * @return mixed
      */

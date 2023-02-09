@@ -7,23 +7,30 @@ use App\Models\Account;
 class EmailAccountMinMaxBalanceLimitRequestDTO
 {
     public string $emailTemplateName;
+
     public int $companyId;
+
     public Account $account;
+
     public object $data;
+
     public string $email;
 
-
     public const MEMBER = 'member';
+
     public const INDIVIDUAL = 'individual';
 
     protected const ACCOUNT_MIN_LIMIT_COLUMN = 'account_min_balance';
+
     protected const ACCOUNT_MAX_LIMIT_COLUMN = 'account_max_balance';
 
     protected const MIN_INDIVIDUAL_LIMIT_TEMPLATE = 'Minimum balance limit has been reached {account_id} {account_currency}';
-    protected const MAX_INDIVIDUAL_LIMIT_TEMPLATE = 'Maximum balance limit has been reached {account_id} {account_currency}';
-    protected const MIN_MEMBER_LIMIT_TEMPLATE = 'Minimum balance limit has been reached for {client_name} {account_id} {account_currency}';
-    protected const MAX_MEMBER_LIMIT_TEMPLATE = 'Maximum balance limit has been reached for {client_name} {account_id} {account_currency}';
 
+    protected const MAX_INDIVIDUAL_LIMIT_TEMPLATE = 'Maximum balance limit has been reached {account_id} {account_currency}';
+
+    protected const MIN_MEMBER_LIMIT_TEMPLATE = 'Minimum balance limit has been reached for {client_name} {account_id} {account_currency}';
+
+    protected const MAX_MEMBER_LIMIT_TEMPLATE = 'Maximum balance limit has been reached for {client_name} {account_id} {account_currency}';
 
     public static function transform(Account $account, bool $isMinLimit, string $type = self::INDIVIDUAL): self
     {
@@ -60,7 +67,7 @@ class EmailAccountMinMaxBalanceLimitRequestDTO
         $dto->emailTemplateName = $templateName;
         $dto->companyId = $account->company_id;
         $dto->email = $email;
-        $dto->data = (object)$data;
+        $dto->data = (object) $data;
 
         return $dto;
     }

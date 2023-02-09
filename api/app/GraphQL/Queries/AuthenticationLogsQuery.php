@@ -19,7 +19,7 @@ final class AuthenticationLogsQuery
     {
         $query = DB::connection('clickhouse')
             ->query()
-            ->from((new AuthenticationLog)->getTable());
+            ->from((new AuthenticationLog())->getTable());
 
         if (isset($args['query']) && count($args['query']) > 0) {
             $fields = $args['query'];
@@ -77,7 +77,7 @@ final class AuthenticationLogsQuery
     {
         $query = DB::connection('clickhouse')
             ->query()
-            ->from((new AuthenticationLog)->getTable());
+            ->from((new AuthenticationLog())->getTable());
 
         if (isset($args['member_id'])) {
             $member = Members::find($args['member_id']);

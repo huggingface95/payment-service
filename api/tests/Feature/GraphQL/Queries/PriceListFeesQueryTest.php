@@ -23,8 +23,6 @@ class PriceListFeesQueryTest extends TestCase
 
     public function testQueryPriceListFeesList(): void
     {
-        $this->login();
-
         $priceListFees = PriceListFee::orderBy('id', 'DESC')->limit(10)->get();
 
         $expect = [
@@ -46,19 +44,25 @@ class PriceListFeesQueryTest extends TestCase
             ];
         }
 
-        $this->graphQL('
-        {
-            priceListFees {
-                id
-                name
-                fee_type {
-                    id
-                }
-                operation_type {
-                    id
-                }
-            }
-        }
-        ')->seeJson($expect);
+        $this->postGraphQL(
+            [
+                'query' => '
+                {
+                    priceListFees {
+                        id
+                        name
+                        fee_type {
+                            id
+                        }
+                        operation_type {
+                            id
+                        }
+                    }
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson($expect);
     }
 }

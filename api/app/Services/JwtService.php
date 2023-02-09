@@ -27,14 +27,14 @@ class JwtService extends JWT
                 return self::decode($token, new Key($personalClient->secret, env('JWT_ALGO')));
             }
         }
+
         return null;
     }
 
     public static function decode(
         string $jwt,
-               $keyOrKeyArray
-    ): stdClass
-    {
+        $keyOrKeyArray
+    ): stdClass {
         if (empty($keyOrKeyArray)) {
             throw new InvalidArgumentException('Key may not be empty');
         }

@@ -20,13 +20,13 @@ class AccountTableSeeder extends Seeder
         for ($i = 1; $i <= 3; $i++) {
             Account::firstOrCreate(
                 [
-                    'account_name' => 'Test account ' . $i,
+                    'account_name' => 'Test account '.$i,
                 ],
                 [
                     'company_id' => 1,
                     'currency_id' => 1,
                     'owner_id' => 1,
-                    'account_number' => '2566' . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
+                    'account_number' => '2566'.str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT),
                     'group_type_id' => 2,
                     'group_role_id' => 1,
                     'commission_template_id' => 1,

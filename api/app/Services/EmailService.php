@@ -11,7 +11,6 @@ use App\DTO\Email\SmtpConfigDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\EmailExceptionCodeEnum;
 use App\Exceptions\EmailException;
-use App\Exceptions\GraphqlException;
 use App\Jobs\SendMailJob;
 use App\Models\Account;
 use App\Models\ApplicantIndividual;
@@ -22,9 +21,8 @@ class EmailService
 {
     public function __construct(
         protected EmailRepositoryInterface $emailRepository,
-        protected VerifyService            $verifyService
-    )
-    {
+        protected VerifyService $verifyService
+    ) {
     }
 
     /**
@@ -35,8 +33,17 @@ class EmailService
         //TODO make it so that after Account::Create work Global Scope "AccountIndividualsCompaniesScope"
         $account = Account::find($account->id);
 
-        $account->load('group', 'company', 'paymentProvider', 'clientable', 'owner',
-            'accountState', 'paymentBank.country', 'paymentSystem', 'currencies', 'groupRole',
+        $account->load(
+            'group',
+            'company',
+            'paymentProvider',
+            'clientable',
+            'owner',
+            'accountState',
+            'paymentBank.country',
+            'paymentSystem',
+            'currencies',
+            'groupRole',
         );
 
         $smtp = $this->emailRepository->getSmtpByCompanyId($account);
@@ -63,7 +70,7 @@ class EmailService
             'email' => $member->email,
             'member_name' => $member->first_name,
             'logo_member_company' => $company->logo_link,
-            'member_email_confirm_url' => $company->member_verify_url . '/email/verify/' . $verifyToken->token,
+            'member_email_confirm_url' => $company->member_verify_url.'/email/verify/'.$verifyToken->token,
             'member_company_name' => $company->name,
         ];
 
@@ -84,7 +91,7 @@ class EmailService
             'email' => $member->email,
             'member_name' => $member->first_name,
             'logo_member_company' => $company->logo_link,
-            'member_email_confirm_url' => $company->member_verify_url . '/password/change/member/' . $verifyToken->token,
+            'member_email_confirm_url' => $company->member_verify_url.'/password/change/member/'.$verifyToken->token,
             'member_company_name' => $company->name,
         ];
 
@@ -105,7 +112,7 @@ class EmailService
             'email' => $applicant->email,
             'member_name' => $applicant->first_name,
             'logo_member_company' => $company->logo_link,
-            'member_email_confirm_url' => $company->member_verify_url . '/password/reset/' . $verifyToken->token,
+            'member_email_confirm_url' => $company->member_verify_url.'/password/reset/'.$verifyToken->token,
             'member_company_name' => $company->name,
         ];
 
@@ -128,7 +135,7 @@ class EmailService
             'logo_member_company' => $company->logo_link,
             'member_company_name' => $company->name,
             'customer_support_url' => $company->backoffice_support_url,
-            'email_confirm_url' => $company->member_verify_url . '/email/verify/' . $verifyToken->token,
+            'email_confirm_url' => $company->member_verify_url.'/email/verify/'.$verifyToken->token,
         ];
 
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $company, $emailTemplateName, $emailData);
@@ -182,8 +189,7 @@ class EmailService
             $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
 
             dispatch(new SendMailJob($config, $emailContentSubjectDto));
-        }
-        catch (\Throwable) {
+        } catch (\Throwable) {
             throw new EmailException('SMTP NOT FOUND', EmailExceptionCodeEnum::SMTP->toString());
         }
     }

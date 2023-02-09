@@ -22,6 +22,6 @@ class ApplicantCompanyBusinessType extends BaseModel
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new ApplicantFilterByMemberScope);
+        static::addGlobalScope(new ApplicantFilterByMemberScope());
     }
 }

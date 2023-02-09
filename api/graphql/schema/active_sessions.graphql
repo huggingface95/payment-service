@@ -4,7 +4,7 @@ type ActiveSession {
     "Название компании"
     company: String!
     "Группа"
-    member: String!
+    provider: String!
     "Домен"
     domain: String!
     "IP"
@@ -42,7 +42,7 @@ type ActiveSessionMutatorResponse{
 extend type Query @guard {
     """
     Получить список сессий
-    query: {column: COMPANY, value: "", column: MEMBER, value: "", column: GROUP, value: "", column: CREATED_AT, value: "2021-10-12"} фильтр по company, member, group, created_at
+    query: {column: COMPANY, value: "", column: PROVIDER, value: "", column: GROUP, value: "", column: CREATED_AT, value: "2021-10-12"} фильтр по company, member, group, created_at
     """
     activeSessions(
         page: Int = 1,
@@ -54,7 +54,7 @@ extend type Query @guard {
 
 input QueryActiveSessionsStatic @spread {
     company: String @eq
-    member: String @eq
+    provider: String @eq
     group: String @eq
     created_at: Date @like
 }

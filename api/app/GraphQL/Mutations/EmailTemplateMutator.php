@@ -34,6 +34,7 @@ class EmailTemplateMutator extends BaseMutator
             Company::query()->where('id', '<>', $args['company_id'])->get()
                 ->map(function ($company) use ($args) {
                     $args['company_id'] = $company->id;
+
                     return new EmailTemplate($args);
                 })
                 ->each(function (EmailTemplate $template) use ($args) {
@@ -64,7 +65,7 @@ class EmailTemplateMutator extends BaseMutator
     public function sendEmailWithData($root, array $args): array
     {
         try {
-            if (!$this->validEmail($args['email'])) {
+            if (! $this->validEmail($args['email'])) {
                 throw new GraphqlException('Email not correct', 'Bad Request', 400);
             }
             /** @var Members $member */
@@ -72,14 +73,14 @@ class EmailTemplateMutator extends BaseMutator
 
             /** @var EmailSmtp $smtp */
             $smtp = EmailSmtp::where('member_id', $member->id)->where('company_id', $args['company_id'])->first();
-            if (!$smtp) {
+            if (! $smtp) {
                 throw new GraphqlException('SMTP configuration for this company not found', 'Not found', '404');
             }
             $smtp->replay_to = $args['email'];
 
             if (array_key_exists('content', $args)) {
-                $args['content'] = isset($args['header']) ? $args['header'] . $args['content'] : $args['content'];
-                $args['content'] = isset($args['footer']) ? $args['content'] . $args['footer'] : $args['content'];
+                $args['content'] = isset($args['header']) ? $args['header'].$args['content'] : $args['content'];
+                $args['content'] = isset($args['footer']) ? $args['content'].$args['footer'] : $args['content'];
             }
 
             $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, $args['content'] ?? ' ', $args['subject']);

@@ -19,7 +19,7 @@ class LogApplicantIndividualSentEmailVerificationListener
     public function handle(ApplicantIndividualSentEmailVerificationEvent $event): void
     {
         $applicantIndividual = $event->applicantIndividual;
-        
+
         $this->kycTimelineService->logApplicantSentEmailVerification($applicantIndividual);
     }
 }

@@ -7,7 +7,9 @@ use App\Models\TransferOutgoing;
 class TransferDTO
 {
     public int $id;
+
     public string $currency;
+
     public float $amount;
 
     public static function transform(TransferOutgoing $transfer): self

@@ -25,7 +25,7 @@ class TicketTableSeeder extends Seeder
                 [
                     'member_id' => 1,
                     'client_id' => 1,
-                    'title' => 'Subject ' . $i,
+                    'title' => 'Subject '.$i,
                     'message' => $faker->text(),
                     'status' => $faker->numberBetween(1, 4),
                     'created_at' => $date = $faker->dateTime()->format('Y-m-d H:i:s'),

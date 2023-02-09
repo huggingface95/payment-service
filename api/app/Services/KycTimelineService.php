@@ -44,7 +44,7 @@ class KycTimelineService extends AbstractService
         if (empty($newValues)) {
             return;
         }
-        
+
         if (array_key_exists('applicant_status_id', $newValues)) {
             $this->logApplicantIndividualStatus($applicantIndividual, $member);
 
@@ -184,7 +184,7 @@ class KycTimelineService extends AbstractService
             'applicant_id' => $applicant->id,
         ]);
     }
-    
+
     public function logApplicantCompany(ApplicantCompany $applicantCompany, Members|null $member): void
     {
         $newValues = $this->getChanges($applicantCompany);
@@ -235,7 +235,7 @@ class KycTimelineService extends AbstractService
     public function logApplicantCompanyNote(ApplicantCompanyNotes $applicantCompanyNote, Members|null $member): void
     {
         $applicant = $applicantCompanyNote->applicantIndividualCompany;
-        
+
         $this->createRow([
             'creator_id' => $member->id ?? null,
             'action' => 'Comment added',
@@ -258,7 +258,7 @@ class KycTimelineService extends AbstractService
 
     public function getIp(): string
     {
-        foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key) {
+        foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'] as $key) {
             if (array_key_exists($key, $_SERVER) === true) {
                 foreach (explode(',', $_SERVER[$key]) as $ip) {
                     $ip = trim($ip);

@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use Illuminate\Support\Facades\DB;
@@ -10,29 +11,49 @@ class GroupsQueryTest extends TestCase
      *
      * @return void
      */
+    public function testQueryGroupListNoAuth(): void
+    {
+        $this->graphQL('
+            {
+                groupList {
+                    data {
+                        id
+                        name
+                    }
+                }
+            }
+        ')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
 
     public function testQueryGroupType(): void
     {
-        $this->login();
-
-        $group= DB::connection('pgsql_test')
+        $group = DB::connection('pgsql_test')
             ->table('group_types')
             ->first();
 
-        $this->graphQL('
-            query GetGroupType($id: ID) {
-                group_type(id: $id) {
-                    id
-                    name
-                }
-            }
-        ', [
-            'id' => strval($group->id),
-        ])->seeJson([
+        $this->postGraphQL(
+            [
+                'query' => '
+                query GetGroupType($id: ID) {
+                    group_type(id: $id) {
+                        id
+                        name
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $group->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'group_type' => [
-                    'id' => strval($group->id),
-                    'name' => strval($group->name),
+                    'id' => (string) $group->id,
+                    'name' => (string) $group->name,
                 ],
             ],
         ]);
@@ -40,31 +61,36 @@ class GroupsQueryTest extends TestCase
 
     public function testQueryGroupListById(): void
     {
-        $this->login();
-
         $group = DB::connection('pgsql_test')
             ->table('group_role')
             ->first();
 
-        $this->graphQL('
-            query GetGroupType($id: ID) {
-                groupList(query: { id: $id }) {
-                    data {
-                        id
-                        name
-                        description
+        $this->postGraphQL(
+            [
+                'query' => '
+                query GetGroupType($id: Mixed) {
+                    groupList(filter: { column: ID, value: $id }) {
+                        data {
+                            id
+                            name
+                            description
+                        }
                     }
-                }
-            }
-        ', [
-            'id' => strval($group->id),
-        ])->seeJson([
+                }',
+                'variables' => [
+                    'id' => (string) $group->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'groupList' => [
                     'data' => [[
-                        'id' => strval($group->id),
-                        'name' => strval($group->name),
-                        'description' => strval($group->description),
+                        'id' => (string) $group->id,
+                        'name' => (string) $group->name,
+                        'description' => (string) $group->description,
                     ]],
                 ],
             ],
@@ -73,85 +99,68 @@ class GroupsQueryTest extends TestCase
 
     public function testQueryGroupListByCompanyId(): void
     {
-        $this->login();
-
         $group = DB::connection('pgsql_test')
             ->table('group_role')
             ->first();
 
-        $this->graphQL('
-            query GetGroupByCompanyId($id: ID) {
-                groupList(query: { company_id: $id }) {
-                    data {
-                        id
-                        name
-                        description
+        $this->postGraphQL(
+            [
+                'query' => '
+                query GetGroupByCompanyId($id: Mixed) {
+                    groupList(filter: { column: COMPANY_ID, value: $id }) {
+                        data {
+                            id
+                            name
+                            description
+                        }
                     }
-                }
-            }
-        ', [
-            'id' => strval($group->id),
-        ])->seeJsonContains([
-           'id' => strval($group->id),
-           'name' => strval($group->name),
-           'description' => strval($group->description),
-        ]);
-    }
-
-    public function testQueryGroupListByPaymentProviderId(): void
-    {
-        $this->login();
-
-        $group = DB::connection('pgsql_test')
-            ->table('group_role')
-            ->first();
-
-        $this->graphQL('
-            query GetGroup($id: ID) {
-                groupList(query: { payment_provider_id: $id }) {
-                    data {
-                        id
-                        name
-                        description
-                    }
-                }
-            }
-        ', [
-            'id' => strval($group->id),
-        ])->seeJsonContains([
-            'id' => strval($group->id),
-            'name' => strval($group->name),
-            'description' => strval($group->description),
+                }',
+                'variables' => [
+                    'id' => (string) $group->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $group->id,
+            'name' => (string) $group->name,
+            'description' => (string) $group->description,
         ]);
     }
 
     public function testQueryGroupListByRoleId(): void
     {
-        $this->login();
-
         $group = DB::connection('pgsql_test')
             ->table('group_role')
             ->first();
 
-        $this->graphQL('
-            query GetGroup($id: ID) {
-                groupList(query: { role_id: $id }) {
-                    data {
-                        id
-                        name
-                        description
+        $this->postGraphQL(
+            [
+                'query' => '
+                query GetGroup($id: Mixed) {
+                    groupList(filter: { column: ROLE_ID, value: $id }) {
+                        data {
+                            id
+                            name
+                            description
+                        }
                     }
-                }
-            }
-        ', [
-            'id' => strval($group->role_id),
-        ])->seeJson([
+                }',
+                'variables' => [
+                    'id' => (string) $group->role_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'groupList' => [
                     'data' => [[
-                        'id' => strval($group->id),
-                        'name' => strval($group->name),
-                        'description' => strval($group->description),
+                        'id' => (string) $group->id,
+                        'name' => (string) $group->name,
+                        'description' => (string) $group->description,
                     ]],
                 ],
             ],
@@ -160,31 +169,36 @@ class GroupsQueryTest extends TestCase
 
     public function testQueryGroupListByName(): void
     {
-        $this->login();
-
         $group = DB::connection('pgsql_test')
             ->table('group_role')
             ->first();
 
-        $this->graphQL('
-            query GetGroup($name: String) {
-                groupList(query: { name: $name }) {
-                    data {
-                        id
-                        name
-                        description
+        $this->postGraphQL(
+            [
+                'query' => '
+                query GetGroup($name: Mixed) {
+                    groupList(filter: { column: NAME, operator: LIKE, value: $name }) {
+                        data {
+                            id
+                            name
+                            description
+                        }
                     }
-                }
-            }
-        ', [
-            'name' => strval($group->name),
-        ])->seeJson([
+                }',
+                'variables' => [
+                    'name' => (string) $group->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'groupList' => [
                     'data' => [[
-                        'id' => strval($group->id),
-                        'name' => strval($group->name),
-                        'description' => strval($group->description),
+                        'id' => (string) $group->id,
+                        'name' => (string) $group->name,
+                        'description' => (string) $group->description,
                     ]],
                 ],
             ],

@@ -11,8 +11,8 @@ class RequisiteSendEmailDTO
         $dto = new self();
 
         $storagePath = storage_path('pdf');
-		$imgLogoBase64 = base64_encode(file_get_contents($args['logo_path']));
-        $cssStyles = file_get_contents($storagePath . '/css/main.css');
+        $imgLogoBase64 = base64_encode(file_get_contents($args['logo_path']));
+        $cssStyles = file_get_contents($storagePath.'/css/main.css');
 
         $dto->content = '<!DOCTYPE html>
         <html lang="en">
@@ -29,28 +29,28 @@ class RequisiteSendEmailDTO
 				font-family: "roboto";
 				font-weight: 500;
 				font-style: normal;
-				src: url(' . storage_path('fonts/roboto-medium.ttf') . ') format("truetype");
+				src: url('.storage_path('fonts/roboto-medium.ttf').') format("truetype");
 			}
 			@font-face {
 				font-family: "roboto";
 				font-weight: 400;
 				font-style: normal;
-				src: url(' . storage_path('fonts/roboto-regular.ttf') . ') format("truetype");
+				src: url('.storage_path('fonts/roboto-regular.ttf').') format("truetype");
 			}
-			' . $cssStyles . '
+			'.$cssStyles.'
 			</style>
         </head>
 
         <body>
             <header class="p100">
                 <div class="container">
-                    <img src="data:image/jpeg;charset=utf-8;base64,' . $imgLogoBase64 . '" alt="" style="width: 230px">
+                    <img src="data:image/jpeg;charset=utf-8;base64,'.$imgLogoBase64.'" alt="" style="width: 230px">
                 </div>
             </header>
             <main>
                 <div class="title-page">
                     <div class="container">
-                        <h1>FOR ' . $args['currency'] . ' TRANSFER</h1>
+                        <h1>FOR '.$args['currency'].' TRANSFER</h1>
                     </div>
                 </div>
                 <div class="p100">
@@ -58,51 +58,51 @@ class RequisiteSendEmailDTO
                         <table class="table">
                             <tr>
                                 <th>Beneficiary</th>
-                                <td>' . $args['beneficiary'] . '</td>
+                                <td>'.$args['beneficiary'].'</td>
                             </tr>
                             <tr>
                                 <th>Address</th>
-                                <td>' . $args['address'] . '</td>
+                                <td>'.$args['address'].'</td>
                             </tr>
                             <tr>
                                 <th>Country</th>
-                                <td>' . $args['country'] . '</td>
+                                <td>'.$args['country'].'</td>
                             </tr>
                             <tr>
                                 <th>Bank Name</th>
-                                <td>' . $args['bank_name'] . '</td>
+                                <td>'.$args['bank_name'].'</td>
                             </tr>
                             <tr>
                                 <th>IBAN/Account #</th>
-                                <td>' . $args['iban'] . '</td>
+                                <td>'.$args['iban'].'</td>
                             </tr>
                             <tr>
                                 <th>Swift Code</th>
-                                <td>' . $args['swift_code'] . '</td>
+                                <td>'.$args['swift_code'].'</td>
                             </tr>
                             <tr>
                                 <th>Bank Address</th>
-                                <td>' . $args['bank_address'] . '</td>
+                                <td>'.$args['bank_address'].'</td>
                             </tr>
                             <tr>
                                 <th>Bank Country</th>
-                                <td>' . $args['bank_country'] . '</td>
+                                <td>'.$args['bank_country'].'</td>
                             </tr>
                             <tr>
                                 <th>Correspondent Bank Name</th>
-                                <td>' . $args['correspondent_bank_name'] . '</td>
+                                <td>'.$args['correspondent_bank_name'].'</td>
                             </tr>
                             <tr>
                                 <th>Correspondent Bank SWIFT code</th>
-                                <td>' . $args['correspondent_bank_swift_code'] . '</td>
+                                <td>'.$args['correspondent_bank_swift_code'].'</td>
                             </tr>
                             <tr>
                                 <th>Correspondent Bank Address</th>
-                                <td>' . $args['correspondent_bank_address'] . '</td>
+                                <td>'.$args['correspondent_bank_address'].'</td>
                             </tr>
                             <tr>
                                 <th>Correspondent Bank Account</th>
-                                <td>' . $args['correspondent_bank_account'] . '</td>
+                                <td>'.$args['correspondent_bank_account'].'</td>
                             </tr>
                         </table>
                     </div>

@@ -7,13 +7,13 @@ use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\MemberStatusEnum;
 use App\Models\Members;
+use App\Services\AuthService;
 use App\Services\EmailService;
 use App\Services\VerifyService;
 use App\Traits\ResetsPasswords;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Services\AuthService;
 
 class PasswordController extends Controller
 {
@@ -22,8 +22,7 @@ class PasswordController extends Controller
     public function __construct(
         protected EmailService $emailService,
         protected VerifyService $verifyService
-    )
-    {
+    ) {
         $this->broker = 'members';
     }
 
@@ -45,7 +44,7 @@ class PasswordController extends Controller
             ]);
         }
 
-        if (!Hash::check($request->current_password, $member->password_hash)) {
+        if (! Hash::check($request->current_password, $member->password_hash)) {
             return response()->json([
                 'success' => false,
                 'error' => 'The current password is wrong',
@@ -148,7 +147,7 @@ class PasswordController extends Controller
             ]);
         }
         $generate = new AuthService();
-        $newPassword = $generate->generateUniqueCode() . rand(1, 99);
+        $newPassword = $generate->generateUniqueCode().rand(1, 99);
 
         $data['password_hash'] = Hash::make($newPassword);
         $data['password_salt'] = $data['password_hash'];

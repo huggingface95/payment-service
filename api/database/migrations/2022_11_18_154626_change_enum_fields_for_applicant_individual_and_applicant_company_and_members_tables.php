@@ -6,8 +6,8 @@ use App\Models\ApplicantCompany;
 use App\Models\ApplicantDocument;
 use App\Models\ApplicantIndividual;
 use App\Models\ApplicantIndividualCompany;
-use App\Models\EmailNotificationClient;
 use App\Models\ClientIpAddress;
+use App\Models\EmailNotificationClient;
 use App\Models\GroupRoleUser;
 use App\Models\Members;
 use Illuminate\Database\Migrations\Migration;
@@ -15,9 +15,11 @@ use Illuminate\Support\Facades\DB;
 
 class ChangeEnumFieldsForApplicantIndividualAndApplicantCompanyAndMembersTables extends Migration
 {
-    const INDIVIDUAL = 'ApplicantIndividual';
-    const COMPANY = 'ApplicantCompany';
-    const MEMBER = 'Members';
+    public const INDIVIDUAL = 'ApplicantIndividual';
+
+    public const COMPANY = 'ApplicantCompany';
+
+    public const MEMBER = 'Members';
 
     /**
      * Run the migrations.
@@ -94,13 +96,13 @@ class ChangeEnumFieldsForApplicantIndividualAndApplicantCompanyAndMembersTables 
 
     private function changeEnum(string $table, string $column, array $types): void
     {
-        DB::statement("ALTER TABLE $table DROP CONSTRAINT " . $table . "_" . $column . "_check");
+        DB::statement("ALTER TABLE $table DROP CONSTRAINT ".$table.'_'.$column.'_check');
 
-        $result = join(', ', array_map(function ($value) {
+        $result = implode(', ', array_map(function ($value) {
             return sprintf("'%s'::character varying", $value);
         }, $types));
 
-        DB::statement("ALTER TABLE $table ADD CONSTRAINT " . $table . "_" . $column . "_check CHECK (" . $column . "::text = ANY (ARRAY[$result]::text[]))");
-        DB::statement("ALTER TABLE $table ALTER COLUMN " . $column . " SET DEFAULT '" . $types[0] . "'");
+        DB::statement("ALTER TABLE $table ADD CONSTRAINT ".$table.'_'.$column.'_check CHECK ('.$column."::text = ANY (ARRAY[$result]::text[]))");
+        DB::statement("ALTER TABLE $table ALTER COLUMN ".$column." SET DEFAULT '".$types[0]."'");
     }
 }

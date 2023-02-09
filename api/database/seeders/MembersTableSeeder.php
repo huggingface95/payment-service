@@ -32,7 +32,7 @@ class MembersTableSeeder extends Seeder
                 'email' => 'test@test.com',
                 'password_hash' => Hash::make('1234567Qa'),
                 'password_salt' => Hash::make('1234567Qa'),
-                'company_id' => 2,
+                'company_id' => 1,
                 'country_id' => 1,
                 'language_id' => 2,
                 'two_factor_auth_setting_id' => 1,
@@ -65,7 +65,7 @@ class MembersTableSeeder extends Seeder
         foreach ($members as $id => $member) {
             Members::firstOrCreate([
                 'id' => $id,
-                'first_name' => 'Member' . $id,
+                'first_name' => 'Member'.$id,
             ], $member);
         }
     }

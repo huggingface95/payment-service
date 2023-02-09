@@ -11,11 +11,8 @@ class ApplicantIndividualModulesMutationTest extends TestCase
      *
      * @return void
      */
-
-    public function testCreateApplicantIndividualModule(): void
+    public function testCreateApplicantIndividualModuleNoAuth(): void
     {
-        $this->loginAsSuperAdmin();
-
         $this->graphQL('
             mutation CreateModule(
                 $name: String!
@@ -30,45 +27,49 @@ class ApplicantIndividualModulesMutationTest extends TestCase
             }
         ', [
             'name' => 'Module_'.\Illuminate\Support\Str::random(7),
-        ]);
-
-        $id = json_decode($this->response->getContent(), true);
-
-        $this->seeJson([
-            'data' => [
-                'createModule' => [
-                    'id' => $id['data']['createModule']['id'],
-                ],
-            ],
+        ])->seeJson([
+            'message' => 'Unauthenticated.',
         ]);
     }
 
     public function testAttachApplicantIndividualModule(): void
     {
-        $this->login();
+        $applicant = DB::connection('pgsql_test')
+            ->table('applicant_individual')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderBy('id', 'DESC')->get();
-        $module = DB::connection('pgsql_test')->table('modules')->orderBy('id', 'DESC')->get();
+        $module = DB::connection('pgsql_test')
+            ->table('modules')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $this->graphQL('
-            mutation CreateApplicantIndividualModule(
-                $applicant_individual_id: ID!
-                $module_id: [ID]
-            )
-            {
-                createApplicantIndividualModule (
-                    applicant_individual_id: $applicant_individual_id
-                    module_id: $module_id
-                    is_active: true
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation CreateApplicantIndividualModule(
+                    $applicant_individual_id: ID!
+                    $module_id: [ID]
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'applicant_individual_id' => strval($applicant[0]->id),
-            'module_id' => strval($module[0]->id),
-        ]);
+                    createApplicantIndividualModule (
+                        applicant_individual_id: $applicant_individual_id
+                        module_id: $module_id
+                        is_active: true
+                    )
+                    {
+                        id
+                    }
+                }',
+                'variables' => [
+                    'applicant_individual_id' => $applicant[0]->id,
+                    'module_id' => $module[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -83,29 +84,41 @@ class ApplicantIndividualModulesMutationTest extends TestCase
 
     public function testDetachApplicantIndividualModule(): void
     {
-        $this->login();
+        $applicant = DB::connection('pgsql_test')
+            ->table('applicant_individual')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $applicant = DB::connection('pgsql_test')->table('applicant_individual')->orderBy('id', 'DESC')->get();
-        $module = DB::connection('pgsql_test')->table('modules')->orderBy('id', 'DESC')->get();
+        $module = DB::connection('pgsql_test')
+            ->table('modules')
+            ->orderBy('id', 'DESC')
+            ->get();
 
-        $this->graphQL('
-            mutation DeleteApplicantIndividualModule(
-                $applicant_individual_id: ID!
-                $module_id: [ID]
-            )
-            {
-                deleteApplicantIndividualModule (
-                    applicant_individual_id: $applicant_individual_id
-                    module_id: $module_id
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation DeleteApplicantIndividualModule(
+                    $applicant_individual_id: ID!
+                    $module_id: [ID]
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'applicant_individual_id' => strval($applicant[0]->id),
-            'module_id' => strval($module[0]->id),
-        ]);
+                    deleteApplicantIndividualModule (
+                        applicant_individual_id: $applicant_individual_id
+                        module_id: $module_id
+                    )
+                    {
+                        id
+                    }
+                }',
+                'variables' => [
+                    'applicant_individual_id' => (string) $applicant[0]->id,
+                    'module_id' => (string) $module[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         $id = json_decode($this->response->getContent(), true);
 

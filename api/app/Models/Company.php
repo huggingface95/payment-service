@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ModuleEnum;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -12,12 +13,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class Company
  *
  * @property int id
- *
  * @property string backoffice_support_url
  */
 class Company extends BaseModel
 {
     use SoftDeletes;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -74,9 +75,19 @@ class Company extends BaseModel
 
     public const DEFAULT_LOGO_PATH = '/img/logo.png';
 
+    protected static function booting()
+    {
+        self::created(function (Company $model) {
+            $model->modules()->saveMany([new CompanyModule([
+                'module_id' => ModuleEnum::KYC->value
+            ])]);
+        });
+        parent::booting();
+    }
+
     public function getLogoLinkAttribute(): string
     {
-        $defaultLogoPath = storage_path('app') . self::DEFAULT_LOGO_PATH;
+        $defaultLogoPath = storage_path('app').self::DEFAULT_LOGO_PATH;
 
         return $this->logo->link ?? $defaultLogoPath;
     }

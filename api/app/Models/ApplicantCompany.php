@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantCompanyUpdatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -89,7 +90,17 @@ class ApplicantCompany extends BaseModel
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new ApplicantFilterByMemberScope);
+        static::addGlobalScope(new ApplicantFilterByMemberScope());
+    }
+
+    protected static function booting()
+    {
+        self::created(function (ApplicantCompany $model) {
+            $model->modules()->saveMany([new ApplicantCompanyModules([
+                'module_id' => ModuleEnum::KYC->value
+            ])]);
+        });
+        parent::booting();
     }
 
     protected $appends = ['fullname'];

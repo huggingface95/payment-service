@@ -2,16 +2,19 @@
 
 namespace Tests;
 
+use App\Repositories\JWTRepository;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
 use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
 use Nuwave\Lighthouse\Testing\MakesGraphQLRequestsLumen;
 
 abstract class TestCase extends BaseTestCase
 {
-    use MakesGraphQLRequestsLumen,
-        ClearsSchemaCache;
+    use MakesGraphQLRequestsLumen;
+    use ClearsSchemaCache;
+
+    public JWTRepository $repository;
 
     protected static $setUpHasRunOnce = false;
 
@@ -23,10 +26,12 @@ abstract class TestCase extends BaseTestCase
                 'migrate:droptables'
             );
             Artisan::call(
-                'migrate', ['--database' => 'pgsql_test']
+                'migrate',
+                ['--database' => 'pgsql_test']
             );
             Artisan::call(
-                'db:seed', ['--database' => 'pgsql_test']
+                'db:seed',
+                ['--database' => 'pgsql_test']
             );
 
             static::$setUpHasRunOnce = true;
@@ -40,7 +45,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function createApplication()
     {
-        return require __DIR__ . '/../bootstrap/app.php';
+        return require __DIR__.'/../bootstrap/app.php';
     }
 
     /**
@@ -55,7 +60,9 @@ abstract class TestCase extends BaseTestCase
             $data = ['email' => 'test@test.com', 'password' => '1234567Qa'];
         }
 
-        return auth()->attempt($data);
+        $token = Http::accept('application/json')->post('http://go-auth:2491/auth/login', $data);
+
+        return $token->json('access_token');
     }
 
     /**

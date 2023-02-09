@@ -20,7 +20,7 @@ class CompanyTableSeeder extends Seeder
         for ($i = 1; $i <= 10; $i++) {
             Company::firstOrCreate(
                 [
-                    'name' => 'Company ' . $i,
+                    'name' => 'Company '.$i,
                 ],
                 [
                     'email' => $faker->email(),
@@ -30,7 +30,7 @@ class CompanyTableSeeder extends Seeder
                     'city' => $faker->city(),
                     'country_id' => $i,
                     'contact_name' => $faker->name,
-                    'url' => 'https://' . $faker->domainName(),
+                    'url' => 'https://'.$faker->domainName(),
                 ]
             );
         }

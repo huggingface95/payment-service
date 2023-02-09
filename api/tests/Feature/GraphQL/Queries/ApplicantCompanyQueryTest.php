@@ -11,28 +11,49 @@ class ApplicantCompanyQueryTest extends TestCase
      *
      * @return void
      */
+    public function testApplicantCompanyNoAuth(): void
+    {
+        $this->graphQL('
+             {
+                companies
+                 {
+                    data {
+                        id
+                        name
+                        email
+                        url
+                    }
+                }
+             }')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
 
     public function testQueryApplicantCompany(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->get();
 
-        $this->graphQL('
-            query ApplicantCompany($id:ID!){
-                applicantCompany(id: $id) {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($applicant[0]->id),
-        ])->seeJson([
+        $this->postGraphQL(
+            [
+                'query' => 'query ApplicantCompany($id:ID!){
+                    applicantCompany(id: $id) {
+                        id
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'applicantCompany' => [
-                    'id' => strval($applicant[0]->id),
+                    'id' => (string) $applicant[0]->id,
                 ],
             ],
         ]);
@@ -44,320 +65,363 @@ class ApplicantCompanyQueryTest extends TestCase
 
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->get();
 
-        $this->graphQL('
-        query {
-            applicantCompanies(orderBy: { column: ID, order: DESC }) {
-                data {
-                    id
-                }
-                }
-        }')->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant[0]->id),
+                'query' => '
+                query {
+                    applicantCompanies(orderBy: { column: ID, order: ASC }) {
+                        data {
+                            id
+                        }
+                        }
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant[0]->id,
             ],
         ]);
     }
 
     public function testQueryApplicantCompanyWhere(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
-            ->orderBy('id', 'ASC')
-            ->get();
+            ->first();
 
-        $this->graphQL('
-        query {
-            applicantCompanies(where: { column: ID, value: 1}) {
-                data {
-                    id
-                }
-                }
-        }')->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant[0]->id),
+                'query' => 'query applicantCompanies ($id: Mixed) {
+                    applicantCompanies(where: { column: ID, value: $id}) {
+                        data {
+                            id
+                        }
+                        }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant->id,
             ],
         ]);
     }
 
     public function testQueryGetMatchedUsers(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
             ->orderBy('id', 'ASC')
             ->get();
 
-        $this->graphQL('
-            query GetMatchedUsers($applicant_company_id:ID!){
-                getMatchedUsers(applicant_company_id: $applicant_company_id) {
-                    applicant_id
-                }
-            }
-        ', [
-            'applicant_company_id' => strval($applicant[0]->id),
-        ])->seeJsonContains([
+        $this->postGraphQL(
             [
-                'applicant_id' => strval($applicant[0]->id),
+                'query' => 'query GetMatchedUsers($applicant_company_id:ID!){
+                    getMatchedUsers(applicant_company_id: $applicant_company_id) {
+                        applicant_id
+                    }
+                }',
+                'variables' => [
+                    'applicant_company_id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'applicant_id' => (string) $applicant[0]->id,
             ],
         ]);
     }
 
     public function testQueryApplicantCompanyFilterById(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
             ->first();
 
-        $this->graphQL('
-            query TestApplicantCompanyFilters($id: Mixed) {
-                applicantCompanies(filter: { column: ID, value: $id }) {
-                    data {
-                        id
-                        name
-                        email
-                        url
-                    }
-                }
-            }
-        ', [
-            'id' => strval($applicant->id),
-        ])->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant->id),
-                'name' => strval($applicant->name),
-                'email' => strval($applicant->email),
-                'url' => strval($applicant->url),
+                'query' => 'query TestApplicantCompanyFilters($id: Mixed) {
+                    applicantCompanies(filter: { column: ID, value: $id }) {
+                        data {
+                            id
+                            name
+                            email
+                            url
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant->id,
+                'name' => (string) $applicant->name,
+                'email' => (string) $applicant->email,
+                'url' => (string) $applicant->url,
             ],
         ]);
     }
 
     public function testQueryApplicantCompanyFilterByCompanyId(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
             ->first();
 
-        $this->graphQL('
-            query TestApplicantCompanyFilters($company_id: Mixed) {
-                applicantCompanies(filter: { column: COMPANY_ID, value: $company_id }) {
-                    data {
-                        id
-                        name
-                        email
-                        url
-                    }
-                }
-            }
-        ', [
-            'company_id' => strval($applicant->company_id),
-        ])->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant->id),
-                'name' => strval($applicant->name),
-                'email' => strval($applicant->email),
-                'url' => strval($applicant->url),
+                'query' => 'query TestApplicantCompanyFilters($company_id: Mixed) {
+                    applicantCompanies(filter: { column: COMPANY_ID, value: $company_id }) {
+                        data {
+                            id
+                            name
+                            email
+                            url
+                        }
+                    }
+                }',
+                'variables' => [
+                    'company_id' => (string) $applicant->company_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant->id,
+                'name' => (string) $applicant->name,
+                'email' => (string) $applicant->email,
+                'url' => (string) $applicant->url,
             ],
         ]);
     }
 
     public function testQueryApplicantCompanyFilterByAccountManagerId(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
             ->first();
 
-        $this->graphQL('
-            query TestApplicantCompanyFilters($id: Mixed) {
-                applicantCompanies(
-                    filter: { column: ACCOUNT_MANAGER_MEMBER_ID, value: $id }
-                ) {
-                    data {
-                        id
-                        name
-                        email
-                        url
-                    }
-                }
-            }
-        ', [
-            'id' => strval($applicant->account_manager_member_id),
-        ])->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant->id),
-                'name' => strval($applicant->name),
-                'email' => strval($applicant->email),
-                'url' => strval($applicant->url),
+                'query' => 'query TestApplicantCompanyFilters($id: Mixed) {
+                    applicantCompanies(filter: { column: ACCOUNT_MANAGER_MEMBER_ID, value: $id }) {
+                        data {
+                            id
+                            name
+                            email
+                            url
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant->account_manager_member_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant->id,
+                'name' => (string) $applicant->name,
+                'email' => (string) $applicant->email,
+                'url' => (string) $applicant->url,
             ],
         ]);
     }
 
     public function testQueryApplicantCompanyFilterByStateReasonId(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
             ->first();
 
-        $this->graphQL('
-            query TestApplicantCompanyFilters($id: Mixed) {
-                applicantCompanies(
-                    filter: { column: HAS_STATE_REASON_MIXED_ID_OR_NAME, value: $id }
-                ) {
-                    data {
-                        id
-                        name
-                        email
-                        url
-                    }
-                }
-            }
-        ', [
-            'id' => strval($applicant->applicant_state_reason_id),
-        ])->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant->id),
-                'name' => strval($applicant->name),
-                'email' => strval($applicant->email),
-                'url' => strval($applicant->url),
+                'query' => 'query TestApplicantCompanyFilters($id: Mixed) {
+                    applicantCompanies(filter: { column: HAS_STATE_REASON_MIXED_ID_OR_NAME, value: $id }) {
+                        data {
+                            id
+                            name
+                            email
+                            url
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant->applicant_state_reason_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant->id,
+                'name' => (string) $applicant->name,
+                'email' => (string) $applicant->email,
+                'url' => (string) $applicant->url,
             ],
         ]);
     }
 
     public function testQueryApplicantCompanyFilterByOwnerId(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
             ->first();
 
-        $this->graphQL('
-            query TestApplicantCompanyFilters($id: Mixed) {
-                applicantCompanies(
-                    filter: { column: HAS_OWNER_MIXED_ID_OR_FULLNAME, value: $id }
-                ) {
-                    data {
-                        id
-                        name
-                        email
-                        url
-                    }
-                }
-            }
-        ', [
-            'id' => strval($applicant->owner_id),
-        ])->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant->id),
-                'name' => strval($applicant->name),
-                'email' => strval($applicant->email),
-                'url' => strval($applicant->url),
+                'query' => 'query TestApplicantCompanyFilters($id: Mixed) {
+                    applicantCompanies(filter: { column: HAS_OWNER_MIXED_ID_OR_FULLNAME, value: $id }) {
+                        data {
+                            id
+                            name
+                            email
+                            url
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant->owner_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant->id,
+                'name' => (string) $applicant->name,
+                'email' => (string) $applicant->email,
+                'url' => (string) $applicant->url,
             ],
         ]);
     }
 
     public function testQueryApplicantCompanyFilterByName(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
             ->first();
 
-        $this->graphQL('
-            query TestApplicantCompanyFilters($name: Mixed) {
-                applicantCompanies(filter: { column: NAME, operator: ILIKE, value: $name }) {
-                    data {
-                        id
-                        name
-                        email
-                        url
-                    }
-                }
-            }
-        ', [
-            'name' => strval($applicant->name),
-        ])->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant->id),
-                'name' => strval($applicant->name),
-                'email' => strval($applicant->email),
-                'url' => strval($applicant->url),
+                'query' => 'query TestApplicantCompanyFilters($name: Mixed) {
+                    applicantCompanies(filter: { column: NAME, operator: ILIKE, value: $name }) {
+                        data {
+                            id
+                            name
+                            email
+                            url
+                        }
+                    }
+                }',
+                'variables' => [
+                    'name' => (string) $applicant->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant->id,
+                'name' => (string) $applicant->name,
+                'email' => (string) $applicant->email,
+                'url' => (string) $applicant->url,
             ],
         ]);
     }
 
     public function testQueryApplicantCompanyFilterByUrl(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
             ->first();
 
-        $this->graphQL('
-            query TestApplicantCompanyFilters($url: Mixed) {
-                applicantCompanies(filter: { column: URL, operator: ILIKE, value: $url }) {
-                    data {
-                        id
-                        name
-                        email
-                        url
-                    }
-                }
-            }
-        ', [
-            'url' => strval($applicant->url),
-        ])->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant->id),
-                'name' => strval($applicant->name),
-                'email' => strval($applicant->email),
-                'url' => strval($applicant->url),
+                'query' => 'query TestApplicantCompanyFilters($url: Mixed) {
+                    applicantCompanies(filter: { column: URL, operator: ILIKE, value: $url }) {
+                        data {
+                            id
+                            name
+                            email
+                            url
+                        }
+                    }
+                }',
+                'variables' => [
+                    'url' => (string) $applicant->url,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant->id,
+                'name' => (string) $applicant->name,
+                'email' => (string) $applicant->email,
+                'url' => (string) $applicant->url,
             ],
         ]);
     }
 
     public function testQueryApplicantCompanyFilterByEmail(): void
     {
-        $this->login();
-
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
             ->first();
 
-        $this->graphQL('
-            query TestApplicantCompanyFilters($email: Mixed) {
-                applicantCompanies(filter: { column: EMAIL, operator: ILIKE, value: $email }) {
-                    data {
-                        id
-                        name
-                        email
-                        url
-                    }
-                }
-            }
-        ', [
-            'email' => strval($applicant->email),
-        ])->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($applicant->id),
-                'name' => strval($applicant->name),
-                'email' => strval($applicant->email),
-                'url' => strval($applicant->url),
+                'query' => 'query TestApplicantCompanyFilters($email: Mixed) {
+                    applicantCompanies(filter: { column: EMAIL, operator: ILIKE, value: $email }) {
+                        data {
+                            id
+                            name
+                            email
+                            url
+                        }
+                    }
+                }',
+                'variables' => [
+                    'email' => (string) $applicant->email,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $applicant->id,
+                'name' => (string) $applicant->name,
+                'email' => (string) $applicant->email,
+                'url' => (string) $applicant->url,
             ],
         ]);
     }

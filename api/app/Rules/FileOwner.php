@@ -21,12 +21,12 @@ class FileOwner implements ImplicitRule
      */
     public function passes($attribute, $value)
     {
-        if (!empty($value)) {
+        if (! empty($value)) {
             $file = Files::where('id', $value)
                 ->where('entity_type', $this->entity_type)
                 ->first();
 
-            if (!$file) {
+            if (! $file) {
                 return false;
             }
         }
@@ -41,6 +41,6 @@ class FileOwner implements ImplicitRule
      */
     public function message()
     {
-        return 'The photo is not associated with the ' . Str::ucfirst($this->entity_type) . '.';
+        return 'The photo is not associated with the '.Str::ucfirst($this->entity_type).'.';
     }
 }

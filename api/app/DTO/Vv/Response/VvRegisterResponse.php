@@ -7,6 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 class VvRegisterResponse
 {
     public int $status;
+
     public string $token;
 
     public static function transform(ResponseInterface $response): self

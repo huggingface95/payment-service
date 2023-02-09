@@ -7,19 +7,33 @@ use Illuminate\Support\Str;
 class ActiveSessionCloneDTO
 {
     public string $id;
+
     public string $provider;
+
     public string $email;
+
     public string $company;
+
     public string $ip;
+
     public string $platform;
+
     public string $browser;
+
     public string $browser_version;
+
     public string $device_type;
+
     public string $model;
+
     public string $country;
+
     public string $city;
+
     public string $active;
+
     public string $trusted;
+
     public string $cookie;
 
     public static function transform(array $data, bool $trusted): self

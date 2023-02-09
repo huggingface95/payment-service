@@ -13,7 +13,7 @@ class ChangeTransferOutgoingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('transfer_outgoings', function(Blueprint $table) {
+        Schema::table('transfer_outgoings', function (Blueprint $table) {
             $table->unsignedBigInteger('group_id');
             $table->unsignedBigInteger('group_type_id');
             $table->unsignedBigInteger('project_id');
@@ -39,7 +39,7 @@ class ChangeTransferOutgoingsTable extends Migration
      */
     public function down()
     {
-        Schema::table('transfer_outgoings', function(Blueprint $table) {
+        Schema::table('transfer_outgoings', function (Blueprint $table) {
             $table->dropColumn('group_id');
             $table->dropColumn('group_type_id');
             $table->dropColumn('project_id');

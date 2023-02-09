@@ -14,7 +14,6 @@ class FileTableSeeder extends Seeder
      */
     public function run()
     {
-
         $files = [
             [
                 'file_name' => 'Test-file-3UzBpOomOz8WI6np5vlc8r27152sNQWPKiPsoEgE.png',

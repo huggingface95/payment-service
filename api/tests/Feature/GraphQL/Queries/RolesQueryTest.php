@@ -12,32 +12,52 @@ class RolesQueryTest extends TestCase
      *
      * @return void
      */
+    public function testQueryRolesNoAuth(): void
+    {
+        $this->graphQL('
+            {
+                roles {
+                    data {
+                        id
+                        name
+                        description
+                    }
+                }
+            }
+        ')->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
 
     public function testQueryRolesById(): void
     {
-        $this->login();
-
         $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'DESC')
             ->where('id', '!=', Role::SUPER_ADMIN_ID)
-            ->take(1)
             ->get();
 
-        $this->graphQL('
-            query Role($id: ID!) {
-                role(id: $id) {
-                    id
-                    name
-                }
-            }
-        ', [
-            'id' => strval($role[0]->id),
-        ])->seeJson([
+        $this->postGraphQL(
+            [
+                'query' => '
+                query Role($id: ID!) {
+                    role(id: $id) {
+                        id
+                        name
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $role[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'role' => [
-                    'id' => strval($role[0]->id),
-                    'name' => strval($role[0]->name),
+                    'id' => (string) $role[0]->id,
+                    'name' => (string) $role[0]->name,
                 ],
             ],
         ]);
@@ -45,89 +65,101 @@ class RolesQueryTest extends TestCase
 
     public function testQueryRolesByGroupTypes(): void
     {
-        $this->login();
-
         $roles = DB::connection('pgsql_test')
             ->table('roles')
             ->where('group_type_id', 1)
             ->where('id', '!=', Role::SUPER_ADMIN_ID)
             ->get();
 
-        foreach($roles as $role) {
+        foreach ($roles as $role) {
             $data[] = [
-                'id' => strval($role->id),
-                'name' => strval($role->name),
+                'id' => (string) $role->id,
+                'name' => (string) $role->name,
             ];
         }
 
-        $this->graphQL('
-            query {
-                roles(filter: { column: HAS_GROUP_TYPE_MIXED_ID_OR_NAME, value: 1 }) {
-                    data {
-                        id
-                        name
+        $this->postGraphQL(
+            [
+                'query' => '
+                query {
+                    roles(filter: { column: HAS_GROUP_TYPE_MIXED_ID_OR_NAME, value: 1 }) {
+                        data {
+                            id
+                            name
+                        }
                     }
-                }
-            }
-        ')->seeJson([
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'roles' => [
                     'data' => $data,
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 
     public function testQueryByCompanyId(): void
     {
-        $this->login();
-
         $role = DB::connection('pgsql_test')
             ->table('roles')
             ->first();
 
-        $this->graphQL('
-            query {
-                roles(filter: { column: COMPANY_ID, value: 1 }) {
-                    data {
-                        id
-                        name
+        $this->postGraphQL(
+            [
+                'query' => '
+                query {
+                    roles(filter: { column: COMPANY_ID, value: 1 }) {
+                        data {
+                            id
+                            name
+                        }
                     }
-                }
-            }
-        ')->seeJsonContains([
-            'id' => strval($role->id),
-            'name' => strval($role->name),
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $role->id,
+            'name' => (string) $role->name,
         ]);
     }
 
     public function testQueryByRoleName(): void
     {
-        $this->login();
-
         $role = DB::connection('pgsql_test')
             ->table('roles')
             ->orderBy('id', 'ASC')
-            ->take(1)
             ->get();
 
-        $this->graphQL('
-            query Roles($name: Mixed) {
-                roles(filter: { column: NAME, operator: ILIKE, value: $name }) {
-                    data {
-                        id
-                        name
+        $this->postGraphQL(
+            [
+                'query' => '
+                query Roles($name: Mixed) {
+                    roles(filter: { column: NAME, operator: ILIKE, value: $name }) {
+                        data {
+                            id
+                            name
+                        }
                     }
-                }
-            }
-        ', [
-            'name' => (string) $role[0]->name,
-        ])->seeJson([
+                }',
+                'variables' => [
+                    'name' => (string) $role[0]->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJson([
             'data' => [
                 'roles' => [
                     'data' => [[
-                        'id' => strval($role[0]->id),
-                        'name' => strval($role[0]->name),
+                        'id' => (string) $role[0]->id,
+                        'name' => (string) $role[0]->name,
                     ]],
                 ],
             ],
@@ -136,26 +168,31 @@ class RolesQueryTest extends TestCase
 
     public function testQueryRolesWhereFilter(): void
     {
-        $this->login();
-
         $role = DB::connection('pgsql_test')
             ->table('roles')
             ->first();
 
-        $this->graphQL('
-            query Roles($id:Mixed){
-                roles(where:{column:GROUP_TYPE_ID, value: $id}) {
-                    data {
-                        id
-                        name
+        $this->postGraphQL(
+            [
+                'query' => '
+                query Roles($id:Mixed){
+                    roles(where:{column:GROUP_TYPE_ID, value: $id}) {
+                        data {
+                            id
+                            name
+                        }
                     }
-                }
-            }
-            ', [
-                'id' => $role->group_type_id,
-        ])->seeJsonContains([
-            'id' => strval($role->id),
-            'name' => strval($role->name),
+                }',
+                'variables' => [
+                    'id' => $role->group_type_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $role->id,
+            'name' => (string) $role->name,
         ]);
     }
 }

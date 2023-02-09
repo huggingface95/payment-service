@@ -12,20 +12,19 @@ class DepartmentsMutationTest extends TestCase
      *
      * @return void
      */
-
-    public function testCreateDepartment(): void
+    public function testCreateDepartmentNoAuth(): void
     {
-        $this->login();
+        $seq = DB::table('departments')
+                ->max('id') + 1;
 
-        $seq = DB::table('departments')->max('id') + 1;
-        DB::select('ALTER SEQUENCE departments_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE departments_id_seq RESTART WITH '.$seq);
 
         $this->graphQL('
-            mutation CreateDepartment($name: String!, $company_id: ID!, $dep_pos:[String]) {
+            mutation CreateDepartment($name: String!, $company_id: ID!, $dep_pos:[ID]) {
                 createDepartment(
                     name: $name
                     company_id: $company_id
-                    department_positions_name: $dep_pos
+                    department_positions_id: $dep_pos
                 ) {
                     id
                     name
@@ -38,11 +37,50 @@ class DepartmentsMutationTest extends TestCase
             'name' => 'Test Department',
             'company_id' => 1,
             'dep_pos' => [
-                'Director',
-                'Manager',
-                'Programmer',
+                1,
+                2,
             ],
+        ])->seeJson([
+            'message' => 'Unauthenticated.',
         ]);
+    }
+
+    public function testCreateDepartment(): void
+    {
+        $seq = DB::table('departments')
+                ->max('id') + 1;
+
+        DB::select('ALTER SEQUENCE departments_id_seq RESTART WITH '.$seq);
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation CreateDepartment($name: String!, $company_id: ID!, $dep_pos:[ID]) {
+                    createDepartment(
+                        name: $name
+                        company_id: $company_id
+                        department_positions_id: $dep_pos
+                    ) {
+                        id
+                        name
+                        positions {
+                            name
+                        }
+                    }
+                }',
+                'variables' => [
+                    'name' => 'Test Department',
+                    'company_id' => 1,
+                    'dep_pos' => [
+                        1,
+                        2,
+                    ],
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
 
         $id = json_decode($this->response->getContent(), true);
 
@@ -64,25 +102,33 @@ class DepartmentsMutationTest extends TestCase
 
     public function testCreateDepartmentPosition(): void
     {
-        $this->login();
+        $seq = DB::table('department_position')
+                ->max('id') + 1;
 
-        $seq = DB::table('department_position')->max('id') + 1;
-        DB::select('ALTER SEQUENCE department_position_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE department_position_id_seq RESTART WITH '.$seq);
 
-        $this->graphQL('
-            mutation CreateDepartmentPosition($name: String!, $company_id: ID!) {
-                createDepartmentPosition(
-                    name: $name
-                    company_id: $company_id
-                ) {
-                    id
-                    name
-                }
-            }
-        ', [
-            'name' => 'Test Department Position',
-            'company_id' => 1,
-        ]);
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation CreateDepartmentPosition($name: String!, $company_id: ID!) {
+                    createDepartmentPosition(
+                        name: $name
+                        company_id: $company_id
+                    ) {
+                        id
+                        name
+                    }
+                }',
+                'variables' => [
+                    'name' => 'Test Department Position',
+                    'company_id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
+
         $id = json_decode($this->response->getContent(), true);
 
         $this->seeJson([
@@ -97,24 +143,30 @@ class DepartmentsMutationTest extends TestCase
 
     public function testUpdateDepartment(): void
     {
-        $this->login();
-
         $department = DB::connection('pgsql_test')
             ->table('departments')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            mutation UpdateDepartment($id: ID!, $name: String) {
-                updateDepartment(id: $id, name: $name) {
-                    id
-                    name
-                }
-            }
-        ', [
-            'id' => strval($department[0]->id),
-            'name' => 'Updated department',
-        ]);
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation UpdateDepartment($id: ID!, $name: String) {
+                    updateDepartment(id: $id, name: $name) {
+                        id
+                        name
+                    }
+                }',
+                'variables' => [
+                    'id' => strval($department[0]->id),
+                    'name' => 'Updated department',
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
+
         $id = json_decode($this->response->getContent(), true);
 
         $this->seeJson([
@@ -129,29 +181,36 @@ class DepartmentsMutationTest extends TestCase
 
     public function testDeleteDepartment(): void
     {
-        $this->login();
-
         $department = DB::connection('pgsql_test')
             ->table('departments')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            mutation DeleteDepartment(
-                $id: ID!
-            )
-            {
-                deleteDepartment (
-                    id: $id
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation DeleteDepartment(
+                    $id: ID!
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($department[0]->id),
-        ]);
+                    deleteDepartment (
+                        id: $id
+                    )
+                    {
+                        id
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $department[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'deleteDepartment' => [
@@ -163,29 +222,36 @@ class DepartmentsMutationTest extends TestCase
 
     public function testDeleteDepartmentPosition(): void
     {
-        $this->login();
-
         $departmentPosition = DB::connection('pgsql_test')
             ->table('department_position')
             ->orderBy('id', 'DESC')
             ->get();
 
-        $this->graphQL('
-            mutation DeleteDepartmentPosition(
-                $id: ID!
-            )
-            {
-                deleteDepartmentPosition (
-                    id: $id
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation DeleteDepartmentPosition(
+                    $id: ID!
                 )
                 {
-                    id
-                }
-            }
-        ', [
-            'id' => strval($departmentPosition[0]->id),
-        ]);
+                    deleteDepartmentPosition (
+                        id: $id
+                    )
+                    {
+                        id
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $departmentPosition[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
+
         $id = json_decode($this->response->getContent(), true);
+
         $this->seeJson([
             'data' => [
                 'deleteDepartmentPosition' => [

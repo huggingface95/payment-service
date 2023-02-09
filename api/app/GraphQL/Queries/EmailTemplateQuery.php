@@ -4,7 +4,6 @@ namespace App\GraphQL\Queries;
 
 use App\Models\EmailTemplate;
 use GraphQL\Type\Definition\ResolveInfo;
-use Illuminate\Database\Eloquent\Builder;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class EmailTemplateQuery
@@ -17,7 +16,7 @@ class EmailTemplateQuery
     {
         $templates = EmailTemplate::all();
         foreach ($templates as $key => $template) {
-            if ($template->type == EmailTemplate::CLIENT && $template->service_type == EmailTemplate::ADMIN ) {
+            if ($template->type == EmailTemplate::CLIENT && $template->service_type == EmailTemplate::ADMIN) {
                 unset($templates[$key]);
             }
         }

@@ -11,7 +11,8 @@ use Staudenmeir\EloquentHasManyDeep\HasTableAlias;
 
 class PaymentSystem extends BaseModel
 {
-    use HasRelationships, HasTableAlias;
+    use HasRelationships;
+    use HasTableAlias;
 
     public $timestamps = false;
 
@@ -53,7 +54,7 @@ class PaymentSystem extends BaseModel
     {
         return $this->hasManyDeep(
             Company::class,
-            [PaymentSystem::class, PaymentProvider::class],
+            [self::class, PaymentProvider::class],
             [
                 'payment_provider_id',
                 'id',

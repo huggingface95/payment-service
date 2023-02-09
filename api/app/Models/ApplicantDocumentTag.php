@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ApplicantDocumentTag extends BaseModel
 {
-
     protected $fillable = [
         'category_id',
         'name',

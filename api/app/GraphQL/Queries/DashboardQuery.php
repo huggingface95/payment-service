@@ -52,7 +52,7 @@ class DashboardQuery
     {
         $transferIncomingStatistic = TransferIncoming::select([
             'payment_status.name as status_name',
-            DB::raw("'" . class_basename(TransferIncoming::class) . "' as transfer_type, count(status_id) as count"),
+            DB::raw("'".class_basename(TransferIncoming::class)."' as transfer_type, count(status_id) as count"),
         ])
             ->join('payment_status', 'transfer_incomings.status_id', '=', 'payment_status.id')
             ->where('operation_type_id', OperationTypeEnum::INCOMING_WIRE_TRANSFER->value)
@@ -60,7 +60,7 @@ class DashboardQuery
 
         $transferOutgoingStatistic = TransferOutgoing::select([
             'payment_status.name as status_name',
-            DB::raw("'" . class_basename(TransferOutgoing::class) . "' as transfer_type, count(status_id) as count"),
+            DB::raw("'".class_basename(TransferOutgoing::class)."' as transfer_type, count(status_id) as count"),
         ])
             ->join('payment_status', 'transfer_outgoings.status_id', '=', 'payment_status.id')
             ->where('operation_type_id', OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value)
@@ -68,12 +68,12 @@ class DashboardQuery
 
         $transferBetweenUserStatistic = TransferBetweenUser::select([
             'status_name',
-            DB::raw("'" . class_basename(TransferBetweenUser::class) . "' as transfer_type, count(status_id) as count"),
+            DB::raw("'".class_basename(TransferBetweenUser::class)."' as transfer_type, count(status_id) as count"),
         ])->groupBy(['status_name']);
 
         $transferBetweenAccountStatistic = TransferBetweenAccount::select([
             'status_name',
-            DB::raw("'" . class_basename(TransferBetweenAccount::class) . "' as transfer_type, count(status_id) as count"),
+            DB::raw("'".class_basename(TransferBetweenAccount::class)."' as transfer_type, count(status_id) as count"),
         ])->groupBy(['status_name']);
 
         if (isset($args['created_at']['from']) && isset($args['created_at']['to'])) {
@@ -148,7 +148,7 @@ class DashboardQuery
     public function usersStatistic($_, array $args)
     {
         $applicantIndividual = ApplicantIndividual::select([
-            DB::raw("'" . class_basename(ApplicantIndividual::class) . "' as applicant_type,
+            DB::raw("'".class_basename(ApplicantIndividual::class)."' as applicant_type,
             CASE applicant_individual_modules.is_active
                 WHEN 'true' THEN 'Active'
                 WHEN 'false' THEN 'Panding'
@@ -160,7 +160,7 @@ class DashboardQuery
             ->groupBy(['applicant_individual_modules.is_active']);
 
         $applicantCompany = ApplicantCompany::select([
-            DB::raw("'" . class_basename(ApplicantCompany::class) . "' as applicant_type,
+            DB::raw("'".class_basename(ApplicantCompany::class)."' as applicant_type,
             CASE applicant_company_modules.is_active
                 WHEN 'true' THEN 'Active'
                 WHEN 'false' THEN 'Panding'
@@ -193,5 +193,4 @@ class DashboardQuery
             $applicantCompany->get()->toArray(),
         );
     }
-
 }

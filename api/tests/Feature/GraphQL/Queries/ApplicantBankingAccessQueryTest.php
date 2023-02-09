@@ -11,128 +11,179 @@ class ApplicantBankingAccessQueryTest extends TestCase
      *
      * @return void
      */
+    public function testApplicantBankingAccessNoAuth(): void
+    {
+        $this->graphQL(
+            '
+             query ApplicantBankingAccesses($applicant_company_id: ID!) {
+                applicantBankingAccesses (
+                    applicant_company_id: $applicant_company_id
+                ) {
+                    data {
+                        id
+                    }
+                }
+             }',
+            [
+                'applicant_company_id' => 1,
+            ]
+        )->seeJson([
+            'message' => 'Unauthenticated.',
+        ]);
+    }
 
     public function testQueryBankingAccessOrderBy(): void
     {
-        $this->login();
-
         $access = DB::connection('pgsql_test')
             ->table('applicant_banking_access')
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->get();
 
-        $this->graphQL('
-        query {
-            applicantBankingAccess(orderBy: { column: ID, order: DESC }) {
-                data {
-                    id
-                }
-                }
-        }')->seeJsonContains([
+        $this->postGraphQL(
             [
-                'id' => strval($access[0]->id),
+                'query' => 'query ApplicantBankingAccesses($applicant_company_id: ID!) {
+                        applicantBankingAccesses( applicant_company_id: $applicant_company_id, orderBy: { column: ID, order: ASC }) {
+                            data {
+                                id
+                            }
+                        }
+                }',
+                'variables' => [
+                    'applicant_company_id' => (string) $access[0]->applicant_company_id,
+                ],
             ],
-        ]);
-    }
-
-    public function testQueryBankingAccessWhere(): void
-    {
-        $this->login();
-
-        $access = DB::connection('pgsql_test')
-            ->table('applicant_banking_access')
-            ->where('member_id', 2)
-            ->first();
-
-        $this->graphQL('
-        query {
-            applicantBankingAccess(where: { column: MEMBER_ID, value: 2}) {
-                data {
-                    id
-                }
-            }
-        }')->seeJsonContains([
             [
-                'id' => strval($access->id),
-            ],
-        ]);
-    }
-
-    public function testQueryBankingAccessFilterByApplicantId(): void
-    {
-        $this->login();
-
-        $access = DB::connection('pgsql_test')
-            ->table('applicant_banking_access')
-            ->first();
-
-        $this->graphQL('
-        query TestApplicantBankingAccessFilters($applicant: Mixed) {
-            applicantBankingAccess(
-                where: { column: APPLICANT_INDIVIDUAL_ID, value: $applicant }
-            ) {
-                data {
-                    id
-                }
-            }
-        }
-        ',[
-            'applicant' => $access->applicant_individual_id,
-            ])->seeJsonContains([
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
-                'id' => (string) $access->id,
-            ],
-        ]);
-    }
-
-    public function testQueryBankingAccessFilterByApplicantCompanyId(): void
-    {
-        $this->login();
-
-        $access = DB::connection('pgsql_test')
-            ->table('applicant_banking_access')
-            ->first();
-
-        $this->graphQL('
-        query TestApplicantBankingAccessFilters($applicant: Mixed) {
-            applicantBankingAccess(
-                where: { column: APPLICANT_COMPANY_ID, value: $applicant }
-            ) {
-                data {
-                    id
-                }
-            }
-        }
-        ',[
-            'applicant' => $access->applicant_company_id,
-        ])->seeJsonContains([
-            [
-                'id' => (string) $access->id,
+                'id' => (string) $access[0]->id,
             ],
         ]);
     }
 
     public function testQueryBankingAccessFilterByMemberId(): void
     {
-        $this->login();
+        $access = DB::connection('pgsql_test')
+            ->table('applicant_banking_access')
+            ->where('member_id', 2)
+            ->first();
 
+        $this->postGraphQL(
+            [
+                'query' => 'query ApplicantBankingAccesses($applicant_company_id: ID!, $member_id: Mixed) {
+                        applicantBankingAccesses( applicant_company_id: $applicant_company_id, filter: { column: MEMBER_ID, value: $member_id }) {
+                            data {
+                                id
+                            }
+                        }
+                }',
+                'variables' => [
+                    'applicant_company_id' => (string) $access->applicant_company_id,
+                    'member_id' => (string) $access->member_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $access->id,
+            ],
+        ]);
+    }
+
+    public function testQueryBankingAccess(): void
+    {
         $access = DB::connection('pgsql_test')
             ->table('applicant_banking_access')
             ->first();
 
-        $this->graphQL('
-        query TestApplicantBankingAccessFilters($applicant: Mixed) {
-            applicantBankingAccess(
-                where: { column: MEMBER_ID, value: $applicant }
-            ) {
-                data {
-                    id
-                }
-            }
-        }
-        ',[
-            'applicant' => $access->member_id,
-        ])->seeJsonContains([
+        $this->postGraphQL(
+            [
+                'query' => 'query ApplicantBankingAccess($id: ID) {
+                        applicantBankingAccess(id: $id) {
+                                id
+                        }
+                }',
+                'variables' => [
+                    'id' => (string) $access->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $access->id,
+            ],
+        ]);
+    }
+
+    public function testQueryGrantedBankingAccess(): void
+    {
+        $access = DB::connection('pgsql_test')
+            ->table('applicant_banking_access')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => 'query GrantedBankingAccess ($applicant_individual_id: ID!, $applicant_company_id: ID!) {
+                        grantedBankingAccess (
+                            applicant_individual_id: $applicant_individual_id
+                            applicant_company_id: $applicant_company_id
+                        ) {
+                        data
+                            {
+                                id
+                            }
+                        }
+                }',
+                'variables' => [
+                    'applicant_individual_id' => (string) $access->applicant_individual_id,
+                    'applicant_company_id' => (string) $access->applicant_company_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $access->id,
+            ],
+        ]);
+    }
+
+    public function testQueryGrantedBankingAccessByMemberId(): void
+    {
+        $access = DB::connection('pgsql_test')
+            ->table('applicant_banking_access')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => 'query GrantedBankingAccess ($applicant_individual_id: ID!, $applicant_company_id: ID!, $member_id: Mixed) {
+                        grantedBankingAccess (
+                            applicant_individual_id: $applicant_individual_id
+                            applicant_company_id: $applicant_company_id
+                            filter: {column: MEMBER_ID, value: $member_id}
+                        ) {
+                        data
+                            {
+                                id
+                            }
+                        }
+                }',
+                'variables' => [
+                    'applicant_individual_id' => (string) $access->applicant_individual_id,
+                    'applicant_company_id' => (string) $access->applicant_company_id,
+                    'member_id' => (string) $access->member_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains([
             [
                 'id' => (string) $access->id,
             ],

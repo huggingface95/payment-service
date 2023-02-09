@@ -16,14 +16,14 @@ class ApplicantBankingAccessQuery
                 ->where('applicant_individual_id', '=', $args['applicant_individual_id'])
                 ->where('applicant_company_id', '=', $args['applicant_company_id'])
                 ->get();
-        } else  {
+        } else {
             $applicantBankingAccess = ApplicantBankingAccess::query()
                 ->where('applicant_company_id', $args['applicant_company_id'])
                 ->get();
         }
 
         if (isset($args['filter']) && $args['filter']['column'] == 'member_id') {
-            $applicantBankingAccess = $applicantBankingAccess->where('member_id',  $args['filter']['value']);
+            $applicantBankingAccess = $applicantBankingAccess->where('member_id', $args['filter']['value']);
         }
 
         if (isset($args['filter']) && $args['filter']['column'] == 'grant_access') {
@@ -35,7 +35,7 @@ class ApplicantBankingAccessQuery
 
             foreach ($fields as $field) {
                 if ($field['order'] == 'DESC') {
-                    $applicantBankingAccess =  $applicantBankingAccess->sortByDesc(Str::lower($field['column']));
+                    $applicantBankingAccess = $applicantBankingAccess->sortByDesc(Str::lower($field['column']));
                 } else {
                     $applicantBankingAccess = $applicantBankingAccess->sortBy(Str::lower($field['column']));
                 }
@@ -55,7 +55,7 @@ class ApplicantBankingAccessQuery
             $permissions['sign_payments'] == true ? $access += ['sign_payments' => true] : $access += ['sign_payments' => false];
         }
 
-        $result = ApplicantBankingAccess::hydrate($bankingAccess)->paginate( $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'), $args['page'] ?? 1);
+        $result = ApplicantBankingAccess::hydrate($bankingAccess)->paginate($args['first'] ?? env('PAGINATE_DEFAULT_COUNT'), $args['page'] ?? 1);
 
         return [
             'data' => $result,
@@ -68,7 +68,7 @@ class ApplicantBankingAccessQuery
                 'lastPage' => $result->lastPage(),
                 'perPage' => $result->perPage(),
                 'total' => $result->total(),
-            ]
+            ],
         ];
     }
 
@@ -83,7 +83,7 @@ class ApplicantBankingAccessQuery
         return $applicantBankingAccess;
     }
 
-    public function getApplicantPermissions ($id)
+    public function getApplicantPermissions($id)
     {
         $result = ['create_payments' => false, 'sign_payments' => false];
         $applicant = ApplicantIndividual::find($id);

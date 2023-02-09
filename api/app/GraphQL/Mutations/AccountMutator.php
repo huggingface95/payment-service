@@ -40,13 +40,13 @@ class AccountMutator
         /** @var Account $account */
         $account = Account::query()->create($args);
 
-        if (isset($args['clientableAttach'])){
+        if (isset($args['clientableAttach'])) {
             $account->clientableAttach()->sync($args['clientableAttach']['sync']);
         }
 
         $this->emailService->sendAccountStatusEmail($account);
 
-        if ($account->account_number == null && $account->group->name == Groups::INDIVIDUAL){
+        if ($account->account_number == null && $account->group->name == Groups::INDIVIDUAL) {
             dispatch(new IbanIndividualActivationJob($account));
         }
 

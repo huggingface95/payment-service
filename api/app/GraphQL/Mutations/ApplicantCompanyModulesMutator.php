@@ -19,7 +19,7 @@ class ApplicantCompanyModulesMutator extends BaseMutator
         $applicant = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
 
         if (isset($args['module_id'])) {
-            $applicant->modules()->delete();
+            $applicant->modules()->detach();
             foreach ($args['module_id'] as $module) {
                 ApplicantCompanyModules::insert(['module_id'=> $module, 'applicant_company_id' => $args['applicant_company_id']]);
             }
@@ -31,7 +31,7 @@ class ApplicantCompanyModulesMutator extends BaseMutator
     public function detach($root, array $args)
     {
         $applicant = ApplicantCompany::where('id', '=', $args['applicant_company_id'])->first();
-        $applicant->modules()->delete();
+        $applicant->modules()->detach();
 
         return $applicant;
     }

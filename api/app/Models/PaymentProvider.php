@@ -58,7 +58,7 @@ class PaymentProvider extends BaseModel
     {
         $countries = implode(',', $countryId);
 
-        return $query->where('country_id', '&&', DB::raw('ARRAY[' . $countries . ']::integer[]'));
+        return $query->where('country_id', '&&', DB::raw('ARRAY['.$countries.']::integer[]'));
     }
 
     public function logo(): BelongsTo
@@ -70,6 +70,6 @@ class PaymentProvider extends BaseModel
     {
         $currencies = implode(',', $currencyId);
 
-        return $query->where('country_id', '&&', DB::raw('ARRAY[' . $currencies . ']::integer[]'));
+        return $query->where('country_id', '&&', DB::raw('ARRAY['.$currencies.']::integer[]'));
     }
 }

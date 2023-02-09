@@ -14,7 +14,7 @@
 */
 $router->group([
     'prefix' => 'auth',
-    'middleware' => 'access'
+    'middleware' => 'access',
 ], function () use ($router) {
     $router->post('login', 'AuthController@login');
     $router->post('me', 'AuthController@me');
@@ -31,7 +31,7 @@ $router->group([
 $router->group([
     'prefix' => 'vv',
     'namespace' => 'Vv',
-], function () use ($router){
+], function () use ($router) {
     //Example routes register, get-link
     $router->get('register', 'VvController@register');
     $router->get('get-link', 'VvController@getLink');

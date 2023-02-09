@@ -43,5 +43,4 @@ class CompanyModuleIbanProvider extends BaseModel
             'id'
         );
     }
-
 }

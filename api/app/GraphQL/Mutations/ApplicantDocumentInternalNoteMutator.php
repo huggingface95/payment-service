@@ -8,7 +8,7 @@ use App\Models\ApplicantDocumentInternalNote;
 class ApplicantDocumentInternalNoteMutator
 {
     /**
-     * @param  $root
+     * @param    $root
      * @param  array  $args
      * @return mixed
      */
@@ -23,7 +23,7 @@ class ApplicantDocumentInternalNoteMutator
     public function attachTag($root, array $args): ApplicantDocumentInternalNote
     {
         $note = ApplicantDocumentInternalNote::find($args['applicant_document_internal_note_id']);
-        if (!$note) {
+        if (! $note) {
             throw new GraphqlException('Applicant document internal note not found', 'not found', 404);
         }
 
@@ -36,7 +36,7 @@ class ApplicantDocumentInternalNoteMutator
     public function detachTag($root, array $args): ApplicantDocumentInternalNote
     {
         $note = ApplicantDocumentInternalNote::find($args['applicant_document_internal_note_id']);
-        if (!$note) {
+        if (! $note) {
             throw new GraphqlException('Applicant document internal note not found', 'not found', 404);
         }
 

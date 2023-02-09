@@ -8,7 +8,7 @@ use App\Models\BankCorrespondent;
 class BankCorrespondentMutator extends BaseMutator
 {
     /**
-     * @param  $_
+     * @param    $_
      * @param  array  $args
      * @return mixed
      */
@@ -36,14 +36,14 @@ class BankCorrespondentMutator extends BaseMutator
     }
 
     /**
-     * @param  $_
+     * @param    $_
      * @param  array  $args
      * @return mixed
      */
     public function update($_, array $args)
     {
         $bank = BankCorrespondent::find($args['id']);
-        if (!$bank) {
+        if (! $bank) {
             throw new GraphqlException('Not found', 'not found', 404);
         }
         $bank->update($args);

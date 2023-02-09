@@ -26,7 +26,7 @@ class VvTokenMiddleware
         }
 
         throw new AuthorizationException(
-            "This request in unauthorized"
+            'This request in unauthorized'
         );
     }
 }

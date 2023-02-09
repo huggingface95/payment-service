@@ -18,7 +18,7 @@ class EmailNotificationMutator extends BaseMutator
         $templates = $args['templates'];
         unset($args['templates']);
         ($args['group_type_id'] == GroupRole::MEMBER) ? $args['type'] = EmailNotification::ADMINISTRATION : $args['type'] = EmailNotification::CLIENT;
-        if (!isset($args['client_id'])) {
+        if (! isset($args['client_id'])) {
             /** @var EmailNotification $emailNotification */
             $notify = EmailNotification::where([
                 'company_id'=>$args['company_id'],

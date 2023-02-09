@@ -15,10 +15,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class RoleAction extends BaseModel
 {
     public const ACTION_CREATING = 'creating';
-    public const ACTION_SAVING = 'saving';
-    public const ACTION_UPDATING = 'updating';
-    public const ACTION_DELETING = 'deleting';
 
+    public const ACTION_SAVING = 'saving';
+
+    public const ACTION_UPDATING = 'updating';
+
+    public const ACTION_DELETING = 'deleting';
 
     protected $fillable = [
         'role_id', 'table', 'action',
@@ -40,5 +42,4 @@ class RoleAction extends BaseModel
     {
         return $this->belongsTo(Role::class);
     }
-
 }

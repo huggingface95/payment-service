@@ -6,7 +6,6 @@ use App\Models\ApplicantIndividual;
 
 class VvPostBackResponse
 {
-
     public string $status;
 
     public string $action;
