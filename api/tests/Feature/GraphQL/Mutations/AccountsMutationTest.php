@@ -112,7 +112,7 @@ class AccountsMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -159,7 +159,7 @@ class AccountsMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -201,7 +201,7 @@ class AccountsMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -211,6 +211,49 @@ class AccountsMutationTest extends TestCase
             'data' => [
                 'deleteAccount' => [
                     'id' => $id['data']['deleteAccount']['id'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testGenerateIban(): void
+    {
+        $account = DB::connection('pgsql_test')
+            ->table('accounts')
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation GenerateIban(
+                    $id: ID!
+                )
+                {
+                    generateIban (
+                        id: $id
+                    )
+                    {
+                        status
+                        message
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $account->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'generateIban' => [
+                    'status' => $id['data']['generateIban']['status'],
+                    'message' => $id['data']['generateIban']['message'],
                 ],
             ],
         ]);
