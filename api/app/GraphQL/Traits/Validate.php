@@ -66,11 +66,14 @@ trait Validate
     private function validateOperator(array $requestColumns, array $graphqlColumns): void
     {
         foreach ($requestColumns as $column => $columnData) {
-            if (array_key_exists($column, $graphqlColumns) && $columnData['operator'] != $graphqlColumns[$column]) {
-                throw new Error(
-                    'COLUMN '.strtoupper(Str::snake($column)).' OPERATOR '.strtoupper(Str::snake($columnData['operator']))." TYPE WRONG OPERATOR IN {$this->definitionNode->type->name->value}",
-                    $this->definitionNode
-                );
+            if (array_key_exists($column, $graphqlColumns)) {
+                $operatorList = explode('|', $graphqlColumns[$column]);
+                if (!in_array($columnData['operator'], $operatorList)){
+                    throw new Error(
+                        'COLUMN '.strtoupper(Str::snake($column)).' OPERATOR '.strtoupper(Str::snake($columnData['operator']))." TYPE WRONG OPERATOR IN {$this->definitionNode->type->name->value}",
+                        $this->definitionNode
+                    );
+                }
             }
         }
     }
