@@ -43,8 +43,8 @@ input QueryMemberAccessLimitationsFilterStatic @spread{
     hasGroupRolesFilterById: ID @eq
     module_id: ID @eq
     project_id: ID @eq
-    payment_provider_id: Mixed @is_null @eq
-    group_type_id: Mixed @is_null @eq
+    payment_provider_id: ID @is_null @eq
+    group_type_id: ID @is_null @eq
 }
 
 input InputMemberAccessLimitation{
