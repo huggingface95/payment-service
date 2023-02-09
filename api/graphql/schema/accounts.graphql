@@ -1,4 +1,3 @@
-union Client = ApplicantIndividual | ApplicantCompany
 """
 Аккаунты
 Banking -> Account -> Account List
