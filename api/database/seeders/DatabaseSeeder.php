@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CountryTableSeeder::class);
         $this->call(LanguagesTableSeeder::class);
         $this->call(CurrencyTableSeeder::class);
+        $this->call(ModulesTableSeeder::class);
         $this->call(CompanyTableSeeder::class);
         $this->call(GroupTableSeeder::class);
         $this->call(TwoFactorAuthTableSeeder::class);
@@ -71,7 +72,6 @@ class DatabaseSeeder extends Seeder
         $this->call(RespondentFeesTableSeeder::class);
         $this->call(CommissionTemplateBusinessActivityTableSeeder::class);
         $this->call(RoleActionsSeeder::class);
-        $this->call(ModulesTableSeeder::class);
         $this->call(OuthClientsTableSeeder::class);
         $this->call(PaymentsTableSeeder::class);
         $this->call(ProjectTableSeeder::class);
