@@ -26,7 +26,7 @@ class AddApplicantTypeColumnToProjectSettingsTable extends Migration
     public function down()
     {
         Schema::table('project_settings', function (Blueprint $table) {
-            //
+            $table->dropColumn('applicant_type');
         });
     }
 }
