@@ -1,0 +1,3 @@
+union Clientable = ApplicantIndividual | ApplicantCompany | Members
+
+union Client = ApplicantIndividual | ApplicantCompany
