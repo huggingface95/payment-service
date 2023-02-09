@@ -130,7 +130,7 @@ extend type Mutation @guard {
         country_id: ID!
         "Телефон"
         phone: String
-    ): Company   @create
+    ): Company   @field(resolver:"CompanyMutator@create")
 
     "Обновить данные компании"
     updateCompany(

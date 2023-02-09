@@ -10,6 +10,21 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 class CompanyMutator extends BaseMutator
 {
     /**
+     * @param  $root
+     * @param  array  $args
+     * @return mixed
+     */
+    public function create($root, array $args)
+    {
+        $company = Company::create($args);
+
+        $company->state_id = 1;
+        $company->save();
+
+        return $company;
+    }
+
+    /**
      * Return a value for the field.
      *
      * @param  @param  null  $root Always null, since this field has no parent.
