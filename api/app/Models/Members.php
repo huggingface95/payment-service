@@ -88,6 +88,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'member_status_id',
         'entity_id',
         'photo_id',
+        'job_title',
     ];
 
     protected $hidden = [
