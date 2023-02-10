@@ -18,11 +18,13 @@ class DatabaseSeeder extends Seeder
         $this->call(CurrencyTableSeeder::class);
         $this->call(ModulesTableSeeder::class);
         $this->call(CompanyTableSeeder::class);
+        $this->call(ProjectTableSeeder::class);
         $this->call(GroupTableSeeder::class);
         $this->call(TwoFactorAuthTableSeeder::class);
         $this->call(PaymentProviderTableSeeder::class);
         $this->call(PaymentSystemTableSeeder::class);
         $this->call(ApplicantRiskLevelTableSeeder::class);
+        $this->call(ApplicantKycLevelTableSeeder::class);
         $this->call(ApplicantStateReasonTableSeeder::class);
         $this->call(ApplicantStateTableSeeder::class);
         $this->call(ApplicantStatusTableSeeder::class);
@@ -51,6 +53,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ApplicantIndividualCompanyRelationTableSeeder::class);
         $this->call(ApplicantCompaniesTableSeeder::class);
         $this->call(ApplicantIndividualCompanyTableSeeder::class);
+        $this->call(ApplicantCompanyModulesTableSeeder::class);
         $this->call(EmailNotificationsTableSeeder::class);
         $this->call(EmailNotificationTemplatesTableSeeder::class);
         $this->call(RegionsTableSeeder::class);
@@ -74,7 +77,6 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleActionsSeeder::class);
         $this->call(OuthClientsTableSeeder::class);
         $this->call(PaymentsTableSeeder::class);
-        $this->call(ProjectTableSeeder::class);
         $this->call(DocumentStateTableSeeder::class);
         $this->call(DocumentTypeTableSeeder::class);
         $this->call(FileTableSeeder::class);

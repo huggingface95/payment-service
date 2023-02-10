@@ -13,7 +13,7 @@ class ApplicantIndividualCompanyMutator
      */
     public function update($_, array $args)
     {
-        $applicantIndividualCompany = ApplicantIndividualCompany::where('applicant_individual_id', $args['applicant_individual_id'])->where('applicant_company_id', $args['applicant_company_id'])->first();
+        $applicantIndividualCompany = ApplicantIndividualCompany::where('applicant_id', $args['applicant_id'])->where('applicant_company_id', $args['applicant_company_id'])->first();
         if (isset($args['applicant_individual_company_relation_id'])) {
             $args['applicant_individual_company_relation_id'] = $args['applicant_individual_company_relation_id'];
         }
@@ -28,8 +28,8 @@ class ApplicantIndividualCompanyMutator
 
     public function delete($_, array $args)
     {
-        ApplicantIndividualCompany::where('applicant_individual_id', $args['applicant_individual_id'])->where('applicant_company_id', $args['applicant_company_id'])->delete();
-        ApplicantBankingAccess::where('applicant_individual_id', $args['applicant_individual_id'])->where('applicant_company_id', $args['applicant_company_id'])->delete();
+        ApplicantIndividualCompany::where('applicant_id', $args['applicant_id'])->where('applicant_company_id', $args['applicant_company_id'])->delete();
+        ApplicantBankingAccess::where('applicant_individual_id', $args['applicant_id'])->where('applicant_company_id', $args['applicant_company_id'])->delete();
 
         return $args;
     }

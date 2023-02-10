@@ -30,5 +30,20 @@ class ApplicantIndividualCompanyTableSeeder extends Seeder
                 'applicant_individual_company_position_id' => 1,
             ]
         );
+
+        $applicantIndividual = ApplicantIndividual::where('id', 2)->first();
+        $applicantCompany = ApplicantCompany::where('id', 2)->first();
+
+        ApplicantIndividualCompany::firstOrCreate(
+            [
+                'applicant_id' => $applicantIndividual->id,
+                'applicant_type' => class_basename(ApplicantIndividual::class),
+                'applicant_company_id' => $applicantCompany->id,
+            ],
+            [
+                'applicant_individual_company_relation_id' => 1,
+                'applicant_individual_company_position_id' => 1,
+            ]
+        );
     }
 }

@@ -17,7 +17,7 @@ class EmailTemplatesTableSeeder extends Seeder
     {
         EmailTemplate::firstOrCreate([
             'id' => 1,
-            'subject' => 'Waiting for approval',
+            'subject' => 'Welcome! Confirm your email address',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 2,

@@ -36,12 +36,17 @@ class ApplicantCompaniesTableSeeder extends Seeder
                     'reg_at' => $faker->date(),
                     'expires_at' => $faker->date(),
                     'applicant_state_id' => 1,
+                    'applicant_company_business_type_id' => 1,
+                    'applicant_status_id' => 1,
+                    'applicant_risk_level_id' => 1,
+                    'applicant_kyc_level_id' => 1,
                     'account_manager_member_id' => 2,
                     'company_id' => 1,
                     'owner_id' => 1,
                     'owner_relation_id' => 1,
                     'owner_position_id' => 1,
                     'applicant_state_reason_id' => 1,
+                    'project_id' => $i,
                 ]
             );
         }
