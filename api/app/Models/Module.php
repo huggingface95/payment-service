@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ModuleScope;
+
 class Module extends BaseModel
 {
     public $timestamps = false;
@@ -14,4 +16,10 @@ class Module extends BaseModel
     protected $fillable = [
         'name',
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ModuleScope());
+    }
 }

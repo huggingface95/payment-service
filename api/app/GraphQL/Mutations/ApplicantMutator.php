@@ -38,13 +38,15 @@ class ApplicantMutator extends BaseMutator
         $args['password_hash'] = $password;
         $args['password_salt'] = $password;
         $args['group_type_id'] = GroupRole::INDIVIDUAL;
-        $args['module_ids'] = array_unique(
-            array_merge($args['module_ids'], [(string) ModuleEnum::KYC->value])
-        );
 
         $applicant = ApplicantIndividual::create($args);
 
-        $applicant->modules()->attach($args['module_ids']);
+
+        if (isset($args['module_ids'])) {
+            $applicant->modules()->attach(array_filter($args['module_ids'], function ($m){
+                return $m != ModuleEnum::KYC->value;
+            }));
+        }
 
         if (isset($args['group_id'])) {
             $applicant->groupRole()->sync([$args['group_id']], true);

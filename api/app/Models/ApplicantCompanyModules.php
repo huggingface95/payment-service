@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
-use App\Models\Scopes\PivotModuleScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApplicantCompanyModules extends BaseModel
@@ -25,7 +24,6 @@ class ApplicantCompanyModules extends BaseModel
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope);
-        static::addGlobalScope(new PivotModuleScope);
     }
 
     /**

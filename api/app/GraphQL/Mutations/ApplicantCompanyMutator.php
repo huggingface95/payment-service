@@ -35,14 +35,15 @@ class ApplicantCompanyMutator extends BaseMutator
         $args['group_type_id'] = GroupRole::COMPANY;
         $applicantCompany = ApplicantCompany::create($args);
 
-        $args['module_ids'] = array_unique(
-            array_merge($args['module_ids'], [(string) ModuleEnum::KYC->value])
-        );
-
         if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {
             $this->setOwner($applicantCompany, $args);
         }
 
+        if (isset($args['module_ids'])) {
+            $applicantCompany->modules()->attach(array_filter($args['module_ids'], function ($m){
+                return $m != ModuleEnum::KYC->value;
+            }));
+        }
         if (isset($args['group_id'])) {
             $applicantCompany->groupRole()->sync([$args['group_id']], true);
         }

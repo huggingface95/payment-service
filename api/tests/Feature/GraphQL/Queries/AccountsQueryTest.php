@@ -43,7 +43,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'data' => [
@@ -59,7 +59,6 @@ class AccountsQueryTest extends TestCase
         $account = DB::connection('pgsql_test')
             ->table('accounts')
             ->orderBy('id', 'ASC')
-            ->take(1)
             ->get();
 
         $this->postGraphQL(
@@ -74,7 +73,7 @@ class AccountsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -108,7 +107,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -147,7 +146,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -182,7 +181,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -221,7 +220,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -259,7 +258,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -297,7 +296,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -335,7 +334,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -373,7 +372,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -411,7 +410,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -449,13 +448,88 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
             'account_number' => (string) $accounts->account_number,
             'account_type' => (string) $accounts->account_type,
             'account_name' => (string) $accounts->account_name,
+        ]);
+    }
+
+    public function testQueryAccountsFilterByPaymentSystemId(): void
+    {
+        $accounts = DB::connection('pgsql_test')
+            ->table('accounts')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                query TestAccountListFilters($payment_system_id: Mixed) {
+                    accountList(
+                        filter: {
+                            column: HAS_PAYMENT_SYSTEM_MIXED_ID_OR_NAME
+                            value: $payment_system_id
+                        }
+                    ) {
+                        data {
+                            id
+                            account_number
+                            account_type
+                            account_name
+                        }
+                    }
+                }',
+                'variables' => [
+                    'payment_system_id' => (string) $accounts->payment_system_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $accounts->id,
+            'account_number' => (string) $accounts->account_number,
+            'account_type' => (string) $accounts->account_type,
+            'account_name' => (string) $accounts->account_name,
+        ]);
+    }
+
+    public function testQueryAccountsFilterByIsPrimary(): void
+    {
+        $accounts = DB::connection('pgsql_test')
+            ->table('accounts')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => '{
+                    accountList(
+                        filter: {
+                            column: IS_PRIMARY
+                            value: true
+                        }
+                    ) {
+                        data {
+                            id
+                            account_number
+                            account_type
+                            account_name
+                        }
+                    }
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $accounts[0]->id,
+            'account_number' => (string) $accounts[0]->account_number,
+            'account_type' => (string) $accounts[0]->account_type,
+            'account_name' => (string) $accounts[0]->account_name,
         ]);
     }
 }

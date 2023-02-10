@@ -131,9 +131,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     protected static function booting()
     {
         self::created(function (ApplicantIndividual $model) {
-            $model->modules()->saveMany([new ApplicantIndividualModules([
-                'module_id' => ModuleEnum::KYC->value
-            ])]);
+            $model->modules()->attach([ModuleEnum::KYC->value]);
         });
         parent::booting();
     }
