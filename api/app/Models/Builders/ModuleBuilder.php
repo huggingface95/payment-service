@@ -10,6 +10,7 @@ class ModuleBuilder extends Builder
     public function withoutKYC($a): static
     {
         $this->where('id', '<>', ModuleEnum::KYC->value);
+
         return $this;
     }
 }

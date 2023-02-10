@@ -91,7 +91,6 @@ class MembersMutator extends BaseMutator
             if ($departamentPosition->company->id !== $member->company_id) {
                 throw new GraphqlException('Position is not this company', 'use', 409);
             }
-
         }
 
         if (isset($args['ip_address'])) {
@@ -212,7 +211,6 @@ class MembersMutator extends BaseMutator
         $member->update([
             'member_status_id' => MemberStatusEnum::ACTIVE->value,
         ]);
-
 
         return $member;
     }

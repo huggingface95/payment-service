@@ -11,7 +11,7 @@ use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 class CompanyMutator extends BaseMutator
 {
     /**
-     * @param  $root
+     * @param    $root
      * @param  array  $args
      * @return mixed
      */

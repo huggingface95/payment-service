@@ -40,7 +40,7 @@ class ApplicantCompanyMutator extends BaseMutator
         }
 
         if (isset($args['module_ids'])) {
-            $applicantCompany->modules()->attach(array_filter($args['module_ids'], function ($m){
+            $applicantCompany->modules()->attach(array_filter($args['module_ids'], function ($m) {
                 return $m != ModuleEnum::KYC->value;
             }));
         }

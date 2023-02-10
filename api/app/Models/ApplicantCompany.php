@@ -95,7 +95,7 @@ class ApplicantCompany extends BaseModel
 
     protected static function booting()
     {
-        self::created(function (ApplicantCompany $model) {
+        self::created(function (self $model) {
             $model->modules()->attach([ModuleEnum::KYC->value]);
         });
         parent::booting();

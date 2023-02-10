@@ -41,9 +41,8 @@ class ApplicantMutator extends BaseMutator
 
         $applicant = ApplicantIndividual::create($args);
 
-
         if (isset($args['module_ids'])) {
-            $applicant->modules()->attach(array_filter($args['module_ids'], function ($m){
+            $applicant->modules()->attach(array_filter($args['module_ids'], function ($m) {
                 return $m != ModuleEnum::KYC->value;
             }));
         }
