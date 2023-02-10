@@ -119,7 +119,7 @@ extend type Query @guard {
     groupList(
         filter: _ @filterConditions(static: QueryGroupListFilterStatic),
         orderBy: _ @orderBy(columns: ["id","is_active","name"],
-        )): [GroupRoleView!]!   @paginate(defaultCount: 10)
+        )): [GroupRoleView!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
 }
 
 
