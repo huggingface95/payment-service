@@ -79,24 +79,10 @@ extend type Query @guard {
     """
     members(
         filter: _ @filterConditions(static: QueryMembersFilterStatic),
-        hasDepartment: _ @whereHasConditions(columns: ["id"]),
-        hasGroupRole: _ @whereHasConditions(columns: ["group_type_id","role_id","id"]),
-        where: _ @whereConditions(columnsEnum: "MembersColumn"),
         companyName: Sort @scope(name:"CompanyNameSort"),
         group: Int @scope(name:"GetGroup"),
         orderBy: _ @orderBy(columns: ["id","email","last_login_at","is_active"],
     )): [Members!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
-}
-
-enum MembersColumn {
-    ID @enum(value: "id")
-    FULLNAME @enum(value: "fullname")
-    COMPANY_ID @enum(value: "company_id")
-    EMAIL @enum(value: "email")
-    POSITION_ID @enum(value: "department_position_id")
-    IS_ACTIVE @enum(value: "is_active")
-    LAST_LOGIN_AT @enum(value: "last_login_at")
-    IS_SHOW_OWNER_APPLICANTS @enum(value: "is_show_owner_applicants")
 }
 
 input QueryMembersFilterStatic @spread{
