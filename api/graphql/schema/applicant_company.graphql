@@ -320,7 +320,7 @@ extend type Mutation @guard {
 
     "Удалить связь Individual с Company"
     deleteApplicantIndividualCompany(
-        applicant_individual_id: ID!
+        applicant_id: ID!
         applicant_company_id: ID!
     ): ApplicantIndividualCompany   @field(resolver: "ApplicantIndividualCompanyMutator@delete")
 
