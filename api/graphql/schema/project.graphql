@@ -63,7 +63,7 @@ extend type Query @guard {
         filter: _ @filterConditions(static: QueryProjectsFilterStatic),
     ): [Project!]!
         @paginate(defaultCount: 100)
-        @orderBy(column: "id", direction: ASC)
+        @orderBy(column: "id", direction: DESC)
 }
 
 input QueryProjectsFilterStatic @spread {
@@ -131,7 +131,7 @@ extend type Mutation @guard {
     ): Project
         @field(resolver:"ProjectMutator@update")
         @validator
-    
+
     """
     Удалить проект
     """
