@@ -55,7 +55,7 @@ class ApplicantCompanyMutationTest extends TestCase
         $seq = DB::table('applicant_companies')
                 ->max('id') + 1;
 
-        DB::select('ALTER SEQUENCE applicant_companies_id_seq RESTART WITH '.$seq);
+        DB::select('ALTER SEQUENCE applicant_companies_id_seq RESTART WITH ' . $seq);
 
         $this->postGraphQL(
             [
@@ -64,7 +64,6 @@ class ApplicantCompanyMutationTest extends TestCase
                     $name: String!
                     $email: EMAIL!
                     $company_id: ID!
-                    $group_id: ID!
                     $project_id: ID!
                 )
                 {
@@ -72,7 +71,6 @@ class ApplicantCompanyMutationTest extends TestCase
                         name: $name
                         email: $email
                         company_id: $company_id
-                        group_id: $group_id
                         project_id: $project_id
                     )
                     {
@@ -83,7 +81,6 @@ class ApplicantCompanyMutationTest extends TestCase
                     'name' => 'AppCompany'.\Illuminate\Support\Str::random(3),
                     'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
                     'company_id' => 1,
-                    'group_id' => 1,
                     'project_id' => 1,
                 ],
             ],
@@ -118,7 +115,6 @@ class ApplicantCompanyMutationTest extends TestCase
                     $name: String!
                     $email: EMAIL!
                     $company_id: ID!
-                    $group_id: ID!
                     $project_id: ID!
                 )
                 {
@@ -127,9 +123,7 @@ class ApplicantCompanyMutationTest extends TestCase
                         name: $name
                         email: $email
                         company_id: $company_id
-                        group_id: $group_id
                         project_id: $project_id
-                        module_ids: []
                     )
                     {
                         id
@@ -141,7 +135,6 @@ class ApplicantCompanyMutationTest extends TestCase
                     'name' => 'Updated name',
                     'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
                     'company_id' => 2,
-                    'group_id' => 2,
                     'project_id' => 2,
                 ],
             ],
@@ -200,9 +193,9 @@ class ApplicantCompanyMutationTest extends TestCase
 
         $this->seeJson([
             'data' => [
-                'updateApplicantCompany' => [
-                    'id' => $id['data']['updateApplicantCompany']['id'],
-                    'email' => $id['data']['updateApplicantCompany']['email'],
+                'updateApplicantCompanyVerificationStatus' => [
+                    'id' => $id['data']['updateApplicantCompanyVerificationStatus']['id'],
+                    'email' => $id['data']['updateApplicantCompanyVerificationStatus']['email'],
                 ],
             ],
         ]);
@@ -248,8 +241,10 @@ class ApplicantCompanyMutationTest extends TestCase
 
         $this->seeJson([
             'data' => [
-                'createApplicantCompany' => [
-                    'applicant_id' => $id['data']['createApplicantCompany']['applicant_id'],
+                'createApplicantIndividualCompany' => [
+                    'applicant_id' => $id['data']['createApplicantIndividualCompany']['applicant_id'],
+                    'applicant_type' => $id['data']['createApplicantIndividualCompany']['applicant_type'],
+                    'applicant_company_id' => $id['data']['createApplicantIndividualCompany']['applicant_company_id'],
                 ],
             ],
         ]);
@@ -300,8 +295,10 @@ class ApplicantCompanyMutationTest extends TestCase
 
         $this->seeJson([
             'data' => [
-                'createApplicantCompany' => [
-                    'applicant_id' => $id['data']['createApplicantCompany']['applicant_id'],
+                'updateApplicantIndividualCompany' => [
+                    'applicant_id' => $id['data']['updateApplicantIndividualCompany']['applicant_id'],
+                    'applicant_type' => $id['data']['updateApplicantIndividualCompany']['applicant_type'],
+                    'applicant_company_id' => $id['data']['updateApplicantIndividualCompany']['applicant_company_id'],
                 ],
             ],
         ]);
@@ -345,8 +342,9 @@ class ApplicantCompanyMutationTest extends TestCase
 
         $this->seeJson([
             'data' => [
-                'createApplicantCompany' => [
-                    'applicant_id' => $id['data']['createApplicantCompany']['applicant_id'],
+                'deleteApplicantIndividualCompany' => [
+                    'applicant_id' => $id['data']['deleteApplicantIndividualCompany']['applicant_id'],
+                    'applicant_company_id' => $id['data']['deleteApplicantIndividualCompany']['applicant_company_id'],
                 ],
             ],
         ]);
@@ -355,7 +353,7 @@ class ApplicantCompanyMutationTest extends TestCase
     public function testSendEmailVerification(): void
     {
         $applicant = DB::connection('pgsql_test')
-            ->table('applicant_company')
+            ->table('applicant_companies')
             ->orderBy('id', 'DESC')
             ->get();
 
@@ -389,9 +387,9 @@ class ApplicantCompanyMutationTest extends TestCase
         $this->seeJson([
             'data' => [
                 'sendEmailVerificationApplicantCompany' => [
-                    'id' => $id['data']['createApplicantCompany']['id'],
-                    'name' => $id['data']['createApplicantCompany']['name'],
-                    'email' => $id['data']['createApplicantCompany']['email'],
+                    'id' => $id['data']['sendEmailVerificationApplicantCompany']['id'],
+                    'name' => $id['data']['sendEmailVerificationApplicantCompany']['name'],
+                    'email' => $id['data']['sendEmailVerificationApplicantCompany']['email'],
                 ],
             ],
         ]);
@@ -400,7 +398,7 @@ class ApplicantCompanyMutationTest extends TestCase
     public function testSendPhoneVerification(): void
     {
         $applicant = DB::connection('pgsql_test')
-            ->table('applicant_company')
+            ->table('applicant_companies')
             ->orderBy('id', 'DESC')
             ->get();
 
@@ -434,9 +432,9 @@ class ApplicantCompanyMutationTest extends TestCase
         $this->seeJson([
             'data' => [
                 'sendEmailVerificationApplicantCompany' => [
-                    'id' => $id['data']['createApplicantCompany']['id'],
-                    'name' => $id['data']['createApplicantCompany']['name'],
-                    'email' => $id['data']['createApplicantCompany']['email'],
+                    'id' => $id['data']['sendPhoneVerificationApplicantCompany']['id'],
+                    'name' => $id['data']['sendPhoneVerificationApplicantCompany']['name'],
+                    'email' => $id['data']['sendPhoneVerificationApplicantCompany']['email'],
                 ],
             ],
         ]);

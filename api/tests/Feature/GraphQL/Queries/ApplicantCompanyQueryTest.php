@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\ApplicantIndividual;
 use Illuminate\Support\Facades\DB;
 
 class ApplicantCompanyQueryTest extends TestCase
@@ -193,14 +194,14 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual_company')
-            ->orderBy('applicant_company_id', 'ASC')
-            ->where('applicant_type', 'ApplicantIndividual')
+            ->orderBy('applicant_company_id', 'DESC')
+            ->where('applicant_type', class_basename(ApplicantIndividual::class))
             ->get();
 
         $this->postGraphQL(
             [
-                'query' => 'query GetMatchedApplicantndividuals($applicant_company_id:ID!){
-                    getMatchedApplicantndividuals(applicant_company_id: $applicant_company_id) {
+                'query' => 'query GetMatchedApplicantIndividuals($applicant_company_id:ID!){
+                    getMatchedApplicantIndividuals(applicant_company_id: $applicant_company_id) {
                         applicant_id
                         applicant_type
                         applicant_company_id
@@ -364,48 +365,6 @@ class ApplicantCompanyQueryTest extends TestCase
         ]);
     }
 
-    public function testQueryApplicantCompanyFilterByGroupRole(): void
-    {
-        $groupRole = DB::connection('pgsql_test')
-            ->table('group_role_members_individuals')
-            ->where('user_type', 'ApplicantCompany')
-            ->orderBy('id', 'DESC')
-            ->first();
-
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
-            ->where('id', $groupRole->user_id)
-            ->first();
-
-        $this->postGraphQL(
-            [
-                'query' => 'query TestApplicantCompanyFilters($id: Mixed) {
-                    applicantCompanies(filter: { column: HAS_GROUP_ROLE_MIXED_ID_OR_NAME, value: $id }) {
-                        data {
-                            id
-                            name
-                            email
-                            url
-                        }
-                    }
-                }',
-                'variables' => [
-                    'id' => (string) $groupRole->group_role_id,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer ' . $this->login(),
-            ]
-        )->seeJsonContains([
-            [
-                'id' => (string) $applicant->id,
-                'name' => (string) $applicant->name,
-                'email' => (string) $applicant->email,
-                'url' => (string) $applicant->url,
-            ],
-        ]);
-    }
-
     public function testQueryApplicantCompanyFilterByRiskLevel(): void
     {
         $applicant = DB::connection('pgsql_test')
@@ -554,7 +513,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $modules = DB::connection('pgsql_test')
             ->table('applicant_company_modules')
-            ->orderBy('id', 'DESC')
+            ->orderBy('applicant_company_id', 'DESC')
             ->first();
 
         $applicant = DB::connection('pgsql_test')

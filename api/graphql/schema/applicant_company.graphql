@@ -149,7 +149,7 @@ extend type Query @guard{
     Получить список ApplicantIndividualCompany по applicant_company_id, где type = ApplicantIndividual
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    getMatchedApplicantndividuals(
+    getMatchedApplicantIndividuals(
         applicant_company_id: ID! @eq,
     ): [ApplicantIndividualCompany!]!
     @field(resolver: "MatchedUsersQuery@getApplicantIndividuals")

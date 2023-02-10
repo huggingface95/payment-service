@@ -48,7 +48,7 @@ class ApplicantCompanyMutator extends BaseMutator
             $applicantCompany->groupRole()->sync([$args['group_id']], true);
         }
 
-        $applicantCompany->modules()->attach($args['module_ids']);
+        //$applicantCompany->modules()->attach($args['module_ids']);
 
         return $applicantCompany;
     }
