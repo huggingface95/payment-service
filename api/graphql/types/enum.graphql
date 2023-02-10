@@ -3,3 +3,7 @@ enum ApplicantType {
     ApplicantCompany @enum(value: "ApplicantCompany")
 }
 
+enum ProviderTypeEnum {
+    PaymentProvider @enum(value: "PaymentProvider")
+    PaymentProviderIban @enum(value: "PaymentProviderIban")
+}

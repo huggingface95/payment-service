@@ -54,6 +54,8 @@ class AppServiceProvider extends ServiceProvider
             'ApplicantIndividual' => 'App\Models\ApplicantIndividual',
             'ApplicantCompany' => 'App\Models\ApplicantCompany',
             'Members' => 'App\Models\Members',
+            'PaymentProvider' => 'App\Models\PaymentProvider',
+            'PaymentProviderIban' => 'App\Models\PaymentProviderIban',
         ]);
     }
 }

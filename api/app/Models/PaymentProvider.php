@@ -6,6 +6,7 @@ use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
@@ -64,6 +65,11 @@ class PaymentProvider extends BaseModel
     public function logo(): BelongsTo
     {
         return $this->belongsTo(Files::class, 'logo_id');
+    }
+
+    public function projectApiSettings(): MorphMany
+    {
+        return $this->morphMany(ProjectApiSetting::class, 'payment_provider');
     }
 
     public function scopePaymentProviderCurrency($query, $currencyId)

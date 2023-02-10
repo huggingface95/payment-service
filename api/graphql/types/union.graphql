@@ -1,3 +1,5 @@
 union Clientable = ApplicantIndividual | ApplicantCompany | Members
 
 union Client = ApplicantIndividual | ApplicantCompany
+
+union ProviderType = PaymentProvider | PaymentProviderIban

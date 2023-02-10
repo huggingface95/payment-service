@@ -15,6 +15,8 @@ type Project {
     sms_sender_name: String
     "URL клиента"
     client_url: String
+    "URL восстановления пароля"
+    forgot_password_url: String
     "Дополнительны поля"
     additional_fields_basic: JSON
     "Дополнительные поля настройки"
@@ -98,6 +100,8 @@ input InputProject {
     sms_sender_name: String
     "URL клиента"
     client_url: String
+    "URL восстановления пароля"
+    forgot_password_url: String
     "Компания"
     company_id: ID!
     "Модуль"
