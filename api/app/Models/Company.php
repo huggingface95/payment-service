@@ -77,9 +77,9 @@ class Company extends BaseModel
 
     protected static function booting()
     {
-        self::created(function (Company $model) {
+        self::created(function (self $model) {
             $model->modules()->saveMany([new CompanyModule([
-                'module_id' => ModuleEnum::KYC->value
+                'module_id' => ModuleEnum::KYC->value,
             ])]);
         });
         parent::booting();

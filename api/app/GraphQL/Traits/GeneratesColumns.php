@@ -72,7 +72,7 @@ trait GeneratesColumns
                 'value' => $value,
                 'required' => $field['type']['kind'] == 'NonNullType' ? '!' : '',
                 'operator' => ($ops = collect($field['directives'])->pluck('name.value')) && $ops->count() > 1
-                    ? $ops->toArray() : $ops->first()
+                    ? $ops->toArray() : $ops->first(),
             ],
             ];
         })->toArray();
@@ -172,9 +172,10 @@ trait GeneratesColumns
         } elseif ($type == self::OPERATOR_ENUM || $type == self::TYPE_ENUM) {
             $enumValues = array_map(
                 function (string $columnName, string|array $v): string {
-                    if (is_array($v)){
+                    if (is_array($v)) {
                         $v = implode('|', $v);
                     }
+
                     return
                         $columnName
                         .' @enum(value: "'.$v.'")';
@@ -216,11 +217,12 @@ GRAPHQL
     ): ?InputObjectTypeDefinitionNode {
         $inputValues = array_map(
             function (string $column, array $data): string {
-                if (is_array($data['operator'])){
+                if (is_array($data['operator'])) {
                     $operator = '@'.implode(' @', $data['operator']);
-                } else{
+                } else {
                     $operator = '@'.$data['operator'];
                 }
+
                 return "{$column}: {$data['value']}{$data['required']} {$operator}";
             },
             array_keys($columns),
