@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\ModuleScope;
+use App\Models\Builders\ModuleBuilder;
 
 class Module extends BaseModel
 {
@@ -17,9 +17,8 @@ class Module extends BaseModel
         'name',
     ];
 
-    protected static function booted()
+    public function newEloquentBuilder($builder): ModuleBuilder
     {
-        parent::booted();
-        static::addGlobalScope(new ModuleScope());
+        return new ModuleBuilder($builder);
     }
 }
