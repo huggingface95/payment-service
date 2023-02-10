@@ -20,7 +20,7 @@ extend type Query @guard {
         where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id"])
     ): [Module!]!
-    @all
+    @all(scopes: ["withoutKYC"])
     @orderBy(column: "id", direction: ASC)
     """
     Получить список модулей без KYC модуля
