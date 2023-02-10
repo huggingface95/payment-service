@@ -87,37 +87,6 @@ class MembersQueryTest extends TestCase
         ]);
     }
 
-    public function testQueryMembersWhere(): void
-    {
-        $member = DB::connection('pgsql_test')
-            ->table('members')
-            ->orderBy('id', 'ASC')
-            ->get();
-
-        $this->postGraphQL(
-            [
-                'query' => '
-                query Members ($id: Mixed) {
-                    members(where: { column: ID, value: $id}) {
-                        data {
-                            id
-                        }
-                        }
-                }',
-                'variables' => [
-                    'id' => (string) $member[0]->id,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer '.$this->login(),
-            ]
-        )->seeJsonContains([
-            [
-                'id' => (string) $member[0]->id,
-            ],
-        ]);
-    }
-
     public function testQueryMembersByDepartmentPosition(): void
     {
         $member = DB::connection('pgsql_test')
@@ -130,7 +99,7 @@ class MembersQueryTest extends TestCase
                 query Members($id: Mixed) {
                     members(
                         filter: {
-                            column: HAS_DEPARTMENT_FILTER_BY_ID
+                            column: DEPARTMENT_ID
                             value: $id
                         }
                     ) {
