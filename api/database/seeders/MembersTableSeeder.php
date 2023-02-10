@@ -26,6 +26,7 @@ class MembersTableSeeder extends Seeder
                 'language_id' => 2,
                 'two_factor_auth_setting_id' => 1,
                 'department_position_id' => 1,
+                'department_id' => 1,
             ],
             [
                 'last_name' => 'Member2 Last',
@@ -37,6 +38,7 @@ class MembersTableSeeder extends Seeder
                 'language_id' => 2,
                 'two_factor_auth_setting_id' => 1,
                 'department_position_id' => 1,
+                'department_id' => 2,
             ],
             [
                 'last_name' => 'Member3 Last',
@@ -48,6 +50,7 @@ class MembersTableSeeder extends Seeder
                 'language_id' => 2,
                 'two_factor_auth_setting_id' => 1,
                 'department_position_id' => 1,
+                'department_id' => 3,
             ],
             [
                 'last_name' => 'Member4 Last',
@@ -58,7 +61,7 @@ class MembersTableSeeder extends Seeder
                 'country_id' => 1,
                 'language_id' => 2,
                 'two_factor_auth_setting_id' => 1,
-                'department_position_id' => 1,
+                'department_id' => 4,
             ],
         ];
 
