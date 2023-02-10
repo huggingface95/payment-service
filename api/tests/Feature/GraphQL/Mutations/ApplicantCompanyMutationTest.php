@@ -33,7 +33,6 @@ class ApplicantCompanyMutationTest extends TestCase
                     company_id: $company_id
                     group_id: $group_id
                     project_id: $project_id
-                    module_ids: []
                 )
                 {
                     id
@@ -227,7 +226,7 @@ class ApplicantCompanyMutationTest extends TestCase
                 }',
                 'variables' => [
                     'applicant_id' => 3,
-                    'applicant_company_id' => 5,
+                    'applicant_company_id' => 3,
                     'applicant_individual_company_relation_id' => 1,
                     'applicant_individual_company_position_id' => 1,
                 ],
@@ -354,8 +353,8 @@ class ApplicantCompanyMutationTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
-            ->orderBy('id', 'DESC')
-            ->get();
+            ->orderBy('id', 'ASC')
+            ->first();
 
         $this->postGraphQL(
             [
@@ -374,7 +373,7 @@ class ApplicantCompanyMutationTest extends TestCase
                     }
                 }',
                 'variables' => [
-                    'applicant_company_id' => (string) $applicant[0]->id,
+                    'applicant_company_id' => (string) $applicant->id,
                 ],
             ],
             [
@@ -431,7 +430,7 @@ class ApplicantCompanyMutationTest extends TestCase
 
         $this->seeJson([
             'data' => [
-                'sendEmailVerificationApplicantCompany' => [
+                'sendPhoneVerificationApplicantCompany' => [
                     'id' => $id['data']['sendPhoneVerificationApplicantCompany']['id'],
                     'name' => $id['data']['sendPhoneVerificationApplicantCompany']['name'],
                     'email' => $id['data']['sendPhoneVerificationApplicantCompany']['email'],

@@ -16,7 +16,7 @@ class GroupRoleMembersIndividualsTableSeeder extends Seeder
     {
         $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 3, 'user_id' => 2])->first();
         if (! $row) {
-            DB::table('group_role_members_individuals')->insert(['group_role_id' => 3, 'user_id' => 2, 'user_type' => 'ApplicantCompany']);
+            DB::table('group_role_members_individuals')->insert(['group_role_id' => 3, 'user_id' => 2]);
         }
 
         $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 2, 'user_id' => 3])->first();
@@ -27,6 +27,11 @@ class GroupRoleMembersIndividualsTableSeeder extends Seeder
         $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 1, 'user_id' => 4])->first();
         if (! $row) {
             DB::table('group_role_members_individuals')->insert(['group_role_id' => 1, 'user_id' => 4]);
+        }
+
+        $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 1, 'user_id' => 5])->first();
+        if (! $row) {
+            DB::table('group_role_members_individuals')->insert(['group_role_id' => 1, 'user_id' => 5, 'user_type' => 'ApplicantCompany']);
         }
     }
 }
