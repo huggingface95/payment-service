@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\PivotModuleScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -15,12 +14,6 @@ class CompanyModule extends BaseModel
         'module_id',
         'is_active',
     ];
-
-    protected static function booted()
-    {
-        parent::booted();
-        static::addGlobalScope(new PivotModuleScope);
-    }
 
     public function company(): BelongsTo
     {
