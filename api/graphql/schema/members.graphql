@@ -102,12 +102,12 @@ enum MembersColumn {
 input QueryMembersFilterStatic @spread{
     hasGroupRoleFilterById: ID @eq
     hasRoleFilterById: ID @eq
-    hasDepartmentFilterById: ID @eq
     id: ID @eq
     fullname: String @ilike
     company_id: ID @eq
     email: String @ilike
     department_position_id: ID @eq
+    department_id: ID @eq
     is_active: Boolean @eq
     last_login_at: String @gte
     is_show_owner_applicants: Boolean @eq
@@ -176,7 +176,9 @@ extend type Mutation  {
         "Активен не активен"
         is_active: Boolean
         "ID должности"
-        department_position: ID
+        department_position_id: ID
+        "ID департамента"
+        department_id: ID
         "ID настройки двухфактороной авторизации"
         two_factor_auth_setting_id: ID
         """

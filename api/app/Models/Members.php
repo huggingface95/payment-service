@@ -89,6 +89,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         'entity_id',
         'photo_id',
         'job_title',
+        'department_id',
     ];
 
     protected $hidden = [
@@ -196,16 +197,9 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         return $this->belongsTo(MemberStatus::class, 'member_status_id');
     }
 
-    public function department(): HasOneThrough
+    public function department(): BelongsTo
     {
-        return $this->hasOneThrough(
-            Department::class,
-            DepartmentPositionRelation::class,
-            'position_id',
-            'id',
-            'department_position_id',
-            'department_id'
-        );
+        return $this->belongsTo(Department::class, 'department_id');
     }
 
     public function twoFactor(): BelongsTo

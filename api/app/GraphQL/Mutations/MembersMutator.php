@@ -81,18 +81,17 @@ class MembersMutator extends BaseMutator
             $args['additional_info_fields'] = $this->setAdditionalField($args['additional_info_fields']);
         }
 
-        if (isset($args['department_position'])) {
-            $departamentPosition = DepartmentPosition::find($args['department_position']);
+        if (isset($args['department_position_id'])) {
+            $departamentPosition = DepartmentPosition::find($args['department_position_id']);
 
             if (! isset($departamentPosition)) {
                 throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
             }
 
             if ($departamentPosition->company->id !== $member->company_id) {
-                throw new GraphqlException('Position is not this company', 'internal', 500);
+                throw new GraphqlException('Position is not this company', 'use', 409);
             }
 
-            $member->department_position_id = $args['department_position'];
         }
 
         if (isset($args['ip_address'])) {
