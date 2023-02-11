@@ -70,12 +70,12 @@ class Project extends BaseModel
 
     public function paymentProviders(): MorphToMany
     {
-        return $this->morphedByMany(PaymentProvider::class, 'payment_provider', ProjectApiSetting::class);
+        return $this->morphedByMany(PaymentProvider::class, 'provider', ProjectApiSetting::class);
     }
 
     public function paymentProvidersIban(): MorphToMany
     {
-        return $this->morphedByMany(PaymentProviderIban::class, 'payment_provider', ProjectApiSetting::class);
+        return $this->morphedByMany(PaymentProviderIban::class, 'provider', ProjectApiSetting::class);
     }
 
     public function applicantCompanies(): HasMany
