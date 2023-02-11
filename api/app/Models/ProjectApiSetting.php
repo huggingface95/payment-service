@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * @method static firstOrCreate(array $array)
@@ -11,7 +12,7 @@ class ProjectApiSetting extends BaseModel
 {
     public $timestamps = false;
 
-    protected $fillable = ['project_id', 'wallet', 'api_key', 'password'];
+    protected $fillable = ['project_id', 'wallet', 'api_key', 'password', 'is_active', 'provider_id', 'provider_type'];
 
     protected $hidden = [
         'password',
@@ -20,5 +21,10 @@ class ProjectApiSetting extends BaseModel
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id');
+    }
+
+    public function provider(): MorphTo
+    {
+        return $this->morphTo('provider', 'provider_type', 'provider_id');
     }
 }

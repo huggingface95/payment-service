@@ -18,6 +18,7 @@ class ProjectSettings extends BaseModel
         'commission_template_id',
         'payment_provider_id',
         'iban_provider_id',
+        'applicant_type',
     ];
 
     public $timestamps = false;

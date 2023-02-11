@@ -51,31 +51,8 @@ enum Sex {
     Female @enum(value: 0)
 }
 
-"""
-Дополнительные поля
-"""
-input AdditionalFieldInput {
-    field_name: String
-    field_value: StringInteger
-    field_type: FieldTypes
-}
 
-input PivotTable {
-    sync: [ID]
-}
-
-#в будущем нам пригодится
-input ImageableMorphToTable {
-    connect: ConnectImageableInput
-    disconnect: Boolean
-    delete: Boolean
-}
-
-input ConnectImageableInput {
-    type: String!
-    id: ID!
-}
-
+#import types/*.graphql
 #import schema/*.graphql
 #import schema/applicant/*.graphql
 

@@ -90,10 +90,7 @@ type ApplicantCompany {
     project: Project @belongsTo(relation: "project")
 }
 
-enum ApplicantType {
-    ApplicantIndividual @enum(value: "ApplicantIndividual")
-    ApplicantCompany @enum(value: "ApplicantCompany")
-}
+
 
 type ApplicantIndividualCompany {
     applicant_id: ID!

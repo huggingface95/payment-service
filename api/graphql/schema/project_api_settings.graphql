@@ -12,6 +12,10 @@ type ProjectApiSetting {
     api_key: String
     "Пароль"
     password: String
+    "Активен или нет"
+    is_active: Boolean
+    "поставщик"
+    provider: ProviderType @morphTo(relation: "provider")
 }
 
 type ProjectApiSettingPassword {
@@ -23,6 +27,10 @@ type ProjectApiSettingPassword {
 
 extend type Query @guard {
     """
+    Получить ProjectApiSettings
+    """
+    projectApiSettings(project_id:ID! @eq): [ProjectApiSetting!]! @all
+    """
     Получить пароль
     """
     projectApiSettingPassword(id: ID! @eq): ProjectApiSettingPassword
@@ -31,14 +39,18 @@ extend type Query @guard {
 
 
 input InputProjectApiSetting {
-    "ID проекта"
-    project_id: ID!
     "Кошелек"
     wallet: String!
     "API ключ"
     api_key: String!
     "Пароль"
     password: String!
+    "is_active"
+    is_active: Boolean
+    "payment_provider_id"
+    payment_provider_id: ID!
+    "payment_provider_type"
+    payment_provider_type: ProviderTypeEnum!
 }
 
 extend type Mutation @guard {
@@ -46,8 +58,7 @@ extend type Mutation @guard {
     Изменить настройки api проекта
     """
     updateProjectApiSetting(
-        "ID шаблона"
-        id: ID!
-        input: InputProjectApiSetting! @spread
-    ): ProjectApiSetting @update
+        project_id: ID!
+        input: [InputProjectApiSetting!]! @spread
+    ): [ProjectApiSetting!]! @field(resolver: "ProjectApiSettingMutator@update")
 }

@@ -8,12 +8,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 /**
  * Class Company
  *
  * @property int id
  * @property string backoffice_support_url
+ * @property Collection $paymentProviders
+ * @property Collection $paymentProvidersIban
  */
 class Company extends BaseModel
 {
@@ -130,6 +133,11 @@ class Company extends BaseModel
     public function paymentProviders(): HasMany
     {
         return $this->hasMany(PaymentProvider::class, 'company_id');
+    }
+
+    public function paymentProvidersIban(): HasMany
+    {
+        return $this->hasMany(PaymentProviderIban::class, 'company_id');
     }
 
     public function paymentSystem(): HasOneThrough

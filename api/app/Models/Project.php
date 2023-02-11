@@ -4,7 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
+
+/**
+ * Class Project
+ *
+ * @property Company $company
+ */
 class Project extends BaseModel
 {
     /**
@@ -26,6 +33,7 @@ class Project extends BaseModel
         'state_id',
         'additional_fields_basic',
         'additional_fields_settings',
+        'forgot_password_url',
     ];
 
     protected $casts = [
@@ -58,6 +66,16 @@ class Project extends BaseModel
     public function projectApiSettings(): HasMany
     {
         return $this->hasMany(ProjectApiSetting::class);
+    }
+
+    public function paymentProviders(): MorphToMany
+    {
+        return $this->morphedByMany(PaymentProvider::class, 'provider', ProjectApiSetting::class);
+    }
+
+    public function paymentProvidersIban(): MorphToMany
+    {
+        return $this->morphedByMany(PaymentProviderIban::class, 'provider', ProjectApiSetting::class);
     }
 
     public function applicantCompanies(): HasMany
