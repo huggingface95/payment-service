@@ -69,7 +69,7 @@ class PaymentProvider extends BaseModel
 
     public function projectApiSettings(): MorphMany
     {
-        return $this->morphMany(ProjectApiSetting::class, 'payment_provider');
+        return $this->morphMany(ProjectApiSetting::class, 'provider');
     }
 
     public function scopePaymentProviderCurrency($query, $currencyId)

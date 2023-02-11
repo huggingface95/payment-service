@@ -32,6 +32,6 @@ class PaymentProviderIban extends BaseModel
 
     public function projectApiSettings(): MorphMany
     {
-        return $this->morphMany(ProjectApiSetting::class, 'payment_provider');
+        return $this->morphMany(ProjectApiSetting::class, 'provider');
     }
 }

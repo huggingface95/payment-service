@@ -12,7 +12,7 @@ class ProjectApiSetting extends BaseModel
 {
     public $timestamps = false;
 
-    protected $fillable = ['project_id', 'wallet', 'api_key', 'password', 'is_active', 'payment_provider_id', 'payment_provider_type'];
+    protected $fillable = ['project_id', 'wallet', 'api_key', 'password', 'is_active', 'provider_id', 'provider_type'];
 
     protected $hidden = [
         'password',
@@ -23,8 +23,8 @@ class ProjectApiSetting extends BaseModel
         return $this->belongsTo(Project::class, 'project_id');
     }
 
-    public function paymentProvider(): MorphTo
+    public function provider(): MorphTo
     {
-        return $this->morphTo('payment_provider');
+        return $this->morphTo('provider', 'provider_type', 'provider_id');
     }
 }

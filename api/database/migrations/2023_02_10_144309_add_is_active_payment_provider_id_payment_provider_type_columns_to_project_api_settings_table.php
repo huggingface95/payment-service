@@ -16,8 +16,8 @@ class AddIsActivePaymentProviderIdPaymentProviderTypeColumnsToProjectApiSettings
     {
         Schema::table('project_api_settings', function (Blueprint $table) {
             $table->boolean('is_active')->default(false);
-            $table->unsignedBigInteger('payment_provider_id')->nullable();
-            $table->enum('payment_provider_type', [PaymentProviderTypeEnum::PAYMENT->toString(), PaymentProviderTypeEnum::IBAN->toString()])->nullable();
+            $table->unsignedBigInteger('provider_id')->nullable();
+            $table->enum('provider_type', [PaymentProviderTypeEnum::PAYMENT->toString(), PaymentProviderTypeEnum::IBAN->toString()])->nullable();
         });
     }
 

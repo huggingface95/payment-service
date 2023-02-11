@@ -15,7 +15,7 @@ type ProjectApiSetting {
     "Активен или нет"
     is_active: Boolean
     "поставщик"
-    provider: ProviderType @morphTo(relation: "paymentProvider")
+    provider: ProviderType @morphTo(relation: "provider")
 }
 
 type ProjectApiSettingPassword {
