@@ -48,7 +48,7 @@ type ProjectSettings {
     "Связанный платежный провайдер"
     payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
     "Связанный iban провайдер"
-    iban_provider: PaymentProvider @belongsTo(relation: "ibanProvider")
+    iban_provider: PaymentProviderIban @belongsTo(relation: "ibanProvider")
     "Связанный платежный шаблон"
     commission_template: CommissionTemplate @belongsTo(relation: "commissionTemplate")
     "Индивидуал или компани"
