@@ -47,7 +47,7 @@ class DepartmentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -78,7 +78,7 @@ class DepartmentsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -113,7 +113,7 @@ class DepartmentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -148,7 +148,7 @@ class DepartmentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -178,7 +178,7 @@ class DepartmentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -209,7 +209,7 @@ class DepartmentsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -229,7 +229,7 @@ class DepartmentsQueryTest extends TestCase
         $this->postGraphQL([
             'query' => '
                 query DepartmentPositions($id: Mixed) {
-                    departmentPositions(hasDepartment: { column: ID, value: $id }) {
+                    departmentPositions(filter: { column: HAS_DEPARTMENT_FILTER_BY_ID, value: $id }) {
                         data {
                             id
                             name
@@ -240,7 +240,37 @@ class DepartmentsQueryTest extends TestCase
                 'id' => $departmentPositions[0]->id,
             ],
         ], [
-            'Authorization' => 'Bearer '.$this->login(),
+            'Authorization' => 'Bearer ' . $this->login(),
+        ])->seeJsonContains([
+            [
+                'id' => (string) $departmentPositions[0]->id,
+                'name' => (string) $departmentPositions[0]->name,
+            ],
+        ]);
+    }
+
+    public function testQueryDepartmentPositionsByName(): void
+    {
+        $departmentPositions = DB::connection('pgsql_test')
+            ->table('department_position')
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        $this->postGraphQL([
+            'query' => '
+                query DepartmentPositions($name: Mixed) {
+                    departmentPositions(filter: { column: NAME, operator: ILIKE, value: $name }) {
+                        data {
+                            id
+                            name
+                        }
+                   }
+                }',
+            'variables' => [
+                'name' => $departmentPositions[0]->name,
+            ],
+        ], [
+            'Authorization' => 'Bearer ' . $this->login(),
         ])->seeJsonContains([
             [
                 'id' => (string) $departmentPositions[0]->id,
@@ -269,7 +299,7 @@ class DepartmentsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
