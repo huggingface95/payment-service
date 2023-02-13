@@ -19,8 +19,8 @@ class MembersTableSeeder extends Seeder
             1 => [
                 'last_name' => 'Member1 Last',
                 'email' => 'test0@test.com',
-                'password_hash' => Hash::make('1234567Qa'),
-                'password_salt' => Hash::make('1234567Qa'),
+                'password_hash' => Hash::make(env('DEFAULT_PASSWORD','1234567Qa')),
+                'password_salt' => Hash::make(env('DEFAULT_PASSWORD','1234567Qa')),
                 'company_id' => 2,
                 'country_id' => 1,
                 'language_id' => 2,
@@ -31,8 +31,8 @@ class MembersTableSeeder extends Seeder
             [
                 'last_name' => 'Member2 Last',
                 'email' => 'test@test.com',
-                'password_hash' => Hash::make('1234567Qa'),
-                'password_salt' => Hash::make('1234567Qa'),
+                'password_hash' => Hash::make(env('DEFAULT_PASSWORD','1234567Qa')),
+                'password_salt' => Hash::make(env('DEFAULT_PASSWORD','1234567Qa')),
                 'company_id' => 1,
                 'country_id' => 1,
                 'language_id' => 2,
@@ -43,8 +43,8 @@ class MembersTableSeeder extends Seeder
             [
                 'last_name' => 'Member3 Last',
                 'email' => 'test2@test.com',
-                'password_hash' => Hash::make('1234567Qa'),
-                'password_salt' => Hash::make('1234567Qa'),
+                'password_hash' => Hash::make(env('DEFAULT_PASSWORD','1234567Qa')),
+                'password_salt' => Hash::make(env('DEFAULT_PASSWORD','1234567Qa')),
                 'company_id' => 2,
                 'country_id' => 1,
                 'language_id' => 2,
@@ -55,8 +55,8 @@ class MembersTableSeeder extends Seeder
             [
                 'last_name' => 'Member4 Last',
                 'email' => 'superadmin@test.com',
-                'password_hash' => Hash::make('1234567Qa'),
-                'password_salt' => Hash::make('1234567Qa'),
+                'password_hash' => Hash::make(env('DEFAULT_PASSWORD','1234567Qa')),
+                'password_salt' => Hash::make(env('DEFAULT_PASSWORD','1234567Qa')),
                 'company_id' => 2,
                 'country_id' => 1,
                 'language_id' => 2,

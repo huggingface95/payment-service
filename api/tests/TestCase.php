@@ -57,7 +57,7 @@ abstract class TestCase extends BaseTestCase
     public function login(array $data = []): string
     {
         if (empty($data)) {
-            $data = ['email' => 'test@test.com', 'password' => '123123Qwa!'];
+            $data = ['email' => 'test@test.com', 'password' => env('DEFAULT_PASSWORD','1234567Qa')];
         }
 
         $token = Http::accept('application/json')->post(env('AUTH_URL','http://go-auth:2491/auth/login'), $data);
