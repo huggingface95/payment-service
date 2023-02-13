@@ -8,6 +8,7 @@ use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\DocumentStateTableSeeder;
 use Database\Seeders\DocumentTypeTableSeeder;
 use Database\Seeders\FileTableSeeder;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class KycTimelineQueryTest extends TestCase
@@ -24,54 +25,74 @@ class KycTimelineQueryTest extends TestCase
 
     public function testQueryKycTimeLineNoAuth(): void
     {
+        $kycTimeLine = DB::connection('pgsql_test')
+            ->table('kyc_timeline')
+            ->orderBy('id', 'ASC')
+            ->first();
+
         $this->graphQL('
-            {
-                kycTimelines {
-                    data {
-                         os
-                        browser
-                        ip
-                        action
-                        action_type
-                        applicant_id
-                        applicant_type
-                        tag
-                    }
+            query KycTimeLines(
+              $applicant_id: ID!
+              $applicant_type: ApplicantType!
+              $company_id: ID!
+            ) {
+              kycTimelines(
+                applicant_id: $applicant_id
+                applicant_type: $applicant_type
+                company_id: $company_id
+              ) {
+                data {
+                  os
+                  browser
+                  ip
+                  action
+                  action_type
+                  applicant_id
+                  applicant_type
+                  tag
                 }
+              }
             }
-        ')->seeJson([
+        ',
+        [
+            'applicant_id' => $kycTimeLine->applicant_id,
+            'applicant_type' => $kycTimeLine->applicant_type,
+            'company_id' => $kycTimeLine->company_id,
+        ])->seeJson([
             'message' => 'Unauthenticated.',
         ]);
     }
 
-    /**
-     * @dataProvider provide_testQueryKycTimelinesWithFilterByCondition
-     */
-    public function testQueryKycTimelinesWithFilterByCondition($cond, $value): void
+    public function testQueryKycTimelinesWithFilterByCondition(): void
     {
-        $documents = KycTimeline::where($cond, $value)->orderBy('id', 'ASC')->get();
+        $document = DB::connection('pgsql_test')
+            ->table('kyc_timeline')
+            ->orderBy('id', 'ASC')
+            ->first();
 
-        $expect = [];
-
-        foreach ($documents as $document) {
-            $expect['data']['kycTimelines']['data'][] = [
-                'os' => (string) $document->os,
-                'browser' => (string) $document->browser,
-                'ip' => (string) $document->ip,
-                'action' => (string) $document->action,
-                'action_type' => (string) strtoupper($document->action_type),
-                'applicant_id' => (string) $document->applicant_id,
-                'applicant_type' => (string) $document->applicant_type,
-                'tag' => (string) $document->tag,
-            ];
-        }
+        $expect  = [
+            'os' => (string) $document->os,
+            'browser' => (string) $document->browser,
+            'ip' => (string) $document->ip,
+            'action' => (string) $document->action,
+            'action_type' => (string) strtoupper($document->action_type),
+            'applicant_id' => (string) $document->applicant_id,
+            'applicant_type' => (string) $document->applicant_type,
+            'tag' => (string) $document->tag,
+        ];
 
         $this->postGraphQL(
             [
                 'query' => '
-                query KycTimelines($id: Mixed) {
+                query KycTimelines(
+                    $applicant_id: ID!
+                    $applicant_type: ApplicantType!
+                    $company_id: ID!
+                ) {
                     kycTimelines (
-                        filter: { column: '.strtoupper($cond).', operator: EQ, value: $id }
+                        applicant_id: $applicant_id,
+                        applicant_type: $applicant_type,
+                        company_id: $company_id
                     ) {
                         data {
                             os
@@ -86,22 +107,14 @@ class KycTimelineQueryTest extends TestCase
                     }
                 }',
                 'variables' => [
-                    'id' => $value,
+                    'applicant_id' => $document->applicant_id,
+                    'applicant_type' => $document->applicant_type,
+                    'company_id' => $document->company_id,
                 ],
             ],
             [
                 'Authorization' => 'Bearer '.$this->login(),
             ]
-        )->seeJson($expect);
-    }
-
-    public function provide_testQueryKycTimelinesWithFilterByCondition()
-    {
-        return [
-            ['applicant_id', '1'],
-            ['company_id', '1'],
-            ['applicant_type', 'ApplicantIndividual'],
-            ['applicant_type', 'ApplicantCompany'],
-        ];
+        )->seeJsonContains($expect);
     }
 }

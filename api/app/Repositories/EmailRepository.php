@@ -93,6 +93,11 @@ class EmailRepository implements EmailRepositoryInterface
             })
             ->first();
 
+
+        $f = fopen('data.txt', 'w');
+        fwrite($f, json_encode($emailTemplate));
+        fclose($f);
+
         if (! $notification) {
             throw new EmailException('Email Notification not found', '404');
         }
