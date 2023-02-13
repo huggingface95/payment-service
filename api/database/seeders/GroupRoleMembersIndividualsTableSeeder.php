@@ -36,7 +36,7 @@ class GroupRoleMembersIndividualsTableSeeder extends Seeder
 
         $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 1, 'user_id' => 1])->first();
         if (! $row) {
-            DB::table('group_role_members_individuals')->insert(['group_role_id' => 1, 'user_id' => 1, 'user_type' => 'ApplicantIndividual']);
+            DB::table('group_role_members_individuals')->insert(['group_role_id' => 1, 'user_id' => 2, 'user_type' => 'ApplicantIndividual']);
         }
     }
 }
