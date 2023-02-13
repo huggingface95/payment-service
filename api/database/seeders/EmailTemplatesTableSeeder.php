@@ -34,7 +34,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'member_id' => 2,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'Test template',
+            'name' => 'Test template approval',
         ]);
 
         EmailTemplate::firstOrCreate([
@@ -45,7 +45,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'member_id' => 2,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'Test template',
+            'name' => 'Test template reset password',
         ]);
     }
 }
