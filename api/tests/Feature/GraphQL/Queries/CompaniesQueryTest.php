@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\Company;
 use Illuminate\Support\Facades\DB;
 
 class CompaniesQueryTest extends TestCase
@@ -53,7 +54,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -99,7 +100,7 @@ class CompaniesQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -146,7 +147,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -192,7 +193,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -238,7 +239,299 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $company[0]->id,
+                'name' => (string) $company[0]->name,
+                'url' => (string) $company[0]->url,
+                'email' => (string) $company[0]->email,
+                'zip' => (string) $company[0]->zip,
+                'address' => (string) $company[0]->address,
+                'city' => (string) $company[0]->city,
+                'company_number' => (string) $company[0]->company_number,
+                'contact_name' => (string) $company[0]->contact_name,
+            ],
+        ]);
+    }
+
+    public function testCompaniesFilterByRegNumber(): void
+    {
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => 'query Company($reg_number: Mixed) {
+                    companies(filter: { column: REG_NUMBER, operator: ILIKE, value: $reg_number }) {
+                        data {
+                            id
+                            name
+                            url
+                            email
+                            zip
+                            address
+                            city
+                            company_number
+                            contact_name
+                        }
+                }
+            }',
+                'variables' => [
+                    'reg_number' => (string) $company[0]->reg_number,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $company[0]->id,
+                'name' => (string) $company[0]->name,
+                'url' => (string) $company[0]->url,
+                'email' => (string) $company[0]->email,
+                'zip' => (string) $company[0]->zip,
+                'address' => (string) $company[0]->address,
+                'city' => (string) $company[0]->city,
+                'company_number' => (string) $company[0]->company_number,
+                'contact_name' => (string) $company[0]->contact_name,
+            ],
+        ]);
+    }
+
+    public function testCompaniesFilterByEntityType(): void
+    {
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => 'query Company($entity_type: Mixed) {
+                    companies(filter: { column: ENTITY_TYPE, operator: ILIKE, value: $entity_type }) {
+                        data {
+                            id
+                            name
+                            url
+                            email
+                            zip
+                            address
+                            city
+                            company_number
+                            contact_name
+                        }
+                }
+            }',
+                'variables' => [
+                    'entity_type' => (string) $company[0]->entity_type,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $company[0]->id,
+                'name' => (string) $company[0]->name,
+                'url' => (string) $company[0]->url,
+                'email' => (string) $company[0]->email,
+                'zip' => (string) $company[0]->zip,
+                'address' => (string) $company[0]->address,
+                'city' => (string) $company[0]->city,
+                'company_number' => (string) $company[0]->company_number,
+                'contact_name' => (string) $company[0]->contact_name,
+            ],
+        ]);
+    }
+
+    public function testCompaniesFilterByCountryId(): void
+    {
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => 'query Company($country_id: Mixed) {
+                    companies(filter: { column: COUNTRY_ID, value: $country_id }) {
+                        data {
+                            id
+                            name
+                            url
+                            email
+                            zip
+                            address
+                            city
+                            company_number
+                            contact_name
+                        }
+                }
+            }',
+                'variables' => [
+                    'country_id' => (string) $company[0]->country_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $company[0]->id,
+                'name' => (string) $company[0]->name,
+                'url' => (string) $company[0]->url,
+                'email' => (string) $company[0]->email,
+                'zip' => (string) $company[0]->zip,
+                'address' => (string) $company[0]->address,
+                'city' => (string) $company[0]->city,
+                'company_number' => (string) $company[0]->company_number,
+                'contact_name' => (string) $company[0]->contact_name,
+            ],
+        ]);
+    }
+
+    public function testCompaniesFilterByPaymentProviders(): void
+    {
+        $paymentProvider = DB::connection('pgsql_test')
+            ->table('payment_provider')
+            ->orderBy('id', 'ASC')
+            ->first();
+
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->where('id', $paymentProvider->company_id)
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => 'query Company($payment_provider: Mixed) {
+                    companies(filter: { column: HAS_PAYMENT_PROVIDERS_FILTER_BY_ID, value: $payment_provider }) {
+                        data {
+                            id
+                            name
+                            url
+                            email
+                            zip
+                            address
+                            city
+                            company_number
+                            contact_name
+                        }
+                }
+            }',
+                'variables' => [
+                    'payment_provider' => (string) $paymentProvider->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $company[0]->id,
+                'name' => (string) $company[0]->name,
+                'url' => (string) $company[0]->url,
+                'email' => (string) $company[0]->email,
+                'zip' => (string) $company[0]->zip,
+                'address' => (string) $company[0]->address,
+                'city' => (string) $company[0]->city,
+                'company_number' => (string) $company[0]->company_number,
+                'contact_name' => (string) $company[0]->contact_name,
+            ],
+        ]);
+    }
+
+    public function testCompaniesFilterByPaymentSystems(): void
+    {
+
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        $paymentSystem = Company::with(['paymentSystem'])->first();
+
+        $this->postGraphQL(
+            [
+                'query' => 'query Company($payment_system: Mixed) {
+                    companies(filter: { column: HAS_PAYMENT_SYSTEM_FILTER_BY_ID, value: $payment_system }) {
+                        data {
+                            id
+                            name
+                            url
+                            email
+                            zip
+                            address
+                            city
+                            company_number
+                            contact_name
+                        }
+                }
+            }',
+                'variables' => [
+                    'payment_system' => (string) $paymentSystem->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $company[0]->id,
+                'name' => (string) $company[0]->name,
+                'url' => (string) $company[0]->url,
+                'email' => (string) $company[0]->email,
+                'zip' => (string) $company[0]->zip,
+                'address' => (string) $company[0]->address,
+                'city' => (string) $company[0]->city,
+                'company_number' => (string) $company[0]->company_number,
+                'contact_name' => (string) $company[0]->contact_name,
+            ],
+        ]);
+    }
+
+    public function testCompaniesFilterByRegions(): void
+    {
+
+        $region = DB::connection('pgsql_test')
+            ->table('regions')
+            ->orderBy('id', 'ASC')
+            ->first();
+
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->where('id', $region->company_id)
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => 'query Company($region: Mixed) {
+                    companies(filter: { column: HAS_REGIONS_FILTER_BY_ID, value: $region }) {
+                        data {
+                            id
+                            name
+                            url
+                            email
+                            zip
+                            address
+                            city
+                            company_number
+                            contact_name
+                        }
+                }
+            }',
+                'variables' => [
+                    'region' => (string) $region->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
