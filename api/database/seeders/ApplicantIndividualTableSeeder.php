@@ -34,6 +34,9 @@ class ApplicantIndividualTableSeeder extends Seeder
                 'account_manager_member_id' => 2,
                 'applicant_risk_level_id' => 1,
                 'applicant_state_reason_id' => 1,
+                'applicant_status_id' => 1,
+                'kyc_level_id' => 1,
+                'project_id' => 1,
             ],
             [
                 'first_name' => 'Applicant_test2',
@@ -53,6 +56,9 @@ class ApplicantIndividualTableSeeder extends Seeder
                 'account_manager_member_id' => 2,
                 'applicant_risk_level_id' => 1,
                 'applicant_state_reason_id' => 1,
+                'applicant_status_id' => 1,
+                'kyc_level_id' => 1,
+                'project_id' => 1,
             ],
         ];
 
