@@ -81,7 +81,7 @@ class CommissionTemplateMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -129,7 +129,7 @@ class CommissionTemplateMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -169,7 +169,7 @@ class CommissionTemplateMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
