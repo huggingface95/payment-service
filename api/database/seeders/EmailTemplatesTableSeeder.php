@@ -27,6 +27,17 @@ class EmailTemplatesTableSeeder extends Seeder
         ]);
 
         EmailTemplate::firstOrCreate([
+            'id' => 2,
+            'subject' => 'Waiting for approval',
+        ], [
+            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'member_id' => 2,
+            'company_id' => 1,
+            'created_at' => Carbon::now(),
+            'name' => 'Test template',
+        ]);
+
+        EmailTemplate::firstOrCreate([
             'id' => 3,
             'subject' => 'Reset Password',
         ], [
@@ -34,7 +45,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'member_id' => 2,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'Test template Reset Password',
+            'name' => 'Test template',
         ]);
     }
 }
