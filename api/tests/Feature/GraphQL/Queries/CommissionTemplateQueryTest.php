@@ -32,16 +32,16 @@ class CommissionTemplateQueryTest extends TestCase
         $commissionTemplate = DB::connection('pgsql_test')
             ->table('commission_template')
             ->orderBy('id', 'ASC')
-            ->get();
+            ->first();
 
         $data =
             [
                 'data' => [
                     'commissionTemplates' => [
                         'data' => [[
-                            'id' => (string) $commissionTemplate[0]->id,
-                            'name' => $commissionTemplate[0]->name,
-                            'description' => $commissionTemplate[0]->description,
+                            'id' => (string) $commissionTemplate->id,
+                            'name' => $commissionTemplate->name,
+                            'description' => $commissionTemplate->description,
                         ]],
                     ],
                 ],
@@ -61,7 +61,7 @@ class CommissionTemplateQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson($data);
     }
@@ -90,7 +90,7 @@ class CommissionTemplateQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -135,7 +135,7 @@ class CommissionTemplateQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -163,7 +163,7 @@ class CommissionTemplateQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $commissionTemplate->id,
@@ -195,7 +195,7 @@ class CommissionTemplateQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $commissionTemplate->id,
@@ -229,7 +229,7 @@ class CommissionTemplateQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $commissionTemplate->id,
@@ -267,7 +267,38 @@ class CommissionTemplateQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $commissionTemplate->id,
+            'name' => (string) $commissionTemplate->name,
+            'description' => (string) $commissionTemplate->description,
+        ]);
+    }
+
+    public function testQueryCommissionTemplateByIsActive(): void
+    {
+        $commissionTemplate = DB::connection('pgsql_test')
+            ->table('commission_template')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                {
+                    commissionTemplates(
+                        filter: { column: IS_ACTIVE, value: true }
+                    ) {
+                        data {
+                            id
+                            name
+                            description
+                        }
+                    }
+                }'
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $commissionTemplate->id,
