@@ -72,7 +72,56 @@ class CommissionPriceListQueryTest extends TestCase
                 }
         ', ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJson($data);
+    }
+
+    public function testQueryCommissionPriceListsOrderBy(): void
+    {
+        $commissionPriceList = DB::connection('pgsql_test')
+            ->table('commission_price_list')
+            ->orderBy('id', 'ASC')
+            ->first();
+
+        $data =
+            [
+                'data' => [
+                    'commissionPriceLists' => [
+                        'data' => [[
+                            'id' => (string) $commissionPriceList->id,
+                            'name' => $commissionPriceList->name,
+                            'provider' => [
+                                'id' => (string) $commissionPriceList->provider_id,
+                            ],
+                            'payment_system' => [
+                                'id' => (string) $commissionPriceList->payment_system_id,
+                            ],
+                        ]],
+                    ],
+                ],
+            ];
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                {
+                    commissionPriceLists(first:1, orderBy:{column: ID, order:ASC}) {
+                        data {
+                            id
+                            name
+                            provider {
+                              id
+                            }
+                            payment_system {
+                              id
+                            }
+                        }
+                    }
+                }
+        ', ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson($data);
     }
@@ -107,7 +156,7 @@ class CommissionPriceListQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -125,7 +174,7 @@ class CommissionPriceListQueryTest extends TestCase
         ]);
     }
 
-    public function testQueryWithWhereCommissionPriceLists(): void
+    public function testQueryCommissionPriceListByCompanyID(): void
     {
         $commissionPriceList = DB::connection('pgsql_test')
             ->table('commission_price_list')
@@ -168,41 +217,9 @@ class CommissionPriceListQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains($data);
-    }
-
-    public function testQueryCommissionPriceListByCompany(): void
-    {
-        $commissionPriceList = DB::connection('pgsql_test')
-            ->table('commission_price_list')
-            ->first();
-
-        $this->postGraphQL(
-            [
-                'query' => '
-                query CommissionPriceList($id: Mixed) {
-                    commissionPriceLists(
-                        filter: { column: COMPANY_ID, value: $id }
-                    ) {
-                        data {
-                            id
-                            name
-                        }
-                    }
-                }',
-                'variables' =>  [
-                    'id' => $commissionPriceList->company_id,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer '.$this->login(),
-            ]
-        )->seeJsonContains([
-            'id' => (string) $commissionPriceList->id,
-            'name' => (string) $commissionPriceList->name,
-        ]);
     }
 
     public function testQueryCommissionPriceListByPaymentProvider(): void
@@ -229,7 +246,7 @@ class CommissionPriceListQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $commissionPriceList->id,
@@ -261,7 +278,7 @@ class CommissionPriceListQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $commissionPriceList->id,
@@ -293,7 +310,7 @@ class CommissionPriceListQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $commissionPriceList->id,
@@ -325,7 +342,7 @@ class CommissionPriceListQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $commissionPriceList->id,
@@ -357,7 +374,7 @@ class CommissionPriceListQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $commissionPriceList->id,
