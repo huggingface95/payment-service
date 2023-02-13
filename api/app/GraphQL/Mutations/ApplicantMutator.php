@@ -122,9 +122,11 @@ class ApplicantMutator extends BaseMutator
 
     public function setSecurityPin($_, array $args)
     {
-        ApplicantIndividual::where('id', $args['id'])->update(['security_pin' => str_pad(mt_rand(1, 99999999), 8, '0', STR_PAD_LEFT)]);
+        $applicant = ApplicantIndividual::find($args['id']);
 
-        return $args;
+        $applicant->update(['security_pin' => str_pad(mt_rand(1, 99999999), 8, '0', STR_PAD_LEFT)]);
+
+        return $applicant;
     }
 
     public function sendEmailVerification($_, array $args)
@@ -137,7 +139,7 @@ class ApplicantMutator extends BaseMutator
         $emailTemplateName = 'Welcome! Confirm your email address';
         $emailData = [
             'client_name' => $applicant->first_name,
-            'email_confirm_url' => $company->companySettings->client_url.'/email/registration/verify/'.$verifyToken->token,
+            'email_confirm_url' => $company->client_url.'/email/registration/verify/'.$verifyToken->token,
             'member_company_name' => $company->name,
         ];
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $company, $emailTemplateName, $emailData);

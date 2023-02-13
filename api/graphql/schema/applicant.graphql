@@ -126,11 +126,6 @@ extend type Query @guard {
     """
     applicantIndividuals(
         filter: _ @filterConditions(static: QueryApplicantIndividualsFilterStatic),
-        hasRiskLevel: _ @whereHasConditions(columns: ["name", "id"]),
-        hasStateReason: _ @whereHasConditions(columns: ["name", "id"]),
-        hasStatus: _ @whereHasConditions(columns: ["name", "id"]),
-        hasGroupRole: _ @whereHasConditions(columns: ["group_type_id","role_id","id"]),
-        where: _ @whereConditions(columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"]),
         group: Int @scope(name:"GetGroup"),
         created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"),
         orderBy: _ @orderBy(columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"])
