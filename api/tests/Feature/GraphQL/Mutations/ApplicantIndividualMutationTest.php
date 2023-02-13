@@ -89,7 +89,7 @@ class ApplicantIndividualMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -138,7 +138,7 @@ class ApplicantIndividualMutationTest extends TestCase
                     }
                 }',
                 'variables' => [
-                    'id' => strval($applicant[0]->id),
+                    'id' => (string) $applicant[0]->id,
                     'first_name' => 'First test',
                     'last_name' => 'Last_name test',
                     'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
@@ -147,7 +147,7 @@ class ApplicantIndividualMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -158,6 +158,269 @@ class ApplicantIndividualMutationTest extends TestCase
                 'updateApplicantIndividual' => [
                     'id' => $id['data']['updateApplicantIndividual']['id'],
                     'email' => $id['data']['updateApplicantIndividual']['email'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testUpdateApplicantIndividualVerificationStatus(): void
+    {
+        $applicant = DB::connection('pgsql_test')
+            ->table('applicant_individual')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation UpdateApplicantIndividualVerificationStatus(
+                    $id: ID!
+                    $status_id: ID!
+                )
+                {
+                    updateApplicantIndividualVerificationStatus (
+                        id: $id
+                        applicant_status_id: $status_id
+                    )
+                    {
+                        id
+                        email
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                    'status_id' => 3,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'updateApplicantIndividualVerificationStatus' => [
+                    'id' => $id['data']['updateApplicantIndividualVerificationStatus']['id'],
+                    'email' => $id['data']['updateApplicantIndividualVerificationStatus']['email'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testSetApplicantIndividualSecurityPin(): void
+    {
+        $applicant = DB::connection('pgsql_test')
+            ->table('applicant_individual')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation setApplicantSecurityPin(
+                    $id: ID!
+                )
+                {
+                    setApplicantSecurityPin (
+                        id: $id
+                    )
+                    {
+                        id
+                        email
+                        security_pin
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'setApplicantSecurityPin' => [
+                    'id' => $id['data']['setApplicantSecurityPin']['id'],
+                    'email' => $id['data']['setApplicantSecurityPin']['email'],
+                    'security_pin' => $id['data']['setApplicantSecurityPin']['security_pin'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testSendEmailVerificationApplicantIndividual(): void
+    {
+        $applicant = DB::connection('pgsql_test')
+            ->table('applicant_individual')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation SendEmailVerification(
+                    $id: ID!
+                )
+                {
+                    sendEmailVerification (
+                        applicant_id: $id
+                    )
+                    {
+                        id
+                        email
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'sendEmailVerification' => [
+                    'id' => $id['data']['sendEmailVerification']['id'],
+                    'email' => $id['data']['sendEmailVerification']['email'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testSendPhoneVerificationApplicantIndividual(): void
+    {
+        $applicant = DB::connection('pgsql_test')
+            ->table('applicant_individual')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation SendPhoneVerification(
+                    $id: ID!
+                )
+                {
+                    sendPhoneVerification (
+                        applicant_id: $id
+                    )
+                    {
+                        id
+                        email
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'sendPhoneVerification' => [
+                    'id' => $id['data']['sendPhoneVerification']['id'],
+                    'email' => $id['data']['sendPhoneVerification']['email'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testSendEmailResetPasswordApplicantIndividual(): void
+    {
+        $applicant = DB::connection('pgsql_test')
+            ->table('applicant_individual')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation SendEmailResetPassword(
+                    $id: ID!
+                )
+                {
+                    sendEmailResetPassword (
+                        applicant_id: $id
+                    )
+                    {
+                        id
+                        email
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'sendEmailResetPassword' => [
+                    'id' => $id['data']['sendEmailResetPassword']['id'],
+                    'email' => $id['data']['sendEmailResetPassword']['email'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testSendEmailRegistrationLinkApplicantIndividual(): void
+    {
+        $applicant = DB::connection('pgsql_test')
+            ->table('applicant_individual')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation SendEmailRegistation(
+                    $id: ID!
+                )
+                {
+                    sendEmailRegistation (
+                        applicant_id: $id
+                    )
+                    {
+                        id
+                        email
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $applicant[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'sendEmailRegistation' => [
+                    'id' => $id['data']['sendEmailRegistation']['id'],
+                    'email' => $id['data']['sendEmailRegistation']['email'],
                 ],
             ],
         ]);
@@ -189,7 +452,7 @@ class ApplicantIndividualMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
