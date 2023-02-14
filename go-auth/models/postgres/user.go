@@ -15,6 +15,7 @@ type User interface {
 	GetEmail() string
 	IsActivated() bool
 	IsEmailVerify() bool
+	IsChangePassword() bool
 	GetCompanyId() uint64
 	GetTwoFactorAuthSettingId() uint64
 	GetGoogle2FaSecret() string
@@ -26,4 +27,5 @@ type User interface {
 	SetGoogle2FaSecret(v string)
 	SetTwoFactorAuthSettingId(v uint64)
 	SetCompanyId(v uint64)
+	SetNeedChangePassword(v bool)
 }

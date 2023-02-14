@@ -37,9 +37,9 @@ func GenerateTwoFactorQr(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
 
-	qr, code, err := services.GenerateTwoFactorQr(clientType, user.GetId(), user.GetEmail(), config.Conf.App.AppName, crypto.SHA1, 8)
+	qr, code, err := services.GenerateTwoFactorQr(clientType, user.GetId(), user.GetEmail(), config.Conf.App.AppName, crypto.SHA1, 6)
 	if err != nil {
-		context.JSON(http.StatusOK, gin.H{"data": "Don't generate two factor token"})
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "Don't generate two factor token"})
 		context.Abort()
 		return
 	}

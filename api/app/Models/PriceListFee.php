@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Services\PriceListFeeService;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Support\Carbon;
 
@@ -130,6 +131,11 @@ class PriceListFee extends BaseModel
     public function fees(): HasMany
     {
         return $this->hasMany(PriceListFeeCurrency::class, 'price_list_fee_id');
+    }
+
+    public function feeScheduled(): HasOne
+    {
+        return $this->hasOne(PriceListFeeScheduled::class, 'price_list_fee_id');
     }
 
     public function operationType(): BelongsTo

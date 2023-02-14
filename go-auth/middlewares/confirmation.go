@@ -48,7 +48,7 @@ func CheckIndividualEmailConfirmation() gin.HandlerFunc {
 
 func CheckIndividualResetPassword() gin.HandlerFunc {
 	return func(context *gin.Context) {
-		token := context.Request.PostForm.Get("token")
+		token := context.Request.URL.Query().Get("token")
 		if token == "" {
 			context.JSON(http.StatusBadRequest, gin.H{"error": "request not working"})
 			context.Abort()

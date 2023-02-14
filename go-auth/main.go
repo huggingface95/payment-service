@@ -54,6 +54,15 @@ func initRouter() *gin.Engine {
 		{
 			ip.GET("", controllers.ConfirmationIp)
 		}
+		email := confirmation.Group("/email").Use(middlewares.CheckIndividualEmailConfirmation())
+		{
+			email.GET("", controllers.ConfirmationIndividualEmail)
+		}
+
+		pass := confirmation.Group("/password").Use(middlewares.CheckIndividualResetPassword())
+		{
+			pass.POST("", controllers.ChangePassword)
+		}
 	}
 
 	auth := router.Group("/auth")
@@ -61,18 +70,6 @@ func initRouter() *gin.Engine {
 		i := auth.Group("applicant")
 		{
 			i.POST("register", individual.Register)
-
-			iConf := i.Group("confirmation")
-			{
-				iConfEmail := iConf.Group("email")
-				{
-					iConfEmail.Use(middlewares.CheckIndividualEmailConfirmation()).GET("", individual.ConfirmationIndividualEmail)
-				}
-				iConfResetPass := iConf.Group("password")
-				{
-					iConfResetPass.Use(middlewares.CheckIndividualResetPassword()).POST("change", controllers.ChangePassword)
-				}
-			}
 		}
 		auth.POST("reset-password", controllers.ResetPassword)
 		auth.POST("login", controllers.Login)

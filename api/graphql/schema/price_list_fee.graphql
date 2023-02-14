@@ -31,11 +31,18 @@ type PriceListFee {
     fees: [PriceListFeeCurrency] @belongsTo(relation: "fees")
     price_list_id: ID
     fee_ranges: JSON
+    scheduled: PriceListFeeScheduled @hasOne(relation: "feeScheduled")
     created_at: DateTimeUtc
     updated_at: DateTimeUtc
 }
 
-
+type PriceListFeeScheduled {
+    starting_date: DateTimeUtc
+    end_date: DateTimeUtc
+    recurrent_interval: Int
+    starting_date_id: ID
+    end_date_id: ID
+}
 
 extend type Query @guard {
     """
@@ -87,8 +94,16 @@ input PriceListFeeInput {
     price_list_id: ID!
     fee_ranges: JSON
     fees: [PriceListFeesList!]
+    scheduled: PriceListFeeScheduledInput
 }
 
+input PriceListFeeScheduledInput {
+    starting_date: DateTimeUtc
+    end_date: DateTimeUtc
+    recurrent_interval: Int
+    starting_date_id: ID
+    end_date_id: ID
+}
 
 extend type Mutation @guard {
     "Создать Цен"

@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"fmt"
 	mail "github.com/xhit/go-simple-mail/v2"
 	"jwt-authentication-golang/config"
 	"log"
@@ -38,7 +39,7 @@ func MailConnect(config *config.EmailConfig) {
 func Mail(subject string, content string, email string) (err error) {
 	newEmail := mail.NewMSG()
 	newEmail.
-		SetFrom("From Example <test@example.com>").
+		SetFrom(fmt.Sprintf("%s <%s>", config.Conf.Email.From, config.Conf.Email.Mail)).
 		AddTo(email).
 		SetSubject(subject).
 		SetBody(mail.TextHTML, content)

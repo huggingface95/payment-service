@@ -31,9 +31,9 @@ func sendEmailByData(e *cache.ConfirmationIpLinksData) {
 			"{client_name}", e.FullName,
 			"{client_datetime_login}", e.CreatedAt,
 			"{client_ip}", e.Ip,
-			"{change_ip_confirm_link}", convertConfirmationIp("ip", e.ConfirmationLink),
+			"{change_ip_confirm_link}", convertConfirmationIp("auth/ip", e.ConfirmationLink),
 		)
-		err := pkg.Mail(content, content, e.Email)
+		err := pkg.Mail(template.Subject, content, e.Email)
 		if err != nil {
 			pkg.Error().Err(err)
 			return

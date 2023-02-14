@@ -75,7 +75,7 @@ class EmailNotificationsMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -126,7 +126,7 @@ class EmailNotificationsMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -136,6 +136,47 @@ class EmailNotificationsMutationTest extends TestCase
             'data' => [
                 'updateEmailNotification' => [
                     'id' => $id['data']['updateEmailNotification']['id'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testDeleteEmailNotification(): void
+    {
+        $email_notification = DB::connection('pgsql_test')
+            ->table('email_notifications')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation DeleteEmailNotification(
+                    $id: ID!
+                )
+                {
+                    deleteEmailNotification (
+                        id: $id
+                    )
+                    {
+                        id
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $email_notification[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'deleteEmailNotification' => [
+                    'id' => $id['data']['deleteEmailNotification']['id'],
                 ],
             ],
         ]);

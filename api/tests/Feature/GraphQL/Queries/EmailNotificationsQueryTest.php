@@ -26,7 +26,7 @@ class EmailNotificationsQueryTest extends TestCase
         ]);
     }
 
-    public function testQueryEmailNotificationByCompanyId(): void
+    public function testQueryEmailNotification(): void
     {
         $email_notification = DB::connection('pgsql_test')
             ->table('email_notifications')
@@ -56,13 +56,41 @@ class EmailNotificationsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
                 'emailNotification' => [
                     'id' => (string) $email_notification[0]->id,
                 ],
+            ],
+        ]);
+    }
+
+    public function testQueryEmailNotificationsOrderBySort(): void
+    {
+        $email_notification = DB::connection('pgsql_test')
+            ->table('email_notifications')
+            ->orderBy('id', 'ASC')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                {
+                    emailNotifications(orderBy: { column: ID, order: ASC }, first: 1) {
+                        data {
+                            id
+                        }
+                    }
+                }'
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            [
+                'id' => (string) $email_notification->id,
             ],
         ]);
     }
@@ -77,7 +105,7 @@ class EmailNotificationsQueryTest extends TestCase
             [
                 'query' => '
                 query EmailNotifications ($id: Mixed) {
-                    emailNotifications(hasGroupRole: { column: ID, value: $id }) {
+                    emailNotifications(filter: { column: HAS_GROUP_ROLE_MIXED_ID_OR_NAME, value: $id }) {
                         data {
                             id
                         }
@@ -88,7 +116,7 @@ class EmailNotificationsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -122,7 +150,7 @@ class EmailNotificationsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $email->id,
@@ -156,41 +184,7 @@ class EmailNotificationsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
-            ]
-        )->seeJsonContains([
-            'id' => (string) $email->id,
-            'type' => (string) ucfirst($email->type),
-            'recipient_type' => (string) strtoupper($email->recipient_type),
-        ]);
-    }
-
-    public function testQueryEmailNotificationsByGroupRole(): void
-    {
-        $email = DB::connection('pgsql_test')
-            ->table('email_notifications')
-            ->first();
-
-        $this->postGraphQL(
-            [
-                'query' => '
-                query EmailNotifications($id: Mixed) {
-                    emailNotifications(
-                        filter: { column: HAS_GROUP_ROLE_MIXED_ID_OR_NAME, value: $id }
-                    ) {
-                        data {
-                            id
-                            type
-                            recipient_type
-                        }
-                    }
-                }',
-                'variables' => [
-                    'id' => $email->group_role_id,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $email->id,
@@ -224,7 +218,7 @@ class EmailNotificationsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $email->id,
@@ -266,7 +260,44 @@ class EmailNotificationsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $email->id,
+            'type' => (string) ucfirst($email->type),
+            'recipient_type' => (string) strtoupper($email->recipient_type),
+        ]);
+    }
+
+    public function testQueryEmailNotificationsByRecipientType(): void
+    {
+        $email = DB::connection('pgsql_test')
+            ->table('email_notifications')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                query EmailNotifications($recipient_type: Mixed) {
+                    emailNotifications(
+                        filter: {
+                            column: RECIPIENT_TYPE
+                            value: $recipient_type
+                        }
+                    ) {
+                        data {
+                            id
+                            type
+                            recipient_type
+                        }
+                    }
+                }',
+                'variables' => [
+                    'recipient_type' => $email->recipient_type,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $email->id,

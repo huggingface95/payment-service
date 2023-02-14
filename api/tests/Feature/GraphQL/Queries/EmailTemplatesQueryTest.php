@@ -27,7 +27,7 @@ class EmailTemplatesQueryTest extends TestCase
         ]);
     }
 
-    public function testQueryEmailTemplateById(): void
+    public function testQueryEmailTemplate(): void
     {
         $email_template = DB::connection('pgsql_test')
             ->table('email_templates')
@@ -47,7 +47,7 @@ class EmailTemplatesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -86,7 +86,7 @@ class EmailTemplatesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $email->id,
@@ -123,7 +123,7 @@ class EmailTemplatesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $email->id,
@@ -160,7 +160,7 @@ class EmailTemplatesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $email->id,
@@ -197,7 +197,50 @@ class EmailTemplatesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $email->id,
+            'name' => (string) ucfirst($email->name),
+            'subject' => (string) $email->subject,
+            'type' => (string) ucfirst($email->type),
+        ]);
+    }
+
+    public function testQueryEmailTemplateByCompanyName(): void
+    {
+        $email = DB::connection('pgsql_test')
+            ->table('email_templates')
+            ->first();
+
+        $company = DB::connection('pgsql_test')
+            ->table('companies')
+            ->where('id', $email->company_id)
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                query EmailTemplates($company: Mixed) {
+                    emailTemplates(
+                        filter: {
+                            column: HAS_COMPANY_FILTER_BY_NAME
+                            operator: ILIKE
+                            value: $company
+                        }
+                    ) {
+                        id
+                        name
+                        subject
+                        type
+                    }
+                }',
+                'variables' => [
+                    'company' => $company->name,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $email->id,
