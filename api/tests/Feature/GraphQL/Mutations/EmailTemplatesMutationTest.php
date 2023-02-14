@@ -106,7 +106,7 @@ class EmailTemplatesMutationTest extends TestCase
         ]);
     }*/
 
-    public function testUpdateEmailTemplateSettings(): void
+    public function testUpdateEmailTemplate(): void
     {
         $email_template = DB::connection('pgsql_test')
             ->table('email_templates')
@@ -146,7 +146,7 @@ class EmailTemplatesMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -156,6 +156,47 @@ class EmailTemplatesMutationTest extends TestCase
             'data' => [
                 'updateEmailTemplate' => [
                     'data' => $id['data']['updateEmailTemplate']['data'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testDeleteEmailTemplate(): void
+    {
+        $email_notification = DB::connection('pgsql_test')
+            ->table('email_templates')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                mutation DeleteEmailTemplate(
+                    $id: ID!
+                )
+                {
+                    deleteEmailTemplate (
+                        id: $id
+                    )
+                    {
+                        id
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $email_notification[0]->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'deleteEmailTemplate' => [
+                    'id' => $id['data']['deleteEmailTemplate']['id'],
                 ],
             ],
         ]);
