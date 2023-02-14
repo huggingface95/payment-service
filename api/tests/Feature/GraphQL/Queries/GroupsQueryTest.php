@@ -595,7 +595,7 @@ class GroupsQueryTest extends TestCase
             [
                 'query' => '
                 query GetGroup($name: Mixed) {
-                    groups(filter: { column: NAME, operator: ILIKE value: $name }) {
+                    groups(filter: { column: NAME, operator: LIKE value: $name }) {
                         data {
                             id
                             name
@@ -638,6 +638,35 @@ class GroupsQueryTest extends TestCase
                 'variables' => [
                     'id' => (string) $groups->group_type_id,
                 ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $groups->id,
+            'name' => (string) $groups->name,
+            'description' => (string) $groups->description,
+        ]);
+    }
+
+    public function testQueryGroupsByIsActive(): void
+    {
+        $groups = DB::connection('pgsql_test')
+            ->table('group_role')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+               {
+                    groups(filter: { column: IS_ACTIVE, value: false }) {
+                        data {
+                            id
+                            name
+                            description
+                        }
+                    }
+                }'
             ],
             [
                 'Authorization' => 'Bearer ' . $this->login(),
