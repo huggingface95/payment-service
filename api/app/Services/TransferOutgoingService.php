@@ -6,6 +6,7 @@ use App\DTO\Email\Request\EmailAccountMinMaxBalanceLimitRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
+use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\RespondentFeesEnum;
 use App\Enums\TransferOutgoingChannelEnum;
@@ -25,6 +26,8 @@ use App\Models\CommissionTemplateLimitType;
 use App\Models\Fee;
 use App\Models\GroupType;
 use App\Models\Members;
+use App\Models\PaymentProvider;
+use App\Models\PaymentSystem;
 use App\Models\PriceListFeeCurrency;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
@@ -85,6 +88,24 @@ class TransferOutgoingService extends AbstractService
     /**
      * @throws GraphqlException
      */
+    public function commissionCalculationFeeScheduled($amount, $fee, $currencyId): float
+    {
+        $paymentFee = 0;
+
+        $priceListFees = PriceListFeeCurrency::where('price_list_fee_id', $fee->price_list_id)
+            ->where('currency_id', $currencyId)
+            ->get();
+        
+        foreach ($priceListFees as $listFee) {
+            $paymentFee += $this->getFee($listFee->fee, $amount);
+        }
+
+        return (float) $paymentFee;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
     public function commissionCalculation(TransferOutgoing $transfer): float
     {
         $amountDebt = 0;
@@ -104,7 +125,7 @@ class TransferOutgoingService extends AbstractService
 
         return (float) $amountDebt;
     }
-
+    
     public function createFee(TransferOutgoing $transfer, float $paymentFee): void
     {
         // TODO: set fee_pp commission
@@ -373,8 +394,12 @@ class TransferOutgoingService extends AbstractService
                 break;
             case PaymentStatusEnum::CANCELED->value:
                 throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+
+                break;
             case PaymentStatusEnum::EXECUTED->value:
                 throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+
+                break;
         }
     }
 
@@ -508,6 +533,41 @@ class TransferOutgoingService extends AbstractService
         } else {
             $args['execution_at'] = $date->format('Y-m-d H:i:s');
         }
+
+        return $this->transferRepository->create($args);
+    }
+
+    public function createScheduledFeeTransfer(array $args): Builder|Model
+    {
+        $psInternal = PaymentSystem::where('name', 'Internal')->first();
+        $ppInternal = PaymentProvider::where('name', 'Internal')->first();
+        $date = Carbon::now();
+
+        $args['requested_by_id'] = 1;
+        $args['amount_debt'] = $args['amount'];
+        $args['company_id'] = 1;
+        $args['recipient_bank_country_id'] = 1;
+        $args['group_id'] = 1;
+        $args['group_type_id'] = 1;
+        $args['project_id'] = 1;
+        $args['price_list_id'] = 1;
+        $args['price_list_fee_id'] = 1;
+        $args['user_type'] = class_basename(Members::class);
+        $args['status_id'] = PaymentStatusEnum::PENDING->value;
+        $args['urgency_id'] = 1;
+        $args['operation_type_id'] = OperationTypeEnum::SCHEDULED_FEE->value;
+        $args['payment_provider_id'] = $ppInternal->id;
+        $args['payment_system_id'] = $psInternal->id;
+        $args['payment_bank_id'] = 2;
+        $args['payment_number'] = rand();
+        $args['sender_id'] = 1;
+        $args['sender_type'] = class_basename(ApplicantCompany::class);
+        $args['system_message'] = 'test';
+        $args['channel'] = TransferOutgoingChannelEnum::BACK_OFFICE->toString();
+        $args['recipient_country_id'] = 1;
+        $args['respondent_fees_id'] = 1;
+        $args['created_at'] = $date->format('Y-m-d H:i:s');
+        $args['execution_at'] = $date->format('Y-m-d H:i:s');
 
         return $this->transferRepository->create($args);
     }
