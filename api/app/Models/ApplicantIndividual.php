@@ -267,7 +267,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 
     public function modules(): BelongsToMany
     {
-        return $this->belongsToMany(Module::class, 'applicant_individual_modules', 'applicant_individual_id', 'module_id')->withPivot('is_active');
+        return $this->belongsToMany(Module::class, 'applicant_individual_modules', 'applicant_individual_id', 'module_id')->withPivot('is_active as is_active');
     }
 
     public function ApplicantIndividual()
