@@ -82,12 +82,28 @@ func Login(context *gin.Context) {
 		}
 		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 		if ok == false {
-			context.JSON(http.StatusCreated, gin.H{"error": "An error occurred while sending your email `confirmation email`"})
+			context.JSON(http.StatusInternalServerError, gin.H{"error": "An error occurred while sending your email `confirmation email`"})
 			return
 		}
 		cache.Caching.ConfirmationEmailLinks.Set(randomToken, data)
 
 		context.JSON(http.StatusForbidden, gin.H{"data": "An email has been sent to your email to confirm the email"})
+		return
+	}
+
+	if user.IsChangePassword() {
+		randomToken := helpers.GenerateRandomString(20)
+		data := &cache.ResetPasswordCacheData{
+			Id: user.GetId(), CompanyId: user.GetCompanyId(), FullName: user.GetFullName(), Email: user.GetEmail(), PasswordRecoveryUrl: randomToken,
+		}
+
+		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendResetPasswordEmail, data)
+		if ok == false {
+			context.JSON(http.StatusInternalServerError, gin.H{"error": "An error occurred while sending your email `reset password`"})
+		} else {
+			cache.Caching.ResetPassword.Set(randomToken, data)
+			context.JSON(http.StatusForbidden, gin.H{"error": "An email has been sent to your email to confirm the password"})
+		}
 		return
 	}
 

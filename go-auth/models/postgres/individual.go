@@ -43,12 +43,13 @@ type Individual struct {
 	ApplicantRiskLevelId     uint64             `gorm:"column:applicant_risk_level_id"`
 	AccountManagerMemberId   uint64             `gorm:"column:account_manager_member_id"`
 	LanguageId               uint64             `gorm:"column:language_id"`
-	CreatedAt                time.Time          `gorm:"column:created_at"`
-	UpdatedAt                time.Time          `gorm:"column:updated_at"`
 	IsVerificationEmail      uint64             `gorm:"column:email_verification_status_id"`
 	Google2FaSecret          string             `gorm:"column:google2fa_secret"`
 	IsActive                 uint64             `gorm:"column:applicant_state_id"`
 	TwoFactorAuthSettingId   uint64             `gorm:"column:two_factor_auth_setting_id"`
+	IsNeedChangePassword     bool               `gorm:"column:is_need_change_password"`
+	CreatedAt                time.Time          `gorm:"column:created_at"`
+	UpdatedAt                time.Time          `gorm:"column:updated_at"`
 	BackupCodeData           *BackupJson        `gorm:"column:backup_codes"`
 	ClientIpAddresses        []*ClientIpAddress `gorm:"foreignKey:ClientId;references:ID"`
 	Company                  *Company           `gorm:"foreignKey:CompanyId"`
@@ -147,6 +148,10 @@ func (user *Individual) IsEmailVerify() bool {
 	return user.IsVerificationEmail == ApplicantVerificationVerifyed
 }
 
+func (user *Individual) IsChangePassword() bool {
+	return user.IsNeedChangePassword
+}
+
 func (user *Individual) GetCompanyId() uint64 {
 	return user.CompanyId
 }
@@ -176,6 +181,10 @@ func (user *Individual) SetIsActivated(v uint64) {
 
 func (user *Individual) SetCompanyId(v uint64) {
 	user.CompanyId = v
+}
+
+func (user *Individual) SetNeedChangePassword(v bool) {
+	user.IsNeedChangePassword = v
 }
 
 func (user *Individual) SetIsEmailVerify(v uint64) {

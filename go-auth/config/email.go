@@ -13,6 +13,8 @@ type EmailConfig struct {
 	Username   string
 	Password   string
 	Encryption string
+	From       string
+	Mail       string
 }
 
 func (e *EmailConfig) Load() *EmailConfig {
@@ -25,6 +27,8 @@ func (e *EmailConfig) Load() *EmailConfig {
 	e.Username = os.Getenv("EMAIL_USERNAME")
 	e.Password = os.Getenv("EMAIL_PASSWORD")
 	e.Encryption = os.Getenv("EMAIL_ENCRYPTION")
+	e.From = os.Getenv("EMAIL_FROM")
+	e.Mail = os.Getenv("EMAIL_FROM_MAIL")
 
 	return e
 }

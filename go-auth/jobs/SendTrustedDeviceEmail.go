@@ -33,7 +33,7 @@ func sendTrustedDeviceEmailByData(e *redis.TrustedDeviceRequest) {
 			"{ip}", e.Ip,
 			"{device_details}", convertDeviceDetails(e.Os, e.Model, e.Browser, e.Type),
 		)
-		err := pkg.Mail(content, content, e.Email)
+		err := pkg.Mail(template.Subject, content, e.Email)
 		if err != nil {
 			pkg.Error().Err(err)
 			return
