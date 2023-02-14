@@ -20,7 +20,7 @@ class SuperAdminSeeder extends Seeder
             $role->update([
                 'name' => 'superadmin',
                 'description' => 'Superadmin role',
-                'company_id' => null,
+                'company_id' => 1,
                 'group_type_id' => 1,
             ]);
         } else {
@@ -28,7 +28,7 @@ class SuperAdminSeeder extends Seeder
                 'id' => Role::SUPER_ADMIN_ID,
                 'name' => 'superadmin',
                 'description' => 'Superadmin role',
-                'company_id' => null,
+                'company_id' => 1,
                 'group_type_id' => 1,
             ]);
         }
