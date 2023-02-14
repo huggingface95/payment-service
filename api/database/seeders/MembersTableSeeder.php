@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\EmailVerificationStatusEnum;
 use App\Models\Members;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -27,6 +28,7 @@ class MembersTableSeeder extends Seeder
                 'two_factor_auth_setting_id' => 1,
                 'department_position_id' => 1,
                 'department_id' => 1,
+                'email_verification' => EmailVerificationStatusEnum::VERIFIED,
             ],
             [
                 'last_name' => 'Member2 Last',
@@ -39,6 +41,7 @@ class MembersTableSeeder extends Seeder
                 'two_factor_auth_setting_id' => 1,
                 'department_position_id' => 1,
                 'department_id' => 2,
+                'email_verification' => EmailVerificationStatusEnum::VERIFIED,
             ],
             [
                 'last_name' => 'Member3 Last',
@@ -51,6 +54,7 @@ class MembersTableSeeder extends Seeder
                 'two_factor_auth_setting_id' => 1,
                 'department_position_id' => 1,
                 'department_id' => 3,
+                'email_verification' => EmailVerificationStatusEnum::VERIFIED,
             ],
             [
                 'last_name' => 'Member4 Last',
@@ -63,6 +67,7 @@ class MembersTableSeeder extends Seeder
                 'two_factor_auth_setting_id' => 1,
                 'department_position_id' => 1,
                 'department_id' => 4,
+                'email_verification' => EmailVerificationStatusEnum::VERIFIED,
             ],
         ];
 
