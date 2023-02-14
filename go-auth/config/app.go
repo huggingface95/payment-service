@@ -14,6 +14,7 @@ type AppConfig struct {
 	AppFrontUrl                string
 	RedirectUrl                string
 	CheckIp                    bool
+	SendEmail                  bool
 	CheckLoginDevice           bool
 	CheckDevice                bool
 	PasswordRequiredCharacters string
@@ -21,6 +22,10 @@ type AppConfig struct {
 
 func (a *AppConfig) Load() *AppConfig {
 	checkIp, err := strconv.ParseBool(os.Getenv("CHECK_IP"))
+	if err != nil {
+		panic(err)
+	}
+	sendEmail, err := strconv.ParseBool(os.Getenv("EMAIL_CONNECTION"))
 	if err != nil {
 		panic(err)
 	}
@@ -33,6 +38,7 @@ func (a *AppConfig) Load() *AppConfig {
 		panic(err)
 	}
 	a.CheckIp = checkIp
+	a.SendEmail = sendEmail
 	a.CheckLoginDevice = checkLoginDevice
 	a.CheckDevice = checkDevice
 	a.AppName = os.Getenv("APP_NAME")
