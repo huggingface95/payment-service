@@ -1,16 +1,12 @@
 package individual
 
 import (
-	"errors"
 	"github.com/gin-gonic/gin"
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/constants"
-	"jwt-authentication-golang/dto"
 	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/postgres"
-	"jwt-authentication-golang/pkg"
 	"jwt-authentication-golang/repositories/individualRepository"
-	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/repositories/redisRepository"
 	"jwt-authentication-golang/repositories/userRepository"
 	"jwt-authentication-golang/requests/individual"
@@ -95,46 +91,4 @@ func Register(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusForbidden, gin.H{"error": "Registration error"})
-}
-
-func ConfirmationIndividualEmail(context *gin.Context) {
-	var user postgres.User
-	deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
-
-	token := context.Request.URL.Query().Get("token")
-	data, _ := cache.Caching.ConfirmationEmailLinks.Get(token)
-	clientType := constants.Member
-	if data.Type == constants.Individual {
-		clientType = constants.Individual
-	}
-	user = userRepository.GetUserById(data.Id, clientType)
-	if user != nil {
-		if user.StructName() == constants.StructMember {
-			user.SetIsActivated(postgres.MemberStatusActive)
-			user.SetIsEmailVerify(postgres.MemberVerificationStatusActive)
-		} else {
-			user.SetIsEmailVerify(postgres.ApplicantVerificationVerifyed)
-			user.SetIsActivated(postgres.ApplicantStateActive)
-		}
-		res := userRepository.SaveUser(user)
-		if res.Error == nil {
-
-			timeLineDto := dto.DTO.CreateTimeLineDto.Parse("Email Verified", "email", "Banking", data.CompanyId, data.Id, deviceInfo)
-			ok := redisRepository.SetRedisDataByBlPop(constants.QueueAddTimeLineLog, timeLineDto)
-			if ok == false {
-				pkg.Error().Err(errors.New("TimeLine redis error"))
-			}
-
-			cache.Caching.ConfirmationEmailLinks.Delete(token)
-			activeSessionLog := oauthRepository.InsertActiveSessionLog(constants.Individual, user.GetEmail(), true, true, deviceInfo)
-			if activeSessionLog != nil {
-				context.JSON(http.StatusOK, gin.H{"data": "Email Verified"})
-				return
-			}
-		}
-	}
-
-	context.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
-	context.Abort()
-	return
 }

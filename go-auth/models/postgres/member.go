@@ -21,6 +21,7 @@ type Member struct {
 	TwoFactorAuthSettingId uint64 `gorm:"column:two_factor_auth_setting_id"`
 	Google2FaSecret        string `gorm:"column:google2fa_secret"`
 	IsVerificationEmail    uint64 `gorm:"column:email_verification"`
+	IsNeedChangePassword   bool   `gorm:"column:is_need_change_password"`
 	CreatedAt              time.Time
 	UpdatedAt              time.Time
 	BackupCodeData         *BackupJson        `gorm:"column:backup_codes"`
@@ -123,7 +124,11 @@ func (user *Member) IsActivated() bool {
 }
 
 func (user *Member) IsEmailVerify() bool {
-	return user.IsVerificationEmail == MemberVerificationStatusActive
+	return user.IsVerificationEmail == MemberVerificationStatusVerified
+}
+
+func (user *Member) IsChangePassword() bool {
+	return user.IsNeedChangePassword
 }
 
 func (user *Member) GetCompanyId() uint64 {
@@ -151,6 +156,10 @@ func (user *Member) GetModelType() string {
 
 func (user *Member) SetCompanyId(v uint64) {
 	user.CompanyId = v
+}
+
+func (user *Member) SetNeedChangePassword(v bool) {
+	user.IsNeedChangePassword = v
 }
 
 func (user *Member) SetIsActivated(v uint64) {

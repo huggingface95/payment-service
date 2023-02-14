@@ -2,13 +2,10 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/constants"
-	"jwt-authentication-golang/dto"
 	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/postgres"
-	"jwt-authentication-golang/pkg"
 	"jwt-authentication-golang/repositories/redisRepository"
 	"jwt-authentication-golang/repositories/userRepository"
 	"jwt-authentication-golang/requests"
@@ -44,56 +41,6 @@ func ResetPassword(c *gin.Context) {
 			return
 		}
 	}
-	c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
-	return
-}
-
-func ChangePassword(c *gin.Context) {
-	var user postgres.User
-
-	var request requests.ChangePasswordRequest
-	if err := c.BindJSON(&request); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	clientType := constants.Member
-	if request.Type != "" {
-		clientType = request.Type
-	}
-
-	if request.Password != request.PasswordRepeat {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Password and Confirm Password do not match"})
-		return
-	}
-
-	data, _ := cache.Caching.ResetPassword.Get(request.Token)
-	user = userRepository.GetUserById(data.Id, clientType)
-
-	if user != nil {
-		err := user.HashPassword(request.Password)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
-			return
-		}
-		res := userRepository.SaveUser(user)
-		if res.Error == nil {
-			cache.Caching.ConfirmationEmailLinks.Delete(request.Token)
-
-			if clientType == constants.Individual {
-				deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(c)
-				timeLineDto := dto.DTO.CreateTimeLineDto.Parse("Ip confirmation", "email", "Banking", data.CompanyId, data.Id, deviceInfo)
-				ok := redisRepository.SetRedisDataByBlPop(constants.QueueAddTimeLineLog, timeLineDto)
-				if ok == false {
-					pkg.Error().Err(errors.New("TimeLine redis error"))
-				}
-			}
-
-			c.JSON(http.StatusOK, gin.H{"data": "Password changed"})
-			return
-		}
-	}
-
 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 	return
 }

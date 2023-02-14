@@ -97,6 +97,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'entity_id',
         'address_additional_fields',
         'last_screened_at',
+        'is_need_change_password',
     ];
 
     protected $hidden = [
