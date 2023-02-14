@@ -61,7 +61,8 @@ class AccountService extends AbstractService
 
     public function setAmmountReserveOnAccountBalance(TransferOutgoing $transfer): Account
     {
-        $account = $this->accountRepository->findById($transfer->account_id);
+        // $account = $this->accountRepository->findById($transfer->account_id);
+        $account = Account::find($transfer->account_id);
 
         if ($account->available_balance < $transfer->amount_debt) {
             throw new GraphqlException('Available balance less than payment amount', 'use');

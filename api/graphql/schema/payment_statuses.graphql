@@ -8,12 +8,14 @@ type PaymentStatus {
 }
 
 enum OperationTypeEnum {
-    INCOMING_TRANSFER @enum(value: "Incoming Transfer")
+    INCOMING_WIRE_TRANSFER @enum(value: "Incoming Transfer")
+    OUTGOING_WIRE_TRANSFER @enum(value: "Outgoing Transfer")
     BETWEEN_ACCOUNT @enum(value: "Between Account")
     BETWEEN_USERS @enum(value: "Between Users")
     EXCHANGE @enum(value: "Exchange")
-    OUTGOING_TRANSFER @enum(value: "Outgoing Transfer")
-    FEE @enum(value: "Fee")
+    DEBIT @enum(value: "Debit")
+    CREDIT @enum(value: "Credit")
+    SCHEDULED_FEES @enum(value: "Scheduled fee")
 }
 
 extend type Query  @guard{

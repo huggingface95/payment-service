@@ -185,6 +185,16 @@ class Account extends BaseModel implements BaseModelInterface
         return $this->belongsTo(PaymentBank::class, 'payment_bank_id');
     }
 
+    public function transferOutgoings(): HasMany
+    {
+        return $this->hasMany(TransferOutgoing::class, 'account_id');
+    }
+
+    public function transferIncomings(): HasMany
+    {
+        return $this->hasMany(TransferIncoming::class, 'account_id');
+    }
+
     /**
      * Get relation Payment Provider
      *

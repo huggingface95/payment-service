@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\DropTestTables;
+use App\Console\Commands\ExecuteFeeScheduledTransferCommand;
 use App\Console\Commands\ExecuteWaitingTransferCommand;
 use App\Console\Commands\IbanCompanyCommand;
 use App\Console\Commands\IbanIndividualStatusCommand;
@@ -20,6 +21,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        ExecuteFeeScheduledTransferCommand::class,
         ExecuteWaitingTransferCommand::class,
         NotificationsCommand::class,
         SendEmailCommand::class,
