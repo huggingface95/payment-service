@@ -21,7 +21,7 @@ class Department extends BaseModel
     ];
 
     protected $casts = [
-        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     public function company(): BelongsTo

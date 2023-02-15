@@ -43,7 +43,7 @@ class GroupRole extends BaseModel
     ];
 
     protected $casts = [
-        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     public static self $clone;

@@ -82,9 +82,9 @@ class ApplicantCompany extends BaseModel
         'company_info_additional_fields'=>'array',
         'contacts_additional_fields'=>'array',
         'profile_additional_field'=>'array',
-        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'incorporate_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'incorporate_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     protected static function booted()

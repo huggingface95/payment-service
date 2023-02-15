@@ -32,9 +32,9 @@ class AccountReachedLimit extends BaseModel
     ];
 
     protected $casts = [
-        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'expires_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'expires_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     protected $dates = ['expires_at'];

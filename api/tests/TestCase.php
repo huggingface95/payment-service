@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\Repositories\JWTRepository;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
 use Nuwave\Lighthouse\Testing\ClearsSchemaCache;
@@ -60,9 +61,17 @@ abstract class TestCase extends BaseTestCase
             $data = ['email' => 'test@test.com', 'password' => env('DEFAULT_PASSWORD','1234567Qa')];
         }
 
-        $token = Http::accept('application/json')->post(env('AUTH_URL','http://go-auth:2491/auth/login'), $data);
+        $key = $data['email'];
+        if (Cache::store('file')->has($key)) {
+            return Cache::store('file')->get($key);
+        }
 
-        return $token->json('access_token');
+        $token = Http::accept('application/json')->post(env('AUTH_URL','http://go-auth:2491/auth/login'), $data);
+        $accessToken = $token->json('access_token');
+
+        Cache::store('file')->put($key, $accessToken, env('JWT_TTL', 1800));
+        
+        return $accessToken;
     }
 
     /**
