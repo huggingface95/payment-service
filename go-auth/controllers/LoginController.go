@@ -97,13 +97,10 @@ func Login(context *gin.Context) {
 			Id: user.GetId(), CompanyId: user.GetCompanyId(), FullName: user.GetFullName(), Email: user.GetEmail(), PasswordRecoveryUrl: randomToken,
 		}
 
-		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendResetPasswordEmail, data)
-		if ok == false {
-			context.JSON(http.StatusInternalServerError, gin.H{"error": "An error occurred while sending your email `reset password`"})
-		} else {
-			cache.Caching.ResetPassword.Set(randomToken, data)
-			context.JSON(http.StatusForbidden, gin.H{"error": "An email has been sent to your email to confirm the password"})
-		}
+		cache.Caching.ResetPassword.Set(randomToken, data)
+		context.JSON(http.StatusForbidden, gin.H{
+			"message": "An email has been sent to your email to confirm the password", "url": fmt.Sprintf("%s?%s", user.GetCompany().BackofficeForgotPasswordUrl, randomToken),
+		})
 		return
 	}
 

@@ -27,12 +27,7 @@ func CreateIndividual(user *postgres.Individual, applicantCompany *postgres.Appl
 
 	res := database.PostgresInstance.Where("name = ?", "Docu").
 		Limit(1).
-		Preload("CompanySetting.GroupRole").
 		First(&company)
-
-	if company.CompanySetting == nil || company.CompanySetting.GroupRole == nil {
-		return nil
-	}
 
 	if res.Error == nil {
 		user.SetCompanyId(company.Id)
@@ -56,10 +51,10 @@ func CreateIndividual(user *postgres.Individual, applicantCompany *postgres.Appl
 				}
 			}
 
+			//TODO add groupRoleId
 			return database.PostgresInstance.Create(&postgres.GroupRoleUser{
-				GroupRoleId: company.CompanySetting.GroupRole.Id,
-				UserId:      user.ID,
-				UserType:    constants.ModelIndividual,
+				UserId:   user.ID,
+				UserType: constants.ModelIndividual,
 			})
 		}
 	}
