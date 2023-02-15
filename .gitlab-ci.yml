@@ -20,9 +20,8 @@ unit-test-job:
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - rsync -rav  ./api/ $SSH_USER_HOST:/opt/test/api
     - ssh $SSH_USER_HOST "docker exec php-dev-test ./vendor/bin/phpunit"
-  when: manual
   only:
-    - /^DBM-.*/
+    - dev
 deploy-job:
   stage: deploy
   image: alpine
