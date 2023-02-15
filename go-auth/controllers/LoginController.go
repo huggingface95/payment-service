@@ -99,7 +99,7 @@ func Login(context *gin.Context) {
 
 		cache.Caching.ResetPassword.Set(randomToken, data)
 		context.JSON(http.StatusForbidden, gin.H{
-			"message": "An email has been sent to your email to confirm the password", "url": fmt.Sprintf("%s?%s", user.GetCompany().BackofficeForgotPasswordUrl, randomToken),
+			"message": "Please change password first", "url": fmt.Sprintf("%s?%s", user.GetCompany().BackofficeForgotPasswordUrl, randomToken),
 		})
 		return
 	}
