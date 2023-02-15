@@ -27,36 +27,39 @@ func CreateIndividual(user *postgres.Individual, applicantCompany *postgres.Appl
 
 	res := database.PostgresInstance.Where("name = ?", "Docu").
 		Limit(1).
+		Preload("Project.Settings.GroupRole").
 		First(&company)
 
-	if res.Error == nil {
-		user.SetCompanyId(company.Id)
-		uRecord := database.PostgresInstance.Omit(user.Omit()...).
-			Create(&user)
+	if res.Error != nil || company.Project == nil || len(company.Project.Settings) == 0 || company.Project.Settings[0].GroupRole == nil {
+		return nil
+	}
 
-		if uRecord.Error == nil {
-			if clientType == constants.RegisterClientTypeCorporate {
-				appCompanyRec := database.PostgresInstance.Create(&applicantCompany)
-				if appCompanyRec.Error != nil {
-					return nil
-				}
-				var appCompanyForeign postgres.ApplicantCompanyForeign
-				appCompanyForeign.IndividualId = user.ID
-				appCompanyForeign.CompanyId = applicantCompany.ID
-				appCompanyForeign.PositionId = 1
-				appCompanyForeign.RelationId = 1
-				appCompanyForeignRec := database.PostgresInstance.Create(&appCompanyForeign)
-				if appCompanyForeignRec.Error != nil {
-					return nil
-				}
+	user.SetCompanyId(company.Id)
+	uRecord := database.PostgresInstance.Omit(user.Omit()...).
+		Create(&user)
+
+	if uRecord.Error == nil {
+		if clientType == constants.RegisterClientTypeCorporate {
+			appCompanyRec := database.PostgresInstance.Create(&applicantCompany)
+			if appCompanyRec.Error != nil {
+				return nil
 			}
-
-			//TODO add groupRoleId
-			return database.PostgresInstance.Create(&postgres.GroupRoleUser{
-				UserId:   user.ID,
-				UserType: constants.ModelIndividual,
-			})
+			var appCompanyForeign postgres.ApplicantCompanyForeign
+			appCompanyForeign.IndividualId = user.ID
+			appCompanyForeign.CompanyId = applicantCompany.ID
+			appCompanyForeign.PositionId = 1
+			appCompanyForeign.RelationId = 1
+			appCompanyForeignRec := database.PostgresInstance.Create(&appCompanyForeign)
+			if appCompanyForeignRec.Error != nil {
+				return nil
+			}
 		}
+
+		return database.PostgresInstance.Create(&postgres.GroupRoleUser{
+			GroupRoleId: company.Project.Settings[0].GroupRoleId,
+			UserId:      user.ID,
+			UserType:    constants.ModelIndividual,
+		})
 	}
 
 	return nil
