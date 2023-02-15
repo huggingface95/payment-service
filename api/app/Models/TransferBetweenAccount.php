@@ -10,6 +10,6 @@ class TransferBetweenAccount extends BaseModel
     protected $table = 'transfer_between_accounts_view';
 
     protected $casts = [
-        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 }

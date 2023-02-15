@@ -31,7 +31,7 @@ class KycTimeline extends BaseModel
     protected $casts = [
         'action_old_value' => 'array',
         'action_new_value' => 'array',
-        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     public function company(): BelongsTo

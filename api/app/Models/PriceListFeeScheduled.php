@@ -21,8 +21,8 @@ class PriceListFeeScheduled extends BaseModel
     ];
 
     protected $casts = [
-        'starting_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'end_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'starting_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'end_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     public function priceListFee(): BelongsTo

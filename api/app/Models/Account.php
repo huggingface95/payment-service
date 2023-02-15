@@ -89,9 +89,9 @@ class Account extends BaseModel implements BaseModelInterface
         'current_balance' => 'decimal:5',
         'reserved_balance' => 'decimal:5',
         'available_balance' => 'decimal:5',
-        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'activated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'activated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     protected static function booted()
