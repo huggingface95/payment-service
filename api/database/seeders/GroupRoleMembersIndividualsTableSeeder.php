@@ -29,6 +29,11 @@ class GroupRoleMembersIndividualsTableSeeder extends Seeder
             DB::table('group_role_members_individuals')->insert(['group_role_id' => 1, 'user_id' => 4]);
         }
 
+        $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 2, 'user_id' => 1])->first();
+        if (! $row) {
+            DB::table('group_role_members_individuals')->insert(['group_role_id' => 2, 'user_id' => 1]);
+        }
+
         $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 1, 'user_id' => 5])->first();
         if (! $row) {
             DB::table('group_role_members_individuals')->insert(['group_role_id' => 1, 'user_id' => 5, 'user_type' => 'ApplicantCompany']);
