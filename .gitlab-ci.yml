@@ -38,8 +38,4 @@ deploy-job:
     - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev php artisan  lighthouse:clear-cache"
   only:
     - dev
-test-manual:
-  script: echo "Test"
-  rules:
-    - if: $CI_COMMIT_REF_NAME =~ /^feature/
-      when: manual
+
