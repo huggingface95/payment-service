@@ -100,10 +100,10 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $casts = [
         'backup_codes' => 'array',
-        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'last_login_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'last_login_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     protected $dates = ['deleted_at'];

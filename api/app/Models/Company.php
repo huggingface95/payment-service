@@ -63,11 +63,11 @@ class Company extends BaseModel
     ];
 
     protected $casts = [
-        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'incorporate_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
-        'exp_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSSSSZ',
+        'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'incorporate_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'exp_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     protected $appends = [
