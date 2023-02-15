@@ -94,7 +94,6 @@ input QueryMembersFilterStatic @spread{
     email: String @ilike
     department_position_id: ID @eq
     department_id: ID @eq
-    is_active: Boolean @eq
     last_login_at: String @gte
     is_show_owner_applicants: Boolean @eq
     member_status_id: ID @eq

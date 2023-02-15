@@ -71,7 +71,10 @@ class MembersMutationTest extends TestCase
     {
         $this->login();
 
-        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
             mutation UpdateMember(
@@ -89,7 +92,7 @@ class MembersMutationTest extends TestCase
                 }
             }
         ', [
-            'id' => strval($member[0]->id),
+            'id' => (string) $member[0]->id,
             'email' => 'test'.str_pad(mt_rand(1, 9), 2, '0', STR_PAD_LEFT).'@test.com',
         ]);
 
@@ -109,7 +112,10 @@ class MembersMutationTest extends TestCase
     {
         $this->login();
 
-        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
             mutation SetMemberPassword(
@@ -128,7 +134,7 @@ class MembersMutationTest extends TestCase
                 }
             }
         ', [
-            'id' => strval($member[0]->id),
+            'id' => (string) $member[0]->id,
             'password' => '1234567Za',
             'password_confirmation' => '1234567Za',
         ]);
@@ -148,7 +154,10 @@ class MembersMutationTest extends TestCase
     {
         $this->login();
 
-        $member = DB::connection('pgsql_test')->table('members')->orderBy('id', 'DESC')->get();
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->orderBy('id', 'DESC')
+            ->get();
 
         $this->graphQL('
             mutation SetMemberSecurityPin(
@@ -163,7 +172,7 @@ class MembersMutationTest extends TestCase
                 }
             }
         ', [
-            'id' => strval($member[0]->id),
+            'id' => (string) $member[0]->id,
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -172,6 +181,186 @@ class MembersMutationTest extends TestCase
             'data' => [
                 'setMemberSecurityPin' => [
                     'id' => $id['data']['setMemberSecurityPin']['id'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testSetMemberSuspended(): void
+    {
+        $this->login();
+
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->graphQL('
+            mutation SetMemberSuspended(
+                $id: ID!
+            )
+            {
+                setMemberSuspended (
+                    id: $id
+                )
+                {
+                    id
+                }
+            }
+        ', [
+            'id' => (string) $member[0]->id,
+        ]);
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'setMemberSuspended' => [
+                    'id' => $id['data']['setMemberSuspended']['id'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testSetMemberInactive(): void
+    {
+        $this->login();
+
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->graphQL('
+            mutation SetMemberInactive(
+                $id: ID!
+            )
+            {
+                setMemberInactive (
+                    id: $id
+                )
+                {
+                    id
+                }
+            }
+        ', [
+            'id' => (string) $member[0]->id,
+        ]);
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'setMemberInactive' => [
+                    'id' => $id['data']['setMemberInactive']['id'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testSetMemberActive(): void
+    {
+        $this->login();
+
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        $this->graphQL('
+            mutation SetMemberActive(
+                $id: ID!
+            )
+            {
+                setMemberActive (
+                    id: $id
+                )
+                {
+                    id
+                }
+            }
+        ', [
+            'id' => (string) $member[0]->id,
+        ]);
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'setMemberActive' => [
+                    'id' => $id['data']['setMemberActive']['id'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testResetMemberPassword(): void
+    {
+        $this->login();
+
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->where('id', 3)
+            ->get();
+
+        $this->graphQL('
+            mutation ResetMemberPassword(
+                $id: ID!
+            )
+            {
+                resetMemberPassword (
+                    id: $id
+                )
+                {
+                    id
+                }
+            }
+        ', [
+            'id' => (string) $member[0]->id,
+        ]);
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'resetMemberPassword' => [
+                    'id' => $id['data']['resetMemberPassword']['id'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testSendMemberEmailVerification(): void
+    {
+        $this->login();
+
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->where('id', 3)
+            ->get();
+
+        $this->graphQL('
+            mutation SendMemberEmailVerification(
+                $id: ID!
+            )
+            {
+                sendMemberEmailVerification (
+                    id: $id
+                )
+                {
+                    id
+                }
+            }
+        ', [
+            'id' => (string) $member[0]->id,
+        ]);
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'sendMemberEmailVerification' => [
+                    'id' => $id['data']['sendMemberEmailVerification']['id'],
                 ],
             ],
         ]);
@@ -196,7 +385,7 @@ class MembersMutationTest extends TestCase
                 }
             }
         ', [
-            'id' => strval($member[0]->id),
+            'id' => (string) $member[0]->id,
         ]);
 
         $id = json_decode($this->response->getContent(), true);

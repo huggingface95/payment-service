@@ -48,7 +48,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -78,7 +78,7 @@ class MembersQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -87,7 +87,7 @@ class MembersQueryTest extends TestCase
         ]);
     }
 
-    public function testQueryMembersByDepartmentPosition(): void
+    public function testQueryMembersByDepartmentId(): void
     {
         $member = DB::connection('pgsql_test')
             ->table('members')
@@ -115,7 +115,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -152,7 +152,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -190,7 +190,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -227,7 +227,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -265,7 +265,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -302,7 +302,214 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $member->id,
+            'first_name' => (string) $member->first_name,
+            'email' => (string) $member->email,
+        ]);
+    }
+
+    public function testQueryMembersFilterByGroupRoleId(): void
+    {
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->where('id', 4)
+            ->first();
+
+        $GroupRole = DB::connection('pgsql_test')
+            ->table('group_role_members_individuals')
+            ->where('user_id', $member->id)
+            ->where('user_type', 'Members')
+            ->first();
+
+        $role = DB::connection('pgsql_test')
+            ->table('group_role')
+            ->where('id', $GroupRole->group_role_id)
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                query Members($id: Mixed) {
+                    members(
+                        filter: {
+                            column: HAS_GROUP_ROLE_FILTER_BY_ID
+                            value: $id
+                        }
+                    ) {
+                        data {
+                            id
+                            first_name
+                            email
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => $role->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $member->id,
+            'first_name' => (string) $member->first_name,
+            'email' => (string) $member->email,
+        ]);
+    }
+
+    public function testQueryMembersFilterByRoleId(): void
+    {
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->orderBy('id', 'ASC')
+            ->first();
+
+        $GroupRole = DB::connection('pgsql_test')
+            ->table('group_role_members_individuals')
+            ->where('user_id', $member->id)
+            ->where('user_type', 'Members')
+            ->first();
+
+        $role = DB::connection('pgsql_test')
+            ->table('group_role')
+            ->where('id', $GroupRole->group_role_id)
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                query Members($id: Mixed) {
+                    members(
+                        filter: {
+                            column: HAS_ROLE_FILTER_BY_ID
+                            value: $id
+                        }
+                    ) {
+                        data {
+                            id
+                            first_name
+                            email
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => $role->role_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $member->id,
+            'first_name' => (string) $member->first_name,
+            'email' => (string) $member->email,
+        ]);
+    }
+
+    public function testQueryMembersFilterByStatusId(): void
+    {
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                query Members($id: Mixed) {
+                    members(
+                        filter: {
+                            column: MEMBER_STATUS_ID
+                            value: $id
+                        }
+                    ) {
+                        data {
+                            id
+                            first_name
+                            email
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => $member->member_status_id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $member->id,
+            'first_name' => (string) $member->first_name,
+            'email' => (string) $member->email,
+        ]);
+    }
+
+    public function testQueryMembersFilterByIsShowOwnerApplicants(): void
+    {
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                {
+                    members(
+                        filter: {
+                            column: IS_SHOW_OWNER_APPLICANTS
+                            value: false
+                        }
+                    ) {
+                        data {
+                            id
+                            first_name
+                            email
+                        }
+                    }
+                }'
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $member->id,
+            'first_name' => (string) $member->first_name,
+            'email' => (string) $member->email,
+        ]);
+    }
+
+    public function testQueryMembersFilterByLastLoginAt(): void
+    {
+        $member = DB::connection('pgsql_test')
+            ->table('members')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                query Members($id: Mixed) {
+                    members(
+                        filter: {
+                            column: LAST_LOGIN_AT
+                            operator: GTE
+                            value: $id
+                        }
+                    ) {
+                        data {
+                            id
+                            first_name
+                            email
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => (string) $member->last_login_at,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
