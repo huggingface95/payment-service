@@ -71,7 +71,7 @@ class RequisitesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'data' => [
@@ -145,7 +145,7 @@ class RequisitesQueryTest extends TestCase
                 'account_number' => (string) $requisites->account_number,
             ],
         ], [
-            'Authorization' => 'Bearer '.$this->login(),
+            'Authorization' => 'Bearer ' . $this->login(),
         ])->seeJsonContains([
             'data' => [
                 'requisites' => [[
@@ -220,7 +220,7 @@ class RequisitesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $requisites->id,
@@ -292,7 +292,7 @@ class RequisitesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $requisites->id,
@@ -364,7 +364,7 @@ class RequisitesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $requisites->id,
@@ -436,7 +436,7 @@ class RequisitesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $requisites->id,
@@ -455,6 +455,62 @@ class RequisitesQueryTest extends TestCase
                     'name' => (string) $bankCountry->name,
                 ],
             ],
+        ]);
+    }
+
+    public function testQueryDownloadRequisiteDetails(): void
+    {
+        $this->postGraphQL(
+            [
+                'query' => '
+                {
+                  downloadRequisiteDetails(account_id: 1) {
+                    base64
+                  }
+               }'
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $response = json_decode($this->response->getContent(), true);
+
+        $this->seeJsonContains([
+            'base64' => $response['data']['downloadRequisiteDetails']['base64'],
+        ]);
+    }
+
+    public function testQuerySendRequisiteDetail(): void
+    {
+        $requisites = DB::connection('pgsql_test')
+            ->table('accounts')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                query SendRequisiteDetails($account_id: ID!, $email: String!){
+                  sendRequisiteDetails(account_id: $account_id, email: $email) {
+                    status
+                    message
+                  }
+               }',
+                'variables' => [
+                    'account_id' => (string) $requisites->id,
+                    'email' => 'fake@gmail.com',
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $response = json_decode($this->response->getContent(), true);
+
+        $this->seeJsonContains([
+            'status' => $response['data']['sendRequisiteDetails']['status'],
+            'message' => $response['data']['sendRequisiteDetails']['message'],
         ]);
     }
 }
