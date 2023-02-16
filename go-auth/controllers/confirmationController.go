@@ -91,28 +91,28 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 
 func ChangePassword(c *gin.Context) {
 	var user postgres.User
-	var token = c.Request.URL.Query().Get("token")
-	var request requests.ChangePasswordRequest
-	if err := c.BindJSON(&request); err != nil {
+
+	var r requests.ChangePasswordRequest
+	if err := c.BindJSON(&r); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	clientType := constants.Member
-	if request.Type != "" {
-		clientType = request.Type
+	data, ok := cache.Caching.ResetPassword.Get(r.PasswordResetToken)
+	if ok == false {
+		c.JSON(http.StatusForbidden, gin.H{"error": "token don't working"})
+		return
 	}
 
-	if request.Password != request.PasswordRepeat {
+	if r.Password != r.PasswordRepeat {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Password and Confirm Password do not match"})
 		return
 	}
 
-	data, _ := cache.Caching.ResetPassword.Get(token)
-	user = userRepository.GetUserById(data.Id, clientType)
+	user = userRepository.GetUserById(data.Id, data.Type)
 
 	if user != nil {
-		err := user.HashPassword(request.Password)
+		err := user.HashPassword(r.Password)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 			return
@@ -120,9 +120,9 @@ func ChangePassword(c *gin.Context) {
 		user.SetNeedChangePassword(false)
 		res := userRepository.SaveUser(user)
 		if res.Error == nil {
-			cache.Caching.ConfirmationEmailLinks.Delete(token)
+			cache.Caching.ConfirmationEmailLinks.Delete(r.PasswordResetToken)
 
-			if clientType == constants.Individual {
+			if data.Type == constants.Individual {
 				deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(c)
 				timeLineDto := dto.DTO.CreateTimeLineDto.Parse("Ip confirmation", "email", "Banking", data.CompanyId, data.Id, deviceInfo)
 				ok := redisRepository.SetRedisDataByBlPop(constants.QueueAddTimeLineLog, timeLineDto)

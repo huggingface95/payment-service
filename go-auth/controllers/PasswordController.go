@@ -32,7 +32,7 @@ func ResetPassword(c *gin.Context) {
 	if user != nil {
 		randomToken := helpers.GenerateRandomString(20)
 		data := &cache.ResetPasswordCacheData{
-			Id: user.GetId(), CompanyId: user.GetCompanyId(), FullName: user.GetFullName(), Email: user.GetEmail(), PasswordRecoveryUrl: randomToken,
+			Id: user.GetId(), CompanyId: user.GetCompanyId(), FullName: user.GetFullName(), Email: user.GetEmail(), PasswordRecoveryUrl: randomToken, Type: clientType,
 		}
 		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendResetPasswordEmail, data)
 		if ok {

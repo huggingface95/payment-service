@@ -16,6 +16,7 @@ type ResetPasswordCacheData struct {
 	FullName            string `json:"full_name"`
 	Email               string `json:"email"`
 	PasswordRecoveryUrl string `json:"password_recovery_url"`
+	Type                string `json:"type"`
 }
 
 func (a *ResetPasswordCache) Get(key string) (*ResetPasswordCacheData, bool) {

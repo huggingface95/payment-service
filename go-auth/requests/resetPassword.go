@@ -6,7 +6,7 @@ type ResetPasswordRequest struct {
 }
 
 type ChangePasswordRequest struct {
-	Type           string `json:"client_type"`
-	Password       string `json:"password" binding:"required"`
-	PasswordRepeat string `json:"password_repeat" binding:"required"`
+	PasswordResetToken string `json:"password_reset_token" binding:"required"`
+	Password           string `json:"password" binding:"required"`
+	PasswordRepeat     string `json:"password_repeat" binding:"required"`
 }
