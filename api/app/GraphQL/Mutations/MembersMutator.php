@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\EmailVerificationStatusEnum;
 use App\Enums\MemberStatusEnum;
 use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
@@ -44,6 +45,7 @@ class MembersMutator extends BaseMutator
             $args['password_salt'] = $args['password_hash'];
             $args['is_need_change_password'] = true;
 
+            /** @var Members $member */
             $member = Members::create($args);
 
             if (isset($args['group_id'])) {
@@ -52,6 +54,9 @@ class MembersMutator extends BaseMutator
 
             if (isset($args['send_email']) && $args['send_email'] === true) {
                 $this->emailService->sendChangePasswordEmail($member);
+            } else{
+                $member->email_verification = EmailVerificationStatusEnum::VERIFIED->value;
+                $member->save();
             }
             DB::commit();
 

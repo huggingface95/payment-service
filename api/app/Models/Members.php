@@ -41,6 +41,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property int language_id
  * @property int two_factor_auth_setting_id
  * @property string google2fa_secret
+ * @property string email_verification
  * @property string backup_codes
  * @property Collection groupRoles
  * @property GroupRole $groupRole
