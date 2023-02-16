@@ -56,7 +56,7 @@ extend type Query @guard {
         hasPosition: _ @whereHasConditions(columns: ["name"]),
         hasMember: _ @whereHasConditions(columns: ["fullname"]),
         hasClient: _ @whereHasConditions(columns: ["fullname"]),
-        created_at: DateRange @whereBetween,
+        created_at: DateTimeRange @whereBetween,
         where: _ @whereConditions(columns: ["title", "status"]),
         orderBy: _ @orderBy(
             columns: ["id"]

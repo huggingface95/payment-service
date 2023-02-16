@@ -29,7 +29,7 @@ extend type Query @guard {
     Получить статистику по акаунтам
     """
     dashboardAccountsStatistic(
-        created_at: DateRange @whereBetween
+        created_at: DateTimeRange @whereBetween
         payment_provider_id: ID
     ): [dashboardAccountsStatistic]
         @field(resolver: "DashboardQuery@accountsStatistic")
@@ -38,7 +38,7 @@ extend type Query @guard {
     Получить статистику по тикетам
     """
     dashboardTicketsStatistic(
-        created_at: DateRange @whereBetween
+        created_at: DateTimeRange @whereBetween
     ): [dashboardTicketsStatistic]
         @field(resolver: "DashboardQuery@ticketsStatistic")
     
@@ -46,7 +46,7 @@ extend type Query @guard {
     Получить статистику по трансферам
     """
     dashboardTransfersStatistic(
-        created_at: DateRange @whereBetween
+        created_at: DateTimeRange @whereBetween
         company_id: ID
         payment_bank_id: ID
         payment_provider_id: ID
@@ -59,7 +59,7 @@ extend type Query @guard {
     """
     dashboardUsersStatistic(
         company_id: ID
-        created_at: DateRange @whereBetween
+        created_at: DateTimeRange @whereBetween
         project_id: ID
     ): [dashboardUsersStatistic]
         @field(resolver: "DashboardQuery@usersStatistic")

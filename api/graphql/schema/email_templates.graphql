@@ -49,7 +49,7 @@ extend type Query @guard {
     """
     emailTemplates(
         filter: _ @filterConditions(static: QueryEmailTemplatesFilterStatic),
-        created_at: DateRange @whereBetween,
+        created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(
             columns: ["id"]
         )

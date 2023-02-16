@@ -72,7 +72,7 @@ extend type Query @guard {
     payments(
         filter: _ @filterConditions(static: QueryPaymentsFilterStatic),
         AccountNumber: Sort @scope(name:"AccountNumber"),
-        created_at: DateRange @whereBetween,
+        created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id", "created_at", "amount", "fee", "payment_number"])
     ): [Payments!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
