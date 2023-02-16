@@ -59,7 +59,7 @@ func initRouter() *gin.Engine {
 			email.GET("", controllers.ConfirmationIndividualEmail)
 		}
 
-		pass := confirmation.Group("/password").Use(middlewares.CheckIndividualResetPassword())
+		pass := confirmation.Group("/password")
 		{
 			pass.POST("", controllers.ChangePassword)
 		}

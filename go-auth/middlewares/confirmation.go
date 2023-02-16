@@ -45,23 +45,3 @@ func CheckIndividualEmailConfirmation() gin.HandlerFunc {
 
 	}
 }
-
-func CheckIndividualResetPassword() gin.HandlerFunc {
-	return func(context *gin.Context) {
-		token := context.Request.URL.Query().Get("token")
-		if token == "" {
-			context.JSON(http.StatusBadRequest, gin.H{"error": "request not working"})
-			context.Abort()
-			return
-		}
-
-		if _, ok := cache.Caching.ResetPassword.Get(token); ok == true {
-			context.Next()
-		} else {
-			context.JSON(http.StatusForbidden, gin.H{"error": "token don't working"})
-			context.Abort()
-			return
-		}
-
-	}
-}
