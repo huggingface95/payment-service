@@ -102,5 +102,27 @@ class EmailTemplatesTableSeeder extends Seeder
             'created_at' => Carbon::now(),
             'name' => 'has invited you to join team 2',
         ]);
+
+        EmailTemplate::firstOrCreate([
+            'id' => 9,
+            'subject' => 'Account Requisites',
+        ], [
+            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'member_id' => 2,
+            'company_id' => 1,
+            'created_at' => Carbon::now(),
+            'name' => 'Account Requisites Test',
+        ]);
+
+        EmailTemplate::firstOrCreate([
+            'id' => 10,
+            'subject' => 'Account Requisites',
+        ], [
+            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'member_id' => 2,
+            'company_id' => 1,
+            'created_at' => Carbon::now(),
+            'name' => 'Account Requisites 2',
+        ]);
     }
 }
