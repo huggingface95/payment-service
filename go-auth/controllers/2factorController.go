@@ -160,8 +160,8 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		user.SetBackupCodeData(backupCodeData)
 		userRepository.SaveUser(user)
 		if success == true {
-			token, _, _, _ := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
-			context.JSON(http.StatusOK, gin.H{"data": "success", "token": token})
+			token, _, expirationTime, _ := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
+			context.JSON(http.StatusOK, gin.H{"access_token": token, "token_type": "bearer", "expires_in": expirationTime.Unix()})
 			return
 		} else {
 			context.JSON(http.StatusForbidden, gin.H{"error": "No such code"})
