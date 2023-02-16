@@ -99,7 +99,7 @@ extend type Query @guard {
     """
     companies(
         filter: _ @filterConditions(static: QueryCompaniesFilterStatic),
-        created_at: DateRange @whereBetween,
+        created_at: DateTimeRange @whereBetween,
         country: Sort @scope(name:"CountrySort"), member_count: Sort @scope(name:"MemberSort"),
         orderBy: _ @orderBy(columns: ["id","created_at","name","email","url"])
     ): [Company!]!   @paginate(defaultCount: 100) @orderBy(column: "id", direction: ASC)

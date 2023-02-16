@@ -78,7 +78,7 @@ extend type Query @guard {
     """
     transferIncomings(
         filter: _ @filterConditions(static: QueryTransferIncomingsFilterStatic),
-        created_at: DateRange @whereBetween
+        created_at: DateTimeRange @whereBetween
     ): [TransferIncoming!]!
         @paginate(defaultCount: 10)
         @orderBy(column: "id", direction: ASC)
@@ -87,7 +87,7 @@ extend type Query @guard {
     Получить статистику по входящим платежам
     """
     transferIncomingsStatistic(
-        created_at: DateRange @whereBetween
+        created_at: DateTimeRange @whereBetween
         company_id: ID
         payment_provider_id: ID
         account_id: ID

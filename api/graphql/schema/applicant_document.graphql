@@ -38,8 +38,8 @@ extend type Query @guard {
     applicantDocuments(
         applicant_type: ApplicantType! @eq,
         filter: _ @filterConditions(static: QueryApplicantDocumentsFilterStatic),
-        created_at: DateRange @whereBetween,
-        update_at: DateRange @whereBetween,
+        created_at: DateTimeRange @whereBetween,
+        update_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id", "created_at"])
     ): [ApplicantDocument!]!
         @paginate(defaultCount: 10)

@@ -126,7 +126,7 @@ extend type Query @guard{
         hasBusinessType: _ @whereHasConditions(columns: ["name", "id"]),
         hasOwner: _ @whereHasConditions(columns: ["fullname", "id"]),
         hasKycLevel: _ @whereHasConditions(columns: ["name", "id"]),
-        created_at: DateRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"),
+        created_at: DateTimeRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"),
         orderBy: _ @orderBy(
         columns: ["id","name", "email","created_at","url","owner_id","company_id"],
     )): [ApplicantCompany!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
