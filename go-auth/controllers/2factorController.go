@@ -118,7 +118,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 	oauthCode := oauthRepository.GetOauthCodeWithConditions(map[string]interface{}{"user_id": user.GetId(), "revoked": true})
 
 	if oauthCode != nil && oauthCode.ExpiresAt.Unix() < newTime.Unix() {
-		context.JSON(http.StatusForbidden, gin.H{"error": "Token has expired"})
+		context.JSON(http.StatusForbidden, gin.H{"error": "Code has expired"})
 		context.Abort()
 		return
 	}
