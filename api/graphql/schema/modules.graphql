@@ -20,17 +20,17 @@ extend type Query @guard {
         where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id"])
     ): [Module!]!
-    @all
-    @orderBy(column: "id", direction: ASC)
+    @field(resolver:"ModuleQuery@nokyc")
     """
-    Получить список модулей без KYC модуля
+    Получить список модулей вместе с модулем KYC
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
-    modulesNoKyc (
+    modulesWithKyc (
         where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id"])
     ): [Module!]
-    @field(resolver:"ModuleQuery@nokyc")
+    @all
+    @orderBy(column: "id", direction: ASC)
 }
 
 extend type Mutation @guard {
