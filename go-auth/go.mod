@@ -1,6 +1,6 @@
 module jwt-authentication-golang
 
-go 1.18
+go 1.19
 
 require (
 	github.com/eneoti/merge-struct v0.0.0-20190716064921-a79f860cdca7

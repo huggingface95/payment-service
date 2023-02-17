@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 
 networks:
   backend:
@@ -65,43 +65,7 @@ services:
       - "2490:2490"
     networks:
       - backend
-  go-auth:
-    build:
-      context: ../go-auth
-      dockerfile: ../docker/go-auth/Dockerfile
-    container_name: go-auth
-    volumes:
-      - ../go-auth/pkg:/auth/pkg
-      - ../go-auth/services:/auth/services
-      - ../go-auth/responses:/auth/responses
-      - ../go-auth/regexes:/auth/regexes
-      - ../go-auth/dto:/auth/dto
-      - ../go-auth/constants:/auth/constants
-      - ../go-auth/jobs:/auth/jobs
-      - ../go-auth/times:/auth/times
-      - ../go-auth/cache:/auth/cache
-      - ../go-auth/config:/auth/config
-      - ../go-auth/controllers:/auth/controllers
-      - ../go-auth/repositories:/auth/repositories
-      - ../go-auth/requests:/auth/requests
-      - ../go-auth/database:/auth/database
-      - ../go-auth/middlewares:/auth/middlewares
-      - ../go-auth/models:/auth/models
-      - ../go-auth/helpers:/auth/helpers
-      - ../go-auth/main.go:/auth/main.go
-      - ../go-auth/go.mod:/auth/go.mod
-      - ../go-auth/go.sum:/auth/go.sum
-      - ../go-auth/.env:/auth/.env
-      - ../go-auth/vendor:/auth/vendor
-      - ../go-auth/storage:/auth/storage
-    command:
-      - go
-      - run
-      - main.go
-    ports:
-      - "2491:2491"
-    networks:
-      - backend
+
   nginx:
     build:
       context: ./nginx
@@ -176,3 +140,17 @@ services:
     networks:
       - backend
 
+  go-auth:
+    container_name: go-auth
+    build:
+      context: ../go-auth
+      dockerfile: ../docker/go-auth/Dockerfile
+    image: hot-reloading-app
+    ports:
+      - "2491:2491"
+    volumes:
+      - ../go-auth:/app
+    environment:
+      PORT: "2491"
+    networks:
+      - backend
