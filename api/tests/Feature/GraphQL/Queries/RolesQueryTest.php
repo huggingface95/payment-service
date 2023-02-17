@@ -51,7 +51,7 @@ class RolesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -91,7 +91,7 @@ class RolesQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -121,7 +121,7 @@ class RolesQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $role->id,
@@ -152,7 +152,7 @@ class RolesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -166,17 +166,23 @@ class RolesQueryTest extends TestCase
         ]);
     }
 
-    public function testQueryRolesWhereFilter(): void
+    public function testQueryByGroupId(): void
     {
         $role = DB::connection('pgsql_test')
             ->table('roles')
+            ->orderBy('id', 'ASC')
+            ->first();
+
+        $groupRole = DB::connection('pgsql_test')
+            ->table('group_role')
+            ->where('role_id', $role->id)
             ->first();
 
         $this->postGraphQL(
             [
                 'query' => '
-                query Roles($id:Mixed){
-                    roles(where:{column:GROUP_TYPE_ID, value: $id}) {
+                query Roles($id: Mixed) {
+                    roles(filter: { column: HAS_GROUPS_MIXED_ID_OR_NAME, value: $id }) {
                         data {
                             id
                             name
@@ -184,15 +190,21 @@ class RolesQueryTest extends TestCase
                     }
                 }',
                 'variables' => [
-                    'id' => $role->group_type_id,
+                    'id' => $groupRole->id,
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
-        )->seeJsonContains([
-            'id' => (string) $role->id,
-            'name' => (string) $role->name,
+        )->seeJson([
+            'data' => [
+                'roles' => [
+                    'data' => [[
+                        'id' => (string) $role->id,
+                        'name' => (string) $role->name,
+                    ]],
+                ],
+            ],
         ]);
     }
 }
