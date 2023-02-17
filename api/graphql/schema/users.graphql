@@ -30,7 +30,7 @@ extend type Query @guard {
     where:{column: FIRST_NAME, operator: LIKE, value: ""} фильтр по фамилии, имени, email, компании, роли, департаменту, должности
     """
     users(
-        where: _ @whereConditions(columnsEnum: "UsersColumn"),
+        filter: _ @filterConditions(static: QueryUsersFilterStatic),
         orderBy: _ @orderBy(columns: ["id","email","fullname"],
     )): [Users!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
@@ -39,12 +39,12 @@ extend type Query @guard(with: ["api", "api_client"]) {
     userAuthData: userAuthResponse! @field(resolver:"UsersQuery@userAuthData")
 }
 
-enum UsersColumn {
-    ID @enum(value: "id")
-    FULLNAME @enum(value: "fullname")
-    COMPANY_ID @enum(value: "company_id")
-    EMAIL @enum(value: "email")
-    GROUP_ID @enum(value: "group_id")
-    GROUP_TYPE_ID @enum(value: "group_type_id")
-    ROLE_ID @enum(value: "role_id")
+input QueryUsersFilterStatic @spread{
+    id: ID @eq
+    fullname: String @ilike
+    company_id: ID @eq
+    email: String @ilike
+    group_id: ID @eq
+    group_type_id: ID @eq
+    role_id: ID @eq
 }

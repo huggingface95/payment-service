@@ -5,6 +5,7 @@ namespace Tests\Feature\GraphQL\Queries;
 use App\Enums\ClientTypeEnum;
 use App\Models\Members;
 use App\Models\PermissionsList;
+use App\Models\Users;
 use App\Services\PermissionsService;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -45,7 +46,7 @@ class UsersQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -59,46 +60,122 @@ class UsersQueryTest extends TestCase
         ]);
     }
 
-    /*private function getUserPermissions(Members $member): array
+    public function testQueryUsersWithFilterByFullname(): void
     {
-        $clientType = ClientTypeEnum::APPLICANT->toString();
+        $users = Users::orderBy('id', 'ASC')
+            ->first();
 
-        $allPermissions = (new PermissionsService)->getPermissionsList(
-            PermissionsList::get()->where('type', $clientType)
-        );
-
-        $permissionsList = '';
-        foreach ($allPermissions as $permission) {
-            $permissionsList .= $permission.PHP_EOL;
-        }
-
-        $permissions = $member->getAllPermissions()->groupBy(['permission_list_id', function ($permission) {
-            return 'PERMISSION_'.strtoupper(Str::snake(str_replace(':', '', $permission->permissionList->name)));
-        }])->collapse()->map(function ($permissions) {
-            return $permissions->pluck('display_name', 'id')->toArray() ?? [];
-        })->toArray() ?? [];
-
-        foreach ($permissions as $listName => $records) {
-            $permissions[$listName] = array_map(
-                function ($id, string $name): string {
-                    return strtoupper(Str::snake(preg_replace("/(\/)|(&)|(\()|(\))|(:)/", '', $name)));
-                },
-                array_keys($records),
-                $records
-            );
-        }
-
-        $basePermissions = [];
-        foreach ($allPermissions as $permission) {
-            $basePermissions[$permission] = [];
-        }
-
-        return [
-            'userPermissions' => array_merge(
-                $basePermissions,
-                $permissions,
-            ),
-            'permissionsList' => $permissionsList,
+        $expect = [
+            'id' => (string) $users->id,
+            'email' => (string) $users->email,
         ];
-    }*/
+
+        $this->postGraphQL(
+            [
+                'query' => 'query Users($name: Mixed) {
+                    users (
+                        filter: { column: FULLNAME, operator: ILIKE, value: $name }
+                    ) {
+                        data {
+                            id
+                            email
+                        }
+                    }
+                }',
+                'variables' => [
+                    'name' => $users->fullname,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains($expect);
+    }
+
+    public function testQueryUsersWithFilterByEmail(): void
+    {
+        $users = Users::orderBy('id', 'ASC')
+            ->first();
+
+        $expect = [
+            'id' => (string) $users->id,
+            'email' => (string) $users->email,
+        ];
+
+        $this->postGraphQL(
+            [
+                'query' => 'query Users($email: Mixed) {
+                    users (
+                        filter: { column: EMAIL, operator: ILIKE, value: $email }
+                    ) {
+                        data {
+                            id
+                            email
+                        }
+                    }
+                }',
+                'variables' => [
+                    'email' => $users->email,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains($expect);
+    }
+
+    /**
+     * @dataProvider provide_testQueryUsersWithFilterByCondition
+     */
+    public function testQueryUsersWithFilterByCondition($cond, $value): void
+    {
+        $users = Users::where($cond, $value)
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        $expect = [
+            'data' => [
+                'users' => [],
+            ],
+        ];
+
+        foreach ($users as $user) {
+            $expect['data']['users']['data'][] = [
+                'id' => (string) $user->id,
+                'email' => (string) $user->email,
+            ];
+        }
+
+        $this->postGraphQL(
+            [
+                'query' => 'query Users($id: Mixed) {
+                    users (
+                        filter: { column: '.strtoupper($cond).', operator: EQ, value: $id }
+                    ) {
+                        data {
+                            id
+                            email
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => $value,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        )->seeJsonContains($expect);
+    }
+
+    public function provide_testQueryUsersWithFilterByCondition()
+    {
+        return [
+            ['id', '1'],
+            ['company_id', '1'],
+            ['group_id', '1'],
+            ['group_type_id', '1'],
+            ['role_id', '2'],
+        ];
+    }
 }
