@@ -77,7 +77,7 @@ class RolesMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -117,7 +117,7 @@ class RolesMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
@@ -152,7 +152,7 @@ class RolesMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         );
 
