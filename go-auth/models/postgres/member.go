@@ -24,17 +24,14 @@ type Member struct {
 	IsNeedChangePassword   bool   `gorm:"column:is_need_change_password"`
 	CreatedAt              time.Time
 	UpdatedAt              time.Time
-	BackupCodeData         *BackupJson        `gorm:"column:backup_codes"`
+	BackupCodes            datatypes.JSON     `gorm:"column:backup_codes"`
 	ClientIpAddresses      []*ClientIpAddress `gorm:"foreignKey:ClientId;references:ID"`
 	Company                *Company           `gorm:"foreignKey:CompanyId"`
 }
 
-type BackupJson struct {
-	datatypes.JSON
-	BackupCodes []struct {
-		Use  bool   `json:"use"`
-		Code string `json:"code"`
-	} `json:"backup_codes"`
+type BackupCodes struct {
+	Use  bool   `json:"use"`
+	Code string `json:"code"`
 }
 
 func (user *Member) StructName() string {
@@ -91,20 +88,17 @@ func (user *Member) InClientIpAddresses(ip string) bool {
 	return false
 }
 
-func (user *Member) GetBackupCodeDataAttribute() *BackupJson {
-	var backupJson *BackupJson
+func (user *Member) GetBackupCodeDataAttribute() []BackupCodes {
+	var codes []BackupCodes
 
-	value, err := user.BackupCodeData.MarshalJSON()
+	str := user.BackupCodes.String()
+	err := json.Unmarshal([]byte(str), &codes)
+
 	if err != nil {
 		return nil
 	}
 
-	err = json.Unmarshal(value, &backupJson)
-	if err != nil {
-		return nil
-	}
-
-	return backupJson
+	return codes
 }
 
 func (user *Member) GetId() uint64 {
@@ -170,8 +164,12 @@ func (user *Member) SetIsEmailVerify(v uint64) {
 	user.IsVerificationEmail = v
 }
 
-func (user *Member) SetBackupCodeData(v *BackupJson) {
-	user.BackupCodeData = v
+func (user *Member) SetBackupCodeData(v []BackupCodes) {
+	data, err := json.Marshal(v)
+	if err != nil {
+		return
+	}
+	user.BackupCodes = data
 }
 
 func (user *Member) SetGoogle2FaSecret(v string) {

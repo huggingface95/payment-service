@@ -146,18 +146,18 @@ func VerifyTwoFactorQr(context *gin.Context) {
 
 	if request.BackupCode != "" {
 		var success = false
-		backupCodeData := user.GetBackupCodeDataAttribute()
-		for i, v := range backupCodeData.BackupCodes {
+		backupCodes := user.GetBackupCodeDataAttribute()
+		for i, v := range backupCodes {
 			if v.Code == request.BackupCode && v.Use == true {
 				context.JSON(http.StatusForbidden, gin.H{"error": "This code has been already used"})
 				context.Abort()
 				return
 			} else if v.Code == request.BackupCode {
-				backupCodeData.BackupCodes[i].Use = true
+				backupCodes[i].Use = true
 				success = true
 			}
 		}
-		user.SetBackupCodeData(backupCodeData)
+		user.SetBackupCodeData(backupCodes)
 		userRepository.SaveUser(user)
 		if success == true {
 			token, _, expirationTime, _ := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
