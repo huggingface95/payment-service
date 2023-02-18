@@ -182,7 +182,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 
 	cache.Caching.TwoFactorAttempt.Delete(key)
 
-	token, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
+	token, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
 
 	if err != nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Generate Error"})
@@ -190,7 +190,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"data": "success", "token": token})
+	context.JSON(http.StatusOK, gin.H{"access_token": token, "token_type": "bearer", "expires_in": expirationTime.Unix()})
 	context.Abort()
 	return
 }

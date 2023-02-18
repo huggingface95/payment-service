@@ -39,12 +39,6 @@ func GenerateBackupCodes(context *gin.Context) {
 		codes[k] = helpers.GenerateRandomString(3)
 	}
 
-	//jsonCodes, err := json.Marshal(codes)
-	//if err != nil {
-	//	context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-	//	return
-	//}
-
 	context.JSON(http.StatusOK, gin.H{"backup_codes": codes, "user_id": user.GetId(), "2fa_secret": user.GetGoogle2FaSecret()})
 	return
 
@@ -73,15 +67,17 @@ func StoreBackupCodes(context *gin.Context) {
 	user.SetBackupCodeData(request.BackupCodes)
 	userRepository.SaveUser(user)
 
-	token, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
+	token, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 	if err != nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Token don't generate"})
 		context.Abort()
 		return
 	}
 	context.JSON(http.StatusOK, gin.H{
-		"data":         fmt.Sprintf("Backup Codes stored success for user id %d", +user.GetId()),
 		"access_token": token,
+		"token_type":   "bearer",
+		"expires_in":   expirationTime.Unix(),
+		"data":         fmt.Sprintf("Backup Codes stored success for user id %d", +user.GetId()),
 	})
 	context.Abort()
 	return
