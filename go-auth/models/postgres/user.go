@@ -9,7 +9,7 @@ type User interface {
 	CheckPassword(providedPassword string) error
 	IsGoogle2FaSecret() bool
 	InClientIpAddresses(ip string) bool
-	GetBackupCodeDataAttribute() *BackupJson
+	GetBackupCodeDataAttribute() []BackupCodes
 	GetId() uint64
 	GetFullName() string
 	GetEmail() string
@@ -23,7 +23,7 @@ type User interface {
 	SetIsActivated(v uint64)
 	SetIsEmailVerify(v uint64)
 	GetCompany() *Company
-	SetBackupCodeData(v *BackupJson)
+	SetBackupCodeData(v []BackupCodes)
 	SetGoogle2FaSecret(v string)
 	SetTwoFactorAuthSettingId(v uint64)
 	SetCompanyId(v uint64)

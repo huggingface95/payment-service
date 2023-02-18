@@ -17,7 +17,7 @@ type ActivateTwoFactorQrRequest struct {
 }
 
 type VerifyTwoFactorQrRequest struct {
-	Code       string `json:"code" binding:"required"`
+	Code       string `json:"code"`
 	AuthToken  string `json:"auth_token"`
 	TwoFaToken string `json:"2fa_token"`
 	MemberId   uint64 `json:"member_id"`
