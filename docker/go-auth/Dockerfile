@@ -1,18 +1,12 @@
-FROM golang:1.18-buster
-ENV GO111MODULE=on
+FROM golang:latest
 
-WORKDIR /auth
+WORKDIR /app
+ADD . /app
 
-ADD . .
+RUN go install -mod=mod github.com/githubnemo/CompileDaemon
 
-RUN go mod download
-
-EXPOSE 2491
-
-RUN set -x && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+RUN go get github.com/githubnemo/CompileDaemon
+RUN go get github.com/gin-gonic/gin
 
 
-# Run the web service on container startup.
-CMD ["/app/main"]
+ENTRYPOINT CompileDaemon --build="go build main.go" --command=./main
