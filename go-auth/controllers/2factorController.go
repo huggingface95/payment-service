@@ -146,18 +146,18 @@ func VerifyTwoFactorQr(context *gin.Context) {
 
 	if request.BackupCode != "" {
 		var success = false
-		backupCodeData := user.GetBackupCodeDataAttribute()
-		for i, v := range backupCodeData.BackupCodes {
+		backupCodes := user.GetBackupCodeDataAttribute()
+		for i, v := range backupCodes {
 			if v.Code == request.BackupCode && v.Use == true {
 				context.JSON(http.StatusForbidden, gin.H{"error": "This code has been already used"})
 				context.Abort()
 				return
 			} else if v.Code == request.BackupCode {
-				backupCodeData.BackupCodes[i].Use = true
+				backupCodes[i].Use = true
 				success = true
 			}
 		}
-		user.SetBackupCodeData(backupCodeData)
+		user.SetBackupCodeData(backupCodes)
 		userRepository.SaveUser(user)
 		if success == true {
 			token, _, expirationTime, _ := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
@@ -182,7 +182,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 
 	cache.Caching.TwoFactorAttempt.Delete(key)
 
-	token, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
+	token, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
 
 	if err != nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Generate Error"})
@@ -190,7 +190,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"data": "success", "token": token})
+	context.JSON(http.StatusOK, gin.H{"access_token": token, "token_type": "bearer", "expires_in": expirationTime.Unix()})
 	context.Abort()
 	return
 }

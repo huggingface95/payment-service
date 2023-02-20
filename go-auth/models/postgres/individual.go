@@ -50,7 +50,7 @@ type Individual struct {
 	IsNeedChangePassword     bool               `gorm:"column:is_need_change_password"`
 	CreatedAt                time.Time          `gorm:"column:created_at"`
 	UpdatedAt                time.Time          `gorm:"column:updated_at"`
-	BackupCodeData           *BackupJson        `gorm:"column:backup_codes"`
+	BackupCodes              datatypes.JSON     `gorm:"column:backup_codes"`
 	ClientIpAddresses        []*ClientIpAddress `gorm:"foreignKey:ClientId;references:ID"`
 	Company                  *Company           `gorm:"foreignKey:CompanyId"`
 }
@@ -112,20 +112,17 @@ func (user *Individual) InClientIpAddresses(ip string) bool {
 	return false
 }
 
-func (user *Individual) GetBackupCodeDataAttribute() *BackupJson {
-	var backupJson *BackupJson
+func (user *Individual) GetBackupCodeDataAttribute() []BackupCodes {
+	var codes []BackupCodes
 
-	value, err := user.BackupCodeData.MarshalJSON()
+	str := user.BackupCodes.String()
+	err := json.Unmarshal([]byte(str), &codes)
+
 	if err != nil {
 		return nil
 	}
 
-	err = json.Unmarshal(value, &backupJson)
-	if err != nil {
-		return nil
-	}
-
-	return backupJson
+	return codes
 }
 
 func (user *Individual) GetId() uint64 {
@@ -191,8 +188,12 @@ func (user *Individual) SetIsEmailVerify(v uint64) {
 	user.IsVerificationEmail = v
 }
 
-func (user *Individual) SetBackupCodeData(v *BackupJson) {
-	user.BackupCodeData = v
+func (user *Individual) SetBackupCodeData(v []BackupCodes) {
+	data, err := json.Marshal(v)
+	if err != nil {
+		return
+	}
+	user.BackupCodes = data
 }
 
 func (user *Individual) SetGoogle2FaSecret(v string) {
