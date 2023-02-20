@@ -83,5 +83,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ApplicantDocumentTableSeeder::class);
         $this->call(GroupRoleProvidersTableSeeder::class);
         $this->call(PaymentSystemRegionsTableSeeder::class);
+        $this->call(TicketStatusTableSeeder::class);
+        $this->call(TicketTableSeeder::class);
     }
 }
