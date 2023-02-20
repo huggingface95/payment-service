@@ -115,7 +115,7 @@ class FilesQueryTest extends TestCase
             [
                 'query' => 'query Files($type: Mixed) {
                     files (
-                        filter: { column: ENTITY_TYPE, operator: ILIKE, value: $type }
+                        filter: { column: ENTITY_TYPE, value: $type }
                     ) {
                         data {
                             id
