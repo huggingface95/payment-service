@@ -51,13 +51,8 @@ extend type Query @guard {
     where:{column: TITLE, operator: LIKE, value: ""} фильтр по имени, статуса
     """
     tickets(
-        hasCompany: _ @whereHasConditions(columns: ["name"]),
-        hasDepartment: _ @whereHasConditions(columns: ["name"]),
-        hasPosition: _ @whereHasConditions(columns: ["name"]),
-        hasMember: _ @whereHasConditions(columns: ["fullname"]),
-        hasClient: _ @whereHasConditions(columns: ["fullname"]),
+        filter: _ @filterConditions(static: QueryTicketsFilterStatic),
         created_at: DateTimeRange @whereBetween,
-        where: _ @whereConditions(columns: ["title", "status"]),
         orderBy: _ @orderBy(
             columns: ["id"]
             relations: [
@@ -66,6 +61,13 @@ extend type Query @guard {
             ]
         )
     ): [Ticket!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryTicketsFilterStatic @spread {
+    id: ID @eq
+    member_id: ID @eq
+    client_id: ID @eq
+    hasCompanyFilterById: ID @eq
 }
 
 extend type Mutation @guard {
@@ -78,7 +80,7 @@ extend type Mutation @guard {
         "Статус билета"
         status: Int
         "ID мембера"
-        company_id: ID!
+        member_id: ID!
         "ID клиента"
         client_id: ID!
     ): Ticket   @create
@@ -86,8 +88,12 @@ extend type Mutation @guard {
     "Обновить данные компании"
     updateTicket(
         id: ID!
+        "Название билета"
+        title: String
+        "Message билета"
+        message: String
         "Статус билета"
-        status: Int!
+        status: Int
     ): Ticket   @update
 }
 

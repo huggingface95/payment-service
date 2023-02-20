@@ -57,17 +57,15 @@ class TicketsQueryTest extends TestCase
         ]);
     }
 
-    /*public function testQueryPaymentBanksList(): void
+    public function testQueryTicketsList(): void
     {
-        $paymentBanks = PaymentBank::get();
+        $tickets = Ticket::get();
 
-        foreach ($paymentBanks as $paymentBank) {
+        foreach ($tickets as $ticket) {
             $data[] = [
-                'id' => (string) $paymentBank->id,
-                'name' => (string) $paymentBank->name,
-                'address' => (string) $paymentBank->address,
-                'bank_code' => (string) $paymentBank->bank_code,
-                'payment_system_code' => (string) $paymentBank->payment_system_code,
+                'id' => (string) $ticket->id,
+                'title' => (string) $ticket->title,
+                'message' => (string) $ticket->message,
             ];
         }
 
@@ -75,13 +73,11 @@ class TicketsQueryTest extends TestCase
             [
                 'query' => '
                 {
-                    paymentBanks {
+                    tickets {
                         data {
                             id
-                            name
-                            address
-                            bank_code
-                            payment_system_code
+                            title
+                            message
                         }
                     }
                 }',
@@ -91,43 +87,41 @@ class TicketsQueryTest extends TestCase
             ]
         )->seeJson([
             'data' => [
-                'paymentBanks' => [
+                'tickets' => [
                     'data' => $data,
                 ],
             ],
         ]);
     }
 
-    public function testQueryPaymentBanksWithFilterByName(): void
+    public function testQueryTicketsWithFilterByCompanyId(): void
     {
-        $paymentBanks = PaymentBank::orderBy('id', 'ASC')
+        $tickets = Ticket::orderBy('id', 'ASC')
             ->first();
 
+        $company = $tickets->company()->first();
+
         $data = [
-            'id' => (string) $paymentBanks->id,
-            'name' => (string) $paymentBanks->name,
-            'address' => (string) $paymentBanks->address,
-            'bank_code' => (string) $paymentBanks->bank_code,
-            'payment_system_code' => (string) $paymentBanks->payment_system_code,
+            'id' => (string) $tickets->id,
+            'title' => (string) $tickets->title,
+            'message' => (string) $tickets->message,
         ];
 
         $this->postGraphQL(
             [
-                'query' => 'query PaymentBanks($name: Mixed) {
-                    paymentBanks (
-                        filter: { column: NAME, operator: ILIKE, value: $name }
+                'query' => 'query Tickets($id: Mixed) {
+                    tickets (
+                        filter: { column: HAS_COMPANY_FILTER_BY_ID, value: $id }
                     ) {
                         data {
                             id
-                            name
-                            address
-                            bank_code
-                            payment_system_code
+                            title
+                            message
                         }
                     }
                 }',
                 'variables' => [
-                    'name' => (string) $paymentBanks->name,
+                    'id' => (string) $company->id,
                 ],
             ],
             [
@@ -135,158 +129,40 @@ class TicketsQueryTest extends TestCase
             ]
         )->seeJsonContains($data);
     }
-
-    public function testQueryPaymentBanksWithFilterByAddress(): void
-    {
-        $paymentBanks = PaymentBank::orderBy('id', 'ASC')
-            ->first();
-
-        $data = [
-            'id' => (string) $paymentBanks->id,
-            'name' => (string) $paymentBanks->name,
-            'address' => (string) $paymentBanks->address,
-            'bank_code' => (string) $paymentBanks->bank_code,
-            'payment_system_code' => (string) $paymentBanks->payment_system_code,
-        ];
-
-        $this->postGraphQL(
-            [
-                'query' => 'query PaymentBanks($address: Mixed) {
-                    paymentBanks (
-                        filter: { column: ADDRESS, operator: ILIKE, value: $address }
-                    ) {
-                        data {
-                            id
-                            name
-                            address
-                            bank_code
-                            payment_system_code
-                        }
-                    }
-                }',
-                'variables' => [
-                    'address' => (string) $paymentBanks->address,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer ' . $this->login(),
-            ]
-        )->seeJsonContains($data);
-    }
-
-    public function testQueryPaymentBanksWithFilterByBankCode(): void
-    {
-        $paymentBanks = PaymentBank::orderBy('id', 'ASC')
-            ->first();
-
-        $data = [
-            'id' => (string) $paymentBanks->id,
-            'name' => (string) $paymentBanks->name,
-            'address' => (string) $paymentBanks->address,
-            'bank_code' => (string) $paymentBanks->bank_code,
-            'payment_system_code' => (string) $paymentBanks->payment_system_code,
-        ];
-
-        $this->postGraphQL(
-            [
-                'query' => 'query PaymentBanks($bank_code: Mixed) {
-                    paymentBanks (
-                        filter: { column: BANK_CODE, operator: ILIKE, value: $bank_code }
-                    ) {
-                        data {
-                            id
-                            name
-                            address
-                            bank_code
-                            payment_system_code
-                        }
-                    }
-                }',
-                'variables' => [
-                    'bank_code' => (string) $paymentBanks->bank_code,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer ' . $this->login(),
-            ]
-        )->seeJsonContains($data);
-    }
-
-    public function testQueryPaymentBanksWithFilterByPaymentSystemCode(): void
-    {
-        $paymentBanks = PaymentBank::orderBy('id', 'ASC')
-            ->first();
-
-        $data = [
-            'id' => (string) $paymentBanks->id,
-            'name' => (string) $paymentBanks->name,
-            'address' => (string) $paymentBanks->address,
-            'bank_code' => (string) $paymentBanks->bank_code,
-            'payment_system_code' => (string) $paymentBanks->payment_system_code,
-        ];
-
-        $this->postGraphQL(
-            [
-                'query' => 'query PaymentBanks($payment_system_code: Mixed) {
-                    paymentBanks (
-                        filter: { column: PAYMENT_SYSTEM_CODE, operator: ILIKE, value: $payment_system_code }
-                    ) {
-                        data {
-                            id
-                            name
-                            address
-                            bank_code
-                            payment_system_code
-                        }
-                    }
-                }',
-                'variables' => [
-                    'payment_system_code' => (string) $paymentBanks->payment_system_code,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer ' . $this->login(),
-            ]
-        )->seeJsonContains($data);
-    }*/
 
     /**
-     * @dataProvider provide_testQueryPaymentBanksWithFilterByCondition
+     * @dataProvider provide_testQueryTicketsWithFilterByCondition
      */
-    /*public function testQueryPaymentBanksWithFilterByCondition($cond, $value): void
+    public function testQueryTicketsWithFilterByCondition($cond, $value): void
     {
-        $paymentBanks = PaymentBank::where($cond, $value)
+        $tickets = Ticket::where($cond, $value)
             ->orderBy('id', 'ASC')
             ->get();
 
         $data = [
             'data' => [
-                'paymentBanks' => [],
+                'tickets' => [],
             ],
         ];
 
-        foreach ($paymentBanks as $paymentBank) {
-            $data['data']['paymentBanks']['data'][] = [
-                'id' => (string) $paymentBank->id,
-                'name' => (string) $paymentBank->name,
-                'address' => (string) $paymentBank->address,
-                'bank_code' => (string) $paymentBank->bank_code,
-                'payment_system_code' => (string) $paymentBank->payment_system_code,
+        foreach ($tickets as $ticket) {
+            $data['data']['tickets']['data'][] = [
+                'id' => (string) $ticket->id,
+                'title' => (string) $ticket->title,
+                'message' => (string) $ticket->message,
             ];
         }
 
         $this->postGraphQL(
             [
-                'query' => 'query PaymentBanks($id: Mixed) {
-                    paymentBanks (
+                'query' => 'query Tickets($id: Mixed) {
+                    tickets (
                         filter: { column: '.strtoupper($cond).', operator: EQ, value: $id }
                     ) {
                         data {
                             id
-                            name
-                            address
-                            bank_code
-                            payment_system_code
+                            title
+                            message
                         }
                     }
                 }',
@@ -300,13 +176,12 @@ class TicketsQueryTest extends TestCase
         )->seeJsonContains($data);
     }
 
-    public function provide_testQueryPaymentBanksWithFilterByCondition()
+    public function provide_testQueryTicketsWithFilterByCondition()
     {
         return [
             ['id', '1'],
-            ['country_id', '1'],
-            ['payment_provider_id', '1'],
-            ['payment_system_id', '1'],
+            ['member_id', '1'],
+            ['client_id', '1'],
         ];
-    }*/
+    }
 }
