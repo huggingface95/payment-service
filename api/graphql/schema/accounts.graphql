@@ -14,6 +14,8 @@ type Account {
     account_type: AccountType
     "Получить связанного платежного провайдера"
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
+    "Получить связанного платежного провайдера iban"
+    iban_provider: PaymentProviderIban @belongsTo(relation:"paymentProviderIban")
     "Получить связанного Пеймент систем"
     payment_system: PaymentSystem @belongsTo(relation:"paymentSystem")
     "Получить банк"
@@ -38,9 +40,14 @@ type Account {
     account_name: String!
     "Основной или нет"
     is_primary: Boolean
+    "лимит максимального баланса"
+    min_limit_balance: Decimal
+    "лимит минимального баланса"
+    max_limit_balance: Decimal
     created_at: DateTimeUtc
     updated_at: DateTimeUtc
     activated_at: DateTimeUtc
+    last_charge_at: DateTimeUtc
 }
 
 type AccountClient {
@@ -64,6 +71,10 @@ type ClientAccountsDetails{
     available_balance: Decimal!
     "Получить связанный код валюты"
     currency: Currencies!
+    "лимит максимального баланса"
+    min_limit_balance: Decimal
+    "лимит минимального баланса"
+    max_limit_balance: Decimal
 }
 
 type AccountGenerateIbanResponse{
@@ -142,6 +153,8 @@ input InputAccount{
     account_number: String
     "ID провайдера"
     payment_provider_id: ID!
+    "ID провайдера iban"
+    iban_provider_id: ID
     "ID шаблона комиссии"
     commission_template_id: ID!
     "Имя аккаунта"
@@ -158,6 +171,10 @@ input InputAccount{
     payment_bank_id: ID
     "clientable"
     clientableAttach: PivotTable
+    "лимит максимального баланса"
+    min_limit_balance: Decimal
+    "лимит минимального баланса"
+    max_limit_balance: Decimal
 }
 
 extend type Mutation @guard {
