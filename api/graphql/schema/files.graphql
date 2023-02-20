@@ -50,7 +50,7 @@ extend type Query @guard {
 
 input QueryFilesFilterStatic @spread {
     author_id: ID @eq
-    entity_type: String @ilike
+    entity_type: String @eq
 }
 
 extend type Mutation @guard {
