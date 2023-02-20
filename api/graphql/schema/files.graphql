@@ -45,7 +45,7 @@ extend type Query @guard {
     files(
         filter: _ @filterConditions(static: QueryFilesFilterStatic),
         orderBy: _ @orderBy(columns: ["id", "author_id"])
-    ): [Files!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [Files!]! @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 }
 
 input QueryFilesFilterStatic @spread {
