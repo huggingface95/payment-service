@@ -63,6 +63,7 @@ class Account extends BaseModel implements BaseModelInterface
         'account_number',
         'account_type',
         'payment_provider_id',
+        'iban_provider_id',
         'commission_template_id',
         'account_state_id',
         'account_name',
@@ -81,6 +82,8 @@ class Account extends BaseModel implements BaseModelInterface
         'client_type',
         'is_show',
         'entity_id',
+        'min_limit_balance',
+        'max_limit_balance',
     ];
 
     protected $casts = [
@@ -92,6 +95,7 @@ class Account extends BaseModel implements BaseModelInterface
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'activated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'last_charge_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     protected static function booted()
@@ -118,7 +122,7 @@ class Account extends BaseModel implements BaseModelInterface
             })
             ->join('accounts as a', 'a.id', '=', 'aic.account_id')
             ->where('accounts.id', '=', $this->id)
-            ->select('a.id', 'a.current_balance', 'a.reserved_balance', 'a.available_balance', 'a.currency_id')
+            ->select('a.id', 'a.current_balance', 'a.reserved_balance', 'a.available_balance', 'a.currency_id', 'a.min_limit_balance', 'a.max_limit_balance')
             ->get()
             ->map(function ($account) {
                 $account->relations['currency'] = $account->relations['currencies'];
@@ -172,7 +176,17 @@ class Account extends BaseModel implements BaseModelInterface
      */
     public function paymentProvider(): BelongsTo
     {
-        return $this->belongsTo(PaymentProvider::class, 'payment_provider_id', 'id');
+        return $this->belongsTo(PaymentProvider::class, 'payment_provider_id');
+    }
+
+    /**
+     * Get relation Iban Provider
+     *
+     * @return BelongsTo
+     */
+    public function paymentProviderIban(): BelongsTo
+    {
+        return $this->belongsTo(PaymentProviderIban::class, 'iban_provider_id');
     }
 
     public function paymentSystem(): BelongsTo
