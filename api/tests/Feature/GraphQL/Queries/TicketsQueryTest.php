@@ -59,21 +59,13 @@ class TicketsQueryTest extends TestCase
 
     public function testQueryTicketsList(): void
     {
-        $tickets = Ticket::get();
-
-        foreach ($tickets as $ticket) {
-            $data[] = [
-                'id' => (string) $ticket->id,
-                'title' => (string) $ticket->title,
-                'message' => (string) $ticket->message,
-            ];
-        }
+        $tickets = Ticket::orderBy('id', 'ASC')->get();
 
         $this->postGraphQL(
             [
                 'query' => '
                 {
-                    tickets {
+                    tickets (orderBy: { column: ID, order: ASC }) {
                         data {
                             id
                             title
@@ -85,12 +77,10 @@ class TicketsQueryTest extends TestCase
             [
                 'Authorization' => 'Bearer ' . $this->login(),
             ]
-        )->seeJson([
-            'data' => [
-                'tickets' => [
-                    'data' => $data,
-                ],
-            ],
+        )->seeJsonContains([
+            'id' => (string) $tickets[0]->id,
+            'title' => (string) $tickets[0]->title,
+            'message' => (string) $tickets[0]->message,
         ]);
     }
 

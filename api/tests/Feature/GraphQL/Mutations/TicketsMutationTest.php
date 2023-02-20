@@ -38,8 +38,8 @@ class TicketsMutationTest extends TestCase
         ', [
             'title' => 'New Ticket',
             'message' => 'System Error',
-            'member_id' => 1,
-            'client_id' => 1,
+            'member_id' => 2,
+            'client_id' => 2,
         ])->seeJsonContains([
             'message' => 'Unauthenticated.',
         ]);
@@ -72,8 +72,8 @@ class TicketsMutationTest extends TestCase
             'variables' => [
                 'title' => 'New Ticket',
                 'message' => 'System Error',
-                'member_id' => 1,
-                'client_id' => 1,
+                'member_id' => 2,
+                'client_id' => 2,
             ]
         ],
         [
