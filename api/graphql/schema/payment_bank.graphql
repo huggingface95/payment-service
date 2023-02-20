@@ -56,16 +56,6 @@ input QueryPaymentBanksFilterStatic @spread{
     payment_system_code: String @ilike
 }
 
-enum QueryPaymentBankWhereColumn {
-    COUNTRY_ID @enum(value: "country_id")
-    NAME @enum(value: "name")
-    ADDRESS @enum(value: "address")
-    BANK_CODE @enum(value: "bank_code")
-    PAYMENT_SYSTEM_CODE @enum(value: "payment_system_code")
-    PAYMENT_PROVIDER_ID @enum(value: "payment_provider_id")
-    PAYMENT_SYSTEM_ID @enum(value: "payment_system_id")
-}
-
 input InputPaymentBank @validator {
     "Название банка"
     name: String!
