@@ -2,6 +2,7 @@ package postgres
 
 type User interface {
 	StructName() string
+	ClientType() string
 	TableName() string
 	Omit() []string
 	MergeOmit(omits []string) []string

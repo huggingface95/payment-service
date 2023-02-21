@@ -1,37 +1,69 @@
 package cache
 
 import (
-	"sync"
+	"encoding/json"
+	"fmt"
+	"jwt-authentication-golang/constants"
+	"jwt-authentication-golang/database"
+	"jwt-authentication-golang/repositories/redisRepository"
 )
 
 type BlackListCache struct {
-	lock sync.Mutex
-	Data []BlackListData
+	Data []*BlackListData
 }
 
 type BlackListData struct {
 	Forever bool
 	Token   string
-	Id      uint64
 }
 
-func (b *BlackListCache) Get(key uint64, token string) int {
-	b.lock.Lock()
-	defer b.lock.Unlock()
+func (bList *BlackListCache) MarshalBinary() ([]byte, error) {
+	return json.Marshal(bList)
+}
 
-	for id, val := range b.Data {
-		if val.Id == key && val.Token == token {
-			return id
+func (bList *BlackListCache) UnmarshalBinary(data []byte) error {
+	if err := json.Unmarshal(data, &bList); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (bList *BlackListCache) HasToken(id string, token string) bool {
+	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheAuthBlackList, id), func() interface{} {
+		return new(BlackListCache)
+	})
+	if record == nil {
+		return false
+	}
+
+	blackList := record.(*BlackListCache)
+
+	for _, val := range blackList.Data {
+		if val.Token == token {
+			return true
 		}
 	}
 
-	return 0
+	return false
 }
 
-func (b *BlackListCache) Set(d *BlackListData) {
-	b.lock.Lock()
-	defer b.lock.Unlock()
-	b.Data = append(b.Data, *d)
+func (bList *BlackListCache) Set(id string, data *BlackListData) {
+	var blackList *BlackListCache
 
-	return
+	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheAuthBlackList, id), func() interface{} {
+		return new(BlackListCache)
+	})
+	if record != nil {
+		blackList = record.(*BlackListCache)
+	} else {
+		blackList = bList
+	}
+	blackList.Data = append(blackList.Data, data)
+
+	database.Set(fmt.Sprintf(constants.CacheAuthBlackList, id), blackList)
+}
+
+func (bList *BlackListCache) Del(id string) {
+	database.Del(fmt.Sprintf(constants.CacheAuthBlackList, id))
 }

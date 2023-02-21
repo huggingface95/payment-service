@@ -138,7 +138,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 			user.SetIsActivated(postgres.ApplicantStateBlocked)
 		}
 		userRepository.SaveUser(user)
-		cache.Caching.LoginAttempt.Delete(key)
+		cache.Caching.LoginAttempt.Del(key)
 		context.JSON(http.StatusForbidden, gin.H{"error": "Account is blocked. Please contact support"})
 		context.Abort()
 		return

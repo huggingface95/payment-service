@@ -1,31 +1,62 @@
 package cache
 
 import (
-	"sync"
+	"encoding/json"
+	"fmt"
+	"jwt-authentication-golang/constants"
+	"jwt-authentication-golang/database"
+	"jwt-authentication-golang/repositories/redisRepository"
+	"jwt-authentication-golang/times"
+	"time"
 )
 
 type LoginAttemptCache struct {
-	lock sync.Mutex
-	Data map[string]int
+	Count     int
+	ExpiredAt *time.Time
 }
 
-func (a *LoginAttemptCache) Get(key string) (int, bool) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	d, ok := a.Data[key]
-	return d, ok
+func (e *LoginAttemptCache) MarshalBinary() ([]byte, error) {
+	return json.Marshal(e)
 }
 
-func (a *LoginAttemptCache) Set(key string, d int) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	a.Data[key] = d
+func (e *LoginAttemptCache) UnmarshalBinary(data []byte) error {
+	if err := json.Unmarshal(data, &e); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (a *LoginAttemptCache) Delete(key string) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	delete(a.Data, key)
+func (l *LoginAttemptCache) GetAttempt(id string) int {
+	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheLoginAttempt, id), func() interface{} {
+		return new(LoginAttemptCache)
+	})
+	if record == nil {
+		return 0
+	}
+	loginAttempt := record.(*LoginAttemptCache)
+	return loginAttempt.Count
+}
 
-	return
+func (l *LoginAttemptCache) GetExpiredAt(id string) *time.Time {
+	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheLoginAttempt, id), func() interface{} {
+		return new(LoginAttemptCache)
+	})
+	if record == nil {
+		return nil
+	}
+	loginAttempt := record.(*LoginAttemptCache)
+	return loginAttempt.ExpiredAt
+}
+
+func (l *LoginAttemptCache) Set(id string, value int) {
+	_, bTime, _, _, _ := times.GetTokenTimes()
+	l.Count = value
+	l.ExpiredAt = &bTime
+
+	database.Set(fmt.Sprintf(constants.CacheLoginAttempt, id), l)
+}
+
+func (l *LoginAttemptCache) Del(id string) {
+	database.Del(fmt.Sprintf(constants.CacheLoginAttempt, id))
 }

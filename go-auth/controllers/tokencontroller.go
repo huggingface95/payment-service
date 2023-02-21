@@ -2,6 +2,7 @@ package controllers
 
 import "C"
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/constants"
@@ -25,6 +26,7 @@ func Refresh(context *gin.Context) {
 		context.Abort()
 		return
 	}
+	var key = fmt.Sprintf("%s_%d", user.ClientType(), user.GetId())
 
 	token := context.GetHeader("Authorization")
 
@@ -36,11 +38,7 @@ func Refresh(context *gin.Context) {
 		return
 	}
 
-	cache.Caching.BlackList.Set(&cache.BlackListData{
-		Id:      user.GetId(),
-		Token:   token,
-		Forever: false,
-	})
+	cache.Caching.BlackList.Set(key, &cache.BlackListData{Token: token, Forever: false})
 
 	context.JSON(http.StatusOK, gin.H{"access_token": newToken, "token_type": "bearer", "expires_in": expirationTime.Unix()})
 

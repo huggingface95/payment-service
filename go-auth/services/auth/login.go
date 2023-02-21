@@ -26,22 +26,20 @@ func ParseRequest(c *gin.Context) (r requests.LoginRequest, h requests.HeaderReq
 }
 
 func AttemptLimitEqual(key string, blockedTime time.Time) bool {
-	if attempt, ok := cache.Caching.LoginAttempt.Get(key); ok == true {
-		if attempt == config.Conf.Jwt.MfaAttempts {
-			cache.Caching.BlockedAccounts.Set(key, blockedTime.Unix())
-			cache.Caching.LoginAttempt.Set(key, attempt+1)
-			return true
-		}
+	attempt := cache.Caching.LoginAttempt.GetAttempt(key)
+	if attempt == config.Conf.Jwt.MfaAttempts {
+		cache.Caching.BlockedAccounts.Set(key, blockedTime.Unix())
+		cache.Caching.LoginAttempt.Set(key, attempt+1)
+		return true
 	}
 	return false
 }
 
 func AttemptLimitLarge(key string) bool {
-	if attempt, ok := cache.Caching.LoginAttempt.Get(key); ok == true {
-		if attempt >= config.Conf.Jwt.MfaAttempts {
-			cache.Caching.LoginAttempt.Delete(key)
-			return true
-		}
+	attempt := cache.Caching.LoginAttempt.GetAttempt(key)
+	if attempt >= config.Conf.Jwt.MfaAttempts {
+		cache.Caching.LoginAttempt.Del(key)
+		return true
 	}
 	return false
 }

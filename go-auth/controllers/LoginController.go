@@ -70,8 +70,8 @@ func Login(context *gin.Context) {
 	}
 
 	if checkPassword(context, user, request) == false {
-		loginAttempt, _ := cache.Caching.LoginAttempt.Get(key)
-		cache.Caching.LoginAttempt.Set(key, loginAttempt+1)
+		attempt := cache.Caching.LoginAttempt.GetAttempt(key)
+		cache.Caching.LoginAttempt.Set(key, attempt+1)
 		return
 	}
 
@@ -175,7 +175,7 @@ func Login(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"two_factor": "true", "auth_token": authToken})
 		return
 	} else {
-		cache.Caching.LoginAttempt.Delete(key)
+		cache.Caching.LoginAttempt.Del(key)
 	}
 
 	tokenJWT, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)

@@ -61,6 +61,10 @@ func (user *Individual) StructName() string {
 	return rModel.Elem().Name()
 }
 
+func (user *Individual) ClientType() string {
+	return constants.Individual
+}
+
 func (*Individual) TableName() string {
 	return "applicant_individual"
 }
