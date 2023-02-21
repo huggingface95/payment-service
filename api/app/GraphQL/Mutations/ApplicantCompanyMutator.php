@@ -14,6 +14,7 @@ use App\Models\ApplicantIndividualCompany;
 use App\Models\GroupRole;
 use App\Services\EmailService;
 use App\Services\VerifyService;
+use Illuminate\Support\Facades\DB;
 
 class ApplicantCompanyMutator extends BaseMutator
 {
@@ -94,6 +95,23 @@ class ApplicantCompanyMutator extends BaseMutator
         $applicant->update($args);
 
         return $applicant;
+    }
+
+    /**
+     * Delete applicant_company
+     *
+     * @param $root
+     * @param  array  $args
+     * @return mixed
+     */
+    public function delete($root, array $args)
+    {
+        $applicantCompany = ApplicantCompany::find($args['id']);
+
+        $applicantCompany->applicantIndividualCompany()->delete();
+        $applicantCompany->delete();
+
+        return $applicantCompany;
     }
 
     /**
