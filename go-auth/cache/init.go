@@ -17,7 +17,7 @@ type Cache struct {
 func (c *Cache) Init() *Cache {
 	c.BlackList = BlackListCache{}
 	c.LoginAttempt = LoginAttemptCache{}
-	c.TwoFactorAttempt = TwoFactorAttemptCache{Data: make(map[string]int)}
+	c.TwoFactorAttempt = TwoFactorAttemptCache{}
 	c.BlockedAccounts = BlockedAccountsCache{}
 	c.Totp = TotpCache{}
 	c.ConfirmationIpLinks = ConfirmationIpLinksCache{}

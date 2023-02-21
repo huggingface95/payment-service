@@ -1,31 +1,59 @@
 package cache
 
 import (
-	"sync"
+	"encoding/json"
+	"fmt"
+	"jwt-authentication-golang/constants"
+	"jwt-authentication-golang/database"
+	"jwt-authentication-golang/repositories/redisRepository"
+	"jwt-authentication-golang/times"
+	"time"
 )
 
 type TwoFactorAttemptCache struct {
-	lock sync.Mutex
-	Data map[string]int // Data should probably not have any reference fields
+	Count     int
+	ExpiredAt *time.Time
 }
 
-func (a *TwoFactorAttemptCache) Get(key string) (int, bool) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	d, ok := a.Data[key]
-	return d, ok
+func (l *TwoFactorAttemptCache) MarshalBinary() ([]byte, error) {
+	return json.Marshal(l)
 }
 
-func (a *TwoFactorAttemptCache) Set(key string, d int) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	a.Data[key] = d
+func (l *TwoFactorAttemptCache) UnmarshalBinary(data []byte) error {
+	if err := json.Unmarshal(data, &l); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (a *TwoFactorAttemptCache) Delete(key string) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	delete(a.Data, key)
+func (l *TwoFactorAttemptCache) GetAttempt(id string) int {
+	data := l.Get(id)
+	if data != nil {
+		return data.Count
+	}
 
-	return
+	return 0
+}
+
+func (l *TwoFactorAttemptCache) Get(id string) *TwoFactorAttemptCache {
+	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheLoginAttempt, id), func() interface{} {
+		return new(TwoFactorAttemptCache)
+	})
+	if record == nil {
+		return nil
+	}
+	return record.(*TwoFactorAttemptCache)
+}
+
+func (l *TwoFactorAttemptCache) Set(id string, value int) {
+	_, bTime, _, _, _ := times.GetTokenTimes()
+	l.Count = value
+	l.ExpiredAt = &bTime
+
+	database.Set(fmt.Sprintf(constants.CacheLoginAttempt, id), l)
+}
+
+func (l *TwoFactorAttemptCache) Del(id string) {
+	database.Del(fmt.Sprintf(constants.CacheLoginAttempt, id))
 }
