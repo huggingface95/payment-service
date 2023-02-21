@@ -105,8 +105,8 @@ func ChangePassword(c *gin.Context) {
 		return
 	}
 
-	data, ok := cache.Caching.ResetPassword.Get(r.PasswordResetToken)
-	if ok == false {
+	data := cache.Caching.ResetPassword.Get(r.PasswordResetToken)
+	if data == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "token don't working"})
 		return
 	}

@@ -23,7 +23,7 @@ func (c *Cache) Init() *Cache {
 	c.ConfirmationIpLinks = ConfirmationIpLinksCache{}
 	c.ConfirmationEmailLinks = ConfirmationEmailLinksCache{}
 	c.ConfirmationNewDevice = ConfirmationNewDeviceCache{}
-	c.ResetPassword = ResetPasswordCache{Data: make(map[string]ResetPasswordCacheData)}
+	c.ResetPassword = ResetPasswordCache{}
 
 	return c
 }

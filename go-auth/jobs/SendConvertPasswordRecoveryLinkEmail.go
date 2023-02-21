@@ -12,16 +12,16 @@ import (
 func ProcessConvertPasswordRecoveryLinkEmailQueue() {
 	for {
 		redisData := redisRepository.GetRedisDataByBlPop(constants.QueueSendResetPasswordEmail, func() interface{} {
-			return new(cache.ResetPasswordCacheData)
+			return new(cache.ResetPasswordCache)
 		})
 		if redisData == nil {
 			break
 		}
-		sendPasswordRecoveryLinkEmailByData(redisData.(*cache.ResetPasswordCacheData))
+		sendPasswordRecoveryLinkEmailByData(redisData.(*cache.ResetPasswordCache))
 	}
 }
 
-func sendPasswordRecoveryLinkEmailByData(e *cache.ResetPasswordCacheData) {
+func sendPasswordRecoveryLinkEmailByData(e *cache.ResetPasswordCache) {
 	template := repositories.GetEmailTemplateWithConditions(
 		map[string]interface{}{"company_id": e.CompanyId},
 		map[string]interface{}{"subject": "Password Recovery"},

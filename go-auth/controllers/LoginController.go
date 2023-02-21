@@ -93,11 +93,10 @@ func Login(context *gin.Context) {
 
 	if user.IsChangePassword() {
 		randomToken := helpers.GenerateRandomString(20)
-		data := &cache.ResetPasswordCacheData{
+		data := &cache.ResetPasswordCache{
 			Id: user.GetId(), CompanyId: user.GetCompanyId(), FullName: user.GetFullName(), Email: user.GetEmail(), PasswordRecoveryUrl: randomToken, Type: clientType,
 		}
-
-		cache.Caching.ResetPassword.Set(randomToken, data)
+		data.Set(randomToken)
 		context.JSON(http.StatusForbidden, gin.H{
 			"message": "Please change password first", "url": user.GetCompany().BackofficeForgotPasswordUrl, "password_reset_token": randomToken,
 		})
