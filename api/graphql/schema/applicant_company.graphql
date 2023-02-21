@@ -234,7 +234,7 @@ extend type Mutation @guard {
         "Дата регистрации"
         reg_at: Date
         "Дата окончания регистрации"
-        expires_at: Date
+        expires_at: DateTimeUtc
         "Налоговый номер"
         tax: String
         "Регистрационный номер"
