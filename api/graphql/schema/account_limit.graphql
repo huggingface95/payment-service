@@ -40,15 +40,19 @@ extend type Query @guard {
     Получить список лимитов
     """
     accountLimits(
-        hasCurrency: _ @whereHasConditions(columns: ["id","name"]),
-        hasAccount: _ @whereHasConditions(columns: ["id","name"]),
-        hasCommissionTemplateLimitType: _ @whereHasConditions(columns: ["id","name"]),
-        hasCommissionTemplateLimitTransferDirection: _ @whereHasConditions(columns: ["id","name"]),
-        hasCommissionTemplateLimitPeriod: _ @whereHasConditions(columns: ["id","name"]),
-        hasCommissionTemplateLimitActionType: _ @whereHasConditions(columns: ["id","name"]),
-        where: _ @whereConditions(columns: ["period_count", "account_id", "amount"]),
+        filter: _ @filterConditions(static: QueryAccountLimitsFilterStatic),
         orderBy: _ @orderBy(columns: ["id"])
     ): [AccountLimit!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryAccountLimitsFilterStatic @spread{
+    hasCurrencyMixedIdOrName: Mixed @eq
+    hasCommissionTemplateLimitTypeMixedIdOrName: Mixed @eq
+    hasCommissionTemplateLimitTransferDirectionMixedIdOrName: Mixed @eq
+    hasCommissionTemplateLimitPeriodMixedIdOrName: Mixed @eq
+    hasCommissionTemplateLimitActionTypeMixedIdOrName: Mixed @eq
+    account_id: ID @eq
+    period_count: ID @eq
 }
 
 extend type Mutation @guard {
@@ -89,7 +93,7 @@ extend type Mutation @guard {
         "ID события лимита"
         commission_template_limit_action_type_id: ID
         "количество срабатываний лимита"
-        period_count: Int
+        period_count: ID
     ):AccountLimit   @field(resolver: "AccountLimitMutator@update")
 
     "Удалить лимит"

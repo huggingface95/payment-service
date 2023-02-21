@@ -36,7 +36,6 @@ class AccountTableSeeder extends Seeder
                     'payment_bank_id' => 1,
                     'is_primary' => true,
                     'current_balance' => 10000,
-                    'current_balance' => 0,
                     'available_balance' => 10000,
                     'account_type' => 'Business',
                     'created_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
