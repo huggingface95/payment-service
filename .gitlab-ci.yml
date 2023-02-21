@@ -19,6 +19,7 @@ unit-test-job:
     - chmod 600 ~/.ssh/id_dsa
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - rsync -rav  ./api/ $SSH_USER_HOST:/opt/test/api
+    - ssh $SSH_USER_HOST "docker exec php-dev-test composer install"
     - ssh $SSH_USER_HOST "docker exec php-dev-test ./vendor/bin/phpunit"
   only:
     - dev
