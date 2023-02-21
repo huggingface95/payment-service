@@ -183,4 +183,10 @@ class TransferOutgoing extends BaseModel
     {
         return $this->hasOneThrough(TransferType::class, OperationType::class, 'id', 'id', 'operation_type_id', 'transfer_type_id');
     }
+
+    public function transaction(): HasOne
+    {
+        return $this->hasOne(Transactions::class, 'transfer_id')
+            ->where('transfer_type', class_basename(self::class));
+    }
 }

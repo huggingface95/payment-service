@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Transactions extends BaseModel
 {
+    use HasFactory;
+
     protected $table = 'transactions';
 
     /**
@@ -13,7 +17,8 @@ class Transactions extends BaseModel
      */
     protected $fillable = [
         'company_id',
-        'payment_id',
+        'transfer_id',
+        'transfer_type',
         'currency_src_id',
         'currency_dst_id',
         'account_src_id',
