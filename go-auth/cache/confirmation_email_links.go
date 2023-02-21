@@ -33,8 +33,11 @@ func (c *ConfirmationEmailLinksCache) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
-func (c *ConfirmationEmailLinksCache) Get(id string) *ConfirmationEmailLinksCache {
-	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheConfirmationEmailLinks, id), func() interface{} {
+func (c *ConfirmationEmailLinksCache) Get(id string, isFullPath bool) *ConfirmationEmailLinksCache {
+	if isFullPath == false {
+		id = fmt.Sprintf(constants.CacheConfirmationEmailLinks, id)
+	}
+	record := redisRepository.GetByKey(id, func() interface{} {
 		return new(ConfirmationEmailLinksCache)
 	})
 	if record == nil {

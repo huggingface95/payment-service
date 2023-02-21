@@ -8,6 +8,7 @@ const QueueSendTrustedDeviceEmail = "queue:email:send-trusted-device"
 const QueueAddTimeLineLog = "queue:timeline:log"
 
 const CacheLoginAttempt = "cache:login-attempt:%s"
+const CacheTwoFactorLoginAttempt = "cache:two-factor-login-attempt:%s"
 const CacheAuthBlackList = "cache:auth-black-list:%s"
 const CacheBlockedAccounts = "cache:blocked-accounts:%s"
 const CacheConfirmationEmailLinks = "cache:confirmation-email-links:%s"

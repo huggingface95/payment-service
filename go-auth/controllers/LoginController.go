@@ -70,7 +70,7 @@ func Login(context *gin.Context) {
 	}
 
 	if checkPassword(context, user, request) == false {
-		attempt := cache.Caching.LoginAttempt.GetAttempt(key)
+		attempt := cache.Caching.LoginAttempt.GetAttempt(key, false)
 		cache.Caching.LoginAttempt.Set(key, attempt+1)
 		return
 	}

@@ -26,7 +26,7 @@ func ParseRequest(c *gin.Context) (r requests.LoginRequest, h requests.HeaderReq
 }
 
 func AttemptLimitEqual(key string, blockedTime time.Time) bool {
-	attempt := cache.Caching.LoginAttempt.GetAttempt(key)
+	attempt := cache.Caching.LoginAttempt.GetAttempt(key, false)
 	if attempt == config.Conf.Jwt.MfaAttempts {
 		cache.Caching.BlockedAccounts.Set(key, &blockedTime)
 		cache.Caching.LoginAttempt.Set(key, attempt+1)
@@ -36,7 +36,7 @@ func AttemptLimitEqual(key string, blockedTime time.Time) bool {
 }
 
 func AttemptLimitLarge(key string) bool {
-	attempt := cache.Caching.LoginAttempt.GetAttempt(key)
+	attempt := cache.Caching.LoginAttempt.GetAttempt(key, false)
 	if attempt >= config.Conf.Jwt.MfaAttempts {
 		cache.Caching.LoginAttempt.Del(key)
 		return true
@@ -45,7 +45,7 @@ func AttemptLimitLarge(key string) bool {
 }
 
 func IsBlockedAccount(key string) bool {
-	return cache.Caching.BlockedAccounts.Has(key)
+	return cache.Caching.BlockedAccounts.Has(key, false)
 }
 
 func CreateConfirmationIpLink(provider string, id uint64, companyId uint64, email string, clientIp string, timeNow time.Time) bool {

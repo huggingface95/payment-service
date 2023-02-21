@@ -13,9 +13,9 @@ type TotpCache struct {
 	ExpiredAt *time.Time
 }
 
-func (l *TotpCache) GetOtpBytes(id string) []byte {
+func (l *TotpCache) GetOtpBytes(id string, isFullPath bool) []byte {
 
-	totp := l.Get(id)
+	totp := l.Get(id, isFullPath)
 	if totp == nil {
 		return nil
 	}
@@ -23,8 +23,12 @@ func (l *TotpCache) GetOtpBytes(id string) []byte {
 	return totp.Data
 }
 
-func (l *TotpCache) Get(id string) *TotpCache {
-	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheTotp, id), func() interface{} {
+func (l *TotpCache) Get(id string, isFullPath bool) *TotpCache {
+	if isFullPath == false {
+		id = fmt.Sprintf(constants.CacheTotp, id)
+	}
+
+	record := redisRepository.GetByKey(id, func() interface{} {
 		return new(TotpCache)
 	})
 	if record == nil {

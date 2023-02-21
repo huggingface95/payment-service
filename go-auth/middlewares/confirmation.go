@@ -15,7 +15,7 @@ func CheckIpConfirmation() gin.HandlerFunc {
 			return
 		}
 
-		if data := cache.Caching.ConfirmationIpLinks.Get(token); data != nil {
+		if data := cache.Caching.ConfirmationIpLinks.Get(token, false); data != nil {
 			context.Next()
 		} else {
 			context.JSON(http.StatusForbidden, gin.H{"error": "token don't working"})
@@ -35,7 +35,7 @@ func CheckIndividualEmailConfirmation() gin.HandlerFunc {
 			return
 		}
 
-		if data := cache.Caching.ConfirmationEmailLinks.Get(token); data != nil {
+		if data := cache.Caching.ConfirmationEmailLinks.Get(token, false); data != nil {
 			context.Next()
 		} else {
 			context.JSON(http.StatusForbidden, gin.H{"error": "token don't working"})

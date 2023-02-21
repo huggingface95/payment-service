@@ -27,8 +27,8 @@ func (l *LoginAttemptCache) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
-func (l *LoginAttemptCache) GetAttempt(id string) int {
-	data := l.Get(id)
+func (l *LoginAttemptCache) GetAttempt(id string, isFullPath bool) int {
+	data := l.Get(id, isFullPath)
 	if data != nil {
 		return data.Count
 	}
@@ -36,8 +36,12 @@ func (l *LoginAttemptCache) GetAttempt(id string) int {
 	return 0
 }
 
-func (l *LoginAttemptCache) Get(id string) *LoginAttemptCache {
-	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheLoginAttempt, id), func() interface{} {
+func (l *LoginAttemptCache) Get(id string, isFullPath bool) *LoginAttemptCache {
+	if isFullPath == false {
+		id = fmt.Sprintf(constants.CacheLoginAttempt, id)
+	}
+
+	record := redisRepository.GetByKey(id, func() interface{} {
 		return new(LoginAttemptCache)
 	})
 	if record == nil {

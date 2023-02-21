@@ -36,8 +36,12 @@ func (c *ConfirmationNewDeviceCache) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
-func (c *ConfirmationNewDeviceCache) Get(id string) *ConfirmationNewDeviceCache {
-	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheConfirmationNewDevice, id), func() interface{} {
+func (c *ConfirmationNewDeviceCache) Get(id string, isFullPath bool) *ConfirmationNewDeviceCache {
+	if isFullPath == false {
+		id = fmt.Sprintf(constants.CacheConfirmationNewDevice, id)
+	}
+
+	record := redisRepository.GetByKey(id, func() interface{} {
 		return new(ConfirmationNewDeviceCache)
 	})
 	if record == nil {

@@ -24,18 +24,19 @@ func (b *BlockedAccountsCache) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
-func (b *BlockedAccountsCache) Has(id string) bool {
-	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheBlockedAccounts, id), func() interface{} {
-		return new(BlockedAccountsCache)
-	})
+func (b *BlockedAccountsCache) Has(id string, isFullPath bool) bool {
+	record := b.Get(id, isFullPath)
 	if record == nil {
 		return false
 	}
 	return true
 }
 
-func (b *BlockedAccountsCache) Get(id string) *BlockedAccountsCache {
-	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheBlockedAccounts, id), func() interface{} {
+func (b *BlockedAccountsCache) Get(id string, isFullPath bool) *BlockedAccountsCache {
+	if isFullPath == false {
+		id = fmt.Sprintf(constants.CacheBlockedAccounts, id)
+	}
+	record := redisRepository.GetByKey(id, func() interface{} {
 		return new(BlockedAccountsCache)
 	})
 	if record == nil {

@@ -27,8 +27,8 @@ func (l *TwoFactorAttemptCache) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
-func (l *TwoFactorAttemptCache) GetAttempt(id string) int {
-	data := l.Get(id)
+func (l *TwoFactorAttemptCache) GetAttempt(id string, isFullPath bool) int {
+	data := l.Get(id, isFullPath)
 	if data != nil {
 		return data.Count
 	}
@@ -36,8 +36,12 @@ func (l *TwoFactorAttemptCache) GetAttempt(id string) int {
 	return 0
 }
 
-func (l *TwoFactorAttemptCache) Get(id string) *TwoFactorAttemptCache {
-	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheLoginAttempt, id), func() interface{} {
+func (l *TwoFactorAttemptCache) Get(id string, isFullPath bool) *TwoFactorAttemptCache {
+	if isFullPath == false {
+		id = fmt.Sprintf(constants.CacheTwoFactorLoginAttempt, id)
+	}
+
+	record := redisRepository.GetByKey(id, func() interface{} {
 		return new(TwoFactorAttemptCache)
 	})
 	if record == nil {
@@ -51,9 +55,9 @@ func (l *TwoFactorAttemptCache) Set(id string, value int) {
 	l.Count = value
 	l.ExpiredAt = &bTime
 
-	database.Set(fmt.Sprintf(constants.CacheLoginAttempt, id), l)
+	database.Set(fmt.Sprintf(constants.CacheTwoFactorLoginAttempt, id), l)
 }
 
 func (l *TwoFactorAttemptCache) Del(id string) {
-	database.Del(fmt.Sprintf(constants.CacheLoginAttempt, id))
+	database.Del(fmt.Sprintf(constants.CacheTwoFactorLoginAttempt, id))
 }

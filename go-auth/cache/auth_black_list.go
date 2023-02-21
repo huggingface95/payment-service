@@ -6,10 +6,12 @@ import (
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/database"
 	"jwt-authentication-golang/repositories/redisRepository"
+	"time"
 )
 
 type BlackListCache struct {
-	Data []*BlackListData
+	Data      []*BlackListData
+	ExpiredAt *time.Time
 }
 
 type BlackListData struct {
@@ -29,17 +31,13 @@ func (bList *BlackListCache) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
-func (bList *BlackListCache) HasToken(id string, token string) bool {
-	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheAuthBlackList, id), func() interface{} {
-		return new(BlackListCache)
-	})
+func (bList *BlackListCache) HasToken(id string, token string, isFullPath bool) bool {
+	record := bList.Get(id, isFullPath)
 	if record == nil {
 		return false
 	}
 
-	blackList := record.(*BlackListCache)
-
-	for _, val := range blackList.Data {
+	for _, val := range record.Data {
 		if val.Token == token {
 			return true
 		}
@@ -48,8 +46,11 @@ func (bList *BlackListCache) HasToken(id string, token string) bool {
 	return false
 }
 
-func (bList *BlackListCache) Get(id string) *BlackListCache {
-	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheAuthBlackList, id), func() interface{} {
+func (bList *BlackListCache) Get(id string, isFullPath bool) *BlackListCache {
+	if isFullPath == false {
+		id = fmt.Sprintf(constants.CacheAuthBlackList, id)
+	}
+	record := redisRepository.GetByKey(id, func() interface{} {
 		return new(BlackListCache)
 	})
 	if record == nil {
@@ -70,6 +71,8 @@ func (bList *BlackListCache) Set(id string, data *BlackListData) {
 		blackList = bList
 	}
 	blackList.Data = append(blackList.Data, data)
+	blackListTime := time.Now().Add(time.Hour * 1)
+	blackList.ExpiredAt = &blackListTime
 
 	database.Set(fmt.Sprintf(constants.CacheAuthBlackList, id), blackList)
 }

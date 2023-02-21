@@ -19,7 +19,7 @@ import (
 func ConfirmationIp(context *gin.Context) {
 	var model string
 	token := context.Request.URL.Query().Get("token")
-	data := cache.Caching.ConfirmationIpLinks.Get(token)
+	data := cache.Caching.ConfirmationIpLinks.Get(token, false)
 	if data.Provider == constants.Individual {
 		model = constants.ModelIndividual
 	} else {
@@ -52,7 +52,7 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 	deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
 
 	token := context.Request.URL.Query().Get("token")
-	data := cache.Caching.ConfirmationEmailLinks.Get(token)
+	data := cache.Caching.ConfirmationEmailLinks.Get(token, false)
 
 	if data == nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": "Token not found"})
@@ -105,7 +105,7 @@ func ChangePassword(c *gin.Context) {
 		return
 	}
 
-	data := cache.Caching.ResetPassword.Get(r.PasswordResetToken)
+	data := cache.Caching.ResetPassword.Get(r.PasswordResetToken, false)
 	if data == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "token don't working"})
 		return

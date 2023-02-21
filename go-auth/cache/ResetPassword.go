@@ -33,8 +33,12 @@ func (c *ResetPasswordCache) UnmarshalBinary(data []byte) error {
 	return nil
 }
 
-func (c *ResetPasswordCache) Get(id string) *ResetPasswordCache {
-	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheResetPassword, id), func() interface{} {
+func (c *ResetPasswordCache) Get(id string, isFullPath bool) *ResetPasswordCache {
+	if isFullPath == false {
+		id = fmt.Sprintf(constants.CacheResetPassword, id)
+	}
+
+	record := redisRepository.GetByKey(id, func() interface{} {
 		return new(ResetPasswordCache)
 	})
 	if record == nil {

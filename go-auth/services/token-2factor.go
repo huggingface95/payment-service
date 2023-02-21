@@ -37,7 +37,7 @@ func GenerateTwoFactorQr(clientType string, id uint64, email string, app string,
 }
 
 func Validate(id uint64, code string, issuer string, provider string) bool {
-	otpBytes := cache.Caching.Totp.GetOtpBytes(fmt.Sprintf("%s_%d", provider, id))
+	otpBytes := cache.Caching.Totp.GetOtpBytes(fmt.Sprintf("%s_%d", provider, id), false)
 	if otpBytes == nil {
 		return false
 	}

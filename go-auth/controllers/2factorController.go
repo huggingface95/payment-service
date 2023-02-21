@@ -125,7 +125,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 
 	var key = fmt.Sprintf("%s_%d", request.Type, user.GetId())
 
-	if twoFactorAttempt := cache.Caching.TwoFactorAttempt.GetAttempt(fmt.Sprintf("%s_%d", clientType, user.GetId())); twoFactorAttempt == config.Conf.Jwt.MfaAttempts {
+	if twoFactorAttempt := cache.Caching.TwoFactorAttempt.GetAttempt(fmt.Sprintf("%s_%d", clientType, user.GetId()), false); twoFactorAttempt == config.Conf.Jwt.MfaAttempts {
 		cache.Caching.BlockedAccounts.Set(key, &blockedTime)
 		cache.Caching.TwoFactorAttempt.Set(key, twoFactorAttempt+1)
 		context.JSON(http.StatusForbidden, gin.H{"error": fmt.Sprint("Account is temporary blocked for ", blockedTime.Sub(newTime))})
@@ -173,7 +173,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 	valid := services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType)
 
 	if valid == false {
-		twoFactorAttempt := cache.Caching.TwoFactorAttempt.GetAttempt(key)
+		twoFactorAttempt := cache.Caching.TwoFactorAttempt.GetAttempt(key, false)
 		cache.Caching.TwoFactorAttempt.Set(key, twoFactorAttempt+1)
 		context.JSON(http.StatusForbidden, gin.H{"data": "Unable to verify your code"})
 		context.Abort()
