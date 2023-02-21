@@ -70,14 +70,14 @@ func Login(context *gin.Context) {
 	}
 
 	if checkPassword(context, user, request) == false {
-		loginAttempt, _ := cache.Caching.LoginAttempt.Get(key)
-		cache.Caching.LoginAttempt.Set(key, loginAttempt+1)
+		attempt := cache.Caching.LoginAttempt.GetAttempt(key, false)
+		cache.Caching.LoginAttempt.Set(key, attempt+1)
 		return
 	}
 
 	if user.IsEmailVerify() == false {
 		randomToken := helpers.GenerateRandomString(20)
-		data := &cache.ConfirmationEmailLinksData{
+		data := &cache.ConfirmationEmailLinksCache{
 			Id: user.GetId(), FullName: user.GetFullName(), ConfirmationLink: randomToken, Email: user.GetEmail(), CompanyId: user.GetCompanyId(), Type: clientType,
 		}
 		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
@@ -85,7 +85,7 @@ func Login(context *gin.Context) {
 			context.JSON(http.StatusInternalServerError, gin.H{"error": "An error occurred while sending your email `confirmation email`"})
 			return
 		}
-		cache.Caching.ConfirmationEmailLinks.Set(randomToken, data)
+		data.Set(randomToken)
 
 		context.JSON(http.StatusForbidden, gin.H{"data": "An email has been sent to your email to confirm the email"})
 		return
@@ -93,11 +93,10 @@ func Login(context *gin.Context) {
 
 	if user.IsChangePassword() {
 		randomToken := helpers.GenerateRandomString(20)
-		data := &cache.ResetPasswordCacheData{
+		data := &cache.ResetPasswordCache{
 			Id: user.GetId(), CompanyId: user.GetCompanyId(), FullName: user.GetFullName(), Email: user.GetEmail(), PasswordRecoveryUrl: randomToken, Type: clientType,
 		}
-
-		cache.Caching.ResetPassword.Set(randomToken, data)
+		data.Set(randomToken)
 		context.JSON(http.StatusForbidden, gin.H{
 			"message": "Please change password first", "url": user.GetCompany().BackofficeForgotPasswordUrl, "password_reset_token": randomToken,
 		})
@@ -175,7 +174,7 @@ func Login(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{"two_factor": "true", "auth_token": authToken})
 		return
 	} else {
-		cache.Caching.LoginAttempt.Delete(key)
+		cache.Caching.LoginAttempt.Del(key)
 	}
 
 	tokenJWT, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
@@ -201,7 +200,7 @@ func checkPassword(c *gin.Context, u postgres.User, r requests.LoginRequest) boo
 func checkAndUpdateSession(provider string, email string, fullName string, companyId uint64, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
 	activeSessionCreated := oauthRepository.InsertActiveSessionLog(provider, email, false, false, deviceInfo)
 	if activeSessionCreated != nil {
-		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendNewDeviceEmail, &cache.ConfirmationNewDeviceData{
+		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendNewDeviceEmail, &cache.ConfirmationNewDeviceCache{
 			CompanyId: companyId,
 			Email:     email,
 			FullName:  fullName,

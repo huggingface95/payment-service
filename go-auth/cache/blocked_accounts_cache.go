@@ -1,39 +1,55 @@
 package cache
 
 import (
-	"sync"
+	"encoding/json"
+	"fmt"
+	"jwt-authentication-golang/constants"
+	"jwt-authentication-golang/database"
+	"jwt-authentication-golang/repositories/redisRepository"
+	"time"
 )
 
 type BlockedAccountsCache struct {
-	lock sync.Mutex
-	Data map[string]int64 // Data should probably not have any reference fields
+	ExpiredAt *time.Time
 }
 
-func (a *BlockedAccountsCache) Get(key string) (int64, bool) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	d, ok := a.Data[key]
-	return d, ok
+func (b *BlockedAccountsCache) MarshalBinary() ([]byte, error) {
+	return json.Marshal(b)
 }
 
-func (a *BlockedAccountsCache) Set(key string, d int64) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	a.Data[key] = d
-	return
+func (b *BlockedAccountsCache) UnmarshalBinary(data []byte) error {
+	if err := json.Unmarshal(data, &b); err != nil {
+		return err
+	}
+	return nil
 }
 
-func (a *BlockedAccountsCache) Has(key string) bool {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	_, ok := a.Data[key]
-	return ok
+func (b *BlockedAccountsCache) Has(id string, isFullPath bool) bool {
+	record := b.Get(id, isFullPath)
+	if record == nil {
+		return false
+	}
+	return true
 }
 
-func (a *BlockedAccountsCache) Delete(key string) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	delete(a.Data, key)
+func (b *BlockedAccountsCache) Get(id string, isFullPath bool) *BlockedAccountsCache {
+	if isFullPath == false {
+		id = fmt.Sprintf(constants.CacheBlockedAccounts, id)
+	}
+	record := redisRepository.GetByKey(id, func() interface{} {
+		return new(BlockedAccountsCache)
+	})
+	if record == nil {
+		return nil
+	}
+	return record.(*BlockedAccountsCache)
+}
 
-	return
+func (b *BlockedAccountsCache) Set(id string, value *time.Time) {
+	b.ExpiredAt = value
+	database.Set(fmt.Sprintf(constants.CacheBlockedAccounts, id), b)
+}
+
+func (b *BlockedAccountsCache) Del(id string) {
+	database.Del(fmt.Sprintf(constants.CacheBlockedAccounts, id))
 }

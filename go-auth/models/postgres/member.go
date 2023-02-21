@@ -40,6 +40,10 @@ func (user *Member) StructName() string {
 	return rModel.Elem().Name()
 }
 
+func (user *Member) ClientType() string {
+	return constants.Member
+}
+
 func (*Member) TableName() string {
 	return "members"
 }

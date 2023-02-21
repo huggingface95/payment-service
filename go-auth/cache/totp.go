@@ -1,31 +1,49 @@
 package cache
 
 import (
-	"sync"
+	"fmt"
+	"jwt-authentication-golang/constants"
+	"jwt-authentication-golang/database"
+	"jwt-authentication-golang/repositories/redisRepository"
+	"time"
 )
 
 type TotpCache struct {
-	lock sync.Mutex
-	Data map[string][]byte // Data should probably not have any reference fields
+	Data      []byte
+	ExpiredAt *time.Time
 }
 
-func (a *TotpCache) Get(key string) ([]byte, bool) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	d, ok := a.Data[key]
-	return d, ok
+func (l *TotpCache) GetOtpBytes(id string, isFullPath bool) []byte {
+
+	totp := l.Get(id, isFullPath)
+	if totp == nil {
+		return nil
+	}
+
+	return totp.Data
 }
 
-func (a *TotpCache) Set(key string, d []byte) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	a.Data[key] = d
+func (l *TotpCache) Get(id string, isFullPath bool) *TotpCache {
+	if isFullPath == false {
+		id = fmt.Sprintf(constants.CacheTotp, id)
+	}
+
+	record := redisRepository.GetByKey(id, func() interface{} {
+		return new(TotpCache)
+	})
+	if record == nil {
+		return nil
+	}
+	return record.(*TotpCache)
 }
 
-func (a *TotpCache) Delete(key string) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	delete(a.Data, key)
+func (l *TotpCache) Set(id string, data []byte) {
+	expiredAt := time.Now().Add(time.Second * 300)
+	l.ExpiredAt = &expiredAt
+	l.Data = data
+	database.Set(fmt.Sprintf(constants.CacheTotp, id), l)
+}
 
-	return
+func (l *TotpCache) Del(id string) {
+	database.Del(fmt.Sprintf(constants.CacheTotp, id))
 }

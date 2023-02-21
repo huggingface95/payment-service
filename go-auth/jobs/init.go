@@ -2,11 +2,10 @@ package jobs
 
 import (
 	"fmt"
+	"github.com/go-co-op/gocron"
 	"jwt-authentication-golang/config"
 	"time"
 )
-
-const JobPeriod = time.Second * 10
 
 func sendChangedIpEmail() {
 	ProcessSendChangedIpEmailQueue()
@@ -32,15 +31,26 @@ func sendAddTimeLineLog() {
 	ProcessAddTimeLineLogQueue()
 }
 
+func removeExpiredCache() {
+	ProcessRemoveExpiredCache()
+}
+
 func Init() {
-	for range time.Tick(JobPeriod) {
+	s := gocron.NewScheduler(time.UTC)
+	_, _ = s.Every(10).Seconds().Do(func() {
 		sendChangedIpEmail()
 		sendConfirmationEmail()
 		sendConvertPasswordRecoveryLink()
 		sendNewDeviceEmail()
 		sendTrustedDeviceEmail()
 		sendAddTimeLineLog()
-	}
+	})
+
+	_, _ = s.Every(60).Seconds().Do(func() {
+		removeExpiredCache()
+	})
+
+	s.StartAsync()
 }
 
 func convertConfirmationLink(path string, token string) string {

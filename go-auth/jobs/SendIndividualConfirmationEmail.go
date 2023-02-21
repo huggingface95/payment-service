@@ -12,16 +12,16 @@ import (
 func ProcessSendConfirmationEmailQueue() {
 	for {
 		redisData := redisRepository.GetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, func() interface{} {
-			return new(cache.ConfirmationEmailLinksData)
+			return new(cache.ConfirmationEmailLinksCache)
 		})
 		if redisData == nil {
 			break
 		}
-		sendConfirmationEmailByData(redisData.(*cache.ConfirmationEmailLinksData))
+		sendConfirmationEmailByData(redisData.(*cache.ConfirmationEmailLinksCache))
 	}
 }
 
-func sendConfirmationEmailByData(e *cache.ConfirmationEmailLinksData) {
+func sendConfirmationEmailByData(e *cache.ConfirmationEmailLinksCache) {
 	//TODO ADD COMPANY ID CONDITION
 	template := repositories.GetEmailTemplateWithConditions(
 		map[string]interface{}{},

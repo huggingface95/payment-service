@@ -40,3 +40,32 @@ func RemRedisSet(key string, val interface{}) bool {
 	cmd := RedisInstance.SRem(context.Background(), key, val)
 	return cmd.Err() == nil
 }
+
+func Remove(key string, val interface{}) bool {
+	cmd := RedisInstance.LRem(context.Background(), key, 1, val)
+	return cmd.Err() == nil
+}
+
+func Set(key string, val interface{}) bool {
+	cmd := RedisInstance.Set(context.Background(), key, val, -1)
+	fmt.Println(cmd.Err())
+	return cmd.Err() == nil
+}
+
+func Del(key string) bool {
+	cmd := RedisInstance.Del(context.Background(), key)
+	return cmd.Err() == nil
+}
+
+func Get(key string) string {
+	return RedisInstance.Get(context.Background(), key).Val()
+}
+
+func GetKeys(pattern string) []string {
+	return RedisInstance.Keys(context.Background(), pattern).Val()
+}
+
+func LIndex(key string) string {
+	cmd := RedisInstance.LIndex(context.Background(), key, -1)
+	return cmd.Val()
+}

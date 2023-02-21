@@ -12,16 +12,16 @@ import (
 func ProcessSendChangedIpEmailQueue() {
 	for {
 		redisData := redisRepository.GetRedisDataByBlPop(constants.QueueSendChangedIpEmail, func() interface{} {
-			return new(cache.ConfirmationIpLinksData)
+			return new(cache.ConfirmationIpLinksCache)
 		})
 		if redisData == nil {
 			break
 		}
-		sendEmailByData(redisData.(*cache.ConfirmationIpLinksData))
+		sendEmailByData(redisData.(*cache.ConfirmationIpLinksCache))
 	}
 }
 
-func sendEmailByData(e *cache.ConfirmationIpLinksData) {
+func sendEmailByData(e *cache.ConfirmationIpLinksCache) {
 	template := repositories.GetEmailTemplateWithConditions(
 		map[string]interface{}{"company_id": e.CompanyId},
 		map[string]interface{}{"name": "New IP Detected"},

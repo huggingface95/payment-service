@@ -16,14 +16,14 @@ type Cache struct {
 
 func (c *Cache) Init() *Cache {
 	c.BlackList = BlackListCache{}
-	c.LoginAttempt = LoginAttemptCache{Data: make(map[string]int)}
-	c.TwoFactorAttempt = TwoFactorAttemptCache{Data: make(map[string]int)}
-	c.BlockedAccounts = BlockedAccountsCache{Data: make(map[string]int64)}
-	c.Totp = TotpCache{Data: make(map[string][]byte)}
-	c.ConfirmationIpLinks = ConfirmationIpLinksCache{Data: make(map[string]ConfirmationIpLinksData)}
-	c.ConfirmationEmailLinks = ConfirmationEmailLinksCache{Data: make(map[string]ConfirmationEmailLinksData)}
-	c.ConfirmationNewDevice = ConfirmationNewDeviceCache{Data: make(map[string]ConfirmationNewDeviceData)}
-	c.ResetPassword = ResetPasswordCache{Data: make(map[string]ResetPasswordCacheData)}
+	c.LoginAttempt = LoginAttemptCache{}
+	c.TwoFactorAttempt = TwoFactorAttemptCache{}
+	c.BlockedAccounts = BlockedAccountsCache{}
+	c.Totp = TotpCache{}
+	c.ConfirmationIpLinks = ConfirmationIpLinksCache{}
+	c.ConfirmationEmailLinks = ConfirmationEmailLinksCache{}
+	c.ConfirmationNewDevice = ConfirmationNewDeviceCache{}
+	c.ResetPassword = ResetPasswordCache{}
 
 	return c
 }

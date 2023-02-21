@@ -19,7 +19,7 @@ import (
 func ConfirmationIp(context *gin.Context) {
 	var model string
 	token := context.Request.URL.Query().Get("token")
-	data, _ := cache.Caching.ConfirmationIpLinks.Get(token)
+	data := cache.Caching.ConfirmationIpLinks.Get(token, false)
 	if data.Provider == constants.Individual {
 		model = constants.ModelIndividual
 	} else {
@@ -28,7 +28,7 @@ func ConfirmationIp(context *gin.Context) {
 
 	ipAddress := repositories.CreateClientIpAddress(data.Ip, data.Id, model)
 	if ipAddress != nil {
-		cache.Caching.ConfirmationIpLinks.Delete(token)
+		cache.Caching.ConfirmationIpLinks.Del(token)
 		if model == constants.ModelIndividual {
 			deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
 			timeLineDto := dto.DTO.CreateTimeLineDto.Parse("Ip confirmation", "email", "Banking", data.CompanyId, data.Id, deviceInfo)
@@ -52,7 +52,14 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 	deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
 
 	token := context.Request.URL.Query().Get("token")
-	data, _ := cache.Caching.ConfirmationEmailLinks.Get(token)
+	data := cache.Caching.ConfirmationEmailLinks.Get(token, false)
+
+	if data == nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "Token not found"})
+		context.Abort()
+		return
+	}
+
 	clientType := constants.Member
 	if data.Type == constants.Individual {
 		clientType = constants.Individual
@@ -75,7 +82,7 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 				pkg.Error().Err(errors.New("TimeLine redis error"))
 			}
 
-			cache.Caching.ConfirmationEmailLinks.Delete(token)
+			cache.Caching.ConfirmationEmailLinks.Del(token)
 			activeSessionLog := oauthRepository.InsertActiveSessionLog(constants.Individual, user.GetEmail(), true, true, deviceInfo)
 			if activeSessionLog != nil {
 				context.JSON(http.StatusOK, gin.H{"data": "Email Verified"})
@@ -98,8 +105,8 @@ func ChangePassword(c *gin.Context) {
 		return
 	}
 
-	data, ok := cache.Caching.ResetPassword.Get(r.PasswordResetToken)
-	if ok == false {
+	data := cache.Caching.ResetPassword.Get(r.PasswordResetToken, false)
+	if data == nil {
 		c.JSON(http.StatusForbidden, gin.H{"error": "token don't working"})
 		return
 	}
@@ -120,7 +127,7 @@ func ChangePassword(c *gin.Context) {
 		user.SetNeedChangePassword(false)
 		res := userRepository.SaveUser(user)
 		if res.Error == nil {
-			cache.Caching.ConfirmationEmailLinks.Delete(r.PasswordResetToken)
+			cache.Caching.ConfirmationEmailLinks.Del(r.PasswordResetToken)
 
 			if data.Type == constants.Individual {
 				deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(c)

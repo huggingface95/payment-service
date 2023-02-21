@@ -31,12 +31,12 @@ func ResetPassword(c *gin.Context) {
 
 	if user != nil {
 		randomToken := helpers.GenerateRandomString(20)
-		data := &cache.ResetPasswordCacheData{
+		data := &cache.ResetPasswordCache{
 			Id: user.GetId(), CompanyId: user.GetCompanyId(), FullName: user.GetFullName(), Email: user.GetEmail(), PasswordRecoveryUrl: randomToken, Type: clientType,
 		}
 		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendResetPasswordEmail, data)
 		if ok {
-			cache.Caching.ResetPassword.Set(randomToken, data)
+			data.Set(randomToken)
 			c.JSON(http.StatusOK, gin.H{"data": "An email has been sent to your email to click to link"})
 			return
 		}

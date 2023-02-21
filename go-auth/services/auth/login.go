@@ -26,38 +26,36 @@ func ParseRequest(c *gin.Context) (r requests.LoginRequest, h requests.HeaderReq
 }
 
 func AttemptLimitEqual(key string, blockedTime time.Time) bool {
-	if attempt, ok := cache.Caching.LoginAttempt.Get(key); ok == true {
-		if attempt == config.Conf.Jwt.MfaAttempts {
-			cache.Caching.BlockedAccounts.Set(key, blockedTime.Unix())
-			cache.Caching.LoginAttempt.Set(key, attempt+1)
-			return true
-		}
+	attempt := cache.Caching.LoginAttempt.GetAttempt(key, false)
+	if attempt == config.Conf.Jwt.MfaAttempts {
+		cache.Caching.BlockedAccounts.Set(key, &blockedTime)
+		cache.Caching.LoginAttempt.Set(key, attempt+1)
+		return true
 	}
 	return false
 }
 
 func AttemptLimitLarge(key string) bool {
-	if attempt, ok := cache.Caching.LoginAttempt.Get(key); ok == true {
-		if attempt >= config.Conf.Jwt.MfaAttempts {
-			cache.Caching.LoginAttempt.Delete(key)
-			return true
-		}
+	attempt := cache.Caching.LoginAttempt.GetAttempt(key, false)
+	if attempt >= config.Conf.Jwt.MfaAttempts {
+		cache.Caching.LoginAttempt.Del(key)
+		return true
 	}
 	return false
 }
 
 func IsBlockedAccount(key string) bool {
-	return cache.Caching.BlockedAccounts.Has(key)
+	return cache.Caching.BlockedAccounts.Has(key, false)
 }
 
 func CreateConfirmationIpLink(provider string, id uint64, companyId uint64, email string, clientIp string, timeNow time.Time) bool {
 	randomToken := helpers.GenerateRandomString(20)
-	data := &cache.ConfirmationIpLinksData{
+	data := &cache.ConfirmationIpLinksCache{
 		CompanyId: companyId, Id: id, Email: email, Ip: clientIp, CreatedAt: timeNow.String(), ConfirmationLink: randomToken, Provider: provider,
 	}
 	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendChangedIpEmail, data)
 	if ok {
-		cache.Caching.ConfirmationIpLinks.Set(randomToken, data)
+		data.Set(randomToken)
 		return true
 	}
 

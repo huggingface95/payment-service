@@ -25,3 +25,17 @@ func GetRedisDataByBlPop(key string, mc func() interface{}) interface{} {
 func SetRedisDataByBlPop(key string, val interface{}) bool {
 	return database.AddList(key, val)
 }
+
+func GetByKey(key string, callback func() interface{}) interface{} {
+	row := database.Get(key)
+	if row == "" {
+		return nil
+	}
+	model := callback()
+	err := json.Unmarshal([]byte(row), &model)
+	if err != nil {
+		return nil
+	}
+
+	return model
+}

@@ -125,20 +125,20 @@ func VerifyTwoFactorQr(context *gin.Context) {
 
 	var key = fmt.Sprintf("%s_%d", request.Type, user.GetId())
 
-	if twoFactorAttempt, ok := cache.Caching.TwoFactorAttempt.Get(fmt.Sprintf("%s_%d", clientType, user.GetId())); ok == true {
-		cache.Caching.BlockedAccounts.Set(key, blockedTime.Unix())
+	if twoFactorAttempt := cache.Caching.TwoFactorAttempt.GetAttempt(fmt.Sprintf("%s_%d", clientType, user.GetId()), false); twoFactorAttempt == config.Conf.Jwt.MfaAttempts {
+		cache.Caching.BlockedAccounts.Set(key, &blockedTime)
 		cache.Caching.TwoFactorAttempt.Set(key, twoFactorAttempt+1)
 		context.JSON(http.StatusForbidden, gin.H{"error": fmt.Sprint("Account is temporary blocked for ", blockedTime.Sub(newTime))})
 		context.Abort()
 		return
-	} else if twoFactorAttempt >= config.Conf.Jwt.MfaAttempts {
+	} else if twoFactorAttempt >= ((config.Conf.Jwt.MfaAttempts * 2) + 1) {
 		if user.StructName() == constants.StructMember {
 			user.SetIsActivated(postgres.MemberStatusSuspended)
 		} else {
 			user.SetIsActivated(postgres.ApplicantStateBlocked)
 		}
 		userRepository.SaveUser(user)
-		cache.Caching.LoginAttempt.Delete(key)
+		cache.Caching.LoginAttempt.Del(key)
 		context.JSON(http.StatusForbidden, gin.H{"error": "Account is blocked. Please contact support"})
 		context.Abort()
 		return
@@ -173,14 +173,14 @@ func VerifyTwoFactorQr(context *gin.Context) {
 	valid := services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType)
 
 	if valid == false {
-		twoFactorAttempt, _ := cache.Caching.TwoFactorAttempt.Get(key)
+		twoFactorAttempt := cache.Caching.TwoFactorAttempt.GetAttempt(key, false)
 		cache.Caching.TwoFactorAttempt.Set(key, twoFactorAttempt+1)
 		context.JSON(http.StatusForbidden, gin.H{"data": "Unable to verify your code"})
 		context.Abort()
 		return
 	}
 
-	cache.Caching.TwoFactorAttempt.Delete(key)
+	cache.Caching.TwoFactorAttempt.Del(key)
 
 	token, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), request.Type, constants.Personal, constants.AccessToken)
 
