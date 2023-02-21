@@ -52,7 +52,14 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 	deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
 
 	token := context.Request.URL.Query().Get("token")
-	data, _ := cache.Caching.ConfirmationEmailLinks.Get(token)
+	data := cache.Caching.ConfirmationEmailLinks.Get(token)
+
+	if data == nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "Token not found"})
+		context.Abort()
+		return
+	}
+
 	clientType := constants.Member
 	if data.Type == constants.Individual {
 		clientType = constants.Individual
@@ -75,7 +82,7 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 				pkg.Error().Err(errors.New("TimeLine redis error"))
 			}
 
-			cache.Caching.ConfirmationEmailLinks.Delete(token)
+			cache.Caching.ConfirmationEmailLinks.Del(token)
 			activeSessionLog := oauthRepository.InsertActiveSessionLog(constants.Individual, user.GetEmail(), true, true, deviceInfo)
 			if activeSessionLog != nil {
 				context.JSON(http.StatusOK, gin.H{"data": "Email Verified"})
@@ -120,7 +127,7 @@ func ChangePassword(c *gin.Context) {
 		user.SetNeedChangePassword(false)
 		res := userRepository.SaveUser(user)
 		if res.Error == nil {
-			cache.Caching.ConfirmationEmailLinks.Delete(r.PasswordResetToken)
+			cache.Caching.ConfirmationEmailLinks.Del(r.PasswordResetToken)
 
 			if data.Type == constants.Individual {
 				deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(c)

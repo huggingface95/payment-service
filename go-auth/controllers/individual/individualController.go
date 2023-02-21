@@ -80,12 +80,12 @@ func Register(c *gin.Context) {
 	}
 
 	randomToken := helpers.GenerateRandomString(20)
-	data := &cache.ConfirmationEmailLinksData{
+	data := &cache.ConfirmationEmailLinksCache{
 		Id: user.ID, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.ID,
 	}
 	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 	if ok {
-		cache.Caching.ConfirmationEmailLinks.Set(randomToken, data)
+		data.Set(randomToken)
 		c.JSON(http.StatusCreated, gin.H{"data": "An email has been sent to your email to confirm the email"})
 		return
 	}

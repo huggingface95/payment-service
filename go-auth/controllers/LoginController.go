@@ -77,7 +77,7 @@ func Login(context *gin.Context) {
 
 	if user.IsEmailVerify() == false {
 		randomToken := helpers.GenerateRandomString(20)
-		data := &cache.ConfirmationEmailLinksData{
+		data := &cache.ConfirmationEmailLinksCache{
 			Id: user.GetId(), FullName: user.GetFullName(), ConfirmationLink: randomToken, Email: user.GetEmail(), CompanyId: user.GetCompanyId(), Type: clientType,
 		}
 		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
@@ -85,7 +85,7 @@ func Login(context *gin.Context) {
 			context.JSON(http.StatusInternalServerError, gin.H{"error": "An error occurred while sending your email `confirmation email`"})
 			return
 		}
-		cache.Caching.ConfirmationEmailLinks.Set(randomToken, data)
+		data.Set(randomToken)
 
 		context.JSON(http.StatusForbidden, gin.H{"data": "An email has been sent to your email to confirm the email"})
 		return

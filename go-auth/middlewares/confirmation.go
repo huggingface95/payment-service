@@ -35,7 +35,7 @@ func CheckIndividualEmailConfirmation() gin.HandlerFunc {
 			return
 		}
 
-		if _, ok := cache.Caching.ConfirmationEmailLinks.Get(token); ok == true {
+		if data := cache.Caching.ConfirmationEmailLinks.Get(token); data != nil {
 			context.Next()
 		} else {
 			context.JSON(http.StatusForbidden, gin.H{"error": "token don't working"})
