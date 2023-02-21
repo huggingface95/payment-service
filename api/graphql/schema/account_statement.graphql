@@ -47,7 +47,7 @@ extend type Query @guard {
     """
     Получить выписку по счету в формате XLS
     """
-    downloadAccountStatementPdf(
+    downloadAccountStatementXls(
         account_id: ID! @eq,
         created_at: DateTimeRange @whereBetween,
     ): RawFile
@@ -56,7 +56,7 @@ extend type Query @guard {
     """
     Получить выписку по счету в формате CSV
     """
-    downloadAccountStatementPdf(
+    downloadAccountStatementCsv(
         account_id: ID! @eq,
         created_at: DateTimeRange @whereBetween,
     ): RawFile
