@@ -115,13 +115,15 @@ func VerifyTwoFactorQr(context *gin.Context) {
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
-	oauthCode := oauthRepository.GetOauthCodeWithConditions(map[string]interface{}{"user_id": user.GetId(), "revoked": true})
 
-	if oauthCode != nil && oauthCode.ExpiresAt.Unix() < newTime.Unix() {
-		context.JSON(http.StatusForbidden, gin.H{"error": "Code has expired"})
-		context.Abort()
-		return
-	}
+	//TODO Might be temporary.
+	//oauthCode := oauthRepository.GetOauthCodeWithConditions(map[string]interface{}{"user_id": user.GetId(), "revoked": true})
+
+	//if oauthCode != nil && oauthCode.ExpiresAt.Unix() < newTime.Unix() {
+	//	context.JSON(http.StatusForbidden, gin.H{"error": "Code has expired"})
+	//	context.Abort()
+	//	return
+	//}
 
 	var key = fmt.Sprintf("%s_%d", request.Type, user.GetId())
 
