@@ -288,7 +288,7 @@ extend type Mutation @guard {
     "Удалить applicant company"
     deleteApplicantCompany (
         id: ID!
-    ): ApplicantCompany   @delete
+    ): ApplicantCompany   @field(resolver:"ApplicantCompanyMutator@delete")
 
     "Изменить статус applicant company"
     updateApplicantCompanyVerificationStatus(
