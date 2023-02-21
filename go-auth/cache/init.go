@@ -20,7 +20,7 @@ func (c *Cache) Init() *Cache {
 	c.TwoFactorAttempt = TwoFactorAttemptCache{Data: make(map[string]int)}
 	c.BlockedAccounts = BlockedAccountsCache{}
 	c.Totp = TotpCache{Data: make(map[string][]byte)}
-	c.ConfirmationIpLinks = ConfirmationIpLinksCache{Data: make(map[string]ConfirmationIpLinksData)}
+	c.ConfirmationIpLinks = ConfirmationIpLinksCache{}
 	c.ConfirmationEmailLinks = ConfirmationEmailLinksCache{}
 	c.ConfirmationNewDevice = ConfirmationNewDeviceCache{Data: make(map[string]ConfirmationNewDeviceData)}
 	c.ResetPassword = ResetPasswordCache{Data: make(map[string]ResetPasswordCacheData)}

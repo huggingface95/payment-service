@@ -50,12 +50,12 @@ func IsBlockedAccount(key string) bool {
 
 func CreateConfirmationIpLink(provider string, id uint64, companyId uint64, email string, clientIp string, timeNow time.Time) bool {
 	randomToken := helpers.GenerateRandomString(20)
-	data := &cache.ConfirmationIpLinksData{
+	data := &cache.ConfirmationIpLinksCache{
 		CompanyId: companyId, Id: id, Email: email, Ip: clientIp, CreatedAt: timeNow.String(), ConfirmationLink: randomToken, Provider: provider,
 	}
 	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendChangedIpEmail, data)
 	if ok {
-		cache.Caching.ConfirmationIpLinks.Set(randomToken, data)
+		data.Set(randomToken)
 		return true
 	}
 

@@ -19,7 +19,7 @@ import (
 func ConfirmationIp(context *gin.Context) {
 	var model string
 	token := context.Request.URL.Query().Get("token")
-	data, _ := cache.Caching.ConfirmationIpLinks.Get(token)
+	data := cache.Caching.ConfirmationIpLinks.Get(token)
 	if data.Provider == constants.Individual {
 		model = constants.ModelIndividual
 	} else {
@@ -28,7 +28,7 @@ func ConfirmationIp(context *gin.Context) {
 
 	ipAddress := repositories.CreateClientIpAddress(data.Ip, data.Id, model)
 	if ipAddress != nil {
-		cache.Caching.ConfirmationIpLinks.Delete(token)
+		cache.Caching.ConfirmationIpLinks.Del(token)
 		if model == constants.ModelIndividual {
 			deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
 			timeLineDto := dto.DTO.CreateTimeLineDto.Parse("Ip confirmation", "email", "Banking", data.CompanyId, data.Id, deviceInfo)

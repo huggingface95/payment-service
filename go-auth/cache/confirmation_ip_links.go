@@ -2,15 +2,14 @@ package cache
 
 import (
 	"encoding/json"
-	"sync"
+	"fmt"
+	"jwt-authentication-golang/constants"
+	"jwt-authentication-golang/database"
+	"jwt-authentication-golang/repositories/redisRepository"
+	"time"
 )
 
 type ConfirmationIpLinksCache struct {
-	lock sync.Mutex
-	Data map[string]ConfirmationIpLinksData // Data should probably not have any reference fields
-}
-
-type ConfirmationIpLinksData struct {
 	CompanyId        uint64 `json:"company_id"`
 	Id               uint64 `json:"id"`
 	Provider         string `json:"provider"`
@@ -19,39 +18,40 @@ type ConfirmationIpLinksData struct {
 	Ip               string `json:"ip"`
 	CreatedAt        string `json:"created_at"`
 	ConfirmationLink string `json:"confirmation_link"`
-}
-
-func (a *ConfirmationIpLinksCache) Get(key string) (*ConfirmationIpLinksData, bool) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	d, ok := a.Data[key]
-	return &d, ok
-}
-
-func (a *ConfirmationIpLinksCache) Set(key string, d *ConfirmationIpLinksData) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	a.Data[key] = *d
-}
-
-func (a *ConfirmationIpLinksCache) Delete(key string) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	delete(a.Data, key)
-
-	return
+	ExpiredAt        *time.Time
 }
 
 // MarshalBinary -
-func (e *ConfirmationIpLinksData) MarshalBinary() ([]byte, error) {
-	return json.Marshal(e)
+func (c *ConfirmationIpLinksCache) MarshalBinary() ([]byte, error) {
+	return json.Marshal(c)
 }
 
 // UnmarshalBinary -
-func (e *ConfirmationIpLinksData) UnmarshalBinary(data []byte) error {
-	if err := json.Unmarshal(data, &e); err != nil {
+func (c *ConfirmationIpLinksCache) UnmarshalBinary(data []byte) error {
+	if err := json.Unmarshal(data, &c); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (c *ConfirmationIpLinksCache) Get(id string) *ConfirmationIpLinksCache {
+	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheConfirmationIpLinks, id), func() interface{} {
+		return new(ConfirmationIpLinksCache)
+	})
+	if record == nil {
+		return nil
+	}
+
+	return record.(*ConfirmationIpLinksCache)
+}
+
+func (c *ConfirmationIpLinksCache) Set(id string) {
+	expiredAt := time.Now().Add(time.Second * 300)
+	c.ExpiredAt = &expiredAt
+	database.Set(fmt.Sprintf(constants.CacheConfirmationIpLinks, id), c)
+}
+
+func (c *ConfirmationIpLinksCache) Del(id string) {
+	database.Del(fmt.Sprintf(constants.CacheConfirmationIpLinks, id))
 }
