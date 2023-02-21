@@ -38,4 +38,20 @@ deploy-job:
     - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev php artisan  lighthouse:clear-cache"
   only:
     - dev
+deploy-job-stage:
+  stage: deploy
+  image: alpine
+  script:
+    - echo "Deploying application..."
+    - apk add --no-cache openssh rsync
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KEY" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - rsync -rav  ./ $SSH_USER_HOST:/opt/stage
+    - ssh $SSH_USER_HOST "cd /opt/stage/docker && docker-compose exec -T php-dev composer install"
+    - ssh $SSH_USER_HOST "cd /opt/stage/docker && docker-compose exec -T php-dev php artisan migrate"
+    - ssh $SSH_USER_HOST "cd /opt/stage/docker && docker-compose exec -T php-dev php artisan  lighthouse:clear-cache"
+  only:
+    - master
 
