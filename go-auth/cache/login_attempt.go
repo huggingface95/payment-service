@@ -15,12 +15,12 @@ type LoginAttemptCache struct {
 	ExpiredAt *time.Time
 }
 
-func (e *LoginAttemptCache) MarshalBinary() ([]byte, error) {
-	return json.Marshal(e)
+func (l *LoginAttemptCache) MarshalBinary() ([]byte, error) {
+	return json.Marshal(l)
 }
 
-func (e *LoginAttemptCache) UnmarshalBinary(data []byte) error {
-	if err := json.Unmarshal(data, &e); err != nil {
+func (l *LoginAttemptCache) UnmarshalBinary(data []byte) error {
+	if err := json.Unmarshal(data, &l); err != nil {
 		return err
 	}
 
@@ -28,25 +28,22 @@ func (e *LoginAttemptCache) UnmarshalBinary(data []byte) error {
 }
 
 func (l *LoginAttemptCache) GetAttempt(id string) int {
-	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheLoginAttempt, id), func() interface{} {
-		return new(LoginAttemptCache)
-	})
-	if record == nil {
-		return 0
+	data := l.Get(id)
+	if data != nil {
+		return data.Count
 	}
-	loginAttempt := record.(*LoginAttemptCache)
-	return loginAttempt.Count
+
+	return 0
 }
 
-func (l *LoginAttemptCache) GetExpiredAt(id string) *time.Time {
+func (l *LoginAttemptCache) Get(id string) *LoginAttemptCache {
 	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheLoginAttempt, id), func() interface{} {
 		return new(LoginAttemptCache)
 	})
 	if record == nil {
 		return nil
 	}
-	loginAttempt := record.(*LoginAttemptCache)
-	return loginAttempt.ExpiredAt
+	return record.(*LoginAttemptCache)
 }
 
 func (l *LoginAttemptCache) Set(id string, value int) {

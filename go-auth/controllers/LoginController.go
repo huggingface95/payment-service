@@ -201,7 +201,7 @@ func checkPassword(c *gin.Context, u postgres.User, r requests.LoginRequest) boo
 func checkAndUpdateSession(provider string, email string, fullName string, companyId uint64, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
 	activeSessionCreated := oauthRepository.InsertActiveSessionLog(provider, email, false, false, deviceInfo)
 	if activeSessionCreated != nil {
-		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendNewDeviceEmail, &cache.ConfirmationNewDeviceData{
+		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendNewDeviceEmail, &cache.ConfirmationNewDeviceCache{
 			CompanyId: companyId,
 			Email:     email,
 			FullName:  fullName,

@@ -34,15 +34,14 @@ func (b *BlockedAccountsCache) Has(id string) bool {
 	return true
 }
 
-func (b *BlockedAccountsCache) GetExpiredAt(id string) *time.Time {
+func (b *BlockedAccountsCache) Get(id string) *BlockedAccountsCache {
 	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheBlockedAccounts, id), func() interface{} {
 		return new(BlockedAccountsCache)
 	})
 	if record == nil {
 		return nil
 	}
-	blocked := record.(*BlockedAccountsCache)
-	return blocked.ExpiredAt
+	return record.(*BlockedAccountsCache)
 }
 
 func (b *BlockedAccountsCache) Set(id string, value *time.Time) {

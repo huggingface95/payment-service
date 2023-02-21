@@ -48,6 +48,16 @@ func (bList *BlackListCache) HasToken(id string, token string) bool {
 	return false
 }
 
+func (bList *BlackListCache) Get(id string) *BlackListCache {
+	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheAuthBlackList, id), func() interface{} {
+		return new(BlackListCache)
+	})
+	if record == nil {
+		return nil
+	}
+	return record.(*BlackListCache)
+}
+
 func (bList *BlackListCache) Set(id string, data *BlackListData) {
 	var blackList *BlackListCache
 

@@ -2,15 +2,14 @@ package cache
 
 import (
 	"encoding/json"
-	"sync"
+	"fmt"
+	"jwt-authentication-golang/constants"
+	"jwt-authentication-golang/database"
+	"jwt-authentication-golang/repositories/redisRepository"
+	"time"
 )
 
 type ConfirmationNewDeviceCache struct {
-	lock sync.Mutex
-	Data map[string]ConfirmationNewDeviceData
-}
-
-type ConfirmationNewDeviceData struct {
 	CompanyId uint64 `json:"company_id"`
 	FullName  string `json:"full_name"`
 	Email     string `json:"email"`
@@ -20,39 +19,40 @@ type ConfirmationNewDeviceData struct {
 	Type      string `json:"type"`
 	Model     string `json:"model"`
 	Browser   string `json:"browser"`
-}
-
-func (a *ConfirmationNewDeviceCache) Get(key string) (*ConfirmationNewDeviceData, bool) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	d, ok := a.Data[key]
-	return &d, ok
-}
-
-func (a *ConfirmationNewDeviceCache) Set(key string, d *ConfirmationNewDeviceData) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	a.Data[key] = *d
-}
-
-func (a *ConfirmationNewDeviceCache) Delete(key string) {
-	a.lock.Lock()
-	defer a.lock.Unlock()
-	delete(a.Data, key)
-
-	return
+	ExpiredAt *time.Time
 }
 
 // MarshalBinary -
-func (e *ConfirmationNewDeviceData) MarshalBinary() ([]byte, error) {
-	return json.Marshal(e)
+func (c *ConfirmationNewDeviceCache) MarshalBinary() ([]byte, error) {
+	return json.Marshal(c)
 }
 
 // UnmarshalBinary -
-func (e *ConfirmationNewDeviceData) UnmarshalBinary(data []byte) error {
-	if err := json.Unmarshal(data, &e); err != nil {
+func (c *ConfirmationNewDeviceCache) UnmarshalBinary(data []byte) error {
+	if err := json.Unmarshal(data, &c); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (c *ConfirmationNewDeviceCache) Get(id string) *ConfirmationNewDeviceCache {
+	record := redisRepository.GetByKey(fmt.Sprintf(constants.CacheConfirmationNewDevice, id), func() interface{} {
+		return new(ConfirmationNewDeviceCache)
+	})
+	if record == nil {
+		return nil
+	}
+
+	return record.(*ConfirmationNewDeviceCache)
+}
+
+func (c *ConfirmationNewDeviceCache) Set(id string) {
+	expiredAt := time.Now().Add(time.Second * 300)
+	c.ExpiredAt = &expiredAt
+	database.Set(fmt.Sprintf(constants.CacheConfirmationNewDevice, id), c)
+}
+
+func (c *ConfirmationNewDeviceCache) Del(id string) {
+	database.Del(fmt.Sprintf(constants.CacheConfirmationNewDevice, id))
 }

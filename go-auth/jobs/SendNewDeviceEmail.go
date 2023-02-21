@@ -12,16 +12,16 @@ import (
 func ProcessSendNewDeviceEmailQueue() {
 	for {
 		redisData := redisRepository.GetRedisDataByBlPop(constants.QueueSendNewDeviceEmail, func() interface{} {
-			return new(cache.ConfirmationNewDeviceData)
+			return new(cache.ConfirmationNewDeviceCache)
 		})
 		if redisData == nil {
 			break
 		}
-		sendNewDeviceEmailByData(redisData.(*cache.ConfirmationNewDeviceData))
+		sendNewDeviceEmailByData(redisData.(*cache.ConfirmationNewDeviceCache))
 	}
 }
 
-func sendNewDeviceEmailByData(e *cache.ConfirmationNewDeviceData) {
+func sendNewDeviceEmailByData(e *cache.ConfirmationNewDeviceCache) {
 	template := repositories.GetEmailTemplateWithConditions(
 		map[string]interface{}{"company_id": e.CompanyId},
 		map[string]interface{}{"name": "Devices: New Device Detected"},
