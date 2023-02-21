@@ -18,7 +18,7 @@ func (c *Cache) Init() *Cache {
 	c.BlackList = BlackListCache{}
 	c.LoginAttempt = LoginAttemptCache{}
 	c.TwoFactorAttempt = TwoFactorAttemptCache{Data: make(map[string]int)}
-	c.BlockedAccounts = BlockedAccountsCache{Data: make(map[string]int64)}
+	c.BlockedAccounts = BlockedAccountsCache{}
 	c.Totp = TotpCache{Data: make(map[string][]byte)}
 	c.ConfirmationIpLinks = ConfirmationIpLinksCache{Data: make(map[string]ConfirmationIpLinksData)}
 	c.ConfirmationEmailLinks = ConfirmationEmailLinksCache{Data: make(map[string]ConfirmationEmailLinksData)}

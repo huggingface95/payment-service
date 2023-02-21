@@ -9,3 +9,4 @@ const QueueAddTimeLineLog = "queue:timeline:log"
 
 const CacheLoginAttempt = "cache:login-attempt:%s"
 const CacheAuthBlackList = "cache:auth-black-list:%s"
+const CacheBlockedAccounts = "cache:blocked-accounts:%s"

@@ -28,7 +28,7 @@ func ParseRequest(c *gin.Context) (r requests.LoginRequest, h requests.HeaderReq
 func AttemptLimitEqual(key string, blockedTime time.Time) bool {
 	attempt := cache.Caching.LoginAttempt.GetAttempt(key)
 	if attempt == config.Conf.Jwt.MfaAttempts {
-		cache.Caching.BlockedAccounts.Set(key, blockedTime.Unix())
+		cache.Caching.BlockedAccounts.Set(key, &blockedTime)
 		cache.Caching.LoginAttempt.Set(key, attempt+1)
 		return true
 	}
