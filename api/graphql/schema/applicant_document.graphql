@@ -13,7 +13,7 @@ type ApplicantDocument {
     company: Company @belongsTo(relation: "company")
     "Получить страну"
     country: Country @belongsTo(relation: "country")
-    document_type : DocumentType @belongsTo(relation: "documentType")
+    document_type: DocumentType @belongsTo(relation: "documentType")
     document_state: DocumentState @belongsTo(relation: "documentState")
     "Получить файл"
     file: Files @belongsTo(relation: "file")
@@ -22,7 +22,11 @@ type ApplicantDocument {
     internal_notes: [ApplicantDocumentInternalNote] @hasMany(relation: "internalNotes")
     "Получить теги"
     tags: [ApplicantDocumentTag] @belongsToMany(relation: "tags")
+    "Получить детали отклонения документа"
+    reject_details: [ApplicantDocumentRejectDetail] @hasMany(relation: "rejectDetails")
+    "Дата создания"
     created_at: DateTimeUtc
+    "Дата обновления"
     updated_at: DateTimeUtc
 }
 

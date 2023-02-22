@@ -62,6 +62,11 @@ class ApplicantDocument extends BaseModel
         return $this->hasMany(ApplicantDocumentInternalNote::class, 'applicant_document_id');
     }
 
+    public function rejectDetails(): HasMany
+    {
+        return $this->hasMany(ApplicantDocumentRejectDetail::class, 'applicant_document_id');
+    }
+
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(

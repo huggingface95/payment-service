@@ -1,0 +1,39 @@
+type ApplicantDocumentRejectDetail {
+    "ID"
+    id: ID!
+    "Документ"
+    applicant_document: ApplicantDocument! @belongsTo(relation: "applicantDocument")
+    "Тег"
+    applicant_document_tag: [ApplicantDocumentTag!] @hasMany(relation: "applicantDocumentTags")
+    "Мембер"
+    member: Members @belongsTo(relation: "member")
+    "Дата создания"
+    created_at: DateTimeUtc
+    "Дата обновления"
+    updated_at: DateTimeUtc
+}
+
+extend type Mutation @guard {
+    """
+    Создать отклонение документа
+    """
+    createApplicantDocumentRejectDetail(
+        applicant_document_id: ID!
+        applicant_document_tag_id: [ID!]!
+    ): ApplicantDocumentRejectDetail
+        @field(resolver: "ApplicantDocumentRejectDetailMutator@create")
+
+    """
+    Удалить тег из отклонения документа
+    """
+    deleteTagApplicantDocumentRejectDetail(
+        id: ID!
+        applicant_document_tag_id: [ID]
+    ): ApplicantDocumentRejectDetail
+        @field(resolver: "ApplicantDocumentRejectDetailMutator@deleteTag")
+
+    """
+    Удалить отклонение документа
+    """
+    deleteApplicantDocumentRejectDetail(id: ID!): ApplicantDocumentRejectDetail @delete
+}

@@ -14,7 +14,7 @@ enum DocumentStateEnum: int
         return match ($this) {
             self::PENDING => 'Pending',
             self::PROCESSING => 'Processing',
-            self::CONFIRMED => 'Confirmed',
+            self::CONFIRMED => 'Approve',
             self::DECLINED => 'Declined',
         };
     }
