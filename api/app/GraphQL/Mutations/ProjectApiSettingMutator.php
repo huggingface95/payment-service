@@ -18,9 +18,11 @@ class ProjectApiSettingMutator extends BaseMutator
     {
         /** @var Project $project */
         $project = Project::find($args['project_id']);
-        $project->projectApiSettings()->delete();
         foreach ($args['input'] as $setting){
-            $project->projectApiSettings()->create($setting);
+            $project->projectApiSettings()
+                ->where('provider_id', $setting['provider_id'])
+                ->where('provider_type', $setting['provider_type'])
+                ->update($setting);
         }
 
         return $project->projectApiSettings()->get();
