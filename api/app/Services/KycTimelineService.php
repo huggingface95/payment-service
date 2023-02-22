@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Enums\ApplicantRiskLevelEnum;
+use App\Enums\ApplicantStatusEnum;
+use App\Enums\DocumentStateEnum;
 use App\Enums\KycTimelineActionTypeEnum;
 use App\Enums\ModuleEnum;
 use App\Models\ApplicantCompany;
@@ -60,8 +63,8 @@ class KycTimelineService extends AbstractService
             'creator_id' => $member->id ?? null,
             'action' => 'Profile updated',
             'action_type' => KycTimelineActionTypeEnum::PROFILE->value,
-            'action_old_value' => $oldValues,
-            'action_new_value' => $newValues,
+            'action_old_value' => $this->replaceWithValues($oldValues),
+            'action_new_value' => $this->replaceWithValues($newValues),
             'company_id' => $applicantIndividual->company_id,
             'applicant_id' => $applicantIndividual->getOriginal('id'),
         ]);
@@ -76,8 +79,8 @@ class KycTimelineService extends AbstractService
             'creator_id' => $member->id ?? null,
             'action' => 'Status changed',
             'action_type' => KycTimelineActionTypeEnum::VERIFICATION->value,
-            'action_old_value' => $oldValue,
-            'action_new_value' => $newValue,
+            'action_old_value' => $this->replaceWithValues($oldValue),
+            'action_new_value' => $this->replaceWithValues($newValue),
             'company_id' => $applicantIndividual->company_id,
             'applicant_id' => $applicantIndividual->getOriginal('id'),
         ]);
@@ -123,8 +126,8 @@ class KycTimelineService extends AbstractService
             'creator_id' => $member->id ?? null,
             'action' => 'Document updated',
             'action_type' => KycTimelineActionTypeEnum::DOCUMENT_STATE->value,
-            'action_old_value' => $oldValues,
-            'action_new_value' => $newValues,
+            'action_old_value' => $this->replaceWithValues($oldValues),
+            'action_new_value' => $this->replaceWithValues($newValues),
             'document_id' => $document->id,
             'company_id' => $document->company_id,
             'applicant_id' => $document->applicant_id,
@@ -207,8 +210,8 @@ class KycTimelineService extends AbstractService
             'creator_id' => $member->id ?? null,
             'action' => 'Company profile updated',
             'action_type' => KycTimelineActionTypeEnum::PROFILE->value,
-            'action_old_value' => $oldValues,
-            'action_new_value' => $newValues,
+            'action_old_value' => $this->replaceWithValues($oldValues),
+            'action_new_value' => $this->replaceWithValues($newValues),
             'company_id' => $applicantCompany->company_id,
             'applicant_id' => $applicantCompany->id,
             'applicant_type' => class_basename(ApplicantCompany::class),
@@ -224,8 +227,8 @@ class KycTimelineService extends AbstractService
             'creator_id' => $member->id ?? null,
             'action' => 'Status changed',
             'action_type' => KycTimelineActionTypeEnum::VERIFICATION->value,
-            'action_old_value' => $oldValue,
-            'action_new_value' => $newValue,
+            'action_old_value' => $this->replaceWithValues($oldValue),
+            'action_new_value' => $this->replaceWithValues($newValue),
             'company_id' => $applicantCompany->company_id,
             'applicant_id' => $applicantCompany->id,
             'applicant_type' => class_basename(ApplicantCompany::class),
@@ -248,7 +251,7 @@ class KycTimelineService extends AbstractService
 
     public function getChanges(ApplicantIndividual|ApplicantCompany $applicant): array
     {
-        $allowedFields = ['phone', 'email', 'first_name', 'last_name', 'middle_name', 'applicant_risk_level_id', 'applicant_status_id', 'name'];
+        $allowedFields = ['phone', 'email', 'first_name', 'last_name', 'middle_name', 'applicant_risk_level_id', 'applicant_status_id', 'name', 'info', 'document_state_id'];
         $newValues = $applicant->getChanges();
 
         return array_filter($newValues, function ($key) use ($allowedFields) {
@@ -270,5 +273,31 @@ class KycTimelineService extends AbstractService
         }
 
         return request()->ip();
+    }
+
+    private function replaceWithValues(array $values): array|null
+    {
+        $result = null;
+        foreach ($values as $key => $value) {
+            if ($value === null) {
+                continue;
+            }
+            
+            switch ($key) {
+                case 'applicant_status_id':
+                    $result['applicant_status'] = ApplicantStatusEnum::tryFrom($value)->toString();
+                    break;
+                case 'applicant_risk_level_id':
+                    $result['applicant_risk_level'] = ApplicantRiskLevelEnum::tryFrom($value)->toString();
+                    break;
+                case 'document_state_id':
+                    $result['document_state'] = DocumentStateEnum::tryFrom($value)->toString();
+                    break;
+                default:
+                    $result[$key] = $value;
+            }
+        }
+
+        return $result;
     }
 }

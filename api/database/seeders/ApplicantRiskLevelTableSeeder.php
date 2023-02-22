@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ApplicantRiskLevelEnum;
 use App\Models\ApplicantRiskLevel;
 use Illuminate\Database\Seeder;
 
@@ -14,15 +15,11 @@ class ApplicantRiskLevelTableSeeder extends Seeder
      */
     public function run()
     {
-        $riskLevels = [
-            'Low',
-            'Medium',
-            'High',
-        ];
+        $riskLevels = ApplicantRiskLevelEnum::cases();
 
         foreach ($riskLevels as $level) {
             ApplicantRiskLevel::firstOrCreate([
-                'name' => $level,
+                'name' => $level->toString(),
             ]);
         }
     }
