@@ -24,9 +24,9 @@ func Auth() gin.HandlerFunc {
 		}
 
 		if errAuthToken != nil {
-			context.JSON(401, gin.H{"error": errAuthToken})
+			context.JSON(401, gin.H{"error": errAuthToken.Error()})
 		} else if errAccessToken != nil {
-			context.JSON(401, gin.H{"error": errAccessToken})
+			context.JSON(401, gin.H{"error": errAccessToken.Error()})
 		}
 		context.Abort()
 		return
