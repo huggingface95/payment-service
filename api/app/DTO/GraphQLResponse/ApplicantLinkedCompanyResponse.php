@@ -21,6 +21,7 @@ class ApplicantLinkedCompanyResponse
         $dto->company = $applicantIndividualCompany->ApplicantCompany()->first();
         $dto->company_position = $applicantIndividualCompany->ApplicantIndividualCompanyPosition()->first();
         $dto->company_relation = $applicantIndividualCompany->ApplicantIndividualCompanyRelation()->first();
+        $dto->percentage_owned = $applicantIndividualCompany->percentage_owned;
 
         return $dto;
     }
