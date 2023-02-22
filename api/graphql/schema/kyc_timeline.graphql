@@ -57,7 +57,7 @@ extend type Query @guard {
     """
     Получить запись
     """
-    kycTimeline(id: ID! @eq): KycTimeline! @find
+    kycTimeline(id: ID! @eq): KycTimeline @find
 
     """
     Получить список
