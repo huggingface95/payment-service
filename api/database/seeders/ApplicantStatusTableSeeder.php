@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ApplicantStatusEnum;
 use App\Models\ApplicantStatus;
 use Illuminate\Database\Seeder;
 
@@ -14,24 +15,13 @@ class ApplicantStatusTableSeeder extends Seeder
      */
     public function run()
     {
-        $applicantStatus = [
-            'Requested',
-            'Declined',
-            'Approved',
-            'Document Requested',
-            'Pending',
-            'Processing',
-            'Check Complited',
-            'Verified',
-            'Rejected',
-            'Resubmission Requested',
-            'Requires Action',
-            'Prechecked',
-        ];
+        $applicantStatus = ApplicantStatusEnum::cases();
 
         foreach ($applicantStatus as $status) {
-            ApplicantStatus::firstOrCreate([
-                'name' => $status,
+            ApplicantStatus::updateOrCreate([
+                'id' => $status->value,
+            ], [
+                'name' => $status->toString(),
             ]);
         }
     }
