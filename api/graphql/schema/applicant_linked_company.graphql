@@ -2,6 +2,7 @@ type ApplicantLinkedCompany {
     company: ApplicantCompany
     company_position: ApplicantIndividualCompanyPosition
     company_relation: ApplicantIndividualCompanyRelation
+    percentage_owned: Float
 }
 
 extend type Query @guard {
