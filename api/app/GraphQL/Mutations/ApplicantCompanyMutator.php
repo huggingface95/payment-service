@@ -98,23 +98,6 @@ class ApplicantCompanyMutator extends BaseMutator
     }
 
     /**
-     * Delete applicant_company
-     *
-     * @param $root
-     * @param  array  $args
-     * @return mixed
-     */
-    public function delete($root, array $args)
-    {
-        $applicantCompany = ApplicantCompany::find($args['id']);
-
-        $applicantCompany->applicantIndividualCompany()->delete();
-        $applicantCompany->delete();
-
-        return $applicantCompany;
-    }
-
-    /**
      * @param  ApplicantCompany  $applicant
      * @param  array  $args
      * @return ApplicantIndividualCompany

@@ -76,6 +76,8 @@ class ApplicantCompany extends BaseModel
         'entity_id',
         'email_verification_status_id',
         'phone_verification_status_id',
+        'contact_email',
+        'contact_phone',
     ];
 
     protected $casts = [

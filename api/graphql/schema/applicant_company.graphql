@@ -56,6 +56,10 @@ type ApplicantCompany {
     basic_info_additional_field: JSON
     "Дата создания"
     created_at: DateTimeUtc
+    "Контактный email"
+    contact_email: EMAIL
+    "Контактный телефон"
+    contact_phone: String
     "Получить тип бизнеса"
     business_type: ApplicantCompanyBusinessType @belongsTo(relation: "businessType")
     "Получить статусы"
@@ -283,12 +287,16 @@ extend type Mutation @guard {
         incorporate_date: DateTimeUtc
         "Дополнительные поля Basic info"
         basic_info_additional_field: [AdditionalFieldInput]
+        "Контактный email"
+        contact_email: EMAIL
+        "Контактный телефон"
+        contact_phone: String
     ): ApplicantCompany   @field(resolver:"ApplicantCompanyMutator@update")
 
     "Удалить applicant company"
     deleteApplicantCompany (
         id: ID!
-    ): ApplicantCompany   @field(resolver:"ApplicantCompanyMutator@delete")
+    ): ApplicantCompany   @delete
 
     "Изменить статус applicant company"
     updateApplicantCompanyVerificationStatus(
