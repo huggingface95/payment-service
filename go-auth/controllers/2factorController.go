@@ -8,7 +8,6 @@ import (
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/models/postgres"
-	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/repositories/userRepository"
 	"jwt-authentication-golang/requests"
 	"jwt-authentication-golang/services"
@@ -51,8 +50,6 @@ func ActivateTwoFactorQr(context *gin.Context) {
 	var request requests.ActivateTwoFactorQrRequest
 	var user postgres.User
 
-	_, _, _, oauthCodeTime, _ := times.GetTokenTimes()
-
 	if err := context.BindJSON(&request); err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -70,15 +67,6 @@ func ActivateTwoFactorQr(context *gin.Context) {
 
 	user.SetGoogle2FaSecret(request.Secret)
 	userRepository.SaveUser(user)
-
-	oauthClient := oauthRepository.GetOauthClientByType(clientType, constants.Personal)
-	code := oauthRepository.CreateOauthCode(user.GetId(), oauthClient.Id, true, oauthCodeTime)
-
-	if code == nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": "System error"})
-		context.Abort()
-		return
-	}
 
 	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType) == true {
 		user.SetTwoFactorAuthSettingId(2)
@@ -115,15 +103,6 @@ func VerifyTwoFactorQr(context *gin.Context) {
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
-
-	//TODO Might be temporary.
-	//oauthCode := oauthRepository.GetOauthCodeWithConditions(map[string]interface{}{"user_id": user.GetId(), "revoked": true})
-
-	//if oauthCode != nil && oauthCode.ExpiresAt.Unix() < newTime.Unix() {
-	//	context.JSON(http.StatusForbidden, gin.H{"error": "Code has expired"})
-	//	context.Abort()
-	//	return
-	//}
 
 	var key = fmt.Sprintf("%s_%d", request.Type, user.GetId())
 

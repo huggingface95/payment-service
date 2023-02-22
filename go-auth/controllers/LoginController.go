@@ -24,11 +24,10 @@ func Login(context *gin.Context) {
 	var user postgres.User
 	var activeSession *clickhouse.ActiveSession
 	var authLog *clickhouse.AuthenticationLog
-	//var authLogActive *clickhouse.AuthenticationLog
 
 	deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
 
-	newTime, blockedTime, _, oauthCodeTime, expirationJWTTime := times.GetTokenTimes()
+	newTime, blockedTime, _, _, expirationJWTTime := times.GetTokenTimes()
 
 	request, _, err := auth.ParseRequest(context)
 
@@ -50,7 +49,6 @@ func Login(context *gin.Context) {
 	var key = fmt.Sprintf("%s_%d", clientType, user.GetId())
 
 	activeSession = oauthRepository.HasActiveSessionWithConditions(user.GetEmail(), clientType, deviceInfo)
-	//authLogActive = oauthRepository.HasActiveAuthLogWithConditions(user.GetEmail(), clientType, deviceInfo)
 	authLog = oauthRepository.HasAuthLogWithConditions(user.GetEmail(), clientType, deviceInfo)
 
 	if auth.AttemptLimitEqual(key, blockedTime) {
@@ -154,12 +152,11 @@ func Login(context *gin.Context) {
 	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), "login", expirationJWTTime, deviceInfo)
 
 	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == false {
-		tokenJWT, oauthClient, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.ForTwoFactor)
+		tokenJWT, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.ForTwoFactor)
 		if err != nil {
 			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		oauthRepository.CreateOauthCode(user.GetId(), oauthClient.Id, true, oauthCodeTime)
 		context.JSON(http.StatusOK, gin.H{"2fa_token": tokenJWT})
 		return
 	}
