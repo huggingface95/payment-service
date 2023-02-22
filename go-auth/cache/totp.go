@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"encoding/json"
 	"fmt"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/database"
@@ -11,6 +12,18 @@ import (
 type TotpCache struct {
 	Data      []byte
 	ExpiredAt *time.Time
+}
+
+func (l *TotpCache) MarshalBinary() ([]byte, error) {
+	return json.Marshal(l)
+}
+
+func (l *TotpCache) UnmarshalBinary(data []byte) error {
+	if err := json.Unmarshal(data, &l); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (l *TotpCache) GetOtpBytes(id string, isFullPath bool) []byte {
