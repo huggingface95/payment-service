@@ -300,6 +300,36 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
+        if (strpos($error->getMessage(), 'applicant_companies_owner_position_id_foreign')) {
+            return $next(new Error(
+                'Position already in use by other corporate',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Position already in use by other corporate',
+                ]
+            ));
+        }
+        if (strpos($error->getMessage(), 'applicant_companies_owner_relation_id_foreign')) {
+            return $next(new Error(
+                'Relation already in use by other corporate',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Relation already in use by other corporate',
+                ]
+            ));
+        }
         //$underlyingException = $error->getPrevious();
         if (strpos($error->getMessage(), 'duplicate')) {
             return $next(new Error(

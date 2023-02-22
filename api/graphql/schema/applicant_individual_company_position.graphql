@@ -50,6 +50,12 @@ extend type Mutation @guard {
         company_id: ID
     ): ApplicantIndividualCompanyPosition    @update
 
+    "Удаление должности"
+    deleteApplicantIndividualCompanyPosition(
+        "ID должности"
+        id: ID!
+    ): ApplicantIndividualCompanyPosition    @delete
+
 
 }
 

@@ -40,7 +40,7 @@ extend type Mutation @guard {
         company_id: ID!
     ): ApplicantIndividualCompanyRelation    @create
 
-    "Редактирование отнощения"
+    "Редактирование отношения"
     updateApplicantIndividualCompanyRelation (
         "ID отношения"
         id: ID!
@@ -49,6 +49,12 @@ extend type Mutation @guard {
         "Компания"
         company_id: ID
     ): ApplicantIndividualCompanyRelation    @update
+
+    "Удалить отношения"
+    deleteApplicantIndividualCompanyRelation (
+        "ID отношения"
+        id: ID!
+    ): ApplicantIndividualCompanyRelation    @delete
 
 
 }
