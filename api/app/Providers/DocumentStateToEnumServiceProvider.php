@@ -3,59 +3,29 @@
 namespace App\Providers;
 
 use App\Models\DocumentState;
-use GraphQL\Language\AST\EnumTypeDefinitionNode;
-use GraphQL\Language\Parser;
-use Illuminate\Contracts\Events\Dispatcher;
+use GraphQL\Type\Definition\EnumType;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
-use Nuwave\Lighthouse\Events\ManipulateAST;
+use Nuwave\Lighthouse\Exceptions\DefinitionException;
+use Nuwave\Lighthouse\Schema\TypeRegistry;
 
 class DocumentStateToEnumServiceProvider extends ServiceProvider
 {
 
-    public function boot(Dispatcher $dispatcher): void
+    /**
+     * @throws DefinitionException
+     */
+    public function boot(TypeRegistry $typeRegistry): void
     {
-        $dispatcher->listen(
-            ManipulateAST::class,
-            function (ManipulateAST $manipulateAST): void {
+        $values = DocumentState::query()->orderBy('id')->get()->mapWithKeys(function ($r){
+            return [$r->name => ['value' => $r->id, 'description' => $r->id]];
+        })->toArray();
 
-                $records = DocumentState::query()->pluck('id', 'name')->toArray();
-
-                $manipulateAST->documentAST
-                    ->setTypeDefinition(
-                        $this->createColumnsEnum($records)
-                    );
-            }
-        );
-    }
-
-    private function createColumnsEnum(
-        array $records
-    ): ?EnumTypeDefinitionNode
-    {
-        $enumValues = array_map(
-            function (string $name, int $id): string {
-                return
-                    strtoupper(
-                        Str::snake(preg_replace("/(\/)|(&)|(\()|(\))|(:)/", '', $name))
-                    )
-                    . ' @enum(value: "' . $id . '")';
-            },
-            array_keys($records),
-            $records
-        );
-
-        $enumValuesString = implode("\n", $enumValues);
-
-        $pEnumName = strtoupper(Str::snake(str_replace(':', '', 'DocumentStateEnum')));
-
-        return Parser::enumTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
-"DocumentStateEnum"
-enum $pEnumName
-{
-    {$enumValuesString}
-}
-GRAPHQL
+        $typeRegistry->register(
+            new EnumType([
+                'name' => 'DocumentStateEnum',
+                'description' => 'DocumentStateEnum',
+                'values' => $values
+            ])
         );
     }
 }
