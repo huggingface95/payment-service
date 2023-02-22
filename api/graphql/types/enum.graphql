@@ -7,11 +7,3 @@ enum ProviderTypeEnum {
     PaymentProvider @enum(value: "PaymentProvider")
     PaymentProviderIban @enum(value: "PaymentProviderIban")
 }
-
-
-enum DocumentStatesEnum {
-    Pending @enum(value: 1)
-    Processing @enum(value: 2)
-    Approve @enum(value: 3)
-    Decline @enum(value: 4)
-}
