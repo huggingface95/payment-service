@@ -10,7 +10,7 @@ use Tests\TestCase;
 class BusinessActivityMutationTest extends TestCase
 {
     /**
-     * Regions Mutation Testing
+     * BusinessActivity Mutation Testing
      *
      * @return void
      */
