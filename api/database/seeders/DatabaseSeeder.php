@@ -87,5 +87,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TicketTableSeeder::class);
         $this->call(AccountLimitsTableSeeder::class);
         $this->call(CommissionTemplateLimitTableSeeder::class);
+        $this->call(ApplicantIndividualNotesTableSeeder::class);
     }
 }
