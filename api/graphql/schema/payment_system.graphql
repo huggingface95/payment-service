@@ -42,6 +42,7 @@ extend type Query @guard {
 
 input QueryPaymentSystemsFilterStatic @spread{
     id: Mixed @eq @neq @not_in
+    name: Mixed @eq @neq @not_in
     hasProvidersFilterByName: String @ilike
     hasProvidersFilterById: ID @eq
     hasCompaniesFilterById: ID @eq
