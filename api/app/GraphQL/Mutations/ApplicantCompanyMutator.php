@@ -78,7 +78,7 @@ class ApplicantCompanyMutator extends BaseMutator
         }
 
         if (isset($args['labels'])) {
-            $applicant->labels()->detach($args['labels']);
+            $applicant->labels()->detach();
             $applicant->labels()->attach($args['labels']);
         }
 
