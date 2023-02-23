@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\GraphQL\Queries;
 
-use App\Models\KycTimeline;
 use Database\Seeders\ApplicantDocumentTableSeeder;
 use Database\Seeders\DatabaseSeeder;
 use Database\Seeders\DocumentStateTableSeeder;
@@ -70,7 +69,7 @@ class KycTimelineQueryTest extends TestCase
             ->orderBy('id', 'ASC')
             ->first();
 
-        $expect  = [
+        $expect = [
             'os' => (string) $document->os,
             'browser' => (string) $document->browser,
             'ip' => (string) $document->ip,

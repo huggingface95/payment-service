@@ -14,7 +14,6 @@ use App\Models\ApplicantIndividualCompany;
 use App\Models\GroupRole;
 use App\Services\EmailService;
 use App\Services\VerifyService;
-use Illuminate\Support\Facades\DB;
 
 class ApplicantCompanyMutator extends BaseMutator
 {

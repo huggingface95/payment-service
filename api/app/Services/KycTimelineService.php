@@ -282,7 +282,7 @@ class KycTimelineService extends AbstractService
             if ($value === null) {
                 continue;
             }
-            
+
             switch ($key) {
                 case 'applicant_status_id':
                     $result['applicant_status'] = ApplicantStatusEnum::tryFrom($value)->toString();

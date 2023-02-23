@@ -52,7 +52,7 @@ class ExecuteFeeScheduledTransferCommand extends Command
         $scheduledFees = $this->priceListFeeScheduledRepository->getScheduledFeesByDate($dateToday);
 
         foreach ($scheduledFees as $scheduledFee) {
-            $this->info("Scheduled fee: " . $scheduledFee->priceListFee->name);
+            $this->info('Scheduled fee: '.$scheduledFee->priceListFee->name);
 
             // Store scheduled tasks
             $this->priceListFeeScheduledService->storeSchdeluedTasksForTodayById($scheduledFee->id);

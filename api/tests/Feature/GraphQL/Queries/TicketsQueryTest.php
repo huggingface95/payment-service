@@ -41,19 +41,19 @@ class TicketsQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $ticket->id,
-                ]
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'ticket' => [
-                        'id' => (string) $ticket->id,
-                        'title' => (string) $ticket->title,
-                        'message' => (string) $ticket->message,
-                    ],
+                    'id' => (string) $ticket->id,
+                    'title' => (string) $ticket->title,
+                    'message' => (string) $ticket->message,
                 ],
+            ],
         ]);
     }
 
@@ -75,7 +75,7 @@ class TicketsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $tickets[0]->id,
@@ -115,7 +115,7 @@ class TicketsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -161,7 +161,7 @@ class TicketsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }

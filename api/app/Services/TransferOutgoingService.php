@@ -95,7 +95,7 @@ class TransferOutgoingService extends AbstractService
         $priceListFees = PriceListFeeCurrency::where('price_list_fee_id', $fee->price_list_id)
             ->where('currency_id', $currencyId)
             ->get();
-        
+
         foreach ($priceListFees as $listFee) {
             $paymentFee += $this->getFee($listFee->fee, $amount);
         }
@@ -125,7 +125,7 @@ class TransferOutgoingService extends AbstractService
 
         return (float) $amountDebt;
     }
-    
+
     public function createFee(TransferOutgoing $transfer, float $paymentFee): void
     {
         // TODO: set fee_pp commission
@@ -394,11 +394,9 @@ class TransferOutgoingService extends AbstractService
                 break;
             case PaymentStatusEnum::CANCELED->value:
                 throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-
                 break;
             case PaymentStatusEnum::EXECUTED->value:
                 throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-
                 break;
         }
     }

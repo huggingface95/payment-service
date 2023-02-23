@@ -47,7 +47,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -82,7 +82,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -120,7 +120,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $group->id,
@@ -152,7 +152,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -190,7 +190,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -228,7 +228,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $group->id,
@@ -254,10 +254,10 @@ class GroupsQueryTest extends TestCase
                             description
                         }
                     }
-                }'
+                }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $group->id,
@@ -289,7 +289,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $group->id,
@@ -322,7 +322,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $group->id,
@@ -354,7 +354,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $group->id,
@@ -388,7 +388,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $groupType->id,
@@ -421,7 +421,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $groupType->id,
@@ -454,7 +454,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $groupType->id,
@@ -478,10 +478,10 @@ class GroupsQueryTest extends TestCase
                             name
                         }
                     }
-                }'
+                }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $groupType->id,
@@ -512,7 +512,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $groups->id,
@@ -544,7 +544,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $groups->id,
@@ -576,7 +576,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $groups->id,
@@ -608,7 +608,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $groups->id,
@@ -640,7 +640,7 @@ class GroupsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $groups->id,
@@ -666,10 +666,10 @@ class GroupsQueryTest extends TestCase
                             description
                         }
                     }
-                }'
+                }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $groups->id,

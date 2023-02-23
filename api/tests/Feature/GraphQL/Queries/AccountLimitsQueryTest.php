@@ -41,19 +41,19 @@ class AccountLimitsQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $accountLimit->id,
-                ]
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'accountLimit' => [
-                        'id' => (string) $accountLimit->id,
-                        'account_id' => (string) $accountLimit->account_id,
-                        'currency_id' => (string) $accountLimit->currency_id,
-                    ],
+                    'id' => (string) $accountLimit->id,
+                    'account_id' => (string) $accountLimit->account_id,
+                    'currency_id' => (string) $accountLimit->currency_id,
                 ],
+            ],
         ]);
     }
 
@@ -75,7 +75,7 @@ class AccountLimitsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accountLimits[0]->id,
@@ -113,7 +113,7 @@ class AccountLimitsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -147,7 +147,7 @@ class AccountLimitsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -181,7 +181,7 @@ class AccountLimitsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -215,7 +215,7 @@ class AccountLimitsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -249,7 +249,7 @@ class AccountLimitsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -283,7 +283,7 @@ class AccountLimitsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -317,7 +317,7 @@ class AccountLimitsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }

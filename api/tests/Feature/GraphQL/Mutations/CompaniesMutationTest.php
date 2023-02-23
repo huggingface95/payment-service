@@ -91,7 +91,7 @@ class CompaniesMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -151,7 +151,7 @@ class CompaniesMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -201,7 +201,7 @@ class CompaniesMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 

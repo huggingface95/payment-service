@@ -54,7 +54,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -100,7 +100,7 @@ class CompaniesQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -147,7 +147,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -193,7 +193,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -239,7 +239,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -285,7 +285,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -331,7 +331,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -377,7 +377,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -429,7 +429,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -448,7 +448,6 @@ class CompaniesQueryTest extends TestCase
 
     public function testCompaniesFilterByPaymentSystems(): void
     {
-
         $company = DB::connection('pgsql_test')
             ->table('companies')
             ->orderBy('id', 'ASC')
@@ -478,7 +477,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -497,7 +496,6 @@ class CompaniesQueryTest extends TestCase
 
     public function testCompaniesFilterByRegions(): void
     {
-
         $region = DB::connection('pgsql_test')
             ->table('regions')
             ->orderBy('id', 'ASC')
@@ -531,7 +529,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [

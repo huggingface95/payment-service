@@ -43,20 +43,20 @@ class FilesQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $file->id,
-                ]
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'file' => [
-                        'id' => (string) $file->id,
-                        'file_name' => (string) $file->file_name,
-                        'mime_type' => (string) $file->mime_type,
-                        'size' => $file->size,
-                    ],
+                    'id' => (string) $file->id,
+                    'file_name' => (string) $file->file_name,
+                    'mime_type' => (string) $file->mime_type,
+                    'size' => $file->size,
                 ],
+            ],
         ]);
     }
 
@@ -88,7 +88,7 @@ class FilesQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -130,7 +130,7 @@ class FilesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -166,7 +166,7 @@ class FilesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }

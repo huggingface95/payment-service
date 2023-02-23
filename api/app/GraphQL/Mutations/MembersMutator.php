@@ -54,7 +54,7 @@ class MembersMutator extends BaseMutator
 
             if (isset($args['send_email']) && $args['send_email'] === true) {
                 $this->emailService->sendChangePasswordEmail($member);
-            } else{
+            } else {
                 $member->email_verification = EmailVerificationStatusEnum::VERIFIED->value;
                 $member->save();
             }

@@ -16,16 +16,14 @@ class MemberAccessLimitationMutator
     {
         try {
             CompanyModule::query()->where([
-                ['company_id', $args['company_id']], ['module_id', $args['module_id']], ['is_active', true]
+                ['company_id', $args['company_id']], ['module_id', $args['module_id']], ['is_active', true],
             ])->firstOrFail();
 
             return MemberAccessLimitation::create($args);
-
         } catch (ModelNotFoundException) {
             throw new GraphqlException('Module not found or disabled for this company', 'use');
         } catch (\Throwable $e) {
             throw new GraphqlException($e->getMessage(), 'use');
         }
-
     }
 }

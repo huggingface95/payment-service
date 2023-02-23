@@ -48,7 +48,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -78,7 +78,7 @@ class MembersQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -115,7 +115,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -152,7 +152,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -190,7 +190,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -227,7 +227,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -265,7 +265,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -302,7 +302,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -351,7 +351,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -400,7 +400,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -437,7 +437,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -468,10 +468,10 @@ class MembersQueryTest extends TestCase
                             email
                         }
                     }
-                }'
+                }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,
@@ -509,7 +509,7 @@ class MembersQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $member->id,

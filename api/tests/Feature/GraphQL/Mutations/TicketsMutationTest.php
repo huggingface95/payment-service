@@ -74,10 +74,10 @@ class TicketsMutationTest extends TestCase
                 'message' => 'System Error',
                 'member_id' => 2,
                 'client_id' => 2,
-            ]
+            ],
         ],
         [
-            'Authorization' => 'Bearer ' . $this->login(),
+            'Authorization' => 'Bearer '.$this->login(),
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -107,10 +107,10 @@ class TicketsMutationTest extends TestCase
             'variables' => [
                 'id' => 1,
                 'message' => 'Updated Ticket Message',
-            ]
+            ],
         ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]);
 
         $id = json_decode($this->response->getContent(), true);

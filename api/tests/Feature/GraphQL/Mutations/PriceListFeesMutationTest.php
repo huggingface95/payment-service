@@ -150,7 +150,7 @@ class PriceListFeesMutationTest extends TestCase
                 'variables' => $data,
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -274,7 +274,7 @@ class PriceListFeesMutationTest extends TestCase
                 'variables' => $data,
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -357,7 +357,7 @@ class PriceListFeesMutationTest extends TestCase
                 'variables' => $data,
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             ['The amount_from and amount_to have an intersection range.'],
@@ -381,7 +381,7 @@ class PriceListFeesMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 

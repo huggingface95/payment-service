@@ -16,7 +16,7 @@ class DocumentStateTableSeeder extends Seeder
     public function run()
     {
         $states = DocumentStateEnum::cases();
-        
+
         foreach ($states as $state) {
             DocumentState::firstOrCreate(['name' => $state->toString()]);
         }

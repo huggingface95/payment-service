@@ -10,13 +10,12 @@ use Nuwave\Lighthouse\Schema\TypeRegistry;
 
 class DocumentStateToEnumServiceProvider extends ServiceProvider
 {
-
     /**
      * @throws DefinitionException
      */
     public function boot(TypeRegistry $typeRegistry): void
     {
-        $values = DocumentState::query()->orderBy('id')->get()->mapWithKeys(function ($r){
+        $values = DocumentState::query()->orderBy('id')->get()->mapWithKeys(function ($r) {
             return [$r->name => ['value' => $r->id, 'description' => $r->id]];
         })->toArray();
 
@@ -24,7 +23,7 @@ class DocumentStateToEnumServiceProvider extends ServiceProvider
             new EnumType([
                 'name' => 'DocumentStateEnum',
                 'description' => 'DocumentStateEnum',
-                'values' => $values
+                'values' => $values,
             ])
         );
     }

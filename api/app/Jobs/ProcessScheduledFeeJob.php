@@ -35,11 +35,10 @@ class ProcessScheduledFeeJob extends Job
         AccountRepository $taskRepository,
         PriceListFeeScheduledRepositoryInterface $feeScheduledRepository,
     ) {
-        info("\n\n>> START " . count($this->tasks) . " tasks for " . $this->scheduledFee->id);
+        info("\n\n>> START ".count($this->tasks).' tasks for '.$this->scheduledFee->id);
 
         foreach ($this->tasks as $task) {
-
-            info("Account:       " . $task->account_id);
+            info('Account:       '.$task->account_id);
 
             $dates = $feeScheduledService->getFromToDates($this->scheduledFee); //, $task ?
             if (empty($dates)) {
@@ -49,8 +48,8 @@ class ProcessScheduledFeeJob extends Job
                 continue;
             }
 
-            info('Date from:     ' . $dates['dateFrom']);
-            info('Date to:       ' . $dates['dateTo']);
+            info('Date from:     '.$dates['dateFrom']);
+            info('Date to:       '.$dates['dateTo']);
 
             // Get amount of cash flow for period
             $amount = $taskRepository->getAmountOfCashFlowForPeriodByAccountId(
@@ -59,8 +58,8 @@ class ProcessScheduledFeeJob extends Job
                 $dates['dateTo']
             );
 
-            info('Amount:        ' . $amount);
-            info('Currency:      ' . $task->currency_id);
+            info('Amount:        '.$amount);
+            info('Currency:      '.$task->currency_id);
             if ($amount == 0) {
                 $this->deleteTask($task);
 
@@ -74,7 +73,7 @@ class ProcessScheduledFeeJob extends Job
                 $task->currency_id
             );
 
-            info('Amount fee:    ' . $feeAmount);
+            info('Amount fee:    '.$feeAmount);
             if ($feeAmount == 0) {
                 $this->deleteTask($task);
 
@@ -98,8 +97,8 @@ class ProcessScheduledFeeJob extends Job
             $transferService->updateTransferFeeStatusToSent($transfer);
         }
 
-        info("");
-        info("Check num tasks");
+        info('');
+        info('Check num tasks');
 
         $dateToday = Carbon::today()->format('Y-m-d');
         if (PriceListFeeScheduledTask::where('price_list_fee_scheduled_id', $this->scheduledFee->id)->where('date', $dateToday)->count() == 0) {
@@ -108,15 +107,15 @@ class ProcessScheduledFeeJob extends Job
                 ['executed_date' => $dateToday]
             );
 
-            info("Updated date executed");
-        };
+            info('Updated date executed');
+        }
 
         info("END\n\n");
     }
 
     private function deleteTask($task): void
     {
-        info("Delete task");
+        info('Delete task');
 
         PriceListFeeScheduledTask::where([
             'price_list_fee_scheduled_id' => $task->price_list_fee_scheduled_id,

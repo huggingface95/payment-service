@@ -47,7 +47,7 @@ class DepartmentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -78,7 +78,7 @@ class DepartmentsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -113,7 +113,7 @@ class DepartmentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -148,7 +148,7 @@ class DepartmentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -178,7 +178,7 @@ class DepartmentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -209,7 +209,7 @@ class DepartmentsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -240,7 +240,7 @@ class DepartmentsQueryTest extends TestCase
                 'id' => $departmentPositions[0]->id,
             ],
         ], [
-            'Authorization' => 'Bearer ' . $this->login(),
+            'Authorization' => 'Bearer '.$this->login(),
         ])->seeJsonContains([
             [
                 'id' => (string) $departmentPositions[0]->id,
@@ -270,7 +270,7 @@ class DepartmentsQueryTest extends TestCase
                 'name' => $departmentPositions[0]->name,
             ],
         ], [
-            'Authorization' => 'Bearer ' . $this->login(),
+            'Authorization' => 'Bearer '.$this->login(),
         ])->seeJsonContains([
             [
                 'id' => (string) $departmentPositions[0]->id,
@@ -299,7 +299,7 @@ class DepartmentsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [

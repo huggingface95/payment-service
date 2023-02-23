@@ -18,7 +18,7 @@ class CompanyModuleMutator extends BaseMutator
         try {
             DB::beginTransaction();
             $company = Company::find($args['company_id']);
-            if (!$company) {
+            if (! $company) {
                 throw new GraphqlException('Company does not exist', 'not found', 404);
             }
 
@@ -28,9 +28,9 @@ class CompanyModuleMutator extends BaseMutator
             }
 
             DB::commit();
+
             return $company;
-        }
-        catch (\Throwable $exception) {
+        } catch (\Throwable $exception) {
             DB::rollBack();
             throw new GraphqlException($exception->getMessage(), $exception->getCode());
         }
@@ -46,8 +46,10 @@ class CompanyModuleMutator extends BaseMutator
 
     private function addModules(Company $company, array $modules): void
     {
-        $ids = [collect($modules)->crossJoin("module_id")->map(function ($m){return [$m[1] => $m[0]];})->toArray(),
-            [['module_id' => ModuleEnum::KYC->value]]
+        $ids = [collect($modules)->crossJoin('module_id')->map(function ($m) {
+            return [$m[1] => $m[0]];
+        })->toArray(),
+            [['module_id' => ModuleEnum::KYC->value]],
         ];
 
         collect($ids)->flatten(1)->unique(function ($item) {

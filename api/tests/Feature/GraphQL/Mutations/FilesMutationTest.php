@@ -3,7 +3,6 @@
 namespace Feature\GraphQL\Mutations;
 
 use App\Models\Files;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class FilesMutationTest extends TestCase
@@ -55,7 +54,7 @@ class FilesMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 

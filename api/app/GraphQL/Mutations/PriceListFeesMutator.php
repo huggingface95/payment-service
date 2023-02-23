@@ -38,7 +38,7 @@ class PriceListFeesMutator
                 if (empty($args['scheduled']['starting_date'])) {
                     $args['scheduled']['starting_date'] = Carbon::now();
                 }
-                if (!empty($args['scheduled']['end_date']) && Carbon::parse($args['scheduled']['end_date'])->lt($args['scheduled']['starting_date'])) {
+                if (! empty($args['scheduled']['end_date']) && Carbon::parse($args['scheduled']['end_date'])->lt($args['scheduled']['starting_date'])) {
                     throw new GraphqlException('end_date cannot be earlier than starting_date', 'use');
                 }
 
@@ -62,10 +62,10 @@ class PriceListFeesMutator
         }
 
         $priceListFee = PriceListFee::find($args['id']);
-        if (!$priceListFee) {
+        if (! $priceListFee) {
             throw new GraphqlException('PriceListFee not found', 'use', Response::HTTP_NOT_FOUND);
         }
-        
+
         DB::transaction(function () use ($priceListFee, $args) {
             $priceListFee->update($args);
 

@@ -31,7 +31,7 @@ class AccountMutator
         $args['member_id'] = Auth::user()->id;
 
         $args['account_type'] = $this->setAccountType($args['group_type_id']);
-        if (!isset($args['account_number'])) {
+        if (! isset($args['account_number'])) {
             $args['account_state_id'] = AccountState::WAITING_FOR_ACCOUNT_GENERATION;
         } else {
             $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;

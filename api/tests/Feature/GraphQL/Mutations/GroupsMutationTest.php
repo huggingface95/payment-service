@@ -93,7 +93,7 @@ class GroupsMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -147,7 +147,7 @@ class GroupsMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -165,7 +165,7 @@ class GroupsMutationTest extends TestCase
             ],
         ]);
     }
-    
+
     public function testDeleteGroup(): void
     {
         $group = DB::connection('pgsql_test')
@@ -186,7 +186,7 @@ class GroupsMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 

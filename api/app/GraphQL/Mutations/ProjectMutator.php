@@ -11,8 +11,9 @@ class ProjectMutator extends BaseMutator
 {
     /**
      * @param    $root
-     * @param array $args
+     * @param  array  $args
      * @return mixed
+     *
      * @throws \Throwable
      */
     public function create($root, array $args): Project
@@ -26,6 +27,7 @@ class ProjectMutator extends BaseMutator
             $this->createPaymentProviders($project);
 
             DB::commit();
+
             return $project;
         } catch (\Throwable $exception) {
             DB::rollBack();
@@ -35,8 +37,9 @@ class ProjectMutator extends BaseMutator
 
     /**
      * @param    $root
-     * @param array $args
+     * @param  array  $args
      * @return mixed
+     *
      * @throws GraphqlException
      */
     public function update($root, array $args): Project
@@ -51,8 +54,8 @@ class ProjectMutator extends BaseMutator
             $this->createApplicantTypes($project, $args['project_settings'] ?? []);
 
             DB::commit();
-            return $project;
 
+            return $project;
         } catch (\Throwable $exception) {
             DB::rollBack();
             throw new GraphqlException($exception->getMessage(), $exception->getCode());

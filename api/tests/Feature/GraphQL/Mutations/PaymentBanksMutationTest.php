@@ -47,7 +47,7 @@ class PaymentBanksMutationTest extends TestCase
             'address' => 'New PaymentBank address',
             'bank_code' => '5656565465',
             'payment_system_id' => 1,
-            'payment_system_code' =>"4564564654655",
+            'payment_system_code' =>'4564564654655',
             'country_id' => 1,
             'payment_provider_id' => 1,
         ])->seeJsonContains([
@@ -62,8 +62,7 @@ class PaymentBanksMutationTest extends TestCase
 
         DB::select('ALTER SEQUENCE payment_banks_id_seq RESTART WITH '.$seq);
 
-        $this->postGraphQL(['query' =>
-            'mutation CreatePaymentBank(
+        $this->postGraphQL(['query' => 'mutation CreatePaymentBank(
                 $name: String!,
                 $address: String!,
                 $bank_code: String!,
@@ -83,20 +82,19 @@ class PaymentBanksMutationTest extends TestCase
                 }) {
                     id
                 }
-            }'
-        ,
+            }',
             'variables' => [
                 'name' => 'New PaymentBank 2',
                 'address' => 'New PaymentBank address 2',
                 'bank_code' => '5656565464',
                 'payment_system_id' => 3,
-                'payment_system_code' =>"4564564654654",
+                'payment_system_code' =>'4564564654654',
                 'country_id' => 1,
                 'payment_provider_id' => 11,
             ],
         ],
         [
-            'Authorization' => 'Bearer ' . $this->login(),
+            'Authorization' => 'Bearer '.$this->login(),
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -106,13 +104,11 @@ class PaymentBanksMutationTest extends TestCase
                 'id' => $id['data']['createPaymentBank']['id'],
             ],
         ]);
-
     }
 
     public function testUpdatePaymentBank(): void
     {
-        $this->postGraphQL(['query' =>
-            'mutation UpdatedPaymentBank(
+        $this->postGraphQL(['query' => 'mutation UpdatedPaymentBank(
                 $id: ID!,
                 $name: String!,
                 $address: String!,
@@ -133,21 +129,20 @@ class PaymentBanksMutationTest extends TestCase
                 }) {
                     id
                 }
-            }'
-            ,
+            }',
             'variables' => [
                 'id' => 10,
                 'name' => 'New PaymentBank 10',
                 'address' => 'New PaymentBank address 10',
                 'bank_code' => '5656565',
                 'payment_system_id' => 10,
-                'payment_system_code' =>"456456465",
+                'payment_system_code' =>'456456465',
                 'country_id' => 1,
                 'payment_provider_id' => 10,
             ],
         ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -157,7 +152,6 @@ class PaymentBanksMutationTest extends TestCase
                 'id' => $id['data']['updatePaymentBank']['id'],
             ],
         ]);
-
     }
 
     public function testDeletePaymentBank(): void
@@ -178,7 +172,7 @@ class PaymentBanksMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 

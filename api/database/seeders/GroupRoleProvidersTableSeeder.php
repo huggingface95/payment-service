@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\GroupRole;
 use App\Models\GroupRoleProvider;
 use Illuminate\Database\Seeder;
 

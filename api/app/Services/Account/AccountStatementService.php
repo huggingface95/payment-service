@@ -40,5 +40,4 @@ class AccountStatementService
             'transactions' => $transactionsList,
         ];
     }
-
 }

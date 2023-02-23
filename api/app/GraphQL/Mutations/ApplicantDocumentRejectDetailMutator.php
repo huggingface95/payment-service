@@ -34,7 +34,7 @@ class ApplicantDocumentRejectDetailMutator extends BaseMutator
     public function deleteTag($root, array $args): ApplicantDocumentRejectDetail|GraphqlException
     {
         $rejectDetail = ApplicantDocumentRejectDetail::find($args['id']);
-        if (!$rejectDetail) {
+        if (! $rejectDetail) {
             return new GraphqlException('Applicant document reject details not found', 'not found', 404);
         }
 

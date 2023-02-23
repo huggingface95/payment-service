@@ -32,9 +32,9 @@ final class DateTimeUtc extends ScalarType
     public function parseValue($value)
     {
         if (Carbon::createFromFormat('Y-m-d\TH:i:s.vp', $value) === false) {
-            throw new Error("Cannot represent following value as DateTimeUtc: " . Utils::printSafeJson($value));
+            throw new Error('Cannot represent following value as DateTimeUtc: '.Utils::printSafeJson($value));
         }
-        
+
         return $value;
     }
 
@@ -48,7 +48,7 @@ final class DateTimeUtc extends ScalarType
     public function parseLiteral($valueNode, ?array $variables = null)
     {
         if (Carbon::createFromFormat('Y-m-d\TH:i:s.vp', $valueNode->value) === false) {
-            throw new Error("Cannot represent following value as DateTimeUtc: " . Utils::printSafeJson($valueNode->value));
+            throw new Error('Cannot represent following value as DateTimeUtc: '.Utils::printSafeJson($valueNode->value));
         }
 
         return $valueNode->value;

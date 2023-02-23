@@ -71,7 +71,7 @@ class RequisitesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'data' => [
@@ -145,7 +145,7 @@ class RequisitesQueryTest extends TestCase
                 'account_number' => (string) $requisites->account_number,
             ],
         ], [
-            'Authorization' => 'Bearer ' . $this->login(),
+            'Authorization' => 'Bearer '.$this->login(),
         ])->seeJsonContains([
             'data' => [
                 'requisites' => [[
@@ -220,7 +220,7 @@ class RequisitesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $requisites->id,
@@ -292,7 +292,7 @@ class RequisitesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $requisites->id,
@@ -364,7 +364,7 @@ class RequisitesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $requisites->id,
@@ -436,7 +436,7 @@ class RequisitesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $requisites->id,
@@ -467,10 +467,10 @@ class RequisitesQueryTest extends TestCase
                   downloadRequisiteDetails(account_id: 1) {
                     base64
                   }
-               }'
+               }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -502,7 +502,7 @@ class RequisitesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 

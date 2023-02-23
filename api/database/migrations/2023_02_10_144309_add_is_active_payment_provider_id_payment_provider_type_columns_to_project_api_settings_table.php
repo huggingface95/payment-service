@@ -29,7 +29,7 @@ class AddIsActivePaymentProviderIdPaymentProviderTypeColumnsToProjectApiSettings
     public function down()
     {
         Schema::table('project_api_settings', function (Blueprint $table) {
-            $table->dropColumn('is_active','payment_provider_id','payment_provider_type');
+            $table->dropColumn('is_active', 'payment_provider_id', 'payment_provider_type');
         });
     }
 }

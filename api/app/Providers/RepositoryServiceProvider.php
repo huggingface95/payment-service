@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\PriceListFeeScheduled;
 use App\Repositories\AccountRepository;
 use App\Repositories\EmailRepository;
 use App\Repositories\FileRepository;
@@ -59,6 +58,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             PriceListFeeScheduledRepositoryInterface::class,
             PriceListFeeScheduledRepository::class
-        );   
+        );
     }
 }

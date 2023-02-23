@@ -48,7 +48,7 @@ class ApplicantIndividualQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -91,7 +91,7 @@ class ApplicantIndividualQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -124,7 +124,7 @@ class ApplicantIndividualQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             [
@@ -156,7 +156,7 @@ class ApplicantIndividualQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -196,7 +196,7 @@ class ApplicantIndividualQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -249,7 +249,7 @@ class ApplicantIndividualQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -296,7 +296,7 @@ class ApplicantIndividualQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -343,7 +343,7 @@ class ApplicantIndividualQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -365,7 +365,7 @@ class ApplicantIndividualQueryTest extends TestCase
             ->where('id', $module->applicant_individual_id)
             ->get();
 
-        $data =  [
+        $data = [
             'id' => (string) $applicants[0]->id,
             'first_name' => (string) $applicants[0]->first_name,
             'email' => (string) $applicants[0]->email,
@@ -392,10 +392,10 @@ class ApplicantIndividualQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
-            $data
+            $data,
         ]);
     }
 
@@ -417,7 +417,7 @@ class ApplicantIndividualQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $applicant->id,
@@ -469,7 +469,7 @@ class ApplicantIndividualQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson($expect);
     }
@@ -483,6 +483,4 @@ class ApplicantIndividualQueryTest extends TestCase
             ['kyc_level_id', '1'],
         ];
     }
-
-
 }

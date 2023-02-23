@@ -3,7 +3,6 @@
 namespace Tests\Feature\GraphQL\Queries;
 
 use App\Models\PaymentBank;
-use App\Models\Payments;
 use Tests\TestCase;
 
 class PaymentBankQueryTest extends TestCase
@@ -46,21 +45,21 @@ class PaymentBankQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $paymentBank->id,
-                ]
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'paymentBank' => [
-                        'id' => (string) $paymentBank->id,
-                        'name' => (string) $paymentBank->name,
-                        'address' => (string) $paymentBank->address,
-                        'bank_code' => (string) $paymentBank->bank_code,
-                        'payment_system_code' => (string) $paymentBank->payment_system_code,
-                    ],
+                    'id' => (string) $paymentBank->id,
+                    'name' => (string) $paymentBank->name,
+                    'address' => (string) $paymentBank->address,
+                    'bank_code' => (string) $paymentBank->bank_code,
+                    'payment_system_code' => (string) $paymentBank->payment_system_code,
                 ],
+            ],
         ]);
     }
 
@@ -94,7 +93,7 @@ class PaymentBankQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -138,7 +137,7 @@ class PaymentBankQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -176,7 +175,7 @@ class PaymentBankQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -214,7 +213,7 @@ class PaymentBankQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -252,7 +251,7 @@ class PaymentBankQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -302,7 +301,7 @@ class PaymentBankQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }

@@ -58,7 +58,7 @@ abstract class TestCase extends BaseTestCase
     public function login(array $data = []): string
     {
         if (empty($data)) {
-            $data = ['email' => 'test@test.com', 'password' => env('DEFAULT_PASSWORD','1234567Qa')];
+            $data = ['email' => 'test@test.com', 'password' => env('DEFAULT_PASSWORD', '1234567Qa')];
         }
 
         $key = $data['email'];
@@ -66,11 +66,11 @@ abstract class TestCase extends BaseTestCase
             return Cache::store('file')->get($key);
         }
 
-        $token = Http::accept('application/json')->post(env('AUTH_URL','http://go-auth:2491/auth/login'), $data);
+        $token = Http::accept('application/json')->post(env('AUTH_URL', 'http://go-auth:2491/auth/login'), $data);
         $accessToken = $token->json('access_token');
 
         Cache::store('file')->put($key, $accessToken, env('JWT_TTL', 1800));
-        
+
         return $accessToken;
     }
 
