@@ -28,7 +28,9 @@ class FilesController extends Controller
         ];
 
         $this->validate($request, [
-            'file' => 'required|file|mimes:jpeg,jpg,png,gif,pdf,doc,docx|max:102400',
+            'file' => 'required_without:files|file|mimes:jpeg,jpg,png,gif,pdf,doc,docx|max:102400',
+            'files' => 'required_without:file',
+            'files.*' => 'required_without:file|file|mimes:jpeg,jpg,png,gif,pdf,doc,docx|max:102400',
             'entity_type' => ['required', Rule::in($allowedEntityTypes)],
             'author_id' => ['required', 'integer'],
         ], $messages = [
@@ -36,11 +38,22 @@ class FilesController extends Controller
             'max' => 'File should be less than 100 MB',
         ]);
 
+        $response = [];
         if ($request->hasfile('file')) {
-            $fileDb = $this->fileService->uploadFile($request);
-
-            return response()->json([$fileDb], 201, [], JSON_UNESCAPED_SLASHES);
+            $response[] = $this->fileService->uploadFile($request, $request->file('file'));
         }
+
+        if ($request->hasfile('files')) {
+            foreach ($request->file('files') as $file) {
+                $response[] = $this->fileService->uploadFile($request, $file);
+            }
+        }
+
+        if (empty($response)) {
+            return response()->json(['message' => 'No files uploaded'], 400);
+        }
+
+        return response()->json($response, 201, [], JSON_UNESCAPED_SLASHES);
     }
 
     public function createPDF(Request $request)
@@ -65,6 +78,6 @@ class FilesController extends Controller
             $message->attachData($pdf->output(), 'requisites.pdf');
         });
 
-        return response()->json(['message' => 'Requisites has been send to '.$email], 200);
+        return response()->json(['message' => 'Requisites has been send to ' . $email], 200);
     }
 }
