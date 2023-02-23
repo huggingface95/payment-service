@@ -16,7 +16,7 @@ class FileService extends AbstractService
     {
         $entityType = $request->post('entity_type');
         $authorId = $request->post('author_id');
-        $filepath = $authorId . '/' . $entityType;
+        $filepath = $authorId.'/'.$entityType;
         $store = $file->store($filepath, 's3');
         $filename = explode('/', $store);
         $data = [
@@ -26,18 +26,18 @@ class FileService extends AbstractService
             'size' => $file->getSize(),
             'entity_type' => $entityType,
             'author_id' => $authorId,
-            'storage_path' => '/' . $filepath . '/',
+            'storage_path' => '/'.$filepath.'/',
             'storage_name' => $filename[2],
-            'link' => self::S3_URL . $filepath . '/' . $filename[2],
+            'link' => self::S3_URL.$filepath.'/'.$filename[2],
             'member_id' => $this->getMemberId(),
         ];
 
         $fileDb = Files::create($data);
-        $exists = Storage::disk('s3')->exists($filepath . '/' . $filename[2]);
+        $exists = Storage::disk('s3')->exists($filepath.'/'.$filename[2]);
 
-        if (!$exists || !$fileDb) {
+        if (! $exists || ! $fileDb) {
             info('delete');
-            Storage::disk('s3')->delete($filepath . '/' . $filename[2]);
+            Storage::disk('s3')->delete($filepath.'/'.$filename[2]);
         }
 
         return $fileDb;
@@ -47,7 +47,7 @@ class FileService extends AbstractService
     {
         $resolution = getimagesize($file);
 
-        return !empty($resolution) ? $resolution[0] . 'x' . $resolution[1] : null;
+        return ! empty($resolution) ? $resolution[0].'x'.$resolution[1] : null;
     }
 
     public function getMemberId(): int|null
