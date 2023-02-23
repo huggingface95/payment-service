@@ -84,7 +84,7 @@ class ApplicantMutator extends BaseMutator
             $args['contacts_additional_fields'] = $this->setAdditionalField($args['contacts_additional_fields']);
         }
         if (isset($args['labels'])) {
-            $applicant->labels()->detach($args['labels']);
+            $applicant->labels()->detach();
             $applicant->labels()->attach($args['labels']);
         }
 
