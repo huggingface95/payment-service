@@ -36,7 +36,6 @@ class FileService extends AbstractService
         $exists = Storage::disk('s3')->exists($filepath.'/'.$filename[2]);
 
         if (! $exists || ! $fileDb) {
-            info('delete');
             Storage::disk('s3')->delete($filepath.'/'.$filename[2]);
         }
 
