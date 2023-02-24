@@ -24,13 +24,13 @@ class EmailAccountMinMaxBalanceLimitRequestDTO
 
     protected const ACCOUNT_MAX_LIMIT_COLUMN = 'account_max_balance';
 
-    protected const MIN_INDIVIDUAL_LIMIT_TEMPLATE = 'Minimum balance limit has been reached {account_id} {account_currency}';
+    protected const MIN_INDIVIDUAL_LIMIT_TEMPLATE = 'Minimum balance limit has been reached';
 
-    protected const MAX_INDIVIDUAL_LIMIT_TEMPLATE = 'Maximum balance limit has been reached {account_id} {account_currency}';
+    protected const MAX_INDIVIDUAL_LIMIT_TEMPLATE = 'Maximum balance limit has been reached';
 
-    protected const MIN_MEMBER_LIMIT_TEMPLATE = 'Minimum balance limit has been reached for {client_name} {account_id} {account_currency}';
+    protected const MIN_MEMBER_LIMIT_TEMPLATE = 'Minimum balance limit has been reached for client';
 
-    protected const MAX_MEMBER_LIMIT_TEMPLATE = 'Maximum balance limit has been reached for {client_name} {account_id} {account_currency}';
+    protected const MAX_MEMBER_LIMIT_TEMPLATE = 'Maximum balance limit has been reached for client';
 
     public static function transform(Account $account, bool $isMinLimit, string $type = self::INDIVIDUAL): self
     {
@@ -52,7 +52,7 @@ class EmailAccountMinMaxBalanceLimitRequestDTO
             $email = $account->clientable->email;
         } else {
             $data['customer_support_url'] = $account->member;
-            $data['member_name'] = $account->member->fullname;
+            $data['name'] = $account->member->fullname;
             $templateName = $isMinLimit ? self::MIN_MEMBER_LIMIT_TEMPLATE : self::MAX_MEMBER_LIMIT_TEMPLATE;
             $email = $account->member->email;
         }
