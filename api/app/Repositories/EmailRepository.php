@@ -78,7 +78,7 @@ class EmailRepository implements EmailRepositoryInterface
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = $this->template->newQuery()
             ->where('company_id', $account->company_id)
-            ->whereRaw("lower(subject) LIKE  '%".strtolower($account->accountState->name)."%'  ")
+            ->whereRaw("lower(name) LIKE  '%".strtolower($account->accountState->name)."%'  ")
             ->first();
 
         if (! $emailTemplate) {
@@ -122,7 +122,7 @@ class EmailRepository implements EmailRepositoryInterface
         /** @var EmailTemplate $emailTemplate */
         $emailTemplate = $this->template->newQuery()
             ->where('company_id', $dto->companyId)
-            ->whereRaw("lower(subject) LIKE  '%".strtolower($dto->emailTemplateName)."%'  ")
+            ->whereRaw("lower(name) LIKE  '%".strtolower($dto->emailTemplateName)."%'  ")
             ->first();
 
         if (! $emailTemplate) {

@@ -83,7 +83,7 @@ class EmailTemplatesTableSeeder extends Seeder
 
         EmailTemplate::firstOrCreate([
             'id' => 7,
-            'subject' => '{member_company_name} has invited you to join team',
+            'subject' => '{company_name} has invited you to join team',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 3,
@@ -94,7 +94,7 @@ class EmailTemplatesTableSeeder extends Seeder
 
         EmailTemplate::firstOrCreate([
             'id' => 8,
-            'subject' => '{member_company_name} has invited you to join team',
+            'subject' => '{company_name} has invited you to join team',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 3,
