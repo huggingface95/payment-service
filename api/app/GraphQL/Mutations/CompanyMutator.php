@@ -3,6 +3,8 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
+use App\Models\ApplicantIndividualCompanyPosition;
+use App\Models\ApplicantIndividualCompanyRelation;
 use App\Models\Company;
 use App\Models\State;
 use Illuminate\Support\Carbon;
@@ -21,6 +23,35 @@ class CompanyMutator extends BaseMutator
 
         $company->state_id = State::INACTIVE;
         $company->save();
+
+        $relationsData = [
+          'Director',
+          'Shareholder',
+          'Beneficiary',
+        ];
+
+        foreach ($relationsData as $relationData) {
+            ApplicantIndividualCompanyRelation::firstOrCreate([
+                'name' => $relationData,
+                'company_id' => $company->id,
+            ]);
+        }
+
+        $positionsData = [
+            'Director',
+            'CEO',
+            'CFO',
+            'CAO',
+            'CIO',
+            'COO',
+        ];
+
+        foreach ($positionsData as $positionData) {
+            ApplicantIndividualCompanyPosition::firstOrCreate([
+                'name' => $positionData,
+                'company_id' => $company->id,
+            ]);
+        }
 
         return $company;
     }
