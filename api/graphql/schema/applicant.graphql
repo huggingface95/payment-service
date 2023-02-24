@@ -75,7 +75,7 @@ type ApplicantIndividual {
     "Получить метки"
     labels: [ApplicantIndividualLabel] @belongsToMany(relation: "labels")
     "Название компании держателя applicant"
-    created_for: Company @belongsTo(relation: "company")
+    company: Company @belongsTo(relation: "company")
     "Получить заметки"
     notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
     "Получить модули"
