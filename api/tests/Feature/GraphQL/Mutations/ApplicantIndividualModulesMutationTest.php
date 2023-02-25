@@ -55,7 +55,6 @@ class ApplicantIndividualModulesMutationTest extends TestCase
                     createApplicantIndividualModule (
                         applicant_individual_id: $applicant_individual_id
                         module_id: $module_id
-                        is_active: true
                     )
                     {
                         id

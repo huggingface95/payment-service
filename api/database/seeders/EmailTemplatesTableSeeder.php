@@ -22,6 +22,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 2,
             'company_id' => 1,
+            'service_type' => 'common',
             'created_at' => Carbon::now(),
             'name' => 'Sign Up: Email Confirmation',
         ]);
@@ -65,7 +66,7 @@ class EmailTemplatesTableSeeder extends Seeder
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 3,
-            'company_id' => 1,
+            'company_id' => 2,
             'created_at' => Carbon::now(),
             'name' => 'Waiting for approval',
         ]);
@@ -76,7 +77,7 @@ class EmailTemplatesTableSeeder extends Seeder
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 3,
-            'company_id' => 1,
+            'company_id' => 2,
             'created_at' => Carbon::now(),
             'name' => 'Reset Password',
         ]);
@@ -87,7 +88,7 @@ class EmailTemplatesTableSeeder extends Seeder
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 3,
-            'company_id' => 1,
+            'company_id' => 2,
             'created_at' => Carbon::now(),
             'name' => 'Sign Up: Email Confirmation',
         ]);
@@ -98,7 +99,7 @@ class EmailTemplatesTableSeeder extends Seeder
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 3,
-            'company_id' => 1,
+            'company_id' => 3,
             'created_at' => Carbon::now(),
             'name' => 'Sign Up: Email Confirmation',
         ]);
@@ -123,6 +124,17 @@ class EmailTemplatesTableSeeder extends Seeder
             'company_id' => 1,
             'created_at' => Carbon::now(),
             'name' => 'Account Requisites2',
+        ]);
+
+        EmailTemplate::firstOrCreate([
+            'id' => 11,
+            'subject' => 'Welcome! Confirm your email address',
+        ], [
+            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'member_id' => 2,
+            'company_id' => 1,
+            'created_at' => Carbon::now(),
+            'name' => 'Welcome! Confirm your email address',
         ]);
     }
 }
