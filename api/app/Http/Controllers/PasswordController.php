@@ -61,10 +61,10 @@ class PasswordController extends Controller
             $emailTemplateName = 'Successful Password Reset';
             $emailData = [
                 'email' => $member->email,
-                'member_name' => $member->first_name,
-                'member_login_page_url' => $company->companySettings->client_url,
-                'member_customer_support_url' => $company->companySettings->support_email,
-                'member_company_name' => $company->name,
+                'name' => $member->first_name,
+                'login_page_url' => $company->companySettings->client_url,
+                'customer_support_url' => $company->companySettings->support_email,
+                'company_name' => $company->name,
             ];
 
             $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $emailData, $emailTemplateName);
@@ -112,12 +112,11 @@ class PasswordController extends Controller
             $emailTemplateName = 'Registration Details';
             $emailData = [
                 'email' => $user->email,
-                'member_email' => $user->email,
-                'member_name' => $user->first_name,
-                'member_forgot_page_url' => $company->companySettings->backoffice_forgot_password_url,
-                'member_login_page_url' => $company->companySettings->backoffice_login_url,
-                'member_customer_support_url' => $company->companySettings->backoffice_support_url,
-                'member_company_name' => $company->name,
+                'name' => $user->first_name,
+                'forgot_page_url' => $company->companySettings->backoffice_forgot_password_url,
+                'login_page_url' => $company->companySettings->backoffice_login_url,
+                'customer_support_url' => $company->companySettings->backoffice_support_url,
+                'company_name' => $company->name,
             ];
 
             $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $user, $emailData, $emailTemplateName);
@@ -157,8 +156,7 @@ class PasswordController extends Controller
             $emailTemplateName = 'Successful Password Reset';
             $emailData = [
                 'email' => $user->email,
-                'member_email' => $user->email,
-                'member_name' => $user->first_name,
+                'name' => $user->first_name,
                 'password' => $newPassword,
             ];
 

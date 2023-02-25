@@ -130,7 +130,7 @@ class ApplicantCompanyMutator extends BaseMutator
         $emailData = [
             'client_name' => $applicantCompany->name,
             'email_confirm_url' => $company->member_verify_url.'/email/verify/'.$verifyToken->token.'/'.$applicantCompany->id,
-            'member_company_name' => $company->name,
+            'company_name' => $company->name,
         ];
         $emailDTO = TransformerDTO::transform(EmailApplicantCompanyRequestDTO::class, $applicantCompany, $company, $emailTemplateName, $emailData);
 

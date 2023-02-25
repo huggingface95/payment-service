@@ -65,13 +65,13 @@ class EmailService
         $verifyToken = $this->verifyService->createVerifyToken($member);
 
         $company = $member->company;
-        $emailTemplateName = 'Welcome! Confirm your email address';
+        $emailTemplateName = 'Sign Up: Email Confirmation';
         $emailData = [
             'email' => $member->email,
-            'member_name' => $member->first_name,
-            'logo_member_company' => $company->logo_link,
-            'member_email_confirm_url' => $company->member_verify_url.'/email/verify/'.$verifyToken->token,
-            'member_company_name' => $company->name,
+            'name' => $member->first_name,
+            'logo_company' => $company->logo_link,
+            'email_confirm_url' => $company->member_verify_url.'/email/verify/'.$verifyToken->token,
+            'company_name' => $company->name,
         ];
 
         $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $emailData, $emailTemplateName);
@@ -86,13 +86,13 @@ class EmailService
         $verifyToken = $this->verifyService->createVerifyToken($member);
 
         $company = $member->company;
-        $emailTemplateName = '{member_company_name} has invited you to join team';
+        $emailTemplateName = 'Reset Password';
         $emailData = [
             'email' => $member->email,
-            'member_name' => $member->first_name,
-            'logo_member_company' => $company->logo_link,
-            'member_email_confirm_url' => $company->member_verify_url.'/password/change/member/'.$verifyToken->token,
-            'member_company_name' => $company->name,
+            'name' => $member->first_name,
+            'logo_company' => $company->logo_link,
+            'email_confirm_url' => $company->member_verify_url.'/password/change/member/'.$verifyToken->token,
+            'company_name' => $company->name,
         ];
 
         $emailDTO = TransformerDTO::transform(EmailMembersRequestDTO::class, $member, $emailData, $emailTemplateName);
@@ -110,10 +110,10 @@ class EmailService
         $emailTemplateName = 'Reset Password';
         $emailData = [
             'email' => $applicant->email,
-            'member_name' => $applicant->first_name,
-            'logo_member_company' => $company->logo_link,
-            'member_email_confirm_url' => $company->member_verify_url.'/password/reset/'.$verifyToken->token,
-            'member_company_name' => $company->name,
+            'name' => $applicant->first_name,
+            'logo_company' => $company->logo_link,
+            'email_confirm_url' => $company->member_verify_url.'/password/reset/'.$verifyToken->token,
+            'company_name' => $company->name,
         ];
 
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $company, $emailTemplateName, $emailData);
@@ -128,12 +128,12 @@ class EmailService
         $verifyToken = $this->verifyService->createVerifyToken($applicant);
 
         $company = $applicant->company;
-        $emailTemplateName = 'Welcome! Confirm your email address';
+        $emailTemplateName = 'Sign Up: Email Confirmation';
         $emailData = [
             'email' => $applicant->email,
             'client_name' => $applicant->first_name,
-            'logo_member_company' => $company->logo_link,
-            'member_company_name' => $company->name,
+            'logo_company' => $company->logo_link,
+            'company_name' => $company->name,
             'customer_support_url' => $company->backoffice_support_url,
             'email_confirm_url' => $company->member_verify_url.'/email/verify/'.$verifyToken->token,
         ];

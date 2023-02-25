@@ -98,7 +98,7 @@ type GroupRoleView @model(class: "\\App\\Models\\GroupRoleView") {
 
 
 extend type Query @guard {
-    "Получить группу по ID"
+    "Получить тип группы по ID"
     group_type(id: ID @eq): GroupType   @find
     "Получить список типов групп"
     group_types(

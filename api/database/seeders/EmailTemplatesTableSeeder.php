@@ -23,7 +23,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'member_id' => 2,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'Test template',
+            'name' => 'Sign Up: Email Confirmation',
         ]);
 
         EmailTemplate::firstOrCreate([
@@ -34,7 +34,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'member_id' => 2,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'Test template approval',
+            'name' => 'Waiting for approval',
         ]);
 
         EmailTemplate::firstOrCreate([
@@ -45,7 +45,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'member_id' => 2,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'Test template reset password',
+            'name' => 'Reset Password',
         ]);
 
         EmailTemplate::firstOrCreate([
@@ -56,7 +56,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'member_id' => 3,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'Test template 2',
+            'name' => 'Sign Up: Email Confirmation',
         ]);
 
         EmailTemplate::firstOrCreate([
@@ -67,7 +67,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'member_id' => 3,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'Test template approval 2',
+            'name' => 'Waiting for approval',
         ]);
 
         EmailTemplate::firstOrCreate([
@@ -78,29 +78,29 @@ class EmailTemplatesTableSeeder extends Seeder
             'member_id' => 3,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'Test template reset password 2',
+            'name' => 'Reset Password',
         ]);
 
         EmailTemplate::firstOrCreate([
             'id' => 7,
-            'subject' => '{member_company_name} has invited you to join team',
+            'subject' => '{company_name} has invited you to join team',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 3,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'has invited you to join team',
+            'name' => 'Sign Up: Email Confirmation',
         ]);
 
         EmailTemplate::firstOrCreate([
             'id' => 8,
-            'subject' => '{member_company_name} has invited you to join team',
+            'subject' => '{company_name} has invited you to join team',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 3,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'has invited you to join team 2',
+            'name' => 'Sign Up: Email Confirmation',
         ]);
 
         EmailTemplate::firstOrCreate([
@@ -111,7 +111,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'member_id' => 2,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'Account Requisites Test',
+            'name' => 'Account Requisites',
         ]);
 
         EmailTemplate::firstOrCreate([
@@ -122,7 +122,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'member_id' => 2,
             'company_id' => 1,
             'created_at' => Carbon::now(),
-            'name' => 'Account Requisites 2',
+            'name' => 'Account Requisites2',
         ]);
     }
 }
