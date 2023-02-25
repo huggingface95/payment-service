@@ -496,6 +496,7 @@ class MembersQueryTest extends TestCase
                             operator: GTE
                             value: $id
                         }
+                        first: 1
                     ) {
                         data {
                             id

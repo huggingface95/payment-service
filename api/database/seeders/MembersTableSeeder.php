@@ -47,7 +47,7 @@ class MembersTableSeeder extends Seeder
                 'department_id' => 2,
                 'email_verification' => EmailVerificationStatusEnum::VERIFIED,
                 'member_status_id' => MemberStatusEnum::ACTIVE,
-                'last_login_at' => Carbon::now(),
+                'last_login_at' => Carbon::now()->addMinutes('1'),
             ],
             [
                 'last_name' => 'Member3 Last',
@@ -62,7 +62,7 @@ class MembersTableSeeder extends Seeder
                 'department_id' => 3,
                 'email_verification' => EmailVerificationStatusEnum::VERIFIED,
                 'member_status_id' => MemberStatusEnum::ACTIVE,
-                'last_login_at' => Carbon::now(),
+                'last_login_at' => Carbon::now()->addMinutes('2'),
             ],
             [
                 'last_name' => 'Member4 Last',
@@ -77,7 +77,7 @@ class MembersTableSeeder extends Seeder
                 'department_id' => 4,
                 'email_verification' => EmailVerificationStatusEnum::VERIFIED,
                 'member_status_id' => MemberStatusEnum::ACTIVE,
-                'last_login_at' => Carbon::now(),
+                'last_login_at' => Carbon::now()->addMinutes('3'),
             ],
         ];
 
