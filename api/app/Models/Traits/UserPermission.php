@@ -31,7 +31,7 @@ trait UserPermission
 
         $operation = PermissionOperation::query()->with(['parents', 'binds'])
             ->where('name', $name)
-            ->where('referer', $url)
+            ->where('referer', preg_replace("/([0-9]+)/", '$id', $url))
             ->first();
 
         if ($operation) {
