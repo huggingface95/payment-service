@@ -117,6 +117,17 @@ class EmailTemplatesTableSeeder extends Seeder
 
         EmailTemplate::firstOrCreate([
             'id' => 10,
+            'subject' => 'Confirm change email',
+        ], [
+            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'member_id' => 2,
+            'company_id' => 1,
+            'created_at' => Carbon::now(),
+            'name' => 'Confirm change email',
+        ]);
+
+        EmailTemplate::firstOrCreate([
+            'id' => 11,
             'subject' => 'Account Requisites',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -127,7 +138,7 @@ class EmailTemplatesTableSeeder extends Seeder
         ]);
 
         EmailTemplate::firstOrCreate([
-            'id' => 11,
+            'id' => 12,
             'subject' => 'Welcome! Confirm your email address',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
