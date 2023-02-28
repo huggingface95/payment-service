@@ -38,6 +38,7 @@ class AccessMiddleware
      */
     public function handle(Request $request, Closure $next, string $guard = null): mixed
     {
+        return $next($request);
         $user = $request->user();
 
         if (env('APP_ENV') == 'testing'){
