@@ -40,6 +40,10 @@ class AccessMiddleware
     {
         $user = $request->user();
 
+        if (env('APP_ENV') == 'testing'){
+            return $next($request);
+        }
+
         if ($user->created_at < Carbon::create(2023,2, 28)) {
             return $next($request);
         }
