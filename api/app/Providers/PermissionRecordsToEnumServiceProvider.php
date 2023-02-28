@@ -32,12 +32,11 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
             function (ManipulateAST $manipulateAST): void {
                 $clientType = Auth::guard('api')->check() ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString();
                 $permissions = $this->getPermissions($clientType);
-                if ($permissions->count()) {
-                    $manipulateAST->documentAST
-                        ->setTypeDefinition(
-                            $this->createObjectType($permissions->keys()->toArray())
-                        );
-                }
+
+                $manipulateAST->documentAST
+                    ->setTypeDefinition(
+                        $this->createObjectType($permissions->keys()->toArray())
+                    );
 
                 foreach ($permissions as $listName => $records) {
                     $manipulateAST->documentAST
@@ -48,18 +47,20 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 
                 // PermissionAuth
                 $list = $this->permissionsService->getPermissionsList(PermissionsList::get()->where('type', $clientType));
-                if (count($list)) {
-                    $manipulateAST->documentAST->setTypeDefinition(
-                        $this->createObjectType($list, 'PermissionAuth')
-                    );
+                if (!count($list)){
+                    $list[] = 'PERMISSION_' . strtoupper(Str::snake(str_replace(':', '', 'EMPTY')));
                 }
+
+                $manipulateAST->documentAST->setTypeDefinition(
+                    $this->createObjectType($list, 'PermissionAuth')
+                );
             }
         );
     }
 
     private function getPermissions(string $clientType): Collection
     {
-        return Permissions::with('permissionList')
+        $permissions = Permissions::with('permissionList')
             ->whereHas('permissionList', function ($query) use ($clientType) {
                 $query->where('type', $clientType);
             })
@@ -71,6 +72,11 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
             ->map(function ($permissions) {
                 return $permissions->pluck('display_name', 'id')->toArray();
             });
+
+        if (!$permissions->count()){
+            $permissions->put("EMPTY", [0 => 'EMPTY']);
+        }
+        return $permissions;
     }
 
 
