@@ -38,12 +38,11 @@ class AccessMiddleware
      */
     public function handle(Request $request, Closure $next, string $guard = null): mixed
     {
-        return $next($request);
-        $user = $request->user();
-
         if (env('APP_ENV') == 'testing'){
             return $next($request);
         }
+
+        $user = $request->user();
 
         if ($user->created_at < Carbon::create(2023,2, 28)) {
             return $next($request);
