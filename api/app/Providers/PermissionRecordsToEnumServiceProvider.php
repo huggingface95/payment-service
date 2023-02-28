@@ -5,25 +5,23 @@ namespace App\Providers;
 use App\Enums\ClientTypeEnum;
 use App\Models\Permissions;
 use App\Models\PermissionsList;
-use App\Services\AuthService;
 use App\Services\PermissionsService;
 use GraphQL\Language\AST\EnumTypeDefinitionNode;
 use GraphQL\Language\AST\ObjectTypeDefinitionNode;
 use GraphQL\Language\Parser;
 use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Events\ManipulateAST;
 
 class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 {
-    protected AuthService $authService;
-
     protected PermissionsService $permissionsService;
 
     public function __construct()
     {
-        $this->authService = new AuthService();
         $this->permissionsService = new PermissionsService();
     }
 
@@ -32,26 +30,14 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
         $dispatcher->listen(
             ManipulateAST::class,
             function (ManipulateAST $manipulateAST): void {
-                $clientType = $this->authService->getClientTypeByToken() ?? ClientTypeEnum::APPLICANT->toString();
-
-                // PermissionType
-                $permissions = Permissions::with('permissionList')
-                    ->whereHas('permissionList', function ($query) use ($clientType) {
-                        $query->where('type', $clientType);
-                    })
-                    ->get()
-                    ->groupBy(['permission_list_id', function ($permission) {
-                        return $permission->permissionList->name;
-                    }])
-                    ->collapse()
-                    ->map(function ($permissions) {
-                        return $permissions->pluck('display_name', 'id')->toArray();
-                    });
-
-                $manipulateAST->documentAST
-                    ->setTypeDefinition(
-                        $this->createObjectType($permissions->keys()->toArray())
-                    );
+                $clientType = Auth::guard('api')->check() ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString();
+                $permissions = $this->getPermissions($clientType);
+                if ($permissions->count()) {
+                    $manipulateAST->documentAST
+                        ->setTypeDefinition(
+                            $this->createObjectType($permissions->keys()->toArray())
+                        );
+                }
 
                 foreach ($permissions as $listName => $records) {
                     $manipulateAST->documentAST
@@ -62,24 +48,44 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 
                 // PermissionAuth
                 $list = $this->permissionsService->getPermissionsList(PermissionsList::get()->where('type', $clientType));
-                $manipulateAST->documentAST->setTypeDefinition(
-                    $this->createObjectType($list, 'PermissionAuth')
-                );
+                if (count($list)) {
+                    $manipulateAST->documentAST->setTypeDefinition(
+                        $this->createObjectType($list, 'PermissionAuth')
+                    );
+                }
             }
         );
     }
 
+    private function getPermissions(string $clientType): Collection
+    {
+        return Permissions::with('permissionList')
+            ->whereHas('permissionList', function ($query) use ($clientType) {
+                $query->where('type', $clientType);
+            })
+            ->get()
+            ->groupBy(['permission_list_id', function ($permission) {
+                return $permission->permissionList->name;
+            }])
+            ->collapse()
+            ->map(function ($permissions) {
+                return $permissions->pluck('display_name', 'id')->toArray();
+            });
+    }
+
+
     private function createColumnsEnum(
         string $enumName,
-        array $permissions
-    ): ?EnumTypeDefinitionNode {
+        array  $permissions
+    ): ?EnumTypeDefinitionNode
+    {
         $enumValues = array_map(
             function (int $id, string $name): string {
                 return
                     strtoupper(
                         Str::snake(preg_replace("/(\/)|(&)|(\()|(\))|(:)/", '', $name))
                     )
-                    .' @enum(value: "'.$id.'")';
+                    . ' @enum(value: "' . $id . '")';
             },
             array_keys($permissions),
             $permissions
@@ -87,9 +93,9 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 
         $enumValuesString = implode("\n", $enumValues);
 
-        $pEnumName = 'PERMISSION_'.strtoupper(Str::snake(str_replace(':', '', $enumName)));
+        $pEnumName = 'PERMISSION_' . strtoupper(Str::snake(str_replace(':', '', $enumName)));
 
-        return Parser::enumTypeDefinition(/** @lang GraphQL */<<<GRAPHQL
+        return Parser::enumTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
 "Permission list name {$enumName}"
 enum $pEnumName
 {
@@ -104,16 +110,16 @@ GRAPHQL
         if ($typeName === 'PermissionAuth') {
             $list = array_map(
                 function (string $name): string {
-                    return $name.': ['.$name.'!]!';
+                    return $name . ': [' . $name . '!]!';
                 },
                 $list
             );
         } else {
             $list = array_map(
                 function (string $name): string {
-                    $name = 'PERMISSION_'.strtoupper(Str::snake(preg_replace('/(:)/', '', $name)));
+                    $name = 'PERMISSION_' . strtoupper(Str::snake(preg_replace('/(:)/', '', $name)));
 
-                    return $name.': '.$name;
+                    return $name . ': ' . $name;
                 },
                 $list
             );
@@ -121,7 +127,7 @@ GRAPHQL
 
         $types = implode("\n", $list);
 
-        return Parser::objectTypeDefinition(/** @lang GraphQL */<<<GRAPHQL
+        return Parser::objectTypeDefinition(/** @lang GraphQL */ <<<GRAPHQL
 "$typeName"
 type $typeName {
 {$types}
