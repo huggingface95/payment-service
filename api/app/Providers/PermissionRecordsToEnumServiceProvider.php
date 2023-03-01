@@ -19,9 +19,11 @@ use Nuwave\Lighthouse\Events\ManipulateAST;
 class PermissionRecordsToEnumServiceProvider extends ServiceProvider
 {
     protected PermissionsService $permissionsService;
+    protected \NumberFormatter $formatNumber;
 
-    public function __construct()
+    protected function __construct()
     {
+        $this->formatNumber = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
         $this->permissionsService = new PermissionsService();
     }
 
@@ -87,6 +89,9 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
     {
         $enumValues = array_map(
             function (int $id, string $name): string {
+                $name = preg_replace_callback("/\d/", function ($match){
+                    return $this->formatNumber->format($match[0]);
+                }, $name);
                 return
                     strtoupper(
                         Str::snake(preg_replace("/(\/)|(&)|(\()|(\))|(:)/", '', $name))
