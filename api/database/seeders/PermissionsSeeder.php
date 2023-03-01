@@ -1512,6 +1512,730 @@ class PermissionsSeeder extends Seeder
                     ],
                 ],
             ],
+            'Administration Module' => [
+                'data' => [
+                    'name' => 'Administration Module',
+                    'is_active' => true,
+                    'order' => 3,
+                ],
+                'list' => [
+                    'member' => [
+                        '' => [
+                            'Member Company List' => [
+                                'data' => [
+                                    'name' => 'Member Company List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 1,
+                                ],
+                                'list' => [
+                                    'Member Company List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Member Company List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'MemberCompanies',
+                                                'referer' => 'administration/member-info/member-company-list',
+                                            ],
+                                        ],
+                                    ],
+                                    'Member Company List.Add Member Company' => [
+                                        'data' => [
+                                            'name' => 'Member Company List.Add Member Company',
+                                            'display_name' => 'Add Member Company',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateMemberCompany',
+                                                'referer' => 'administration/member-info/member-company-list',
+                                                'parents' => ['Member Company List.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Member Company List.Delete' => [
+                                        'data' => [
+                                            'name' => 'Member Company List.Delete',
+                                            'display_name' => 'Delete',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'important',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'DeleteCompany',
+                                                'referer' => 'administration/member-info/member-company-list',
+                                                'parents' => ['Member Company List.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Member Company Profile:General' => [
+                                'data' => [
+                                    'name' => 'Member Company Profile:General',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 2,
+                                ],
+                                'list' => [
+                                    'Member Company Profile:General.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:General.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetMemberCompanyById',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                            ],
+                                            [
+                                                'name' => 'GetSettingsCompanyById',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                            ],
+                                            [
+                                                'name' => 'GetProfileDataCompanyById',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                            ],
+                                            [
+                                                'name' => 'MemberProfile',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                            ],
+                                            [
+                                                'name' => 'GetSettingsCompanyById',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                            ],
+                                        ],
+                                    ],
+                                    'Member Company Profile:General.Edit' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:General.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateMemberCompanyInfoForm',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                                'parents' => ['Member Company Profile:General.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'UpdateBasicInfoCompanyForm',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                                'parents' => ['Member Company Profile:General.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'UpdateSettingsCompanyForm',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                                'parents' => ['Member Company Profile:General.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'UpdateProfileDataCompanyForm',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                                'parents' => ['Member Company Profile:General.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Member Company Profile:Departments' => [
+                                'data' => [
+                                    'name' => 'Member Company Profile:Departments',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 3,
+                                ],
+                                'list' => [
+                                    'Member Company Profile:Departments.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Departments.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetDepartmentsCompany',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/departments',
+                                            ]
+                                        ],
+                                    ],
+                                    'Member Company Profile:Departments.Edit' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Departments.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateDepartment',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/departments',
+                                                'parents' => ['Member Company Profile:Departments.Enabled']
+                                            ]
+                                        ],
+                                    ],
+                                    'Member Company Profile:Departments.Add New Department' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Departments.Add New Department',
+                                            'display_name' => 'Add New Department',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateDepartment',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/departments',
+                                                'parents' => ['Member Company Profile:Departments.Enabled', 'Member Company Profile:Departments.Edit']
+                                            ]
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Member Company Profile:Modules' => [
+                                'data' => [
+                                    'name' => 'Member Company Profile:Modules',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 4,
+                                ],
+                                'list' => [
+                                    'Member Company Profile:Modules.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Modules.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetModules',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/modules',
+                                            ]
+                                        ],
+                                    ],
+                                    'Member Company Profile:Modules.Edit' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Modules.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateApplicantCompanyModule',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/modules',
+                                                'parents' => ['Member Company Profile:Modules.Enabled']
+                                            ]
+                                        ],
+                                    ],
+                                    'Member Company Profile:Modules.Add Banking Module' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Modules.Add Banking Module',
+                                            'display_name' => 'Add Banking Module',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'AddApplicantCompanyModule',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/module',
+                                                'parents' => ['Member Company Profile:Modules.Enabled']
+                                            ]
+                                        ],
+                                    ],
+                                    'Member Company Profile:Modules.Edit Module Status' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Modules.Edit Module Status',
+                                            'display_name' => 'Edit Module Status',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateApplicantCompanyModule',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/modules',
+                                                'parents' => ['Member Company Profile:Modules.Enabled', 'Member Company Profile:Modules.Edit']
+                                            ]
+                                        ],
+                                    ],
+                                    'Member Company Profile:Modules.Payment Provider List' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Modules.Payment Provider List',
+                                            'display_name' => 'Payment Provider List',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Member Company Profile:Modules.IBAN Provider List' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Modules.IBAN Provider List',
+                                            'display_name' => 'IBAN Provider List',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Member Company Profile:Projects List' => [
+                                'data' => [
+                                    'name' => 'Member Company Profile:Projects List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 5,
+                                ],
+                                'list' => [
+                                    'Member Company Profile:Projects List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Projects List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetProjects',
+                                                'referer' => 'administration/member-info/full-profile/new/projects/projects-list',
+                                            ]
+                                        ],
+                                    ],
+                                    'Member Company Profile:Projects List.Add New Project' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Projects List.Add New Project',
+                                            'display_name' => 'Add New Project',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateProject',
+                                                'referer' => 'administration/member-info/full-profile/new/projects/projects-list',
+                                                'parents' => ['Member Company Profile:Projects List.Enabled']
+                                            ]
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Projects:General Settings' => [
+                                'data' => [
+                                    'name' => 'Projects:General Settings',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 6,
+                                ],
+                                'list' => [
+                                    'Projects:General Settings.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Projects:General Settings.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetCommonProjectDataById',
+                                                'referer' => 'administration/member-info/full-profile/$id/projects/general-settings'
+                                            ],
+                                            [
+                                                'name' => 'GetSettingsProjectDataById',
+                                                'referer' => 'administration/member-info/full-profile/$id/projects/general-settings'
+                                            ]
+                                        ],
+                                    ],
+                                    'Projects:General Settings.Edit' => [
+                                        'data' => [
+                                            'name' => 'Projects:General Settings.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateProject',
+                                                'referer' => 'administration/member-info/full-profile/$id/projects/general-settings',
+                                                'parents' => ['Projects:General Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Projects:General Settings.Basic Info' => [
+                                        'data' => [
+                                            'name' => 'Projects:General Settings.Basic Info',
+                                            'display_name' => 'Basic Info',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Projects:General Settings.Default Settings for Client Registrations' => [
+                                        'data' => [
+                                            'name' => 'Projects:General Settings.Default Settings for Client Registrations',
+                                            'display_name' => 'Default Settings for Client Registrations',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Projects:API Settings' => [
+                                'data' => [
+                                    'name' => 'Projects:API Settings',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 7,
+                                ],
+                                'list' => [
+                                    'Projects:API Settings.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Projects:API Settings.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetProjectAPISettings',
+                                                'referer' => 'administration/member-info/full-profile/$id/projects/api-settings',
+                                            ],
+                                        ],
+                                    ],
+                                    'Projects:API Settings.Edit' => [
+                                        'data' => [
+                                            'name' => 'Projects:API Settings.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateProjectApiSettings',
+                                                'referer' => 'administration/member-info/full-profile/$id/projects/api-settings',
+                                                'parents' => ['Projects:API Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Projects:API Settings.Payment Provider List' => [
+                                        'data' => [
+                                            'name' => 'Projects:API Settings.Payment Provider List',
+                                            'display_name' => 'Payment Provider List',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Projects:API Settings.IBAN Provider List' => [
+                                        'data' => [
+                                            'name' => 'Projects:API Settings.IBAN Provider List',
+                                            'display_name' => 'IBAN Provider List',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Member Company Profile:Member List' => [
+                                'data' => [
+                                    'name' => 'Member Company Profile:Member List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 8,
+                                ],
+                                'list' => [
+                                    'Member Company Profile:Member List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Member List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetMembersList',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/members-list',
+                                            ],
+                                        ],
+                                    ],
+                                    'Member Company Profile:Member List.Add New Member' => [
+                                        'data' => [
+                                            'name' => 'Member Company Profile:Member List.Add New Member',
+                                            'display_name' => 'Add New Member',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateMember',
+                                                'referer' => 'administration/member-info/new-member/new-member',
+                                                'parents' => ['Member Company Profile:Member List.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Member Profile:General Settings' => [
+                                'data' => [
+                                    'name' => 'Member Profile:General Settings',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 9,
+                                ],
+                                'list' => [
+                                    'Member Profile:General Settings.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Member Profile:General Settings.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Member Profile:General Settings.Edit' => [
+                                        'data' => [
+                                            'name' => 'Member Profile:General Settings.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateMember',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
+                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'UpdateMemberSettings',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
+                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Member Profile:General Settings.Basic Info' => [
+                                        'data' => [
+                                            'name' => 'Member Profile:General Settings.Basic Info',
+                                            'display_name' => 'Basic Info',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetMemberBasicInfo',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
+                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Member Profile:General Settings.Settings' => [
+                                        'data' => [
+                                            'name' => 'Member Profile:General Settings.Settings',
+                                            'display_name' => 'Settings',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetMemberSettings',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
+                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Member Profile:General Settings.Access Limitation' => [
+                                        'data' => [
+                                            'name' => 'Member Profile:General Settings.Access Limitation',
+                                            'display_name' => 'Access Limitation',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetAccessLimitations',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
+                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Member Profile:General Settings.Add New Access' => [
+                                        'data' => [
+                                            'name' => 'Member Profile:General Settings.Add New Access',
+                                            'display_name' => 'Add New Access',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateAccessLimitation',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
+                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Member:Security' => [
+                                'data' => [
+                                    'name' => 'Member:Security',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 10,
+                                ],
+                                'list' => [
+                                    'Member:Security.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Member:Security.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetMemberTfaStatus',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/security/password',
+                                            ],
+                                            [
+                                                'name' => 'GetMemberTransaction',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/security/password',
+                                            ],
+                                        ],
+                                    ],
+                                    'Member:Security.Edit' => [
+                                        'data' => [
+                                            'name' => 'Member:Security.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Member:Security.Password' => [
+                                        'data' => [
+                                            'name' => 'Member:Security.Password',
+                                            'display_name' => 'Password',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'ChangeMemberPassword',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/security/password',
+                                                'parents' => ['Member:Security.Enabled', 'Member:Security.Edit']
+                                            ],
+                                        ],
+                                    ],
+                                    'Member:Security.2FA' => [
+                                        'data' => [
+                                            'name' => 'Member:Security.2FA',
+                                            'display_name' => '2FA',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Member:Security.Secure PIN' => [
+                                        'data' => [
+                                            'name' => 'Member:Security.Secure PIN',
+                                            'display_name' => 'Secure PIN',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Member:Security.Security Settings' => [
+                                        'data' => [
+                                            'name' => 'Member:Security.Security Settings',
+                                            'display_name' => 'Security Settings',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateMemberSecuritySettings',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/security/password',
+                                                'parents' => ['Member:Security.Enabled', 'Member:Security.Edit']
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Logs:Active Session' => [
+                                'data' => [
+                                    'name' => 'Logs:Active Session',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 11,
+                                ],
+                                'list' => [
+                                    'Logs:Active Session.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Logs:Active Session.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Logs:Authentication Logs' => [
+                                'data' => [
+                                    'name' => 'Logs:Authentication Logs',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 12,
+                                ],
+                                'list' => [
+                                    'Logs:Authentication Logs.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Logs:Authentication Logs.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         foreach ($allPermissions as $moduleValue) {
