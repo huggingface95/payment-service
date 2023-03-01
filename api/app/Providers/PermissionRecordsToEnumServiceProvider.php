@@ -21,7 +21,7 @@ class PermissionRecordsToEnumServiceProvider extends ServiceProvider
     protected PermissionsService $permissionsService;
     protected \NumberFormatter $formatNumber;
 
-    protected function __construct()
+    public function __construct()
     {
         $this->formatNumber = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
         $this->permissionsService = new PermissionsService();
