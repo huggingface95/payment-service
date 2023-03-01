@@ -42,7 +42,9 @@ class AccessMiddleware
             return $next($request);
         }
 
-        $user = $request->user();
+        if (!$user = $request->user()){
+            return $next($request);
+        }
 
         if ($user->created_at < Carbon::create(2023,2, 28)) {
             return $next($request);
@@ -58,16 +60,5 @@ class AccessMiddleware
         throw new AuthorizationException(
             "You are not authorized to access {$operationName}"
         );
-
-//        if ($this->permissibleAction($request->getContent()) || !$this->auth->guard($guard)->guest()) {
-//            return $next($request);
-//        }
-    }
-
-    private function permissibleAction($content): bool
-    {
-        return
-            is_string($content) &&
-            preg_match_all('/(createMember\()|(inviteMember\()/', $content);
     }
 }
