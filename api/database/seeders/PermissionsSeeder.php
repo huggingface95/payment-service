@@ -43,7 +43,7 @@ class PermissionsSeeder extends Seeder
                                     'Applicants Individual list.Enabled' => [
                                         'data' => [
                                             'name' => 'Applicants Individual list.Enabled',
-                                            'display_name' => 'Read',
+                                            'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
@@ -1225,6 +1225,285 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'management/applicants/corporate/full-profile/$id/kyc/documents',
                                                 'parents' => ['Corporate Full Profile:Documents.Enabled', 'Corporate Full Profile:Documents.Add New Document'],
                                             ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'Settings Module' => [
+                'data' => [
+                    'name' => 'Settings Module',
+                    'is_active' => true,
+                    'order' => 2,
+                ],
+                'list' => [
+                    'member' => [
+                        '' => [
+                            'Role List' => [
+                                'data' => [
+                                    'name' => 'Role List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 1,
+                                ],
+                                'list' => [
+                                    'Role List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Role List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetRoleList',
+                                                'referer' => 'settings/manager-roles/list',
+                                            ],
+                                        ],
+                                    ],
+                                    'Role List.Add New Role' => [
+                                        'data' => [
+                                            'name' => 'Role List.Add New Role',
+                                            'display_name' => 'Add New Role',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateRole',
+                                                'referer' => 'settings/manager-roles/new',
+                                                'parents' => ['Role List.Enabled'],
+                                            ],
+                                        ],
+                                    ],
+                                    'Role List.Show User list' => [
+                                        'data' => [
+                                            'name' => 'Role List.Show User list',
+                                            'display_name' => 'Show User list',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetUsers',
+                                                'referer' => 'settings/manager-roles/list',
+                                                'parents' => ['Role List.Enabled'],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Roles Settings' => [
+                                'data' => [
+                                    'name' => 'Roles Settings',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 2,
+                                ],
+                                'list' => [
+                                    'Roles Settings.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Roles Settings.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetRole',
+                                                'referer' => 'settings/manager-roles/settings',
+                                            ],
+                                        ],
+                                    ],
+                                    'Roles Settings.Edit' => [
+                                        'data' => [
+                                            'name' => 'Roles Settings.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateRole',
+                                                'referer' => 'settings/manager-roles/settings',
+                                                'parents' => ['Roles Settings.Enabled'],
+                                            ],
+                                        ],
+                                    ],
+                                    'Roles Settings.Delete' => [
+                                        'data' => [
+                                            'name' => 'Roles Settings.Delete',
+                                            'display_name' => 'Delete',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'important',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'DeleteRole',
+                                                'referer' => 'settings/manager-roles/settings',
+                                                'parents' => ['Roles Settings.Enabled'],
+                                            ],
+                                        ],
+                                    ],
+                                    'Roles Settings.Group Type: Individual' => [
+                                        'data' => [
+                                            'name' => 'Roles Settings.Group Type: Individual',
+                                            'display_name' => 'Group Type: Individual',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Roles Settings.Group Type: Corporate' => [
+                                        'data' => [
+                                            'name' => 'Roles Settings.Group Type: Corporate',
+                                            'display_name' => 'Group Type: Corporate',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Roles Settings.Group Type: Member' => [
+                                        'data' => [
+                                            'name' => 'Roles Settings.Group Type: Member',
+                                            'display_name' => 'Group Type: Member',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Groups List' => [
+                                'data' => [
+                                    'name' => 'Groups List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 3,
+                                ],
+                                'list' => [
+                                    'Groups List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Groups List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetGroupsList',
+                                                'referer' => 'settings/manager-groups/list',
+                                            ],
+                                        ],
+                                    ],
+                                    'Groups List.Add New Group' => [
+                                        'data' => [
+                                            'name' => 'Groups List.Add New Group',
+                                            'display_name' => 'Add New Group',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateGroup',
+                                                'referer' => 'settings/manager-groups/new',
+                                                'parents' => ['Groups List.Enabled'],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Groups Settings' => [
+                                'data' => [
+                                    'name' => 'Groups Settings',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 4,
+                                ],
+                                'list' => [
+                                    'Groups Settings.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Groups Settings.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetGroup',
+                                                'referer' => 'settings/manager-groups/settings',
+                                            ],
+                                        ],
+                                    ],
+                                    'Groups Settings.Edit' => [
+                                        'data' => [
+                                            'name' => 'Groups Settings.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateGroup',
+                                                'referer' => 'settings/manager-groups/settings',
+                                                'parents' => ['Groups Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Groups Settings.Delete' => [
+                                        'data' => [
+                                            'name' => 'Groups Settings.Delete',
+                                            'display_name' => 'Delete',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'important',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'DeleteGroupSetting',
+                                                'referer' => 'settings/manager-groups/settings',
+                                                'parents' => ['Groups Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Groups Settings.Group Type: Individual' => [
+                                        'data' => [
+                                            'name' => 'Groups Settings.Group Type: Individual',
+                                            'display_name' => 'Group Type: Individual',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Groups Settings.Group Type: Corporate' => [
+                                        'data' => [
+                                            'name' => 'Groups Settings.Group Type: Corporate',
+                                            'display_name' => 'Group Type: Corporate',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Groups Settings.Group Type: Member' => [
+                                        'data' => [
+                                            'name' => 'Groups Settings.Group Type: Member',
+                                            'display_name' => 'Group Type: Member',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
                                         ],
                                     ],
                                 ],
