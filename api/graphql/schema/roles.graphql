@@ -31,9 +31,8 @@ extend type Query @guard {
     role(id: ID @eq): Role   @field(resolver:"RoleQuery@permissions")
     """
     Получить список ролей
-    groups_sort: сортировка по количеству групп
+    filter: {column: NAME, value: Name}
     orderBy: [{ column: ID, order: DESC }] сортировка по ID или по названию
-    where: {column: name, operator: LIKE, value: "Name"}
     """
     roles(groups_sort: Sort @scope(name:"GroupsSort"),
         filter: _ @filterConditions(static: QueryRolesFilterStatic),

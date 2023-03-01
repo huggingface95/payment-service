@@ -146,7 +146,7 @@ $app->register(Illuminate\Notifications\NotificationServiceProvider::class);
 $app->register(\App\Providers\MailServiceProvider::class);
 $app->register(Jenssegers\Agent\AgentServiceProvider::class);
 $app->register(\App\Providers\PermissionRecordsToEnumServiceProvider::class);
-if (env('APP_EN') !== 'testing') $app->register(\App\Providers\DocumentStateToEnumServiceProvider::class);
+$app->register(\App\Providers\DocumentStateToEnumServiceProvider::class);
 $app->register(\Tinderbox\ClickhouseBuilder\Integrations\Laravel\ClickhouseServiceProvider::class);
 $app->register(App\Providers\RepositoryServiceProvider::class);
 $app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
