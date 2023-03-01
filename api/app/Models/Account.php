@@ -83,7 +83,8 @@ class Account extends BaseModel implements BaseModelInterface
         'is_show',
         'entity_id',
         'min_limit_balance',
-        'max_limit_balance',
+        'total_transactions',
+        'total_pending_transactions',
     ];
 
     protected $casts = [
