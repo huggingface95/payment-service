@@ -95,7 +95,7 @@ class EmailSmtpMutator extends BaseMutator
 
                 return true;
             } else {
-                $transport = new Swift_SmtpTransport($args['host_name'], $args['port'], $args['security']);
+                $transport = new Swift_SmtpTransport($args['host_name'], $args['port'], $args['security'] == 'auto' || empty($args['security']) ? $args['security'] = null : $args['security']);
                 $transport->setUsername($args['username']);
                 $transport->setPassword($args['password']);
                 $mailer = new \Swift_Mailer($transport);
