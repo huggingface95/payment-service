@@ -13,17 +13,16 @@ class CompanyModuleMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
-    public function attach($root, array $args): Company
+    public function create($root, array $args): Company
     {
         try {
             DB::beginTransaction();
             $company = Company::find($args['company_id']);
-            if (! $company) {
+            if (!$company) {
                 throw new GraphqlException('Company does not exist', 'not found', 404);
             }
 
             if (isset($args['module_id'])) {
-                CompanyModule::where('company_id', $args['company_id'])->delete();
                 $this->addModules($company, $args['module_id']);
             }
 
@@ -38,8 +37,9 @@ class CompanyModuleMutator extends BaseMutator
 
     public function detach($root, array $args): Company
     {
+        /** @var Company $company */
         $company = Company::find($args['company_id']);
-        $company->modules()->delete();
+        $company->modules()->where('module_id', '<>', ModuleEnum::KYC->value)->delete();
 
         return $company;
     }
@@ -55,7 +55,7 @@ class CompanyModuleMutator extends BaseMutator
         collect($ids)->flatten(1)->unique(function ($item) {
             return $item['module_id'];
         })->each(function ($module) use ($company) {
-            $company->modules()->create($module);
+            $company->modules()->firstOrCreate($module);
         });
     }
 }

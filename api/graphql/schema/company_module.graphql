@@ -30,9 +30,7 @@ extend type Mutation @guard {
         company_id: ID!
         "Модуль"
         module_id: [ID]
-        "Активность"
-        is_active: Boolean
-    ): Company @field(resolver: "CompanyModuleMutator@attach")
+    ): Company @field(resolver: "CompanyModuleMutator@create")
 
     """
     Активировать/деактивировать модуль
