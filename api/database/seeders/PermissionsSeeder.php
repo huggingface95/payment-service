@@ -3097,22 +3097,22 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Payments:Exchange:List.Edit' => [
+                                    'Payments:Exchange:List.Transfers Stats' => [
                                         'data' => [
-                                            'name' => 'Payments:Exchange:List.Edit',
-                                            'display_name' => 'Edit',
+                                            'name' => 'Payments:Exchange:List.Transfers Stats',
+                                            'display_name' => 'Transfers Stats',
                                             'guard_name' => 'api',
                                             'order' => 2,
-                                            'type' => 'edit',
+                                            'type' => 'info',
                                         ],
                                     ],
-                                    'Payments:Exchange:List.Upload Document' => [
+                                    'Payments:Exchange:List.Exchange List' => [
                                         'data' => [
-                                            'name' => 'Payments:Exchange:List.Upload Document',
-                                            'display_name' => 'Upload Document',
+                                            'name' => 'Payments:Exchange:List.Exchange List',
+                                            'display_name' => 'Exchange List',
                                             'guard_name' => 'api',
                                             'order' => 3,
-                                            'type' => 'export',
+                                            'type' => 'info',
                                         ],
                                     ],
                                     'Payments:Exchange:List.Export' => [
@@ -3124,18 +3124,65 @@ class PermissionsSeeder extends Seeder
                                             'type' => 'export',
                                         ],
                                     ],
-                                    'Payments:Exchange:List.PP Information' => [
+
+                                ],
+                            ],
+                            'Payments:Exchange:Details' => [
+                                'data' => [
+                                    'name' => 'Payments:Exchange:Details',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 6,
+                                ],
+                                'list' => [
+                                    'Payments:Exchange:Details.Enabled' => [
                                         'data' => [
-                                            'name' => 'Payments:Exchange:List.PP Information',
+                                            'name' => 'Payments:Exchange:Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payments:Exchange:Details.Edit' => [
+                                        'data' => [
+                                            'name' => 'Payments:Exchange:Details.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Payments:Exchange:Details.Upload Document' => [
+                                        'data' => [
+                                            'name' => 'Payments:Exchange:Details.Upload Document',
+                                            'display_name' => 'Upload Document',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                    'Payments:Exchange:Details.Export' => [
+                                        'data' => [
+                                            'name' => 'Payments:Exchange:Details.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                    'Payments:Exchange:Details.PP Information' => [
+                                        'data' => [
+                                            'name' => 'Payments:Exchange:Details.PP Information',
                                             'display_name' => 'PP Information',
                                             'guard_name' => 'api',
                                             'order' => 5,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Payments:Exchange:List.History' => [
+                                    'Payments:Exchange:Details.History' => [
                                         'data' => [
-                                            'name' => 'Payments:Exchange:List.History',
+                                            'name' => 'Payments:Exchange:Details.History',
                                             'display_name' => 'History',
                                             'guard_name' => 'api',
                                             'order' => 6,
@@ -3149,7 +3196,7 @@ class PermissionsSeeder extends Seeder
                                     'name' => 'Make Transfer',
                                     'type' => 'member',
                                     'separator' => null,
-                                    'order' => 6,
+                                    'order' => 7,
                                 ],
                                 'list' => [
                                     'Make Transfer.Enabled' => [
@@ -3222,7 +3269,7 @@ class PermissionsSeeder extends Seeder
                                     'name' => 'Sign Payments',
                                     'type' => 'member',
                                     'separator' => null,
-                                    'order' => 7,
+                                    'order' => 8,
                                 ],
                                 'list' => [
                                     'Sign Payments.Enabled' => [
