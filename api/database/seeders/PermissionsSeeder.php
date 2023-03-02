@@ -3294,6 +3294,295 @@ class PermissionsSeeder extends Seeder
                     ],
                 ],
             ],
+            'Banking Module - Commissions' => [
+                'data' => [
+                    'name' => 'Banking Module - Commissions',
+                    'is_active' => true,
+                    'order' => 7,
+                ],
+                'list' => [
+                    'member' => [
+                        '' => [
+                            'Commission Template:List' => [
+                                'data' => [
+                                    'name' => 'Commission Template:List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 1,
+                                ],
+                                'list' => [
+                                    'Commission Template:List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CommissionTemplatesList',
+                                                'referer' => 'banking/payment-provider/full-profile/commission-templates',
+                                            ],
+                                        ],
+                                    ],
+                                    'Commission Template:List.Add New Template' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:List.Add New Template',
+                                            'display_name' => 'Add New Template',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateCommissionTemplate',
+                                                'referer' => 'banking/payment-provider/full-profile/settings/create',
+                                                'parents' => ['Commission Template:List.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Commission Template:Settings' => [
+                                'data' => [
+                                    'name' => 'Commission Template:Settings',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 2,
+                                ],
+                                'list' => [
+                                    'Commission Template:Settings.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Settings.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CommissionTemplatesFilterList',
+                                                'referer' => 'banking/payment-provider/full-profile/settings/create',
+                                            ],
+                                        ],
+                                    ],
+                                    'Commission Template:Settings.Edit' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Settings.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateCommissionTemplate',
+                                                'referer' => 'banking/payment-provider/full-profile/settings/create',
+                                                'parents' => ['Commission Template:Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Commission Template:Settings.Thresholds' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Settings.Thresholds',
+                                            'display_name' => 'Thresholds',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateCommissionTemplateLimit',
+                                                'referer' => 'banking/payment-provider/full-profile/settings/create',
+                                                'parents' => ['Commission Template:Settings.Enabled', 'Commission Template:Settings.Edit']
+                                            ],
+                                        ],
+                                    ],
+                                    'Commission Template:Settings.Delete' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Settings.Delete',
+                                            'display_name' => 'Delete',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'important',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'DeleteCommissionTemplate',
+                                                'referer' => 'banking/payment-provider/full-profile/commission-templates',
+                                                'parents' => ['Commission Template:Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Commission Template:Price Lists' => [
+                                'data' => [
+                                    'name' => 'Commission Template:Price Lists',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 3,
+                                ],
+                                'list' => [
+                                    'Commission Template:Price Lists.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Price Lists.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CommissionPriceLists',
+                                                'referer' => 'banking/payment-provider/full-profile/price-lists',
+                                            ],
+                                        ],
+                                    ],
+                                    'Commission Template:Price Lists.Add New Price List' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Price Lists.Add New Price List',
+                                            'display_name' => 'Add New Price List',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateCommissionPriceList',
+                                                'referer' => 'banking/payment-provider/full-profile/price-lists',
+                                                'parents' => ['Commission Template:Price Lists.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Commission Template:Price Lists:Fees List' => [
+                                'data' => [
+                                    'name' => 'Commission Template:Price Lists:Fees List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 4,
+                                ],
+                                'list' => [
+                                    'Commission Template:Price Lists:Fees List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Price Lists:Fees List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetPriceListFees',
+                                                'referer' => 'banking/payment-provider/full-profile/fees',
+                                            ],
+                                        ],
+                                    ],
+                                    'Commission Template:Price Lists:Fees List.Edit' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Price Lists:Fees List.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdatePriceListFee',
+                                                'referer' => 'banking/payment-provider/full-profile/fees',
+                                                'parents' => ['Commission Template:Price Lists:Fees List.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Commission Template:Price Lists:Fees List.Delete' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Price Lists:Fees List.Delete',
+                                            'display_name' => 'Delete',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'important',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'DeletePriceListFee',
+                                                'referer' => 'banking/payment-provider/full-profile/fees',
+                                                'parents' => ['Commission Template:Price Lists:Fees List.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Commission Template:Price Lists:Add New' => [
+                                'data' => [
+                                    'name' => 'Commission Template:Price Lists:Add New',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 5,
+                                ],
+                                'list' => [
+                                    'Commission Template:Price Lists:Add New.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Price Lists:Add New.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Commission Template:Price Lists:Add New.Service Fee' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Price Lists:Add New.Service Fee',
+                                            'display_name' => 'Service Fee',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Commission Template:Price Lists:Add New.Exchange Fee' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Price Lists:Add New.Exchange Fee',
+                                            'display_name' => 'Exchange Fee',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Commission Template:Price Lists:Add New.BTU Fee' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Price Lists:Add New.BTU Fee',
+                                            'display_name' => 'BTU Fee',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Commission Template:Price Lists:Add New.BTA Fee' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Price Lists:Add New.BTA Fee',
+                                            'display_name' => 'BTA Fee',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Commission Template:Price Lists:Add New.Transfers Fee' => [
+                                        'data' => [
+                                            'name' => 'Commission Template:Price Lists:Add New.Transfers Fee',
+                                            'display_name' => 'Transfers Fee',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         foreach ($allPermissions as $moduleValue) {
