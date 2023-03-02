@@ -2851,6 +2851,449 @@ class PermissionsSeeder extends Seeder
                     ],
                 ],
             ],
+            'Banking Module - Payments' => [
+                'data' => [
+                    'name' => 'Banking Module - Payments',
+                    'is_active' => true,
+                    'order' => 6,
+                ],
+                'list' => [
+                    'member' => [
+                        '' => [
+                            'Payments:IWT:List' => [
+                                'data' => [
+                                    'name' => 'Payments:IWT:List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 1,
+                                ],
+                                'list' => [
+                                    'Payments:IWT:List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payments:IWT:List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payments:IWT:List.Transfers Stats' => [
+                                        'data' => [
+                                            'name' => 'Payments:IWT:List.Transfers Stats',
+                                            'display_name' => 'Transfers Stats',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Payments:IWT:List.IWT List' => [
+                                        'data' => [
+                                            'name' => 'Payments:IWT:List.IWT List',
+                                            'display_name' => 'IWT List',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Payments:IWT:List.Export' => [
+                                        'data' => [
+                                            'name' => 'Payments:IWT:List.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payments:IWT:Details' => [
+                                'data' => [
+                                    'name' => 'Payments:IWT:Details',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 2,
+                                ],
+                                'list' => [
+                                    'Payments:IWT:Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payments:IWT:Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payments:IWT:Details.Edit' => [
+                                        'data' => [
+                                            'name' => 'Payments:IWT:Details.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Payments:IWT:Details.Upload Document' => [
+                                        'data' => [
+                                            'name' => 'Payments:IWT:Details.Upload Document',
+                                            'display_name' => 'Upload Document',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                    'Payments:IWT:Details.Export' => [
+                                        'data' => [
+                                            'name' => 'Payments:IWT:Details.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                    'Payments:IWT:Details.PP Information' => [
+                                        'data' => [
+                                            'name' => 'Payments:IWT:Details.PP Information',
+                                            'display_name' => 'PP Information',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Payments:IWT:Details.History' => [
+                                        'data' => [
+                                            'name' => 'Payments:IWT:Details.History',
+                                            'display_name' => 'History',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payments:OWT:List' => [
+                                'data' => [
+                                    'name' => 'Payments:OWT:List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 3,
+                                ],
+                                'list' => [
+                                    'Payments:OWT:List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payments:OWT:List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payments:OWT:List.Transfers Stats' => [
+                                        'data' => [
+                                            'name' => 'Payments:OWT:List.Transfers Stats',
+                                            'display_name' => 'Transfers Stats',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Payments:OWT:List.OWT List' => [
+                                        'data' => [
+                                            'name' => 'Payments:OWT:List.OWT List',
+                                            'display_name' => 'OWT List',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Payments:OWT:List.Export' => [
+                                        'data' => [
+                                            'name' => 'Payments:OWT:List.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payments:OWT:Details' => [
+                                'data' => [
+                                    'name' => 'Payments:OWT:Details',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 4,
+                                ],
+                                'list' => [
+                                    'Payments:OWT:Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payments:OWT:Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payments:OWT:Details.Edit' => [
+                                        'data' => [
+                                            'name' => 'Payments:OWT:Details.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Payments:OWT:Details.Upload Document' => [
+                                        'data' => [
+                                            'name' => 'Payments:OWT:Details.Upload Document',
+                                            'display_name' => 'Upload Document',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                    'Payments:OWT:Details.Export' => [
+                                        'data' => [
+                                            'name' => 'Payments:OWT:Details.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                    'Payments:OWT:Details.PP Information' => [
+                                        'data' => [
+                                            'name' => 'Payments:OWT:Details.PP Information',
+                                            'display_name' => 'PP Information',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Payments:OWT:Details.History' => [
+                                        'data' => [
+                                            'name' => 'Payments:OWT:Details.History',
+                                            'display_name' => 'History',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payments:Exchange:List' => [
+                                'data' => [
+                                    'name' => 'Payments:Exchange:List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 5,
+                                ],
+                                'list' => [
+                                    'Payments:Exchange:List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payments:Exchange:List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payments:Exchange:List.Edit' => [
+                                        'data' => [
+                                            'name' => 'Payments:Exchange:List.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Payments:Exchange:List.Upload Document' => [
+                                        'data' => [
+                                            'name' => 'Payments:Exchange:List.Upload Document',
+                                            'display_name' => 'Upload Document',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                    'Payments:Exchange:List.Export' => [
+                                        'data' => [
+                                            'name' => 'Payments:Exchange:List.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                    'Payments:Exchange:List.PP Information' => [
+                                        'data' => [
+                                            'name' => 'Payments:Exchange:List.PP Information',
+                                            'display_name' => 'PP Information',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Payments:Exchange:List.History' => [
+                                        'data' => [
+                                            'name' => 'Payments:Exchange:List.History',
+                                            'display_name' => 'History',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Make Transfer' => [
+                                'data' => [
+                                    'name' => 'Make Transfer',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 6,
+                                ],
+                                'list' => [
+                                    'Make Transfer.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Make Transfer.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Make Transfer.IWT' => [
+                                        'data' => [
+                                            'name' => 'Make Transfer.IWT',
+                                            'display_name' => 'IWT',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Make Transfer.OWT' => [
+                                        'data' => [
+                                            'name' => 'Make Transfer.OWT',
+                                            'display_name' => 'OWT',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Make Transfer.TBA' => [
+                                        'data' => [
+                                            'name' => 'Make Transfer.TBA',
+                                            'display_name' => 'TBA',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Make Transfer.TBU' => [
+                                        'data' => [
+                                            'name' => 'Make Transfer.TBU',
+                                            'display_name' => 'TBU',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Make Transfer.Exchange' => [
+                                        'data' => [
+                                            'name' => 'Make Transfer.Exchange',
+                                            'display_name' => 'Exchange',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Make Transfer.Fee' => [
+                                        'data' => [
+                                            'name' => 'Make Transfer.Fee',
+                                            'display_name' => 'Fee',
+                                            'guard_name' => 'api',
+                                            'order' => 7,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Sign Payments' => [
+                                'data' => [
+                                    'name' => 'Sign Payments',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 7,
+                                ],
+                                'list' => [
+                                    'Sign Payments.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Sign Payments.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Sign Payments.IWT' => [
+                                        'data' => [
+                                            'name' => 'Sign Payments.IWT',
+                                            'display_name' => 'IWT',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Sign Payments.OWT' => [
+                                        'data' => [
+                                            'name' => 'Sign Payments.OWT',
+                                            'display_name' => 'OWT',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Sign Payments.TBA' => [
+                                        'data' => [
+                                            'name' => 'Sign Payments.TBA',
+                                            'display_name' => 'TBA',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Sign Payments.TBU' => [
+                                        'data' => [
+                                            'name' => 'Sign Payments.TBU',
+                                            'display_name' => 'TBU',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Sign Payments.Exchange' => [
+                                        'data' => [
+                                            'name' => 'Sign Payments.Exchange',
+                                            'display_name' => 'Exchange',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Sign Payments.Fee' => [
+                                        'data' => [
+                                            'name' => 'Sign Payments.Fee',
+                                            'display_name' => 'Fee',
+                                            'guard_name' => 'api',
+                                            'order' => 7,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         foreach ($allPermissions as $moduleValue) {
