@@ -36,8 +36,11 @@ class AccountTableSeeder extends Seeder
                     'payment_bank_id' => 1,
                     'is_primary' => true,
                     'current_balance' => 10000,
+                    'reserved_balance' => 5000,
                     'available_balance' => 10000,
                     'account_type' => 'Business',
+                    'total_transactions' => 10,
+                    'total_pending_transactions' => 5,
                     'created_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                     'updated_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                 ]

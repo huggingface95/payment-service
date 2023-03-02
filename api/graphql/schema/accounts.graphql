@@ -142,9 +142,9 @@ input QueryAccountListFilterStatic @spread{
     hasCommissionTemplateMixedIdOrFullname: Mixed @eq
     account_state_id: ID @eq
     hasClientableMixedIdOrFullname: Mixed @eq
-    current_balance: Decimal @eq
-    available_blanance: Decimal @eq
-    reserved_balance: Decimal @eq
+    current_balance: Float @eq
+    available_balance: Float @eq
+    reserved_balance: Float @eq
 }
 
 
