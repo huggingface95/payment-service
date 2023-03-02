@@ -54,6 +54,10 @@ type Account {
     updated_at: DateTimeUtc
     activated_at: DateTimeUtc
     last_charge_at: DateTimeUtc
+    "Total transactions"
+    total_transactions: Int
+    "Total pending transactions"
+    total_pending_transactions: Int
 }
 
 type AccountClient {
@@ -138,6 +142,9 @@ input QueryAccountListFilterStatic @spread{
     hasCommissionTemplateMixedIdOrFullname: Mixed @eq
     account_state_id: ID @eq
     hasClientableMixedIdOrFullname: Mixed @eq
+    current_balance: Float @eq
+    available_balance: Float @eq
+    reserved_balance: Float @eq
 }
 
 

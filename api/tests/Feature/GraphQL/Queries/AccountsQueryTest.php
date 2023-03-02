@@ -43,7 +43,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'data' => [
@@ -68,17 +68,19 @@ class AccountsQueryTest extends TestCase
                     accountList(orderBy: { column: ID, order: ASC }) {
                         data {
                             id
+                            total_transactions
+                            total_pending_transactions
                         }
                         }
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
-            [
-                'id' => (string) $account[0]->id,
-            ],
+            'id' => (string) $account[0]->id,
+            'total_transactions' => $account[0]->total_transactions,
+            'total_pending_transactions' => $account[0]->total_pending_transactions,
         ]);
     }
 
@@ -107,7 +109,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -146,7 +148,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -181,7 +183,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -220,7 +222,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -258,7 +260,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -296,7 +298,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -334,7 +336,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -372,7 +374,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -410,7 +412,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -448,7 +450,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -487,7 +489,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -523,13 +525,121 @@ class AccountsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' .  $this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts[0]->id,
             'account_number' => (string) $accounts[0]->account_number,
             'account_type' => (string) $accounts[0]->account_type,
             'account_name' => (string) $accounts[0]->account_name,
+        ]);
+    }
+
+    public function testQueryAccountsFilterByCurrentBalance(): void
+    {
+        $accounts = DB::connection('pgsql_test')
+            ->table('accounts')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                {
+                    accountList(
+                        filter: {
+                            column: CURRENT_BALANCE
+                            value: 10000
+                        }
+                    ) {
+                        data {
+                            id
+                            account_number
+                            account_type
+                            account_name
+                        }
+                    }
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer ' .  $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $accounts->id,
+            'account_number' => (string) $accounts->account_number,
+            'account_type' => (string) $accounts->account_type,
+            'account_name' => (string) $accounts->account_name,
+        ]);
+    }
+
+    public function testQueryAccountsFilterByReservedBalance(): void
+    {
+        $accounts = DB::connection('pgsql_test')
+            ->table('accounts')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                {
+                    accountList(
+                        filter: {
+                            column: RESERVED_BALANCE
+                            value: 5000
+                        }
+                    ) {
+                        data {
+                            id
+                            account_number
+                            account_type
+                            account_name
+                        }
+                    }
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer ' .  $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $accounts->id,
+            'account_number' => (string) $accounts->account_number,
+            'account_type' => (string) $accounts->account_type,
+            'account_name' => (string) $accounts->account_name,
+        ]);
+    }
+
+    public function testQueryAccountsFilterByAvailableBalance(): void
+    {
+        $accounts = DB::connection('pgsql_test')
+            ->table('accounts')
+            ->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                {
+                    accountList(
+                        filter: {
+                            column: AVAILABLE_BALANCE
+                            value: 10000
+                        }
+                    ) {
+                        data {
+                            id
+                            account_number
+                            account_type
+                            account_name
+                        }
+                    }
+                }',
+            ],
+            [
+                'Authorization' => 'Bearer ' .  $this->login(),
+            ]
+        )->seeJsonContains([
+            'id' => (string) $accounts->id,
+            'account_number' => (string) $accounts->account_number,
+            'account_type' => (string) $accounts->account_type,
+            'account_name' => (string) $accounts->account_name,
         ]);
     }
 }
