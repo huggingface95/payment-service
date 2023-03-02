@@ -2236,6 +2236,303 @@ class PermissionsSeeder extends Seeder
                     ],
                 ],
             ],
+            'Email Templates' => [
+                'data' => [
+                    'name' => 'Email Templates',
+                    'is_active' => true,
+                    'order' => 4,
+                ],
+                'list' => [
+                    'member' => [
+                        '' => [
+                            'Email Templates:SMTP Details' => [
+                                'data' => [
+                                    'name' => 'Email Templates:SMTP Details',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 1,
+                                ],
+                                'list' => [
+                                    'Email Templates:SMTP Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:SMTP Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Email Templates:SMTP Details.Edit' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:SMTP Details.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Email Templates:SMTP Details.SMTP' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:SMTP Details.SMTP',
+                                            'display_name' => 'SMTP',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'EmailTemplateSmtpList',
+                                                'referer' => 'administration/email/smtp-templates',
+                                            ],
+                                        ],
+                                    ],
+                                    'Email Templates:SMTP Details.Add New SMTP' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:SMTP Details.Add New SMTP',
+                                            'display_name' => 'Add New SMTP',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateSmtpDetails',
+                                                'referer' => 'administration/email/smtp-templates',
+                                                'parents' => ['Email Templates:SMTP Details.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Email Templates:SMTP Details.Delete SMTP Template' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:SMTP Details.Delete SMTP Template',
+                                            'display_name' => 'Delete SMTP Template',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'important',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'DeleteSmtpDetails',
+                                                'referer' => 'administration/email/smtp-templates',
+                                                'parents' => ['Email Templates:SMTP Details.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Email Templates:Settings' => [
+                                'data' => [
+                                    'name' => 'Email Templates:Settings',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 2,
+                                ],
+                                'list' => [
+                                    'Email Templates:Settings.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Settings.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'EmailTemplateItem',
+                                                'referer' => 'administration/email/email-template-settings',
+                                            ],
+                                        ],
+                                    ],
+                                    'Email Templates:Settings.Edit' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Settings.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateEmailTemplate',
+                                                'referer' => 'administration/email/email-template-settings',
+                                                'parents' => ['Email Templates:Settings.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Email Templates:Settings.Type Notification: Client' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Settings.Type Notification: Client',
+                                            'display_name' => 'Type Notification: Client',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Settings.Type Notification: Administration' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Settings.Type Notification: Administration',
+                                            'display_name' => 'Type Notification: Administration',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Email Templates:Tags' => [
+                                'data' => [
+                                    'name' => 'Email Templates:Tags',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 3,
+                                ],
+                                'list' => [
+                                    'Email Templates:Tags.Banking: System' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tags.Banking: System',
+                                            'display_name' => 'Banking: System',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tags.Banking: Common' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tags.Banking: Common',
+                                            'display_name' => 'Banking: Common',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tags.Banking: Admin Notify' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tags.Banking: Admin Notify',
+                                            'display_name' => 'Banking: Admin Notify',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tags.KYC: System' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tags.KYC: System',
+                                            'display_name' => 'KYC: System',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tags.KYC: Common' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tags.KYC: Common',
+                                            'display_name' => 'KYC: Common',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Tags.KYC: Admin Notify' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Tags.KYC: Admin Notify',
+                                            'display_name' => 'KYC: Admin Notify',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Email Templates:Notifications' => [
+                                'data' => [
+                                    'name' => 'Email Templates:Notifications',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 4,
+                                ],
+                                'list' => [
+                                    'Email Templates:Notifications.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Notifications.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'EmailNotificationItem',
+                                                'referer' => 'administration/email/email-notifications',
+                                            ],
+                                        ],
+                                    ],
+                                    'Email Templates:Notifications.Edit' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Notifications.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateEmailNotification',
+                                                'referer' => 'administration/email/email-notifications',
+                                                'parents' => ['Email Templates:Notifications.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Email Templates:Notifications.Recipient Type: Group' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Notifications.Recipient Type: Group',
+                                            'display_name' => 'Recipient Type: Group',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Notifications.Recipient Type: Person' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Notifications.Recipient Type: Person',
+                                            'display_name' => 'Recipient Type: Person',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Notifications.Group Type: Individual' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Notifications.Group Type: Individual',
+                                            'display_name' => 'Group Type: Individual',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Notifications.Group Type: Corporate' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Notifications.Group Type: Corporate',
+                                            'display_name' => 'Group Type: Corporate',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Email Templates:Notifications.Group Type: Member' => [
+                                        'data' => [
+                                            'name' => 'Email Templates:Notifications.Group Type: Member',
+                                            'display_name' => 'Group Type: Member',
+                                            'guard_name' => 'api',
+                                            'order' => 7,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         foreach ($allPermissions as $moduleValue) {
