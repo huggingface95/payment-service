@@ -86,13 +86,23 @@ class EmailSmtpMutator extends BaseMutator
     public function checkSmtp(array $args)
     {
         try {
-            $transport = new Swift_SmtpTransport($args['host_name'], $args['port'], $args['security']);
-            $transport->setUsername($args['username']);
-            $transport->setPassword($args['password']);
-            $mailer = new \Swift_Mailer($transport);
-            $mailer->getTransport()->start();
+            if (env('APP_ENV') == 'testing' || env('APP_ENV') == 'local') {
+                $transport = new Swift_SmtpTransport('mailhog', env('MAIL_SMTP_PORT', '1025'), '');
+                $transport->setUsername('');
+                $transport->setPassword('');
+                $mailer = new \Swift_Mailer($transport);
+                $mailer->getTransport()->start();
 
-            return true;
+                return true;
+            } else {
+                $transport = new Swift_SmtpTransport($args['host_name'], $args['port'], $args['security']);
+                $transport->setUsername($args['username']);
+                $transport->setPassword($args['password']);
+                $mailer = new \Swift_Mailer($transport);
+                $mailer->getTransport()->start();
+
+                return true;
+            }
         } catch (Exception $e) {
             Log::error($e->getMessage());
             throw new GraphqlException('SMTP doesnt work correctly. Please check configuration', 'internal', 403);
