@@ -2533,6 +2533,324 @@ class PermissionsSeeder extends Seeder
                     ],
                 ],
             ],
+            'Banking Module - Accounts' => [
+                'data' => [
+                    'name' => 'Banking Module - Accounts',
+                    'is_active' => true,
+                    'order' => 5,
+                ],
+                'list' => [
+                    'member' => [
+                        '' => [
+                            'Dashboard' => [
+                                'data' => [
+                                    'name' => 'Dashboard',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 1,
+                                ],
+                                'list' => [
+                                    'Dashboard.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Dashboard.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Dashboard.Users Requests' => [
+                                        'data' => [
+                                            'name' => 'Dashboard.Users Requests',
+                                            'display_name' => 'Users Requests',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Dashboard.Transfer Requests' => [
+                                        'data' => [
+                                            'name' => 'Dashboard.Transfer Requests',
+                                            'display_name' => 'Transfer Requests',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Dashboard.Accounts Requests' => [
+                                        'data' => [
+                                            'name' => 'Dashboard.Accounts Requests',
+                                            'display_name' => 'Accounts Requests',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Dashboard.Tickets' => [
+                                        'data' => [
+                                            'name' => 'Dashboard.Tickets',
+                                            'display_name' => 'Tickets',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Account List' => [
+                                'data' => [
+                                    'name' => 'Account List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 2,
+                                ],
+                                'list' => [
+                                    'Account List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Account List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'AccountsList',
+                                                'referer' => 'banking/accounts/list',
+                                            ],
+                                        ],
+                                    ],
+                                    'Account List.Open Account' => [
+                                        'data' => [
+                                            'name' => 'Account List.Open Account',
+                                            'display_name' => 'Open Account',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'add',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateAccount',
+                                                'referer' => 'banking/accounts/list',
+                                                'parents' => ['Account List.Enabled'],
+                                            ],
+                                        ],
+                                    ],
+                                    'Account List.Export' => [
+                                        'data' => [
+                                            'name' => 'Account List.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Account Details' => [
+                                'data' => [
+                                    'name' => 'Account Details',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 3,
+                                ],
+                                'list' => [
+                                    'Account Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetAccountBalance',
+                                                'referer' => 'banking/accounts/details/$id',
+                                            ],
+                                            [
+                                                'name' => 'GetAccountCommissionLimits',
+                                                'referer' => 'banking/accounts/details/$id',
+                                            ],
+                                        ],
+                                    ],
+                                    'Account Details.Edit' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateAccount',
+                                                'referer' => 'banking/accounts/details/$id',
+                                                'parents' => ['Account Details.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Account Details.Account Details' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Account Details',
+                                            'display_name' => 'Account Details',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetAccount',
+                                                'referer' => 'banking/accounts/details/$id',
+                                                'parents' => ['Account Details.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Account Details.Generate IBAN' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Generate IBAN',
+                                            'display_name' => 'Generate IBAN',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Show Balance' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Show Balance',
+                                            'display_name' => 'Show Balance',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Make Transfer' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Make Transfer',
+                                            'display_name' => 'Make Transfer',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Requisites' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Requisites',
+                                            'display_name' => 'Requisites',
+                                            'guard_name' => 'api',
+                                            'order' => 7,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Statements' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Statements',
+                                            'display_name' => 'Statements',
+                                            'guard_name' => 'api',
+                                            'order' => 8,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Export Statement' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Export Statement',
+                                            'display_name' => 'Export Statement',
+                                            'guard_name' => 'api',
+                                            'order' => 9,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Requisites' => [
+                                'data' => [
+                                    'name' => 'Requisites',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 4,
+                                ],
+                                'list' => [
+                                    'Requisites.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Requisites.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'RequisiteItem',
+                                                'referer' => 'banking/accounts/requisites',
+                                            ],
+                                        ],
+                                    ],
+                                    'Requisites.Export' => [
+                                        'data' => [
+                                            'name' => 'Requisites.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'export',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'DownloadRequisiteDetails',
+                                                'referer' => 'banking/accounts/requisites',
+                                                'parents' => ['Requisites.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                    'Requisites.Send Requisites' => [
+                                        'data' => [
+                                            'name' => 'Requisites.Send Requisites',
+                                            'display_name' => 'Send Requisites',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'SendRequisiteDetails',
+                                                'referer' => 'banking/accounts/requisites',
+                                                'parents' => ['Requisites.Enabled']
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Statement' => [
+                                'data' => [
+                                    'name' => 'Statement',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 5,
+                                ],
+                                'list' => [
+                                    'Statement.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Statement.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Statement.Export' => [
+                                        'data' => [
+                                            'name' => 'Statement.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         foreach ($allPermissions as $moduleValue) {
