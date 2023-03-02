@@ -11,18 +11,17 @@ class ApplicantIndividualModulesMutator extends BaseMutator
      * Return a value for the field.
      *
      * @param  @param  null  $root Always null, since this field has no parent.
-     * @param  array<string, mixed>  $args The field arguments passed by the client.
+     * @param array<string, mixed> $args The field arguments passed by the client.
      * @return mixed
      */
-    public function attach($root, array $args)
+    public function create($root, array $args)
     {
-        $applicant = ApplicantIndividual::where('id', '=', $args['applicant_individual_id'])->first();
+        /** @var ApplicantIndividual $applicant */
+        $applicant = ApplicantIndividual::query()->where('id', '=', $args['applicant_individual_id'])->firstOrFail();
 
         if (isset($args['module_id'])) {
-            $applicant->modules()->detach();
-            foreach ($args['module_id'] as $module) {
-                ApplicantIndividualModules::insert(['module_id'=> $module, 'applicant_individual_id' => $args['applicant_individual_id']]);
-            }
+            $ids = collect($args['module_id'])->diff($applicant->modules()->pluck('id'));
+            $applicant->modules()->attach($ids);
         }
 
         return $applicant;
@@ -46,7 +45,7 @@ class ApplicantIndividualModulesMutator extends BaseMutator
                 ApplicantIndividualModules::where([
                     'applicant_individual_id' => $args['applicant_individual_id'],
                     'module_id' => $module,
-                ])->update(['is_active'=>$args['is_active']]);
+                ])->update(['is_active' => $args['is_active']]);
             }
         }
 
