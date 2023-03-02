@@ -3583,6 +3583,242 @@ class PermissionsSeeder extends Seeder
                     ],
                 ],
             ],
+            'Banking Module - Core' => [
+                'data' => [
+                    'name' => 'Banking Module - Core',
+                    'is_active' => true,
+                    'order' => 8,
+                ],
+                'list' => [
+                    'member' => [
+                        '' => [
+                            'IBAN Provider:List' => [
+                                'data' => [
+                                    'name' => 'IBAN Provider:List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 1,
+                                ],
+                                'list' => [
+                                    'IBAN Provider:List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'IBAN Provider:List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'IBAN Provider:Full Profile' => [
+                                'data' => [
+                                    'name' => 'IBAN Provider:Full Profile',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 2,
+                                ],
+                                'list' => [
+                                    'IBAN Provider:Full Profile.Enabled' => [
+                                        'data' => [
+                                            'name' => 'IBAN Provider:Full Profile.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'IBAN Provider:Full Profile.Edit' => [
+                                        'data' => [
+                                            'name' => 'IBAN Provider:Full Profile.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'IBAN Provider:Full Profile.Member Companies List' => [
+                                        'data' => [
+                                            'name' => 'IBAN Provider:Full Profile.Member Companies List',
+                                            'display_name' => 'Member Companies List',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Global Settings:Transaction Region' => [
+                                'data' => [
+                                    'name' => 'Global Settings:Transaction Region',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 3,
+                                ],
+                                'list' => [
+                                    'Global Settings:Transaction Region.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Global Settings:Transaction Region.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Global Settings:Transaction Region.Edit' => [
+                                        'data' => [
+                                            'name' => 'Global Settings:Transaction Region.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Global Settings:Transaction Region.Add New Region' => [
+                                        'data' => [
+                                            'name' => 'Global Settings:Transaction Region.Add New Region',
+                                            'display_name' => 'Add New Region',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'add',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payment Provider:List' => [
+                                'data' => [
+                                    'name' => 'Payment Provider:List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 4,
+                                ],
+                                'list' => [
+                                    'Payment Provider:List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payment Provider:List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payment Provider:Settings' => [
+                                'data' => [
+                                    'name' => 'Payment Provider:Settings',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 5,
+                                ],
+                                'list' => [
+                                    'Payment Provider:Settings.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payment Provider:Settings.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payment Provider:Settings.Edit' => [
+                                        'data' => [
+                                            'name' => 'Payment Provider:Settings.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Payment Provider:Settings.Payment System Details' => [
+                                        'data' => [
+                                            'name' => 'Payment Provider:Settings.Payment System Details',
+                                            'display_name' => 'Payment System Details',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payment System:List' => [
+                                'data' => [
+                                    'name' => 'Payment System:List',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 6,
+                                ],
+                                'list' => [
+                                    'Payment System:List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payment System:List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payment System:Full Profile' => [
+                                'data' => [
+                                    'name' => 'Payment System:Full Profile',
+                                    'type' => 'member',
+                                    'separator' => null,
+                                    'order' => 7,
+                                ],
+                                'list' => [
+                                    'Payment System:Full Profile.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payment System:Full Profile.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payment System:Full Profile.Edit' => [
+                                        'data' => [
+                                            'name' => 'Payment System:Full Profile.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payment System:Full Profile.Delete' => [
+                                        'data' => [
+                                            'name' => 'Payment System:Full Profile.Delete',
+                                            'display_name' => 'Delete',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'important',
+                                        ],
+                                    ],
+                                    'Payment System:Full Profile.Banks Correspondent' => [
+                                        'data' => [
+                                            'name' => 'Payment System:Full Profile.Banks Correspondent',
+                                            'display_name' => 'Banks Correspondent',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Payment System:Full Profile.Add New Corr Bank' => [
+                                        'data' => [
+                                            'name' => 'Payment System:Full Profile.Add New Corr Bank',
+                                            'display_name' => 'Add New Corr Bank',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'add',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
 
         foreach ($allPermissions as $moduleValue) {
