@@ -3562,62 +3562,76 @@ class PermissionsSeeder extends Seeder
                                     ],
                                 ],
                             ],
-                            'Commission Template:Price Lists:Add New' => [
+                            'Commission Template:Price Lists:Add New Fee' => [
                                 'data' => [
-                                    'name' => 'Commission Template:Price Lists:Add New',
+                                    'name' => 'Commission Template:Price Lists:Add New Fee',
                                     'type' => 'member',
                                     'separator' => null,
                                     'order' => 5,
                                 ],
                                 'list' => [
-                                    'Commission Template:Price Lists:Add New.Enabled' => [
+                                    'Commission Template:Price Lists:Add New Fee.Enabled' => [
                                         'data' => [
-                                            'name' => 'Commission Template:Price Lists:Add New.Enabled',
+                                            'name' => 'Commission Template:Price Lists:Add New Fee.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'FeesPaymentSystems',
+                                                'referer' => 'banking/payment-provider/full-profile/fees',
+                                            ],
+                                            [
+                                                'name' => 'GetFeeTypes',
+                                                'referer' => 'banking/payment-provider/full-profile/fees',
+                                            ],
+                                            [
+                                                'name' => 'GetFeeOperationTypes',
+                                                'referer' => 'banking/payment-provider/full-profile/fees',
+                                            ],
+                                        ],
                                     ],
-                                    'Commission Template:Price Lists:Add New.Service Fee' => [
+                                    'Commission Template:Price Lists:Add New Fee.Service Fee' => [
                                         'data' => [
-                                            'name' => 'Commission Template:Price Lists:Add New.Service Fee',
+                                            'name' => 'Commission Template:Price Lists:Add New Fee.Service Fee',
                                             'display_name' => 'Service Fee',
                                             'guard_name' => 'api',
                                             'order' => 2,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Commission Template:Price Lists:Add New.Exchange Fee' => [
+                                    'Commission Template:Price Lists:Add New Fee.Exchange Fee' => [
                                         'data' => [
-                                            'name' => 'Commission Template:Price Lists:Add New.Exchange Fee',
+                                            'name' => 'Commission Template:Price Lists:Add New Fee.Exchange Fee',
                                             'display_name' => 'Exchange Fee',
                                             'guard_name' => 'api',
                                             'order' => 3,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Commission Template:Price Lists:Add New.BTU Fee' => [
+                                    'Commission Template:Price Lists:Add New Fee.BTU Fee' => [
                                         'data' => [
-                                            'name' => 'Commission Template:Price Lists:Add New.BTU Fee',
+                                            'name' => 'Commission Template:Price Lists:Add New Fee.BTU Fee',
                                             'display_name' => 'BTU Fee',
                                             'guard_name' => 'api',
                                             'order' => 4,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Commission Template:Price Lists:Add New.BTA Fee' => [
+                                    'Commission Template:Price Lists:Add New Fee.BTA Fee' => [
                                         'data' => [
-                                            'name' => 'Commission Template:Price Lists:Add New.BTA Fee',
+                                            'name' => 'Commission Template:Price Lists:Add New Fee.BTA Fee',
                                             'display_name' => 'BTA Fee',
                                             'guard_name' => 'api',
                                             'order' => 5,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Commission Template:Price Lists:Add New.Transfers Fee' => [
+                                    'Commission Template:Price Lists:Add New Fee.Transfers Fee' => [
                                         'data' => [
-                                            'name' => 'Commission Template:Price Lists:Add New.Transfers Fee',
+                                            'name' => 'Commission Template:Price Lists:Add New Fee.Transfers Fee',
                                             'display_name' => 'Transfers Fee',
                                             'guard_name' => 'api',
                                             'order' => 6,
