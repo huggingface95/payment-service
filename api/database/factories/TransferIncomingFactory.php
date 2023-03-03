@@ -35,7 +35,7 @@ class TransferIncomingFactory extends Factory
             'payment_system_id' => 1,
             'payment_bank_id' => 1,
             'payment_number' => $this->faker->randomNumber(),
-            'account_id' => 50,
+            'account_id' => 1,
             'recipient_id' => 1,
             'recipient_type' => $this->faker->randomElement([class_basename(ApplicantIndividual::class), class_basename(ApplicantCompany::class)]),
             'company_id' => 1,

@@ -92,5 +92,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MemberAccessLimitationsGroupRolesTableSeeder::class);
         $this->call(CompanyModulesTableSeeder::class);
         $this->call(PaymentProviderIbanTableSeeder::class);
+        $this->call(TransferIncomingTableSeeder::class);
+        $this->call(TransferOutgoingTableSeeder::class);
     }
 }
