@@ -95,6 +95,11 @@ class EmailSmtpMutator extends BaseMutator
 
                 return true;
             } else {
+                if (isset($args['security'])) {
+                    $args['security'] == 'auto' || empty($args['security']) ? $args['security'] = null : $args['security'];
+                } else {
+                    $args['security'] = null;
+                }
                 $transport = new Swift_SmtpTransport($args['host_name'], $args['port'], $args['security']);
                 $transport->setUsername($args['username']);
                 $transport->setPassword($args['password']);

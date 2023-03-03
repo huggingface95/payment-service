@@ -30,7 +30,7 @@ extend type Mutation @guard {
         applicant_individual_id: ID!
         "Модуль"
         module_id: [ID]
-    ): ApplicantIndividual    @field(resolver:"ApplicantIndividualModulesMutator@attach")
+    ): ApplicantIndividual    @field(resolver:"ApplicantIndividualModulesMutator@create")
 
     "Активировать или деактивировать модуль аппликанту"
     updateApplicantIndividualModule(
