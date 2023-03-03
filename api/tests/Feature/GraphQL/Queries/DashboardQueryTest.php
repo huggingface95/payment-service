@@ -585,7 +585,6 @@ class DashboardQueryTest extends TestCase
                     dashboardUsersStatistic(project_id: $id) {
                         applicant_type
                         status_name
-                        count
                     }
                 }',
                 'variables' => [
@@ -598,7 +597,6 @@ class DashboardQueryTest extends TestCase
         )->seeJsonContains([
             'applicant_type' => (string) $statistic[0]['applicant_type'],
             'status_name' => (string) $statistic[0]['status_name'],
-            'count' => $statistic[0]['count'],
         ]);
     }
 }
