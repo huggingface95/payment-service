@@ -1,0 +1,146 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\ApplicantIndividual;
+use App\Models\Members;
+use App\Repositories\Interfaces\GraphqlManipulateSchemaRepositoryInterface;
+use GraphQL\Type\Definition\EnumType;
+use GraphQL\Type\Definition\ListOfType;
+use GraphQL\Type\Definition\ObjectType;
+use Illuminate\Support\Facades\Auth;
+use Nuwave\Lighthouse\Exceptions\DefinitionException;
+use Nuwave\Lighthouse\Schema\TypeRegistry;
+
+class GraphqlManipulateSchemaService
+{
+    protected ?string $type;
+    protected Members|ApplicantIndividual|null $user;
+    protected bool $testMode;
+    protected array $permissionsList;
+
+    public function __construct(protected GraphqlManipulateSchemaRepositoryInterface $repository)
+    {
+        $this->testMode = env('APP_ENV') == 'testing';
+        $this->type = Auth::guard()->type();
+        $this->user = Auth::guard()->user();
+
+    }
+
+    /**
+     * @throws DefinitionException
+     */
+    public function registerTestDocumentStateEnums(TypeRegistry $typeRegistry): TypeRegistry
+    {
+        return $typeRegistry->register(
+            new EnumType([
+                'name' => 'DocumentStateEnum',
+                'description' => 'DocumentStateEnum',
+                'values' => ['EMPTY' => ['value' => 'EMPTY', 'description' => 'EMPTY']],
+            ])
+        );
+    }
+
+    /**
+     * @throws DefinitionException
+     */
+    public function registerDocumentStateEnums(TypeRegistry $typeRegistry): TypeRegistry
+    {
+        if ($this->testMode) {
+            return $this->registerTestDocumentStateEnums($typeRegistry);
+        } else {
+            $enums = $this->repository->getDocumentStates();
+
+            return $typeRegistry->register(
+                new EnumType([
+                    'name' => 'DocumentStateEnum',
+                    'description' => 'DocumentStateEnum',
+                    'values' => $enums,
+                ])
+            );
+        }
+    }
+
+    /**
+     * @throws DefinitionException
+     */
+    public function registerTestPermissionEnums(TypeRegistry $typeRegistry): TypeRegistry
+    {
+        $testEnum = new EnumType([
+            'name' => 'PERMISSION_EMPTY',
+            'description' => 'PERMISSION_EMPTY',
+            'values' => ['EMPTY' => ['value' => 'EMPTY', 'description' => 'EMPTY']],
+        ]);
+
+        $testPermissionType = new ObjectType([
+            'name' => 'PermissionType',
+            'fields' => function () use ($typeRegistry, $testEnum): array {
+                return ['PERMISSION_EMPTY' => ['type' => $testEnum]];
+            }
+        ]);
+
+        $testPermissionAuth = new ObjectType([
+            'name' => 'PermissionAuth',
+            'fields' => function () use ($typeRegistry, $testEnum): array {
+                return ['PERMISSION_EMPTY' => ['type' => new ListOfType($testEnum)]];
+            }
+        ]);
+
+        $typeRegistry->register($testEnum);
+        $typeRegistry->register($testPermissionType);
+        $typeRegistry->register($testPermissionAuth);
+
+        return $typeRegistry;
+    }
+
+    /**
+     * @throws DefinitionException
+     */
+    public function registerPermissionEnums(TypeRegistry $typeRegistry): TypeRegistry
+    {
+
+        if ($this->testMode) {
+            return $this->registerTestPermissionEnums($typeRegistry);
+        }
+
+        $this->permissionsList = $this->repository->getAllPermissionsListWithClientType($this->type, $this->user);
+
+        $enums = [];
+        foreach ($this->permissionsList as $k => $value) {
+            $enums[$k] = new EnumType([
+                'name' => $k,
+                'description' => $k,
+                'values' => $value,
+            ]);
+            $typeRegistry->register($enums[$k]);
+        }
+
+        $permissionsType = [];
+        $permissionsAuth = [];
+        foreach ($this->permissionsList as $k => $v) {
+            $permissionsType[$k] = ['type' => $enums[$k]];
+            $permissionsAuth[$k] = ['type' => new ListOfType($enums[$k])];
+        }
+
+        $typeRegistry->register(
+            new ObjectType([
+                'name' => 'PermissionType',
+                'fields' => function () use ($typeRegistry, $permissionsType): array {
+                    return $permissionsType;
+                }
+            ])
+        );
+
+        $typeRegistry->register(
+            new ObjectType([
+                'name' => 'PermissionAuth',
+                'fields' => function () use ($typeRegistry, $permissionsAuth): array {
+                    return $permissionsAuth;
+                }
+            ])
+        );
+
+        return $typeRegistry;
+    }
+
+}
