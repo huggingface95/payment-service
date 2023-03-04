@@ -9,6 +9,7 @@ use App\Models\Permissions;
 use App\Models\PermissionsList;
 use App\Repositories\Interfaces\GraphqlManipulateSchemaRepositoryInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class GraphqlManipulateSchemaRepository implements GraphqlManipulateSchemaRepositoryInterface
@@ -28,8 +29,12 @@ class GraphqlManipulateSchemaRepository implements GraphqlManipulateSchemaReposi
         })->toArray();
     }
 
-    public function getAllPermissionsListWithClientType(?string $type, Members|ApplicantIndividual|null $user): array
+    public function getAllPermissionsListWithClientType(): array
     {
+        $type = Auth::guard('api')->type() ?? Auth::guard('api_client')->type();
+        /** @var Members|ApplicantIndividual|null $user */
+        $user = Auth::guard('api')->user() ?? Auth::guard('api_client')->user();
+
         if (!$type || !$user) {
             $permissionsList = collect(['empty' => collect([
                 'empty' => 0

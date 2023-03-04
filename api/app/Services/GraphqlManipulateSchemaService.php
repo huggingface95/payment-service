@@ -2,29 +2,21 @@
 
 namespace App\Services;
 
-use App\Models\ApplicantIndividual;
-use App\Models\Members;
 use App\Repositories\Interfaces\GraphqlManipulateSchemaRepositoryInterface;
 use GraphQL\Type\Definition\EnumType;
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\ObjectType;
-use Illuminate\Support\Facades\Auth;
 use Nuwave\Lighthouse\Exceptions\DefinitionException;
 use Nuwave\Lighthouse\Schema\TypeRegistry;
 
 class GraphqlManipulateSchemaService
 {
-    protected ?string $type;
-    protected Members|ApplicantIndividual|null $user;
     protected bool $testMode;
     protected array $permissionsList;
 
     public function __construct(protected GraphqlManipulateSchemaRepositoryInterface $repository)
     {
         $this->testMode = env('APP_ENV') == 'testing';
-        $this->type = Auth::guard()->type();
-        $this->user = Auth::guard()->user();
-
     }
 
     /**
@@ -103,7 +95,7 @@ class GraphqlManipulateSchemaService
             return $this->registerTestPermissionEnums($typeRegistry);
         }
 
-        $this->permissionsList = $this->repository->getAllPermissionsListWithClientType($this->type, $this->user);
+        $this->permissionsList = $this->repository->getAllPermissionsListWithClientType();
 
         $enums = [];
         foreach ($this->permissionsList as $k => $value) {
