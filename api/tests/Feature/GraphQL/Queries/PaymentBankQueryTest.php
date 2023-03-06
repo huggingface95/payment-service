@@ -310,7 +310,6 @@ class PaymentBankQueryTest extends TestCase
     {
         return [
             ['id', '1'],
-            ['country_id', '1'],
             ['payment_provider_id', '1'],
             ['payment_system_id', '1'],
         ];
