@@ -34,6 +34,8 @@ type Account {
     company: Company @belongsTo(relation:"company")
     "Получить менеджера"
     member: Members @belongsTo(relation:"member")
+    "Получить Проект"
+    project: Project @belongsTo(relation:"project")
     "Все аккаунты клиента"
     client_accounts: [ClientAccountsDetails!]!
     "Имя аккаунта"
@@ -182,12 +184,16 @@ input InputAccount{
     payment_system_id: ID
     "ID банка"
     payment_bank_id: ID
+    "ID Проекта"
+    project_id: ID
     "clientable"
     clientableAttach: PivotTable
     "лимит максимального баланса"
     min_limit_balance: Decimal
     "лимит минимального баланса"
     max_limit_balance: Decimal
+    "Текущий баланс"
+    current_balance: Decimal
 }
 
 extend type Mutation @guard {
