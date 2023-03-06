@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Enums\PaymentStatusEnum;
 use App\Events\AccountUpdatedEvent;
 use App\Models\Interfaces\BaseModelInterface;
 use App\Models\Scopes\AccountIndividualsCompaniesScope;
@@ -146,7 +147,7 @@ class Account extends BaseModel implements BaseModelInterface
 
     public function getTotalPendingTransactionsAttribute(): int
     {
-        return $this->transferIncomings()->where('status_id', 1)->count() + $this->transferOutgoings()->where('status_id', 1)->count();
+        return $this->transferIncomings()->where('status_id', PaymentStatusEnum::PENDING->value)->count() + $this->transferOutgoings()->where('status_id', PaymentStatusEnum::PENDING->value)->count();
     }
 
     public function member(): BelongsTo
