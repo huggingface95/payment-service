@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Enums\ModuleTagEnum;
+use App\Enums\FeeTypeEnum;
+use App\Enums\GroupTypeEnum;
+use App\Models\EmailNotification;
 use App\Models\PermissionCategory;
 use App\Models\PermissionFilter;
 use App\Models\PermissionOperation;
@@ -3938,384 +3940,224 @@ class PermissionsSeeder extends Seeder
             }
         }
 
-        $operations = [
+        $filters = [
+//            [
+//                'mode' => PermissionFilter::SCOPE_MODE,
+//                'action' => null,
+//                'table' => 'email_templates',
+//                'column' => 'service_type',
+//                'value' => 'banking',
+//                'binds' => ['Email Templates:Tag.Administration: Banking'],
+//            ],
             [
-                'name' => 'ChangeMemberPassword',
-                'referer' => null,
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_notifications',
+                'column' => 'recipient_type',
+                'value' => EmailNotification::RECIPIENT_GROUP,
+                'binds' => [
+                    'Email Templates:Notifications.Enabled',
+                    'Email Templates:Notifications.Edit',
+                    'Email Templates:Notifications.Recipient Type: Group'
+                ],
             ],
             [
-                'name' => 'GetMemberTfaStatus',
-                'referer' => null,
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_notifications',
+                'column' => 'recipient_type',
+                'value' => EmailNotification::RECIPIENT_PERSON,
+                'binds' => [
+                    'Email Templates:Notifications.Enabled',
+                    'Email Templates:Notifications.Edit',
+                    'Email Templates:Notifications.Recipient Type: Person'
+                ],
             ],
             [
-                'name' => 'GetMember2FaData',
-                'referer' => null,
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_notifications',
+                'column' => 'group_type_id',
+                'value' => GroupTypeEnum::INDIVIDUAL->value,
+                'binds' => [
+                    'Email Templates:Notifications.Enabled',
+                    'Email Templates:Notifications.Edit',
+                    'Email Templates:Notifications.Group Type: Individual'
+                ],
             ],
             [
-                'name' => 'getMember',
-                'referer' => null,
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_notifications',
+                'column' => 'group_type_id',
+                'value' => GroupTypeEnum::COMPANY->value,
+                'binds' => [
+                    'Email Templates:Notifications.Enabled',
+                    'Email Templates:Notifications.Edit',
+                    'Email Templates:Notifications.Group Type: Corporate'
+                ],
             ],
             [
-                'name' => 'GetMemberByField',
-                'referer' => null,
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_notifications',
+                'column' => 'group_type_id',
+                'value' => GroupTypeEnum::MEMBER->value,
+                'binds' => [
+                    'Email Templates:Notifications.Enabled',
+                    'Email Templates:Notifications.Edit',
+                    'Email Templates:Notifications.Group Type: Member'
+                ],
             ],
             [
-                'name' => 'getMemberData',
-                'referer' => null,
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'fees',
+                'column' => 'fee_type_id',
+                'value' => FeeTypeEnum::SERVICE_FEE->value,
+                'binds' => [
+                    'Commission Template:Price Lists:Add New Fee.Enabled',
+                    'Commission Template:Price Lists:Add New Fee.Service Fee'
+                ],
             ],
             [
-                'name' => 'GetFilterFieldsData',
-                'referer' => null,
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'fees',
+                'column' => 'fee_type_id',
+                'value' => FeeTypeEnum::EXCHANGE_FEE->value,
+                'binds' => [
+                    'Commission Template:Price Lists:Add New Fee.Enabled',
+                    'Commission Template:Price Lists:Add New Fee.Exchange Fee'
+                ],
             ],
             [
-                'name' => 'GetFilterFieldsTableData',
-                'referer' => null,
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'fees',
+                'column' => 'fee_type_id',
+                'value' => FeeTypeEnum::EXCHANGE_FEE->value,
+                'binds' => [
+                    'Commission Template:Price Lists:Add New Fee.Enabled',
+                    'Commission Template:Price Lists:Add New Fee.Exchange Fee'
+                ],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'fees',
+                'column' => 'fee_type_id',
+                'value' => FeeTypeEnum::BTU_FEE->value,
+                'binds' => [
+                    'Commission Template:Price Lists:Add New Fee.Enabled',
+                    'Commission Template:Price Lists:Add New Fee.BTU Fee'
+                ],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'fees',
+                'column' => 'fee_type_id',
+                'value' => FeeTypeEnum::BTA_FEE->value,
+                'binds' => [
+                    'Commission Template:Price Lists:Add New Fee.Enabled',
+                    'Commission Template:Price Lists:Add New Fee.BTA Fee'
+                ],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'fees',
+                'column' => 'fee_type_id',
+                'value' => FeeTypeEnum::TRANSFERS_FEE->value,
+                'binds' => [
+                    'Commission Template:Price Lists:Add New Fee.Enabled',
+                    'Commission Template:Price Lists:Add New Fee.Transfers Fee'
+                ],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'roles',
+                'column' => 'group_type_id',
+                'value' => GroupTypeEnum::INDIVIDUAL->value,
+                'binds' => [
+                    'Role List.Add New Role',
+                    'Roles Settings.Group Type: Individual'
+                ],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'roles',
+                'column' => 'group_type_id',
+                'value' => GroupTypeEnum::COMPANY->value,
+                'binds' => [
+                    'Role List.Add New Role',
+                    'Roles Settings.Group Type: Corporate'
+                ],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'roles',
+                'column' => 'group_type_id',
+                'value' => GroupTypeEnum::MEMBER->value,
+                'binds' => [
+                    'Role List.Add New Role',
+                    'Roles Settings.Group Type: Member'
+                ],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'group_role',
+                'column' => 'group_type_id',
+                'value' => GroupTypeEnum::INDIVIDUAL->value,
+                'binds' => [
+                    'Groups List.Add New Group',
+                    'Groups Settings.Group Type: Individual'
+                ],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'group_role',
+                'column' => 'group_type_id',
+                'value' => GroupTypeEnum::COMPANY->value,
+                'binds' => [
+                    'Groups List.Add New Group',
+                    'Groups Settings.Group Type: Corporate'
+                ],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'group_role',
+                'column' => 'group_type_id',
+                'value' => GroupTypeEnum::MEMBER->value,
+                'binds' => [
+                    'Groups List.Add New Group',
+                    'Groups Settings.Group Type: Member'
+                ],
             ],
         ];
+        $lists = PermissionsList::where('type', 'member')->get()->pluck('id')->toArray();
+        foreach ($filters as $filter) {
+            $binds = $filter['binds'];
+            unset($filter['binds']);
+            $permissionFilter = PermissionFilter::firstOrCreate($filter);
 
-        foreach ($operations as $data) {
-            PermissionOperation::firstOrCreate(['name' => $data['name'], 'referer' => $data['referer']]);
+            foreach ($binds ?? [] as $perName) {
+                /** @var Permissions $permission */
+                $permission = Permissions::query()->where('name', $perName)->whereIn('permission_list_id', $lists)->first();
+                if ($permission) {
+                    $ids = $permissionFilter->binds()->get()->pluck('id')->push($permission->id)->unique()->toArray();
+                    $operation->binds()->sync($ids, true);
+                } else {
+                    throw new Exception("Not found bind permission in {$perName} filter");
+                }
+            }
         }
-
-
-//        $filters = [
-//            [
-//                'mode' => PermissionFilter::SCOPE_MODE,
-//                'action' => null,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'banking',
-//                'binds' => ['Email Templates:Tag.Administration: Banking'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_CREATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'banking',
-//                'binds' => ['Email Templates:Tag.Administration: Banking'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_UPDATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'banking',
-//                'binds' => ['Email Templates:Tag.Administration: Banking'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_DELETING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'banking',
-//                'binds' => ['Email Templates:Tag.Administration: Banking'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::SCOPE_MODE,
-//                'action' => null,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'common',
-//                'binds' => ['Email Templates:Tag.Administration: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_CREATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'common',
-//                'binds' => ['Email Templates:Tag.Administration: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_UPDATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'common',
-//                'binds' => ['Email Templates:Tag.Administration: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_DELETING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'common',
-//                'binds' => ['Email Templates:Tag.Administration: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::SCOPE_MODE,
-//                'action' => null,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.Administration: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_CREATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.Administration: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_UPDATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.Administration: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_DELETING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.Administration: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::SCOPE_MODE,
-//                'action' => null,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'system',
-//                'binds' => ['Email Templates:Tag.Administration: System'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_CREATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'system',
-//                'binds' => ['Email Templates:Tag.Administration: System'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_UPDATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'system',
-//                'binds' => ['Email Templates:Tag.Administration: System'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_DELETING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'system',
-//                'binds' => ['Email Templates:Tag.Administration: System'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::SCOPE_MODE,
-//                'action' => null,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'common',
-//                'binds' => ['Email Templates:Tag.KYC: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_CREATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'common',
-//                'binds' => ['Email Templates:Tag.KYC: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_UPDATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'common',
-//                'binds' => ['Email Templates:Tag.KYC: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_DELETING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'common',
-//                'binds' => ['Email Templates:Tag.KYC: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::SCOPE_MODE,
-//                'action' => null,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.KYC: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_CREATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.KYC: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_UPDATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.KYC: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_DELETING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.KYC: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::SCOPE_MODE,
-//                'action' => null,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'system',
-//                'binds' => ['Email Templates:Tag.KYC: System'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_CREATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'system',
-//                'binds' => ['Email Templates:Tag.KYC: System'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_UPDATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'system',
-//                'binds' => ['Email Templates:Tag.KYC: System'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_DELETING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'system',
-//                'binds' => ['Email Templates:Tag.KYC: System'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::SCOPE_MODE,
-//                'action' => null,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => ModuleTagEnum::BANKING_COMMON->value,
-//                'binds' => ['Email Templates:Tag.Banking: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_CREATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => ModuleTagEnum::BANKING_COMMON->value,
-//                'binds' => ['Email Templates:Tag.Banking: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_UPDATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => ModuleTagEnum::BANKING_COMMON->value,
-//                'binds' => ['Email Templates:Tag.Banking: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_DELETING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => ModuleTagEnum::BANKING_COMMON->value,
-//                'binds' => ['Email Templates:Tag.Banking: Common'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::SCOPE_MODE,
-//                'action' => null,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.Banking: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_CREATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.Banking: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_UPDATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.Banking: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_DELETING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'admin notify',
-//                'binds' => ['Email Templates:Tag.Banking: Admin Notify'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::SCOPE_MODE,
-//                'action' => null,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => ModuleTagEnum::BANKING_SYSTEM->value,
-//                'binds' => ['Email Templates:Tag.Banking: System'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_CREATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => ModuleTagEnum::BANKING_SYSTEM->value,
-//                'binds' => ['Email Templates:Tag.Banking: System'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_UPDATING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => ModuleTagEnum::BANKING_SYSTEM->value,
-//                'binds' => ['Email Templates:Tag.Banking: System'],
-//            ],
-//            [
-//                'mode' => PermissionFilter::EVENT_MODE,
-//                'action' => PermissionFilter::EVENT_DELETING,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => ModuleTagEnum::BANKING_SYSTEM->value,
-//                'binds' => ['Email Templates:Tag.Banking: System'],
-//            ],
-//        ];
-//        $lists = PermissionsList::where('type', 'member')->get()->pluck('id')->toArray();
-//        foreach ($filters as $filter) {
-//            $binds = $filter['binds'];
-//            unset($filter['binds']);
-//            $permissionFilter = PermissionFilter::firstOrCreate($filter);
-//
-//            foreach ($binds ?? [] as $perName) {
-//                /** @var Permissions $permission */
-//                $permission = Permissions::query()->where('name', $perName)->whereIn('permission_list_id', $lists)->first();
-//                if ($permission) {
-//                    $ids = $permissionFilter->binds()->get()->pluck('id')->push($permission->id)->unique()->toArray();
-//                    $operation->binds()->sync($ids, true);
-//                } else {
-//                    throw new Exception("Not found bind permission in {$data['name']} filter");
-//                }
-//            }
-//        }
     }
 }
