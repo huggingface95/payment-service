@@ -12,8 +12,10 @@ type PaymentBank {
     bank_code: String
     "Код платежной системы"
     payment_system_code: String
-    "Страна"
-    country: Country @belongsTo(relation:"country")
+    "Получить валюты"
+    currencies: [Currencies] @hasMany(relation: "currencies")
+    "Получить регионы"
+    regions: [Region] @hasMany(relation: "regions")
     "Получить банк корреспондент"
     bank_correspondent: BankCorrespondent @belongsTo(relation: "bankCorrespondent")
     "Платежная провидер"
@@ -36,7 +38,6 @@ extend type Query @guard {
 }
 
 input QueryPaymentBankCondition {
-    country_id: ID @eq
     name: String @eq
     address: String @like
     bank_code: String @eq
@@ -47,7 +48,6 @@ input QueryPaymentBankCondition {
 
 input QueryPaymentBanksFilterStatic @spread{
     id: ID @eq
-    country_id: ID @eq
     payment_system_id: ID @eq
     payment_provider_id: ID @eq
     name: String @ilike
@@ -56,7 +56,7 @@ input QueryPaymentBanksFilterStatic @spread{
     payment_system_code: String @ilike
 }
 
-input InputPaymentBank @validator {
+input InputPaymentBank {
     "Название банка"
     name: String!
     "Адрес банка"
@@ -65,8 +65,10 @@ input InputPaymentBank @validator {
     bank_code: String
     "Код платежной системы"
     payment_system_code: String
-    "ID страны"
-    country_id: ID!
+    "ID валют"
+    currency_id: [ID]!
+    "ID регионов"
+    region_id: [ID]!
     "ID платежного системы"
     payment_system_id: ID!
     "ID платежного провидера"
@@ -79,13 +81,15 @@ extend type Mutation @guard {
     "Создать банк"
     createPaymentBank(
         input: InputPaymentBank! @spread
-    ): PaymentBank   @create
+    ): PaymentBank
+        @field(resolver: "PaymentBankMutator@create")
 
     "Обновить поля банка"
     updatePaymentBank(
         id: ID!
         input: InputPaymentBank! @spread
-    ): PaymentBank   @update
+    ): PaymentBank
+        @field(resolver: "PaymentBankMutator@update")
 
     "Удалить платежную систему"
     deletePaymentBank(id: ID!): PaymentBank   @delete

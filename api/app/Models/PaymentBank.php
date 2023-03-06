@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class PaymentBank extends BaseModel
 {
@@ -16,7 +18,13 @@ class PaymentBank extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'country_id', 'name', 'address', 'bank_code', 'payment_system_code', 'payment_provider_id', 'payment_system_id', 'is_active',
+        'name',
+        'address',
+        'bank_code',
+        'payment_system_code',
+        'payment_provider_id',
+        'payment_system_id',
+        'is_active',
     ];
 
     public function bankCorrespondent(): BelongsTo
@@ -24,9 +32,38 @@ class PaymentBank extends BaseModel
         return $this->belongsTo(BankCorrespondent::class, 'payment_system_id', 'payment_system_id');
     }
 
-    public function country(): BelongsTo
+    public function paymentBankCurrencies(): HasMany
     {
-        return $this->belongsTo(Country::class, 'country_id');
+        return $this->hasMany(PaymentBankCurrency::class);
+    }
+
+    public function paymentBankRegions(): HasMany
+    {
+        return $this->hasMany(PaymentBankRegion::class);
+    }
+
+    public function currencies(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Currencies::class,
+            PaymentBankCurrency::class,
+            'payment_bank_id',
+            'id',
+            'id',
+            'currency_id'
+        );
+    }
+
+    public function regions(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Region::class,
+            PaymentBankRegion::class,
+            'payment_bank_id',
+            'id',
+            'id',
+            'region_id'
+        );
     }
 
     public function paymentSystem(): BelongsTo

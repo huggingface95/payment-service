@@ -39,10 +39,6 @@ class RequisitesQueryTest extends TestCase
             ->table('payment_banks')->where('id', $requisites->payment_bank_id)
             ->first();
 
-        $bankCountry = DB::connection('pgsql_test')
-            ->table('countries')->where('id', $bank->country_id)
-            ->first();
-
         $this->postGraphQL(
             [
                 'query' => '
@@ -59,9 +55,6 @@ class RequisitesQueryTest extends TestCase
                     bank {
                       name
                       address
-                      country {
-                        name
-                      }
                     }
                     account_number
                   }
@@ -88,9 +81,6 @@ class RequisitesQueryTest extends TestCase
                     'bank' => [
                         'name' => (string) $bank->name,
                         'address' => (string) $bank->address,
-                        'country' => [
-                            'name' => (string) $bankCountry->name,
-                        ],
                     ],
                 ],
             ],
@@ -115,10 +105,6 @@ class RequisitesQueryTest extends TestCase
             ->table('payment_banks')->where('id', $requisites->payment_bank_id)
             ->first();
 
-        $bankCountry = DB::connection('pgsql_test')
-            ->table('countries')->where('id', $bank->country_id)
-            ->first();
-
         $this->postGraphQL([
             'query' => '
                 query RequisitesFilter($account_number: Mixed){
@@ -134,9 +120,6 @@ class RequisitesQueryTest extends TestCase
                     bank {
                       name
                       address
-                      country {
-                        name
-                      }
                     }
                     account_number
                   }
@@ -161,9 +144,6 @@ class RequisitesQueryTest extends TestCase
                     'bank' => [
                         'name' => (string) $bank->name,
                         'address' => (string) $bank->address,
-                        'country' => [
-                            'name' => (string) $bankCountry->name,
-                        ],
                     ],
                 ]],
             ],
@@ -188,10 +168,6 @@ class RequisitesQueryTest extends TestCase
             ->table('payment_banks')->where('id', $requisites->payment_bank_id)
             ->first();
 
-        $bankCountry = DB::connection('pgsql_test')
-            ->table('countries')->where('id', $bank->country_id)
-            ->first();
-
         $this->postGraphQL(
             [
                 'query' => '
@@ -208,9 +184,6 @@ class RequisitesQueryTest extends TestCase
                     bank {
                       name
                       address
-                      country {
-                        name
-                      }
                     }
                     account_number
                   }
@@ -235,9 +208,6 @@ class RequisitesQueryTest extends TestCase
             'bank' => [
                 'name' => (string) $bank->name,
                 'address' => (string) $bank->address,
-                'country' => [
-                    'name' => (string) $bankCountry->name,
-                ],
             ],
         ]);
     }
@@ -260,10 +230,6 @@ class RequisitesQueryTest extends TestCase
             ->table('payment_banks')->where('id', $requisites->payment_bank_id)
             ->first();
 
-        $bankCountry = DB::connection('pgsql_test')
-            ->table('countries')->where('id', $bank->country_id)
-            ->first();
-
         $this->postGraphQL(
             [
                 'query' => '
@@ -280,9 +246,6 @@ class RequisitesQueryTest extends TestCase
                     bank {
                       name
                       address
-                      country {
-                        name
-                      }
                     }
                     account_number
                   }
@@ -307,9 +270,6 @@ class RequisitesQueryTest extends TestCase
             'bank' => [
                 'name' => (string) $bank->name,
                 'address' => (string) $bank->address,
-                'country' => [
-                    'name' => (string) $bankCountry->name,
-                ],
             ],
         ]);
     }
@@ -332,10 +292,6 @@ class RequisitesQueryTest extends TestCase
             ->table('payment_banks')->where('id', $requisites->payment_bank_id)
             ->first();
 
-        $bankCountry = DB::connection('pgsql_test')
-            ->table('countries')->where('id', $bank->country_id)
-            ->first();
-
         $this->postGraphQL(
             [
                 'query' => '
@@ -352,9 +308,6 @@ class RequisitesQueryTest extends TestCase
                     bank {
                       name
                       address
-                      country {
-                        name
-                      }
                     }
                     account_number
                   }
@@ -379,9 +332,6 @@ class RequisitesQueryTest extends TestCase
             'bank' => [
                 'name' => (string) $bank->name,
                 'address' => (string) $bank->address,
-                'country' => [
-                    'name' => (string) $bankCountry->name,
-                ],
             ],
         ]);
     }
@@ -404,10 +354,6 @@ class RequisitesQueryTest extends TestCase
             ->table('payment_banks')->where('id', $requisites->payment_bank_id)
             ->first();
 
-        $bankCountry = DB::connection('pgsql_test')
-            ->table('countries')->where('id', $bank->country_id)
-            ->first();
-
         $this->postGraphQL(
             [
                 'query' => '
@@ -424,9 +370,6 @@ class RequisitesQueryTest extends TestCase
                     bank {
                       name
                       address
-                      country {
-                        name
-                      }
                     }
                     account_number
                   }
@@ -451,9 +394,6 @@ class RequisitesQueryTest extends TestCase
             'bank' => [
                 'name' => (string) $bank->name,
                 'address' => (string) $bank->address,
-                'country' => [
-                    'name' => (string) $bankCountry->name,
-                ],
             ],
         ]);
     }
