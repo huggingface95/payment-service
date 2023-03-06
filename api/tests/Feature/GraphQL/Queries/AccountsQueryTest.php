@@ -68,8 +68,6 @@ class AccountsQueryTest extends TestCase
                     accountList(orderBy: { column: ID, order: ASC }) {
                         data {
                             id
-                            total_transactions
-                            total_pending_transactions
                         }
                         }
                 }',
@@ -79,8 +77,6 @@ class AccountsQueryTest extends TestCase
             ]
         )->seeJsonContains([
             'id' => (string) $account[0]->id,
-            'total_transactions' => $account[0]->total_transactions,
-            'total_pending_transactions' => $account[0]->total_pending_transactions,
         ]);
     }
 
