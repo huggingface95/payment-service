@@ -69,7 +69,7 @@ class AccountsQueryTest extends TestCase
                         data {
                             id
                         }
-                        }
+                    }
                 }',
             ],
             [
