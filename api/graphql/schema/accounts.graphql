@@ -179,7 +179,7 @@ input InputAccount{
     "ID группы"
     group_type_id: ID!
     "ID платежной системы"
-    payment_system_id: ID!
+    payment_system_id: ID
     "ID банка"
     payment_bank_id: ID
     "clientable"
