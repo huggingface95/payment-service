@@ -256,6 +256,82 @@ class PaymentBankQueryTest extends TestCase
         )->seeJsonContains($data);
     }
 
+    public function testQueryPaymentBanksWithFilterByCurrencyId(): void
+    {
+        $paymentBanks = PaymentBank::orderBy('id', 'ASC')
+            ->first();
+
+        $data = [
+            'id' => (string) $paymentBanks->id,
+            'name' => (string) $paymentBanks->name,
+            'address' => (string) $paymentBanks->address,
+            'bank_code' => (string) $paymentBanks->bank_code,
+            'payment_system_code' => (string) $paymentBanks->payment_system_code,
+        ];
+
+        $this->postGraphQL(
+            [
+                'query' => 'query PaymentBanks($id: Mixed) {
+                    paymentBanks (
+                        filter: { column: HAS_PAYMENT_BANK_CURRENCIES_FILTER_BY_CURRENCY_ID, value: $id }
+                    ) {
+                        data {
+                            id
+                            name
+                            address
+                            bank_code
+                            payment_system_code
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains($data);
+    }
+
+    public function testQueryPaymentBanksWithFilterByRegionId(): void
+    {
+        $paymentBanks = PaymentBank::orderBy('id', 'ASC')
+            ->first();
+
+        $data = [
+            'id' => (string) $paymentBanks->id,
+            'name' => (string) $paymentBanks->name,
+            'address' => (string) $paymentBanks->address,
+            'bank_code' => (string) $paymentBanks->bank_code,
+            'payment_system_code' => (string) $paymentBanks->payment_system_code,
+        ];
+
+        $this->postGraphQL(
+            [
+                'query' => 'query PaymentBanks($id: Mixed) {
+                    paymentBanks (
+                        filter: { column: HAS_PAYMENT_BANK_REGIONS_FILTER_BY_REGION_ID, value: $id }
+                    ) {
+                        data {
+                            id
+                            name
+                            address
+                            bank_code
+                            payment_system_code
+                        }
+                    }
+                }',
+                'variables' => [
+                    'id' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        )->seeJsonContains($data);
+    }
+
     /**
      * @dataProvider provide_testQueryPaymentBanksWithFilterByCondition
      */
