@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Enums\PaymentStatusEnum;
 use App\Events\AccountUpdatedEvent;
 use App\Models\Interfaces\BaseModelInterface;
 use App\Models\Scopes\AccountIndividualsCompaniesScope;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class Account
@@ -83,8 +85,6 @@ class Account extends BaseModel implements BaseModelInterface
         'is_show',
         'entity_id',
         'min_limit_balance',
-        'total_transactions',
-        'total_pending_transactions',
     ];
 
     protected $casts = [
@@ -97,6 +97,11 @@ class Account extends BaseModel implements BaseModelInterface
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'activated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'last_charge_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+    ];
+
+    protected $appends = [
+        'total_transactions',
+        'total_pending_transactions'
     ];
 
     protected static function booted()
@@ -133,6 +138,16 @@ class Account extends BaseModel implements BaseModelInterface
                 return $account;
             })
             ->toArray();
+    }
+
+    public function getTotalTransactionsAttribute(): int
+    {
+        return $this->transferIncomings()->count() + $this->transferOutgoings()->count();
+    }
+
+    public function getTotalPendingTransactionsAttribute(): int
+    {
+        return $this->transferIncomings()->where('status_id', PaymentStatusEnum::PENDING->value)->count() + $this->transferOutgoings()->where('status_id', PaymentStatusEnum::PENDING->value)->count();
     }
 
     public function member(): BelongsTo
