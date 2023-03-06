@@ -85,6 +85,8 @@ class Account extends BaseModel implements BaseModelInterface
         'is_show',
         'entity_id',
         'min_limit_balance',
+        'max_limit_balance',
+        'project_id',
     ];
 
     protected $casts = [
@@ -292,6 +294,11 @@ class Account extends BaseModel implements BaseModelInterface
     public function accountState(): BelongsTo
     {
         return $this->belongsTo(AccountState::class, 'account_state_id');
+    }
+
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
     public static function getAccountFilter($filter): Builder
