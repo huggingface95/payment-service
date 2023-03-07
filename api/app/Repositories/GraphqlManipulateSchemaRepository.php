@@ -32,18 +32,19 @@ class GraphqlManipulateSchemaRepository implements GraphqlManipulateSchemaReposi
     public function getAllPermissionsListWithClientType(): array
     {
         $type = Auth::guard('api')->type() ?? Auth::guard('api_client')->type();
-        /** @var Members|ApplicantIndividual|null $user */
-        $user = Auth::guard('api')->user() ?? Auth::guard('api_client')->user();
 
-        if (!$type || !$user) {
-            $permissionsList = collect(['empty' => collect([
-                'empty' => 0
-            ])]);
-        } else {
-            $permissionsList = $user->getAllPermissionsList();
-        }
+        $permissionsList = $this->getAllPermissionsList($type);
 
         return $this->keysToEnumFormat($permissionsList)->toArray();
+    }
+
+    public function getAllPermissionsList(?string $type): Collection
+    {
+        return PermissionsList::query()->with('permissions')->when($type, function ($q, $t) {
+            return $q->where('type', $t);
+        })->get()->pluck(  'permissions', 'name')->map(function ($permissions) {
+            return $permissions->pluck('id', 'display_name');
+        });
     }
 
 
