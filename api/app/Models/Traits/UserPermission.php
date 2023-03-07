@@ -14,17 +14,6 @@ trait UserPermission
         return $this->groupRole->role->permissions ?? collect([]);
     }
 
-    public function getAllPermissionsList(): Collection
-    {
-        $this->loadPermissionsList();
-
-        return $this->groupRole->role->permissions->groupBy('permissionList.name',function ($permission){
-            return $permission->permissionList->name;
-        })->map(function ($permissions){
-            return $permissions->pluck('id', 'display_name');
-        }) ?? collect([]);
-    }
-
     public function hasPermission(string $name, string $url): bool
     {
         $allPermissions = $this->getAllPermissions();
@@ -49,7 +38,7 @@ trait UserPermission
             $bindPermissions = $operation->binds->intersect($allPermissions);
 
             if ($bindPermissions->count()) {
-                if (! $operation->parents->count()) {
+                if (!$operation->parents->count()) {
                     return true;
                 }
                 $parentPermissions = $operation->parents->intersect($allPermissions);
