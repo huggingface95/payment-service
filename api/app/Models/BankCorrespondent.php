@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
@@ -18,6 +19,10 @@ class BankCorrespondent extends BaseModel
         'bank_code',
         'bank_account',
         'payment_system_id',
+        'country_id',
+        'swift',
+        'account_number',
+        'ncs_number',
         'is_active',
     ];
 
@@ -58,5 +63,10 @@ class BankCorrespondent extends BaseModel
             'id',
             'region_id'
         );
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'country_id');
     }
 }

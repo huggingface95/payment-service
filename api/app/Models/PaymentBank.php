@@ -24,6 +24,8 @@ class PaymentBank extends BaseModel
         'payment_system_code',
         'payment_provider_id',
         'payment_system_id',
+        'country_id',
+        'swift',
         'is_active',
     ];
 
@@ -74,5 +76,10 @@ class PaymentBank extends BaseModel
     public function paymentProvider(): BelongsTo
     {
         return $this->belongsTo(PaymentProvider::class, 'payment_provider_id');
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'country_id');
     }
 }

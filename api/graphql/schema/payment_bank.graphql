@@ -12,6 +12,10 @@ type PaymentBank {
     bank_code: String
     "Код платежной системы"
     payment_system_code: String
+    "SWIFT"
+    swift: String
+    "Получить страну"
+    country: Country @belongsTo(relation: "country")
     "Получить валюты"
     currencies: [Currencies] @hasMany(relation: "currencies")
     "Получить регионы"
@@ -75,6 +79,10 @@ input InputPaymentBank {
     payment_system_id: ID!
     "ID платежного провидера"
     payment_provider_id: ID!
+    "SWIFT"
+    swift: String!
+    "Страна"
+    country_id: ID!
     "Активный не активный (true/false)"
     is_active: Boolean
 }
