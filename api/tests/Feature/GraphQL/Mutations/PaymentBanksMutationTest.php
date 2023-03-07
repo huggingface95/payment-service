@@ -28,6 +28,8 @@ class PaymentBanksMutationTest extends TestCase
                 $payment_system_code: String!,
                 $payment_system_id: ID!,
                 $payment_provider_id: ID!,
+                $country_id: ID!,
+                $swift: String!,
             ) {
                 createPaymentBank(input: {
                     name: $name,
@@ -38,6 +40,8 @@ class PaymentBanksMutationTest extends TestCase
                     payment_system_code: $payment_system_code
                     currency_id: [1, 2, 3]
                     region_id: [1]
+                    country_id: $country_id
+                    swift: $swift
                 }) {
                     id
                 }
@@ -49,6 +53,8 @@ class PaymentBanksMutationTest extends TestCase
             'payment_system_id' => 1,
             'payment_system_code' =>'4564564654655',
             'payment_provider_id' => 1,
+            'country_id' => 1,
+            'swift' => "IBXXAEWDZ1E",
         ])->seeJsonContains([
             'message' => 'Unauthenticated.',
         ]);
@@ -68,6 +74,8 @@ class PaymentBanksMutationTest extends TestCase
                 $payment_system_code: String!,
                 $payment_system_id: ID!,
                 $payment_provider_id: ID!,
+                $country_id: ID!,
+                $swift: String!,
             ) {
                 createPaymentBank(input: {
                     name: $name,
@@ -78,6 +86,8 @@ class PaymentBanksMutationTest extends TestCase
                     payment_system_code: $payment_system_code
                     currency_id: [1, 2, 3]
                     region_id: [1]
+                    country_id: $country_id
+                    swift: $swift
                 }) {
                     id
                 }
@@ -89,6 +99,8 @@ class PaymentBanksMutationTest extends TestCase
                 'payment_system_id' => 3,
                 'payment_system_code' =>'4564564654654',
                 'payment_provider_id' => 11,
+                'country_id' => 1,
+                'swift' => "IBXXAEWDZ1E",
             ],
         ],
         [
@@ -114,6 +126,8 @@ class PaymentBanksMutationTest extends TestCase
                 $payment_system_code: String!,
                 $payment_system_id: ID!,
                 $payment_provider_id: ID!,
+                $country_id: ID!,
+                $swift: String!,
             ) {
                 updatePaymentBank(id: $id, input: {
                     name: $name,
@@ -124,6 +138,8 @@ class PaymentBanksMutationTest extends TestCase
                     payment_system_code: $payment_system_code
                     currency_id: [1, 3, 5]
                     region_id: [1]
+                    country_id: $country_id
+                    swift: $swift
                 }) {
                     id
                 }
@@ -136,6 +152,8 @@ class PaymentBanksMutationTest extends TestCase
                 'payment_system_id' => 10,
                 'payment_system_code' =>'456456465',
                 'payment_provider_id' => 10,
+                'country_id' => 1,
+                'swift' => "IBXXAEWDZ1E",
             ],
         ],
             [

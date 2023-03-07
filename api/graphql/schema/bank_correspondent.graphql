@@ -8,10 +8,18 @@ type BankCorrespondent {
     name: String!
     "Адрес"
     address: String!
-    "SWIFT"
+    "Код банка"
     bank_code: String!
+    "swift"
+    swift: String!
+    "Account number"
+    account_number: String!
+    "NCS Number"
+    ncs_number: String!
     "Счет банка корреспондента"
     bank_account: String!
+    "Получить страну"
+    country: Country @belongsTo(relation: "country")
     "Получить валюты"
     currencies: [Currencies] @hasMany(relation: "currencies")
     "Получить регионы"
@@ -38,9 +46,38 @@ extend type Query @guard {
 }
 
 input QueryBankCorrespondentsFilterStatic @spread {
+    id: ID @eq
+    payment_system_id: ID @eq
     name: String @ilike
     hasBankCorrespondentCurrenciesFilterByCurrencyId: ID @eq
     hasBankCorrespondentRegionsFilterByRegionId: ID @eq
+}
+
+input InputBankCorrespondent {
+    "Название"
+    name: String!
+    "Адрес"
+    address: String!
+    "SWIFT"
+    bank_code: String!
+    "Счет банка корреспондента"
+    bank_account: String!
+    "swift"
+    swift: String!
+    "Account number"
+    account_number: String!
+    "NCS Number"
+    ncs_number: String!
+    "Страна"
+    country_id: ID!
+    "ID платежной системы"
+    payment_system_id: ID!
+    "ID валют"
+    currency_id: [ID]!
+    "ID регионов"
+    region_id: [ID]!
+    "Активность"
+    is_active: Boolean!
 }
 
 extend type Mutation @guard {
@@ -48,22 +85,7 @@ extend type Mutation @guard {
     Создать банк корреспондент
     """
     createBankCorrespondent(
-        "Название"
-        name: String!
-        "Адрес"
-        address: String!
-        "SWIFT"
-        bank_code: String!
-        "Счет банка корреспондента"
-        bank_account: String!
-        "ID платежной системы"
-        payment_system_id: ID!
-        "ID валют"
-        currency_id: [ID]!
-        "ID регионов"
-        region_id: [ID]!
-        "Активность"
-        is_active: Boolean!
+        input: InputBankCorrespondent! @spread
     ): BankCorrespondent
         @field(resolver: "BankCorrespondentMutator@create")
 
@@ -73,22 +95,7 @@ extend type Mutation @guard {
     updateBankCorrespondent(
         "ID проекта"
         id: ID!
-        "Название"
-        name: String!
-        "Адрес"
-        address: String!
-        "SWIFT"
-        bank_code: String!
-        "Счет банка корреспондента"
-        bank_account: String!
-        "ID платежной системы"
-        payment_system_id: ID!
-        "ID валют"
-        currency_id: [ID]!
-        "ID регионов"
-        region_id: [ID]!
-        "Активность"
-        is_active: Boolean!
+        input: InputBankCorrespondent! @spread
     ): BankCorrespondent
         @field(resolver: "BankCorrespondentMutator@update")
 
