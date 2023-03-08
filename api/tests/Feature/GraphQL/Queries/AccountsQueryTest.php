@@ -127,7 +127,7 @@ class AccountsQueryTest extends TestCase
                 query TestAccountListFilters($payment_provider_id: Mixed) {
                     accountList(
                         filter: {
-                            column: HAS_PAYMENT_PROVIDER_MIXED_ID_OR_NAME
+                            column: PAYMENT_PROVIDER_ID
                             value: $payment_provider_id
                         }
                     ) {
