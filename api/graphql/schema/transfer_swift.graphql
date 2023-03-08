@@ -1,0 +1,21 @@
+type TransferSwift {
+    swift: String
+    bank_name: String
+    bank_address: String
+    bank_country: Country @belongsTo(relation: "bankCountry")
+    location: String
+    ncs_number: String
+    aba: String
+    account_number: String
+}
+
+input TransferSwiftInput {
+    swift: String
+    bank_name: String
+    bank_address: String
+    bank_country_id: ID
+    location: String
+    ncs_number: String
+    aba: String
+    account_number: String
+}

@@ -71,23 +71,7 @@ class TransferOutgoingMutator extends BaseMutator
     {
         $transfer = $this->transferRepository->findById($args['id']);
 
-        $this->transferService->validateUpdateTransferStatus($transfer, $args);
-
-        switch ($args['status_id']) {
-            case PaymentStatusEnum::ERROR->value:
-            case PaymentStatusEnum::CANCELED->value:
-                $this->transferService->updateTransferStatusToCancelOrError($transfer, $args['status_id']);
-
-                break;
-            case PaymentStatusEnum::SENT->value:
-                $this->transferService->updateTransferStatusToSent($transfer);
-
-                break;
-            default:
-                $this->transferRepository->update($transfer, ['status_id' => $args['status_id']]);
-
-                break;
-        }
+        $this->transferService->updateTransferStatus($transfer, $args);
 
         return $transfer;
     }

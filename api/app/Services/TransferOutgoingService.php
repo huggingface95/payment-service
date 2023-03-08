@@ -3,13 +3,14 @@
 namespace App\Services;
 
 use App\DTO\Email\Request\EmailAccountMinMaxBalanceLimitRequestDTO;
+use App\DTO\Transaction\TransactionDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\RespondentFeesEnum;
-use App\Enums\TransferOutgoingChannelEnum;
+use App\Enums\TransferChannelEnum;
 use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\TransferOutgoingJob;
@@ -43,7 +44,9 @@ class TransferOutgoingService extends AbstractService
     public function __construct(
         protected EmailService $emailService,
         protected AccountService $accountService,
-        protected TransferOutgoingRepositoryInterface $transferRepository
+        protected CommissionService $commissionService,
+        protected TransferOutgoingRepositoryInterface $transferRepository,
+        protected TransactionService $transactionService
     ) {
     }
 
@@ -60,34 +63,6 @@ class TransferOutgoingService extends AbstractService
     /**
      * @throws GraphqlException
      */
-    public function getTransferAmountDebt(TransferOutgoing $transfer, float $paymentFee): ?float
-    {
-        return match ((int) $transfer->respondent_fees_id) {
-            RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount,
-            RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount + $paymentFee,
-            RespondentFeesEnum::SHARED_FEES->value => $transfer->amount + $paymentFee / 2,
-
-            default => throw new GraphqlException('Unknown respondent fee', 'use'),
-        };
-    }
-
-    /**
-     * @throws GraphqlException
-     */
-    public function getAccountAmountRealWithCommission(TransferOutgoing $transfer, float $paymentFee): ?float
-    {
-        return match ((int) $transfer->respondent_fees_id) {
-            RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount + $paymentFee,
-            RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount,
-            RespondentFeesEnum::SHARED_FEES->value => $transfer->amount + $paymentFee / 2,
-
-            default => throw new GraphqlException('Unknown respondent fee', 'use'),
-        };
-    }
-
-    /**
-     * @throws GraphqlException
-     */
     public function commissionCalculationFeeScheduled($amount, $fee, $currencyId): float
     {
         $paymentFee = 0;
@@ -97,99 +72,10 @@ class TransferOutgoingService extends AbstractService
             ->get();
 
         foreach ($priceListFees as $listFee) {
-            $paymentFee += $this->getFee($listFee->fee, $amount);
+            $paymentFee += $this->commissionService->getFee($listFee->fee, $amount);
         }
 
         return (float) $paymentFee;
-    }
-
-    /**
-     * @throws GraphqlException
-     */
-    public function commissionCalculation(TransferOutgoing $transfer): float
-    {
-        $amountDebt = 0;
-        $paymentFee = 0;
-
-        $priceListFees = PriceListFeeCurrency::where('price_list_fee_id', $transfer->price_list_fee_id)
-            ->where('currency_id', $transfer->currency_id)
-            ->get();
-
-        foreach ($priceListFees as $listFee) {
-            $paymentFee += $this->getFee($listFee->fee, $transfer->amount);
-        }
-
-        $amountDebt = $this->getTransferAmountDebt($transfer, $paymentFee);
-
-        $this->createFee($transfer, $paymentFee);
-
-        return (float) $amountDebt;
-    }
-
-    public function createFee(TransferOutgoing $transfer, float $paymentFee): void
-    {
-        // TODO: set fee_pp commission
-        Fee::updateOrCreate(
-            [
-                'transfer_id' => $transfer->id,
-                'transfer_type' => FeeTransferTypeEnum::OUTGOING->toString(),
-            ],
-            [
-                'fee' => $paymentFee,
-                'fee_pp' => 0,
-                'fee_type_id' => 1,
-                'operation_type_id' => $transfer->operation_type_id,
-                'member_id' => null,
-                'status_id' => $transfer->status_id,
-                'client_id' => 1,
-                'client_type' => class_basename(ApplicantCompany::class),
-                'account_id' => $transfer->account_id,
-                'price_list_fee_id' => $transfer->price_list_fee_id,
-            ]
-        );
-    }
-
-    public function getFee(Collection $list, $amount): ?float
-    {
-        $fee = $list->toArray();
-        $modeKey = array_search(FeeModeEnum::RANGE->toString(), array_column($fee, 'mode'));
-        if ($modeKey !== null && $modeKey !== false) {
-            return self::getFeeByRangeMode($fee, $modeKey, $amount);
-        } else {
-            return self::getFeeByFixMode($fee, $amount);
-        }
-    }
-
-    private static function getFeeByFixMode(array $data, float $amount): ?float
-    {
-        return collect($data)->map(function ($fee) use ($amount) {
-            return self::getConstantFee($fee, $amount);
-        })->sum();
-    }
-
-    private static function getFeeByRangeMode(array $data, int $modeKey, float $amount): ?float
-    {
-        $fees = null;
-        if ((float) $data[$modeKey]['amount_from'] <= $amount && $amount <= (float) $data[$modeKey]['amount_to']) {
-            unset($data[$modeKey]);
-
-            foreach ($data as $fee) {
-                $fees += self::getConstantFee($fee, $amount);
-            }
-        }
-
-        return $fees;
-    }
-
-    public static function getConstantFee(array $data, float $amount): ?float
-    {
-        if ($data['mode'] == FeeModeEnum::FIX->toString()) {
-            return $data['fee'];
-        } elseif ($data['mode'] == FeeModeEnum::PERCENT->toString()) {
-            return ($data['percent'] / 100) * $amount;
-        }
-
-        return null;
     }
 
     public function checkLimit(Account $account, Collection $allLimits, Collection $allProcessedAmount, $paymentAmount): bool
@@ -394,9 +280,11 @@ class TransferOutgoingService extends AbstractService
                 break;
             case PaymentStatusEnum::CANCELED->value:
                 throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+
                 break;
             case PaymentStatusEnum::EXECUTED->value:
                 throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+
                 break;
         }
     }
@@ -420,6 +308,30 @@ class TransferOutgoingService extends AbstractService
     }
 
     /**
+     * @throws GraphqlException
+     */
+    public function updateTransferStatus(TransferOutgoing $transfer, array $args): void
+    {
+        $this->validateUpdateTransferStatus($transfer, $args);
+
+        switch ($args['status_id']) {
+            case PaymentStatusEnum::ERROR->value:
+            case PaymentStatusEnum::CANCELED->value:
+                $this->updateTransferStatusToCancelOrError($transfer, $args['status_id']);
+
+                break;
+            case PaymentStatusEnum::SENT->value:
+                $this->updateTransferStatusToSent($transfer);
+
+                break;
+            default:
+                $this->transferRepository->update($transfer, ['status_id' => $args['status_id']]);
+
+                break;
+        }
+    }
+
+    /**
      * @throws EmailException
      * @throws GraphqlException
      */
@@ -428,7 +340,7 @@ class TransferOutgoingService extends AbstractService
         $this->checkLimits($transfer);
 
         DB::transaction(function () use ($transfer) {
-            $amountDebt = $this->commissionCalculation($transfer);
+            $amountDebt = $this->commissionService->makeFee($transfer);
 
             $this->checkApplicantBankingAccessUsedLimits($transfer);
 
@@ -443,6 +355,42 @@ class TransferOutgoingService extends AbstractService
 
             dispatch(new TransferOutgoingJob($transfer))->afterCommit();
         });
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function updateTransferStatusToExecuted(TransferOutgoing $transfer, TransactionDTO $transactionDTO = null): void
+    {
+        DB::beginTransaction();
+
+        try {
+            $amountDebt = $this->commissionService->makeFee($transfer);
+
+            $this->checkApplicantBankingAccessUsedLimits($transfer);
+
+            $this->transferRepository->update($transfer, [
+                'status_id' => PaymentStatusEnum::EXECUTED->value,
+                'amount_debt' => $amountDebt,
+            ]);
+
+            if ($transactionDTO) {
+                $this->transactionService->createTransaction($transactionDTO);
+            }
+            
+            $this->accountService->withdrawFromBalance($transfer, $amountDebt);
+
+            $this->updateApplicantBanckingAccessUsedLimits($transfer);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            
+            $this->transferRepository->update($transfer, [
+                'status_id' => PaymentStatusEnum::ERROR->value,
+                'system_message' => $e->getMessage(),
+            ]);
+        }
     }
 
     /**
@@ -517,7 +465,7 @@ class TransferOutgoingService extends AbstractService
         $args['sender_id'] = 1;
         $args['sender_type'] = class_basename(ApplicantCompany::class);
         $args['system_message'] = 'test';
-        $args['channel'] = TransferOutgoingChannelEnum::BACK_OFFICE->toString();
+        $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['reason'] = 'test';
         $args['recipient_country_id'] = 1;
         $args['respondent_fees_id'] = 1;
@@ -532,7 +480,7 @@ class TransferOutgoingService extends AbstractService
             $args['execution_at'] = $date->format('Y-m-d H:i:s');
         }
 
-        return $this->transferRepository->create($args);
+        return $this->transferRepository->createWithSwift($args);
     }
 
     public function createScheduledFeeTransfer(array $args): Builder|Model
@@ -561,7 +509,7 @@ class TransferOutgoingService extends AbstractService
         $args['sender_id'] = 1;
         $args['sender_type'] = class_basename(ApplicantCompany::class);
         $args['system_message'] = 'test';
-        $args['channel'] = TransferOutgoingChannelEnum::BACK_OFFICE->toString();
+        $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['recipient_country_id'] = 1;
         $args['respondent_fees_id'] = 1;
         $args['created_at'] = $date->format('Y-m-d H:i:s');

@@ -48,20 +48,34 @@ type TransferOutgoing {
     bank_message: String
     "Номер счета или IBAN получателя"
     recipient_account: String!
+    "Название банка получателя"
     recipient_bank_name: String!
+    "Адрес банка получателя"
     recipient_bank_address: String!
+    "SWIFT код банка получателя"
     recipient_bank_swift: String
+    "Страна банка получателя"
     recipient_bank_country: Country @belongsTo(relation: "recipientBankCountry")
+    "Имя получателя"
     recipient_name: String!
+    "Страна получателя"
     recipient_country: Country @belongsTo(relation: "recipientCountry")
+    "Город получателя"
     recipient_city: String!
+    "Адрес получателя"
     recipient_address: String!
+    "Штат получателя"
     recipient_state: String!
+    "Индекс получателя"
     recipient_zip: String!
     respondent_fee: RespondentFee @belongsTo(relation: "respondentFee")
+    "SWIFT field 56A (Intermediary Bank)"
+    transfer_swift: TransferSwift @hasOne(relation: "transferSwift")
     "Дата и время выполнения транзакции"
     execution_at: DateTimeUtc
+    "Дата и время создания"
     created_at: DateTimeUtc
+    "Дата и время обновления"
     updated_at: DateTimeUtc
 }
 
@@ -146,7 +160,7 @@ extend type Mutation @guard {
         payment_provider_id: ID!
         "ID платежной системы"
         payment_system_id: ID!
-        "ID банка получателя"
+        "ID страны банка получателя"
         recipient_bank_country_id: ID!
         requested_by_id: ID!
         price_list_id: ID!
@@ -174,6 +188,8 @@ extend type Mutation @guard {
         bank_message: String
         "ID файлов"
         file_id: [ID]
+        "SWIFT field 56A (Intermediary Bank)"
+        transfer_swift: TransferSwiftInput
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@create")
 
