@@ -31,10 +31,10 @@ enum ClientType{
 enum ServiceType {
     BankingCommon @enum(value: "BankingCommon")
     BankingSystem @enum(value: "BankingSystem")
-    Banking @enum(value: "banking")
-    Common @enum(value: "common")
-    System @enum(value: "system")
-    AdminNotify @enum(value: "admin notify")
+    BankingAdminNotify @enum(value: "BankingAdminNotify")
+    KYCCommon @enum(value: "KYCCommon")
+    KYCSystem @enum(value: "KYCSystem")
+    KYCAdminNotify @enum(value: "KYCAdminNotify")
 }
 
 
