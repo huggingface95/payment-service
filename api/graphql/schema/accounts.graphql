@@ -132,7 +132,6 @@ extend type Query @guard {
 
 input QueryAccountListFilterStatic @spread{
     hasCompanyMixedIdOrName: Mixed @eq
-    hasPaymentProviderMixedIdOrName: Mixed @eq
     hasPaymentSystemMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
     MixedAccountNumberOrAccountName: String @ilike
@@ -144,6 +143,8 @@ input QueryAccountListFilterStatic @spread{
     hasCommissionTemplateMixedIdOrFullname: Mixed @eq
     account_state_id: ID @eq
     hasClientableMixedIdOrFullname: Mixed @eq
+    payment_provider_id: ID @eq
+    iban_provider_id: ID @eq
     current_balance: Float @eq
     available_balance: Float @eq
     reserved_balance: Float @eq
