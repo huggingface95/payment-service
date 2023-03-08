@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\RespondentFeesEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\Payments;
@@ -16,10 +17,37 @@ class AccountService extends AbstractService
     ) {
     }
 
-    public function withdrawFromBalance(Payments $payment)
+    public function addToBalance(Account $account, float $amount): void
     {
-        $account = $payment->account;
-        $amount = $this->paymentsService->getAccountAmountRealWithCommission($payment, $payment->fee);
+        $account->current_balance = $account->current_balance + $amount;
+        $account->available_balance = $account->current_balance - $account->reserved_balance;
+        $account->save();
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function withdrawFromBalance(TransferOutgoing $transfer)
+    {
+        $account = $transfer->account;
+        $amount = $this->getAccountAmountRealWithCommission($transfer, $transfer->fee->fee);
+
+        if ($account->available_balance < $amount) {
+            throw new GraphqlException('Available balance less than payment amount', 'use');
+        }
+
+        $account->current_balance = $account->current_balance - $amount;
+        $account->available_balance = $account->current_balance;
+        $account->save();
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function withdrawFromReservedBalance(TransferOutgoing $transfer)
+    {
+        $account = $transfer->account;
+        $amount = $this->getAccountAmountRealWithCommission($transfer, $transfer->fee->fee);
 
         if ($account->reserved_balance < $amount) {
             throw new GraphqlException('Reserved balance less than payment amount', 'use');
@@ -29,6 +57,20 @@ class AccountService extends AbstractService
         $account->reserved_balance = $account->reserved_balance - $amount;
         $account->available_balance = $account->current_balance - $account->reserved_balance;
         $account->save();
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function getAccountAmountRealWithCommission(TransferOutgoing $transfer, float $paymentFee): ?float
+    {
+        return match ((int) $transfer->respondent_fees_id) {
+            RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount + $paymentFee,
+            RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount,
+            RespondentFeesEnum::SHARED_FEES->value => $transfer->amount + $paymentFee / 2,
+
+            default => throw new GraphqlException('Unknown respondent fee', 'use'),
+        };
     }
 
     public function setAmmountReserveOnBalance(Payments $payment)

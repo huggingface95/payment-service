@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\TransferOutgoingChannelEnum;
+use App\Enums\TransferChannelEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -35,9 +35,9 @@ class CreateTransferOutgoingTable extends Migration
             $table->string('system_message', 255);
             $table->string('reason', 255);
             $table->enum('channel', [
-                TransferOutgoingChannelEnum::CLIENT_DASHBOARD->toString(),
-                TransferOutgoingChannelEnum::BACK_OFFICE->toString(),
-                TransferOutgoingChannelEnum::CLIENT_MOBILE_APPLICATION->toString(),
+                TransferChannelEnum::CLIENT_DASHBOARD->toString(),
+                TransferChannelEnum::BACK_OFFICE->toString(),
+                TransferChannelEnum::CLIENT_MOBILE_APPLICATION->toString(),
             ]);
             $table->string('bank_message', 255);
             $table->string('recipient_account', 255);

@@ -12,10 +12,12 @@ use App\Repositories\Interfaces\FileRepositoryInterface;
 use App\Repositories\Interfaces\GraphqlManipulateSchemaRepositoryInterface;
 use App\Repositories\Interfaces\JWTRepositoryInterface;
 use App\Repositories\Interfaces\PriceListFeeScheduledRepositoryInterface;
+use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Repositories\Interfaces\VvRepositoryInterface;
 use App\Repositories\JWTRepository;
 use App\Repositories\PriceListFeeScheduledRepository;
+use App\Repositories\TransferIncomingRepository;
 use App\Repositories\TransferOutgoingRepository;
 use App\Repositories\VvRepository;
 use Illuminate\Support\ServiceProvider;
@@ -45,6 +47,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             JWTRepositoryInterface::class,
             JWTRepository::class
+        );
+
+        $this->app->bind(
+            TransferIncomingRepositoryInterface::class,
+            TransferIncomingRepository::class
         );
 
         $this->app->bind(

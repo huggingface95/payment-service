@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum TransferOutgoingChannelEnum: int
+enum TransferChannelEnum: int
 {
     case CLIENT_DASHBOARD = 1;
     case BACK_OFFICE = 2;

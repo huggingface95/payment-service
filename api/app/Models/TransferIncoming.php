@@ -55,12 +55,20 @@ class TransferIncoming extends BaseModel
         'sender_address',
         'sender_state',
         'sender_zip',
+        'respondent_fees_id',
         'created_at',
         'updated_at',
         'execution_at',
+        'group_id',
+        'group_type_id',
+        'project_id',
+        'price_list_id',
+        'price_list_fee_id',
     ];
 
     protected $casts = [
+        'amount' => 'decimal:5',
+        'amount_debt' => 'decimal:5',
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'execution_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
@@ -158,6 +166,12 @@ class TransferIncoming extends BaseModel
     public function transferType(): HasOneThrough
     {
         return $this->hasOneThrough(TransferType::class, OperationType::class, 'id', 'id', 'operation_type_id', 'transfer_type_id');
+    }
+
+    public function transferSwift(): HasOne
+    {
+        return $this->hasOne(TransferSwift::class, 'transfer_id')
+            ->where('transfer_type', class_basename(self::class));
     }
 
     public function transaction(): HasOne

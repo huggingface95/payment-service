@@ -1,0 +1,16 @@
+extend type Mutation @guard {
+    """
+    Создать перевод между аккаунтами
+    """
+    createTransferBetweenAccounts(
+        "Сумма"
+        amount: Decimal!
+        "ID аккаунта отправителя"
+        from_account_id: ID!
+        "ID аккаунта получателя"
+        to_account_id: ID!
+        "ID файлов"
+        file_id: [ID]
+    ): TransferIncoming
+        @field(resolver: "TransferBetweenAccountsMutator@create")
+}

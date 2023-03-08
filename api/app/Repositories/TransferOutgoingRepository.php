@@ -42,6 +42,22 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
         return $this->query()->create($data);
     }
 
+    public function createWithSwift(array $data): Model|Builder
+    {
+        $transfer = $this->query()->create($data);
+
+        if (isset($data['transfer_swift'])) {
+            $transfer->transferSwift()->create(
+                array_merge(
+                    $data['transfer_swift'],
+                    ['transfer_type' => class_basename(TransferOutgoing::class)]
+                )
+            );
+        }
+        
+        return $transfer;
+    }
+
     public function update(Model|Builder $model, array $data): Model|Builder
     {
         $model->update($data);

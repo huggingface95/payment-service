@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\TransferOutgoingChannelEnum;
+use App\Enums\TransferChannelEnum;
 use App\Models\TransferIncoming;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -42,9 +42,9 @@ class TransferIncomingFactory extends Factory
             'system_message' => 'System msg: '.$this->faker->name(),
             'reason' => $this->faker->name(),
             'channel' => $this->faker->randomElement([
-                TransferOutgoingChannelEnum::CLIENT_DASHBOARD->toString(),
-                TransferOutgoingChannelEnum::BACK_OFFICE->toString(),
-                TransferOutgoingChannelEnum::CLIENT_MOBILE_APPLICATION->toString(),
+                TransferChannelEnum::CLIENT_DASHBOARD->toString(),
+                TransferChannelEnum::BACK_OFFICE->toString(),
+                TransferChannelEnum::CLIENT_MOBILE_APPLICATION->toString(),
             ]),
             'bank_message' => 'Bank msg: '.$this->faker->name(),
             'sender_account' => $this->faker->name(),
@@ -62,6 +62,11 @@ class TransferIncomingFactory extends Factory
             'execution_at' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
             'created_at' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
             'updated_at' => $this->faker->dateTime()->format('Y-m-d H:i:s'),
+            'group_id' => 1,
+            'group_type_id' => 1,
+            'project_id' => 1,
+            'price_list_id' => 1,
+            'price_list_fee_id' => 1,
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\TransferOutgoingChannelEnum;
+use App\Enums\TransferChannelEnum;
 use App\Models\TransferOutgoing;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -44,9 +44,9 @@ class TransferOutgoingFactory extends Factory
             'system_message' => 'System msg: '.$this->faker->name(),
             'reason' => $this->faker->name(),
             'channel' => $this->faker->randomElement([
-                TransferOutgoingChannelEnum::CLIENT_DASHBOARD->toString(),
-                TransferOutgoingChannelEnum::BACK_OFFICE->toString(),
-                TransferOutgoingChannelEnum::CLIENT_MOBILE_APPLICATION->toString(),
+                TransferChannelEnum::CLIENT_DASHBOARD->toString(),
+                TransferChannelEnum::BACK_OFFICE->toString(),
+                TransferChannelEnum::CLIENT_MOBILE_APPLICATION->toString(),
             ]),
             'bank_message' => 'Bank msg: '.$this->faker->name(),
             'recipient_account' => $this->faker->name(),
