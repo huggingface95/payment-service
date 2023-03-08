@@ -30,13 +30,13 @@ class EmailTemplate extends BaseModel
 
     public const CLIENT = 'client';
 
-    public const BANKING = 'banking';
+    public const BANKING = 'BankingAdminNotify';
 
-    public const COMMON = 'common';
+    public const COMMON = 'KYCCommon';
 
-    public const SYSTEM = 'system';
+    public const SYSTEM = 'KYCSystem';
 
-    public const ADMIN = 'admin notify';
+    public const ADMIN = 'KYCAdminNotify';
 
     /**
      * The attributes that are mass assignable.

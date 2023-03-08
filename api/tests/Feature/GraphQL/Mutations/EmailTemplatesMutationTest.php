@@ -33,7 +33,7 @@ class EmailTemplatesMutationTest extends TestCase
                     subject: $subject
                     content: $content
                     use_layout: false
-                    service_type: Common
+                    service_type: KYCCommon
                     type: Client
                     company_id: $company_id
                 )
@@ -74,7 +74,7 @@ class EmailTemplatesMutationTest extends TestCase
                         subject: $subject
                         content: $content
                         use_layout: false
-                        service_type: Common
+                        service_type: KYCCommon
                         type: Client
                         company_id: $company_id
                     )
@@ -128,7 +128,7 @@ class EmailTemplatesMutationTest extends TestCase
                         subject: $subject
                         content: $content
                         use_layout: false
-                        service_type: Banking
+                        service_type: BankingAdminNotify
                         type: Administration
                         company_id: $company_id
                     )
