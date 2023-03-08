@@ -45,7 +45,7 @@ input QueryPaymentSystemsFilterStatic @spread{
     name: Mixed @eq @neq @not_in
     hasProvidersFilterByName: String @ilike
     hasProvidersFilterById: ID @eq
-    hasCompaniesFilterById: ID @eq
+    hasCompanyFilterById: ID @eq
     hasRegionsFilterById: ID @eq
 }
 

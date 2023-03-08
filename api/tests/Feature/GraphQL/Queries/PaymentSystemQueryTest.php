@@ -242,7 +242,7 @@ class PaymentSystemQueryTest extends TestCase
             [
                 'query' => '
                 {
-                    paymentSystems (filter: { column: HAS_COMPANIES_FILTER_BY_ID, value: 1 }) {
+                    paymentSystems (filter: { column: HAS_COMPANY_FILTER_BY_ID, value: 1 }) {
                         data {
                           id
                           name
