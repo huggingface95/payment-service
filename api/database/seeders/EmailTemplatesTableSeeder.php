@@ -22,7 +22,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 2,
             'company_id' => 1,
-            'service_type' => 'common',
+            'service_type' => 'KYCCommon',
             'created_at' => Carbon::now(),
             'name' => 'Sign Up: Email Confirmation',
         ]);

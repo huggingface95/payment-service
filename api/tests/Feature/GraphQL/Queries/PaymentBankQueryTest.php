@@ -144,7 +144,7 @@ class PaymentBankQueryTest extends TestCase
 
     public function testQueryPaymentBanksWithFilterByAddress(): void
     {
-        $paymentBanks = PaymentBank::orderBy('id', 'ASC')
+        $paymentBanks = PaymentBank::orderBy('id', 'DESC')
             ->first();
 
         $data = [
@@ -159,6 +159,7 @@ class PaymentBankQueryTest extends TestCase
             [
                 'query' => 'query PaymentBanks($address: Mixed) {
                     paymentBanks (
+                        orderBy: {column: ID, order: DESC}
                         filter: { column: ADDRESS, operator: ILIKE, value: $address }
                     ) {
                         data {
