@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\EmailTemplatesTypeEnum;
 use App\Enums\FeeTypeEnum;
 use App\Enums\GroupTypeEnum;
+use App\Enums\ModuleTagEnum;
 use App\Models\EmailNotification;
 use App\Models\PermissionCategory;
 use App\Models\PermissionFilter;
@@ -4140,6 +4142,118 @@ class PermissionsSeeder extends Seeder
                     'Groups List.Add New Group',
                     'Groups Settings.Group Type: Member'
                 ],
+            ],
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'type',
+                'value' => EmailTemplatesTypeEnum::CLIENT,
+                'binds' => ['Email Templates:Settings.Enabled', 'Email Templates:Settings.Type Notification: Client'],
+            ],
+            [
+                'mode' => PermissionFilter::SCOPE_MODE,
+                'action' => null,
+                'table' => 'email_templates',
+                'column' => 'type',
+                'value' => EmailTemplatesTypeEnum::ADMINISTRATION,
+                'binds' => ['Email Templates:Settings.Enabled', 'Email Templates:Settings.Type Notification: Administration'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::BANKING_SYSTEM,
+                'binds' => ['Email Templates:Tags.Banking: System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::BANKING_SYSTEM,
+                'binds' => ['Email Templates:Tags.Banking: System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::BANKING_COMMON,
+                'binds' => ['Email Templates:Tags.Banking: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::BANKING_COMMON,
+                'binds' => ['Email Templates:Tags.Banking: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::BANKING_ADMIN_NOTIFY,
+                'binds' => ['Email Templates:Tags.Banking: Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::BANKING_ADMIN_NOTIFY,
+                'binds' => ['Email Templates:Tags.Banking: Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::KYC_SYSTEM,
+                'binds' => ['Email Templates:Tags.KYC: System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::KYC_SYSTEM,
+                'binds' => ['Email Templates:Tags.KYC: System'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::KYC_COMMON,
+                'binds' => ['Email Templates:Tags.KYC: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::KYC_COMMON,
+                'binds' => ['Email Templates:Tags.KYC: Common'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_CREATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::KYC_ADMIN_NOTIFY,
+                'binds' => ['Email Templates:Tags.KYC: Admin Notify'],
+            ],
+            [
+                'mode' => PermissionFilter::EVENT_MODE,
+                'action' => PermissionFilter::EVENT_UPDATING,
+                'table' => 'email_templates',
+                'column' => 'service_type',
+                'value' => ModuleTagEnum::KYC_ADMIN_NOTIFY,
+                'binds' => ['Email Templates:Tags.KYC: Admin Notify'],
             ],
         ];
         $lists = PermissionsList::where('type', 'member')->get()->pluck('id')->toArray();
