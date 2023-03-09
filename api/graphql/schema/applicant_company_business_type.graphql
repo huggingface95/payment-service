@@ -18,9 +18,15 @@ extend type Query @guard {
     orderBy: [{ column: NAME, order: DESC }] сортировка по ID, по названию
     where:{column: NAME, operator: LIKE, value: ""} фильтр по названию
     """
-    applicantCompanyBusinessType(where: _ @whereConditions(columns: ["name"]), orderBy: _ @orderBy(
+    applicantCompanyBusinessTypes (
+    filter: _ @filterConditions(static: QueryApplicantCompanyBusinessTypesFilterStatic),
+    orderBy: _ @orderBy(
         columns: ["id","name"],
     )): [ApplicantCompanyBusinessType!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+}
+
+input QueryApplicantCompanyBusinessTypesFilterStatic @spread{
+    name: String @ilike
 }
 
 extend type Mutation @guard {
