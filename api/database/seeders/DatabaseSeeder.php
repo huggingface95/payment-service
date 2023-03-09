@@ -99,5 +99,6 @@ class DatabaseSeeder extends Seeder
         $this->call(BankCorrespondentTableSeeder::class);
         $this->call(BankCorrespondentCurrenciesTableSeeder::class);
         $this->call(BankCorrespondentRegionsTableSeeder::class);
+        $this->call(AccountReachedLimitsTableSeeder::class);
     }
 }
