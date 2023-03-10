@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\FeeTransferTypeEnum;
 use App\Models\Fee;
 use Illuminate\Database\Seeder;
 
@@ -14,8 +15,38 @@ class FeeTableSeeder extends Seeder
      */
     public function run()
     {
+        Fee::firstOrCreate([
+            'transfer_id' => 1,
+            'fee' => 750,
+            'fee_pp' => 750 * 0.9,
+            'fee_type_id' => 1,
+            'transfer_type' => FeeTransferTypeEnum::INCOMING->toString(),
+            'operation_type_id' => 1,
+            'member_id' => null,
+            'status_id' => 1,
+            'client_id' => 1,
+            'client_type' => class_basename(ApplicantIndividual::class),
+            'account_id' => 1,
+            'price_list_fee_id' => 1,
+        ]);
+
+        Fee::firstOrCreate([
+            'transfer_id' => 2,
+            'fee' => 560,
+            'fee_pp' => 560 * 0.9,
+            'fee_type_id' => 1,
+            'transfer_type' => FeeTransferTypeEnum::OUTGOING->toString(),
+            'operation_type_id' => 1,
+            'member_id' => null,
+            'status_id' => 1,
+            'client_id' => 1,
+            'client_type' => class_basename(ApplicantIndividual::class),
+            'account_id' => 1,
+            'price_list_fee_id' => 1,
+        ]);
+
         Fee::withoutEvents(function () {
-            for ($i = 1; $i <= 20; $i++) {
+            for ($i = 3; $i <= 20; $i++) {
                 $fee = Fee::factory()->definition();
 
                 Fee::firstOrCreate(

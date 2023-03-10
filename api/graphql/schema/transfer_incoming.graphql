@@ -173,10 +173,12 @@ extend type Mutation @guard {
         "ID файлов"
         file_id: [ID]
         "SWIFT field 56A (Intermediary Bank)"
-        transfer_swift: TransferSwiftInput
-    ): TransferOutgoing
+        transfer_swift: String
+        "Статус"
+        status_id: Int
+    ): TransferIncoming
         @field(resolver: "TransferIncomingMutator@create")
-    
+
     """
     Редактировать входящий перевод
     """

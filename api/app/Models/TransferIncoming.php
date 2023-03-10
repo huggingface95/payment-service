@@ -104,7 +104,7 @@ class TransferIncoming extends BaseModel
     public function files(): BelongsToMany
     {
         return $this->belongsToMany(Files::class, 'transfer_file_relation', 'transfer_id', 'file_id')
-            ->where('transfer_type', class_basename(TransferOutgoing::class));
+            ->where('transfer_type', class_basename(self::class));
     }
 
     public function paymentBank(): BelongsTo
@@ -114,7 +114,7 @@ class TransferIncoming extends BaseModel
 
     public function paymentOperation(): BelongsTo
     {
-        return $this->belongsTo(OperationType::class, 'operation_type_id');
+        return $this->belongsTo(OperationType::class, 'operation_type_id', 'id');
     }
 
     public function paymentProvider(): BelongsTo
