@@ -64,7 +64,7 @@ type Account {
 
 type AccountClient {
     id: ID!
-    client: Client! @morphTo(relation:"client")
+    client: Client @morphTo(relation:"client")
 }
 
 type AccountState {
