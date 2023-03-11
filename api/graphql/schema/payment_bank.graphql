@@ -80,7 +80,7 @@ input InputPaymentBank {
     "ID платежного провидера"
     payment_provider_id: ID!
     "SWIFT"
-    swift: String!
+    swift: String
     "Страна"
     country_id: ID!
     "Активный не активный (true/false)"

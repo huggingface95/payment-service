@@ -59,15 +59,15 @@ input InputBankCorrespondent {
     "Адрес"
     address: String!
     "SWIFT"
-    bank_code: String!
+    bank_code: String
     "Счет банка корреспондента"
     bank_account: String!
     "swift"
-    swift: String!
+    swift: String
     "Account number"
     account_number: String!
     "NCS Number"
-    ncs_number: String!
+    ncs_number: String
     "Страна"
     country_id: ID!
     "ID платежной системы"
