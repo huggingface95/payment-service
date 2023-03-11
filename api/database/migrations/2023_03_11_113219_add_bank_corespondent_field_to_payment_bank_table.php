@@ -13,7 +13,7 @@ class AddBankCorespondentFieldToPaymentBankTable extends Migration
      */
     public function up()
     {
-        Schema::table('payment_bank', function (Blueprint $table) {
+        Schema::table('payment_banks', function (Blueprint $table) {
             $table->unsignedBigInteger('bank_correspondent_id')->nullable();
             $table->foreign('bank_correspondent_id')->references('id')->on('bank_correspondents')->onUpdate('cascade');
         });
@@ -26,7 +26,7 @@ class AddBankCorespondentFieldToPaymentBankTable extends Migration
      */
     public function down()
     {
-        Schema::table('payment_bank', function (Blueprint $table) {
+        Schema::table('payment_banks', function (Blueprint $table) {
             $table->dropForeign(['bank_correspondent_id']);
             $table->dropColumn('bank_correspondent_id');
         });
