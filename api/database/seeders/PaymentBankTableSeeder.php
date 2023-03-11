@@ -30,6 +30,7 @@ class PaymentBankTableSeeder extends Seeder
                     'is_active' => true,
                     'payment_provider_id' => $i,
                     'payment_system_id' => $i,
+                    'bank_correspondent_id' => $i,
                     'country_id' => $i,
                     'swift' => $faker->swiftBicNumber(),
                 ]
