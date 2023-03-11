@@ -17,6 +17,7 @@ class CreateAuthenticationLogTable extends Migration
                 id UUID,
                 provider String,
                 email String,
+                client_type String
                 company String,
                 domain String,
                 ip String,
