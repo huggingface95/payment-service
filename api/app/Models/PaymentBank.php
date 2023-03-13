@@ -26,6 +26,8 @@ class PaymentBank extends BaseModel
         'payment_system_id',
         'country_id',
         'swift',
+        'account_number',
+        'ncs_number',
         'is_active',
     ];
 

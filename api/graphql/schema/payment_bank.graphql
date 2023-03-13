@@ -14,6 +14,10 @@ type PaymentBank {
     payment_system_code: String
     "SWIFT"
     swift: String
+    "Account Number"
+    account_number: String!
+    "NCS Number"
+    ncs_number: String!
     "Получить страну"
     country: Country @belongsTo(relation: "country")
     "Получить валюты"
@@ -81,6 +85,10 @@ input InputPaymentBank {
     payment_provider_id: ID!
     "SWIFT"
     swift: String
+    "Account Number"
+    account_number: String!
+    "NCS Number"
+    ncs_number: String!
     "Страна"
     country_id: ID!
     "Активный не активный (true/false)"

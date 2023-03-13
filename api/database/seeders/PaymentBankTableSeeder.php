@@ -33,6 +33,8 @@ class PaymentBankTableSeeder extends Seeder
                     'bank_correspondent_id' => $i,
                     'country_id' => $i,
                     'swift' => $faker->swiftBicNumber(),
+                    'account_number' => $faker->numberBetween(1000000, 2000000),
+                    'ncs_number' => $faker->numberBetween(1000000, 2000000),
                 ]
             );
         }
