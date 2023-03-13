@@ -25,6 +25,7 @@ class TransferIncomingsMutationTest extends TestCase
                 $account_id: ID!
                 $payment_provider_id: ID!
                 $payment_system_id: ID!
+                $payment_bank_id: ID!
                 $price_list_id: ID!
                 $price_list_fee_id: ID!
                 $sender_account: String
@@ -51,6 +52,7 @@ class TransferIncomingsMutationTest extends TestCase
                     account_id: $account_id
                     payment_provider_id: $payment_provider_id
                     payment_system_id: $payment_system_id
+                    payment_bank_id: $payment_bank_id
                     price_list_id: $price_list_id
                     price_list_fee_id: $price_list_fee_id
                     sender_account: $sender_account
@@ -177,6 +179,7 @@ class TransferIncomingsMutationTest extends TestCase
                 'account_id' => 1,
                 'payment_provider_id' => 1,
                 'payment_system_id' => 1,
+                'payment_bank_id' => 1,
                 'price_list_id' => 1,
                 'price_list_fee_id' => 1,
                 'sender_account' => 'Sender Account',
@@ -215,6 +218,7 @@ class TransferIncomingsMutationTest extends TestCase
                 $account_id: ID!
                 $payment_provider_id: ID!
                 $payment_system_id: ID!
+                $payment_bank_id: ID!
                 $price_list_id: ID!
                 $price_list_fee_id: ID!
                 $sender_account: String
@@ -241,6 +245,7 @@ class TransferIncomingsMutationTest extends TestCase
                     account_id: $account_id
                     payment_provider_id: $payment_provider_id
                     payment_system_id: $payment_system_id
+                    payment_bank_id: $payment_bank_id
                     price_list_id: $price_list_id
                     price_list_fee_id: $price_list_fee_id
                     sender_account: $sender_account
@@ -287,6 +292,7 @@ class TransferIncomingsMutationTest extends TestCase
                     'account_id' => 1,
                     'payment_provider_id' => 1,
                     'payment_system_id' => 1,
+                    'payment_bank_id' => 1,
                     'price_list_id' => 1,
                     'price_list_fee_id' => 1,
                     'sender_account' => 'Sender Account',

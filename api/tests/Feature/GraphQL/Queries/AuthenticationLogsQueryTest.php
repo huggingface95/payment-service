@@ -116,8 +116,6 @@ class AuthenticationLogsQueryTest extends TestCase
                         data {
                             id
                             company
-                            email
-                            provider
                         }
                         paginatorInfo {
                             count
