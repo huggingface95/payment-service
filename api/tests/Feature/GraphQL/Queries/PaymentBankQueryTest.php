@@ -74,6 +74,8 @@ class PaymentBankQueryTest extends TestCase
                 'address' => (string) $paymentBank->address,
                 'bank_code' => (string) $paymentBank->bank_code,
                 'payment_system_code' => (string) $paymentBank->payment_system_code,
+                'ncs_number' => (string) $paymentBank->ncs_number,
+                'account_number' => (string) $paymentBank->account_number,
             ];
         }
 
@@ -88,6 +90,8 @@ class PaymentBankQueryTest extends TestCase
                             address
                             bank_code
                             payment_system_code
+                            ncs_number
+                            account_number
                         }
                     }
                 }',
