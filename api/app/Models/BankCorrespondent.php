@@ -24,6 +24,7 @@ class BankCorrespondent extends BaseModel
         'account_number',
         'ncs_number',
         'is_active',
+        'payment_bank_id',
     ];
 
     protected $casts = [
@@ -68,5 +69,10 @@ class BankCorrespondent extends BaseModel
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id');
+    }
+
+    public function paymentBank(): BelongsTo
+    {
+        return $this->belongsTo(PaymentBank::class, 'payment_bank_id');
     }
 }

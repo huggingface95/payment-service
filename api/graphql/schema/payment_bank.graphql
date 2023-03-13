@@ -24,8 +24,8 @@ type PaymentBank {
     currencies: [Currencies] @hasMany(relation: "currencies")
     "Получить регионы"
     regions: [Region] @hasMany(relation: "regions")
-    "Получить банк корреспондент"
-    bank_correspondent: BankCorrespondent @belongsTo(relation: "bankCorrespondent")
+    "Получить банкы корреспондент"
+    bank_correspondent: [BankCorrespondent] @hasMany(relation: "bankCorrespondents")
     "Платежная провидер"
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Платежная система"
@@ -83,6 +83,8 @@ input InputPaymentBank {
     payment_system_id: ID!
     "ID платежного провидера"
     payment_provider_id: ID!
+    "Массив ID корреспондентов"
+    bank_correspondent_id: [ID]
     "SWIFT"
     swift: String
     "Account Number"
