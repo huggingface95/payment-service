@@ -31,9 +31,9 @@ class PaymentBank extends BaseModel
         'is_active',
     ];
 
-    public function bankCorrespondent(): BelongsTo
+    public function bankCorrespondents(): HasMany
     {
-        return $this->belongsTo(BankCorrespondent::class, 'bank_correspondent_id');
+        return $this->hasMany(BankCorrespondent::class, 'payment_bank_id');
     }
 
     public function paymentBankCurrencies(): HasMany
