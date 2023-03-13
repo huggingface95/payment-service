@@ -44,11 +44,18 @@ class TransferIncomingService extends AbstractService
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['reason'] = 'test';
         $args['sender_country_id'] = 1;
-        $args['respondent_fees_id'] = 1;
+        $args['respondent_fees_id'] = 2;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $date->format('Y-m-d H:i:s');
 
-        return $this->transferRepository->createWithSwift($args);
+        return DB::transaction(function () use ($args) {
+            $transfer = $this->transferRepository->createWithSwift($args);
+
+            $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
+            $this->commissionService->makeFee($transfer, $transactionDTO);
+
+            return $transfer;
+        });
     }
 
     /**
@@ -124,18 +131,15 @@ class TransferIncomingService extends AbstractService
         DB::beginTransaction();
 
         try {
-            $amountDebt = $this->commissionService->makeFee($transfer);
-
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::EXECUTED->value,
-                'amount_debt' => $amountDebt,
             ]);
 
             if ($transactionDTO) {
                 $this->transactionService->createTransaction($transactionDTO);
             }
 
-            $this->accountService->addToBalance($transfer->account, $amountDebt);
+            $this->accountService->addToBalance($transfer->account, $transfer->amount_debt);
 
             DB::commit();
         } catch (\Exception $e) {

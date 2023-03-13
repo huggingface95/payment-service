@@ -340,13 +340,10 @@ class TransferOutgoingService extends AbstractService
         $this->checkLimits($transfer);
 
         DB::transaction(function () use ($transfer) {
-            $amountDebt = $this->commissionService->makeFee($transfer);
-
             $this->checkApplicantBankingAccessUsedLimits($transfer);
 
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::SENT->value,
-                'amount_debt' => $amountDebt,
             ]);
 
             $this->accountService->setAmmountReserveOnAccountBalance($transfer);
@@ -365,20 +362,17 @@ class TransferOutgoingService extends AbstractService
         DB::beginTransaction();
 
         try {
-            $amountDebt = $this->commissionService->makeFee($transfer);
-
             $this->checkApplicantBankingAccessUsedLimits($transfer);
 
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::EXECUTED->value,
-                'amount_debt' => $amountDebt,
             ]);
 
             if ($transactionDTO) {
                 $this->transactionService->createTransaction($transactionDTO);
             }
             
-            $this->accountService->withdrawFromBalance($transfer, $amountDebt);
+            $this->accountService->withdrawFromBalance($transfer, $transfer->amount_debt);
 
             $this->updateApplicantBanckingAccessUsedLimits($transfer);
 
@@ -468,7 +462,7 @@ class TransferOutgoingService extends AbstractService
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['reason'] = 'test';
         $args['recipient_country_id'] = 1;
-        $args['respondent_fees_id'] = 1;
+        $args['respondent_fees_id'] = 2;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
 
         if (isset($args['execution_at'])) {
@@ -480,7 +474,14 @@ class TransferOutgoingService extends AbstractService
             $args['execution_at'] = $date->format('Y-m-d H:i:s');
         }
 
-        return $this->transferRepository->createWithSwift($args);
+        return DB::transaction(function () use ($args) {
+            $transfer = $this->transferRepository->createWithSwift($args);
+
+            $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
+            $this->commissionService->makeFee($transfer, $transactionDTO);
+
+            return $transfer;
+        });
     }
 
     public function createScheduledFeeTransfer(array $args): Builder|Model

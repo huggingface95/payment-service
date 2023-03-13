@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use App\DTO\Transaction\TransactionDTO;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
+use App\Enums\OperationTypeEnum;
 use App\Enums\RespondentFeesEnum;
 use App\Exceptions\GraphqlException;
+use App\Models\Currencies;
 use App\Models\Fee;
 use App\Models\PriceListFeeCurrency;
 use App\Models\TransferIncoming;
@@ -15,13 +18,18 @@ use Illuminate\Support\Collection;
 class CommissionService extends AbstractService
 {
 
-    public function makeFee(TransferOutgoing|TransferIncoming $transfer): float
+    public function makeFee(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
     {
         $amountDebt = 0;
-        $feeAmount = $this->commissionCalculation($transfer);
+        $feeAmount = $this->commissionCalculation($transfer, $transactionDTO);
         $amountDebt = $this->getTransferAmountDebt($transfer, $feeAmount);
 
         $this->createFee($transfer, $feeAmount);
+
+        if ($amountDebt > 0) {
+            $transfer->amount_debt = $amountDebt;
+            $transfer->save();
+        }
 
         return (float) $amountDebt;
     }
@@ -29,7 +37,7 @@ class CommissionService extends AbstractService
     /**
      * @throws GraphqlException
      */
-    private function commissionCalculation(TransferOutgoing|TransferIncoming $transfer): float
+    private function commissionCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
     {
         $paymentFee = 0;
 
@@ -38,10 +46,50 @@ class CommissionService extends AbstractService
             ->get();
 
         foreach ($priceListFees as $listFee) {
+            if (! $this->isAllowToApplyCommission($transfer, $listFee, $transactionDTO)) {
+                continue;
+            }
+           
             $paymentFee += $this->getFee($listFee->fee, $transfer->amount);
         }
 
         return (float) $paymentFee;
+    }
+    
+
+    private function isAllowToApplyCommission(TransferOutgoing|TransferIncoming $transfer, PriceListFeeCurrency $listFee, TransactionDTO $transactionDTO = null): bool
+    {
+        switch ($transfer->operation_type_id) {
+            case OperationTypeEnum::EXCHANGE->value:
+                if ($transfer instanceof TransferOutgoing) {
+                    $dstCurrencies = $listFee->feeDestinationCurrency;
+                    if ($dstCurrencies->count() > 0) {
+                        foreach($dstCurrencies as $currency) {
+                            if ($currency->currency_id == Currencies::ALL_CURRENCIES || $currency->currency_id == $transactionDTO->currency_dst_id) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+                break;
+            case OperationTypeEnum::BETWEEN_ACCOUNT->value:
+            case OperationTypeEnum::BETWEEN_USERS->value:
+                if ($transfer instanceof TransferOutgoing) {
+                    return true;
+                }
+                return false;
+                break;
+            case OperationTypeEnum::INCOMING_WIRE_TRANSFER->value:
+            case OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value:
+            case OperationTypeEnum::DEBIT->value:
+            case OperationTypeEnum::CREDIT->value:
+            case OperationTypeEnum::SCHEDULED_FEE->value:
+                return true;
+                break;
+            default:
+                return false;
+        }
     }
 
     public function getFee(Collection $list, $amount): ?float
