@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 class TransferBetweenUsersService extends AbstractService
 {
     public function __construct(
+        protected CommissionService $commissionService,
         protected TransferOutgoingService $transferOutgoingService,
         protected TransferIncomingService $transferIncomingService,
         protected TransferIncomingRepositoryInterface $transferIncomingRepository,
@@ -41,6 +42,8 @@ class TransferBetweenUsersService extends AbstractService
         $transfers = DB::transaction(function () use ($data) {
             $outgoing = $this->transferOutgoingRepository->create($data['outgoing']);
             $incoming = $this->transferIncomingRepository->create($data['incoming']);
+
+            $this->commissionService->makeFee($outgoing);
 
             return [
                 'outgoing' => $outgoing, 
@@ -83,12 +86,12 @@ class TransferBetweenUsersService extends AbstractService
         $outgoing['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $outgoing['reason'] = 'test';
         $outgoing['sender_country_id'] = 1;
-        $outgoing['respondent_fees_id'] = 1;
+        $outgoing['respondent_fees_id'] = 2;
         $outgoing['group_id'] = 1;
         $outgoing['group_type_id'] = 1;
         $outgoing['project_id'] = 1;
         $outgoing['price_list_id'] = 1;
-        $outgoing['price_list_fee_id'] = 1;
+        $outgoing['price_list_fee_id'] = 121;
         $outgoing['requested_by_id'] = 1;
         $outgoing['created_at'] = $date->format('Y-m-d H:i:s');
         $outgoing['execution_at'] = $date->format('Y-m-d H:i:s');
@@ -117,12 +120,12 @@ class TransferBetweenUsersService extends AbstractService
         $incoming['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $incoming['reason'] = 'test';
         $incoming['sender_country_id'] = 1;
-        $incoming['respondent_fees_id'] = 1;
+        $incoming['respondent_fees_id'] = 2;
         $incoming['group_id'] = 1;
         $incoming['group_type_id'] = 1;
         $incoming['project_id'] = 1;
         $incoming['price_list_id'] = 1;
-        $incoming['price_list_fee_id'] = 1;
+        $incoming['price_list_fee_id'] = 121;
         $incoming['requested_by_id'] = 1;
         $incoming['created_at'] = $date->format('Y-m-d H:i:s');
         $incoming['execution_at'] = $date->format('Y-m-d H:i:s');

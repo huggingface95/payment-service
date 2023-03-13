@@ -8,6 +8,8 @@ namespace App\Models;
  */
 class Currencies extends BaseModel
 {
+    public const ALL_CURRENCIES = 180;
+
     /**
      * The attributes that are mass assignable.
      *

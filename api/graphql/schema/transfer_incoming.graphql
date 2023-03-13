@@ -175,7 +175,7 @@ extend type Mutation @guard {
         "ID файлов"
         file_id: [ID]
         "SWIFT field 56A (Intermediary Bank)"
-        transfer_swift: String
+        transfer_swift: TransferSwiftInput
         "Статус"
         status_id: Int
     ): TransferIncoming
