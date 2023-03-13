@@ -21,13 +21,13 @@ class TransferFileRelationsTableSeeder extends Seeder
         DB::table('transfer_file_relation')->insert([
             'transfer_id' => 1,
             'transfer_type' => 'TransferIncoming',
-            'file_id' => $faker->numberBetween(1, 2),
+            'file_id' => 1,
         ]);
 
         DB::table('transfer_file_relation')->insert([
             'transfer_id' => 2,
             'transfer_type' => 'TransferOutgoing',
-            'file_id' => $faker->numberBetween(1, 2),
+            'file_id' => 1,
         ]);
 
         for ($i = 3; $i <= 10; $i++) {

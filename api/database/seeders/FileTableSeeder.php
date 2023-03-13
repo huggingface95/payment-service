@@ -35,6 +35,16 @@ class FileTableSeeder extends Seeder
                 'storage_name' => 'cdvdvdvdvdxvcxvxcvcxv.png',
                 'link' => 'https://dev.storage.docudots.com/1/document/cdvdvdvdvdxvcxvxcvcxv.png',
             ],
+            [
+                'file_name' => 'Test-file-SFSDfsdFDffdfdfdffdSDSDS.png',
+                'mime_type' => 'image/png',
+                'size' => 50715,
+                'entity_type' => 'document',
+                'author_id' => 1,
+                'storage_path' => '/1/document/',
+                'storage_name' => 'Test-file-SFSDfsdFDffdfdfdffdSDSDS',
+                'link' => 'https://dev.storage.docudots.com/1/document/Test-file-SFSDfsdFDffdfdfdffdSDSDS',
+            ],
         ];
 
         foreach ($files as $file) {

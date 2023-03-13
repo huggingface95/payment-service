@@ -128,7 +128,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncoming(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
 
         $fee = $transferIncoming->fee()->first();
@@ -366,7 +365,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsList(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
 
         $fee = $transferIncoming->fee()->first();
@@ -607,7 +605,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterById(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
 
         $fee = $transferIncoming->fee()->first();
@@ -857,7 +854,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByUrgencyId(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
 
         $fee = $transferIncoming->fee()->first();
@@ -1107,7 +1103,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByOperationTypeId(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
 
         $fee = $transferIncoming->fee()->first();
@@ -1357,7 +1352,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByStatusId(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
 
         $fee = $transferIncoming->fee()->first();
@@ -1607,7 +1601,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterBySenderName(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
 
         $fee = $transferIncoming->fee()->first();
@@ -1858,7 +1851,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByAccountNumber(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
 
         $fee = $transferIncoming->fee()->first();
@@ -2109,7 +2101,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByFee(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
 
         $fee = $transferIncoming->fee()->first();
@@ -2360,7 +2351,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByFeeAmount(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
 
         $fee = $transferIncoming->fee()->first();
@@ -2611,7 +2601,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingStatistic(): void
     {
-        $this->markTestSkipped('Skipped');
         $statistics = TransferIncoming::select([
             'payment_status.name', 'status_id', DB::raw('count(status_id) as count'),
         ])
@@ -2642,7 +2631,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingStatisticWithCompanyId(): void
     {
-        $this->markTestSkipped('Skipped');
         $statistics = TransferIncoming::select([
             'payment_status.name', 'status_id', DB::raw('count(status_id) as count'),
         ])
@@ -2673,7 +2661,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingStatisticWithPaymentProviderId(): void
     {
-        $this->markTestSkipped('Skipped');
         $statistics = TransferIncoming::select([
             'payment_status.name', 'status_id', DB::raw('count(status_id) as count'),
         ])
@@ -2704,7 +2691,6 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingStatisticWithAccountId(): void
     {
-        $this->markTestSkipped('Skipped');
         $statistics = TransferIncoming::select([
             'payment_status.name', 'status_id', DB::raw('count(status_id) as count'),
         ])
