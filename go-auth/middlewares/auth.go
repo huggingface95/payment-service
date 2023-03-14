@@ -7,6 +7,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func AccessAuth() gin.HandlerFunc {
+	return func(context *gin.Context) {
+		tokenString := context.GetHeader("Authorization")
+		if tokenString == "" {
+			context.JSON(401, gin.H{"error": "request does not contain an access token"})
+			context.Abort()
+			return
+		}
+		errAccessToken := services.ValidateAccessToken(tokenString, constants.Personal, true)
+
+		if errAccessToken == nil {
+			context.Next()
+			return
+		}
+
+		context.JSON(401, gin.H{"error": errAccessToken.Error()})
+		context.Abort()
+		return
+	}
+}
+
 func Auth() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		tokenString := context.GetHeader("Authorization")
@@ -24,9 +45,9 @@ func Auth() gin.HandlerFunc {
 		}
 
 		if errAuthToken != nil {
-			context.JSON(401, gin.H{"error": errAuthToken.Error()})
+			context.JSON(401, gin.H{"error": errAuthToken})
 		} else if errAccessToken != nil {
-			context.JSON(401, gin.H{"error": errAccessToken.Error()})
+			context.JSON(401, gin.H{"error": errAccessToken})
 		}
 		context.Abort()
 		return
