@@ -7,6 +7,7 @@ import (
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
+	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/repositories/userRepository"
 	"jwt-authentication-golang/requests"
@@ -70,8 +71,14 @@ func ActivateTwoFactorQr(context *gin.Context) {
 
 	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType) == true {
 		user.SetTwoFactorAuthSettingId(2)
+		codes := make([]postgres.BackupCodes, 9)
+		for k := range codes {
+			codes[k] = postgres.BackupCodes{Code: helpers.GenerateRandomString(3), Use: false}
+		}
+
+		user.SetBackupCodeData(codes)
 		userRepository.SaveUser(user)
-		context.JSON(http.StatusOK, gin.H{"data": "2fa activated"})
+		context.JSON(http.StatusOK, gin.H{"message": "2fa activated", "data": codes})
 		context.Abort()
 		return
 	} else {
