@@ -66,18 +66,31 @@ class EmailSmtpMutator extends BaseMutator
             }
         }
         /** @var EmailSmtp $smtp */
-        $smtp = new EmailSmtp();
-        $smtp->replay_to = (isset($args['reply_to'])) ? $args['reply_to'] : $emails;
-        $smtp->security = ($args['security']) ?? 'No';
-        $smtp->host_name = $args['host_name'];
-        $smtp->username = $args['username'];
-        $smtp->password = $args['password'];
-        $smtp->from_email = (isset($args['from_email'])) ? $args['from_email'] : $emails;
-        $smtp->from_name = (isset($args['from_name'])) ? $args['from_name'] : 'Test Name';
-        $smtp->port = $args['port'];
+        if (env('APP_ENV') == 'testing' || env('APP_ENV') == 'local') {
+            $smtp = new EmailSmtp();
+            $smtp->replay_to = (isset($args['reply_to'])) ? $args['reply_to'] : $emails;
+            $smtp->security = '';
+            $smtp->host_name = env('MAIL_HOST', 'mailhog');;
+            $smtp->username = '';
+            $smtp->password = '';
+            $smtp->from_email = (isset($args['from_email'])) ? $args['from_email'] : $emails;
+            $smtp->from_name = (isset($args['from_name'])) ? $args['from_name'] : 'Test Name';
+            $smtp->port = env('MAIL_PORT', '1025');
+        } else {
+            $smtp = new EmailSmtp();
+            $smtp->replay_to = (isset($args['reply_to'])) ? $args['reply_to'] : $emails;
+            $smtp->security = $args['security'] == 'auto' ? '' : $args['security'];
+            $smtp->host_name = $args['host_name'];
+            $smtp->username = $args['username'];
+            $smtp->password = $args['password'];
+            $smtp->from_email = (isset($args['from_email'])) ? $args['from_email'] : $emails;
+            $smtp->from_name = (isset($args['from_name'])) ? $args['from_name'] : 'Test Name';
+            $smtp->port = $args['port'];
+        }
 
-        $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp, '<p><strong>Success</strong></p><p><strong>SMTP works correctly</strong></p>', 'Test Email no reply');
+        $data = TransformerDTO::transform(SmtpDataDTO::class, $smtp->from_email, '<p><strong>Success</strong></p><p><strong>SMTP works correctly</strong></p>', 'Test Email no reply');
         $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
+
         dispatch(new SendMailJob($config, $data));
 
         return ['status'=>'OK', 'message'=>'Email sent for processing'];
