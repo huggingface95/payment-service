@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * Class Payments
  *
  * @property int owner_id
+ * @property int member_id
+ * @property int account_id
  * @property float amount
  * @property int fee_type_id
  * @property int currency_id

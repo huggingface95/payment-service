@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
 use App\Models\Scopes\AccountIndividualsCompaniesScope;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,7 +19,13 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  *
  * @property Account $account
  * @property Currencies $currency
+ * @property int requested_by_id
+ * @property int sender_id
+ * @property int status_id
+ * @property int account_id
  * @property float $amount
+ * @property float amount_debt
+ * @property Carbon execution_at
  */
 class TransferOutgoing extends BaseModel
 {

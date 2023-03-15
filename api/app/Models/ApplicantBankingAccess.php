@@ -13,6 +13,8 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * Class ApplicantBankingAccess
  *
  * @property float daily_limit
+ * @property float used_daily_limit
+ * @property float used_monthly_limit
  * @property float monthly_limit
  * @property float operation_limit
  * @property float used_limit

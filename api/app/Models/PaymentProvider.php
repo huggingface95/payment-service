@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 /**
+ * @PaymentProvider
+ * @property int id
  * @method static findOrFail(int $providerId)
  */
 class PaymentProvider extends BaseModel
