@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Enums\PaymentStatusEnum;
-use App\Exceptions\GraphqlException;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Services\TransferOutgoingService;
 use Illuminate\Console\Command;
@@ -44,13 +43,18 @@ class ExecuteWaitingTransferCommand extends Command
         if ($waitingTransfers) {
             foreach ($waitingTransfers as $transfer) {
                 try {
-                    $this->transferService->validateUpdateTransferStatus($transfer, [
-                        'status_id' => PaymentStatusEnum::SENT->value,
+                    $this->transferService->updateTransferStatus($transfer, [
+                        'status_id' => PaymentStatusEnum::PENDING->value,
                     ]);
 
-                    $this->transferService->updateTransferStatusToSent($transfer);
-                } catch (GraphqlException $e) {
-                    $this->transferRepository->update($transfer, ['status_id' => PaymentStatusEnum::ERROR->value]);
+                    $this->transferService->updateTransferStatus($transfer, [
+                        'status_id' => PaymentStatusEnum::SENT->value,
+                    ]);
+                } catch (\Exception $e) {
+                    $this->transferRepository->update($transfer, [
+                        'status_id' => PaymentStatusEnum::ERROR->value,
+                        'system_message' => $e->getMessage(),
+                    ]);
                 }
             }
         }

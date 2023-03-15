@@ -33,7 +33,7 @@ class TransferIncomingService extends AbstractService
 
         $args['user_type'] = class_basename(Members::class);
         $args['amount_debt'] = $args['amount'];
-        $args['status_id'] = PaymentStatusEnum::PENDING->value;
+        $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['urgency_id'] = 1;
         $args['operation_type_id'] = $operationType;
         $args['payment_bank_id'] = 2;
@@ -46,7 +46,7 @@ class TransferIncomingService extends AbstractService
         $args['sender_country_id'] = 1;
         $args['respondent_fees_id'] = 2;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
-        $args['execution_at'] = $date->format('Y-m-d H:i:s');
+        $args['execution_at'] = $args['created_at'];
 
         return DB::transaction(function () use ($args) {
             $transfer = $this->transferRepository->createWithSwift($args);
@@ -110,6 +110,10 @@ class TransferIncomingService extends AbstractService
         $this->validateUpdateTransferStatus($transfer, $args);
 
         switch ($args['status_id']) {
+            case PaymentStatusEnum::PENDING->value:
+                $this->updateTransferStatusToPending($transfer);
+
+                break;
             case PaymentStatusEnum::EXECUTED->value:
                 $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
                 $this->updateTransferStatusToExecuted($transfer, $transactionDTO);
@@ -120,6 +124,13 @@ class TransferIncomingService extends AbstractService
 
                 break;
         }
+    }
+
+    public function updateTransferStatusToPending(TransferIncoming $transfer): void
+    {
+        $this->transferRepository->update($transfer, [
+            'status_id' => PaymentStatusEnum::PENDING->value,
+        ]);
     }
 
     /**

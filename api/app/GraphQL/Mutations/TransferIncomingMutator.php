@@ -3,6 +3,7 @@
 namespace App\GraphQL\Mutations;
 
 use App\Enums\OperationTypeEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\TransferIncoming;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
@@ -35,6 +36,25 @@ class TransferIncomingMutator extends BaseMutator
         $transfer = $this->transferRepository->findById($args['id']);
 
         $this->transferService->updateTransferStatus($transfer, $args);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function sign($_, array $args): TransferIncoming
+    {
+        $transfer = $this->transferRepository->findById($args['id']);
+        $statusId = PaymentStatusEnum::PENDING->value;
+
+        if ($transfer->execution_at != $transfer->created_at) {
+            $statusId = PaymentStatusEnum::WAITING_EXECUTION_DATE->value;
+        }
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => $statusId,
+        ]);
 
         return $transfer;
     }

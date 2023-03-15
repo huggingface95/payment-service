@@ -10,6 +10,7 @@ use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\ApplicantCompany;
 use App\Models\Members;
+use App\Models\TransferBetweenRelation;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,6 +31,22 @@ class TransferBetweenUsersService extends AbstractService
     ) {
     }
 
+    /**
+     * @throws GraphqlException
+     */
+    public function getTransfersByIncomingId(int $id): array
+    {
+        $transfers['incoming'] = $this->transferIncomingRepository->findById($id);
+        if (empty($transfers['incoming'])) {
+            throw new GraphqlException('Transfer not found', 'not found', 404);
+        }
+
+        $transferOutgoingId = TransferBetweenRelation::where('transfer_incoming_id', $id)->first()->transfer_outgoing_id;
+        $transfers['outgoing'] = $this->transferOutgoingRepository->findById($transferOutgoingId);
+
+        return $transfers;
+    }
+
     public function createTransfer(array $args, int $operationType): Builder|Model
     {
         $fromAccount = Account::find($args['from_account_id']);
@@ -43,23 +60,70 @@ class TransferBetweenUsersService extends AbstractService
             $outgoing = $this->transferOutgoingRepository->create($data['outgoing']);
             $incoming = $this->transferIncomingRepository->create($data['incoming']);
 
+            TransferBetweenRelation::create([
+                'transfer_outgoing_id' => $outgoing->id,
+                'transfer_incoming_id' => $incoming->id,
+            ]);
+
             $this->commissionService->makeFee($outgoing);
 
             return [
-                'outgoing' => $outgoing, 
+                'outgoing' => $outgoing,
                 'incoming' => $incoming,
             ];
         });
-        
+
+        $this->attachFileById($transfers, $args['file_id'] ?? []);
+
+        return $transfers['incoming'];
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function updateTransferStatus(array $transfers, array $args): void
+    {
+        $this->validateUpdateTransferStatus($transfers, $args);
+
+        switch ($args['status_id']) {
+            case PaymentStatusEnum::PENDING->value:
+                $this->updateTransferStatusToPending($transfers);
+
+                break;
+            case PaymentStatusEnum::EXECUTED->value:
+                $this->updateTransferStatusToExecuted($transfers);
+
+                break;
+        }
+    }
+
+    public function updateTransferStatusToPending(array $transfers): void
+    {
+        DB::transaction(function () use ($transfers) {
+            $this->transferOutgoingRepository->update($transfers['outgoing'], [
+                'status_id' => PaymentStatusEnum::PENDING->value,
+            ]);
+
+            $this->transferIncomingRepository->update($transfers['incoming'], [
+                'status_id' => PaymentStatusEnum::PENDING->value,
+            ]);
+        });
+    }
+
+    /**
+     * @throws EmailException
+     * @throws GraphqlException
+     */
+    public function updateTransferStatusToExecuted(array $transfers): void
+    {
+        $fromAccount = Account::find($transfers['outgoing']->account_id);
+        $toAccount = Account::find($transfers['incoming']->account_id);
+
         $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $transfers['outgoing'], $fromAccount, $toAccount);
         $transactionIncoming = TransformerDTO::transform(TransactionDTO::class, $transfers['incoming'], $fromAccount, $toAccount);
 
         $this->transferOutgoingService->updateTransferStatusToExecuted($transfers['outgoing'], $transactionOutgoing);
         $this->transferIncomingService->updateTransferStatusToExecuted($transfers['incoming'], $transactionIncoming);
-
-        $this->attachFileById($transfers, $args['file_id'] ?? []);
-
-        return $transfers['outgoing'];
     }
 
     private function populateTransferData(array $args, Account $fromAccount, Account $toAccount, int $operationType): array
@@ -73,7 +137,7 @@ class TransferBetweenUsersService extends AbstractService
         $outgoing['user_type'] = class_basename(Members::class);
         $outgoing['amount'] = $args['amount'];
         $outgoing['amount_debt'] = $args['amount'];
-        $outgoing['status_id'] = PaymentStatusEnum::PENDING->value;
+        $outgoing['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $outgoing['urgency_id'] = 1;
         $outgoing['operation_type_id'] = $operationType;
         $outgoing['payment_bank_id'] = 2;
@@ -107,7 +171,7 @@ class TransferBetweenUsersService extends AbstractService
         $incoming['user_type'] = class_basename(Members::class);
         $incoming['amount'] = $args['amount'];
         $incoming['amount_debt'] = $args['amount'];
-        $incoming['status_id'] = PaymentStatusEnum::PENDING->value;
+        $incoming['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $incoming['urgency_id'] = 1;
         $incoming['operation_type_id'] = $operationType;
         $incoming['payment_bank_id'] = 2;
@@ -134,6 +198,35 @@ class TransferBetweenUsersService extends AbstractService
             'outgoing' => $outgoing,
             'incoming' => $incoming,
         ];
+    }
+
+    private function validateUpdateTransferStatus(array $transfers, array $args): void
+    {
+        foreach ($transfers as $transfer) {
+            switch ($transfer['status_id']) {
+                case PaymentStatusEnum::UNSIGNED->value:
+                    if ($args['status_id'] != PaymentStatusEnum::PENDING->value) {
+                        throw new GraphqlException('This status is not allowed for transfer which has Unsigned status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                    break;
+                case PaymentStatusEnum::PENDING->value:
+                    $allowedStatuses = [
+                        PaymentStatusEnum::ERROR->value,
+                        PaymentStatusEnum::CANCELED->value,
+                        PaymentStatusEnum::EXECUTED->value,
+                    ];
+        
+                    if (! in_array($args['status_id'], $allowedStatuses)) {
+                        throw new GraphqlException('This status is not allowed for transfer which has Pending status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+        
+                    break;
+                case PaymentStatusEnum::EXECUTED->value:
+                    throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+        
+                    break;
+            }
+        }
     }
 
     /**

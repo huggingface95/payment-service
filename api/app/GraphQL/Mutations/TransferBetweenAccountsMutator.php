@@ -3,22 +3,49 @@
 namespace App\GraphQL\Mutations;
 
 use App\Enums\OperationTypeEnum;
-use App\Models\TransferOutgoing;
-use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
+use App\Enums\PaymentStatusEnum;
+use App\Models\TransferIncoming;
 use App\Services\TransferBetweenUsersService;
 
 class TransferBetweenAccountsMutator extends BaseMutator
 {
     public function __construct(
         protected TransferBetweenUsersService $transferService,
-        protected TransferIncomingRepositoryInterface $transferRepository
     ) {
     }
 
-    public function create($root, array $args): TransferOutgoing
+    public function create($root, array $args): TransferIncoming
     {
         $transfer = $this->transferService->createTransfer($args, (int) OperationTypeEnum::BETWEEN_ACCOUNT->value);
 
         return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function sign($_, array $args): TransferIncoming
+    {
+        $transfers = $this->transferService->getTransfersByIncomingId($args['transfer_incoming_id']);
+
+        $this->transferService->updateTransferStatus($transfers, [
+            'status_id' => PaymentStatusEnum::PENDING->value,
+        ]);
+
+        return $transfers['incoming'];
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function execute($_, array $args): TransferIncoming
+    {
+        $transfers = $this->transferService->getTransfersByIncomingId($args['transfer_incoming_id']);
+
+        $this->transferService->updateTransferStatus($transfers, [
+            'status_id' => PaymentStatusEnum::EXECUTED->value,
+        ]);
+
+        return $transfers['incoming'];
     }
 }
