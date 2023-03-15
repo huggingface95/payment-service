@@ -38,6 +38,8 @@ class AccountTableSeeder extends Seeder
                     'current_balance' => 10000,
                     'reserved_balance' => 5000,
                     'available_balance' => 10000,
+                    'min_limit_balance' => 50000,
+                    'max_limit_balance' => 80000,
                     'account_type' => 'Business',
                     'created_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                     'updated_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
