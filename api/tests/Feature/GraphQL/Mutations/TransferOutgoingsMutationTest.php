@@ -335,9 +335,7 @@ class TransferOutgoingsMutationTest extends TestCase
 
     public function testUpdateTransferOutgoing(): void
     {
-        $TransferOutgoing = TransferOutgoing::where('status_id', '!=', 7)
-            ->where('status_id', '!=', 4)
-            ->where('status_id', '!=', 1)
+        $TransferOutgoing = TransferOutgoing::where('status_id', 2)
             ->first();
 
         $this->postGraphQL(
@@ -349,7 +347,7 @@ class TransferOutgoingsMutationTest extends TestCase
             {
                 updateTransferOutgoing (
                     id: $id
-                    status_id: 7
+                    status_id: 4
                 )
                 {
                       id
