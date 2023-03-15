@@ -2,12 +2,16 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\DTO\Service\CheckLimitDTO;
+use App\DTO\TransformerDTO;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Models\TransferOutgoing;
 use App\Repositories\AccountRepository;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
+use App\Services\CheckLimitService;
 use App\Services\TransferOutgoingService;
 
 class TransferOutgoingMutator extends BaseMutator
@@ -15,13 +19,21 @@ class TransferOutgoingMutator extends BaseMutator
     public function __construct(
         protected TransferOutgoingService $transferService,
         protected AccountRepository $accountRepository,
-        protected TransferOutgoingRepositoryInterface $transferRepository
+        protected TransferOutgoingRepositoryInterface $transferRepository,
+        protected CheckLimitService $checkLimitService
     ) {
     }
 
+    /**
+     * @throws EmailException
+     * @throws GraphqlException
+     */
     public function create($root, array $args): TransferOutgoing
     {
-        $transfer = $this->transferService->createTransfer($args, (int) OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value);
+        $this->checkLimitService->checkLimits(TransformerDTO::transform(CheckLimitDTO::class, new TransferOutgoing($args), $args['amount']));
+
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferService->createTransfer($args, OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value);
 
         if ($transfer) {
             $this->transferService->attachFileById($transfer, $args['file_id'] ?? []);
@@ -35,6 +47,7 @@ class TransferOutgoingMutator extends BaseMutator
      */
     public function update($_, array $args): TransferOutgoing
     {
+        /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
 
         $this->transferService->updateTransferStatus($transfer, $args);
@@ -47,6 +60,7 @@ class TransferOutgoingMutator extends BaseMutator
      */
     public function sign($_, array $args): TransferOutgoing
     {
+        /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
         $statusId = PaymentStatusEnum::PENDING->value;
 
@@ -66,6 +80,7 @@ class TransferOutgoingMutator extends BaseMutator
      */
     public function send($_, array $args): TransferOutgoing
     {
+        /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
 
         $this->transferService->updateTransferStatus($transfer, [

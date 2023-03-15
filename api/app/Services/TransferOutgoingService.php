@@ -2,27 +2,16 @@
 
 namespace App\Services;
 
-use App\DTO\Email\Request\EmailAccountMinMaxBalanceLimitRequestDTO;
 use App\DTO\Transaction\TransactionDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
-use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\TransferOutgoingJob;
-use App\Models\Account;
-use App\Models\AccountLimit;
-use App\Models\AccountState;
 use App\Models\ApplicantBankingAccess;
 use App\Models\ApplicantCompany;
-use App\Models\ApplicantIndividual;
-use App\Models\CommissionTemplateLimit;
-use App\Models\CommissionTemplateLimitPeriod;
-use App\Models\CommissionTemplateLimitTransferDirection;
-use App\Models\CommissionTemplateLimitType;
-use App\Models\GroupType;
 use App\Models\Members;
 use App\Models\PaymentProvider;
 use App\Models\PaymentSystem;
@@ -31,211 +20,53 @@ use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 class TransferOutgoingService extends AbstractService
 {
     public function __construct(
-        protected EmailService $emailService,
-        protected AccountService $accountService,
-        protected CommissionService $commissionService,
+        protected EmailService                        $emailService,
+        protected AccountService                      $accountService,
+        protected CommissionService                   $commissionService,
         protected TransferOutgoingRepositoryInterface $transferRepository,
-        protected TransactionService $transactionService
-    ) {
-    }
-
-    public function getAllProcessedAmount(TransferOutgoing $transfer): Collection
+        protected TransactionService                  $transactionService,
+        protected CheckLimitService                   $checkLimitService
+    )
     {
-        return TransferOutgoing::query()
-            ->where('requested_by_id', $transfer->requested_by_id)
-            ->where('user_type', class_basename(Members::class))
-            ->whereIn('status_id', [PaymentStatusEnum::PENDING->value, PaymentStatusEnum::SENT->value])
-            ->get()
-            ->push($transfer);
     }
 
-    /**
-     * @throws GraphqlException
-     */
+
     public function commissionCalculationFeeScheduled($amount, $fee, $currencyId): float
     {
         $paymentFee = 0;
 
-        $priceListFees = PriceListFeeCurrency::where('price_list_fee_id', $fee->price_list_id)
+        $priceListFees = PriceListFeeCurrency::query()->where('price_list_fee_id', $fee->price_list_id)
             ->where('currency_id', $currencyId)
             ->get();
 
         foreach ($priceListFees as $listFee) {
-            $paymentFee += $this->commissionService->getFee($listFee->fee, $amount, (int) PaymentUrgencyEnum::STANDART->value);
+            $paymentFee += $this->commissionService->getFee($listFee->fee, $amount, PaymentUrgencyEnum::STANDART->value);
         }
 
-        return (float) $paymentFee;
+        return (float)$paymentFee;
     }
 
-    public function checkLimit(Account $account, Collection $allLimits, Collection $allProcessedAmount, $paymentAmount): bool
-    {
-        foreach ($allLimits->flatten(1)->filter(function ($l) {
-            return $l;
-        }) as $limit) {
-            if ($limit instanceof ApplicantBankingAccess) {
-                if ($limit->daily_limit < $allProcessedAmount->whereBetween(
-                    'created_at',
-                    [Carbon::now()->startOfDay()->format('Y-m-d H:i:s'), Carbon::now()->endOfDay()->format('Y-m-d H:i:s')]
-                )->sum('amount')
-                    || $limit->monthly_limit < $allProcessedAmount->whereBetween(
-                        'created_at',
-                        [Carbon::now()->startOfMonth()->format('Y-m-d H:i:s'), Carbon::now()->endOfMonth()->format('Y-m-d H:i:s')]
-                    )->sum('amount')
-                    || $limit->operation_limit < $paymentAmount
-                    || $limit->used_limit < $allProcessedAmount->sum('amount')
-                ) {
-                    $this->createReachedLimit($account, $limit);
-
-                    return false;
-                }
-            } elseif ($limit instanceof AccountLimit || $limit instanceof CommissionTemplateLimit) {
-                $processedAmount = $allProcessedAmount
-                    ->when($limit->commissionTemplateLimitPeriod->name, function ($q, $name) {
-                        if ($name == CommissionTemplateLimitPeriod::YEARLY) {
-                            return $q->whereBetween(
-                                'created_at',
-                                [
-                                    Carbon::now()->startOfYear()->format('Y-m-d H:i:s'),
-                                    Carbon::now()->endOfYear()->format('Y-m-d H:i:s'),
-                                ]
-                            );
-                        } elseif ($name == CommissionTemplateLimitPeriod::MONTHLY) {
-                            return $q->whereBetween(
-                                'created_at',
-                                [
-                                    Carbon::now()->startOfMonth()->format('Y-m-d H:i:s'),
-                                    Carbon::now()->endOfMonth()->format('Y-m-d H:i:s'),
-                                ]
-                            );
-                        } elseif ($name == CommissionTemplateLimitPeriod::WEEKLY) {
-                            return $q->whereBetween(
-                                'created_at',
-                                [
-                                    Carbon::now()->startOfWeek()->format('Y-m-d H:i:s'),
-                                    Carbon::now()->endOfWeek()->format('Y-m-d H:i:s'),
-                                ]
-                            );
-                        } elseif ($name == CommissionTemplateLimitPeriod::DAILY) {
-                            return $q->whereBetween(
-                                'created_at',
-                                [
-                                    Carbon::now()->startOfDay()->format('Y-m-d H:i:s'),
-                                    Carbon::now()->endOfDay()->format('Y-m-d H:i:s'),
-                                ]
-                            );
-                        } elseif ($name == CommissionTemplateLimitPeriod::EACH_TIME) {
-                            return $q->whereNull('id');
-                        } elseif ($name == CommissionTemplateLimitPeriod::ONE_TIME) {
-                            return $q->whereNull('id');
-                        }
-
-                        return $q;
-                    })
-                    ->when($limit->commissionTemplateLimitTransferDirection->name, function ($q, $name) {
-                        if ($name == CommissionTemplateLimitTransferDirection::INCOMING) {
-                            return $q->where('type_id', 1);
-                        } elseif ($name == CommissionTemplateLimitTransferDirection::OUTGOING) {
-                            return $q->where('type_id', 2);
-                        } elseif ($name == CommissionTemplateLimitTransferDirection::ALL) {
-                            return $q;
-                        }
-
-                        return $q;
-                    });
-
-                if ($limit->commissionTemplateLimitType->name == CommissionTemplateLimitType::TRANSACTION_AMOUNT
-                    && $limit->amount < $processedAmount->sum('amount')
-                ) {
-                    $this->createReachedLimit($account, $limit);
-
-                    return false;
-                } elseif ($limit->commissionTemplateLimitType->name == CommissionTemplateLimitType::TRANSACTION_COUNT
-                    && $limit->period_count < $processedAmount->count()) {
-                    $this->createReachedLimit($account, $limit);
-
-                    return false;
-                } elseif ($limit->commissionTemplateLimitType->name == CommissionTemplateLimitType::ALL
-                    && $limit->amount < $processedAmount->sum('amount')
-                    && $limit->period_count < $processedAmount->count()
-                ) {
-                    $this->createReachedLimit($account, $limit);
-
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    private function createReachedLimit(Account $account, $limit): void
-    {
-        $account->reachedLimits()->create([
-            'group_type' => $account->clientable instanceof ApplicantIndividual ? GroupType::INDIVIDUAL : GroupType::COMPANY,
-            'client_name' => $account->clientable->fullname ?? $account->clientable->name,
-            'client_state' => $account->clientable->state->name,
-            'transfer_direction' => $limit->commissionTemplateLimitTransferDirection->name,
-            'limit_type' => $limit->commissionTemplateLimitType->name,
-            'limit_value' => $limit->commissionTemplateLimitPeriod->name,
-            'limit_currency' => $limit->currency->name,
-            'period' => $limit->period_count,
-            'amount' => $limit->amount,
-        ]);
-    }
-
-    public function getAllLimits(TransferOutgoing $transfer): Collection
-    {
-        /** @var Account $account */
-        $account = $transfer->account()->with(['clientable', 'limits', 'commissionTemplate.commissionTemplateLimits'])->first();
-        $allLimits = collect([$account->limits, $account->commissionTemplate->commissionTemplateLimits]);
-        if ($account->clientable instanceof ApplicantCompany) {
-            $allLimits = $allLimits->prepend($transfer->applicantIndividual->applicantBankingAccess);
-        }
-
-        return $allLimits;
-    }
-
-    public function checkApplicantBankingAccessUsedLimits(TransferOutgoing $transfer): void
-    {
-        $applicantBankingAccess = ApplicantBankingAccess::where('applicant_individual_id', $transfer->requested_by_id)
-            ->where('applicant_company_id', $transfer->sender_id)
-            ->first();
-
-        $dailyLimit = $applicantBankingAccess->daily_limit - $applicantBankingAccess->used_daily_limit;
-        $monthlyLimit = $applicantBankingAccess->monthly_limit - $applicantBankingAccess->used_monthly_limit;
-
-        if ($dailyLimit < $transfer->amount_debt) {
-            throw new GraphqlException('Daily limit reached', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        if ($monthlyLimit < $transfer->amount_debt) {
-            throw new GraphqlException('Monthly limit reached', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-    }
-
-    public function updateApplicantBanckingAccessUsedLimits(TransferOutgoing $transaction): void
+    public function updateApplicantBankingAccessUsedLimits(TransferOutgoing $transaction): void
     {
         $usedMonthly = $this->transferRepository->getSumOfMonthlySentTransfersByApplicantIndividualId($transaction->requested_by_id);
         $usedDaily = $this->transferRepository->getSumOfDailySentTransfersByApplicantIndividualId($transaction->requested_by_id);
 
-        $applicantBankingAccess = ApplicantBankingAccess::where('applicant_individual_id', $transaction->requested_by_id)
+        $applicantBankingAccess = ApplicantBankingAccess::query()->where('applicant_individual_id', $transaction->requested_by_id)
             ->where('applicant_company_id', $transaction->sender_id)
             ->first();
 
-        if ($applicantBankingAccess) {
-            $applicantBankingAccess->update([
-                'used_monthly_limit' => $usedMonthly,
-                'used_daily_limit' => $usedDaily,
-            ]);
-        }
+        $applicantBankingAccess?->update([
+            'used_monthly_limit' => $usedMonthly,
+            'used_daily_limit' => $usedDaily,
+        ]);
     }
 
     /**
@@ -283,30 +114,8 @@ class TransferOutgoingService extends AbstractService
                 break;
             case PaymentStatusEnum::CANCELED->value:
                 throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-
-                break;
             case PaymentStatusEnum::EXECUTED->value:
                 throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-
-                break;
-        }
-    }
-
-    /**
-     * @throws EmailException
-     * @throws GraphqlException
-     */
-    public function checkLimits(TransferOutgoing $transfer): void
-    {
-        $allAmount = $this->getAllProcessedAmount($transfer);
-        $allLimits = $this->getAllLimits($transfer);
-
-        if (false === $this->checkAccountBalanceLimit($transfer)) {
-            throw new GraphqlException('balance limit error', 'use');
-        }
-
-        if (false === $this->checkLimit($transfer->account, $allLimits, $allAmount, $transfer->amount)) {
-            throw new GraphqlException('limit is exceeded', 'use');
         }
     }
 
@@ -345,16 +154,10 @@ class TransferOutgoingService extends AbstractService
         ]);
     }
 
-    /**
-     * @throws EmailException
-     * @throws GraphqlException
-     */
     public function updateTransferStatusToSent(TransferOutgoing $transfer): void
     {
-        $this->checkLimits($transfer);
-
         DB::transaction(function () use ($transfer) {
-            $this->checkApplicantBankingAccessUsedLimits($transfer);
+            $this->checkLimitService->checkApplicantBankingAccessUsedLimits($transfer);
 
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::SENT->value,
@@ -362,21 +165,19 @@ class TransferOutgoingService extends AbstractService
 
             $this->accountService->setAmmountReserveOnAccountBalance($transfer);
 
-            $this->updateApplicantBanckingAccessUsedLimits($transfer);
+            $this->updateApplicantBankingAccessUsedLimits($transfer);
 
             dispatch(new TransferOutgoingJob($transfer))->afterCommit();
         });
     }
 
-    /**
-     * @throws GraphqlException
-     */
+
     public function updateTransferStatusToExecuted(TransferOutgoing $transfer, TransactionDTO $transactionDTO = null): void
     {
         DB::beginTransaction();
 
         try {
-            $this->checkApplicantBankingAccessUsedLimits($transfer);
+            $this->checkLimitService->checkApplicantBankingAccessUsedLimits($transfer);
 
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::EXECUTED->value,
@@ -385,15 +186,15 @@ class TransferOutgoingService extends AbstractService
             if ($transactionDTO) {
                 $this->transactionService->createTransaction($transactionDTO);
             }
-            
-            $this->accountService->withdrawFromBalance($transfer, $transfer->amount_debt);
 
-            $this->updateApplicantBanckingAccessUsedLimits($transfer);
+            $this->accountService->withdrawFromBalance($transfer);
+
+            $this->updateApplicantBankingAccessUsedLimits($transfer);
 
             DB::commit();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             DB::rollback();
-            
+
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::ERROR->value,
                 'system_message' => $e->getMessage(),
@@ -401,10 +202,6 @@ class TransferOutgoingService extends AbstractService
         }
     }
 
-    /**
-     * @throws EmailException
-     * @throws GraphqlException
-     */
     public function updateTransferFeeAmount(TransferOutgoing $transfer, float $amount): void
     {
         DB::transaction(function () use ($transfer) {
@@ -414,9 +211,6 @@ class TransferOutgoingService extends AbstractService
 
             $this->accountService->unsetAmmountReserveOnAccountBalance($transfer);
         });
-
-        $transfer->amount = $amount;
-        $this->checkLimits($transfer);
 
         DB::transaction(function () use ($transfer, $amount) {
             $this->transferRepository->update($transfer, [
@@ -429,14 +223,8 @@ class TransferOutgoingService extends AbstractService
         });
     }
 
-    /**
-     * @throws EmailException
-     * @throws GraphqlException
-     */
     public function updateTransferFeeStatusToSent(TransferOutgoing $transfer): void
     {
-        $this->checkLimits($transfer);
-
         DB::transaction(function () use ($transfer) {
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::SENT->value,
@@ -455,10 +243,13 @@ class TransferOutgoingService extends AbstractService
 
             $this->accountService->unsetAmmountReserveOnAccountBalance($transfer);
 
-            $this->updateApplicantBanckingAccessUsedLimits($transfer);
+            $this->updateApplicantBankingAccessUsedLimits($transfer);
         });
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function createTransfer(array $args, int $operationType): Builder|Model
     {
         $date = Carbon::now();
@@ -487,6 +278,7 @@ class TransferOutgoingService extends AbstractService
         }
 
         return DB::transaction(function () use ($args) {
+            /** @var TransferOutgoing $transfer */
             $transfer = $this->transferRepository->createWithSwift($args);
 
             $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
@@ -498,8 +290,10 @@ class TransferOutgoingService extends AbstractService
 
     public function createScheduledFeeTransfer(array $args): Builder|Model
     {
-        $psInternal = PaymentSystem::where('name', 'Internal')->first();
-        $ppInternal = PaymentProvider::where('name', 'Internal')->first();
+        /** @var PaymentSystem $psInternal */
+        $psInternal = PaymentSystem::query()->where('name', 'Internal')->first();
+        /** @var PaymentProvider $ppInternal */
+        $ppInternal = PaymentProvider::query()->where('name', 'Internal')->first();
         $date = Carbon::now();
 
         $args['requested_by_id'] = 1;
@@ -529,31 +323,6 @@ class TransferOutgoingService extends AbstractService
         $args['execution_at'] = $args['created_at'];
 
         return $this->transferRepository->create($args);
-    }
-
-    /**
-     * @throws EmailException
-     */
-    protected function checkAccountBalanceLimit(TransferOutgoing $transferOutgoing): bool
-    {
-        $calculationBalance = $transferOutgoing->account->current_balance - $transferOutgoing->amount;
-
-        if (($isMinLimit = $transferOutgoing->account->min_limit_balance < $calculationBalance)
-            || $transferOutgoing->account->max_limit_balance > $calculationBalance
-        ) {
-            $transferOutgoing->account->account_state_id = AccountState::SUSPENDED;
-            $transferOutgoing->account->save();
-
-            $iDto = TransformerDTO::transform(EmailAccountMinMaxBalanceLimitRequestDTO::class, $transferOutgoing->account, $isMinLimit);
-            $this->emailService->sendAccountBalanceLimitDto($iDto);
-
-            $mDto = TransformerDTO::transform(EmailAccountMinMaxBalanceLimitRequestDTO::class, $transferOutgoing->account, $isMinLimit, EmailAccountMinMaxBalanceLimitRequestDTO::MEMBER);
-            $this->emailService->sendAccountBalanceLimitDto($mDto);
-
-            return false;
-        }
-
-        return true;
     }
 
     public function attachFileById(TransferOutgoing $transfer, array $fileIds): void

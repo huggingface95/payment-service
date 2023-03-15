@@ -3,23 +3,14 @@
 namespace App\Services;
 
 use App\Enums\FeeModeEnum;
-use App\Enums\PaymentStatusEnum;
 use App\Enums\RespondentFeesEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Payments;
+use App\Models\PriceListFee;
 use Illuminate\Support\Collection;
 
 class PaymentsService extends AbstractService
 {
-    public function getAllProcessedAmount(Payments $payment): Collection
-    {
-        return Payments::query()
-            ->where('member_id', $payment->member_id)
-            ->whereIn('status_id', [PaymentStatusEnum::PENDING->value, PaymentStatusEnum::SENT->value])
-            ->get()
-            ->push($payment);
-    }
-
     /**
      * Description for getBankAmountRealWithCommission and getAccountAmountRealWithCommission:
      *
@@ -49,6 +40,9 @@ class PaymentsService extends AbstractService
         };
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function commissionCalculation(Payments $payment): Payments
     {
         $amountReal = 0;
@@ -92,11 +86,7 @@ class PaymentsService extends AbstractService
             } else {
                 return self::getFeeByFixMode($feeItem, $modeKey, $amount);
             }
-
-            return null;
         })->sum();
-
-        return null;
     }
 
     private static function getFeeByFixMode(array $data, int $modeKey, float $amount): ?float
@@ -104,8 +94,6 @@ class PaymentsService extends AbstractService
         return collect($data)->map(function ($fee) use ($amount) {
             return self::getConstantFee($fee, $amount);
         })->sum();
-
-        return null;
     }
 
     private static function getFeeByRangeMode(array $data, int $modeKey, float $amount): ?float

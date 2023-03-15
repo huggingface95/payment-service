@@ -9,6 +9,11 @@ use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Staudenmeir\EloquentHasManyDeep\HasTableAlias;
 
+/**
+ * Class PaymentSystem
+ *
+ * @property int id
+ */
 class PaymentSystem extends BaseModel
 {
     use HasRelationships;
