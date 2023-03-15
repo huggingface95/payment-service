@@ -5,11 +5,9 @@ namespace App\Services;
 use App\DTO\Email\Request\EmailAccountMinMaxBalanceLimitRequestDTO;
 use App\DTO\Transaction\TransactionDTO;
 use App\DTO\TransformerDTO;
-use App\Enums\FeeModeEnum;
-use App\Enums\FeeTransferTypeEnum;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
-use App\Enums\RespondentFeesEnum;
+use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
 use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
@@ -24,7 +22,6 @@ use App\Models\CommissionTemplateLimit;
 use App\Models\CommissionTemplateLimitPeriod;
 use App\Models\CommissionTemplateLimitTransferDirection;
 use App\Models\CommissionTemplateLimitType;
-use App\Models\Fee;
 use App\Models\GroupType;
 use App\Models\Members;
 use App\Models\PaymentProvider;
@@ -72,7 +69,7 @@ class TransferOutgoingService extends AbstractService
             ->get();
 
         foreach ($priceListFees as $listFee) {
-            $paymentFee += $this->commissionService->getFee($listFee->fee, $amount);
+            $paymentFee += $this->commissionService->getFee($listFee->fee, $amount, (int) PaymentUrgencyEnum::STANDART->value);
         }
 
         return (float) $paymentFee;
@@ -249,6 +246,12 @@ class TransferOutgoingService extends AbstractService
         $date = Carbon::today();
 
         switch ($transfer->status_id) {
+            case PaymentStatusEnum::UNSIGNED->value:
+                if ($args['status_id'] != PaymentStatusEnum::PENDING->value && $args['status_id'] != PaymentStatusEnum::WAITING_EXECUTION_DATE->value) {
+                    throw new GraphqlException('This status is not allowed for transfer which has Unsigned status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+
+                break;
             case PaymentStatusEnum::WAITING_EXECUTION_DATE->value:
                 $executionAt = Carbon::parse($transfer->execution_at)->format('Y-m-d');
                 if ($date->lt($executionAt)) {
@@ -315,6 +318,10 @@ class TransferOutgoingService extends AbstractService
         $this->validateUpdateTransferStatus($transfer, $args);
 
         switch ($args['status_id']) {
+            case PaymentStatusEnum::PENDING->value:
+                $this->updateTransferStatusToPending($transfer);
+
+                break;
             case PaymentStatusEnum::ERROR->value:
             case PaymentStatusEnum::CANCELED->value:
                 $this->updateTransferStatusToCancelOrError($transfer, $args['status_id']);
@@ -329,6 +336,13 @@ class TransferOutgoingService extends AbstractService
 
                 break;
         }
+    }
+
+    public function updateTransferStatusToPending(TransferOutgoing $transfer): void
+    {
+        $this->transferRepository->update($transfer, [
+            'status_id' => PaymentStatusEnum::PENDING->value,
+        ]);
     }
 
     /**
@@ -347,7 +361,6 @@ class TransferOutgoingService extends AbstractService
             ]);
 
             $this->accountService->setAmmountReserveOnAccountBalance($transfer);
-
 
             $this->updateApplicantBanckingAccessUsedLimits($transfer);
 
@@ -372,7 +385,7 @@ class TransferOutgoingService extends AbstractService
             if ($transactionDTO) {
                 $this->transactionService->createTransaction($transactionDTO);
             }
-
+            
             $this->accountService->withdrawFromBalance($transfer, $transfer->amount_debt);
 
             $this->updateApplicantBanckingAccessUsedLimits($transfer);
@@ -380,7 +393,7 @@ class TransferOutgoingService extends AbstractService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-
+            
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::ERROR->value,
                 'system_message' => $e->getMessage(),
@@ -452,8 +465,7 @@ class TransferOutgoingService extends AbstractService
 
         $args['user_type'] = class_basename(Members::class);
         $args['amount_debt'] = $args['amount'];
-        $args['status_id'] = PaymentStatusEnum::PENDING->value;
-        $args['urgency_id'] = 1;
+        $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['operation_type_id'] = $operationType;
         $args['payment_bank_id'] = 2;
         $args['payment_number'] = rand();
@@ -470,9 +482,8 @@ class TransferOutgoingService extends AbstractService
             if (Carbon::parse($args['execution_at'])->lt($date)) {
                 throw new GraphqlException('execution_at cannot be earlier than current date and time', 'use');
             }
-            $args['status_id'] = PaymentStatusEnum::WAITING_EXECUTION_DATE->value;
         } else {
-            $args['execution_at'] = $date->format('Y-m-d H:i:s');
+            $args['execution_at'] = $args['created_at'];
         }
 
         return DB::transaction(function () use ($args) {
@@ -501,7 +512,7 @@ class TransferOutgoingService extends AbstractService
         $args['price_list_id'] = 1;
         $args['price_list_fee_id'] = 1;
         $args['user_type'] = class_basename(Members::class);
-        $args['status_id'] = PaymentStatusEnum::PENDING->value;
+        $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['urgency_id'] = 1;
         $args['operation_type_id'] = OperationTypeEnum::SCHEDULED_FEE->value;
         $args['payment_provider_id'] = $ppInternal->id;
@@ -515,7 +526,7 @@ class TransferOutgoingService extends AbstractService
         $args['recipient_country_id'] = 1;
         $args['respondent_fees_id'] = 1;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
-        $args['execution_at'] = $date->format('Y-m-d H:i:s');
+        $args['execution_at'] = $args['created_at'];
 
         return $this->transferRepository->create($args);
     }

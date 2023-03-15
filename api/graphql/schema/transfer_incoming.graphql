@@ -191,4 +191,13 @@ extend type Mutation @guard {
         status_id: Int!
     ): TransferIncoming
         @field(resolver: "TransferIncomingMutator@update")
+
+    """
+    Подписать входящий перевод
+    """
+    signTransferIncoming(
+        "ID"
+        id: ID!
+    ): TransferIncoming
+        @field(resolver: "TransferIncomingMutator@sign")
 }
