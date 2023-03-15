@@ -28,6 +28,7 @@ class TransferOutgoingsMutationTest extends TestCase
                 $requested_by_id: ID!
                 $price_list_id: ID!
                 $price_list_fee_id: ID!
+                $urgency_id: ID!
                 $recipient_account: String
                 $recipient_bank_name: String
                 $recipient_bank_address: String
@@ -53,6 +54,7 @@ class TransferOutgoingsMutationTest extends TestCase
                     payment_system_id: $payment_system_id
                     price_list_id: $price_list_id
                     price_list_fee_id: $price_list_fee_id
+                    urgency_id: $urgency_id
                     requested_by_id: $requested_by_id
                     recipient_account: $recipient_account
                     recipient_bank_name: $recipient_bank_name
@@ -177,6 +179,7 @@ class TransferOutgoingsMutationTest extends TestCase
                 'requested_by_id' => 1,
                 'price_list_id' => 1,
                 'price_list_fee_id' => 1,
+                'urgency_id' => 1,
                 'recipient_account' => 'Sender Account',
                 'recipient_bank_name' => 'recipient_bank_name',
                 'recipient_bank_address' => 'recipient_bank_address',
