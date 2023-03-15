@@ -6,6 +6,7 @@ use App\DTO\Transaction\TransactionDTO;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\OperationTypeEnum;
+use App\Enums\PaymentUrgencyEnum;
 use App\Enums\RespondentFeesEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Currencies;
@@ -50,7 +51,7 @@ class CommissionService extends AbstractService
                 continue;
             }
            
-            $paymentFee += $this->getFee($listFee->fee, $transfer->amount);
+            $paymentFee += $this->getFee($listFee->fee, $transfer->amount, $transfer->urgency_id);
         }
 
         return (float) $paymentFee;
@@ -92,47 +93,55 @@ class CommissionService extends AbstractService
         }
     }
 
-    public function getFee(Collection $list, $amount): ?float
+    public function getFee(Collection $list, float $amount, int $urgency): ?float
     {
         $fee = $list->toArray();
         $modeKey = array_search(FeeModeEnum::RANGE->toString(), array_column($fee, 'mode'));
         if ($modeKey !== null && $modeKey !== false) {
-            return self::getFeeByRangeMode($fee, $modeKey, $amount);
+            return self::getFeeByRangeMode($fee, $modeKey, $amount, $urgency);
         } else {
-            return self::getFeeByFixMode($fee, $amount);
+            return self::getFeeByFixMode($fee, $amount, $urgency);
         }
     }
 
-    private static function getFeeByFixMode(array $data, float $amount): ?float
+    private static function getFeeByFixMode(array $data, float $amount, int $urgency): ?float
     {
-        return collect($data)->map(function ($fee) use ($amount) {
-            return self::getConstantFee($fee, $amount);
+        return collect($data)->map(function ($fee) use ($amount, $urgency) {
+            return self::getConstantFee($fee, $amount, $urgency);
         })->sum();
     }
 
-    private static function getFeeByRangeMode(array $data, int $modeKey, float $amount): ?float
+    private static function getFeeByRangeMode(array $data, int $modeKey, float $amount, int $urgency): ?float
     {
         $fees = null;
         if ((float) $data[$modeKey]['amount_from'] <= $amount && $amount <= (float) $data[$modeKey]['amount_to']) {
             unset($data[$modeKey]);
 
             foreach ($data as $fee) {
-                $fees += self::getConstantFee($fee, $amount);
+                $fees += self::getConstantFee($fee, $amount, $urgency);
             }
         }
 
         return $fees;
     }
 
-    private static function getConstantFee(array $data, float $amount): ?float
+    private static function getConstantFee(array $data, float $amount, int $urgency): float
     {
         if ($data['mode'] == FeeModeEnum::FIX->toString()) {
             return $data['fee'];
         } elseif ($data['mode'] == FeeModeEnum::PERCENT->toString()) {
             return ($data['percent'] / 100) * $amount;
+        } elseif ($data['mode'] == FeeModeEnum::BASE->toString()) {
+            if ($urgency == PaymentUrgencyEnum::STANDART->value) {
+                return $data['fee']['standart'];
+            } elseif ($urgency == PaymentUrgencyEnum::EXPRESS->value) {
+                return $data['fee']['express'];
+            }
+
+            return 0;
         }
 
-        return null;
+        return 0;
     }
 
     /**

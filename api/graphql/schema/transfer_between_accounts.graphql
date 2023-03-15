@@ -13,4 +13,22 @@ extend type Mutation @guard {
         file_id: [ID]
     ): TransferIncoming
         @field(resolver: "TransferBetweenAccountsMutator@create")
+
+    """
+    Подписать перевод между аккаунтами
+    """
+    signTransferBetweenAccounts(
+        "ID исходящего перевода"
+        transfer_incoming_id: ID!
+    ): TransferIncoming
+        @field(resolver: "TransferBetweenAccountsMutator@sign")
+
+    """
+    Исполнить перевод между аккаунтами
+    """
+    executeTransferBetweenAccounts(
+        "ID исходящего перевода"
+        transfer_incoming_id: ID!
+    ): TransferIncoming
+        @field(resolver: "TransferBetweenAccountsMutator@execute")
 }

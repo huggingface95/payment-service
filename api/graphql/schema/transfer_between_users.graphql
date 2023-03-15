@@ -1,4 +1,3 @@
-
 extend type Mutation @guard {
     """
     Создать перевод между пользователями
@@ -18,4 +17,22 @@ extend type Mutation @guard {
         file_id: [ID]
     ): TransferIncoming
         @field(resolver: "TransferBetweenUsersMutator@create")
+
+    """
+    Подписать перевод между пользователями
+    """
+    signTransferBetweenUsers(
+        "ID исходящего перевода"
+        transfer_incoming_id: ID!
+    ): TransferIncoming
+        @field(resolver: "TransferBetweenUsersMutator@sign")
+
+    """
+    Исполнить перевод между пользователями
+    """
+    executeTransferBetweenUsers(
+        "ID исходящего перевода"
+        transfer_incoming_id: ID!
+    ): TransferIncoming
+        @field(resolver: "TransferBetweenUsersMutator@execute")
 }

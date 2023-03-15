@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PaymentUrgencyEnum;
 use App\Models\PaymentUrgency;
 use Illuminate\Database\Seeder;
 
@@ -14,14 +15,16 @@ class PaymentUrgencyTableSeeder extends Seeder
      */
     public function run()
     {
-        PaymentUrgency::firstOrCreate([
+        PaymentUrgency::updateOrCreate([
             'id' => 1,
-            'name' => 'Standart',
+        ], [
+            'name' => PaymentUrgencyEnum::STANDART->toString(),
         ]);
 
-        PaymentUrgency::firstOrCreate([
+        PaymentUrgency::updateOrCreate([
             'id' => 2,
-            'name' => 'Urgent',
+        ], [
+            'name' => PaymentUrgencyEnum::EXPRESS->toString(),
         ]);
     }
 }
