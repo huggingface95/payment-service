@@ -139,6 +139,39 @@ class EmailTemplatesTableSeeder extends Seeder
 
         EmailTemplate::firstOrCreate([
             'id' => 12,
+            'subject' => 'Account suspended',
+        ], [
+            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'member_id' => 2,
+            'company_id' => 1,
+            'created_at' => Carbon::now(),
+            'name' => 'Account suspended',
+        ]);
+
+        EmailTemplate::firstOrCreate([
+            'id' => 13,
+            'subject' => 'Minimum balance limit has been reached for client',
+        ], [
+            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'member_id' => 2,
+            'company_id' => 1,
+            'created_at' => Carbon::now(),
+            'name' => 'Minimum balance limit has been reached for client',
+        ]);
+
+        EmailTemplate::firstOrCreate([
+            'id' => 14,
+            'subject' => 'Maximum balance limit has been reached for client',
+        ], [
+            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'member_id' => 2,
+            'company_id' => 1,
+            'created_at' => Carbon::now(),
+            'name' => 'Maximum balance limit has been reached for client',
+        ]);
+
+        EmailTemplate::firstOrCreate([
+            'id' => 15,
             'subject' => 'Account Requisites',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',

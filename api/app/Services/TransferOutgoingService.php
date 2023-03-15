@@ -348,6 +348,7 @@ class TransferOutgoingService extends AbstractService
 
             $this->accountService->setAmmountReserveOnAccountBalance($transfer);
 
+
             $this->updateApplicantBanckingAccessUsedLimits($transfer);
 
             dispatch(new TransferOutgoingJob($transfer))->afterCommit();
@@ -371,7 +372,7 @@ class TransferOutgoingService extends AbstractService
             if ($transactionDTO) {
                 $this->transactionService->createTransaction($transactionDTO);
             }
-            
+
             $this->accountService->withdrawFromBalance($transfer, $transfer->amount_debt);
 
             $this->updateApplicantBanckingAccessUsedLimits($transfer);
@@ -379,7 +380,7 @@ class TransferOutgoingService extends AbstractService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            
+
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::ERROR->value,
                 'system_message' => $e->getMessage(),
