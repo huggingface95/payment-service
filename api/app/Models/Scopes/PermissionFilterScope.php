@@ -4,7 +4,7 @@ namespace App\Models\Scopes;
 
 use App\Models\Members;
 use App\Models\PermissionFilter;
-use App\Models\Traits\PermissionFilterData;
+use App\Models\Traits\CheckForEvents;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PermissionFilterScope implements Scope
 {
-    use PermissionFilterData;
+    use CheckForEvents;
 
     public function apply(Builder $builder, Model $model)
     {
