@@ -92,4 +92,9 @@ class PaymentSystem extends BaseModel
     {
         return $this->belongsTo(Files::class, 'logo_id');
     }
+
+    public function respondentFees(): BelongsToMany
+    {
+        return $this->belongsToMany(RespondentFee::class, 'payment_system_respondent_fees', 'payment_system_id', 'respondent_fee_id');
+    }
 }
