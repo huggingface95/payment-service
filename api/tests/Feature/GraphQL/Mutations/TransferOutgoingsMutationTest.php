@@ -195,8 +195,8 @@ class TransferOutgoingsMutationTest extends TestCase
             'message' => 'Unauthenticated.',
         ]);
     }
-    //TODO find out why checkBalance not working
-    /*public function testCreateTransferOutgoing(): void
+
+    public function testCreateTransferOutgoing(): void
     {
         $seq = DB::table('transfer_outgoings')
                 ->max('id') + 1;
@@ -217,6 +217,7 @@ class TransferOutgoingsMutationTest extends TestCase
                 $payment_system_id: ID!
                 $price_list_id: ID!
                 $price_list_fee_id: ID!
+                $urgency_id: ID!
                 $requested_by_id: ID!
                 $recipient_account: String
                 $recipient_bank_name: String
@@ -244,6 +245,7 @@ class TransferOutgoingsMutationTest extends TestCase
                     requested_by_id: $requested_by_id
                     price_list_id: $price_list_id
                     price_list_fee_id: $price_list_fee_id
+                    urgency_id: $urgency_id
                     recipient_account: $recipient_account
                     recipient_bank_name: $recipient_bank_name
                     recipient_bank_address: $recipient_bank_address
@@ -289,6 +291,7 @@ class TransferOutgoingsMutationTest extends TestCase
                     'requested_by_id' => 1,
                     'price_list_id' => 1,
                     'price_list_fee_id' => 1,
+                    'urgency_id' => 1,
                     'recipient_account' => 'Sender Account',
                     'recipient_bank_name' => 'recipient_bank_name',
                     'recipient_bank_address' => 'recipient_bank_address',
@@ -308,8 +311,6 @@ class TransferOutgoingsMutationTest extends TestCase
         );
 
         $id = json_decode($this->response->getContent(), true);
-
-        dump($id);
 
         $this->seeJson([
             'data' => [
@@ -334,12 +335,11 @@ class TransferOutgoingsMutationTest extends TestCase
                 ],
             ],
         ]);
-    }*/
+    }
 
     public function testUpdateTransferOutgoing(): void
     {
-        $this->markTestSkipped('Skipped');
-        $TransferOutgoing = TransferOutgoing::where('status_id', 2)
+        $TransferOutgoing = TransferOutgoing::orderBy('id', 'DESC')
             ->first();
 
         $this->postGraphQL(
@@ -351,7 +351,7 @@ class TransferOutgoingsMutationTest extends TestCase
             {
                 updateTransferOutgoing (
                     id: $id
-                    status_id: 4
+                    status_id: 1
                 )
                 {
                       id
