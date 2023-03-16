@@ -159,8 +159,8 @@ class CheckLimitService
     {
         $calculationBalance = $account->current_balance - $amount;
 
-        if (($isMinLimit = $account->min_limit_balance < $calculationBalance)
-            || $account->max_limit_balance > $calculationBalance
+        if (($isMinLimit = $account->min_limit_balance > $calculationBalance)
+            || $account->max_limit_balance < $calculationBalance
         ) {
             $account->account_state_id = AccountState::SUSPENDED;
             $account->save();
