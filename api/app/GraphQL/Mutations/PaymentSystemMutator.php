@@ -22,4 +22,29 @@ class PaymentSystemMutator
             throw new GraphqlException('Payment system was not deleted. Please, check if it`s assigned to a Payment Provider.', 'use');
         }
     }
+
+    public function attachRespondentFee($root, array $args): PaymentSystem
+    {
+        $paymentSystem = PaymentSystem::find($args['payment_system_id']);
+        if (! $paymentSystem) {
+            throw new GraphqlException('Payment system not found', 'not found', 404);
+        }
+
+        $paymentSystem->respondentFees()->detach();
+        $paymentSystem->respondentFees()->attach($args['respondent_fee_id']);
+
+        return $paymentSystem;
+    }
+
+    public function detachRespondentFee($root, array $args): PaymentSystem
+    {
+        $paymentSystem = PaymentSystem::find($args['payment_system_id']);
+        if (! $paymentSystem) {
+            throw new GraphqlException('Payment system not found', 'not found', 404);
+        }
+
+        $paymentSystem->respondentFees()->detach($args['respondent_fee_id']);
+
+        return $paymentSystem;
+    }
 }

@@ -10,6 +10,7 @@ type PaymentSystem {
     is_active: Boolean
     "Получить связанные регионы"
     regions: [Region] @belongsToMany(relation:"regions")
+    respondent_fees: [RespondentFee] @BelongsToMany(relation: "respondentFees")
     "Получить связанную компанию"
     company: Company @hasOne(relation:"company")
     "Получить связанные валюты"
@@ -85,5 +86,23 @@ extend type Mutation @guard {
 
     "Удалить платежную систему"
     deletePaymentSystem(id: ID!): PaymentSystem   @field(resolver:"PaymentSystemMutator@delete")
+
+    """
+    Прикрепить respondent_fee к платежной системе
+    """
+    attachPaymentSystemRespondentFee(
+        payment_system_id: ID!
+        respondent_fee_id: [ID]!
+    ): PaymentSystem
+        @field(resolver: "PaymentSystemMutator@attachRespondentFee")
+
+    """
+    Открепить respondent_fee от платежной системы
+    """
+    detachPaymentSystemRespondentFee(
+        payment_system_id: ID!
+        respondent_fee_id: [ID]!
+    ): PaymentSystem
+        @field(resolver:"PaymentSystemMutator@detachRespondentFee")
 }
 
