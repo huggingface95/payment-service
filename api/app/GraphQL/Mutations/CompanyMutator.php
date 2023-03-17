@@ -6,6 +6,7 @@ use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividualCompanyPosition;
 use App\Models\ApplicantIndividualCompanyRelation;
 use App\Models\Company;
+use App\Models\PaymentSystem;
 use App\Models\State;
 use Illuminate\Support\Carbon;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
@@ -52,6 +53,12 @@ class CompanyMutator extends BaseMutator
                 'company_id' => $company->id,
             ]);
         }
+
+        $company->paymentProviders()->create(['name' => 'Internal']);
+        $company->paymentSystem()->create([
+            'name' => 'Internal',
+            'payment_provider_id' => $company->paymentProviders()->first()->id,
+        ]);
 
         return $company;
     }

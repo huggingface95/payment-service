@@ -33,6 +33,7 @@ class PaymentSystem extends BaseModel
         'is_active',
         'description',
         'logo_id',
+        'payment_provider_id',
     ];
 
     public function currencies(): BelongsToMany
