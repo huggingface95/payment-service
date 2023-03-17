@@ -83,7 +83,11 @@ func initRouter() *gin.Engine {
 		{
 			m.POST("me", member.Me)
 			m.POST("refresh", controllers.Refresh)
-			m.POST("disable-two-factor", controllers.DisableTwoFactorQr)
+		}
+
+		d := auth.Group("/").Use(middlewares.AccessAuth())
+		{
+			d.POST("disable-two-factor", controllers.DisableTwoFactorQr)
 		}
 	}
 

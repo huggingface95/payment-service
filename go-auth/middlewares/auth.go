@@ -3,6 +3,7 @@ package middlewares
 import (
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/services"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,6 +19,7 @@ func AccessAuth() gin.HandlerFunc {
 		errAccessToken := services.ValidateAccessToken(tokenString, constants.Personal, true)
 
 		if errAccessToken == nil {
+			context.Set("bearer", strings.Replace(tokenString, "Bearer ", "", -1))
 			context.Next()
 			return
 		}

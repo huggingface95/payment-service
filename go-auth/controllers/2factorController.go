@@ -192,20 +192,21 @@ func DisableTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	clientType := constants.Member
-	if request.Type != "" {
-		clientType = request.Type
-	}
-
-	user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, request.AuthToken)
-	if user == nil {
-		context.JSON(http.StatusOK, gin.H{"data": "Access token not working"})
+	if request.Code == "" && request.MemberId == 0 {
+		context.JSON(http.StatusOK, gin.H{"error": "Code or member id field required"})
 		context.Abort()
 		return
 	}
 
-	if request.MemberId > 0 && request.Type == constants.Member {
-		user = userRepository.GetUserById(request.MemberId, clientType)
+	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetString("bearer"))
+	if user == nil {
+		context.JSON(http.StatusOK, gin.H{"error": "User not found"})
+		context.Abort()
+		return
+	}
+
+	if request.MemberId > 0 && user.ClientType() == constants.Member {
+		user = userRepository.GetUserById(request.MemberId, user.ClientType())
 		if user == nil {
 			context.JSON(http.StatusOK, gin.H{"data": "Member not found"})
 			context.Abort()
@@ -213,17 +214,21 @@ func DisableTwoFactorQr(context *gin.Context) {
 		}
 	}
 
-	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType) == true {
-		user.SetTwoFactorAuthSettingId(1)
-		user.SetGoogle2FaSecret("")
-		userRepository.SaveUser(user)
-		context.JSON(http.StatusOK, gin.H{"data": "Google 2fa disabled successful"})
-		context.Abort()
-		return
+	if request.MemberId == 0 {
+		if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, user.ClientType()) == false {
+			context.JSON(http.StatusForbidden, gin.H{"data": "Unable to verify your code"})
+			context.Abort()
+			return
+		}
 	}
-	context.JSON(http.StatusForbidden, gin.H{"data": "Unable to verify your code"})
+
+	user.SetTwoFactorAuthSettingId(1)
+	user.SetGoogle2FaSecret("")
+	userRepository.SaveUser(user)
+	context.JSON(http.StatusOK, gin.H{"data": "Google 2fa disabled successful"})
 	context.Abort()
 	return
+
 }
 
 func checkUserByToken(twaToken string, authToken string, memberId uint64, clientType string) (user postgres.User, errorMessage string) {
