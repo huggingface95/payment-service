@@ -26,8 +26,6 @@ type VerifyTwoFactorQrRequest struct {
 }
 
 type DisableTwoFactorQrRequest struct {
-	Code      string `json:"code" binding:"required"`
-	AuthToken string `json:"auth_token" binding:"required"`
-	MemberId  uint64 `json:"member_id"`
-	Type      string `json:"client_type"`
+	Code     string `json:"code"`
+	MemberId uint64 `json:"member_id"`
 }
