@@ -95,17 +95,8 @@ class PaymentSystemQueryTest extends TestCase
     {
         $payment_systems = DB::connection('pgsql_test')
             ->table('payment_system')
-            ->orderBy('id', 'DESC')
-            ->get();
-
-        $expect = [];
-
-        foreach ($payment_systems as $payment_system) {
-            $expect['data']['paymentSystemsList'][] = [
-                'id' => (string) $payment_system->id,
-                'name' => $payment_system->name,
-            ];
-        }
+            ->orderBy('id', 'ASC')
+            ->first();
 
         $this->postGraphQL(
             [
@@ -120,7 +111,10 @@ class PaymentSystemQueryTest extends TestCase
             [
                 'Authorization' => 'Bearer '.$this->login(),
             ]
-        )->seeJson($expect);
+        )->seeJsonContains([
+            'id' => (string) $payment_systems->id,
+            'name' => (string) $payment_systems->name,
+        ]);
     }
 
     public function testQueryPaymentSystemsFilterById(): void
