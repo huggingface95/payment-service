@@ -156,6 +156,11 @@ class Account extends BaseModel implements BaseModelInterface
         return $this->parent_id == null;
     }
 
+    public function isChild(): bool
+    {
+        return $this->parent_id > 0;
+    }
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Account::class, 'parent_id');

@@ -21,9 +21,10 @@ class AccountObserver extends BaseObserver
             return false;
         }
 
-        if ($parent = $model->parent) {
+        if ($model->isChild()) {
             /** @var Currencies $currency */
             $currency = $model->currencies;
+            $parent = $model->parent;
 
             $model->account_number = isset($model->account_number)
                 ? sprintf("%s-%s", $model->account_number, $currency->code)
