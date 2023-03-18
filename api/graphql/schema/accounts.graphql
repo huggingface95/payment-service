@@ -187,6 +187,8 @@ input InputAccount{
     payment_bank_id: ID
     "ID Проекта"
     project_id: ID
+    "ID родительского аккаунта"
+    parent_id: ID
     "clientable"
     clientableAttach: PivotTable
     "лимит максимального баланса"

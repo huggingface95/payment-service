@@ -4,15 +4,18 @@ namespace App\GraphQL\Mutations;
 
 use App\DTO\GraphQLResponse\AccountGenerateIbanResponse;
 use App\DTO\TransformerDTO;
+use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Account;
 use App\Models\AccountState;
+use App\Models\Currencies;
 use App\Models\GroupRole;
 use App\Models\Groups;
 use App\Services\EmailService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AccountMutator
 {
@@ -24,36 +27,49 @@ class AccountMutator
     }
 
     /**
+     * @throws EmailException
      * @throws GraphqlException
      */
     public function create($root, array $args): LengthAwarePaginator
     {
-        $args['member_id'] = Auth::user()->id;
+        try {
+            DB::beginTransaction();
 
-        $args['account_type'] = $this->setAccountType($args['group_type_id']);
-        if (! isset($args['account_number'])) {
-            $args['account_state_id'] = AccountState::WAITING_FOR_ACCOUNT_GENERATION;
-        } else {
-            $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
-        }
+            $args['member_id'] = Auth::user()->id;
 
-        /** @var Account $account */
-        $account = Account::query()->create($args);
+            $args['account_type'] = $this->setAccountType($args['group_type_id']);
+            if (!isset($args['account_number'])) {
+                $args['account_state_id'] = AccountState::WAITING_FOR_ACCOUNT_GENERATION;
+            } else {
+                $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
+            }
 
-        if (isset($args['clientableAttach'])) {
-            $account->clientableAttach()->sync($args['clientableAttach']['sync']);
-        }
+            /** @var Account $account */
+            $account = Account::query()->create($args);
 
-        $this->emailService->sendAccountStatusEmail($account);
+            if (isset($args['clientableAttach'])) {
+                $account->clientableAttach()->sync($args['clientableAttach']['sync']);
+            }
 
-        if ($account->account_number == null && $account->group->name == Groups::INDIVIDUAL) {
-            dispatch(new IbanIndividualActivationJob($account));
-        }
+            $this->emailService->sendAccountStatusEmail($account);
 
-        if (isset($args['query'])) {
-            return Account::getAccountFilter($args['query'])->paginate(env('PAGINATE_DEFAULT_COUNT'));
-        } else {
-            return Account::paginate(env('PAGINATE_DEFAULT_COUNT'));
+            if ($account->isParent() && $account->account_number == null && $account->group->name == Groups::INDIVIDUAL) {
+                dispatch(new IbanIndividualActivationJob($account));
+            }
+
+            DB::commit();
+
+            if (isset($args['query'])) {
+                return Account::getAccountFilter($args['query'])->paginate(env('PAGINATE_DEFAULT_COUNT'));
+            } else {
+                return Account::paginate(env('PAGINATE_DEFAULT_COUNT'));
+            }
+        } catch (EmailException $e) {
+            DB::rollBack();
+            throw new GraphqlException($e->getMessage(), $e->getCode());
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            throw new GraphqlException($e->getMessage(), $e->getCode());
         }
     }
 
@@ -74,12 +90,13 @@ class AccountMutator
         return TransformerDTO::transform(AccountGenerateIbanResponse::class);
     }
 
-    protected function setAccountType(int $groupId)
+    protected function setAccountType(int $groupId): ?string
     {
         if ($groupId == GroupRole::INDIVIDUAL) {
             return Account::PRIVATE;
         } elseif ($groupId == GroupRole::COMPANY) {
             return Account::BUSINESS;
         }
+        return null;
     }
 }

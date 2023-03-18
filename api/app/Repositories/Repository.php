@@ -38,7 +38,7 @@ abstract class Repository
     {
         $model = app($this->model());
 
-        if (! $model instanceof Model) {
+        if (!$model instanceof Model) {
             throw new RepositoryException(
                 "Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model",
             );
@@ -47,8 +47,11 @@ abstract class Repository
         return $model;
     }
 
-    public function find(array $conditions): Model|Builder|null
+    /**
+     * @throws RepositoryException
+     */
+    public function find(array $conditions): Model|null
     {
-        return $this->query->where($conditions)->first();
+        return $this->query()->where($conditions)->first();
     }
 }

@@ -23,4 +23,8 @@ interface AccountRepositoryInterface
     public function getDebitTurnoverForPeriodByAccountId(int $accountId, string $dateFrom, string $dateTo): float;
 
     public function getCreditTurnoverForPeriodByAccountId(int $accountId, string $dateFrom, string $dateTo): float;
+
+    public function getParentClonedColumns(int $accountId): array;
+
+    public function getParentMorphRecords(int $accountId): array;
 }
