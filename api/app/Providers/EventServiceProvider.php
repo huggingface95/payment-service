@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Events\AccountUpdatedEvent;
 use App\Events\Applicant\ApplicantCompanyNoteCreatedEvent;
 use App\Events\Applicant\ApplicantCompanyUpdatedEvent;
 use App\Events\Applicant\ApplicantDocumentCreatedEvent;
@@ -16,7 +15,6 @@ use App\Events\Applicant\ApplicantIndividualSentEmailVerificationEvent;
 use App\Events\Applicant\ApplicantIndividualUpdatedEvent;
 use App\Events\PaymentCreatedEvent;
 use App\Events\PaymentUpdatedEvent;
-use App\Listeners\AccountUpdatedListener;
 use App\Listeners\Log\LogApplicantCompanyChangesListener;
 use App\Listeners\Log\LogApplicantCompanyNoteChangesListener;
 use App\Listeners\Log\LogApplicantDocumentCreatedListener;
@@ -30,6 +28,9 @@ use App\Listeners\Log\LogApplicantIndividualSentEmailTrustedDeviceRemovedListene
 use App\Listeners\Log\LogApplicantIndividualSentEmailVerificationListener;
 use App\Listeners\PaymentCreatedListener;
 use App\Listeners\PaymentUpdatedListener;
+use App\Models\Account;
+use App\Observers\AccountObserver;
+use App\Observers\BaseObserver;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -40,9 +41,6 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        AccountUpdatedEvent::class => [
-            AccountUpdatedListener::class,
-        ],
         ApplicantCompanyUpdatedEvent::class => [
             LogApplicantCompanyChangesListener::class,
         ],
@@ -83,4 +81,14 @@ class EventServiceProvider extends ServiceProvider
             PaymentUpdatedListener::class,
         ],
     ];
+
+    public function boot(): void
+    {
+        Account::observe(AccountObserver::class);
+
+        foreach (getAllModels() as $model) {
+            $model::observe(BaseObserver::class);
+        }
+
+    }
 }

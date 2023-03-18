@@ -5,7 +5,6 @@ namespace App\Models;
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\PaymentStatusEnum;
-use App\Events\AccountUpdatedEvent;
 use App\Models\Interfaces\BaseModelInterface;
 use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
@@ -14,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 
 /**
  * Class Account
@@ -24,6 +23,7 @@ use Illuminate\Support\Facades\DB;
  * @property int account_state_id
  * @property int group_type_id
  * @property int company_id
+ * @property int parent_id
  * @property float min_limit_balance
  * @property float max_limit_balance
  * @property float current_balance
@@ -35,6 +35,8 @@ use Illuminate\Support\Facades\DB;
  * @property AccountReachedLimit $reachedLimits
  * @property ApplicantIndividual | ApplicantCompany clientable
  * @property Currencies currencies
+ * @property Account parent
+ * @property Collection children
  *
  * @method static find(int $id)
  * @method static findOrFail(int $id)
@@ -49,10 +51,6 @@ class Account extends BaseModel implements BaseModelInterface
     public const BUSINESS = 'Business';
 
     protected $table = 'accounts';
-
-    protected $dispatchesEvents = [
-        'updated' => AccountUpdatedEvent::class,
-    ];
 
     /**
      * The attributes that are mass assignable.
@@ -87,6 +85,7 @@ class Account extends BaseModel implements BaseModelInterface
         'min_limit_balance',
         'max_limit_balance',
         'project_id',
+        'parent_id',
     ];
 
     protected $casts = [
@@ -150,6 +149,21 @@ class Account extends BaseModel implements BaseModelInterface
     public function getTotalPendingTransactionsAttribute(): int
     {
         return $this->transferIncomings()->where('status_id', PaymentStatusEnum::PENDING->value)->count() + $this->transferOutgoings()->where('status_id', PaymentStatusEnum::PENDING->value)->count();
+    }
+
+    public function isParent(): bool
+    {
+        return $this->parent_id == null;
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Account::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Account::class, 'parent_id');
     }
 
     public function member(): BelongsTo

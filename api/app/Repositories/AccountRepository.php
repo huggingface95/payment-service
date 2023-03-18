@@ -4,7 +4,10 @@ namespace App\Repositories;
 
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Exceptions\RepositoryException;
 use App\Models\Account;
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
 use App\Models\Transactions;
 use App\Models\TransferIncoming;
 use App\Models\TransferOutgoing;
@@ -15,12 +18,39 @@ use Illuminate\Database\Eloquent\Model;
 
 class AccountRepository extends Repository implements AccountRepositoryInterface
 {
+
+    public const PARENT_CLONE_COLUMNS = [
+        'owner_id',
+        'payment_provider_id',
+        'iban_provider_id',
+        'commission_template_id',
+        'payment_system_id',
+        'payment_bank_id',
+        'commission_template_id',
+        'group_role_id',
+        'group_type_id',
+        'account_state_id',
+        'company_id',
+        'member_id',
+        'project_id',
+    ];
+
+    public const PARENT_CLONE_MORPH_RECORDS = [
+        'clientable' => [
+            ApplicantIndividual::class => 'applicantIndividual',
+            ApplicantCompany::class => 'applicantCompany',
+        ]
+    ];
+
     protected function model(): string
     {
         return Account::class;
     }
 
-    public function findById(int $id): Model|Builder|null
+    /**
+     * @throws RepositoryException
+     */
+    public function findById(int $id): Model|Account|null
     {
         return $this->find(['id' => $id]);
     }
@@ -107,5 +137,33 @@ class AccountRepository extends Repository implements AccountRepositoryInterface
             ->sum('amount');
 
         return $otgoingsAmount;
+    }
+
+    /**
+     * @throws RepositoryException
+     */
+    public function getParentClonedColumns(int $accountId): array
+    {
+        return array_intersect_key(
+            $this->findById($accountId)->getAttributes(),
+            array_flip(self::PARENT_CLONE_COLUMNS)
+        );
+    }
+
+    /**
+     * @throws RepositoryException
+     */
+    public function getParentMorphRecords(int $accountId): array
+    {
+        $result = [];
+        $parent = $this->findById($accountId);
+        foreach (self::PARENT_CLONE_MORPH_RECORDS as $relation => $types) {
+            if ($record = $parent->$relation) {
+                $action = $types[get_class($record)] ?? null;
+                $result[$action] = $record;
+            }
+        }
+
+        return $result;
     }
 }

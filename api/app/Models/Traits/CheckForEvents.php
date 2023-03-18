@@ -4,6 +4,7 @@ namespace App\Models\Traits;
 
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividual;
+use App\Models\BaseModel;
 use App\Models\Members;
 use App\Models\PermissionFilter;
 use App\Models\RoleAction;
@@ -95,7 +96,7 @@ trait CheckForEvents
                         return true;
                     }
 
-                    return in_array($key, [self::SUPER_COMPANY_ID, $user->company_id]);
+                    return in_array($key, [BaseModel::SUPER_COMPANY_ID, $user->company_id]);
                 }
             }
         }
