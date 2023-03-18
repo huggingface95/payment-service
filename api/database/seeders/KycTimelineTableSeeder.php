@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
 use App\Models\KycTimeline;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
@@ -27,8 +29,7 @@ class KycTimelineTableSeeder extends Seeder
                     'browser' => $faker->randomElement(['Opera', 'Chrome', 'Firefox']),
                     'ip' => $faker->ipv4,
                     'action' => 'test action',
-                    'action_state' => 'test action state',
-                    'tag' => 'tag',
+                    'tag' => 'KYC',
                     'action_type' => $faker->randomElement(['document_upload', 'document_state', 'verification', 'email']),
                     'document_id' => 1,
                     'company_id' => $i,
