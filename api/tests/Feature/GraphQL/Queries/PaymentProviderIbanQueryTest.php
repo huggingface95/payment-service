@@ -101,6 +101,10 @@ class PaymentProviderIbanQueryTest extends TestCase
                             id
                             name
                             is_active
+                            swift
+                            sort_code
+                            provider_address
+                            about
                             company {
                                 id
                                 name
@@ -125,6 +129,10 @@ class PaymentProviderIbanQueryTest extends TestCase
                     'data' => [[
                         'id' => (string) $paymentProviderIban->id,
                         'name' => (string) $paymentProviderIban->name,
+                        'swift' => (string) $paymentProviderIban->swift,
+                        'sort_code' => (string) $paymentProviderIban->sort_code,
+                        'provider_address' => (string) $paymentProviderIban->provider_address,
+                        'about' => (string) $paymentProviderIban->about,
                         'is_active' => $paymentProviderIban->is_active,
                         'company' => [
                             'id' => (string) $company->id,

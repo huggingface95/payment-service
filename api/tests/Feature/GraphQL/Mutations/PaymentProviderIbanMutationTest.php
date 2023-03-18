@@ -64,12 +64,20 @@ class PaymentProviderIbanMutationTest extends TestCase
         $this->postGraphQL(['query' => 'mutation CreatePaymentProviderIban(
                 $name: String!,
                 $company_id: ID!,
-                $currency_id: ID!
+                $currency_id: ID!,
+                $swift: String,
+                $sort_code: String,
+                $provider_address: String,
+                $about: String
             ) {
                 createPaymentProviderIban(input: {
                     name: $name,
                     company_id: $company_id,
                     currency_id: $currency_id,
+                    swift: $swift
+                    sort_code: $sort_code
+                    provider_address: $provider_address
+                    about: $about
                     is_active: true
                 }) {
                     id
@@ -82,6 +90,10 @@ class PaymentProviderIbanMutationTest extends TestCase
                         id
                         name
                     }
+                    swift
+                    sort_code
+                    provider_address
+                    about
                     is_active
                 }
             }',
@@ -89,6 +101,10 @@ class PaymentProviderIbanMutationTest extends TestCase
                 'name' => 'New PaymentProviderIban',
                 'company_id' => 1,
                 'currency_id' => 1,
+                'swift' => 'FHJFJHFJFHJ6787',
+                'sort_code' => '65433322',
+                'provider_address' => 'Provider Address',
+                'about' => 'About provider',
             ],
         ],
         [
@@ -101,6 +117,10 @@ class PaymentProviderIbanMutationTest extends TestCase
             [
                 'id' => $id['data']['createPaymentProviderIban']['id'],
                 'name' => $id['data']['createPaymentProviderIban']['name'],
+                'swift' => $id['data']['createPaymentProviderIban']['swift'],
+                'sort_code' => $id['data']['createPaymentProviderIban']['sort_code'],
+                'provider_address' => $id['data']['createPaymentProviderIban']['provider_address'],
+                'about' => $id['data']['createPaymentProviderIban']['about'],
                 'is_active' => $id['data']['createPaymentProviderIban']['is_active'],
                 'company' => $id['data']['createPaymentProviderIban']['company'],
                 'currency' => $id['data']['createPaymentProviderIban']['currency'],

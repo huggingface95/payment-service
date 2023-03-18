@@ -10,6 +10,10 @@ class PaymentProviderIban extends BaseModel
 {
     protected $fillable = [
         'name',
+        'swift',
+        'sort_code',
+        'provider_address',
+        'about',
         'member_id',
         'currency_id',
         'is_active',

@@ -6,6 +6,14 @@ type PaymentProviderIban {
     id: ID!
     "Название"
     name: String!
+    "SWIFT"
+    swift: String
+    "Sort Code"
+    sort_code: String
+    "Provider Address"
+    provider_address: String
+    "About"
+    about: String
     "Получить компанию"
     company: Company @belongsTo(relation: "company")
     "Получить валюту"
@@ -40,6 +48,14 @@ input QueryPaymentProviderIbansFilterStatic @spread {
 input InputPaymentProviderIban {
     "Название"
     name: String!
+    "SWIFT"
+    swift: String
+    "Sort Code"
+    sort_code: String
+    "Provider Address"
+    provider_address: String
+    "About"
+    about: String
     "ID компании"
     company_id: ID!
     "ID валюты"
