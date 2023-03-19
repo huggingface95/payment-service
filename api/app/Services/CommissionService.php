@@ -12,6 +12,7 @@ use App\Exceptions\GraphqlException;
 use App\Models\Currencies;
 use App\Models\Fee;
 use App\Models\PriceListFeeCurrency;
+use App\Models\PriceListPPFeeCurrency;
 use App\Models\TransferIncoming;
 use App\Models\TransferOutgoing;
 use Illuminate\Support\Collection;
@@ -23,9 +24,10 @@ class CommissionService extends AbstractService
     {
         $amountDebt = 0;
         $feeAmount = $this->commissionCalculation($transfer, $transactionDTO);
-        $amountDebt = $this->getTransferAmountDebt($transfer, $feeAmount);
+        $feePPAmount = $this->commissionPPCalculation($transfer, $transactionDTO);
+        $amountDebt = $this->getTransferAmountDebt($transfer, $feeAmount + $feePPAmount);
 
-        $this->createFee($transfer, $feeAmount);
+        $this->createFee($transfer, $feeAmount, $feePPAmount);
 
         if ($amountDebt > 0) {
             $transfer->amount_debt = $amountDebt;
@@ -40,25 +42,46 @@ class CommissionService extends AbstractService
      */
     private function commissionCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
     {
-        $paymentFee = 0;
-
         $priceListFees = PriceListFeeCurrency::where('price_list_fee_id', $transfer->price_list_fee_id)
             ->where('currency_id', $transfer->currency_id)
             ->get();
 
+        return $this->calculatePaymentFee($priceListFees, $transfer, $transactionDTO);
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    private function commissionPPCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
+    {
+        $priceListFees = PriceListPpFeeCurrency::where('currency_id', $transfer->currency_id)
+            ->whereHas('PriceListPPFee', function($query) use ($transfer) {
+                $query->where('payment_system_id', $transfer->payment_system_id)
+                    ->where('payment_provider_id', $transfer->payment_provider_id);
+            })
+            ->get();
+        
+        return $this->calculatePaymentFee($priceListFees, $transfer, $transactionDTO);
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    private function calculatePaymentFee($priceListFees, TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
+    {
+        $paymentFee = 0;
         foreach ($priceListFees as $listFee) {
             if (! $this->isAllowToApplyCommission($transfer, $listFee, $transactionDTO)) {
                 continue;
             }
-           
+            
             $paymentFee += $this->getFee($listFee->fee, $transfer->amount, $transfer->urgency_id);
         }
 
         return (float) $paymentFee;
     }
     
-
-    private function isAllowToApplyCommission(TransferOutgoing|TransferIncoming $transfer, PriceListFeeCurrency $listFee, TransactionDTO $transactionDTO = null): bool
+    private function isAllowToApplyCommission(TransferOutgoing|TransferIncoming $transfer, PriceListFeeCurrency|PriceListPPFeeCurrency $listFee, TransactionDTO $transactionDTO = null): bool
     {
         switch ($transfer->operation_type_id) {
             case OperationTypeEnum::EXCHANGE->value:
@@ -158,19 +181,18 @@ class CommissionService extends AbstractService
         };
     }
 
-    public function createFee(TransferOutgoing|TransferIncoming $transfer, float $paymentFee): void
+    public function createFee(TransferOutgoing|TransferIncoming $transfer, float $paymentFee, float $paymentPPFee): void
     {
         $transferType = $transfer instanceof TransferOutgoing ? FeeTransferTypeEnum::OUTGOING->toString() : FeeTransferTypeEnum::INCOMING->toString();
 
-        // TODO: set fee_pp commission
         Fee::updateOrCreate(
             [
                 'transfer_id' => $transfer->id,
-                'transfer_type' =>  $transferType,
+                'transfer_type' => $transferType,
             ],
             [
                 'fee' => $paymentFee,
-                'fee_pp' => 0,
+                'fee_pp' => $paymentPPFee,
                 'fee_type_id' => 1,
                 'operation_type_id' => $transfer->operation_type_id,
                 'member_id' => null,

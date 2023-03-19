@@ -101,7 +101,7 @@ class PriceListFeeService extends AbstractService
 
         foreach ($fees as $feeItems) {
             $key = $this->getKeyName($feeItems['fee']);
-            $currenciesDestination = $feeItems->feeDestinationCurrency()->pluck('currency_id')->toArray();
+            $currenciesDestination = $feeItems->feeDestinationCurrency?->pluck('currency_id')->toArray() ?? [];
             $feeItems = $feeItems->toArray();
 
             if (array_search(FeeModeEnum::RANGE->toString(), array_column($feeItems['fee'], 'mode')) === false) {
@@ -150,7 +150,7 @@ class PriceListFeeService extends AbstractService
 
         foreach ($fees as $feeItems) {
             $key = $this->getKeyName($feeItems['fee']);
-            $currenciesDestination = $feeItems->feeDestinationCurrency()->pluck('currency_id')->toArray();
+            $currenciesDestination = $feeItems->feeDestinationCurrency?->pluck('currency_id')->toArray() ?? [];
             $feeItems = $feeItems->toArray();
 
             if (array_search(FeeModeEnum::RANGE->toString(), array_column($feeItems['fee'], 'mode')) !== false) {
