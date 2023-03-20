@@ -16,6 +16,7 @@ class PaymentProviderIban extends BaseModel
         'about',
         'member_id',
         'currency_id',
+        'logo_id',
         'is_active',
     ];
 
@@ -32,6 +33,11 @@ class PaymentProviderIban extends BaseModel
     public function currency(): HasOne
     {
         return $this->hasOne(Currencies::class, 'id', 'currency_id');
+    }
+
+    public function logo(): BelongsTo
+    {
+        return $this->belongsTo(Files::class, 'logo_id');
     }
 
     public function projectApiSettings(): MorphMany

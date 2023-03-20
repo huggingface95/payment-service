@@ -18,6 +18,8 @@ type PaymentProviderIban {
     company: Company @belongsTo(relation: "company")
     "Получить валюту"
     currency: Currencies @hasOne(relation: "currency")
+    "Лого"
+    logo: Files @belongsTo(relation: "logo")
     "Активность"
     is_active: Boolean
 }
@@ -60,6 +62,8 @@ input InputPaymentProviderIban {
     company_id: ID!
     "ID валюты"
     currency_id: ID!
+    "Лого"
+    logo_id: ID
     "Активность"
     is_active: Boolean!
 }

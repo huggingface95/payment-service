@@ -91,6 +91,7 @@ class PaymentProviderIbanQueryTest extends TestCase
 
         $company = $paymentProviderIban->company()->first();
         $currency = $paymentProviderIban->currency()->first();
+        $logo = $paymentProviderIban->logo()->first();
 
         $this->postGraphQL(
             [
@@ -112,6 +113,10 @@ class PaymentProviderIbanQueryTest extends TestCase
                             currency {
                                 id
                                 name
+                            }
+                            logo {
+                                id
+                                file_name
                             }
                         }
                     }
@@ -141,6 +146,10 @@ class PaymentProviderIbanQueryTest extends TestCase
                         'currency' => [
                             'id' => (string) $currency->id,
                             'name' => (string) $currency->name,
+                        ],
+                        'logo' => [
+                            'id' => (string) $logo->id,
+                            'file_name' => (string) $logo->file_name,
                         ]],
                     ],
                 ],
