@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
 use App\Exceptions\GraphqlException;
@@ -200,9 +201,16 @@ class TransferBetweenUsersService extends AbstractService
         ];
     }
 
+    /**
+     * @throws GraphqlException
+     */
     private function validateUpdateTransferStatus(array $transfers, array $args): void
     {
         foreach ($transfers as $transfer) {
+            if ($transfer->operation_type_id != OperationTypeEnum::BETWEEN_ACCOUNT->value || $transfer->operation_type_id != OperationTypeEnum::BETWEEN_USERS->value) {
+                throw new GraphqlException('This operation is not allowed for this transfer', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
             switch ($transfer['status_id']) {
                 case PaymentStatusEnum::UNSIGNED->value:
                     if ($args['status_id'] != PaymentStatusEnum::PENDING->value) {
