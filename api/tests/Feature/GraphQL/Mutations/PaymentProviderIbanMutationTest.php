@@ -65,6 +65,7 @@ class PaymentProviderIbanMutationTest extends TestCase
                 $name: String!,
                 $company_id: ID!,
                 $currency_id: ID!,
+                $logo_id: ID,
                 $swift: String,
                 $sort_code: String,
                 $provider_address: String,
@@ -74,6 +75,7 @@ class PaymentProviderIbanMutationTest extends TestCase
                     name: $name,
                     company_id: $company_id,
                     currency_id: $currency_id,
+                    logo_id: $logo_id,
                     swift: $swift
                     sort_code: $sort_code
                     provider_address: $provider_address
@@ -89,6 +91,10 @@ class PaymentProviderIbanMutationTest extends TestCase
                     currency {
                         id
                         name
+                    }
+                    logo {
+                        id
+                        file_name
                     }
                     swift
                     sort_code
@@ -124,6 +130,7 @@ class PaymentProviderIbanMutationTest extends TestCase
                 'is_active' => $id['data']['createPaymentProviderIban']['is_active'],
                 'company' => $id['data']['createPaymentProviderIban']['company'],
                 'currency' => $id['data']['createPaymentProviderIban']['currency'],
+                'logo' => $id['data']['createPaymentProviderIban']['logo'],
             ],
         ]);
     }
@@ -138,11 +145,13 @@ class PaymentProviderIbanMutationTest extends TestCase
                 $name: String!,
                 $company_id: ID!,
                 $currency_id: ID!
+                $logo_id: ID
             ) {
                 updatePaymentProviderIban(id: $id, input: {
                     name: $name,
                     company_id: $company_id,
                     currency_id: $currency_id,
+                    logo_id: $logo_id,
                     is_active: true
                 }) {
                     id
@@ -155,6 +164,10 @@ class PaymentProviderIbanMutationTest extends TestCase
                         id
                         name
                     }
+                    logo {
+                        id
+                        file_name
+                    }
                     is_active
                 }
             }',
@@ -163,6 +176,7 @@ class PaymentProviderIbanMutationTest extends TestCase
                 'name' => 'New PaymentProviderIban updated',
                 'company_id' => 1,
                 'currency_id' => 1,
+                'logo_id' => 1,
             ],
         ],
             [
@@ -178,6 +192,7 @@ class PaymentProviderIbanMutationTest extends TestCase
                 'is_active' => $id['data']['updatePaymentProviderIban']['is_active'],
                 'company' => $id['data']['updatePaymentProviderIban']['company'],
                 'currency' => $id['data']['updatePaymentProviderIban']['currency'],
+                'logo' => $id['data']['updatePaymentProviderIban']['logo'],
             ],
         ]);
     }

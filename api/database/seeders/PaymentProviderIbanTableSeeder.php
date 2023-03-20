@@ -29,6 +29,7 @@ class PaymentProviderIbanTableSeeder extends Seeder
                     'about' => $faker->text(30),
                     'company_id' => $i,
                     'currency_id' => $i,
+                    'logo_id' => 1,
                     'is_active' => true,
                 ]
             );
