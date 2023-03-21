@@ -26,6 +26,10 @@ class CompanyModuleMutator extends BaseMutator
                 $this->addModules($company, $args['module_id']);
             }
 
+            if (! isset($args['module_id']) || empty($args['module_id'])) {
+                $company->modules()->update(['is_active' => false]);
+            }
+
             DB::commit();
 
             return $company;
