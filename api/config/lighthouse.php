@@ -231,6 +231,7 @@ return [
     */
 
     'error_handlers' => [
+        \App\GraphQL\Execution\OverrideErrorException::class,
         \Nuwave\Lighthouse\Execution\AuthenticationErrorHandler::class,
         \Nuwave\Lighthouse\Execution\AuthorizationErrorHandler::class,
         \Nuwave\Lighthouse\Execution\ValidationErrorHandler::class,
