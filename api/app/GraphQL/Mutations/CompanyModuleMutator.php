@@ -27,7 +27,7 @@ class CompanyModuleMutator extends BaseMutator
             }
 
             if (! isset($args['module_id']) || empty($args['module_id'])) {
-                $company->modules()->update(['is_active' => false]);
+                $company->modules()->where('module_id', '<>', ModuleEnum::KYC->value)->delete();
             }
 
             DB::commit();
