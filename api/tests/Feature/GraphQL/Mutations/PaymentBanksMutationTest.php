@@ -41,8 +41,7 @@ class PaymentBanksMutationTest extends TestCase
                     payment_provider_id: $payment_provider_id,
                     bank_code: $bank_code
                     payment_system_code: $payment_system_code
-                    currency_id: [1, 2, 3]
-                    region_id: [1]
+                    currencies_and_regions: [{currency_id:[1], regions:[1]}]
                     country_id: $country_id
                     swift: $swift
                     account_number: $account_number
@@ -93,8 +92,7 @@ class PaymentBanksMutationTest extends TestCase
                     payment_provider_id: $payment_provider_id,
                     bank_code: $bank_code
                     payment_system_code: $payment_system_code
-                    currency_id: [1, 2, 3]
-                    region_id: [1]
+                    currencies_and_regions: [{currency_id:[1], regions:[1]}]
                     country_id: $country_id
                     swift: $swift
                     account_number: $account_number
@@ -151,8 +149,7 @@ class PaymentBanksMutationTest extends TestCase
                     payment_provider_id: $payment_provider_id,
                     bank_code: $bank_code
                     payment_system_code: $payment_system_code
-                    currency_id: [1, 3, 5]
-                    region_id: [1]
+                    currencies_and_regions: [{currency_id:[1], regions:[1]}]
                     country_id: $country_id
                     swift: $swift
                     account_number: $account_number

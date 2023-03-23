@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\BankCorrespondentRegion;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
-class BankCorrespondentRegionsTableSeeder extends Seeder
+class BankCorrespondentCurrenciesRegionsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,8 +14,9 @@ class BankCorrespondentRegionsTableSeeder extends Seeder
      */
     public function run()
     {
-        BankCorrespondentRegion::firstOrCreate([
+        DB::table('bank_correspondent_currencies_regions')->insert([
             'bank_correspondent_id' => 1,
+            'currency_id' => 1,
             'region_id' => 1,
         ]);
     }

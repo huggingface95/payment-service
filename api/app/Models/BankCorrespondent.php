@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class BankCorrespondent extends BaseModel
 {
@@ -32,38 +31,24 @@ class BankCorrespondent extends BaseModel
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
-    public function bankCorrespondentCurrencies(): HasMany
+    public function currencies(): BelongsToMany
     {
-        return $this->hasMany(BankCorrespondentCurrency::class);
-    }
-
-    public function bankCorrespondentRegions(): HasMany
-    {
-        return $this->hasMany(BankCorrespondentRegion::class);
-    }
-
-    public function currencies(): HasManyThrough
-    {
-        return $this->hasManyThrough(
+        return $this->belongsToMany(
             Currencies::class,
-            BankCorrespondentCurrency::class,
+            'bank_correspondent_currencies_regions',
             'bank_correspondent_id',
-            'id',
-            'id',
             'currency_id'
-        );
+        )->distinct('id');
     }
 
-    public function regions(): HasManyThrough
+    public function regions(): BelongsToMany
     {
-        return $this->hasManyThrough(
+        return $this->belongsToMany(
             Region::class,
-            BankCorrespondentRegion::class,
+            'bank_correspondent_currencies_regions',
             'bank_correspondent_id',
-            'id',
-            'id',
             'region_id'
-        );
+        )->distinct('id');
     }
 
     public function country(): BelongsTo

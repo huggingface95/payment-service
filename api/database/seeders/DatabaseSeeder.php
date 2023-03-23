@@ -69,11 +69,9 @@ class DatabaseSeeder extends Seeder
         $this->call(PriceListFeesTableSeeder::class);
         $this->call(PriceListFeeCurrencyTableSeeder::class);
         $this->call(BankCorrespondentTableSeeder::class);
-        $this->call(BankCorrespondentCurrenciesTableSeeder::class);
-        $this->call(BankCorrespondentRegionsTableSeeder::class);
+        $this->call(BankCorrespondentCurrenciesRegionsSeeder::class);
         $this->call(PaymentBankTableSeeder::class);
-        $this->call(PaymentBankCurrenciesTableSeeder::class);
-        $this->call(PaymentBankRegionsTableSeeder::class);
+        $this->call(PaymentBankCurrenciesRegionsSeeder::class);
         $this->call(AccountTableSeeder::class);
         $this->call(ApplicantBankingAccessTableSeeder::class);
         $this->call(PaymentUrgencyTableSeeder::class);

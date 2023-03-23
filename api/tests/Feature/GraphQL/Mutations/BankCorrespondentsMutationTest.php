@@ -40,8 +40,7 @@ class BankCorrespondentsMutationTest extends TestCase
                     account_number: $account_number
                     ncs_number: $ncs_number,
                     payment_system_id: $payment_system_id,
-                    currency_id: [1, 2, 3]
-                    region_id: [1]
+                    currencies_and_regions: [{currency_id:[1], regions:[1]}]
                     country_id: $country_id
                     swift: $swift
                     is_active: true
@@ -97,8 +96,7 @@ class BankCorrespondentsMutationTest extends TestCase
                     account_number: $account_number
                     ncs_number: $ncs_number,
                     payment_system_id: $payment_system_id,
-                    currency_id: [1, 2, 3]
-                    region_id: [1]
+                    currencies_and_regions: [{currency_id:[1], regions:[1]}]
                     country_id: $country_id
                     swift: $swift
                     is_active: true
@@ -167,8 +165,7 @@ class BankCorrespondentsMutationTest extends TestCase
                     account_number: $account_number
                     ncs_number: $ncs_number,
                     payment_system_id: $payment_system_id,
-                    currency_id: [1, 2, 3]
-                    region_id: [1]
+                    currencies_and_regions: [{currency_id:[1], regions:[1]}]
                     country_id: $country_id
                     swift: $swift
                     is_active: true

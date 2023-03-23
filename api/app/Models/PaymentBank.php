@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class PaymentBank extends BaseModel
 {
@@ -36,38 +36,24 @@ class PaymentBank extends BaseModel
         return $this->hasMany(BankCorrespondent::class, 'payment_bank_id');
     }
 
-    public function paymentBankCurrencies(): HasMany
+    public function currencies(): BelongsToMany
     {
-        return $this->hasMany(PaymentBankCurrency::class);
-    }
-
-    public function paymentBankRegions(): HasMany
-    {
-        return $this->hasMany(PaymentBankRegion::class);
-    }
-
-    public function currencies(): HasManyThrough
-    {
-        return $this->hasManyThrough(
+        return $this->belongsToMany(
             Currencies::class,
-            PaymentBankCurrency::class,
+            'payment_bank_currencies_regions',
             'payment_bank_id',
-            'id',
-            'id',
             'currency_id'
-        );
+        )->distinct('id');
     }
 
-    public function regions(): HasManyThrough
+    public function regions(): BelongsToMany
     {
-        return $this->hasManyThrough(
+        return $this->belongsToMany(
             Region::class,
-            PaymentBankRegion::class,
+            'payment_bank_currencies_regions',
             'payment_bank_id',
-            'id',
-            'id',
             'region_id'
-        );
+        )->distinct('id');
     }
 
     public function paymentSystem(): BelongsTo
