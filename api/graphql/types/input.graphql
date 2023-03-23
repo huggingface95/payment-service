@@ -25,5 +25,5 @@ input ConnectImageableInput {
 
 input CurrenciesAndRegions{
     currency_id: [ID!]
-    regions: [ID!]
+    regions: [ID]
 }
