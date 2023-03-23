@@ -28,7 +28,7 @@ func GenerateBackupCodes(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user, message := checkUserByAuthToken(request.AuthToken, request.MemberId, clientType)
+	user, message := auth.CheckUserByToken("", request.AccessToken, request.MemberId, clientType)
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
@@ -59,7 +59,7 @@ func StoreBackupCodes(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user, message := checkUserByAuthToken(request.AuthToken, request.MemberId, clientType)
+	user, message := auth.CheckUserByToken("", request.AccessToken, request.MemberId, clientType)
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
@@ -80,23 +80,5 @@ func StoreBackupCodes(context *gin.Context) {
 		"data":         fmt.Sprintf("Backup Codes stored success for user id %d", +user.GetId()),
 	})
 	context.Abort()
-	return
-}
-
-func checkUserByAuthToken(authToken string, memberId uint64, clientType string) (user postgres.User, errorMessage string) {
-
-	user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, authToken)
-	if user == nil {
-		errorMessage = "Auth token not working"
-		return
-	}
-
-	if memberId > 0 && clientType == constants.Member {
-		user = userRepository.GetUserById(memberId, clientType)
-		if user == nil {
-			errorMessage = "Member not found"
-		}
-	}
-
 	return
 }
