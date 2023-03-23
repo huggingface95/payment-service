@@ -11,7 +11,7 @@ trait OptimizationCurrencyRegionTrait
     {
         return collect($input)
             ->map(function ($item) {
-                return collect($item['currency_id'])->crossJoin($item['regions'])->map(function ($item) {
+                return collect($item['currency_id'])->crossJoin(!empty($item['regions']) ? $item['regions'] : [0])->map(function ($item) {
                     return collect(['currency_id', 'region_id'])->combine($item);
                 });
             })->collapse();
