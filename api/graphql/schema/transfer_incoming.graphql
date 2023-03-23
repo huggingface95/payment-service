@@ -91,7 +91,7 @@ extend type Query @guard {
     Получить список входящих платежей
     """
     transferIncomings(
-        filter: _ @filterConditions(static: QueryTransferIncomingsFilterStatic),
+        filter: _ @filterConditions(static: QueryTransferIncomingsFilterStatic)
         created_at: DateTimeRange @whereBetween
     ): [TransferIncoming!]!
         @paginate(defaultCount: 10)
@@ -107,9 +107,41 @@ extend type Query @guard {
         account_id: ID
     ): [TransferIncomingStatistic]
         @field(resolver: "TransferIncomingQuery@statistic")
+
+    """
+    Получить выписку по входящим трансферам
+    """
+    downloadTransferIncomings(
+        type: ExportFileType!
+        filter: _ @filterConditions(static: QueryTransferIncomingsFilterStatic)
+        created_at: DateTimeRange @whereBetween
+    ): RawFile
+        @downloadFileWithConditions(model: "TransferIncoming")
+
+    """
+    Получить детали входящего трансфера
+    """
+    downloadTransferIncomingDetails(
+        "ID трансфера"
+        id: ID!
+        "Тип файла"
+        type: ExportFileType!
+    ): RawFile
+        @field(resolver: "TransferIncomingQuery@downloadDetails")
 }
 
 input QueryTransferIncomingsFilterStatic @spread {
+    id: ID @eq
+    urgency_id: ID @eq
+    operation_type_id: ID @eq
+    sender_name: String @ilike
+    status_id: ID @eq
+    hasAccountFilterByAccountNumber: String @ilike
+    hasFeeFilterByFee: String @ilike
+    hasFeeFilterByFeeAmount: String @ilike
+}
+
+input QueryDownloadTransferIncomingsFilterStatic @spread {
     id: ID @eq
     urgency_id: ID @eq
     operation_type_id: ID @eq
