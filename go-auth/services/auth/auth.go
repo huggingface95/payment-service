@@ -37,10 +37,10 @@ func GetAuthUserByToken(jwtType string, jwtAccessType string, token string) post
 	var err error
 	if jwtAccessType == constants.AccessToken {
 		err = services.ValidateAccessToken(token, jwtType, false)
-	} else if jwtAccessType == constants.AuthToken {
-		err = services.ValidateAuthToken(token, jwtType, false)
+	} else if jwtAccessType == constants.ForTwoFactor {
+		err = services.ValidateForTwoFactorToken(token, jwtType, false)
 	} else {
-		err = services.ValidateForTwoFactorTOken(token, jwtType, false)
+		err = services.ValidateForTwoFactorToken(token, jwtType, false)
 	}
 	if err != nil {
 		return nil
@@ -48,4 +48,28 @@ func GetAuthUserByToken(jwtType string, jwtAccessType string, token string) post
 	claims, err := services.GetClaims(token, jwtType, false)
 
 	return userRepository.GetUserById(claims.GetId(), claims.Prv)
+}
+
+func CheckUserByToken(twaToken string, accessToken string, memberId uint64, clientType string) (user postgres.User, errorMessage string) {
+	if twaToken != "" {
+		user = GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, twaToken)
+		errorMessage = "TwoFaToken not working"
+	} else if accessToken != "" {
+		user = GetAuthUserByToken(constants.Personal, constants.AccessToken, accessToken)
+		errorMessage = "Auth token not working"
+	} else {
+		errorMessage = "two factor token or Access token required"
+	}
+
+	if user == nil {
+		return
+	}
+
+	if memberId > 0 && clientType == constants.Member {
+		user = userRepository.GetUserById(memberId, clientType)
+		if user == nil {
+			errorMessage = "Member not found"
+		}
+	}
+	return
 }

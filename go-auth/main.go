@@ -79,15 +79,11 @@ func initRouter() *gin.Engine {
 		auth.POST("generate-backup-codes", controllers.GenerateBackupCodes)
 		auth.POST("store-backup-codes", controllers.StoreBackupCodes)
 
-		m := auth.Group("/").Use(middlewares.Auth())
+		m := auth.Group("/").Use(middlewares.AccessAuth())
 		{
 			m.POST("me", member.Me)
 			m.POST("refresh", controllers.Refresh)
-		}
-
-		d := auth.Group("/").Use(middlewares.AccessAuth())
-		{
-			d.POST("disable-two-factor", controllers.DisableTwoFactorQr)
+			m.POST("disable-two-factor", controllers.DisableTwoFactorQr)
 		}
 	}
 

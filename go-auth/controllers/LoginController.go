@@ -151,25 +151,18 @@ func Login(context *gin.Context) {
 	}
 	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), "login", expirationJWTTime, deviceInfo)
 
-	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == false {
+	if user.GetTwoFactorAuthSettingId() == 2 {
 		tokenJWT, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.ForTwoFactor)
 		if err != nil {
 			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		context.JSON(http.StatusOK, gin.H{"2fa_token": tokenJWT})
-		return
-	}
-
-	if user.GetTwoFactorAuthSettingId() == 2 && user.IsGoogle2FaSecret() == true {
-		authToken, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AuthToken)
-		if err != nil {
-			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		if user.IsGoogle2FaSecret() == false {
+			context.JSON(http.StatusOK, gin.H{"2fa_token": tokenJWT})
 			return
+		} else {
+			context.JSON(http.StatusOK, gin.H{"two_factor": "true", "2fa_token": tokenJWT})
 		}
-
-		context.JSON(http.StatusOK, gin.H{"two_factor": "true", "auth_token": authToken})
-		return
 	} else {
 		cache.Caching.LoginAttempt.Del(key)
 	}

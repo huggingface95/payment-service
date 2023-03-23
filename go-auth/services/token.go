@@ -99,21 +99,10 @@ func ValidateAccessToken(token string, jwtType string, replaceBearer bool) (err 
 	return
 }
 
-func ValidateForTwoFactorTOken(token string, jwtType string, replaceBearer bool) (err error) {
+func ValidateForTwoFactorToken(token string, jwtType string, replaceBearer bool) (err error) {
 	claims, err := parseJWT(token, jwtType, replaceBearer)
 	if err == nil {
 		if claims.Type != constants.ForTwoFactor {
-			err = errors.New("bad two factor token")
-			return
-		}
-	}
-	return
-}
-
-func ValidateAuthToken(token string, jwtType string, replaceBearer bool) (err error) {
-	claims, err := parseJWT(token, jwtType, replaceBearer)
-	if err == nil {
-		if claims.Type != constants.AuthToken {
 			err = errors.New("bad two factor token")
 			return
 		}

@@ -32,7 +32,7 @@ func GenerateTwoFactorQr(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user, message := checkUserByToken(request.TwoFaToken, request.AuthToken, request.MemberId, clientType)
+	user, message := auth.CheckUserByToken(request.TwoFaToken, request.AccessToken, request.MemberId, clientType)
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
@@ -61,7 +61,7 @@ func ActivateTwoFactorQr(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user, message := checkUserByToken(request.TwoFaToken, request.AuthToken, request.MemberId, clientType)
+	user, message := auth.CheckUserByToken(request.TwoFaToken, request.AccessToken, request.MemberId, clientType)
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
@@ -106,7 +106,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user, message := checkUserByToken(request.TwoFaToken, request.AuthToken, request.MemberId, clientType)
+	user, message := auth.CheckUserByToken(request.TwoFaToken, request.AccessToken, request.MemberId, clientType)
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
@@ -229,28 +229,4 @@ func DisableTwoFactorQr(context *gin.Context) {
 	context.Abort()
 	return
 
-}
-
-func checkUserByToken(twaToken string, authToken string, memberId uint64, clientType string) (user postgres.User, errorMessage string) {
-	if twaToken != "" {
-		user = auth.GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, twaToken)
-		errorMessage = "TwoFaToken not working"
-	} else if authToken != "" {
-		user = auth.GetAuthUserByToken(constants.Personal, constants.AuthToken, authToken)
-		errorMessage = "Auth token not working"
-	} else {
-		errorMessage = "two factor token or Auth token required"
-	}
-
-	if user == nil {
-		return
-	}
-
-	if memberId > 0 && clientType == constants.Member {
-		user = userRepository.GetUserById(memberId, clientType)
-		if user == nil {
-			errorMessage = "Member not found"
-		}
-	}
-	return
 }
