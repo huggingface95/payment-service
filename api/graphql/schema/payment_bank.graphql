@@ -62,8 +62,8 @@ input QueryPaymentBanksFilterStatic @spread{
     address: String @ilike
     bank_code: String @ilike
     payment_system_code: String @ilike
-    hasPaymentBankCurrenciesFilterByCurrencyId: ID @eq
-    hasPaymentBankRegionsFilterByRegionId: ID @eq
+    hasCurrenciesFilterById: ID @eq
+    hasRegionsFilterById: ID @eq
 }
 
 input InputPaymentBank {
@@ -75,10 +75,8 @@ input InputPaymentBank {
     bank_code: String
     "Код платежной системы"
     payment_system_code: String
-    "ID валют"
-    currency_id: [ID]!
-    "ID регионов"
-    region_id: [ID]!
+    "IDs currencies and regions"
+    currencies_and_regions: [CurrenciesAndRegions!]
     "ID платежного системы"
     payment_system_id: ID!
     "ID платежного провидера"

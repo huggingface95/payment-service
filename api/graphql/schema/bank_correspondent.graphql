@@ -49,8 +49,8 @@ input QueryBankCorrespondentsFilterStatic @spread {
     id: ID @eq
     payment_system_id: ID @eq
     name: String @ilike
-    hasBankCorrespondentCurrenciesFilterByCurrencyId: ID @eq
-    hasBankCorrespondentRegionsFilterByRegionId: ID @eq
+    hasCurrenciesFilterById: ID @eq
+    hasRegionsFilterById: ID @eq
 }
 
 input InputBankCorrespondent {
@@ -72,10 +72,8 @@ input InputBankCorrespondent {
     country_id: ID!
     "ID платежной системы"
     payment_system_id: ID!
-    "ID валют"
-    currency_id: [ID]!
-    "ID регионов"
-    region_id: [ID]!
+    "IDs currencies and regions"
+    currencies_and_regions: [CurrenciesAndRegions!]
     "Активность"
     is_active: Boolean!
 }

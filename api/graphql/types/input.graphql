@@ -22,3 +22,8 @@ input ConnectImageableInput {
     type: String!
     id: ID!
 }
+
+input CurrenciesAndRegions{
+    currency_id: [ID!]
+    regions: [ID!]
+}

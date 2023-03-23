@@ -3,12 +3,15 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
+use App\GraphQL\Mutations\Traits\OptimizationCurrencyRegionTrait;
 use App\Models\BankCorrespondent;
 use App\Models\PaymentBank;
 use Illuminate\Support\Facades\DB;
 
 class PaymentBankMutator extends BaseMutator
 {
+    use OptimizationCurrencyRegionTrait;
+
     /**
      * @param    $_
      * @param array $args
@@ -20,21 +23,15 @@ class PaymentBankMutator extends BaseMutator
         try {
             DB::beginTransaction();
 
-            $bank = PaymentBank::create($args);
+            /** @var PaymentBank $bank */
+            $bank = PaymentBank::query()->create($args);
 
-            if (isset($args['currency_id'])) {
-                $bank->paymentBankCurrencies()->delete();
 
-                foreach ($args['currency_id'] as $id) {
-                    $bank->paymentBankCurrencies()->create(['currency_id' => $id]);
-                }
-            }
+            if (isset($args['currencies_and_regions'])) {
+                $requestCurrenciesRegions = $this->optimizeCurrencyRegionInput($args['currencies_and_regions']);
 
-            if (isset($args['region_id'])) {
-                $bank->paymentBankRegions()->delete();
-
-                foreach ($args['region_id'] as $id) {
-                    $bank->paymentBankRegions()->create(['region_id' => $id]);
+                foreach ($requestCurrenciesRegions as $currenciesRegion) {
+                    $bank->currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
                 }
             }
 
@@ -63,25 +60,19 @@ class PaymentBankMutator extends BaseMutator
         try {
             DB::beginTransaction();
 
-            $bank = PaymentBank::find($args['id']);
+            /** @var PaymentBank $bank */
+            $bank = PaymentBank::query()->find($args['id']);
             if (!$bank) {
                 throw new GraphqlException('Not found', 'not found', 404);
             }
             $bank->update($args);
 
-            if (isset($args['currency_id'])) {
-                $bank->paymentBankCurrencies()->delete();
+            if (isset($args['currencies_and_regions'])) {
+                $requestCurrenciesRegions = $this->optimizeCurrencyRegionInput($args['currencies_and_regions']);
 
-                foreach ($args['currency_id'] as $id) {
-                    $bank->paymentBankCurrencies()->create(['currency_id' => $id]);
-                }
-            }
-
-            if (isset($args['region_id'])) {
-                $bank->paymentBankRegions()->delete();
-
-                foreach ($args['region_id'] as $id) {
-                    $bank->paymentBankRegions()->create(['region_id' => $id]);
+                $bank->currencies()->detach($requestCurrenciesRegions->pluck('currency_id')->unique());
+                foreach ($requestCurrenciesRegions as $currenciesRegion) {
+                    $bank->currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
                 }
             }
 
