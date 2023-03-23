@@ -2,11 +2,21 @@
 
 namespace App\GraphQL\Queries;
 
+use App\Exceptions\GraphqlException;
 use App\Models\TransferIncoming;
+use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
+use App\Services\ExportService;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
 class TransferIncomingQuery
 {
+    public function __construct(
+        protected ExportService $exportService,
+        protected TransferIncomingRepositoryInterface $transferRepository,
+    ) {
+    }
+
     public function statistic($_, array $args)
     {
         $statistic = TransferIncoming::select([
@@ -33,5 +43,22 @@ class TransferIncomingQuery
         }
 
         return $statistic->get();
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function downloadDetails($_, array $args): array
+    {
+        $transfer = $this->transferRepository->findById($args['id']);
+        if (!$transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
+
+        $raw = $this->exportService->exportTransferDetails($transfer, $args['type']);
+
+        return [
+            'base64' => base64_encode($raw),
+        ];
     }
 }
