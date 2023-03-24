@@ -159,10 +159,10 @@ func Login(context *gin.Context) {
 		}
 		if user.IsGoogle2FaSecret() == false {
 			context.JSON(http.StatusOK, gin.H{"2fa_token": tokenJWT})
-			return
 		} else {
 			context.JSON(http.StatusOK, gin.H{"two_factor": "true", "2fa_token": tokenJWT})
 		}
+		return
 	} else {
 		cache.Caching.LoginAttempt.Del(key)
 	}
