@@ -71,13 +71,11 @@ func ActivateTwoFactorQr(context *gin.Context) {
 
 	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType) == true {
 		user.SetTwoFactorAuthSettingId(2)
+		userRepository.SaveUser(user)
 		codes := make([]postgres.BackupCodes, 9)
 		for k := range codes {
 			codes[k] = postgres.BackupCodes{Code: helpers.GenerateRandomString(3), Use: false}
 		}
-
-		user.SetBackupCodeData(codes)
-		userRepository.SaveUser(user)
 		context.JSON(http.StatusOK, gin.H{"message": "2fa activated", "data": codes})
 		context.Abort()
 		return
