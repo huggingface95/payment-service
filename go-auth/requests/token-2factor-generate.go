@@ -1,5 +1,7 @@
 package requests
 
+import "jwt-authentication-golang/models/postgres"
+
 type GenerateTwoFactorQrRequest struct {
 	MemberId    uint64 `json:"member_id"`
 	TwoFaToken  string `json:"2fa_token"`
@@ -17,12 +19,13 @@ type ActivateTwoFactorQrRequest struct {
 }
 
 type VerifyTwoFactorQrRequest struct {
-	Code        string `json:"code"`
-	AccessToken string `json:"access_token"`
-	TwoFaToken  string `json:"2fa_token"`
-	MemberId    uint64 `json:"member_id"`
-	BackupCode  string `json:"backup_code"`
-	Type        string `json:"client_type"`
+	Code        string                 `json:"code"`
+	AccessToken string                 `json:"access_token"`
+	TwoFaToken  string                 `json:"2fa_token"`
+	MemberId    uint64                 `json:"member_id"`
+	BackupCode  string                 `json:"backup_code"`
+	BackupCodes []postgres.BackupCodes `json:"backup_codes" binding:"required"`
+	Type        string                 `json:"client_type"`
 }
 
 type DisableTwoFactorQrRequest struct {

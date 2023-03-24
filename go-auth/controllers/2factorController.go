@@ -176,6 +176,11 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		return
 	}
 
+	if request.BackupCodes != nil {
+		user.SetBackupCodeData(request.BackupCodes)
+		userRepository.SaveUser(user)
+	}
+
 	context.JSON(http.StatusOK, gin.H{"access_token": token, "token_type": "bearer", "expires_in": expirationTime.Unix()})
 	context.Abort()
 	return
