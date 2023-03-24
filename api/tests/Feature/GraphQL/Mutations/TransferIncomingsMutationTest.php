@@ -294,7 +294,7 @@ class TransferIncomingsMutationTest extends TestCase
                     'payment_system_id' => 1,
                     'payment_bank_id' => 1,
                     'price_list_id' => 1,
-                    'price_list_fee_id' => 1,
+                    'price_list_fee_id' => 3,
                     'sender_account' => 'Sender Account',
                     'sender_bank_name' => 'sender_bank_name',
                     'sender_bank_address' => 'sender_bank_address',

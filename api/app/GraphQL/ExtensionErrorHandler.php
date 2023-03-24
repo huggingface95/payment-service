@@ -330,6 +330,21 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
+        if (strpos($error->getMessage(), 'fees_operation_type_id_price_list_fee_id_unique')) {
+            return $next(new Error(
+                'Fees with this operation has already been added.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'This threshold already exists.',
+                ]
+            ));
+        }
         //$underlyingException = $error->getPrevious();
         if (strpos($error->getMessage(), 'duplicate')) {
             return $next(new Error(

@@ -290,7 +290,7 @@ class TransferOutgoingsMutationTest extends TestCase
                     'payment_system_id' => 1,
                     'requested_by_id' => 1,
                     'price_list_id' => 1,
-                    'price_list_fee_id' => 1,
+                    'price_list_fee_id' => 3,
                     'urgency_id' => 1,
                     'recipient_account' => 'Sender Account',
                     'recipient_bank_name' => 'recipient_bank_name',

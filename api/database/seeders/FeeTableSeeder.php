@@ -21,7 +21,7 @@ class FeeTableSeeder extends Seeder
             'fee_pp' => 750 * 0.9,
             'fee_type_id' => 1,
             'transfer_type' => FeeTransferTypeEnum::INCOMING->toString(),
-            'operation_type_id' => 1,
+            'operation_type_id' => 2,
             'member_id' => null,
             'status_id' => 1,
             'client_id' => 1,
@@ -42,16 +42,17 @@ class FeeTableSeeder extends Seeder
             'client_id' => 1,
             'client_type' => class_basename(ApplicantIndividual::class),
             'account_id' => 1,
-            'price_list_fee_id' => 1,
+            'price_list_fee_id' => 2,
         ]);
 
         Fee::withoutEvents(function () {
-            for ($i = 3; $i <= 20; $i++) {
+            for ($i = 3; $i <= 8; $i++) {
                 $fee = Fee::factory()->definition();
 
                 Fee::firstOrCreate(
                     [
                         'transfer_id' => $i,
+                        'operation_type_id' => $i,
                     ],
                     $fee
                 );
