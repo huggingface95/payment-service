@@ -341,7 +341,7 @@ class ExtensionErrorHandler implements ErrorHandler
                 new GraphqlException($error->getMessage()),
                 [
                     'code' => 409,
-                    'systemMessage' => $error->getMessage(), 'This threshold already exists.',
+                    'systemMessage' => $error->getMessage(), 'Fees with this operation has already been added.',
                 ]
             ));
         }
