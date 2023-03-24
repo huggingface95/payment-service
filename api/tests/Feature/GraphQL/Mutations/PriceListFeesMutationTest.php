@@ -366,7 +366,7 @@ class PriceListFeesMutationTest extends TestCase
 
     public function testDeletePriceListFees(): void
     {
-        $priceListFee = PriceListFee::first();
+        $priceListFee = PriceListFee::orderBy('id', 'DESC')->get();
 
         $this->postGraphQL(
             [
@@ -377,7 +377,7 @@ class PriceListFeesMutationTest extends TestCase
                     }
                 }',
                 'variables' => [
-                    'id' => (string) $priceListFee->id,
+                    'id' => (string) $priceListFee[0]->id,
                 ],
             ],
             [
@@ -388,7 +388,7 @@ class PriceListFeesMutationTest extends TestCase
         $this->seeJson([
             'data' => [
                 'deletePriceListFees' => [
-                    'id' => (string) $priceListFee->id,
+                    'id' => (string) $priceListFee[0]->id,
                 ],
             ],
         ]);
