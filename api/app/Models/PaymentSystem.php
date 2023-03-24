@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
@@ -97,5 +98,10 @@ class PaymentSystem extends BaseModel
     public function respondentFees(): BelongsToMany
     {
         return $this->belongsToMany(RespondentFee::class, 'payment_system_respondent_fees', 'payment_system_id', 'respondent_fee_id');
+    }
+
+    public function commissionTemplate(): HasOneThrough
+    {
+        return $this->hasOneThrough(CommissionTemplate::class, PaymentProvider::class, 'id', 'payment_provider_id', 'payment_provider_id', 'id');
     }
 }

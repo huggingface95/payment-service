@@ -28,6 +28,20 @@ class OverrideErrorException implements ErrorHandler
             return $next(null);
         }
 
+        if (strpos($error, 'invalid input syntax for type bigint')) {
+            $error = new Error(
+                'Variable of required type must not be null.',
+                $error->nodes,
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                null,
+                $error->getExtensions(),
+            );
+
+            return $next($error);
+        }
+
 
         $previous = $error->getPrevious();
 
