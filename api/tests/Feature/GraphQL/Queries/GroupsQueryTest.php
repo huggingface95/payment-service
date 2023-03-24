@@ -341,7 +341,7 @@ class GroupsQueryTest extends TestCase
             [
                 'query' => '
                 query GetGroup($payment_provider_id: Mixed) {
-                    groupList(filter: { column: COMMISSION_TEMPLATE_ID, value: $payment_provider_id }) {
+                    groupList(filter: { column: PAYMENT_PROVIDER_ID, value: $payment_provider_id }) {
                         data {
                             id
                             name
