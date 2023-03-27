@@ -7,7 +7,6 @@ use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantIndividualUpdatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
-use App\Models\Traits\UserPermission;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -36,7 +35,6 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 {
     use Authorizable;
     use Authenticatable;
-    use UserPermission;
     use HasApiTokens;
     use CanResetPassword;
     use MorphToOne;
