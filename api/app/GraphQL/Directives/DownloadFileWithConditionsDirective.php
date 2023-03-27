@@ -46,7 +46,7 @@ GRAPHQL;
                 $this->directiveArgValue('scopes', [])
             )->get();
 
-            $raw = $this->exportService->exportTransfersList($this->directiveArgValue('model'), $results, $args['type']);
+            $raw = $this->exportService->exportListByModelName($this->directiveArgValue('model'), $results, $args['type']);
 
             return [
                 'base64' => base64_encode($raw),
