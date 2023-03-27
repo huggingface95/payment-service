@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"io/ioutil"
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/helpers"
@@ -20,9 +20,10 @@ func RedirectRequest(context *gin.Context) {
 	var header requests.OperationHeaders
 	var user postgres.User
 
+	jsonData, errJson := context.GetRawData()
 	errHeader := context.ShouldBindHeader(&header)
-	errInput := context.ShouldBindJSON(&input)
-	jsonData, errJson := ioutil.ReadAll(context.Request.Body)
+	errInput := json.Unmarshal(jsonData, &input)
+
 	if errHeader != nil || errInput != nil || errJson != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Bad Request"})
 		return
@@ -32,10 +33,12 @@ func RedirectRequest(context *gin.Context) {
 
 	//testTime, _ := time.Parse("2006-01-02", "2023-02-28")
 
-	if config.Conf.App.AppEnv != "testing" || user.GetId() != 2 {
-		if access.CheckOperation(user, input.OperationName, header.Referer) == false {
-			context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("You are not authorized to access %s", input.OperationName)})
-			return
+	if config.Conf.App.AppEnv == "local" || config.Conf.App.AppEnv == "staging" {
+		if user.GetId() != 2 {
+			if access.CheckOperation(user, input.OperationName, header.Referer) == false {
+				context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("You are not authorized to access %s", input.OperationName)})
+				return
+			}
 		}
 	}
 
