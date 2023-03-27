@@ -1,5 +1,7 @@
 package postgres
 
+import "time"
+
 type User interface {
 	StructName() string
 	ClientType() string
@@ -14,6 +16,7 @@ type User interface {
 	GetId() uint64
 	GetFullName() string
 	GetEmail() string
+	GetCreatedAt() time.Time
 	IsActivated() bool
 	IsEmailVerify() bool
 	IsChangePassword() bool
