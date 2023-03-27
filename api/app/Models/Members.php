@@ -5,6 +5,7 @@ namespace App\Models;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\MemberStatusEnum;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\UserPermission;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -60,6 +61,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     use Notifiable;
     use MorphToOne;
     use HasRelationships;
+    use UserPermission;
 
     public $password_confirmation;
 
