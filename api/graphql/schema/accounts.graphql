@@ -107,6 +107,7 @@ enum AccountClientsType {
 extend type Query @guard {
     "Получить аккаунт по ID"
     account(id: ID! @eq): Account @find
+
     """
     Получить список аккаунтов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -114,7 +115,7 @@ extend type Query @guard {
     accountList(
         filter: _ @filterConditions(static: QueryAccountListFilterStatic),
         created_at: DateTimeRange @whereBetween,
-        orderBy: _ @orderBy(columns: ["id","created_at"])
+        orderBy: _ @orderBy(columns: ["id", "created_at"])
     ): [Account!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
 
     """
@@ -128,6 +129,16 @@ extend type Query @guard {
     Получить список клиентов
     """
     clientList(group_type: ID @eq): [AccountClient!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
+
+    """
+    Скачать список аккаунтов 
+    """
+    downloadAccountList(
+        type: ExportFileType!
+        filter: _ @filterConditions(static: QueryAccountListFilterStatic)
+        created_at: DateTimeRange @whereBetween
+    ): RawFile
+        @downloadFileWithConditions(model: "Account")
 }
 
 input QueryAccountListFilterStatic @spread{
@@ -149,6 +160,27 @@ input QueryAccountListFilterStatic @spread{
     available_balance: Float @eq
     reserved_balance: Float @eq
 }
+
+input QueryDownloadAccountListFilterStatic @spread {
+    hasCompanyMixedIdOrName: Mixed @eq
+    hasPaymentSystemMixedIdOrName: Mixed @eq
+    hasOwnerMixedIdOrFullname: Mixed @eq
+    MixedAccountNumberOrAccountName: String @ilike
+    currency_id: ID @eq
+    hasGroupRoleMixedIdOrName: Mixed @eq
+    group_type_id: ID @eq
+    hasMemberMixedIdOrFullname: Mixed @eq
+    is_primary: Boolean @eq
+    hasCommissionTemplateMixedIdOrFullname: Mixed @eq
+    account_state_id: ID @eq
+    hasClientableMixedIdOrFullname: Mixed @eq
+    payment_provider_id: ID @eq
+    iban_provider_id: ID @eq
+    current_balance: Float @eq
+    available_balance: Float @eq
+    reserved_balance: Float @eq
+}
+
 
 
 #todo

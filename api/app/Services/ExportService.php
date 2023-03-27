@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Exports\Account\AccountsExport;
 use App\Exports\Transfer\TransferDetailsExport;
 use App\Exports\Transfer\TransferIncomingsExport;
 use App\Exports\Transfer\TransferOutgoingsExport;
+use App\Http\Resources\Account\AccountsListResource;
 use App\Http\Resources\Transfer\TransferOutgoingDetailsResource;
 use App\Http\Resources\Transfer\TransfersListResource;
 use App\Models\TransferIncoming;
@@ -14,7 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ExportService extends AbstractService
 {
-    public function exportTransferDetails($transfer, $type): string
+    public function exportTransferDetails(TransferOutgoing|TransferIncoming $transfer, string $type): string
     {
         $type = $this->getTypeOfFile($type);
 
@@ -25,18 +27,17 @@ class ExportService extends AbstractService
         } else {
             throw new \Exception('Model not found');
         }
-        
+
         return Excel::raw(new TransferDetailsExport($data), $type);
     }
 
-    public function exportTransfersList($model, $data, $type): string
+    public function exportListByModelName(string $model, $data, string $type): string
     {
         $type = $this->getTypeOfFile($type);
 
-        if ($model == class_basename(TransferOutgoing::class)) {
-            $exportData = $this->exportTransferOutgoings($data);
-        } elseif ($model == class_basename(TransferIncoming::class)) {
-            $exportData = $this->exportTransferIncomings($data);
+        $method = 'export' . $model;
+        if (method_exists($this, $method)) {
+            $exportData = $this->{$method}($data);
         } else {
             throw new \Exception('Model not found');
         }
@@ -44,7 +45,14 @@ class ExportService extends AbstractService
         return Excel::raw($exportData, $type);
     }
 
-    private function exportTransferIncomings($data): TransferIncomingsExport
+    private function exportAccount(Collection $data): AccountsExport
+    {
+        $accounts = AccountsListResource::collection($data)->sortByDesc('created_at')->jsonSerialize();
+
+        return new AccountsExport(['accounts' => $accounts]);
+    }
+
+    private function exportTransferIncoming( $data): TransferIncomingsExport
     {
         $transfersList = $this->collectTransfers($data);
         $transfersList = TransfersListResource::collection($transfersList ?? [])->sortByDesc('created_at')->jsonSerialize();
@@ -52,7 +60,7 @@ class ExportService extends AbstractService
         return new TransferIncomingsExport(['transfers' => $transfersList]);
     }
 
-    private function exportTransferOutgoings($data): TransferOutgoingsExport
+    private function exportTransferOutgoing( $data): TransferOutgoingsExport
     {
         $transfersList = $this->collectTransfers($data);
         $transfersList = TransfersListResource::collection($transfersList ?? [])->sortByDesc('created_at')->jsonSerialize();

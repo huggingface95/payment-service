@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
 /**
@@ -102,7 +103,8 @@ class Account extends BaseModel implements BaseModelInterface
 
     protected $appends = [
         'total_transactions',
-        'total_pending_transactions'
+        'total_pending_transactions',
+        'last_transaction_at',
     ];
 
     protected static function booted()
@@ -149,6 +151,20 @@ class Account extends BaseModel implements BaseModelInterface
     public function getTotalPendingTransactionsAttribute(): int
     {
         return $this->transferIncomings()->where('status_id', PaymentStatusEnum::PENDING->value)->count() + $this->transferOutgoings()->where('status_id', PaymentStatusEnum::PENDING->value)->count();
+    }
+
+    public function getLastTransactionAtAttribute(): ?string
+    {
+        $lastIncomingTransaction = $this->transferIncomings()->orderBy('execution_at', 'desc')->first()?->execution_at;
+        $lastOutgoingTransaction = $this->transferOutgoings()->orderBy('execution_at', 'desc')->first()?->execution_at;
+
+        if (!$lastIncomingTransaction && !$lastOutgoingTransaction) {
+            return null;
+        }
+
+        return Carbon::parse($lastIncomingTransaction)
+            ->max($lastOutgoingTransaction)
+            ->format('Y-m-d\\TH:i:s.ZZZ\\Z');
     }
 
     public function isParent(): bool
