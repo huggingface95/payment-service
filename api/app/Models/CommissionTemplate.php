@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -107,5 +108,10 @@ class CommissionTemplate extends BaseModel
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function paymentSystem(): HasManyThrough
+    {
+        return $this->HasManyThrough(PaymentSystem::class, PaymentProvider::class, 'id', 'payment_provider_id', 'payment_provider_id', 'id');
     }
 }

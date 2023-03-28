@@ -16,6 +16,8 @@ type CommissionTemplate {
     currency_id: [ID]
     "Получить связанный платежный провайдер"
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
+    "Получить связанную платежную систему"
+    payment_system_id: [PaymentSystem] @hasMany(relation: "paymentSystem")
     "Получить список бизнесов"
     business_activity: [BusinessActivity] @belongsToMany(relation: "businessActivity")
     "Получить связанного мембера"
@@ -63,9 +65,9 @@ input InputCommissionTemplate {
     "ID платежного провайдера"
     payment_provider_id: ID
     "ID платежной системы"
-    payment_system_id: [ID]
+    payment_system_id: [ID]!
     "массив ID бизнесов"
-    business_activity: [ID]
+    business_activity: [ID]!
     "массив ID регионов"
     region_id: [ID]
     "массив ID валют"
