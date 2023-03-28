@@ -31,6 +31,8 @@ class CommissionTemplateMutationTest extends TestCase
                     description: $description
                     payment_provider_id: $payment_provider_id
                     company_id: $company_id
+                    payment_system_id: [1]
+                    business_activity: [1]
                 }
             ) {
                 id
@@ -68,6 +70,8 @@ class CommissionTemplateMutationTest extends TestCase
                         description: $description
                         payment_provider_id: $payment_provider_id
                         company_id: $company_id
+                        payment_system_id: [1]
+                        business_activity: [1]
                     }
                 ) {
                     id
@@ -116,6 +120,8 @@ class CommissionTemplateMutationTest extends TestCase
                     input: {
                         name: $name
                         description: $description
+                        payment_system_id: [1]
+                        business_activity: [1]
                     }
                 ) {
                     id
