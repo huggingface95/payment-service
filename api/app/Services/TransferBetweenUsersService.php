@@ -207,7 +207,7 @@ class TransferBetweenUsersService extends AbstractService
     private function validateUpdateTransferStatus(array $transfers, array $args): void
     {
         foreach ($transfers as $transfer) {
-            if ($transfer->operation_type_id != OperationTypeEnum::BETWEEN_ACCOUNT->value || $transfer->operation_type_id != OperationTypeEnum::BETWEEN_USERS->value) {
+            if ($transfer->operation_type_id != (OperationTypeEnum::BETWEEN_ACCOUNT->value || OperationTypeEnum::BETWEEN_USERS->value)) {
                 throw new GraphqlException('This operation is not allowed for this transfer', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
@@ -223,15 +223,15 @@ class TransferBetweenUsersService extends AbstractService
                         PaymentStatusEnum::CANCELED->value,
                         PaymentStatusEnum::EXECUTED->value,
                     ];
-        
+
                     if (! in_array($args['status_id'], $allowedStatuses)) {
                         throw new GraphqlException('This status is not allowed for transfer which has Pending status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
-        
+
                     break;
                 case PaymentStatusEnum::EXECUTED->value:
                     throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-        
+
                     break;
             }
         }
