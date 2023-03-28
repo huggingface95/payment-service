@@ -117,6 +117,10 @@ func (user *Member) GetEmail() string {
 	return user.Email
 }
 
+func (user *Member) GetCreatedAt() time.Time {
+	return user.CreatedAt
+}
+
 func (user *Member) IsActivated() bool {
 	return user.IsActive == MemberStatusActive
 }

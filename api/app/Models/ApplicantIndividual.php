@@ -36,11 +36,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 {
     use Authorizable;
     use Authenticatable;
-    use UserPermission;
     use HasApiTokens;
     use CanResetPassword;
     use MorphToOne;
     use BelongsToOne;
+    use UserPermission;
 
     protected $table = 'applicant_individual';
 

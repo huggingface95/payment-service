@@ -141,6 +141,10 @@ func (user *Individual) GetEmail() string {
 	return user.Email
 }
 
+func (user *Individual) GetCreatedAt() time.Time {
+	return user.CreatedAt
+}
+
 func (user *Individual) IsActivated() bool {
 	return user.IsActive == ApplicantStateActive
 }

@@ -56,12 +56,12 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     use SoftDeletes;
     use Authorizable;
     use Authenticatable;
-    use UserPermission;
     use HasApiTokens;
     use CanResetPassword;
     use Notifiable;
     use MorphToOne;
     use HasRelationships;
+    use UserPermission;
 
     public $password_confirmation;
 

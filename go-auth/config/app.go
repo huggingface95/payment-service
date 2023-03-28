@@ -9,6 +9,7 @@ var AppConf = AppConfig{}
 
 type AppConfig struct {
 	AppName                    string
+	AppEnv                     string
 	AppDebug                   bool
 	AppUrl                     string
 	AppFrontUrl                string
@@ -46,6 +47,7 @@ func (a *AppConfig) Load() *AppConfig {
 	a.AppFrontUrl = os.Getenv("APP_FRONT_URL")
 	a.RedirectUrl = os.Getenv("REDIRECT_URL")
 	a.PasswordRequiredCharacters = os.Getenv("PASSWORD_REQUIRED_CHARACTERS")
+	a.AppEnv = os.Getenv("APP_ENV")
 
 	return a
 }
