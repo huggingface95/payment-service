@@ -10,7 +10,7 @@ use Tests\TestCase;
 class TransferBetweenAccountsMutationTest extends TestCase
 {
     /**
-     * TransferIncomings Mutation Testing
+     * Transfer Between Accounts Mutation Testing
      *
      * @return void
      */
@@ -135,8 +135,6 @@ class TransferBetweenAccountsMutationTest extends TestCase
 
         $id = json_decode($this->response->getContent(), true);
 
-        dump($id);
-
         $this->seeJson([
             'data' => [
                 'signTransferBetweenAccounts' => [
@@ -148,6 +146,55 @@ class TransferBetweenAccountsMutationTest extends TestCase
                     'reason' => $id['data']['signTransferBetweenAccounts']['reason'],
                     'channel' => $id['data']['signTransferBetweenAccounts']['channel'],
                     'bank_message' => $id['data']['signTransferBetweenAccounts']['bank_message'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testExecuteTransferBetweenAccounts(): void
+    {
+        $transfer = TransferIncoming::orderBy('id', 'DESC')->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                    mutation ExecuteTransferBetweenAccounts($transfer: ID!) {
+                      executeTransferBetweenAccounts(
+                        transfer_incoming_id: $transfer
+                      ) {
+                        id
+                        amount
+                        amount_debt
+                        payment_number
+                        system_message
+                        reason
+                        channel
+                        bank_message
+                      }
+                    }
+                ',
+                'variables' => [
+                    'transfer' => $transfer->id,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'executeTransferBetweenAccounts' => [
+                    'id' => $id['data']['executeTransferBetweenAccounts']['id'],
+                    'amount' => $id['data']['executeTransferBetweenAccounts']['amount'],
+                    'amount_debt' => $id['data']['executeTransferBetweenAccounts']['amount_debt'],
+                    'payment_number' => $id['data']['executeTransferBetweenAccounts']['payment_number'],
+                    'system_message' => $id['data']['executeTransferBetweenAccounts']['system_message'],
+                    'reason' => $id['data']['executeTransferBetweenAccounts']['reason'],
+                    'channel' => $id['data']['executeTransferBetweenAccounts']['channel'],
+                    'bank_message' => $id['data']['executeTransferBetweenAccounts']['bank_message'],
                 ],
             ],
         ]);
