@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
 use App\Exceptions\GraphqlException;
@@ -11,6 +12,7 @@ use App\Models\Account;
 use App\Models\ApplicantCompany;
 use App\Models\CurrencyExchangeRate;
 use App\Models\Members;
+use App\Repositories\Interfaces\TransferExchangeRepositoryInterface;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,6 +29,7 @@ class TransferExchangeService extends AbstractService
         protected TransferIncomingService $transferIncomingService,
         protected TransferIncomingRepositoryInterface $transferIncomingRepository,
         protected TransferOutgoingRepositoryInterface $transferOutgoingRepository,
+        protected TransferExchangeRepositoryInterface $transferExchangeRepository,
         protected TransactionService $transactionService,
     ) {
     }
@@ -40,32 +43,40 @@ class TransferExchangeService extends AbstractService
 
         $data = $this->populateTransferData($args, $fromAccount, $toAccount, $operationType);
 
-        $transfers = DB::transaction(function () use ($data) {
+        $transfers = DB::transaction(function () use ($data, $fromAccount, $toAccount) {
             $outgoing = $this->transferOutgoingRepository->create($data['outgoing']);
             $incoming = $this->transferIncomingRepository->create($data['incoming']);
+            $exchange = $this->transferExchangeRepository->create([
+                'company_id' => $outgoing->company_id,
+                'client_id' => $outgoing->account?->company_id,
+                'requested_by_id' => $outgoing->requested_by_id,
+                'debited_account_id' => $outgoing->account?->id,
+                'credited_account_id' => $incoming->account?->id,
+                'status_id' => $outgoing->status_id,
+                'transfer_outgoing_id' => $outgoing->id,
+                'transfer_incoming_id' => $incoming->id,
+                'exchange_rate' => $data['exchange_rate'],
+            ]);
+
+            $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $outgoing, $fromAccount, $toAccount);
+            $this->commissionService->makeFee($outgoing, $transactionOutgoing);
 
             return [
                 'outgoing' => $outgoing, 
                 'incoming' => $incoming,
+                'exchange' => $exchange,
             ];
         });
         
-        $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $transfers['outgoing'], $fromAccount, $toAccount);
-        $transactionIncoming = TransformerDTO::transform(TransactionDTO::class, $transfers['incoming'], $fromAccount, $toAccount);
-        $this->commissionService->makeFee($transfers['outgoing'], $transactionOutgoing);
-
-        $this->transferOutgoingService->updateTransferStatusToExecuted($transfers['outgoing'], $transactionOutgoing);
-        $this->transferIncomingService->updateTransferStatusToExecuted($transfers['incoming'], $transactionIncoming);
-
         $this->attachFileById($transfers, $args['file_id'] ?? []);
 
-        return $transfers['outgoing'];
+        return $transfers['exchange'];
     }
 
     /**
      * @throws GraphqlException
      */
-    private function getExchangeAmount(float $amount, Account $fromAccount, Account $toAccount): float
+    private function getExchangeRate(Account $fromAccount, Account $toAccount): float
     {
         $exchageRate = CurrencyExchangeRate::where('currency_from_id', $fromAccount->currencies->id)
             ->where('currency_to_id', $toAccount->currencies->id)
@@ -75,6 +86,16 @@ class TransferExchangeService extends AbstractService
         if ($exchageRate === null) {
             throw new GraphqlException('Exchange rate not found', Response::HTTP_BAD_REQUEST);
         }
+
+        return $exchageRate;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    private function getExchangeAmount(float $amount, Account $fromAccount, Account $toAccount): float
+    {
+        $exchageRate = $this->getExchangeRate($fromAccount, $toAccount);
 
         return $amount * $exchageRate;
     }
@@ -91,7 +112,7 @@ class TransferExchangeService extends AbstractService
         $outgoing['user_type'] = class_basename(Members::class);
         $outgoing['amount'] = $args['amount'];
         $outgoing['amount_debt'] = $args['amount'];
-        $outgoing['status_id'] = PaymentStatusEnum::PENDING->value;
+        $outgoing['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $outgoing['urgency_id'] = 1;
         $outgoing['operation_type_id'] = $operationType;
         $outgoing['payment_bank_id'] = 2;
@@ -125,7 +146,7 @@ class TransferExchangeService extends AbstractService
         $incoming['user_type'] = class_basename(Members::class);
         $incoming['amount'] = $toAmmount;
         $incoming['amount_debt'] = $toAmmount;
-        $incoming['status_id'] = PaymentStatusEnum::PENDING->value;
+        $incoming['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $incoming['urgency_id'] = 1;
         $incoming['operation_type_id'] = $operationType;
         $incoming['payment_bank_id'] = 2;
@@ -151,7 +172,103 @@ class TransferExchangeService extends AbstractService
         return [
             'outgoing' => $outgoing,
             'incoming' => $incoming,
+            'exchange_rate' => $this->getExchangeRate($fromAccount, $toAccount),
         ];
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function updateTransferStatus(array $transfers, array $args): void
+    {
+        $this->validateUpdateTransferStatus($transfers, $args);
+
+        switch ($args['status_id']) {
+            case PaymentStatusEnum::PENDING->value:
+                $this->updateTransferStatusToPending($transfers);
+
+                break;
+            case PaymentStatusEnum::EXECUTED->value:
+                $this->updateTransferStatusToExecuted($transfers);
+
+                break;
+        }
+    }
+
+    public function updateTransferStatusToPending(array $transfers): void
+    {
+        DB::transaction(function () use ($transfers) {
+            $this->transferOutgoingRepository->update($transfers['outgoing'], [
+                'status_id' => PaymentStatusEnum::PENDING->value,
+            ]);
+
+            $this->transferIncomingRepository->update($transfers['incoming'], [
+                'status_id' => PaymentStatusEnum::PENDING->value,
+            ]);
+            
+            $this->transferExchangeRepository->update($transfers['exchange'], [
+                'status_id' => PaymentStatusEnum::PENDING->value,
+            ]);
+        });
+    }
+
+    /**
+     * @throws EmailException
+     * @throws GraphqlException
+     */
+    public function updateTransferStatusToExecuted(array $transfers): void
+    {
+        $fromAccount = Account::find($transfers['outgoing']->account_id);
+        $toAccount = Account::find($transfers['incoming']->account_id);
+
+        $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $transfers['outgoing'], $fromAccount, $toAccount);
+        $transactionIncoming = TransformerDTO::transform(TransactionDTO::class, $transfers['incoming'], $fromAccount, $toAccount);
+        $this->commissionService->makeFee($transfers['outgoing'], $transactionOutgoing);
+
+        $this->transferOutgoingService->updateTransferStatusToExecuted($transfers['outgoing'], $transactionOutgoing);
+        $this->transferIncomingService->updateTransferStatusToExecuted($transfers['incoming'], $transactionIncoming);
+
+        $this->transferExchangeRepository->update($transfers['exchange'], [
+            'status_id' => PaymentStatusEnum::EXECUTED->value,
+        ]);
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    private function validateUpdateTransferStatus(array $transfers, array $args): void
+    {
+        unset($transfers['exchange']);
+
+        foreach ($transfers as $transfer) {
+            if ($transfer->operation_type_id != OperationTypeEnum::EXCHANGE->value) {
+                throw new GraphqlException('This operation is not allowed for this transfer', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+
+            switch ($transfer['status_id']) {
+                case PaymentStatusEnum::UNSIGNED->value:
+                    if ($args['status_id'] != PaymentStatusEnum::PENDING->value) {
+                        throw new GraphqlException('This status is not allowed for transfer which has Unsigned status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                    break;
+                case PaymentStatusEnum::PENDING->value:
+                    $allowedStatuses = [
+                        PaymentStatusEnum::ERROR->value,
+                        PaymentStatusEnum::CANCELED->value,
+                        PaymentStatusEnum::EXECUTED->value,
+                    ];
+        
+                    if (! in_array($args['status_id'], $allowedStatuses)) {
+                        throw new GraphqlException('This status is not allowed for transfer which has Pending status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+        
+                    break;
+                case PaymentStatusEnum::EXECUTED->value:
+                    throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+        
+                    break;
+            }
+        }
     }
 
     /**

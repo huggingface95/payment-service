@@ -1,3 +1,43 @@
+type TransferExchange {
+    id: ID!
+    company_id: ID!
+    client_id: ID!
+    requested_by_id: ID!
+    debited_account_id: ID!
+    credited_account_id: ID!
+    status_id: ID!
+    transfer_incoming: TransferIncoming @belongsTo (relation: "transferIncoming")
+    transfer_outgoing: TransferOutgoing @belongsTo (relation: "transferOutgoing")
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+extend type Query @guard {
+    """
+    Получить трансфер
+    """
+    transferExchnage(id: ID! @eq): TransferExchange!    @find
+    
+    """
+    Получить список трансферов
+    """
+    transferExchnages(
+        filter: _ @filterConditions(static: QueryTransferExchnagesFilterStatic)
+        created_at: DateTimeRange @whereBetween
+    ): [TransferExchange!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: ASC)
+}
+
+input QueryTransferExchnagesFilterStatic @spread {
+    id: ID @eq
+    company_id: ID @eq
+    client_id: ID @eq
+    requested_by_id: ID @eq
+    debited_account_id: ID @eq
+    credited_account_id: ID @eq
+    status_id: ID @eq
+}
 
 extend type Mutation @guard {
     """
@@ -12,6 +52,24 @@ extend type Mutation @guard {
         to_account_id: ID!
         "ID файлов"
         file_id: [ID]
-    ): TransferIncoming
+    ): TransferExchange
         @field(resolver: "TransferExchangeMutator@create")
+
+    """
+    Подписать exchange перевод
+    """
+    signTransferExchange(
+        "ID"
+        id: ID!
+    ): TransferExchange
+        @field(resolver: "TransferExchangeMutator@sign")
+
+    """
+    Исполнить exchange перевод
+    """
+    executeTransferExchange(
+        "ID"
+        id: ID!
+    ): TransferExchange
+        @field(resolver: "TransferExchangeMutator@execute")
 }
