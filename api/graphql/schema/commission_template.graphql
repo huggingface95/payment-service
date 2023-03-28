@@ -67,7 +67,7 @@ input InputCommissionTemplate {
     "ID платежной системы"
     payment_system_id: [ID]!
     "массив ID бизнесов"
-    business_activity: [ID]!
+    business_activity: [ID]
     "массив ID регионов"
     region_id: [ID]
     "массив ID валют"
