@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\GroupRole;
 use Illuminate\Support\Facades\DB;
 
 class GroupsQueryTest extends TestCase
@@ -62,7 +63,7 @@ class GroupsQueryTest extends TestCase
     public function testQueryGroupListById(): void
     {
         $group = DB::connection('pgsql_test')
-            ->table('group_role_view')
+            ->table('group_role')
             ->first();
 
         $this->postGraphQL(
@@ -100,7 +101,7 @@ class GroupsQueryTest extends TestCase
     public function testQueryGroupListByCompanyId(): void
     {
         $group = DB::connection('pgsql_test')
-            ->table('group_role_view')
+            ->table('group_role')
             ->first();
 
         $this->postGraphQL(
@@ -132,7 +133,7 @@ class GroupsQueryTest extends TestCase
     public function testQueryGroupListByRoleId(): void
     {
         $group = DB::connection('pgsql_test')
-            ->table('group_role_view')
+            ->table('group_role')
             ->first();
 
         $this->postGraphQL(
@@ -170,7 +171,7 @@ class GroupsQueryTest extends TestCase
     public function testQueryGroupListByName(): void
     {
         $group = DB::connection('pgsql_test')
-            ->table('group_role_view')
+            ->table('group_role')
             ->first();
 
         $this->postGraphQL(
@@ -208,7 +209,7 @@ class GroupsQueryTest extends TestCase
     public function testQueryGroupListByGroupTypeId(): void
     {
         $group = DB::connection('pgsql_test')
-            ->table('group_role_view')
+            ->table('group_role')
             ->first();
 
         $this->postGraphQL(
@@ -240,7 +241,7 @@ class GroupsQueryTest extends TestCase
     public function testQueryGroupListByIsActive(): void
     {
         $group = DB::connection('pgsql_test')
-            ->table('group_role_view')
+            ->table('group_role')
             ->first();
 
         $this->postGraphQL(
@@ -269,7 +270,7 @@ class GroupsQueryTest extends TestCase
     public function testQueryGroupListByModuleId(): void
     {
         $group = DB::connection('pgsql_test')
-            ->table('group_role_view')
+            ->table('group_role')
             ->first();
 
         $this->postGraphQL(
@@ -301,15 +302,13 @@ class GroupsQueryTest extends TestCase
 
     public function testQueryGroupListByCommissionTemplateId(): void
     {
-        $group = DB::connection('pgsql_test')
-            ->table('group_role_view')
-            ->first();
+        $group = GroupRole::query()->first();
 
         $this->postGraphQL(
             [
                 'query' => '
                 query GetGroup($commission_template_id: Mixed) {
-                    groupList(filter: { column: COMMISSION_TEMPLATE_ID, value: $commission_template_id }) {
+                    groupList(filter: { column: HAS_GROUP_ROLE_PROVIDERS_FILTER_BY_COMMISSION_TEMPLATE_ID, value: $commission_template_id }) {
                         data {
                             id
                             name
@@ -318,7 +317,7 @@ class GroupsQueryTest extends TestCase
                     }
                 }',
                 'variables' => [
-                    'commission_template_id' => (string) $group->commission_template_id,
+                    'commission_template_id' => (string) $group->groupRoleProviders->first()->commission_template_id,
                 ],
             ],
             [
@@ -333,15 +332,13 @@ class GroupsQueryTest extends TestCase
 
     public function testQueryGroupListByPaymentProviderId(): void
     {
-        $group = DB::connection('pgsql_test')
-            ->table('group_role_view')
-            ->first();
+        $group = GroupRole::query()->first();
 
         $this->postGraphQL(
             [
                 'query' => '
                 query GetGroup($payment_provider_id: Mixed) {
-                    groupList(filter: { column: PAYMENT_PROVIDER_ID, value: $payment_provider_id }) {
+                    groupList(filter: { column: HAS_GROUP_ROLE_PROVIDERS_FILTER_BY_PAYMENT_PROVIDER_ID, value: $payment_provider_id }) {
                         data {
                             id
                             name
@@ -350,7 +347,7 @@ class GroupsQueryTest extends TestCase
                     }
                 }',
                 'variables' => [
-                    'payment_provider_id' => (string) $group->payment_provider_id,
+                    'payment_provider_id' => (string) $group->groupRoleProviders->first()->payment_provider_id,
                 ],
             ],
             [

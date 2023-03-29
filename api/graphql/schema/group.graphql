@@ -35,7 +35,6 @@ type GroupRoleProvider {
     is_default: Boolean
 }
 
-
 type GroupRole {
     id: ID!
     "Название группы"
@@ -60,52 +59,20 @@ type GroupRole {
     company: Company @belongsTo(relation: "company")
     "Получить связанный модуль"
     module: Module @belongsTo(relation: "modules")
-
 }
-
-
-type GroupRoleView @model(class: "\\App\\Models\\GroupRoleView") {
-    id: ID!
-    "Название группы"
-    name: String
-    "ID типа группы"
-    group_type_id: ID
-    "ID роли"
-    role_id: ID
-    "ID модуля"
-    module_id: ID
-    "Описание группы"
-    description: String
-    "Активная и не активная группа"
-    is_active: Boolean
-    "Получить тип группы"
-    group_type: GroupType @belongsTo(relation: "groupType")
-    "Получить связанную роль"
-    role: Role @belongsTo(relation: "role")
-    "ID шаблона коммиссии"
-    commission_template_id: ID
-    "Имя шаблона коммиссии"
-    commission_template_name: String
-    "ID провайдера"
-    payment_provider_id: ID
-    "Имя провайдера"
-    payment_provider_name: String
-    "Получить компанию"
-    company: Company @belongsTo(relation: "company")
-    "Получить связанный модуль"
-    module: Module @belongsTo(relation: "modules")
-}
-
 
 extend type Query @guard {
     "Получить тип группы по ID"
     group_type(id: ID @eq): GroupType   @find
+    
     "Получить список типов групп"
     group_types(
         filter: _ @filterConditions(static: QueryGroupTypesFilterStatic),
     ): [GroupType!]! @all @orderBy(column: "id", direction: ASC)
+    
     "Получить список типов групп"
     groupTypeList (mode: GroupTypeMode): [GroupType!]! @paginate(builder: "App\\GraphQL\\Queries\\GroupsTypeQuery", defaultCount:10) @orderBy(column: "id", direction: ASC)
+    
     """
     Получить список групп с ролями
     orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
@@ -118,10 +85,11 @@ extend type Query @guard {
 
     groupList(
         filter: _ @filterConditions(static: QueryGroupListFilterStatic),
-        orderBy: _ @orderBy(columns: ["id","is_active","name"],
-        )): [GroupRoleView!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
+        orderBy: _ @orderBy(columns: ["id", "is_active", "name"])
+    ): [GroupRole!]!   
+        @paginate(defaultCount: 10) 
+        @orderBy(column: "id", direction: DESC)
 }
-
 
 input QueryGroupTypesFilterStatic @spread{
     hasGroupsFilterByCompanyId: ID @eq
@@ -146,8 +114,8 @@ input QueryGroupListFilterStatic @spread {
     group_type_id: ID @eq
     is_active: Boolean @eq
     module_id: ID @eq
-    commission_template_id: ID @eq
-    payment_provider_id: ID @eq
+    hasGroupRoleProvidersFilterByCommissionTemplateId: ID @eq
+    hasGroupRoleProvidersFilterByPaymentProviderId: ID @eq
 }
 
 input InputGroupRoleProvider {
