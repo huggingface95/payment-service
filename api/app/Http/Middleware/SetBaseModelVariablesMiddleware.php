@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\ApplicantIndividual;
 use App\Models\BaseModel;
 use App\Models\Members;
 use Closure;
@@ -19,9 +20,11 @@ class SetBaseModelVariablesMiddleware
     public function handle(Request $request, Closure $next, string $guard = null): mixed
     {
         if (Auth::guard('api')->check() || Auth::guard('api_client')->check()) {
-            /** @var Members $user */
+            /** @var Members|ApplicantIndividual $user */
             $user = Auth::guard('api')->user() ?? Auth::guard('api_client')->user();
-            BaseModel::$applicantIds = $this->getApplicantIdsByAuthMember($user);
+            if ($user instanceof Members){
+                BaseModel::$applicantIds = $this->getApplicantIdsByAuthMember($user);
+            }
             BaseModel::$currentCompanyId = $user->company_id == BaseModel::SUPER_COMPANY_ID ? null : $user->company_id;
         }
 
