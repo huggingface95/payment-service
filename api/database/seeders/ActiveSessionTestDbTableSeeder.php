@@ -24,7 +24,7 @@ class ActiveSessionTestDbTableSeeder extends Seeder
                 ->insert([
                     'id' => $faker->uuid(),
                     'company' => $faker->randomElement(['Nginx', 'Apple', 'Nike']),
-                    'email' => $faker->randomElement(['feder@gmail.com', 'jover@gmail.com', 'dan@gmail.com']),
+                    'email' => $faker->randomElement(['feder@gmail.com', 'jover@gmail.com', 'dan@gmail.com', 'applicant1@test.com']),
                     'provider' => $faker->randomElement(['Member', 'Admin', 'individual']),
                     'ip' => $faker->ipv4,
                     'country' => $faker->country,
