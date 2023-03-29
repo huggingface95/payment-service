@@ -19,6 +19,7 @@ extend type Query @guard {
     Получить список модулей
     """
     companyModules(company_id: ID! @eq): [CompanyModule!]!  @all
+        @orderBy(column: "module_id", direction: ASC)
 }
 
 extend type Mutation @guard {
