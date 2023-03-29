@@ -37,6 +37,8 @@ class ApplicantIndividualTableSeeder extends Seeder
                 'applicant_status_id' => 1,
                 'kyc_level_id' => 1,
                 'project_id' => 1,
+                'is_active' => true,
+                'email_verification_status_id' => 3,
             ],
             [
                 'first_name' => 'Applicant_test2',

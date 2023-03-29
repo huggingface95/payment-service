@@ -17,9 +17,9 @@ class ApplicantDeviceQuery
     {
         $applicant = auth()->user();
 
-        $query = DB::connection('clickhouse')
+        $query = DB::connection(env('APP_ENV') == 'testing' ? 'clickhouse_test' : 'clickhouse')
             ->table((new ActiveSession())->getTable())
-            ->where('member', $applicant->email)
+            ->where('email', $applicant->email)
             ->orderBy('created_at', 'DESC')
             ->get();
 
