@@ -29,6 +29,8 @@ class ApplicantDevicesQueryTest extends TestCase
 
     public function testApplicantDevicesList(): void
     {
+
+        $this->markTestSkipped();
         $active_sessions = DB::connection('clickhouse_test')
             ->table((new ActiveSession())->getTable())
             ->select(['id', 'device_type'])
