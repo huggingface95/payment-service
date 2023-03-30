@@ -7,8 +7,10 @@ import (
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
+	"jwt-authentication-golang/dto"
 	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/postgres"
+	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/repositories/userRepository"
 	"jwt-authentication-golang/requests"
 	"jwt-authentication-golang/services"
@@ -91,6 +93,8 @@ func VerifyTwoFactorQr(context *gin.Context) {
 	var request requests.VerifyTwoFactorQrRequest
 	var user postgres.User
 
+	deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(context)
+
 	newTime, blockedTime, _, _, _ := times.GetTokenTimes()
 
 	if err := context.BindJSON(&request); err != nil {
@@ -148,6 +152,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		if success == true {
 			token, _, expirationTime, _ := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 			context.JSON(http.StatusOK, gin.H{"access_token": token, "token_type": "bearer", "expires_in": expirationTime.Unix()})
+			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationTime, deviceInfo)
 			return
 		} else {
 			context.JSON(http.StatusForbidden, gin.H{"error": "No such code"})
@@ -180,6 +185,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		user.SetBackupCodeData(request.BackupCodes)
 		userRepository.SaveUser(user)
 	}
+	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationTime, deviceInfo)
 
 	context.JSON(http.StatusOK, gin.H{"access_token": token, "token_type": "bearer", "expires_in": expirationTime.Unix()})
 	context.Abort()
