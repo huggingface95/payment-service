@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\GraphQL\Mutations\Traits\OptimizationCurrencyRegionTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PaymentBank extends BaseModel
 {
+    use OptimizationCurrencyRegionTrait;
+
     public $timestamps = false;
 
     protected $table = 'payment_banks';
@@ -30,6 +33,15 @@ class PaymentBank extends BaseModel
         'ncs_number',
         'is_active',
     ];
+
+    public function getCurrenciesAndRegionsAttribute(): array
+    {
+        $currenciesRegions = $this->currenciesRegions()->get()->groupBy('currency_id')->map(function ($records, $key) {
+            return $records->pluck('region_id')->toArray();
+        })->toArray();
+
+        return $this->optimizeCurrencyRegionResponse($currenciesRegions);
+    }
 
     public function bankCorrespondents(): HasMany
     {
@@ -54,6 +66,14 @@ class PaymentBank extends BaseModel
             'payment_bank_id',
             'region_id'
         )->distinct('id');
+    }
+
+    public function currenciesRegions(): HasMany
+    {
+        return $this->hasMany(
+            PaymentBankCurrencyRegion::class,
+            'payment_bank_id',
+        );
     }
 
     public function paymentSystem(): BelongsTo

@@ -2,6 +2,8 @@
 
 namespace App\GraphQL\Mutations\Traits;
 
+use App\DTO\GraphQLResponse\PaymentBankCurrencyAndRegionResponse;
+use App\DTO\TransformerDTO;
 use Illuminate\Support\Collection;
 
 trait OptimizationCurrencyRegionTrait
@@ -16,5 +18,30 @@ trait OptimizationCurrencyRegionTrait
                 });
             })->collapse();
     }
+
+    public function optimizeCurrencyRegionResponse(array $currenciesRegions): array
+    {
+        $result = [];
+        foreach ($currenciesRegions as $k => $v) {
+            if (($key = $this->searchTwoArrays($result, $v)) !== false) {
+                $result[$key]->currency_id[] = $k;
+            } else {
+                $result[] = TransformerDTO::transform(PaymentBankCurrencyAndRegionResponse::class, [$k], $v);
+            }
+        }
+
+        return $result;
+    }
+
+    private function searchTwoArrays(array $array1, array $array2): bool|int
+    {
+        foreach ($array1 as $k => $v) {
+            if (count(array_diff($array2, $v->regions)) == 0) {
+                return $k;
+            }
+        }
+        return false;
+    }
+
 
 }

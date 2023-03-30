@@ -1,0 +1,4 @@
+type PaymentBankCurrencyAndRegionResponse{
+    currency_id: [ID!]
+    regions: [ID!]
+}
