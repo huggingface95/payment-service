@@ -1,0 +1,55 @@
+type CompanyLedgerSettings {
+    id: ID!
+    "Компания"
+    company: Company! @belongsTo(relation: "company")
+    "Время окончания периода за день"
+    end_of_day_time: Time
+    "Номер дня закрытия недели"
+    end_of_week_day: Int
+    "Время окончания периода за неделю"
+    end_of_week_time: Time
+    "Номер дня закрытия месяца"
+    end_of_month_day: Int
+    "Время окончания периода за месяц"
+    end_of_month_time: Time
+}
+
+input CompanyLedgerSettingsInput {
+    "Время окончания периода за день"
+    end_of_day_time: Time
+    "Номер дня закрытия недели"
+    end_of_week_day: Int
+    "Время окончания периода за неделю"
+    end_of_week_time: Time
+    "Номер дня закрытия месяца"
+    end_of_month_day: Int
+    "Время окончания периода за месяц"
+    end_of_month_time: Time
+}
+
+extend type Mutation @guard {
+    """
+    Добавить настройки расписания для компании
+    """
+    createCompanyLedgerSettings(
+        company_id: ID!
+        input: CompanyLedgerSettingsInput! @spread
+    ): CompanyLedgerSettings! @create
+
+    """
+    Обновить настройки расписания для компании
+    """
+    updateCompanyLedgerSettings(
+        company_id: ID!
+        input: CompanyLedgerSettingsInput! @spread
+    ): CompanyLedgerSettings!
+        @field(resolver:"CompanyLedgerSettingsMutator@update")
+
+    """
+    Удалить настройки расписания для компании
+    """
+    deleteCompanyLedgerSettings(
+        company_id: ID!
+    ): Boolean!
+        @field(resolver:"CompanyLedgerSettingsMutator@delete")
+}

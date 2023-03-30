@@ -105,6 +105,11 @@ class Company extends BaseModel
         return $this->belongsTo('App\Models\Languages', 'language_id');
     }
 
+    public function ledgerSettings(): BelongsTo
+    {
+        return $this->belongsTo(CompanyLedgerSettings::class, 'company_id');
+    }
+
     public function members(): HasMany
     {
         return $this->hasMany(Members::class, 'company_id');

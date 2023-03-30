@@ -71,6 +71,8 @@ type Company {
     additional_fields_data: JSON
     "Лого"
     logo: Files @belongsTo(relation: "logo")
+    "Настройки расписания"
+    ledger_settings: CompanyLedgerSettings @belongsTo(relation: "ledgerSettings")
     "Токен для видеоверификации"
     vv_token: String
     "Url верификации мембера"
