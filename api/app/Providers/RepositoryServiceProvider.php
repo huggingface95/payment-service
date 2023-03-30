@@ -4,11 +4,13 @@ namespace App\Providers;
 
 use App\Repositories\AccountRepository;
 use App\Repositories\CheckLimitRepository;
+use App\Repositories\CompanyRevenueAccountRepository;
 use App\Repositories\EmailRepository;
 use App\Repositories\FileRepository;
 use App\Repositories\GraphqlManipulateSchemaRepository;
 use App\Repositories\Interfaces\AccountRepositoryInterface;
 use App\Repositories\Interfaces\CheckLimitRepositoryInterface;
+use App\Repositories\Interfaces\CompanyRevenueAccountRepositoryInterface;
 use App\Repositories\Interfaces\EmailRepositoryInterface;
 use App\Repositories\Interfaces\FileRepositoryInterface;
 use App\Repositories\Interfaces\GraphqlManipulateSchemaRepositoryInterface;
@@ -86,6 +88,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             CheckLimitRepositoryInterface::class,
             CheckLimitRepository::class
+        );
+
+        $this->app->bind(
+            CompanyRevenueAccountRepositoryInterface::class,
+            CompanyRevenueAccountRepository::class
         );
     }
 }

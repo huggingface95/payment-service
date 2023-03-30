@@ -1,0 +1,10 @@
+"""
+Company Revenue Accounts
+Administration->Company Info
+error codes: 500, 400
+"""
+type CompanyRevenueAccount {
+    id: ID!
+    "номер счета"
+    number: String!
+}

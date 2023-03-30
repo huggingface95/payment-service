@@ -76,14 +76,14 @@ extend type Mutation @guard {
     "Создать платежную систему"
     createPaymentSystem(
         input: InputPaymentSystem! @spread
-    ): PaymentSystem   @create
+    ): PaymentSystem   @field(resolver:"PaymentSystemMutator@create")
 
     "Обновить поля платежной системы"
     updatePaymentSystem(
         "ID платежной системы"
         id: ID!
         input: InputPaymentSystem! @spread
-    ): PaymentSystem   @update
+    ): PaymentSystem   @field(resolver:"PaymentSystemMutator@update")
 
     "Удалить платежную систему"
     deletePaymentSystem(id: ID!): PaymentSystem   @field(resolver:"PaymentSystemMutator@delete")
