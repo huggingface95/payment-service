@@ -90,7 +90,7 @@ class Company extends BaseModel
 
     public function getLogoLinkAttribute(): string
     {
-        $defaultLogoPath = storage_path('app').self::DEFAULT_LOGO_PATH;
+        $defaultLogoPath = storage_path('app') . self::DEFAULT_LOGO_PATH;
 
         return $this->logo->link ?? $defaultLogoPath;
     }
@@ -200,5 +200,10 @@ class Company extends BaseModel
     public function logo(): belongsTo
     {
         return $this->belongsTo(Files::class, 'logo_id');
+    }
+
+    public function revenues(): HasMany
+    {
+        return $this->hasMany(CompanyRevenueAccount::class, 'company_id');
     }
 }

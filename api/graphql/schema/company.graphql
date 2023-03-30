@@ -55,6 +55,8 @@ type Company {
     exp_date: DateTimeUtc
     "Состояние"
     state: State @belongsTo(relation: "state")
+    "счета доходов"
+    revenues: CompanyRevenueAccount @hasMany(relation: "revenues")
     "Причина состояния"
     state_reason: StateReason @belongsTo(relation: "stateReason")
     "Регистрационный номер"

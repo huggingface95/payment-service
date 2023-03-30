@@ -9,15 +9,18 @@ use App\Models\OperationType;
 use App\Models\TransferOutgoing;
 use App\Repositories\AccountRepository;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
+use App\Services\CompanyRevenueAccountService;
 use App\Services\TransferOutgoingService;
 
 class TransferOutgoingFeeMutator extends BaseMutator
 {
     public function __construct(
-        protected TransferOutgoingService $transferService,
-        protected AccountRepository $accountRepository,
+        protected TransferOutgoingService             $transferService,
+        protected CompanyRevenueAccountService        $companyRevenueAccountService,
+        protected AccountRepository                   $accountRepository,
         protected TransferOutgoingRepositoryInterface $transferRepository
-    ) {
+    )
+    {
     }
 
     public function cancel($root, array $args): TransferOutgoing
@@ -38,6 +41,10 @@ class TransferOutgoingFeeMutator extends BaseMutator
     {
         if (OperationType::find($args['operation_type_id'])->transfer_type_id !== TransferTypeEnum::FEE->value) {
             throw new GraphqlException('Operation type is not Fee');
+        }
+
+        if (!$this->companyRevenueAccountService->exist($args['company_id'], $args['currency_id'])) {
+            throw new GraphqlException('Revenue Account not found in this company');
         }
 
         $transfer = $this->transferService->createTransfer($args, $args['operation_type_id']);
