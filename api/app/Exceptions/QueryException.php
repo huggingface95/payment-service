@@ -31,10 +31,7 @@ class QueryException extends Exception
     {
 
         if (!array_key_exists($code, $this->codes)) {
-            return [
-                'message' => $message,
-                'code' => (int)$code,
-            ];
+            return [$message, (int)$code];
         }
 
         $definition = $this->codes[$code];
