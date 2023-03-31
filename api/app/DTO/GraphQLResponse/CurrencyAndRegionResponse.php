@@ -2,7 +2,7 @@
 
 namespace App\DTO\GraphQLResponse;
 
-class PaymentBankCurrencyAndRegionResponse
+class CurrencyAndRegionResponse
 {
     public array $currency_id;
     public array $regions;

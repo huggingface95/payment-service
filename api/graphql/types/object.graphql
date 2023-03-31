@@ -1,4 +1,4 @@
-type PaymentBankCurrencyAndRegionResponse{
+type CurrencyAndRegionResponse{
     currency_id: [ID!]
     regions: [ID!]
 }

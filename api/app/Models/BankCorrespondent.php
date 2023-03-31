@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\GraphQL\Mutations\Traits\OptimizationCurrencyRegionTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class BankCorrespondent extends BaseModel
 {
+    use OptimizationCurrencyRegionTrait;
     /**
      * The attributes that are mass assignable.
      *
@@ -30,6 +33,15 @@ class BankCorrespondent extends BaseModel
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
+
+    public function getCurrenciesAndRegionsAttribute(): array
+    {
+        $currenciesRegions = $this->currenciesRegions()->get()->groupBy('currency_id')->map(function ($records) {
+            return $records->pluck('region_id')->toArray();
+        })->toArray();
+
+        return $this->optimizeCurrencyRegionResponse($currenciesRegions);
+    }
 
     public function currencies(): BelongsToMany
     {
@@ -59,5 +71,13 @@ class BankCorrespondent extends BaseModel
     public function paymentBank(): BelongsTo
     {
         return $this->belongsTo(PaymentBank::class, 'payment_bank_id');
+    }
+
+    public function currenciesRegions(): HasMany
+    {
+        return $this->hasMany(
+            BankCorrespondentCurrencyRegion::class,
+            'bank_correspondent_id',
+        );
     }
 }

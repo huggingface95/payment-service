@@ -25,7 +25,7 @@ type PaymentBank {
     "Получить регионы"
     regions: [Region] @hasMany(relation: "regions")
     "IDs currencies and regions"
-    currencies_and_regions: [PaymentBankCurrencyAndRegionResponse!]!
+    currencies_and_regions: [CurrencyAndRegionResponse]!
     "Получить банкы корреспондент"
     bank_correspondent: [BankCorrespondent] @hasMany(relation: "bankCorrespondents")
     "Платежная провидер"

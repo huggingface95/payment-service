@@ -24,6 +24,8 @@ type BankCorrespondent {
     currencies: [Currencies] @hasMany(relation: "currencies")
     "Получить регионы"
     regions: [Region] @hasMany(relation: "regions")
+    "IDs currencies and regions"
+    currencies_and_regions: [CurrencyAndRegionResponse]!
     "Активность"
     is_active: Boolean
 }
@@ -59,7 +61,7 @@ input InputBankCorrespondent {
     "Адрес"
     address: String!
     "SWIFT"
-    bank_code: String
+    bank_code: String!
     "Счет банка корреспондента"
     bank_account: String!
     "swift"

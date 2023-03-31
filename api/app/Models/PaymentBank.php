@@ -36,7 +36,7 @@ class PaymentBank extends BaseModel
 
     public function getCurrenciesAndRegionsAttribute(): array
     {
-        $currenciesRegions = $this->currenciesRegions()->get()->groupBy('currency_id')->map(function ($records, $key) {
+        $currenciesRegions = $this->currenciesRegions()->get()->groupBy('currency_id')->map(function ($records) {
             return $records->pluck('region_id')->toArray();
         })->toArray();
 
