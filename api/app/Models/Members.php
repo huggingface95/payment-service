@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\MemberStatusEnum;
+use App\Models\Clickhouse\ActiveSession;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\UserPermission;
 use Illuminate\Auth\Authenticatable;
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Laravel\Lumen\Auth\Authorizable;
 use Laravel\Passport\HasApiTokens;
@@ -46,6 +49,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property Collection groupRoles
  * @property GroupRole $groupRole
  * @property EmailSmtp $smtp
+ * @property ?array $active_session
  * @property bool is_super_admin
  * @property Role role
  *
@@ -109,7 +113,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['two_factor', 'permissions', 'is_super_admin', 'is_active'];
+    protected $appends = ['two_factor', 'permissions', 'is_super_admin', 'is_active', 'active_session'];
 
     protected static function booted()
     {
@@ -119,7 +123,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function getFullnameAttribute()
     {
-        return $this->first_name.' '.$this->last_name;
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function getTwoFactorAttribute()
@@ -170,6 +174,24 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function getIsActiveAttribute(): bool
     {
         return $this->member_status_id == MemberStatusEnum::ACTIVE->value;
+    }
+
+    public function getActiveSessionAttribute(): ?array
+    {
+        $activeSession = DB::connection('clickhouse')
+            ->query()
+            ->from((new ActiveSession())->getTable())
+            ->where('provider', '=', 'member')
+            ->where('email', '=', $this->email)
+            ->orderBy('created_at', 'DESC')
+            ->limit(1)
+            ->first();
+
+
+        if (!is_null($activeSession) && Auth::guard('api')->user()?->id == $this->id) {
+            $activeSession['current_session'] = true;
+        }
+        return $activeSession;
     }
 
     public function company(): BelongsTo

@@ -77,7 +77,7 @@ func parseJWT(signedToken string, jwtType string, replaceBearer bool) (claims *J
 		if err == nil {
 			claims, ok := token.Claims.(*JWTClaim)
 			if ok {
-				if claims.ExpiresAt.Unix() < time.Now().Local().Unix() {
+				if claims.ExpiresAt.Unix() < time.Now().UTC().Unix() {
 					err = errors.New("token expired")
 				}
 				return claims, err
