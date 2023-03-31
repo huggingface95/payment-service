@@ -3,6 +3,7 @@
   NOTE: User and query level settings are set up in "users.xml" file.
 -->
 <yandex>
+    <timezone>UTC</timezone>
     <!-- Listen specified host. use :: (wildcard IPv6 address), if you want to accept connections both with IPv4 and IPv6 from everywhere. -->
     <!-- <listen_host>::</listen_host> -->
     <!-- Same for hosts with disabled ipv6: -->
