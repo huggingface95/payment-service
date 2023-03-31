@@ -52,7 +52,7 @@ func Login(context *gin.Context) {
 	authLog = oauthRepository.HasAuthLogWithConditions(user.GetEmail(), clientType, deviceInfo)
 
 	if auth.AttemptLimitEqual(key, blockedTime) {
-		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 		context.JSON(http.StatusForbidden, gin.H{"error": fmt.Sprint("Account is temporary blocked for ", blockedTime.Sub(newTime))})
 		return
 	}
@@ -64,7 +64,7 @@ func Login(context *gin.Context) {
 			user.SetIsActivated(postgres.ApplicantStateBlocked)
 		}
 		userRepository.SaveUser(user)
-		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 		context.JSON(http.StatusForbidden, gin.H{"error": "Account is blocked. Please contact support"})
 		return
 	}
@@ -72,7 +72,7 @@ func Login(context *gin.Context) {
 	if checkPassword(context, user, request) == false {
 		attempt := cache.Caching.LoginAttempt.GetAttempt(key, false)
 		cache.Caching.LoginAttempt.Set(key, attempt+1)
-		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 		return
 	}
 
@@ -84,12 +84,12 @@ func Login(context *gin.Context) {
 		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 		if ok == false {
 			context.JSON(http.StatusInternalServerError, gin.H{"error": "An error occurred while sending your email `confirmation email`"})
-			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 			return
 		}
 		data.Set(randomToken)
 		context.JSON(http.StatusForbidden, gin.H{"data": "An email has been sent to your email to confirm the email"})
-		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 		return
 	}
 
@@ -102,7 +102,7 @@ func Login(context *gin.Context) {
 		context.JSON(http.StatusForbidden, gin.H{
 			"message": "Please change password first", "url": user.GetCompany().BackofficeForgotPasswordUrl, "password_reset_token": randomToken,
 		})
-		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 		return
 	}
 
@@ -114,13 +114,13 @@ func Login(context *gin.Context) {
 	}
 
 	if user.IsActivated() == false {
-		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 		context.JSON(http.StatusForbidden, gin.H{"error": "Account is blocked. Please contact support"})
 		return
 	}
 
 	if auth.IsBlockedAccount(key) {
-		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 		context.JSON(http.StatusForbidden, gin.H{"error": "Your account temporary blocked. Try again later"})
 		return
 	}
@@ -129,17 +129,17 @@ func Login(context *gin.Context) {
 		var proceed = false
 		if request.Proceed {
 			proceed = true
-			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 		}
 
 		if request.Cancel {
-			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 			context.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
 			return
 		}
 
 		if authLog.Status == constants.StatusLogin && proceed == false {
-			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 			context.JSON(http.StatusUnauthorized, gin.H{"error": "This ID is currently in use on another device. Proceeding on this device, will automatically log out all other users."})
 			return
 		}
@@ -162,7 +162,7 @@ func Login(context *gin.Context) {
 	if user.GetTwoFactorAuthSettingId() == 2 {
 		tokenJWT, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.ForTwoFactor)
 		if err != nil {
-			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
@@ -178,12 +178,12 @@ func Login(context *gin.Context) {
 
 	tokenJWT, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 	if err != nil {
-		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusFailed, expirationJWTTime, deviceInfo)
+		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), constants.StatusLogin, expirationJWTTime, deviceInfo)
+	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusLogin, expirationJWTTime, deviceInfo)
 	context.JSON(http.StatusOK, gin.H{"access_token": tokenJWT, "token_type": "bearer", "expires_in": expirationTime.Unix()})
 
 }
