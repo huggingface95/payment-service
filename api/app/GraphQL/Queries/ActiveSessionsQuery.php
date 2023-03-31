@@ -3,6 +3,7 @@
 namespace App\GraphQL\Queries;
 
 use App\Models\Clickhouse\ActiveSession;
+use App\Models\Members;
 use Illuminate\Support\Facades\DB;
 
 final class ActiveSessionsQuery
@@ -10,10 +11,10 @@ final class ActiveSessionsQuery
     /**
      * Get data with pagination and filteration
      *
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
+     * @param null $_
+     * @param array<string, mixed> $args
      */
-    public function get($_, array $args)
+    public function get($_, array $args): array
     {
         $query = DB::connection('clickhouse')
             ->query()
@@ -25,7 +26,7 @@ final class ActiveSessionsQuery
 
             if (isset($fields['created_at'])) {
                 $value = substr($fields['created_at'], 0, 10);
-                $query->whereBetween('created_at', [$value.' 00:00:00', $value.' 23:59:59']);
+                $query->whereBetween('created_at', [$value . ' 00:00:00', $value . ' 23:59:59']);
 
                 unset($fields['created_at']);
             }
@@ -54,5 +55,13 @@ final class ActiveSessionsQuery
                 'total' => $result->total(),
             ],
         ];
+    }
+
+    public function last($_, array $args): ?array
+    {
+        /** @var Members $member */
+        $member = Members::query()->findOrFail($args['member_id']);
+
+        return $member->active_session;
     }
 }

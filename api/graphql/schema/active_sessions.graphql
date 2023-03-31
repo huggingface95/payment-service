@@ -27,6 +27,8 @@ type ActiveSession {
     trusted: Boolean
     "Дата создания"
     created_at: DateTimeUtc!
+    "Появится если пользователь запрашивает свой active session"
+    current_session: Boolean
 }
 
 type ActiveSessions {
@@ -40,6 +42,10 @@ type ActiveSessionMutatorResponse{
 }
 
 extend type Query @guard {
+    """
+    Получить последнюю сессию
+    """
+    activeSession(member_id: ID! @eq): ActiveSession @field(resolver:"ActiveSessionsQuery@last")
     """
     Получить список сессий
     query: {column: COMPANY, value: "", column: PROVIDER, value: "", column: GROUP, value: "", column: CREATED_AT, value: "2021-10-12"} фильтр по company, member, group, created_at
