@@ -1,0 +1,77 @@
+
+type QuoteProvider {
+    id: ID!
+    "Название"
+    name: String!
+    "Компания"
+    company: Company @belongsTo(relation: "company")
+    "Тип обновления котировок"
+    quote_type: QuoteType!
+    "Статус активности"
+    status: ActivityStatusType!
+    "Дата создания"
+    created_at: DateTimeUtc!
+    "Дата обновления"
+    updated_at: DateTimeUtc!
+}
+
+enum QuoteType {
+    Manual @enum(value: "Manual")
+    API @enum(value: "API")
+}
+
+enum ActivityStatusType {
+    Active @enum(value: "Active")
+    Inactive @enum(value: "Inactive")
+}
+
+extend type Query @guard {
+    """
+    Получить список провайдеров квот
+    """
+    quoteProviders(
+        filter: _ @filterConditions(static: QueryQuoteProvidersFilterStatic)
+    ): [QuoteProvider!]!
+        @paginate(defaultCount: 100)
+        @orderBy(column: "id", direction: DESC)
+}
+
+input QueryQuoteProvidersFilterStatic @spread {
+    id: ID @eq
+    company_id: ID @eq
+    quote_type: QuoteType @eq
+}
+
+input QuoteProviderInput {
+    "Название"
+    name: String!
+    "ID компании"
+    company_id: ID!
+    "Тип обновления котировок"
+    quote_type: QuoteType!
+    "Статус активности"
+    status: ActivityStatusType!
+}
+
+extend type Mutation @guard {
+    """
+    Создать
+    """
+    createQuoteProvider(
+        input: QuoteProviderInput! @spread
+    ): QuoteProvider @create
+
+    """
+    Обновить
+    """
+    updateQuoteProvider(
+        "ID"
+        id: ID!
+        input: QuoteProviderInput! @spread
+    ): QuoteProvider @update
+
+    """
+    Удалить
+    """
+    deleteQuoteProvider(id: ID!): QuoteProvider @delete
+}
