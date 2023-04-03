@@ -4,9 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v4"
+	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
-	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/times"
 	"strconv"
@@ -46,13 +46,28 @@ func getJWTClaims(id uint64, name string, provider string, accessType string) *J
 	}
 }
 
-func GenerateJWT(id uint64, name string, provider string, jwtType string, accessType string) (token string, oauthClient *postgres.OauthClient, expirationTime time.Time, err error) {
+func GenerateJWT(id uint64, name string, provider string, jwtType string, accessType string) (token string, expirationTime time.Time, err error) {
+	jwtObject := cache.Caching.Jwt.Get(fmt.Sprintf(constants.CacheJwt, jwtType, accessType, provider, id))
+	if jwtObject != nil {
+		_, err := parseJWT(jwtObject.Token, jwtType, false)
+		if err == nil {
+			return jwtObject.Token, jwtObject.ExpiredAt, nil
+		}
+	}
+
 	claims := getJWTClaims(id, name, provider, accessType)
-	oauthClient = oauthRepository.GetOauthClientByType(provider, jwtType)
+	oauthClient := oauthRepository.GetOauthClientByType(provider, jwtType)
 
 	token, err = GetToken(claims, oauthClient.Secret)
 
 	expirationTime = claims.ExpiresAt.Time
+
+	data := &cache.JwtCache{
+		Token:     token,
+		ExpiredAt: expirationTime,
+	}
+	data.Set(fmt.Sprintf(constants.CacheJwt, jwtType, accessType, provider, id))
+
 	return
 }
 
@@ -69,10 +84,11 @@ func parseJWT(signedToken string, jwtType string, replaceBearer bool) (claims *J
 		signedToken = strings.Replace(signedToken, "Bearer ", "", -1)
 	}
 
+	oauthClients := oauthRepository.GetOauthClients(jwtType)
+
 	for _, provider := range []string{constants.Member, constants.Individual} {
-		oauthClient := oauthRepository.GetOauthClientByType(provider, jwtType)
 		token, err := new(jwt.Parser).ParseWithClaims(signedToken, &JWTClaim{}, func(token *jwt.Token) (interface{}, error) {
-			return []byte(oauthClient.Secret), nil
+			return []byte(oauthClients[provider].Secret), nil
 		})
 		if err == nil {
 			claims, ok := token.Claims.(*JWTClaim)

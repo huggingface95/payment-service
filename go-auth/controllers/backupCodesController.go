@@ -67,7 +67,7 @@ func StoreBackupCodes(context *gin.Context) {
 	user.SetBackupCodeData(request.BackupCodes)
 	userRepository.SaveUser(user)
 
-	token, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
+	token, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 	if err != nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Token don't generate"})
 		context.Abort()

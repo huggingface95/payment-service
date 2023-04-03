@@ -160,7 +160,7 @@ func Login(context *gin.Context) {
 	}
 
 	if user.GetTwoFactorAuthSettingId() == 2 {
-		tokenJWT, _, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.ForTwoFactor)
+		tokenJWT, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.ForTwoFactor)
 		if err != nil {
 			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -176,7 +176,7 @@ func Login(context *gin.Context) {
 		cache.Caching.LoginAttempt.Del(key)
 	}
 
-	tokenJWT, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
+	tokenJWT, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 	if err != nil {
 		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationJWTTime, deviceInfo)
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

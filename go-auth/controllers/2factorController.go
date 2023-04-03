@@ -150,7 +150,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		user.SetBackupCodeData(backupCodes)
 		userRepository.SaveUser(user)
 		if success == true {
-			token, _, expirationTime, _ := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
+			token, expirationTime, _ := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 			context.JSON(http.StatusOK, gin.H{"access_token": token, "token_type": "bearer", "expires_in": expirationTime.Unix()})
 			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, expirationTime, deviceInfo)
 			return
@@ -173,7 +173,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 
 	cache.Caching.TwoFactorAttempt.Del(key)
 
-	token, _, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
+	token, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 
 	if err != nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Generate Error"})
