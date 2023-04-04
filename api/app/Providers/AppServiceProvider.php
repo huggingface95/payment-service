@@ -56,6 +56,8 @@ class AppServiceProvider extends ServiceProvider
             'Members' => 'App\Models\Members',
             'PaymentProvider' => 'App\Models\PaymentProvider',
             'PaymentProviderIban' => 'App\Models\PaymentProviderIban',
+            'Outgoing' => 'App\Models\TransferOutgoing',
+            'Incoming' => 'App\Models\TransferIncoming',
         ]);
     }
 }

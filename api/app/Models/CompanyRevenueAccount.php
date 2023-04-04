@@ -12,7 +12,12 @@ class CompanyRevenueAccount extends BaseModel
 {
     protected $table = 'company_revenue_accounts';
 
-    protected $fillable = ['number', 'company_id',];
+    protected $fillable = [
+        'number', 
+        'company_id',
+        'currency_id',
+        'balance',
+    ];
 
     public $timestamps = false;
 
