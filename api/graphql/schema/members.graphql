@@ -88,7 +88,6 @@ extend type Query @guard {
 input QueryMembersFilterStatic @spread{
     hasGroupRoleFilterById: ID @eq
     hasRoleFilterById: ID @eq
-    hasGroupTypeFilterById: ID @eq
     id: ID @eq
     fullname: String @ilike
     company_id: ID @eq

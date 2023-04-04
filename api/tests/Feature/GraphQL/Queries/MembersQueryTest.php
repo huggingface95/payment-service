@@ -446,44 +446,6 @@ class MembersQueryTest extends TestCase
         ]);
     }
 
-    public function testQueryMembersFilterGroupTypeId(): void
-    {
-        $member = DB::connection('pgsql_test')
-            ->table('members')
-            ->where('id', 4)
-            ->first();
-
-        $this->postGraphQL(
-            [
-                'query' => '
-                query Members($id: Mixed) {
-                    members(
-                        filter: {
-                            column: HAS_GROUP_TYPE_FILTER_BY_ID
-                            value: $id
-                        }
-                    ) {
-                        data {
-                            id
-                            first_name
-                            email
-                        }
-                    }
-                }',
-                'variables' => [
-                    'id' => 1,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer '.$this->login(),
-            ]
-        )->seeJsonContains([
-            'id' => (string) $member->id,
-            'first_name' => (string) $member->first_name,
-            'email' => (string) $member->email,
-        ]);
-    }
-
     public function testQueryMembersFilterByIsShowOwnerApplicants(): void
     {
         $member = DB::connection('pgsql_test')
