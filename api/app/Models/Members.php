@@ -15,6 +15,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -300,6 +301,11 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     public function photo(): BelongsTo
     {
         return $this->belongsTo(Files::class, 'photo_id');
+    }
+
+    public function groupType(): HasManyThrough
+    {
+        return $this->hasManyThrough(GroupType::class, MemberAccessLimitation::class, 'member_id', 'id', 'id', 'group_type_id');
     }
 
     public function scopeCompanySort($query, $sort)
