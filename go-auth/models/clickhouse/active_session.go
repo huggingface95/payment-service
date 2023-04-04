@@ -21,6 +21,7 @@ type ActiveSession struct {
 	Trusted        bool      `gorm:"column:trusted"`
 	Code           string    `gorm:"column:code"`
 	CreatedAt      time.Time `gorm:"column:created_at"`
+	ExpiredAt      time.Time `gorm:"column:expired_at"`
 }
 
 func (ActiveSession) TableName() string {

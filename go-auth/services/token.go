@@ -51,6 +51,8 @@ func GenerateJWT(id uint64, name string, provider string, jwtType string, access
 	if jwtObject != nil {
 		_, err := parseJWT(jwtObject.Token, jwtType, false)
 		if err == nil {
+			fmt.Println(jwtObject.ExpiredAt)
+
 			return jwtObject.Token, jwtObject.ExpiredAt, nil
 		}
 	}
