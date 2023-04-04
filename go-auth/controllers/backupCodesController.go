@@ -44,6 +44,7 @@ func GenerateBackupCodes(context *gin.Context) {
 
 }
 
+// StoreBackupCodes TODO remove this action
 func StoreBackupCodes(context *gin.Context) {
 	var request requests.StoreBackupCodesRequest
 	var user postgres.User

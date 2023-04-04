@@ -7,6 +7,7 @@ import (
 	"jwt-authentication-golang/database"
 	"jwt-authentication-golang/dto"
 	"jwt-authentication-golang/models/clickhouse"
+	"time"
 )
 
 func HasActiveSessionWithConditions(email string, clientType string, deviceInfo *dto.DeviceDetectorInfo) (activeSession *clickhouse.ActiveSession) {
@@ -30,7 +31,7 @@ func encodeCode(provider string, email string, deviceInfo *dto.DeviceDetectorInf
 	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s-%s-%s-%s-%s-%s", provider, email, deviceInfo.Ip, deviceInfo.OsName, deviceInfo.ClientEngine, deviceInfo.Lang)))
 }
 
-func InsertActiveSessionLog(provider string, email string, active bool, trusted bool, deviceInfo *dto.DeviceDetectorInfo) *clickhouse.ActiveSession {
+func InsertActiveSessionLog(provider string, email string, active bool, trusted bool, expiredAt *time.Time, deviceInfo *dto.DeviceDetectorInfo) *clickhouse.ActiveSession {
 	activeSession := &clickhouse.ActiveSession{
 		Id:             uuid.NewString(),
 		Code:           encodeCode(provider, email, deviceInfo),
@@ -47,6 +48,7 @@ func InsertActiveSessionLog(provider string, email string, active bool, trusted 
 		Country:        deviceInfo.Country,
 		City:           deviceInfo.City,
 		Lang:           deviceInfo.Lang,
+		ExpiredAt:      expiredAt,
 	}
 
 	result := database.ClickhouseInstance.Create(&activeSession)

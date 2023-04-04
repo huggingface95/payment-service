@@ -9,7 +9,6 @@ import (
 	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/pkg"
 	"jwt-authentication-golang/repositories"
-	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/repositories/redisRepository"
 	"jwt-authentication-golang/repositories/userRepository"
 	"jwt-authentication-golang/requests"
@@ -83,11 +82,9 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 			}
 
 			cache.Caching.ConfirmationEmailLinks.Del(token)
-			activeSessionLog := oauthRepository.InsertActiveSessionLog(constants.Individual, user.GetEmail(), true, true, deviceInfo)
-			if activeSessionLog != nil {
-				context.JSON(http.StatusOK, gin.H{"data": "Email Verified"})
-				return
-			}
+
+			context.JSON(http.StatusOK, gin.H{"data": "Email Verified"})
+			return
 		}
 	}
 
