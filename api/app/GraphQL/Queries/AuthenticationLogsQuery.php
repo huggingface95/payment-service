@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Queries;
 
+use App\Models\ApplicantIndividual;
 use App\Models\Clickhouse\AuthenticationLog;
 use App\Models\Members;
 use Illuminate\Support\Facades\DB;
@@ -77,11 +78,52 @@ final class AuthenticationLogsQuery
     {
         $query = DB::connection('clickhouse')
             ->query()
-            ->from((new AuthenticationLog())->getTable());
+            ->from((new AuthenticationLog())->getTable())
+            ->where('provider', 'member');
 
         if (isset($args['member_id'])) {
             $member = Members::find($args['member_id']);
             $query->where('email', $member->email);
+        }
+
+        if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
+            $fields = $args['orderBy'];
+
+            foreach ($fields as $field) {
+                $query->orderBy(Str::lower($field['column']), $field['order']);
+            }
+        } else {
+            $query->orderBy('id', 'DESC');
+        }
+
+        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
+
+        return [
+            'data' => $result->items(),
+            'paginatorInfo' => [
+                'count' => $result->count(),
+                'currentPage' => $result->currentPage(),
+                'firstItem' => $result->firstItem(),
+                'hasMorePages' => $result->hasMorePages(),
+                'lastItem' => $result->lastItem(),
+                'lastPage' => $result->lastPage(),
+                'perPage' => $result->perPage(),
+                'total' => $result->total(),
+            ],
+        ];
+    }
+
+    public function getIndividual($_, array $args): array
+    {
+        $query = DB::connection('clickhouse')
+            ->query()
+            ->from((new AuthenticationLog())->getTable())
+            ->where('provider', 'applicant');
+
+        if (isset($args['individual_id'])) {
+            /** @var ApplicantIndividual $individual */
+            $individual = ApplicantIndividual::query()->findOrFail($args['individual_id']);
+            $query->where('email', $individual->email);
         }
 
         if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
