@@ -25,7 +25,7 @@ func HasAuthLogWithConditions(email string, clientType string, deviceInfo *dto.D
 	return nil
 }
 
-func InsertAuthLog(provider string, email string, companyName string, status string, expirationJWTTime time.Time, deviceInfo *dto.DeviceDetectorInfo) *clickhouse.AuthenticationLog {
+func InsertAuthLog(provider string, email string, companyName string, status string, expirationJWTTime *time.Time, deviceInfo *dto.DeviceDetectorInfo) *clickhouse.AuthenticationLog {
 	authLog := &clickhouse.AuthenticationLog{
 		Id:             uuid.NewString(),
 		Company:        companyName,

@@ -17,7 +17,6 @@ import (
 	"jwt-authentication-golang/services/auth"
 	"jwt-authentication-golang/times"
 	"net/http"
-	"time"
 )
 
 func GenerateTwoFactorQr(context *gin.Context) {
@@ -153,8 +152,8 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		if success == true {
 			token, expirationTime, _ := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
 			context.JSON(http.StatusOK, gin.H{"access_token": token, "token_type": "bearer", "expires_in": expirationTime.Unix()})
-			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, time.Now().UTC(), deviceInfo)
-			oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), true, true, expirationTime, deviceInfo)
+			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, nil, deviceInfo)
+			oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), true, true, &expirationTime, deviceInfo)
 			return
 		} else {
 			context.JSON(http.StatusForbidden, gin.H{"error": "No such code"})
@@ -187,8 +186,8 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		user.SetBackupCodeData(request.BackupCodes)
 		userRepository.SaveUser(user)
 	}
-	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, time.Now().UTC(), deviceInfo)
-	oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), true, true, expirationTime, deviceInfo)
+	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, nil, deviceInfo)
+	oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), true, true, &expirationTime, deviceInfo)
 
 	context.JSON(http.StatusOK, gin.H{"access_token": token, "token_type": "bearer", "expires_in": expirationTime.Unix()})
 	context.Abort()
