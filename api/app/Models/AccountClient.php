@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -28,5 +29,15 @@ class AccountClient extends BaseModel
     public function client(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function individual(): BelongsTo
+    {
+        return $this->belongsTo(ApplicantIndividual::class, 'client_id')->where('client_type', '=', class_basename(ApplicantIndividual::class));
+    }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(ApplicantIndividual::class, 'client_id')->where('client_type', '=', class_basename(ApplicantCompany::class));
     }
 }

@@ -128,10 +128,13 @@ extend type Query @guard {
     """
     Получить список клиентов
     """
-    clientList(group_type: ID @eq): [AccountClient!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
+    clientList(
+        group_type: ID @eq
+        company_id: ID @eq
+    ): [AccountClient!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
 
     """
-    Скачать список аккаунтов 
+    Скачать список аккаунтов
     """
     downloadAccountList(
         type: ExportFileType!
