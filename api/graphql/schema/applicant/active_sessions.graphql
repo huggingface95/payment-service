@@ -1,0 +1,6 @@
+extend type Query @guard(with: "api_client") {
+    """
+    Получить последнюю сессию
+    """
+    activeIndividualSession(individual_id: ID! @eq): ActiveSession @field(resolver:"ActiveSessionsQuery@getIndividualActiveSession")
+}

@@ -6,6 +6,7 @@ use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantIndividualUpdatedEvent;
+use App\Models\Clickhouse\ActiveSession;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\UserPermission;
 use Illuminate\Auth\Authenticatable;
@@ -18,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Auth\Authorizable;
 use Laravel\Passport\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -31,6 +34,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property int company_id
  * @property ApplicantBankingAccess $applicantBankingAccess
  * @property Company company
+ * @property ?array $active_session
  */
 class ApplicantIndividual extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
 {
@@ -121,6 +125,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     protected $appends = [
         'two_factor',
         'is_need_change_password',
+        'active_session',
     ];
 
     protected static function booted()
@@ -162,6 +167,23 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function getIsNeedChangePasswordAttribute(): bool
     {
         return false;
+    }
+
+    public function getActiveSessionAttribute(): ?array
+    {
+        $activeSession = DB::connection('clickhouse')
+            ->query()
+            ->from((new ActiveSession())->getTable())
+            ->where('provider', '=', 'applicant')
+            ->where('email', '=', $this->email)
+            ->orderBy('created_at', 'DESC')
+            ->limit(1)
+            ->first();
+
+        if (!is_null($activeSession) && Auth::guard('api_client')->user()?->id == $this->id) {
+            $activeSession['current_session'] = true;
+        }
+        return $activeSession;
     }
 
     /**

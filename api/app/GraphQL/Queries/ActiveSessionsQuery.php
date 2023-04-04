@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Queries;
 
+use App\Models\ApplicantIndividual;
 use App\Models\Clickhouse\ActiveSession;
 use App\Models\Members;
 use Illuminate\Support\Facades\DB;
@@ -57,11 +58,19 @@ final class ActiveSessionsQuery
         ];
     }
 
-    public function last($_, array $args): ?array
+    public function getMemberActiveSession($_, array $args): ?array
     {
         /** @var Members $member */
         $member = Members::query()->findOrFail($args['member_id']);
 
         return $member->active_session;
+    }
+
+    public function getIndividualActiveSession($_, array $args): ?array
+    {
+        /** @var ApplicantIndividual $individual */
+        $individual = ApplicantIndividual::query()->findOrFail($args['individual_id']);
+
+        return $individual->active_session;
     }
 }
