@@ -45,7 +45,7 @@ extend type Query @guard {
     """
     Получить последнюю сессию
     """
-    activeSession(member_id: ID! @eq): ActiveSession @field(resolver:"ActiveSessionsQuery@last")
+    activeMemberSession(member_id: ID! @eq): ActiveSession @field(resolver:"ActiveSessionsQuery@getMemberActiveSession")
     """
     Получить список сессий
     query: {column: COMPANY, value: "", column: PROVIDER, value: "", column: GROUP, value: "", column: CREATED_AT, value: "2021-10-12"} фильтр по company, member, group, created_at
