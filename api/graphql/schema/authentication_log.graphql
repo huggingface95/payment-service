@@ -86,6 +86,16 @@ extend type Query @guard {
         orderBy: [OrderBy!]
     ): AuthenticationLogs
         @field(resolver:"AuthenticationLogsQuery@getMember")
+    """
+    Получить список логов для индивидуала по его ID
+    """
+    authenticationIndividualLogs(
+        individual_id: ID! @eq
+        page: Int = 1,
+        first: Int = 10,
+        orderBy: [OrderBy!]
+    ): AuthenticationLogs
+    @field(resolver:"AuthenticationLogsQuery@getIndividual")
 }
 
 input QueryAuthenticationLogsStatic @spread {

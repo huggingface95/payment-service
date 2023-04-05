@@ -74,7 +74,7 @@ final class AuthenticationLogsQuery
         ];
     }
 
-    public function getMember($_, array $args)
+    public function getMember($_, array $args): array
     {
         $query = DB::connection('clickhouse')
             ->query()
