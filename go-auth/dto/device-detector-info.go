@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/gamebtc/devicedetector"
 	"github.com/gin-gonic/gin"
+	"io"
 	"jwt-authentication-golang/responses"
 	"net/http"
 )
@@ -73,15 +74,21 @@ func (d *DeviceDetectorInfo) Parse(context *gin.Context) *DeviceDetectorInfo {
 	return d
 }
 
-//TODO move to services
+// TODO move to services
 func parseIp(ip string) *responses.Ip {
 	var response *responses.Ip
 	res, err := http.Get("http://ip-api.com/json/" + ip)
-	defer res.Body.Close()
 
 	if err != nil {
 		return nil
 	}
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+
+		}
+	}(res.Body)
 
 	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
 		return nil
