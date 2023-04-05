@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Queries;
 
+use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use App\Models\Clickhouse\AuthenticationLog;
 use App\Models\Members;
@@ -13,8 +14,8 @@ final class AuthenticationLogsQuery
     /**
      * Get data with pagination and filteration
      *
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
+     * @param null $_
+     * @param array<string, mixed> $args
      */
     public function get($_, array $args)
     {
@@ -27,13 +28,13 @@ final class AuthenticationLogsQuery
 
             if (isset($fields['expired_at'])) {
                 $value = substr($fields['expired_at'], 0, 10);
-                $query->whereBetween('expired_at', [$value.' 00:00:00', $value.' 23:59:59']);
+                $query->whereBetween('expired_at', [$value . ' 00:00:00', $value . ' 23:59:59']);
 
                 unset($fields['expired_at']);
             }
             if (isset($fields['created_at'])) {
                 $value = substr($fields['created_at'], 0, 10);
-                $query->whereBetween('created_at', [$value.' 00:00:00', $value.' 23:59:59']);
+                $query->whereBetween('created_at', [$value . ' 00:00:00', $value . ' 23:59:59']);
 
                 unset($fields['created_at']);
             }
@@ -124,6 +125,46 @@ final class AuthenticationLogsQuery
             /** @var ApplicantIndividual $individual */
             $individual = ApplicantIndividual::query()->findOrFail($args['individual_id']);
             $query->where('email', $individual->email);
+        }
+
+        if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
+            $fields = $args['orderBy'];
+
+            foreach ($fields as $field) {
+                $query->orderBy(Str::lower($field['column']), $field['order']);
+            }
+        } else {
+            $query->orderBy('id', 'DESC');
+        }
+
+        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
+
+        return [
+            'data' => $result->items(),
+            'paginatorInfo' => [
+                'count' => $result->count(),
+                'currentPage' => $result->currentPage(),
+                'firstItem' => $result->firstItem(),
+                'hasMorePages' => $result->hasMorePages(),
+                'lastItem' => $result->lastItem(),
+                'lastPage' => $result->lastPage(),
+                'perPage' => $result->perPage(),
+                'total' => $result->total(),
+            ],
+        ];
+    }
+
+    public function getCompany($_, array $args): array
+    {
+        $query = DB::connection('clickhouse')
+            ->query()
+            ->from((new AuthenticationLog())->getTable())
+            ->where('provider', 'applicant');
+
+        if (isset($args['applicant_company_id'])) {
+            /** @var ApplicantCompany $applicantCompany */
+            $applicantCompany = ApplicantCompany::query()->with('applicantIndividuals')->findOrFail($args['applicant_company_id']);
+            $query->whereIn('email', $applicantCompany->applicantIndividuals->pluck('email')->toArray());
         }
 
         if (isset($args['orderBy']) && count($args['orderBy']) > 0) {

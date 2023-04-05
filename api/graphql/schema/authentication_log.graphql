@@ -96,6 +96,16 @@ extend type Query @guard {
         orderBy: [OrderBy!]
     ): AuthenticationLogs
     @field(resolver:"AuthenticationLogsQuery@getIndividual")
+    """
+    Получить список логов для индивидуала по его ID
+    """
+    authenticationCompanyLogs(
+        applicant_company_id: ID! @eq
+        page: Int = 1,
+        first: Int = 10,
+        orderBy: [OrderBy!]
+    ): AuthenticationLogs
+    @field(resolver:"AuthenticationLogsQuery@getCompany")
 }
 
 input QueryAuthenticationLogsStatic @spread {
