@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -39,5 +40,31 @@ class AccountClient extends BaseModel
     public function company(): BelongsTo
     {
         return $this->belongsTo(ApplicantIndividual::class, 'client_id')->where('client_type', '=', class_basename(ApplicantCompany::class));
+    }
+
+    public function individualGroupRole(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            GroupRole::class,
+            GroupRoleUser::class,
+            'user_id',
+            'id',
+            'client_id',
+            'group_role_id'
+        )->where('client_type', '=', class_basename(ApplicantIndividual::class))
+            ->where('user_type', '=', class_basename(ApplicantIndividual::class));
+    }
+
+    public function companyGroupRole(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            GroupRole::class,
+            GroupRoleUser::class,
+            'user_id',
+            'id',
+            'client_id',
+            'group_role_id'
+        )->where('client_type', '=', class_basename(ApplicantCompany::class))
+            ->where('user_type', '=', class_basename(ApplicantCompany::class));
     }
 }
