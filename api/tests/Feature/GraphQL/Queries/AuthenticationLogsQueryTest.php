@@ -192,9 +192,6 @@ class AuthenticationLogsQueryTest extends TestCase
             'firstItem' => 1,
             'hasMorePages' => true,
             'lastItem' => 3,
-            'lastPage' => 10,
-            'perPage' => 3,
-            'total' => 30,
         ]);
     }
 }
