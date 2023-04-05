@@ -41,13 +41,24 @@ class AccountsQuery
         }
 
         if (isset($args['company_id'])) {
-            $list->whereHas('individual', function (Builder $q) use ($args) {
-                $q->where('company_id', $args['company_id']);
-            })->orWhereHas('company', function (Builder $q) use ($args) {
-                $q->where('company_id', $args['company_id']);
+            $list->where(function (Builder $q) use ($args) {
+                $q->whereHas('individual', function (Builder $q) use ($args) {
+                    $q->where('company_id', $args['company_id']);
+                })->orWhereHas('company', function (Builder $q) use ($args) {
+                    $q->where('company_id', $args['company_id']);
+                });
             });
         }
 
+        if (isset($args['group_role_id'])) {
+            $list->where(function (Builder $q) use ($args) {
+                $q->whereHas('individualGroupRole', function (Builder $q) use ($args) {
+                    $q->where('id', $args['group_role_id']);
+                })->orWhereHas('companyGroupRole', function (Builder $q) use ($args) {
+                    $q->where('id', $args['group_role_id']);
+                });
+            });
+        }
 
         return $list->get();
     }
