@@ -22,7 +22,7 @@ class ProjectTableSeeder extends Seeder
                 'id' => $i,
             ], [
                 'name' => $faker->company(),
-                'company_id' => $faker->randomElement([1, 2]),
+                'company_id' => $i,
                 'module_id' => $faker->randomElement([1, 2]),
             ]);
         }
