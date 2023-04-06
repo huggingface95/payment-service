@@ -119,7 +119,6 @@ class ActiveSessionsQueryTest extends TestCase
                         'from' => $createdAt,
                         'to' => $createdAt,
                     ],
-
                 ],
             ],
             [
