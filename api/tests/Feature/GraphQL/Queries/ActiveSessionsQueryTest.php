@@ -3,6 +3,7 @@
 namespace Tests\Feature\GraphQL\Queries;
 
 use App\Models\Clickhouse\ActiveSession;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -81,11 +82,13 @@ class ActiveSessionsQueryTest extends TestCase
             ->where('created_at', $active_session[0]['created_at'])
             ->get();
 
-        $created_at = substr($active_session[0]['created_at'], 0, 10);
+        $createdAt = Carbon::createFromFormat('Y-m-d H:i:s', $active_session[0]['created_at'], 'UTC')
+            ->setTimezone('UTC')
+            ->format('Y-m-d\TH:i:s.v\Z');
 
         $response = $this->postGraphQL(
             [
-                'query' => 'query($company: String!, $provider: String!, $created_at: Date!) {
+                'query' => 'query($company: String!, $provider: String!, $created_at: DateTimeRange!) {
                     activeSessions(
                         query: {
                             company: $company
@@ -112,7 +115,10 @@ class ActiveSessionsQueryTest extends TestCase
                 'variables' => [
                     'company' => $active_session[0]['company'],
                     'provider' => $active_session[0]['provider'],
-                    'created_at' => $created_at,
+                    'created_at' => [
+                        'from' => $createdAt,
+                        'to' => $createdAt,
+                    ],
 
                 ],
             ],

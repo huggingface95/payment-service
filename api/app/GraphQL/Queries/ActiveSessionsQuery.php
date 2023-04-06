@@ -26,8 +26,8 @@ final class ActiveSessionsQuery
             $fields = $args['query'];
 
             if (isset($fields['created_at'])) {
-                $value = substr($fields['created_at'], 0, 10);
-                $query->whereBetween('created_at', [$value . ' 00:00:00', $value . ' 23:59:59']);
+                $value = $fields['created_at'];
+                $query->whereBetween('created_at', [substr($value['from'], 0, 10) . ' 00:00:00', substr($value['to'], 0, 10) . ' 23:59:59']);
 
                 unset($fields['created_at']);
             }
