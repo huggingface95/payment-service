@@ -81,7 +81,6 @@ class ActiveSessionsQueryTest extends TestCase
             ->where('created_at', $active_session[0]['created_at'])
             ->get();
 
-        $created_at = substr($active_session[0]['created_at'], 0, 10);
 
         $response = $this->postGraphQL(
             [
@@ -112,7 +111,7 @@ class ActiveSessionsQueryTest extends TestCase
                 'variables' => [
                     'company' => $active_session[0]['company'],
                     'provider' => $active_session[0]['provider'],
-                    'created_at' => $created_at,
+                    'created_at' => $active_session[0]['created_at'],
 
                 ],
             ],
