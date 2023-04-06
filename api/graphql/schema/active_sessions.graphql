@@ -68,7 +68,7 @@ input QueryActiveSessionsStatic @spread {
     company: String @eq
     provider: String @eq
     group: String @eq
-    created_at: Date @like
+    created_at: DateTimeRange @like
 }
 
 extend type Mutation @guard {

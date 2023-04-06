@@ -125,7 +125,7 @@ input QueryAuthenticationLogsStatic @spread {
     model: String @eq
     status: String @eq
     expired_at: Date @like
-    created_at: Date @like
+    created_at: DateTimeRange @like
 }
 
 input OrderBy @spread {
