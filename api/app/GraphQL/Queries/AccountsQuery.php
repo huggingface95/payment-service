@@ -4,6 +4,7 @@ namespace App\GraphQL\Queries;
 
 use App\Models\Account;
 use App\Models\AccountClient;
+use App\Models\AccountState;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use App\Models\GroupRole;
@@ -81,5 +82,16 @@ class AccountsQuery
         }
 
         return $account->paginate(env('PAGINATE_DEFAULT_COUNT'));
+    }
+
+    /**
+     * @param null $_
+     * @param array<string, mixed> $args
+     */
+    public function accountActiveList($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): \Illuminate\Database\Eloquent\Collection|array
+    {
+        $list = Account::query()->where('account_state_id','=',AccountState::ACTIVE);
+
+        return $list->get();
     }
 }

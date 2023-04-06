@@ -119,6 +119,11 @@ extend type Query @guard {
     ): [Account!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
 
     """
+    Получить список активных аккаунтов
+    """
+    accountActiveList: [Account] @field(resolver:"AccountsQuery@accountActiveList") @orderBy(column: "id", direction: ASC)
+
+    """
     Получить список account states
     """
     accountStates(
