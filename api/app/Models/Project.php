@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\DTO\GraphQLResponse\ProjectApiSettingsResponse;
+use App\DTO\TransformerDTO;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class Project
@@ -42,6 +45,11 @@ class Project extends BaseModel
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
+    public function getProjectApiSettingsAttribute()
+    {
+        return TransformerDTO::transform(ProjectApiSettingsResponse::class, $this->paymentProviders()->get(), $this->paymentProvidersIban()->get());
+    }
+
     public function avatar(): BelongsTo
     {
         return $this->belongsTo(Files::class, 'avatar_id')->where('entity_type', 'project');
@@ -69,12 +77,12 @@ class Project extends BaseModel
 
     public function paymentProviders(): MorphToMany
     {
-        return $this->morphedByMany(PaymentProvider::class, 'provider', ProjectApiSetting::class);
+        return $this->morphedByMany(PaymentProvider::class, 'provider', ProjectApiSetting::class)->withPivot(Schema::getColumnListing('project_api_settings'));
     }
 
     public function paymentProvidersIban(): MorphToMany
     {
-        return $this->morphedByMany(PaymentProviderIban::class, 'provider', ProjectApiSetting::class);
+        return $this->morphedByMany(PaymentProviderIban::class, 'provider', ProjectApiSetting::class)->withPivot(Schema::getColumnListing('project_api_settings'));
     }
 
     public function applicantCompanies(): HasMany

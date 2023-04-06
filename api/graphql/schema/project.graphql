@@ -24,7 +24,7 @@ type Project {
     "Настройки проекта"
     project_settings: [ProjectSettings] @hasMany(relation: "projectSettings")
     "Настройки api проекта"
-    project_api_settings: [ProjectApiSetting] @hasMany(relation: "projectApiSettings")
+    project_api_settings: ProjectApiSettingsResponse
     "Модуль"
     module: Module @BelongsTo(relation: "module")
     "Компания"
