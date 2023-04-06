@@ -70,7 +70,6 @@ class ActivityLogsQueryTest extends TestCase
 
     public function testActivityLogsListWithQuery(): void
     {
-        $this->markTestSkipped('Skipped');
         $activity_log = DB::connection('clickhouse')
             ->table((new ActivityLog())->getTable())
             ->limit(1)
