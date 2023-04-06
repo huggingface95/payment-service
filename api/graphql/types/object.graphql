@@ -2,3 +2,8 @@ type CurrencyAndRegionResponse{
     currency_id: [ID!]
     regions: [ID!]
 }
+
+type ProjectApiSettingsResponse{
+    payment_providers: [ProjectApiSetting!]
+    iban_providers: [ProjectApiSetting!]
+}
