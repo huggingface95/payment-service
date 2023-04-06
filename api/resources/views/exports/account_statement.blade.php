@@ -33,8 +33,8 @@
             <tr>
                 <td align="left" valign="top">{{ $transaction['transaction_id'] }}</td>
                 <td valign="top">{{ $transaction['created_at'] }}</td>
-                <td valign="top">{{ Illuminate\Support\Str::transliterate($transaction['sender_recipient']) }}<br>{{ Illuminate\Support\Str::transliterate($transaction['reason']) }}</td>
-                <td valign="top">{{ $transaction['account_number'] }} ({{ Illuminate\Support\Str::transliterate($transaction['account_client']) }})</td>
+                <td valign="top">{{ (empty($transaction['sender_recipient']) ? null : Illuminate\Support\Str::transliterate($transaction['sender_recipient'])) }}<br>{{ (empty($transaction['reason']) ? null : Illuminate\Support\Str::transliterate($transaction['reason'])) }}</td>
+                <td valign="top">{{ $transaction['account_number'] }} ({{ (empty($transaction['account_client']) ? null : Illuminate\Support\Str::transliterate($transaction['account_client'])) }})</td>
                 <td valign="top">{{ $transaction['amount'] }} {{ $account_currency }}<br>Balance: {{ $transaction['account_balance'] }}</td>
                 <td valign="top">{{ $transaction['status'] }}</td>
             </tr>
