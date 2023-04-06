@@ -3,6 +3,7 @@
 namespace Tests\Feature\GraphQL\Queries;
 
 use App\Models\Clickhouse\ActiveSession;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -69,7 +70,6 @@ class ActiveSessionsQueryTest extends TestCase
 
     public function testActiveSessionsListWithQuery(): void
     {
-        $this->markTestSkipped('Skipped');
         $active_session = DB::connection('clickhouse')
             ->table((new ActiveSession())->getTable())
             ->limit(1)
@@ -82,6 +82,9 @@ class ActiveSessionsQueryTest extends TestCase
             ->where('created_at', $active_session[0]['created_at'])
             ->get();
 
+        $createdAt = Carbon::createFromFormat('Y-m-d H:i:s', $active_session[0]['created_at'], 'UTC')
+            ->setTimezone('UTC')
+            ->format('Y-m-d\TH:i:s.v\Z');
 
         $response = $this->postGraphQL(
             [
@@ -112,8 +115,10 @@ class ActiveSessionsQueryTest extends TestCase
                 'variables' => [
                     'company' => $active_session[0]['company'],
                     'provider' => $active_session[0]['provider'],
-                    'created_at' => $active_session[0]['created_at'],
-
+                    'created_at' => [
+                        'from' => $createdAt,
+                        'to' => $createdAt,
+                    ],
                 ],
             ],
             [
