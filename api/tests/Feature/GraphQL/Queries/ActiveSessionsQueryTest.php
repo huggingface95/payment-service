@@ -85,7 +85,7 @@ class ActiveSessionsQueryTest extends TestCase
 
         $response = $this->postGraphQL(
             [
-                'query' => 'query($company: String!, $provider: String!, $created_at: Date!) {
+                'query' => 'query($company: String!, $provider: String!, $created_at: DateTimeRange!) {
                     activeSessions(
                         query: {
                             company: $company
