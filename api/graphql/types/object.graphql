@@ -1,6 +1,6 @@
 type CurrencyAndRegionResponse{
-    currency_id: [ID!]
-    regions: [ID!]
+    currencies: [Currencies!]
+    regions: [Region!]
 }
 
 type ProjectApiSettingsResponse{
