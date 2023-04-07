@@ -23,6 +23,129 @@ final class AuthenticationLogsQuery
             ->query()
             ->from((new AuthenticationLog())->getTable());
 
+        $this->filterByQueryAndSort($query, $args);
+
+        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
+
+        return [
+            'data' => $result->items(),
+            'paginatorInfo' => [
+                'count' => $result->count(),
+                'currentPage' => $result->currentPage(),
+                'firstItem' => $result->firstItem(),
+                'hasMorePages' => $result->hasMorePages(),
+                'lastItem' => $result->lastItem(),
+                'lastPage' => $result->lastPage(),
+                'perPage' => $result->perPage(),
+                'total' => $result->total(),
+            ],
+        ];
+    }
+
+    public function getMember($_, array $args): array
+    {
+        $query = DB::connection('clickhouse')
+            ->query()
+            ->from((new AuthenticationLog())->getTable())
+            ->where('provider', 'member');
+
+        if (isset($args['member_id'])) {
+            $member = Members::find($args['member_id']);
+            $query->where('email', $member->email);
+        }
+
+        $this->filterByQueryAndSort($query, $args);
+
+        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
+
+        return [
+            'data' => $result->items(),
+            'paginatorInfo' => [
+                'count' => $result->count(),
+                'currentPage' => $result->currentPage(),
+                'firstItem' => $result->firstItem(),
+                'hasMorePages' => $result->hasMorePages(),
+                'lastItem' => $result->lastItem(),
+                'lastPage' => $result->lastPage(),
+                'perPage' => $result->perPage(),
+                'total' => $result->total(),
+            ],
+        ];
+    }
+
+    public function getIndividual($_, array $args): array
+    {
+        $query = DB::connection('clickhouse')
+            ->query()
+            ->from((new AuthenticationLog())->getTable())
+            ->where('provider', 'applicant');
+
+        if (isset($args['individual_id'])) {
+            /** @var ApplicantIndividual $individual */
+            $individual = ApplicantIndividual::query()->findOrFail($args['individual_id']);
+            $query->where('email', $individual->email);
+        }
+
+        $this->filterByQueryAndSort($query, $args);
+
+        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
+
+        return [
+            'data' => $result->items(),
+            'paginatorInfo' => [
+                'count' => $result->count(),
+                'currentPage' => $result->currentPage(),
+                'firstItem' => $result->firstItem(),
+                'hasMorePages' => $result->hasMorePages(),
+                'lastItem' => $result->lastItem(),
+                'lastPage' => $result->lastPage(),
+                'perPage' => $result->perPage(),
+                'total' => $result->total(),
+            ],
+        ];
+    }
+
+    public function getCompany($_, array $args): array
+    {
+        $query = DB::connection('clickhouse')
+            ->query()
+            ->from((new AuthenticationLog())->getTable())
+            ->where('provider', 'applicant');
+
+        if (isset($args['applicant_company_id'])) {
+            /** @var ApplicantCompany $applicantCompany */
+            $applicantCompany = ApplicantCompany::query()->with('applicantIndividuals')->findOrFail($args['applicant_company_id']);
+            $query->whereIn('email', $applicantCompany->applicantIndividuals->pluck('email')->toArray());
+        }
+
+        if (isset($args['individual_id'])) {
+            /** @var ApplicantIndividual $individual */
+            $individual = ApplicantIndividual::query()->findOrFail($args['individual_id']);
+            $query->where('email', $individual->email);
+        }
+
+        $this->filterByQueryAndSort($query, $args);
+
+        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
+
+        return [
+            'data' => $result->items(),
+            'paginatorInfo' => [
+                'count' => $result->count(),
+                'currentPage' => $result->currentPage(),
+                'firstItem' => $result->firstItem(),
+                'hasMorePages' => $result->hasMorePages(),
+                'lastItem' => $result->lastItem(),
+                'lastPage' => $result->lastPage(),
+                'perPage' => $result->perPage(),
+                'total' => $result->total(),
+            ],
+        ];
+    }
+
+
+    protected function filterByQueryAndSort(object $query, array $args): void
+    {
         if (isset($args['query']) && count($args['query']) > 0) {
             $fields = $args['query'];
 
@@ -58,139 +181,5 @@ final class AuthenticationLogsQuery
             $query->orderBy('id', 'DESC');
         }
 
-        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
-
-        return [
-            'data' => $result->items(),
-            'paginatorInfo' => [
-                'count' => $result->count(),
-                'currentPage' => $result->currentPage(),
-                'firstItem' => $result->firstItem(),
-                'hasMorePages' => $result->hasMorePages(),
-                'lastItem' => $result->lastItem(),
-                'lastPage' => $result->lastPage(),
-                'perPage' => $result->perPage(),
-                'total' => $result->total(),
-            ],
-        ];
-    }
-
-    public function getMember($_, array $args): array
-    {
-        $query = DB::connection('clickhouse')
-            ->query()
-            ->from((new AuthenticationLog())->getTable())
-            ->where('provider', 'member');
-
-        if (isset($args['member_id'])) {
-            $member = Members::find($args['member_id']);
-            $query->where('email', $member->email);
-        }
-
-        if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
-            $fields = $args['orderBy'];
-
-            foreach ($fields as $field) {
-                $query->orderBy(Str::lower($field['column']), $field['order']);
-            }
-        } else {
-            $query->orderBy('id', 'DESC');
-        }
-
-        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
-
-        return [
-            'data' => $result->items(),
-            'paginatorInfo' => [
-                'count' => $result->count(),
-                'currentPage' => $result->currentPage(),
-                'firstItem' => $result->firstItem(),
-                'hasMorePages' => $result->hasMorePages(),
-                'lastItem' => $result->lastItem(),
-                'lastPage' => $result->lastPage(),
-                'perPage' => $result->perPage(),
-                'total' => $result->total(),
-            ],
-        ];
-    }
-
-    public function getIndividual($_, array $args): array
-    {
-        $query = DB::connection('clickhouse')
-            ->query()
-            ->from((new AuthenticationLog())->getTable())
-            ->where('provider', 'applicant');
-
-        if (isset($args['individual_id'])) {
-            /** @var ApplicantIndividual $individual */
-            $individual = ApplicantIndividual::query()->findOrFail($args['individual_id']);
-            $query->where('email', $individual->email);
-        }
-
-        if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
-            $fields = $args['orderBy'];
-
-            foreach ($fields as $field) {
-                $query->orderBy(Str::lower($field['column']), $field['order']);
-            }
-        } else {
-            $query->orderBy('id', 'DESC');
-        }
-
-        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
-
-        return [
-            'data' => $result->items(),
-            'paginatorInfo' => [
-                'count' => $result->count(),
-                'currentPage' => $result->currentPage(),
-                'firstItem' => $result->firstItem(),
-                'hasMorePages' => $result->hasMorePages(),
-                'lastItem' => $result->lastItem(),
-                'lastPage' => $result->lastPage(),
-                'perPage' => $result->perPage(),
-                'total' => $result->total(),
-            ],
-        ];
-    }
-
-    public function getCompany($_, array $args): array
-    {
-        $query = DB::connection('clickhouse')
-            ->query()
-            ->from((new AuthenticationLog())->getTable())
-            ->where('provider', 'applicant');
-
-        if (isset($args['applicant_company_id'])) {
-            /** @var ApplicantCompany $applicantCompany */
-            $applicantCompany = ApplicantCompany::query()->with('applicantIndividuals')->findOrFail($args['applicant_company_id']);
-            $query->whereIn('email', $applicantCompany->applicantIndividuals->pluck('email')->toArray());
-        }
-
-        if (isset($args['orderBy']) && count($args['orderBy']) > 0) {
-            $fields = $args['orderBy'];
-
-            foreach ($fields as $field) {
-                $query->orderBy(Str::lower($field['column']), $field['order']);
-            }
-        } else {
-            $query->orderBy('id', 'DESC');
-        }
-
-        $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
-
-        return [
-            'data' => $result->items(),
-            'paginatorInfo' => [
-                'count' => $result->count(),
-                'currentPage' => $result->currentPage(),
-                'firstItem' => $result->firstItem(),
-                'hasMorePages' => $result->hasMorePages(),
-                'lastItem' => $result->lastItem(),
-                'lastPage' => $result->lastPage(),
-                'perPage' => $result->perPage(),
-                'total' => $result->total(),
-            ],
-        ];
     }
 }

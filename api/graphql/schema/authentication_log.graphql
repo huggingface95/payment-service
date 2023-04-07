@@ -81,6 +81,7 @@ extend type Query @guard {
     """
     authenticationMemberLogs(
         member_id: ID! @eq
+        query: QueryAuthenticationLogsByTypeStatic
         page: Int = 1,
         first: Int = 10,
         orderBy: [OrderBy!]
@@ -91,6 +92,7 @@ extend type Query @guard {
     """
     authenticationIndividualLogs(
         individual_id: ID! @eq
+        query: QueryAuthenticationLogsByTypeStatic
         page: Int = 1,
         first: Int = 10,
         orderBy: [OrderBy!]
@@ -101,11 +103,19 @@ extend type Query @guard {
     """
     authenticationCompanyLogs(
         applicant_company_id: ID! @eq
+        individual_id: ID! @eq
+        query: QueryAuthenticationLogsByTypeStatic
         page: Int = 1,
         first: Int = 10,
         orderBy: [OrderBy!]
     ): AuthenticationLogs
     @field(resolver:"AuthenticationLogsQuery@getCompany")
+}
+
+input QueryAuthenticationLogsByTypeStatic @spread{
+    company: String @eq
+    email: String @eq
+    created_at: DateTimeRange @like
 }
 
 input QueryAuthenticationLogsStatic @spread {
