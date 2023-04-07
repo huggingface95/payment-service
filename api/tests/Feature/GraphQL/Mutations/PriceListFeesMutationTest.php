@@ -66,7 +66,7 @@ class PriceListFeesMutationTest extends TestCase
                 'currency_id' => '1',
                 'fee' => [
                     ['mode' => 'Fix', 'fee' => 10, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
-                    ['mode' => 'Range', 'fee' => null, 'amount_from' => 100, 'amount_to' => 300, 'percent' => null],
+                    ['mode' => 'Range', 'fee' => null, 'amount_from' => number_format(100, 5, '.', ''), 'amount_to' => number_format(300, 5, '.', ''), 'percent' => null],
                     ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 15],
                 ],
             ],
@@ -74,7 +74,7 @@ class PriceListFeesMutationTest extends TestCase
                 'currency_id' => '2',
                 'fee' => [
                     ['mode' => 'Fix', 'fee' => 5, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
-                    ['mode' => 'Range', 'fee' => null, 'amount_from' => 20, 'amount_to' => 200, 'percent' => null],
+                    ['mode' => 'Range', 'fee' => null, 'amount_from' => number_format(20, 5, '.', ''), 'amount_to' => number_format(200, 5, '.', ''), 'percent' => null],
                     ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 10],
                 ],
             ],
@@ -112,7 +112,7 @@ class PriceListFeesMutationTest extends TestCase
                                 fee: [
                                     [
                                         { mode: $fix, fee: 10 }
-                                        { mode: $range, amount_to: 300, amount_from: 100 }
+                                        { mode: $range, amount_to: 300.00000, amount_from: 100.00000 }
                                         { mode: $percent, percent: 15 }
                                     ]
                                 ]
@@ -122,7 +122,7 @@ class PriceListFeesMutationTest extends TestCase
                                 fee: [
                                     [
                                         { mode: $fix, fee: 5 }
-                                        { mode: $range, amount_to: 200, amount_from: 20 }
+                                        { mode: $range, amount_to: 200.00000, amount_from: 20.00000 }
                                         { mode: $percent, percent: 10 }
                                     ],
                                     [
@@ -188,7 +188,7 @@ class PriceListFeesMutationTest extends TestCase
                 'currency_id' => '1',
                 'fee' => [
                     ['mode' => 'Fix', 'fee' => 13, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
-                    ['mode' => 'Range', 'fee' => null, 'amount_from' => 250, 'amount_to' => 550, 'percent' => null],
+                    ['mode' => 'Range', 'fee' => null, 'amount_from' => number_format(250, 5, '.', ''), 'amount_to' => number_format(550, 5, '.', ''), 'percent' => null],
                     ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 17],
                 ],
             ],
@@ -196,7 +196,7 @@ class PriceListFeesMutationTest extends TestCase
                 'currency_id' => '2',
                 'fee' => [
                     ['mode' => 'Fix', 'fee' => 3, 'amount_from' => null, 'amount_to' => null, 'percent' => null],
-                    ['mode' => 'Range', 'fee' => null, 'amount_from' => 70, 'amount_to' => 700, 'percent' => null],
+                    ['mode' => 'Range', 'fee' => null, 'amount_from' => number_format(70, 5, '.', ''), 'amount_to' => number_format(700, 5, '.', ''), 'percent' => null],
                     ['mode' => 'Percent', 'fee' => null, 'amount_from' => null, 'amount_to' => null, 'percent' => 10],
                 ],
             ],
@@ -236,7 +236,7 @@ class PriceListFeesMutationTest extends TestCase
                                 fee: [
                                     [
                                         { mode: $fix, fee: 13 }
-                                        { mode: $range, amount_to: 550, amount_from: 250 }
+                                        { mode: $range, amount_to: 550.00000, amount_from: 250.00000 }
                                         { mode: $percent, percent: 17 }
                                     ]
                                 ]
@@ -246,7 +246,7 @@ class PriceListFeesMutationTest extends TestCase
                                 fee: [
                                     [
                                         { mode: $fix, fee: 3 }
-                                        { mode: $range, amount_to: 700, amount_from: 70 }
+                                        { mode: $range, amount_to: 700.00000, amount_from: 70.00000 }
                                         { mode: $percent, percent: 10 }
                                     ],
                                     [
