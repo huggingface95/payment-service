@@ -91,6 +91,12 @@ class AccountsQuery
     public function accountActiveList($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): \Illuminate\Database\Eloquent\Collection|array
     {
         $list = Account::query()->where('account_state_id','=',AccountState::ACTIVE);
+        if (isset($args['client_id'])) {
+            $list = Account::query()->join('account_clients', 'accounts.id', '=', 'account_clients.client_id')
+                ->where('account_clients.client_id', '=', $args['client_id']['id'])
+                ->where('account_clients.client_type', '=', $args['client_id']['client_type'])
+                ->where('accounts.account_state_id','=',AccountState::ACTIVE);
+        }
 
         return $list->get();
     }
