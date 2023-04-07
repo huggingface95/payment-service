@@ -19,24 +19,27 @@ trait OptimizationCurrencyRegionTrait
             })->collapse();
     }
 
-    public function optimizeCurrencyRegionResponse(array $currenciesRegions): array
+    public function optimizeCurrencyRegionResponse(Collection $currenciesRegions): array
     {
         $result = [];
         foreach ($currenciesRegions as $k => $v) {
-            if (($key = $this->searchTwoArrays($result, $v)) !== false) {
-                $result[$key]->currency_id[] = $k;
+            $currency = $v['currency'];
+            $regions = $v['regions'];
+
+            if (($key = $this->searchTwoArrays($result, $regions)) !== false) {
+                $result[$key]->currencies[] = $currency;
             } else {
-                $result[] = TransformerDTO::transform(CurrencyAndRegionResponse::class, [$k], $v);
+                $result[] = TransformerDTO::transform(CurrencyAndRegionResponse::class, [$currency], $regions);
             }
         }
 
         return $result;
     }
 
-    private function searchTwoArrays(array $array1, array $array2): bool|int
+    private function searchTwoArrays(array $array1, Collection $array2): bool|int
     {
         foreach ($array1 as $k => $v) {
-            if (count(array_diff($array2, $v->regions)) == 0) {
+            if ($array2->diff($v->regions)->count() == 0) {
                 return $k;
             }
         }
