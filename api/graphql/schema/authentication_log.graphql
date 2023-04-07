@@ -103,7 +103,6 @@ extend type Query @guard {
     """
     authenticationCompanyLogs(
         applicant_company_id: ID! @eq
-        individual_id: ID! @eq
         query: QueryAuthenticationLogsByTypeStatic
         page: Int = 1,
         first: Int = 10,

@@ -118,12 +118,6 @@ final class AuthenticationLogsQuery
             $query->whereIn('email', $applicantCompany->applicantIndividuals->pluck('email')->toArray());
         }
 
-        if (isset($args['individual_id'])) {
-            /** @var ApplicantIndividual $individual */
-            $individual = ApplicantIndividual::query()->findOrFail($args['individual_id']);
-            $query->where('email', $individual->email);
-        }
-
         $this->filterByQueryAndSort($query, $args);
 
         $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
