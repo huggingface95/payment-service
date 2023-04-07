@@ -121,7 +121,9 @@ extend type Query @guard {
     """
     Получить список активных аккаунтов
     """
-    accountActiveList: [Account] @field(resolver:"AccountsQuery@accountActiveList") @orderBy(column: "id", direction: ASC)
+    accountActiveList(
+        client_id: InputAccountClients @eq
+    ): [Account] @field(resolver:"AccountsQuery@accountActiveList") @orderBy(column: "id", direction: ASC)
 
     """
     Получить список account states
@@ -197,6 +199,11 @@ input QueryDownloadAccountListFilterStatic @spread {
 
 input QueryClientCondition {
     id: ID!
+}
+
+input InputAccountClients{
+    id: ID!
+    client_type: AccountClientsType!
 }
 
 input InputAccount{
