@@ -2,15 +2,17 @@
 
 namespace App\DTO\GraphQLResponse;
 
+use Illuminate\Support\Collection;
+
 class CurrencyAndRegionResponse
 {
-    public array $currency_id;
-    public array $regions;
+    public array $currencies;
+    public Collection $regions;
 
-    public static function transform(array $currencyId, array $regions): self
+    public static function transform(array $currencies, Collection $regions): self
     {
         $dto = new self();
-        $dto->currency_id = $currencyId;
+        $dto->currencies = $currencies;
         $dto->regions = $regions;
 
         return $dto;
