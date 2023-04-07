@@ -1,9 +1,9 @@
 type FeeItem {
    mode: String!
-   fee: Int
-   amount_from: Int
-   amount_to: Int
-   percent: Int
+   fee: Float
+   amount_from: Decimal
+   amount_to: Decimal
+   percent: Float
 }
 
 type PriceListFeeCurrency {
@@ -73,10 +73,10 @@ input PriceListFeesList {
 
 input PriceListFeeItem {
    mode: String!
-   fee: Int
-   amount_from: Int
-   amount_to: Int
-   percent: Int
+   fee: Float
+   amount_from: Decimal
+   amount_to: Decimal
+   percent: Float
 }
 
 input priceList {
