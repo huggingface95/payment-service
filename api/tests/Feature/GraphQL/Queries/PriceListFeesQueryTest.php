@@ -97,8 +97,10 @@ class PriceListFeesQueryTest extends TestCase
                     priceListFees (
                         filter: { column: '.strtoupper($cond).', operator: EQ, value: $id }
                     ) {
+                        data{
                             id
                             name
+                        }
                     }
                 }',
                 'variables' => [
@@ -128,8 +130,10 @@ class PriceListFeesQueryTest extends TestCase
                     priceListFees (
                         filter: { column: HAS_COMPANY_FILTER_BY_ID, value: $id }
                     ) {
+                         data{
                             id
                             name
+                        }
                     }
                 }',
                 'variables' => [
@@ -159,8 +163,10 @@ class PriceListFeesQueryTest extends TestCase
                     priceListFees (
                         filter: { column: HAS_PAYMENT_PROVIDER_FILTER_BY_ID, value: $id }
                     ) {
+                        data{
                             id
                             name
+                        }
                     }
                 }',
                 'variables' => [
@@ -190,8 +196,10 @@ class PriceListFeesQueryTest extends TestCase
                     priceListFees (
                         filter: { column: HAS_PAYMENT_SYSTEM_FILTER_BY_ID, value: $id }
                     ) {
+                        data{
                             id
                             name
+                        }
                     }
                 }',
                 'variables' => [
@@ -221,8 +229,10 @@ class PriceListFeesQueryTest extends TestCase
                     priceListFees (
                         filter: { column: HAS_FEES_FILTER_BY_ID, value: $id }
                     ) {
+                        data{
                             id
                             name
+                        }
                     }
                 }',
                 'variables' => [
