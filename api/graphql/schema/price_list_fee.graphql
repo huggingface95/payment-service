@@ -51,7 +51,7 @@ extend type Query @guard {
     """
     priceListFees(
         filter: _ @filterConditions(static: QueryPriceListFeesFilterStatic)
-    ): [PriceListFee!]!   @orderBy(column: "id", direction: ASC) @all
+    ): [PriceListFee!]! @paginate(defaultCount: 10)  @orderBy(column: "id", direction: ASC)
 }
 
 input QueryPriceListFeesFilterStatic @spread{
