@@ -42,7 +42,7 @@ extend type Query @guard {
 }
 
 input QueryPaymentProviderIbansFilterStatic @spread {
-    name: String @eq
+    name: String @eq @ilike
     company_id: ID @eq
     currency_id: ID @eq
 }

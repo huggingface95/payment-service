@@ -58,7 +58,7 @@ extend type Query @guard {
 
 input QueryEmailTemplatesFilterStatic @spread{
     hasCompanyFilterByName: String @ilike
-    name: String @ilike
+    name: String @eq @ilike
     company_id: ID @eq
     type: ClientType @eq
     service_type: ServiceType @eq

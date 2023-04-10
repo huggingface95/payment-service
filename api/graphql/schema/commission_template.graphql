@@ -48,7 +48,7 @@ extend type Query @guard {
 
 input QueryCommissionTemplatesFilterStatic @spread{
     id: ID @eq
-    name: String @like
+    name: String @eq @like
     is_active: Boolean @eq
     hasCompanyFilterById: ID @eq
     hasPaymentProviderFilterById: ID @eq

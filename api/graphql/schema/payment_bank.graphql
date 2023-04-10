@@ -60,7 +60,7 @@ input QueryPaymentBanksFilterStatic @spread{
     id: ID @eq
     payment_system_id: ID @eq
     payment_provider_id: ID @eq
-    name: String @ilike
+    name: String @eq @ilike
     address: String @ilike
     bank_code: String @ilike
     payment_system_code: String @ilike

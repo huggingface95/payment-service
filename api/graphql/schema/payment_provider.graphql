@@ -36,7 +36,7 @@ extend type Query @guard {
 }
 
 input QueryPaymentProvidersFilterStatic @spread{
-    name: String @ilike
+    name: String @eq @ilike
     hasPaymentSystemsFilterById: ID @eq
     hasAccountFilterById: ID @eq
     hasCommissionTemplateFilterById: ID @eq

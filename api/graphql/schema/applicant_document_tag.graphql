@@ -29,7 +29,7 @@ extend type Query @guard {
 }
 
 input QueryApplicantDocumentTagsFilterStatic @spread {
-    name: String @ilike
+    name: String @eq @ilike
     hasCategoryFilterByName: String @ilike
 }
 

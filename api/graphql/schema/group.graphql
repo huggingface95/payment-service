@@ -64,15 +64,15 @@ type GroupRole {
 extend type Query @guard {
     "Получить тип группы по ID"
     group_type(id: ID @eq): GroupType   @find
-    
+
     "Получить список типов групп"
     group_types(
         filter: _ @filterConditions(static: QueryGroupTypesFilterStatic),
     ): [GroupType!]! @all @orderBy(column: "id", direction: ASC)
-    
+
     "Получить список типов групп"
     groupTypeList (mode: GroupTypeMode): [GroupType!]! @paginate(builder: "App\\GraphQL\\Queries\\GroupsTypeQuery", defaultCount:10) @orderBy(column: "id", direction: ASC)
-    
+
     """
     Получить список групп с ролями
     orderBy: [{ column: IS_ACTIVE, order: DESC }] сортировка по ID, статусу, описанию
@@ -86,8 +86,8 @@ extend type Query @guard {
     groupList(
         filter: _ @filterConditions(static: QueryGroupListFilterStatic),
         orderBy: _ @orderBy(columns: ["id", "is_active", "name"])
-    ): [GroupRole!]!   
-        @paginate(defaultCount: 10) 
+    ): [GroupRole!]!
+        @paginate(defaultCount: 10)
         @orderBy(column: "id", direction: DESC)
 }
 
@@ -101,7 +101,7 @@ input QueryGroupsFilterStatic @spread {
     id: ID @eq
     company_id: ID @eq
     role_id: ID @eq
-    name: String @like
+    name: String @eq @like
     group_type_id: ID @eq
     is_active: Boolean @eq
 }
@@ -109,7 +109,7 @@ input QueryGroupsFilterStatic @spread {
 input QueryGroupListFilterStatic @spread {
     id: ID @eq
     company_id: ID @eq
-    name: String @like
+    name: String @eq @like
     role_id: ID @eq
     group_type_id: ID @eq
     is_active: Boolean @eq
