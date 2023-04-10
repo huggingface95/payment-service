@@ -13,8 +13,10 @@ class PriceListFeesQueryTest extends TestCase
         $this->graphQL('
             {
                 priceListFees {
-                    id
-                    name
+                    data{
+                        id
+                        name
+                    }
                 }
             }
         ')->seeJson([
@@ -30,12 +32,14 @@ class PriceListFeesQueryTest extends TestCase
 
         $expect = [
             'data' => [
-                'priceListFees' => [],
+                'priceListFees' => [
+                    'data' => []
+                ],
             ],
         ];
 
         foreach ($priceListFees as $priceListFee) {
-            $expect['data']['priceListFees'][] = [
+            $expect['data']['priceListFees']['data'][] = [
                 'id' => (string) $priceListFee['id'],
                 'name' => (string) $priceListFee['name'],
                 'fee_type' => [
@@ -52,13 +56,15 @@ class PriceListFeesQueryTest extends TestCase
                 'query' => '
                 {
                     priceListFees {
-                        id
-                        name
-                        fee_type {
+                        data{
                             id
-                        }
-                        operation_type {
-                            id
+                            name
+                            fee_type {
+                                id
+                            }
+                            operation_type {
+                                id
+                            }
                         }
                     }
                 }',
@@ -80,12 +86,14 @@ class PriceListFeesQueryTest extends TestCase
 
         $expect = [
             'data' => [
-                'priceListFees' => [],
+                'priceListFees' => [
+                    'data' => []
+                ],
             ],
         ];
 
         foreach ($priceListFees as $priceListFee) {
-            $expect['data']['priceListFees'][] = [
+            $expect['data']['priceListFees']['data'][] = [
                 'id' => (string) $priceListFee->id,
                 'name' => (string) $priceListFee->name,
             ];
