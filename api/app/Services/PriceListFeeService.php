@@ -132,7 +132,7 @@ class PriceListFeeService extends AbstractService
                 } elseif ($fee['mode'] == FeeModeEnum::FIX->toString()) {
                     $newMultiFees['feeValues'][] = [
                         'mode' => 'fix',
-                        'value' => $fee['fee'],
+                        'value' => $fee['fee'] ?? null,
                     ];
                 }
             }
@@ -184,12 +184,12 @@ class PriceListFeeService extends AbstractService
                     } elseif ($fee['mode'] == FeeModeEnum::FIX->toString()) {
                         $newFeeValues[] = [
                             'mode' => 'fix',
-                            'value' => $fee['fee'],
+                            'value' => $fee['fee'] ?? null,
                         ];
                     } elseif ($fee['mode'] == FeeModeEnum::BASE->toString()) {
                         $newFeeValues[] = [
                             'mode' => 'base',
-                            'value' => $fee['fee'],
+                            'value' => $fee['fee'] ?? null,
                         ];
                     }
                 }
