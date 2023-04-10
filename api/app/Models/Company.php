@@ -140,6 +140,16 @@ class Company extends BaseModel
         return $this->hasMany(PaymentProvider::class, 'company_id');
     }
 
+    public function paymentProviderInternal(): HasOne
+    {
+        return $this->hasOne(PaymentProvider::class, 'company_id')->where('name', PaymentProvider::NAME_INTERNAL);
+    }
+
+    public function paymentSystemInternal(): HasOneThrough
+    {
+        return $this->paymentSystem()->where('payment_system.name', PaymentSystem::NAME_INTERNAL);
+    }
+
     public function paymentProvidersIban(): HasMany
     {
         return $this->hasMany(PaymentProviderIban::class, 'company_id');

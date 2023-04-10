@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\FeeTransferTypeEnum;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
@@ -12,6 +13,8 @@ use App\Models\Account;
 use App\Models\ApplicantCompany;
 use App\Models\Members;
 use App\Models\TransferBetweenRelation;
+use App\Models\TransferIncoming;
+use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,13 +26,14 @@ use Illuminate\Support\Facades\DB;
 class TransferBetweenUsersService extends AbstractService
 {
     public function __construct(
-        protected CommissionService $commissionService,
-        protected TransferOutgoingService $transferOutgoingService,
-        protected TransferIncomingService $transferIncomingService,
+        protected CommissionService                   $commissionService,
+        protected TransferOutgoingService             $transferOutgoingService,
+        protected TransferIncomingService             $transferIncomingService,
         protected TransferIncomingRepositoryInterface $transferIncomingRepository,
         protected TransferOutgoingRepositoryInterface $transferOutgoingRepository,
-        protected TransactionService $transactionService,
-    ) {
+        protected TransactionService                  $transactionService,
+    )
+    {
     }
 
     /**
@@ -74,8 +78,6 @@ class TransferBetweenUsersService extends AbstractService
             ];
         });
 
-        $this->attachFileById($transfers, $args['file_id'] ?? []);
-
         return $transfers['incoming'];
     }
 
@@ -112,7 +114,6 @@ class TransferBetweenUsersService extends AbstractService
     }
 
     /**
-     * @throws EmailException
      * @throws GraphqlException
      */
     public function updateTransferStatusToExecuted(array $transfers): void
@@ -127,14 +128,28 @@ class TransferBetweenUsersService extends AbstractService
         $this->transferIncomingService->updateTransferStatusToExecuted($transfers['incoming'], $transactionIncoming);
     }
 
+    public function attachFile(array $args): TransferOutgoing|TransferIncoming|Model|null
+    {
+        if ($args['type'] == FeeTransferTypeEnum::INCOMING->toString()) {
+            $transfer = TransferIncoming::query()->findOrFail($args['transfer_id']);
+            return $this->transferIncomingRepository->attachFileById($transfer, $args['file_id']);
+        } else {
+            $transfer = TransferOutgoing::query()->findOrFail($args['transfer_id']);
+            return $this->transferOutgoingRepository->attachFileById($transfer, $args['file_id']);
+        }
+    }
+
     private function populateTransferData(array $args, Account $fromAccount, Account $toAccount, int $operationType): array
     {
         $date = Carbon::now();
+        $companyId = $fromAccount->company_id;
+        $paymentProviderId = $fromAccount->company->paymentProviderInternal()->first()?->id;
+        $paymentSystemId = $fromAccount->company->paymentSystemInternal()->first()?->id;
 
         // Outgoing
         $outgoing['account_id'] = $fromAccount->id;
         $outgoing['currency_id'] = $fromAccount->currencies->id;
-        $outgoing['company_id'] = 1;
+        $outgoing['company_id'] = $companyId;
         $outgoing['user_type'] = class_basename(Members::class);
         $outgoing['amount'] = $args['amount'];
         $outgoing['amount_debt'] = $args['amount'];
@@ -143,8 +158,8 @@ class TransferBetweenUsersService extends AbstractService
         $outgoing['operation_type_id'] = $operationType;
         $outgoing['payment_bank_id'] = 2;
         $outgoing['payment_number'] = 'BTW' . rand();
-        $outgoing['payment_provider_id'] = 1;
-        $outgoing['payment_system_id'] = 1;
+        $outgoing['payment_provider_id'] = $paymentProviderId;
+        $outgoing['payment_system_id'] = $paymentSystemId;
         $outgoing['recipient_id'] = 1;
         $outgoing['recipient_type'] = class_basename(ApplicantCompany::class);
         $outgoing['system_message'] = 'test';
@@ -168,7 +183,7 @@ class TransferBetweenUsersService extends AbstractService
         // Incoming
         $incoming['account_id'] = $toAccount->id;
         $incoming['currency_id'] = $toAccount->currencies->id;
-        $incoming['company_id'] = 1;
+        $incoming['company_id'] = $companyId;
         $incoming['user_type'] = class_basename(Members::class);
         $incoming['amount'] = $args['amount'];
         $incoming['amount_debt'] = $args['amount'];
@@ -177,8 +192,8 @@ class TransferBetweenUsersService extends AbstractService
         $incoming['operation_type_id'] = $operationType;
         $incoming['payment_bank_id'] = 2;
         $incoming['payment_number'] = $outgoing['payment_number'];
-        $incoming['payment_provider_id'] = 1;
-        $incoming['payment_system_id'] = 1;
+        $incoming['payment_provider_id'] = $paymentProviderId;
+        $incoming['payment_system_id'] = $paymentSystemId;
         $incoming['recipient_id'] = 1;
         $incoming['recipient_type'] = class_basename(ApplicantCompany::class);
         $incoming['system_message'] = 'test';
@@ -224,7 +239,7 @@ class TransferBetweenUsersService extends AbstractService
                         PaymentStatusEnum::EXECUTED->value,
                     ];
 
-                    if (! in_array($args['status_id'], $allowedStatuses)) {
+                    if (!in_array($args['status_id'], $allowedStatuses)) {
                         throw new GraphqlException('This status is not allowed for transfer which has Pending status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 

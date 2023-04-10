@@ -37,6 +37,7 @@ use Illuminate\Support\Collection;
  * @property ApplicantIndividual | ApplicantCompany clientable
  * @property Currencies currencies
  * @property Account parent
+ * @property Company $company
  * @property Collection children
  *
  * @method static find(int $id)

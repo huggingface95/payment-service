@@ -13,8 +13,6 @@ extend type Mutation @guard {
         respondent_fee_id: ID!
         "Причина перевода"
         reason: String
-        "ID файлов"
-        file_id: [ID]
     ): TransferIncoming
         @field(resolver: "TransferBetweenUsersMutator@create")
 
@@ -35,4 +33,14 @@ extend type Mutation @guard {
         transfer_incoming_id: ID!
     ): TransferIncoming
         @field(resolver: "TransferBetweenUsersMutator@execute")
+
+    """
+    Привязать файлы
+    """
+    attachFIleToTransferBetweenUsers(
+        transfer_id: ID!
+        type: TransferType!
+        file_id: [ID!]!
+    ): TransferObjectType
+    @field(resolver: "TransferBetweenUsersMutator@attachFile")
 }
