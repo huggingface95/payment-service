@@ -126,6 +126,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'two_factor',
         'is_need_change_password',
         'active_session',
+        'company_name',
     ];
 
     protected static function booted()
@@ -157,6 +158,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         return [
             'client_type' => 'applicant',
         ];
+    }
+
+    public function getCompanyNameAttribute()
+    {
+        return $this->company()->first()?->name;
     }
 
     public function getTwoFactorAttribute(): bool

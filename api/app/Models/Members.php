@@ -114,12 +114,17 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['two_factor', 'permissions', 'is_super_admin', 'is_active', 'active_session'];
+    protected $appends = ['two_factor', 'permissions', 'is_super_admin', 'is_active', 'active_session', 'company_name',];
 
     protected static function booted()
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope());
+    }
+
+    public function getCompanyNameAttribute()
+    {
+        return $this->company()->first()?->name;
     }
 
     public function getFullnameAttribute()
