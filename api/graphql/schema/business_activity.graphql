@@ -22,7 +22,7 @@ extend type Query @guard {
 
 input QueryBusinessActivitiesFilterStatic @spread {
     id: ID @eq
-    name: String @ilike
+    name: String @eq @ilike
     hasCommissionTemplateFilterById: ID @eq
 }
 

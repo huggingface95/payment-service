@@ -58,12 +58,12 @@ extend type Query @guard {
 
 input QueryDepartmentsFilterStatic @spread{
     hasCompanyFilterById: ID @eq
-    name: String @ilike
+    name: String @eq @ilike
 }
 
 input QueryDepartmentPositionsFilterStatic @spread{
     hasDepartmentFilterById: ID @eq
-    name: String @ilike
+    name: String @eq @ilike
     is_active: Boolean @eq
 }
 

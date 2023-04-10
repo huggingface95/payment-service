@@ -170,7 +170,7 @@ input QueryApplicantCompaniesFilterStatic @spread{
     hasKycLevelMixedIdOrName: Mixed @eq
     hasStatusFilterById: ID @eq
     hasModulesFilterById: ID @eq
-    name: String @ilike
+    name: String @eq @ilike
     url: String @ilike
     email: String @ilike
 }

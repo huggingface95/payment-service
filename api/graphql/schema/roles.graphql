@@ -41,7 +41,7 @@ extend type Query @guard {
 }
 
 input QueryRolesFilterStatic @spread{
-    name: String @ilike
+    name: String @eq @ilike
     company_id: ID @eq
     hasGroupTypeMixedIdOrName: Mixed @eq
     hasGroupsMixedIdOrName: Mixed @eq

@@ -27,7 +27,7 @@ extend type Query @guard {
 }
 
 input QueryApplicantIndividualCompanyRelationsFilterStatic @spread{
-    name: String @ilike
+    name: String @eq @ilike
     company_id: ID @eq
 }
 

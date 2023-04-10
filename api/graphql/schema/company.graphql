@@ -110,7 +110,7 @@ extend type Query @guard {
 }
 
 input QueryCompaniesFilterStatic @spread {
-    name: String @ilike
+    name: String @eq @ilike
     email: String @ilike
     url: String @ilike
     reg_number: String @ilike

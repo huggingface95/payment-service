@@ -50,7 +50,7 @@ extend type Query @guard {
 input QueryBankCorrespondentsFilterStatic @spread {
     id: ID @eq
     payment_system_id: ID @eq
-    name: String @ilike
+    name: String @eq @ilike
     hasCurrenciesFilterById: ID @eq
     hasRegionsFilterById: ID @eq
 }
