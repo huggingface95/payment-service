@@ -9,8 +9,6 @@ extend type Mutation @guard {
         from_account_id: ID!
         "ID аккаунта получателя"
         to_account_id: ID!
-        "ID файлов"
-        file_id: [ID]
     ): TransferIncoming
         @field(resolver: "TransferBetweenAccountsMutator@create")
 
@@ -31,4 +29,14 @@ extend type Mutation @guard {
         transfer_incoming_id: ID!
     ): TransferIncoming
         @field(resolver: "TransferBetweenAccountsMutator@execute")
+
+    """
+    Привязать файлы
+    """
+    attachFIleToTransferBetweenAccounts(
+        transfer_id: ID!
+        type: TransferType!
+        file_id: [ID!]!
+    ): TransferIncoming
+    @field(resolver: "TransferBetweenAccountsMutator@attachFile")
 }

@@ -23,6 +23,7 @@ class PaymentProvider extends BaseModel
 
     protected $table = 'payment_provider';
 
+    public const NAME_INTERNAL = 'Internal';
     /**
      * The attributes that are mass assignable.
      *

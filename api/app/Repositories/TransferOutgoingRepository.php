@@ -26,7 +26,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
 
     public function attachFileById(Model|Builder $model, array $data): Model|Builder|null
     {
-        if (isset($data)) {
+        if (!empty($data)) {
             $model->files()->detach();
             $model->files()->attach(
                 $data,
@@ -54,7 +54,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
                 )
             );
         }
-        
+
         return $transfer;
     }
 
