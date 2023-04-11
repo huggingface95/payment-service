@@ -118,6 +118,17 @@ final class AuthenticationLogsQuery
             $query->whereIn('email', $applicantCompany->applicantIndividuals->pluck('email')->toArray());
         }
 
+        if (isset($args['applicant_individual_id'])) {
+            /** @var ApplicantIndividual $individual */
+            $individual = ApplicantIndividual::query()->findOrFail($args['applicant_individual_id']);
+            $query->where('email', $individual->email);
+        }
+
+        if (isset($args['owner_id'])) {
+            $individuals = ApplicantIndividual::query()->where('account_manager_member_id', $args['owner_id'])->get();
+            $query->whereIn('email', $individuals->pluck('email')->toArray());
+        }
+
         $this->filterByQueryAndSort($query, $args);
 
         $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
