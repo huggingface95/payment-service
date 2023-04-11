@@ -2,17 +2,16 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Enums\FeeTransferTypeEnum;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\TransferIncoming;
-use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Services\TransferBetweenUsersService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class TransferBetweenUsersMutator extends BaseMutator
 {
@@ -29,14 +28,23 @@ class TransferBetweenUsersMutator extends BaseMutator
         return $this->transferService->createTransfer($args, OperationTypeEnum::BETWEEN_USERS->value);
     }
 
-    public function attachFile($root, array $args): TransferOutgoing|TransferIncoming|Model|Builder|null
+    /**
+     * @throws GraphqlException
+     */
+    public function attachFile($root, array $args): TransferIncoming|Model|Builder|null
     {
-        if ($args['type'] == FeeTransferTypeEnum::INCOMING->toString()) {
-            $transfer = TransferIncoming::query()->where('operation_type_id', OperationTypeEnum::BETWEEN_USERS->value)->findOrFail($args['transfer_id']);
-            return $this->transferIncomingRepository->attachFileById($transfer, $args['file_id']);
-        } else {
-            $transfer = TransferOutgoing::query()->where('operation_type_id', OperationTypeEnum::BETWEEN_USERS->value)->findOrFail($args['transfer_id']);
-            return $this->transferOutgoingRepository->attachFileById($transfer, $args['file_id']);
+        try {
+            DB::beginTransaction();
+            /** @var TransferIncoming $transfer */
+            $transfer = TransferIncoming::query()->with('transferBetweenOutgoing')->where('operation_type_id', OperationTypeEnum::BETWEEN_USERS->value)->findOrFail($args['transfer_incoming_id']);
+            $this->transferIncomingRepository->attachFileById($transfer, $args['file_id']);
+            $this->transferOutgoingRepository->attachFileById($transfer->transferBetweenOutgoing, $args['file_id']);
+            DB::commit();
+
+            return $transfer;
+        } catch (\Throwable $exception) {
+            DB::rollBack();
+            throw new GraphqlException($exception->getMessage(), $exception->getCode());
         }
     }
 

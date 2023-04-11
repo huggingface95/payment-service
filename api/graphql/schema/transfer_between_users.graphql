@@ -38,9 +38,8 @@ extend type Mutation @guard {
     Привязать файлы
     """
     attachFIleToTransferBetweenUsers(
-        transfer_id: ID!
-        type: TransferType!
+        transfer_incoming_id: ID!
         file_id: [ID!]!
-    ): TransferObjectType
+    ): TransferIncoming
     @field(resolver: "TransferBetweenUsersMutator@attachFile")
 }
