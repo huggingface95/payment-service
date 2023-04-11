@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Ankurk91\Eloquent\BelongsToOne;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
 use App\Models\Scopes\AccountIndividualsCompaniesScope;
@@ -15,10 +16,13 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * Class TransferIncoming
+ *
+ * @property TransferOutgoing $transferBetweenOutgoing
  */
 class TransferIncoming extends BaseModel
 {
     use HasFactory;
+    use BelongsToOne;
 
     /**
      * The attributes that are mass assignable.
@@ -178,5 +182,10 @@ class TransferIncoming extends BaseModel
     {
         return $this->hasOne(Transactions::class, 'transfer_id')
             ->where('transfer_type', class_basename(self::class));
+    }
+
+    public function transferBetweenOutgoing(): \Ankurk91\Eloquent\Relations\BelongsToOne
+    {
+        return $this->belongsToOne(TransferOutgoing::class, TransferBetweenRelation::class, 'transfer_incoming_id', 'transfer_outgoing_id');
     }
 }
