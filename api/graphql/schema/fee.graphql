@@ -2,7 +2,6 @@ type Fee {
     "Дата"
     created_at: DateTimeUtc!
     fee: Decimal!
-    fee_pp: Decimal!
     fee_amount: Decimal!
     "Трансфер"
     transfer_outgoing: TransferOutgoing @belongsTo(relation: "transferOutgoing")

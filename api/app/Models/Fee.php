@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -15,7 +17,6 @@ class Fee extends BaseModel
 
     protected $fillable = [
         'fee',
-        'fee_pp',
         'fee_type_id',
         'transfer_id',
         'operation_type_id',
@@ -26,12 +27,23 @@ class Fee extends BaseModel
         'account_id',
         'price_list_fee_id',
         'transfer_type',
+        'fee_type_mode_id',
     ];
 
     protected $casts = [
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
+
+    public function getFeeAmountAttribute()
+    {
+        return $this->fees()->sum('fee');
+    }
+
+    public function fees(): HasMany
+    {
+        return $this->hasMany(self::class, 'transfer_id', 'transfer_id');
+    }
 
     public function account(): BelongsTo
     {
@@ -66,5 +78,10 @@ class Fee extends BaseModel
     public function transferOutgoing(): BelongsTo
     {
         return $this->belongsTo(TransferOutgoing::class, 'transfer_id');
+    }
+
+    public function mode(): BelongsTo
+    {
+        return $this->belongsTo(FeeMode::class, 'fee_type_mode_id');
     }
 }
