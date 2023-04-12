@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
 use App\Models\Scopes\AccountIndividualsCompaniesScope;
@@ -122,6 +123,16 @@ class TransferOutgoing extends BaseModel
         return $this->hasOne(Fee::class, 'transfer_id')
             ->where('transfer_type', FeeTransferTypeEnum::OUTGOING->toString())
             ->where('fee_type_id', FeeTypeEnum::FEES->value);
+    }
+
+    public function feeModeBase(): HasOne
+    {
+        return $this->fee()->where('fee_type_mode_id', FeeModeEnum::BASE->value);
+    }
+
+    public function feeModeProvider(): HasOne
+    {
+        return $this->fee()->where('fee_type_mode_id', FeeModeEnum::PROVIDER->value);
     }
 
     public function fees(): HasMany

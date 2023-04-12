@@ -20,6 +20,7 @@ class FeeModesSeeder extends Seeder
             FeeModeEnum::FIX->value,
             FeeModeEnum::PERCENT->value,
             FeeModeEnum::BASE->value,
+            FeeModeEnum::PROVIDER->value,
         ];
 
         foreach ($feeModes as $mode) {

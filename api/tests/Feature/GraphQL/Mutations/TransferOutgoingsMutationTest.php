@@ -79,7 +79,6 @@ class TransferOutgoingsMutationTest extends TestCase
                       }
                       fees {
                         fee
-                        fee_pp
                         fee_amount
                       }
                       files {
