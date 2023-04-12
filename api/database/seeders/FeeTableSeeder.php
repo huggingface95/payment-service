@@ -17,7 +17,7 @@ class FeeTableSeeder extends Seeder
      */
     public function run()
     {
-        Fee::qfirstOrCreate([
+        Fee::query()->firstOrCreate([
             'transfer_id' => 1,
             'fee' => 750,
             'fee_type_id' => 1,
@@ -32,7 +32,7 @@ class FeeTableSeeder extends Seeder
             'fee_type_mode_id' => FeeModeEnum::BASE->value,
         ]);
 
-        Fee::firstOrCreate([
+        Fee::query()->firstOrCreate([
             'transfer_id' => 2,
             'fee' => 560,
             'fee_type_id' => 1,
