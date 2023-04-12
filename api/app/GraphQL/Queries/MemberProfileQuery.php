@@ -15,6 +15,8 @@ class MemberProfileQuery
     {
         $member = auth()->user();
 
-        return $member;
+        $isSuperAdmin = $member->getIsSuperAdminAttribute();
+
+        return $member->setAttribute('is_super_admin', $isSuperAdmin);
     }
 }
