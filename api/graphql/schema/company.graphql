@@ -119,6 +119,7 @@ input QueryCompaniesFilterStatic @spread {
     hasPaymentProvidersFilterById: ID @eq
     hasPaymentSystemFilterById: ID @eq
     hasRegionsFilterById: ID @eq
+    hasAccountsFilterById: ID @eq
 }
 
 extend type Mutation @guard {
