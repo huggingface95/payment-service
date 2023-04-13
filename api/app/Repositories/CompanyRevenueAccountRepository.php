@@ -20,7 +20,10 @@ class CompanyRevenueAccountRepository extends Repository implements CompanyReven
     public function createMultiple(int $companyId, array $numbers): void
     {
         foreach ($numbers as $number) {
-            $this->query()->firstOrCreate(['number' => $number], ['company_id' => $companyId]);
+            $this->query()->firstOrCreate(
+                ['number' => $number['number']],
+                ['company_id' => $companyId, 'currency_id' => $number['currency_id']]
+            );
         }
     }
 

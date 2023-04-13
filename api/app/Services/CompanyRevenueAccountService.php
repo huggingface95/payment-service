@@ -22,7 +22,7 @@ class CompanyRevenueAccountService
 
         $currencies = Currencies::query()->whereIn('id', $currencyIds)->get();
 
-        $numbers = $this->prepareMultipleCurrencies($company->id, $currencies->pluck('code')->toArray());
+        $numbers = $this->prepareMultipleCurrencies($company->id, $currencies->pluck('id', 'code')->toArray());
 
         $this->repository->createMultiple($company->id, $numbers);
     }
@@ -34,14 +34,16 @@ class CompanyRevenueAccountService
         $number = $this->prepareCurrency($companyId, $currency->code);
 
         return $this->repository->exist($number);
-
     }
 
     private function prepareMultipleCurrencies(int $id, array $codes): array
     {
         $prepared = [];
-        foreach ($codes as $code) {
-            $prepared[] = $this->prepareCurrency($id, $code);
+        foreach ($codes as $code => $currencyId) {
+            $prepared[] = [
+                'currency_id' => $currencyId,
+                'number' => $this->prepareCurrency($id, $code)
+            ];
         }
 
         return $prepared;
