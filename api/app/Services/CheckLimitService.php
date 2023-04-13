@@ -106,10 +106,6 @@ class CheckLimitService
                                     Carbon::now()->endOfDay()->format('Y-m-d H:i:s'),
                                 ]
                             );
-                        } elseif ($name == CommissionTemplateLimitPeriod::EACH_TIME) {
-                            return $q->whereNull('id');
-                        } elseif ($name == CommissionTemplateLimitPeriod::ONE_TIME) {
-                            return $q->whereNull('id');
                         }
 
                         return $q;

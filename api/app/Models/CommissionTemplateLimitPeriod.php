@@ -4,10 +4,6 @@ namespace App\Models;
 
 class CommissionTemplateLimitPeriod extends BaseModel
 {
-    public const EACH_TIME = 'Each time';
-
-    public const ONE_TIME = 'One time';
-
     public const DAILY = 'Daily';
 
     public const WEEKLY = 'Weekly';
