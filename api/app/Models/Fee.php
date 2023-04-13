@@ -35,11 +35,6 @@ class Fee extends BaseModel
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
-    public function getFeeAmountAttribute()
-    {
-        return $this->fees()->sum('fee');
-    }
-
     public function fees(): HasMany
     {
         return $this->hasMany(self::class, 'transfer_id', 'transfer_id');

@@ -79,6 +79,7 @@ class TransferOutgoing extends BaseModel
         'project_id',
         'price_list_id',
         'price_list_fee_id',
+        'fee_amount',
     ];
 
     protected $casts = [

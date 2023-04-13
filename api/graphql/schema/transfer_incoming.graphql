@@ -141,7 +141,7 @@ input QueryTransferIncomingsFilterStatic @spread {
     status_id: ID @eq
     hasAccountFilterByAccountNumber: String @ilike
     hasFeeFilterByFee: String @ilike
-    fee_amount: Float @gte @lte
+    fee_amount: String @gte @lte
 }
 
 input QueryDownloadTransferIncomingsFilterStatic @spread {
@@ -152,7 +152,7 @@ input QueryDownloadTransferIncomingsFilterStatic @spread {
     status_id: ID @eq
     hasAccountFilterByAccountNumber: String @ilike
     hasFeeFilterByFee: String @ilike
-    fee_amount: Float @gte @lte
+    fee_amount: String @gte @lte
 }
 
 extend type Mutation @guard {
