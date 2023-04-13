@@ -132,6 +132,8 @@ extend type Query @guard {
 
 input QueryTransferIncomingsFilterStatic @spread {
     id: ID @eq
+    company_id: ID @eq
+    payment_provider_id: ID @eq
     urgency_id: ID @eq
     operation_type_id: ID @eq
     sender_name: String @ilike
