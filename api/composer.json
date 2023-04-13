@@ -47,7 +47,8 @@
     },
     "autoload": {
         "files": [
-            "app/Helpers/model.php"
+            "app/Helpers/model.php",
+            "app/Helpers/migration.php"
         ],
         "psr-4": {
             "App\\": "app/",

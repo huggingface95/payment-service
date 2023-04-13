@@ -7,7 +7,6 @@ use App\Models\CompanyLedgerSettings;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Services\TransferOutgoingService;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
@@ -42,38 +41,20 @@ class CalculateRevenueCommissionCommand extends Command
      */
     public function handle()
     {
-
-        $chunkSize = 2;
+        $chunkSize = 100;
         $timeNow = Carbon::now()->format('H:i:s');
 
-        $this->info('Day of week: ' . Carbon::now()->dayOfWeekIso);
-        $this->info('Day of month: ' . Carbon::now()->day);
-
-        // $query = CompanyLedgerSettings::query()
-        //     ->where(function (Builder $query) use ($timeNow) {
-        //         $query->where('end_of_day_time', '<=', $timeNow)
-        //             ->orWhere(function (Builder $query) use ($timeNow) {
-        //                 $query->where('end_of_week_time', '<=', $timeNow)
-        //                     ->where('end_of_week_day', Carbon::now()->dayOfWeekIso);
-        //             })
-        //             ->orWhere(function (Builder $query) use ($timeNow) {
-        //                 $query->where('end_of_month_time', '<=', $timeNow)
-        //                     ->where('end_of_month_day', Carbon::now()->day);
-        //             });
-        //     });
+        $this->info('Chunk size: ' . $chunkSize);
+        $this->info('Time now: ' . $timeNow);
 
         $query = CompanyLedgerSettings::query()->where('end_of_day_time', '<=', $timeNow);
-        
-        $query->chunkById($chunkSize, function (Collection $settings) {
-            $this->info('Chunk size: ' . $settings->count());
-            $this->info($settings);
 
+        $query->chunkById($chunkSize, function (Collection $settings) {
             foreach ($settings as $setting) {
-                $this->info('Company: ' . $setting->company_id);
+                $this->info('Processing for company: ' . $setting->company_id);
 
                 dispatch(new ProcessLedgerDayHistoryJob($setting));
             }
         });
-
     }
 }

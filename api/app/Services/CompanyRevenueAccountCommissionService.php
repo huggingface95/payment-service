@@ -7,11 +7,13 @@ use App\Models\CompanyLedgerDayHistory;
 use App\Models\CompanyLedgerSettings;
 use App\Models\CompanyRevenueAccount;
 use App\Models\Fee;
+use App\Models\Transactions;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CompanyRevenueAccountCommissionService extends AbstractService
 {
-
     public function calculateRevenueCommission(Account $account, CompanyLedgerSettings $ledgerSettings): float
     {
         $dateInterval = $this->getCommissionDateInterval($account, $ledgerSettings);
@@ -32,19 +34,48 @@ class CompanyRevenueAccountCommissionService extends AbstractService
         });
 
         $feesByCurrency->each(function ($amount, $currency_id) use ($account, $dateInterval, $revenueAccounts) {
-            $revenueAccount = $revenueAccounts
-                ->where('currency_id', $currency_id)
-                ->where('company_id', $account->company_id)
-                ->first();
+            DB::beginTransaction();
 
-            CompanyLedgerDayHistory::create([
-                'account_id' => $account->id,
-                'revenue_account_id' => $revenueAccount->id,
-                'company_id' => $account->company_id,
-                'currency_id' => $currency_id,
-                'amount' => $amount,
-                'created_at' => $dateInterval['end_date_time'],
-            ]);
+            try {
+                $revenueAccount = $revenueAccounts
+                    ->where('currency_id', $currency_id)
+                    ->where('company_id', $account->company_id)
+                    ->first();
+
+                CompanyLedgerDayHistory::create([
+                    'account_id' => $account->id,
+                    'revenue_account_id' => $revenueAccount->id,
+                    'company_id' => $account->company_id,
+                    'currency_id' => $currency_id,
+                    'amount' => $amount,
+                    'created_at' => $dateInterval['end_date_time'],
+                ]);
+
+                Transactions::create([
+                    'company_id' => $account->company_id,
+                    'transfer_id' => null,
+                    'transfer_type' => class_basename(TransferIncoming::class),
+                    'currency_src_id' => $currency_id,
+                    'currency_dst_id' => $currency_id,
+                    'account_src_id' => null,
+                    'account_dst_id' => null,
+                    'revenue_account_id' => $revenueAccount->id,
+                    'balance_prev' => $revenueAccount->balance,
+                    'balance_next' => $revenueAccount->balance + $amount,
+                    'amount' => $amount,
+                    'txtype' => 'revenue',
+                ]);
+
+                $revenueAccount->update([
+                    'balance' => $revenueAccount->balance + $amount,
+                ]);
+    
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollback();
+
+                Log::error($e->getMessage());
+            }
         });
 
         return $totalCommission;

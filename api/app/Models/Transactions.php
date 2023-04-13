@@ -27,6 +27,7 @@ class Transactions extends BaseModel
         'balance_next',
         'amount',
         'txtype',
+        'revenue_account_id',
     ];
 
     protected $casts = [
