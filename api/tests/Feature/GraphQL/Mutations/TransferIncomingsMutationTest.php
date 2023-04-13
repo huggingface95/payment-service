@@ -73,13 +73,12 @@ class TransferIncomingsMutationTest extends TestCase
                     id
                       amount
                       amount_debt
+                      fee_amount
                       fee {
                         fee
-                        fee_amount
                       }
                       fees {
                         fee
-                        fee_amount
                       }
                       files {
                         id

@@ -19,7 +19,7 @@ class TransferOutgoingDetailsResource extends JsonResource
             'account_client_name' => $this->account?->owner?->fullname,
             'iban' => $this->account?->account_number,
             'payment_provider_fee' => $this->feeModeProvider?->fee,
-            'fee_amount' => $this->fees->sum('fee'),
+            'fee_amount' => $this->fee_amount,
             'final_amount_debited' => $this->amount_debt,
             'fee_account' => $this->fee?->client_id,
             'urgency' => $this->paymentUrgency?->name,

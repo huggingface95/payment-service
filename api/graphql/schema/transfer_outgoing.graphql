@@ -10,6 +10,7 @@ type TransferOutgoing {
     "Сумма"
     amount: Decimal!
     amount_debt: Decimal!
+    fee_amount: Decimal!
     "Коммиссия"
     fee: Fee @hasOne(realtion: "fee")
     "Все коммиссии"
@@ -163,6 +164,7 @@ input QueryTransferOutgoingsFilterStatic @spread {
     hasAccountFilterByAccountNumber: String @ilike
     hasSenderMixedNameOrFullname: Mixed @ilike
     hasFeeFilterByFee: String @ilike
+    fee_amount: String @gte @lte
 }
 
 input QueryDownloadTransferOutgoingsFilterStatic @spread {
@@ -175,6 +177,7 @@ input QueryDownloadTransferOutgoingsFilterStatic @spread {
     hasAccountFilterByAccountNumber: String @ilike
     hasSenderMixedNameOrFullname: Mixed @ilike
     hasFeeFilterByFee: String @ilike
+    fee_amount: String @gte @lte
 }
 
 extend type Mutation @guard {

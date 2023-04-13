@@ -24,19 +24,28 @@ class FilterConditionsHandler
     }
 
     /**
-     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder  $builder
-     * @param  array<string, mixed>  $whereConditions
+     * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $builder
+     * @param array<string, mixed> $whereConditions
      *
      * @throws Error
      */
     public function __invoke(
         object $builder,
-        array $whereConditions,
-        Model $model = null,
+        array  $whereConditions,
+        Model  $model = null,
         string $boolean = 'and'
-    ): void {
+    ): void
+    {
         if ($builder instanceof EloquentBuilder) {
             $model = $builder->getModel();
+        } else {
+            if ($model) {
+                $builder = new EloquentBuilder($builder);
+                $builder->setModel($model);
+                foreach ($model->getGlobalScopes() as $identifier => $scope) {
+                    $builder->withGlobalScope($identifier, $scope);
+                }
+            }
         }
 
         if ($andConnectedConditions = $whereConditions['AND'] ?? null) {
@@ -101,7 +110,7 @@ class FilterConditionsHandler
             $this->__invoke($builder, $condition, $model);
         }
 
-        if (! preg_match('/^(has)|(Mixed)|(doesntHave)/', $whereConditions['column'] ?? 'null')) {
+        if (!preg_match('/^(has)|(Mixed)|(doesntHave)/', $whereConditions['column'] ?? 'null')) {
             if ($column = $whereConditions['column'] ?? null) {
                 $this->assertValidColumnReference($column);
 
@@ -111,30 +120,31 @@ class FilterConditionsHandler
     }
 
     /**
-     * @param  array<string, mixed>|null  $condition
+     * @param array<string, mixed>|null $condition
      */
     public function handleHasCondition(
-        Model $model,
+        Model  $model,
         string $relation,
         string $operator,
-        int $amount,
+        int    $amount,
         ?array $condition = null
-    ): QueryBuilder {
+    ): QueryBuilder
+    {
         return $model
             ->newQuery()
             ->whereHas(
                 $relation,
                 $condition
                     ? function ($builder) use ($condition): void {
-                        $this->__invoke(
-                            $builder,
-                            $this->prefixConditionWithTableName(
+                    $this->__invoke(
+                        $builder,
+                        $this->prefixConditionWithTableName(
                             $condition,
                             $builder->getModel()
                         ),
-                            $builder->getModel()
-                        );
-                    }
+                        $builder->getModel()
+                    );
+                }
                     : null,
                 $operator,
                 $amount
@@ -143,9 +153,10 @@ class FilterConditionsHandler
     }
 
     public function handleDoesntHaveCondition(
-        Model $model,
+        Model  $model,
         string $relation,
-    ): QueryBuilder {
+    ): QueryBuilder
+    {
         return $model
             ->newQuery()
             ->whereDoesntHave($relation)
@@ -181,16 +192,16 @@ class FilterConditionsHandler
      * This is important for queries which can otherwise be ambiguous, for
      * example when multiple tables with a column "id" are involved.
      *
-     * @param  array<string, mixed>  $condition
+     * @param array<string, mixed> $condition
      * @return array<string, mixed>
      */
     protected function prefixConditionWithTableName(array $condition, Model $model): array
     {
         if (isset($condition['column'])) {
-            $condition['column'] = $model->getTable().'.'.$condition['column'];
+            $condition['column'] = $model->getTable() . '.' . $condition['column'];
         } elseif (isset($condition[0]['column'])) {
             foreach ($condition as &$item) {
-                $item['column'] = $model->getTable().'.'.$item['column'];
+                $item['column'] = $model->getTable() . '.' . $item['column'];
             }
         }
 
