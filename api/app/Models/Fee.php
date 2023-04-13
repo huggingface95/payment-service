@@ -75,6 +75,11 @@ class Fee extends BaseModel
         return $this->belongsTo(PriceListFee::class, 'price_list_fee_id');
     }
 
+    public function transfer(): MorphTo
+    {
+        return $this->morphTo(__FUNCTION__, 'transfer_type', 'transfer_id');
+    }
+
     public function transferOutgoing(): BelongsTo
     {
         return $this->belongsTo(TransferOutgoing::class, 'transfer_id');
