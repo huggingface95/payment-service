@@ -1,4 +1,5 @@
-##Installation
+## Installation
+
 `cd docker && docker-compose up -d`
 
 `cd docker && docker-compose exec php-dev composer install`
@@ -9,3 +10,10 @@
 
 ### Graphql URL http://server_url/api
 ### Graphql IDE http://server_url/graphql-playground
+
+## Tests
+
+`cd docker && docker-compose exec php-dev ./vendor/bin/phpunit`
+
+`cd docker && docker-compose exec php-dev ./vendor/bin/phpunit --stop-on-failure --filter=testCreatePaymentSystem`
+
