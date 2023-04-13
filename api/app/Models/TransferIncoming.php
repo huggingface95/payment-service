@@ -7,6 +7,7 @@ use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
 use App\Models\Scopes\AccountIndividualsCompaniesScope;
+use App\Models\Scopes\TransferFeeAmountScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -78,6 +79,12 @@ class TransferIncoming extends BaseModel
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'execution_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new TransferFeeAmountScope());
+    }
 
     public function account(): BelongsTo
     {
