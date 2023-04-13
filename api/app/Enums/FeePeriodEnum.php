@@ -4,17 +4,15 @@ namespace App\Enums;
 
 enum FeePeriodEnum: int
 {
-    case EACH_TIME = 1;
-    case DAILY = 2;
-    case WEEKLY = 3;
-    case MONTHLY = 4;
-    case YEARLY = 5;
-    case OTHER_SCHEDULE = 6;
+    case DAILY = 1;
+    case WEEKLY = 2;
+    case MONTHLY = 3;
+    case YEARLY = 4;
+    case OTHER_SCHEDULE = 5;
 
     public function toString(): string
     {
         return match ($this) {
-            self::EACH_TIME => 'Each time',
             self::DAILY => 'Daily',
             self::WEEKLY => 'Weekly',
             self::MONTHLY => 'Monthly',
