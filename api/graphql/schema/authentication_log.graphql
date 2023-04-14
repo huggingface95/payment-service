@@ -99,12 +99,12 @@ extend type Query @guard {
     ): AuthenticationLogs
     @field(resolver:"AuthenticationLogsQuery@getIndividual")
     """
-    Получить список логов для индивидуала по его ID
+    Получить список логов для корпорейта по его ID
     """
     authenticationCompanyLogs(
         applicant_company_id: ID! @eq
-        owner_id: ID! @eq
-        applicant_individual_id: ID! @eq
+        owner_id: ID @eq
+        applicant_individual_id: ID @eq
         query: QueryAuthenticationLogsByTypeStatic
         page: Int = 1,
         first: Int = 10,
