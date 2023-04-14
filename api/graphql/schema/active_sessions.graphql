@@ -5,8 +5,6 @@ type ActiveSession {
     company: String!
     "Группа"
     provider: String!
-    "Домен"
-    domain: String!
     "IP"
     ip: String
     "Страна"
