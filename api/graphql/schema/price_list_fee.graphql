@@ -99,7 +99,7 @@ input PriceListFeeInput {
 
 input PriceListFeeScheduledInput {
     starting_date: DateTimeUtc
-    end_date: DateTimeUtc
+    end_date: DateTimeUtc!
     recurrent_interval: Int
     starting_date_id: ID
     end_date_id: ID
