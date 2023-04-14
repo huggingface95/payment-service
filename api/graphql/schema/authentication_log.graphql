@@ -6,13 +6,13 @@ type AuthenticationLog {
     "Почта"
     email: String!
     "Member email"
-    member: String!
+    client: AuthClientType
     "Тип"
     client_type: String!
     "Тип"
     provider: String!
     "Группа"
-    group: String!
+    group: String
     "Домен"
     domain: String!
     "IP"

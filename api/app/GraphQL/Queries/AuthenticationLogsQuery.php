@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Queries;
 
+use App\GraphQL\Mutations\Traits\GetMemberOrIndividualClickhouseTrait;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use App\Models\Clickhouse\AuthenticationLog;
@@ -11,6 +12,8 @@ use Illuminate\Support\Str;
 
 final class AuthenticationLogsQuery
 {
+
+    use GetMemberOrIndividualClickhouseTrait;
     /**
      * Get data with pagination and filteration
      *
@@ -26,6 +29,8 @@ final class AuthenticationLogsQuery
         $this->filterByQueryAndSort($query, $args);
 
         $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
+
+        $this->addClient($result);
 
         return [
             'data' => $result->items(),
@@ -58,6 +63,8 @@ final class AuthenticationLogsQuery
 
         $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
 
+        $this->addClient($result);
+
         return [
             'data' => $result->items(),
             'paginatorInfo' => [
@@ -89,6 +96,8 @@ final class AuthenticationLogsQuery
         $this->filterByQueryAndSort($query, $args);
 
         $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
+
+        $this->addClient($result);
 
         return [
             'data' => $result->items(),
@@ -132,6 +141,8 @@ final class AuthenticationLogsQuery
         $this->filterByQueryAndSort($query, $args);
 
         $result = $query->paginate($args['page'] ?? 1, $args['first'] ?? env('PAGINATE_DEFAULT_COUNT'));
+
+        $this->addClient($result);
 
         return [
             'data' => $result->items(),
