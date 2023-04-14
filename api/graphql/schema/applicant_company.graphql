@@ -56,6 +56,7 @@ type ApplicantCompany {
     basic_info_additional_field: JSON
     "Дата создания"
     created_at: DateTimeUtc
+    updated_at: DateTimeUtc
     "Контактный email"
     contact_email: EMAIL
     "Контактный телефон"
