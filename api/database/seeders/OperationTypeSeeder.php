@@ -31,7 +31,8 @@ class OperationTypeSeeder extends Seeder
             ],
         ];
 
-        $feeTypeFee = FeeType::where('name', FeeType::FEES)->first();
+        $feeTypeFeeId = FeeType::where('name', FeeType::FEES)->first()->id;
+        $serviceFeeTypeId = FeeType::where('name', FeeType::SERVICE_FEE)->first()->id;
 
         $i = 1;
         foreach ($types as $k => $values) {
@@ -40,7 +41,7 @@ class OperationTypeSeeder extends Seeder
                     'id' => $i++,
                 ], [
                     'name' => $v,
-                    'fee_type_id' => $feeTypeFee->id,
+                    'fee_type_id' => $v === OperationTypeEnum::SCHEDULED_FEE->toString() ? $serviceFeeTypeId : $feeTypeFeeId,
                     'transfer_type_id' => TransferType::where('name', $k)->first()->id,
                 ]);
             }
