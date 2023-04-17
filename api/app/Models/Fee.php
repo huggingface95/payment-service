@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -42,7 +41,7 @@ class Fee extends BaseModel
 
     public function account(): BelongsTo
     {
-        return $this->belongsTo(Account::class, 'account_id')->withoutGlobalScope(AccountIndividualsCompaniesScope::class);
+        return $this->belongsTo(Account::class, 'account_id');
     }
 
     public function client(): MorphTo

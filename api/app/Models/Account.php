@@ -6,12 +6,10 @@ use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\PaymentStatusEnum;
 use App\Models\Interfaces\BaseModelInterface;
-use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -47,10 +45,6 @@ class Account extends BaseModel implements BaseModelInterface
 {
     use MorphToOne;
     use BelongsToOne;
-
-    public const PRIVATE = 'Private';
-
-    public const BUSINESS = 'Business';
 
     protected $table = 'accounts';
 
@@ -88,6 +82,8 @@ class Account extends BaseModel implements BaseModelInterface
         'max_limit_balance',
         'project_id',
         'parent_id',
+        'client_id',
+        'client_type',
     ];
 
     protected $casts = [
@@ -112,16 +108,10 @@ class Account extends BaseModel implements BaseModelInterface
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new AccountIndividualsCompaniesScope());
         static::addGlobalScope(new ApplicantFilterByMemberScope());
     }
 
-    public function newModelQuery(): Builder|Account
-    {
-        return $this->newEloquentBuilder(
-            $this->newBaseQueryBuilder()
-        )->withGlobalScope(AccountIndividualsCompaniesScope::class, new AccountIndividualsCompaniesScope())->setModel($this);
-    }
+
 
     public function getAliasAttribute(): bool
     {
@@ -294,33 +284,9 @@ class Account extends BaseModel implements BaseModelInterface
         $this->attributes['account_number'] = uniqid();
     }
 
-    public function accountIndividualCompany(): HasOne
-    {
-        return $this->hasOne(AccountIndividualCompany::class, 'account_id', 'id');
-    }
-
     public function clientable(): MorphTo
     {
         return $this->morphTo('clientable', 'client_type', 'client_id');
-    }
-
-    public function clientableAttach(): \Ankurk91\Eloquent\Relations\MorphToOne
-    {
-        if ($this->account_type == self::BUSINESS) {
-            return $this->applicantCompany();
-        }
-
-        return $this->applicantIndividual();
-    }
-
-    public function applicantIndividual(): \Ankurk91\Eloquent\Relations\MorphToOne
-    {
-        return $this->morphedByOne(ApplicantIndividual::class, 'client', AccountIndividualCompany::class, 'account_id');
-    }
-
-    public function applicantCompany(): \Ankurk91\Eloquent\Relations\MorphToOne
-    {
-        return $this->morphedByOne(ApplicantCompany::class, 'client', AccountIndividualCompany::class, 'account_id');
     }
 
     public function limits(): HasMany

@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Auth\Authorizable;
@@ -308,9 +309,9 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         return $this->belongsToMany(ApplicantCompany::class, 'applicant_individual_company', 'applicant_id', 'applicant_company_id');
     }
 
-    public function account(): \Ankurk91\Eloquent\Relations\MorphToOne
+    public function account(): MorphOne
     {
-        return $this->morphToOne(Account::class, 'client', AccountIndividualCompany::class, 'client_id', 'account_id');
+        return $this->morphOne(Account::class, 'clientable');
     }
 
     public function groupRole(): \Ankurk91\Eloquent\Relations\MorphToOne

@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\AccountClient;
-use App\Models\AccountIndividualCompany;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantDocument;
 use App\Models\ApplicantIndividual;
@@ -29,7 +28,6 @@ class ChangeEnumFieldsForApplicantIndividualAndApplicantCompanyAndMembersTables 
     public function up()
     {
         $this->changeFieldInTableUp(new AccountClient(), 'client_type');
-        $this->changeFieldInTableUp(new AccountIndividualCompany(), 'client_type');
         $this->changeFieldInTableUp(new ApplicantDocument(), 'applicant_type');
         $this->changeFieldInTableUp(new ApplicantIndividualCompany(), 'applicant_type');
         $this->changeFieldInTableUp(new ClientIpAddress(), 'client_type');
@@ -50,7 +48,6 @@ class ChangeEnumFieldsForApplicantIndividualAndApplicantCompanyAndMembersTables 
     public function down()
     {
         $this->changeFieldInTableDown(new AccountClient(), 'client_type');
-        $this->changeFieldInTableDown(new AccountIndividualCompany(), 'client_type');
         $this->changeFieldInTableDown(new ApplicantDocument(), 'applicant_type');
         $this->changeFieldInTableDown(new ApplicantIndividualCompany(), 'applicant_type');
         $this->changeFieldInTableDown(new ClientIpAddress(), 'client_type');

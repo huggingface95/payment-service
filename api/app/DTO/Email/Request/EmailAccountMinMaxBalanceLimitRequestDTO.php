@@ -36,10 +36,6 @@ class EmailAccountMinMaxBalanceLimitRequestDTO
     {
         $dto = new self();
 
-        //TODO delete after fix the morph clientable bug
-        /** @var Account $account */
-        $account = Account::find($account->id);
-
         $data = [
             'account_id' => $account->id,
             'account_currency' => $account->currencies->name,

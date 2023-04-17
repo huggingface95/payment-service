@@ -239,8 +239,8 @@ input InputAccount{
     project_id: ID
     "ID родительского аккаунта"
     parent_id: ID
-    "clientable"
-    clientableAttach: PivotTable
+    "ID Individual or Company"
+    client_id: ID
     "лимит максимального баланса"
     min_limit_balance: Decimal
     "лимит минимального баланса"
