@@ -6,7 +6,6 @@ use Ankurk91\Eloquent\BelongsToOne;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
-use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use App\Models\Scopes\TransferFeeAmountScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -89,7 +88,7 @@ class TransferIncoming extends BaseModel
 
     public function account(): BelongsTo
     {
-        return $this->belongsTo(Account::class, 'account_id')->withoutGlobalScope(AccountIndividualsCompaniesScope::class);
+        return $this->belongsTo(Account::class, 'account_id');
     }
 
     public function company(): BelongsTo

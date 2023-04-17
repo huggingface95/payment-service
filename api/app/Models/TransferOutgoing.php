@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
-use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use App\Models\Scopes\TransferFeeAmountScope;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -98,7 +97,7 @@ class TransferOutgoing extends BaseModel
 
     public function account(): BelongsTo
     {
-        return $this->belongsTo(Account::class, 'account_id')->withoutGlobalScope(AccountIndividualsCompaniesScope::class);
+        return $this->belongsTo(Account::class, 'account_id');
     }
 
     public function company(): BelongsTo

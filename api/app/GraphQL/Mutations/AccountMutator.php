@@ -4,12 +4,13 @@ namespace App\GraphQL\Mutations;
 
 use App\DTO\GraphQLResponse\AccountGenerateIbanResponse;
 use App\DTO\TransformerDTO;
+use App\Enums\AccountTypeEnum;
+use App\Enums\ApplicantTypeEnum;
 use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Account;
 use App\Models\AccountState;
-use App\Models\Currencies;
 use App\Models\GroupRole;
 use App\Models\Groups;
 use App\Services\EmailService;
@@ -44,12 +45,17 @@ class AccountMutator
                 $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
             }
 
+            if (isset($args['client_id'])) {
+                if (AccountTypeEnum::BUSINESS == $args['account_type']) {
+                    $args['client_type'] = ApplicantTypeEnum::COMPANY->toString();
+                } else {
+                    $args['client_type'] = ApplicantTypeEnum::INDIVIDUAL->toString();
+                }
+            }
+
             /** @var Account $account */
             $account = Account::query()->create($args);
 
-            if (isset($args['clientableAttach'])) {
-                $account->clientableAttach()->sync($args['clientableAttach']['sync']);
-            }
 
             $this->emailService->sendAccountStatusEmail($account);
 
@@ -93,9 +99,9 @@ class AccountMutator
     protected function setAccountType(int $groupId): ?string
     {
         if ($groupId == GroupRole::INDIVIDUAL) {
-            return Account::PRIVATE;
+            return AccountTypeEnum::PRIVATE->value;
         } elseif ($groupId == GroupRole::COMPANY) {
-            return Account::BUSINESS;
+            return AccountTypeEnum::BUSINESS->value;
         }
         return null;
     }

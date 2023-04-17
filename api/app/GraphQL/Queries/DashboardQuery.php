@@ -7,7 +7,6 @@ use App\Enums\OperationTypeEnum;
 use App\Models\Account;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
-use App\Models\Scopes\AccountIndividualsCompaniesScope;
 use App\Models\Ticket;
 use App\Models\TransferBetweenAccount;
 use App\Models\TransferBetweenUser;
@@ -27,7 +26,6 @@ class DashboardQuery
             'account_states.name as account_state_name', 'payment_provider.name as payment_provider_name',
             'payment_provider_id', 'account_state_id', DB::raw('count(account_state_id) as count'),
         ])
-            ->withoutGlobalScope(AccountIndividualsCompaniesScope::class)
             ->join('account_states', 'accounts.account_state_id', '=', 'account_states.id')
             ->join('payment_provider', 'accounts.payment_provider_id', '=', 'payment_provider.id')
             ->groupBy(['payment_provider.name', 'payment_provider_id', 'account_state_id', 'account_states.name']);
