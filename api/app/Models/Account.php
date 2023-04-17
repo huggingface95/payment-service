@@ -106,6 +106,7 @@ class Account extends BaseModel implements BaseModelInterface
         'total_transactions',
         'total_pending_transactions',
         'last_transaction_at',
+        'alias',
     ];
 
     protected static function booted()
@@ -120,6 +121,11 @@ class Account extends BaseModel implements BaseModelInterface
         return $this->newEloquentBuilder(
             $this->newBaseQueryBuilder()
         )->withGlobalScope(AccountIndividualsCompaniesScope::class, new AccountIndividualsCompaniesScope())->setModel($this);
+    }
+
+    public function getAliasAttribute(): bool
+    {
+        return !$this->isParent();
     }
 
     public function getClientAccountsAttribute(): array
