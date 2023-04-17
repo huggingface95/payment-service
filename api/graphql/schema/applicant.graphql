@@ -141,7 +141,7 @@ input QueryApplicantIndividualsFilterStatic @spread{
     id: ID @eq
     fullname: String @ilike
     email: String @ilike
-    phone: String @ilike
+    phone: String @eq
     company_id: ID @eq
     project_id: ID @eq
     kyc_level_id: ID @eq
