@@ -60,6 +60,8 @@ type Account {
     total_transactions: Int
     "Total pending transactions"
     total_pending_transactions: Int
+    "основной аккаунт или нет"
+    alias: Boolean!
 }
 
 type AccountClient {
