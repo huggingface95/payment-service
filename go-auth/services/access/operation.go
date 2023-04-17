@@ -20,14 +20,19 @@ func CheckOperation(user postgres.User, name string, referer string) bool {
 		permissions := permissionRepository.GetUserPermissions(user)
 
 		bindPermissions := intersect.Simple(operation.BindPermissions, permissions)
-		if len(bindPermissions) > 0 {
+
+		parentPermissions := intersect.Simple(operation.ParentPermissions, permissions)
+
+		if len(operation.BindPermissions) > 0 {
+			if len(bindPermissions) > 0 && len(operation.ParentPermissions) == 0 {
+				return true
+			} else if len(bindPermissions) > 0 && len(parentPermissions) > 0 {
+				return true
+			}
+		} else if len(parentPermissions) > 0 {
 			return true
 		}
 
-		parentPermissions := intersect.Simple(operation.ParentPermissions, permissions)
-		if len(parentPermissions) > 0 {
-			return true
-		}
 	}
 
 	return false
