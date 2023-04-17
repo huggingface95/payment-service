@@ -142,6 +142,8 @@ input QueryTransferIncomingsFilterStatic @spread {
     hasAccountFilterByAccountNumber: String @ilike
     hasFeeFilterByFee: String @ilike
     fee_amount: String @gte @lte
+    amount_debt: String @gte @lte
+    hasRecipientMixedNameOrFullname: Mixed @ilike
 }
 
 input QueryDownloadTransferIncomingsFilterStatic @spread {
