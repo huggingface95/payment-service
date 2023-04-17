@@ -59,7 +59,7 @@ extend type Mutation @guard {
         "ID платежного шаблона"
         commission_template_id: ID!
         "ID Региона"
-        region_id: ID!
+        region_id: ID
         "ID Компании"
         company_id: ID!
     ):CommissionPriceList   @create
