@@ -20,24 +20,38 @@ use Illuminate\Support\Collection;
 
 class CommissionService extends AbstractService
 {
-
     /**
      * @throws GraphqlException
      */
     public function makeFee(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
     {
+        $fee = $this->getAllCommissions($transfer, $transactionDTO);
+
+        $this->createFee($transfer, $fee['fee_amount'], FeeModeEnum::BASE->value)->createFee($transfer, $fee['fee_pp'], FeeModeEnum::PROVIDER->value);
+
+        if ($fee['amount_debt'] > 0) {
+            $transfer->amount_debt = $fee['amount_debt'];
+            $transfer->save();
+        }
+
+        return (float)$fee['amount_debt'];
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function getAllCommissions(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): array
+    {
         $feeAmount = $this->commissionCalculation($transfer, $transactionDTO);
         $feePPAmount = $this->commissionPPCalculation($transfer, $transactionDTO);
         $amountDebt = $this->getTransferAmountDebt($transfer, $feeAmount + $feePPAmount);
 
-        $this->createFee($transfer, $feeAmount, FeeModeEnum::BASE->value)->createFee($transfer, $feePPAmount, FeeModeEnum::PROVIDER->value);
-
-        if ($amountDebt > 0) {
-            $transfer->amount_debt = $amountDebt;
-            $transfer->save();
-        }
-
-        return (float)$amountDebt;
+        return [
+            'fee_amount' => $feeAmount,
+            'fee_pp' => $feePPAmount,
+            'fee_total' => $feeAmount + $feePPAmount,
+            'amount_debt' => $amountDebt,
+        ];
     }
 
     /**
