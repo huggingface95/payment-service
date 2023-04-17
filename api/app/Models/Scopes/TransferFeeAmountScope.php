@@ -14,9 +14,9 @@ class TransferFeeAmountScope implements Scope
         $table = $builder->getModel()->getTable();
 
         return $builder->fromSub(function ($q) use ($table) {
-            return $q->from($table)->select(["{$table}.*", DB::raw("(SELECT SUM(COALESCE(fees.fee, 0))::NUMERIC(15,5) FROM fees
-                                WHERE fees.transfer_id = {$table}.id
-                                GROUP BY fees.transfer_id) as fee_amount")]);
+            return $q->from($table)->selectRaw("{$table}.*, COALESCE(SUM(fees.fee), 0)::NUMERIC(15,5) as fee_amount")
+                ->leftJoin('fees', 'fees.transfer_id', '=', "{$table}.id")
+                ->groupBy("{$table}.id");
         }, $table);
     }
 }
