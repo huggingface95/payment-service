@@ -3,8 +3,11 @@
 namespace App\GraphQL\Handlers;
 
 use GraphQL\Error\Error;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -72,6 +75,7 @@ class FilterConditionsHandler
 
         if (isset($whereConditions['column']) && preg_match('/^has(.*)/', $whereConditions['column'], $hasCondition)) {
             $condition = null;
+            $isMorph = false;
             if (preg_match('/^(.*?)FilterBy(.*)/', $hasCondition[1], $hasConditionArguments)) {
                 $relation = $hasConditionArguments[1];
                 $condition = [
@@ -81,8 +85,17 @@ class FilterConditionsHandler
                 ];
             } elseif (preg_match('/^(.*?)Mixed(.*)/', $hasCondition[1], $hasConditionArguments)) {
                 $relation = $hasConditionArguments[1];
-                $relationshipTableName = $model->$relation()->getRelated()->getTable();
-                $condition = $this->getMixedColumns($hasConditionArguments[2], $whereConditions, $relationshipTableName);
+                $relationship = $model->$relation();
+                if ($relationship instanceof MorphTo) {
+                    $isMorph = true;
+                    foreach ($model->newModelQuery()->distinct()->pluck($relationship->getMorphType())->filter()->all() as $morph) {
+                        $morph = Relation::getMorphedModel($morph) ?? $morph;
+                        $condition[$morph] = $this->getMixedColumns($hasConditionArguments[2], $whereConditions, (new $morph())->getTable());
+                    }
+                } else {
+                    $relationshipTableName = $relationship->getRelated()->getTable();
+                    $condition = $this->getMixedColumns($hasConditionArguments[2], $whereConditions, $relationshipTableName);
+                }
             } else {
                 $relation = $hasCondition[1];
             }
@@ -92,10 +105,9 @@ class FilterConditionsHandler
                 $relation,
                 '>=',
                 $whereConditions['amount'] ?? 1,
-                $condition
+                $condition,
+                $isMorph
             );
-
-            // @phpstan-ignore-next-line Simply wrong, maybe from Larastan?
             $builder->addNestedWhereQuery($nestedBuilder, $boolean);
         }
 
@@ -127,28 +139,51 @@ class FilterConditionsHandler
         string $relation,
         string $operator,
         int    $amount,
-        ?array $condition = null
+        ?array $condition = null,
+        bool   $isMorph = false
     ): QueryBuilder
     {
         return $model
             ->newQuery()
-            ->whereHas(
-                $relation,
-                $condition
-                    ? function ($builder) use ($condition): void {
-                    $this->__invoke(
-                        $builder,
-                        $this->prefixConditionWithTableName(
-                            $condition,
+            ->when($isMorph == false, function ($b) use ($relation, $condition, $operator, $amount) {
+                return $b->whereHas(
+                    $relation,
+                    $condition
+                        ? function ($builder) use ($condition): void {
+                        $this->__invoke(
+                            $builder,
+                            $this->prefixConditionWithTableName(
+                                $condition,
+                                $builder->getModel()
+                            ),
                             $builder->getModel()
-                        ),
-                        $builder->getModel()
-                    );
-                }
-                    : null,
-                $operator,
-                $amount
-            )
+                        );
+                    }
+                        : null,
+                    $operator,
+                    $amount
+                );
+            })
+            ->when($isMorph, function (Builder $b) use ($relation, $condition, $operator, $amount) {
+                return $b->whereHasMorph(
+                    $relation,
+                    array_keys($condition),
+                    $condition
+                        ? function ($builder) use ($condition): void {
+                        $this->__invoke(
+                            $builder,
+                            $this->prefixConditionWithTableName(
+                                $condition[get_class($builder->getModel())],
+                                $builder->getModel()
+                            ),
+                            $builder->getModel()
+                        );
+                    }
+                        : null,
+                    $operator,
+                    $amount
+                );
+            })
             ->getQuery();
     }
 
