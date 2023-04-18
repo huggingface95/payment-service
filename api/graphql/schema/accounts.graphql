@@ -159,7 +159,7 @@ input QueryAccountListFilterStatic @spread{
     hasPaymentSystemMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
     MixedAccountNumberOrAccountName: String @ilike
-    currency_id: ID @eq
+    currency_id: ID @eq @neq
     hasGroupRoleMixedIdOrName: Mixed @eq
     group_type_id: ID @eq
     hasMemberMixedIdOrFullname: Mixed @eq
