@@ -29,7 +29,7 @@ func sendPasswordRecoveryLinkEmailByData(e *cache.ResetPasswordCache) {
 	if template != nil {
 		content := helpers.ReplaceData(template.Content,
 			"{client_name}", e.FullName,
-			"{password_recovery_url}", convertPasswordRecoveryLink("confirmation/password", e.PasswordRecoveryUrl),
+			"{password_recovery_url}", convertPasswordRecoveryLink("auth/change-password", e.PasswordRecoveryUrl),
 		)
 		err := pkg.Mail(template.Subject, content, e.Email)
 		if err != nil {
