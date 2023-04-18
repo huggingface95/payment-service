@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\CalculateRevenueCommissionCommand;
+use App\Console\Commands\CalculateRevenueCommissionPeriodCommand;
 use App\Console\Commands\DropTestTables;
 use App\Console\Commands\ExecuteFeeScheduledTransferCommand;
 use App\Console\Commands\ExecuteWaitingTransferCommand;
@@ -23,6 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         CalculateRevenueCommissionCommand::class,
+        CalculateRevenueCommissionPeriodCommand::class,
         ExecuteFeeScheduledTransferCommand::class,
         ExecuteWaitingTransferCommand::class,
         NotificationsCommand::class,
