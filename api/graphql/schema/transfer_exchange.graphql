@@ -8,6 +8,7 @@ type TransferExchange {
     status_id: ID!
     transfer_incoming: TransferIncoming @belongsTo (relation: "transferIncoming")
     transfer_outgoing: TransferOutgoing @belongsTo (relation: "transferOutgoing")
+    exchange_rate: Decimal!
     created_at: DateTime!
     updated_at: DateTime!
 }
