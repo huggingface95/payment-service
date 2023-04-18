@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Auth\Authorizable;
@@ -372,6 +373,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function kycLevel(): BelongsTo
     {
         return $this->belongsTo(ApplicantKycLevel::class, 'kyc_level_id');
+    }
+
+    public function payment(): HasOne
+    {
+        return $this->hasOne(Payments::class, 'owner_id');
     }
 
     public function scopeGroupSort($query, $sort)

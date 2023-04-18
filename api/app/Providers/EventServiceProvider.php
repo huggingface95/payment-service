@@ -29,8 +29,10 @@ use App\Listeners\Log\LogApplicantIndividualSentEmailVerificationListener;
 use App\Listeners\PaymentCreatedListener;
 use App\Listeners\PaymentUpdatedListener;
 use App\Models\Account;
+use App\Models\TransferOutgoing;
 use App\Observers\AccountObserver;
 use App\Observers\BaseObserver;
+use App\Observers\TransferOutgoingObserver;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -85,6 +87,7 @@ class EventServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Account::observe(AccountObserver::class);
+        TransferOutgoing::observe(TransferOutgoingObserver::class);
 
         foreach (getAllModels() as $model) {
             $model::observe(BaseObserver::class);

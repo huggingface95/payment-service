@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
+use App\DTO\Transfer\CreateTransferDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
@@ -247,39 +248,13 @@ class TransferOutgoingService extends AbstractService
         });
     }
 
-    /**
-     * @throws GraphqlException
-     */
     public function createTransfer(array $args, int $operationType): Builder|Model
     {
-        $date = Carbon::now();
-
-        $args['user_type'] = class_basename(Members::class);
-        $args['amount_debt'] = $args['amount'];
-        $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
-        $args['operation_type_id'] = $operationType;
-        $args['payment_bank_id'] = 2;
-        $args['payment_number'] = rand();
-        $args['sender_id'] = 1;
-        $args['sender_type'] = class_basename(ApplicantCompany::class);
-        $args['system_message'] = 'test';
-        $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['reason'] = 'test';
-        $args['recipient_country_id'] = 1;
-        $args['respondent_fees_id'] = 2;
-        $args['created_at'] = $date->format('Y-m-d H:i:s');
-
-        if (isset($args['execution_at'])) {
-            if (Carbon::parse($args['execution_at'])->lt($date)) {
-                throw new GraphqlException('execution_at cannot be earlier than current date and time', 'use');
-            }
-        } else {
-            $args['execution_at'] = $args['created_at'];
-        }
-
-        return DB::transaction(function () use ($args) {
+        /** @var CreateTransferDTO $createTransferDto */
+        $createTransferDto = TransformerDTO::transform(CreateTransferDTO::class, $args, $operationType);
+        return DB::transaction(function () use ($createTransferDto) {
             /** @var TransferOutgoing $transfer */
-            $transfer = $this->transferRepository->createWithSwift($args);
+            $transfer = $this->transferRepository->createWithSwift((array) $createTransferDto);
 
             $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
             $this->commissionService->makeFee($transfer, $transactionDTO);
