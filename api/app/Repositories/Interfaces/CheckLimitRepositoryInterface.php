@@ -16,7 +16,7 @@ interface CheckLimitRepositoryInterface
 
     public function createReachedLimit(Account $account, $limit): void;
 
-    public function getAllPaymentProcessedAmount(Payments $payment): Collection;
+    public function getAllTransferOutgoingProcessedAmount(TransferOutgoing $transfer, string $clientType): Collection;
 
-    public function getAllTransferOutgoingProcessedAmount(TransferOutgoing $transfer): Collection;
+    public function getAllTransferIncomingProcessedAmount(TransferOutgoing $transfer, string $clientType): Collection;
 }

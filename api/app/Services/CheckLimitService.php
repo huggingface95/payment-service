@@ -15,7 +15,6 @@ use App\Models\CommissionTemplateLimit;
 use App\Models\CommissionTemplateLimitPeriod;
 use App\Models\CommissionTemplateLimitTransferDirection;
 use App\Models\CommissionTemplateLimitType;
-use App\Models\Payments;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\CheckLimitRepositoryInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -181,7 +180,7 @@ class CheckLimitService
     /**
      * @throws GraphqlException
      */
-    public function checkApplicantBankingAccessUsedLimits(TransferOutgoing|Payments $transfer): void
+    public function checkApplicantBankingAccessUsedLimits(TransferOutgoing $transfer): void
     {
         /** @var ApplicantBankingAccess $applicantBankingAccess */
         $applicantBankingAccess = ApplicantBankingAccess::query()->where('applicant_individual_id', $transfer->requested_by_id)

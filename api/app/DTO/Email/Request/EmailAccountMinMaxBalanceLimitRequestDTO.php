@@ -39,20 +39,15 @@ class EmailAccountMinMaxBalanceLimitRequestDTO
         $data = [
             'account_id' => $account->id,
             'account_currency' => $account->currencies->name,
-            //TODO change after fix the morph clientable bug
-            //'client_name' => $account->clientable->fullname,
+            'client_name' => $account->clientable->fullname,
         ];
 
         if ($type == self::INDIVIDUAL) {
-            //TODO change after fix the morph clientable bug
-            //$data['customer_support_url'] = $account->clientable->company->backoffice_support_url;
-            $data['customer_support_url'] = $account->company->backoffice_support_url;
+            $data['customer_support_url'] = $account->clientable->company->backoffice_support_url;
             $templateName = $isMinLimit ? self::MIN_INDIVIDUAL_LIMIT_TEMPLATE : self::MAX_INDIVIDUAL_LIMIT_TEMPLATE;
-            //TODO change after fix the morph clientable bug
-            //$email = $account->clientable->email;
-            $email = $account->owner->email;
+            $email = $account->clientable->email;
         } else {
-            $data['customer_support_url'] = $account->member;
+            $data['customer_support_url'] = $account->member->company->backoffice_support_url;
             $data['name'] = $account->member->fullname;
             $templateName = $isMinLimit ? self::MIN_MEMBER_LIMIT_TEMPLATE : self::MAX_MEMBER_LIMIT_TEMPLATE;
             $email = $account->member->email;

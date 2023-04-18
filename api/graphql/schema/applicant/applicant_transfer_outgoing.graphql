@@ -1,0 +1,80 @@
+extend type Mutation @guard {
+    """
+    Создать исходящий перевод
+    """
+    createApplicantTransferOutgoing(
+        "ID компании"
+        company_id: ID!
+        "ID группы"
+        group_id: ID!
+        "ID типа группы"
+        group_type_id: ID!
+        "ID проекта"
+        project_id: ID!
+        "Сумма"
+        amount: Decimal!
+        "ID валюты"
+        currency_id: ID!
+        "ID аккаунта"
+        account_id: ID!
+        "ID платежного провайдера"
+        payment_provider_id: ID!
+        "ID платежной системы"
+        payment_system_id: ID!
+        "ID страны банка получателя"
+        recipient_bank_country_id: ID!
+        requested_by_id: ID!
+        price_list_id: ID!
+        "ID коммиссии"
+        price_list_fee_id: ID!
+        "ID срочности операции"
+        urgency_id: ID!
+        "Исполнить в"
+        execution_at: DateTimeUtc
+        "Номер счета или IBAN получателя"
+        recipient_account: String
+        "Имя банка получателя"
+        recipient_bank_name: String
+        "Адрес банка получателя"
+        recipient_bank_address: String
+        "SWIFT банка получателя"
+        recipient_bank_swift: String
+        "Имя получателя"
+        recipient_name: String
+        "Город получателя"
+        recipient_city: String
+        "Адрес получателя"
+        recipient_address: String
+        "Штат получателя"
+        recipient_state: String
+        "Индекс получателя"
+        recipient_zip: String
+        "Сообщение банка"
+        bank_message: String
+        "ID файлов"
+        file_id: [ID]
+        "SWIFT field 56A (Intermediary Bank)"
+        transfer_swift: TransferSwiftInput
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@create")
+
+    """
+    Редактировать исходящий перевод
+    """
+    updateApplicantTransferOutgoing(
+        "ID"
+        id: ID!
+        "Статус"
+        status_id: Int!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@update")
+
+    """
+    Подписать исходящий перевод
+    """
+    signApplicantTransferOutgoing(
+        "ID"
+        id: ID!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@sign")
+}

@@ -50,6 +50,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property Collection groupRoles
  * @property GroupRole $groupRole
  * @property EmailSmtp $smtp
+ * @property Company $company
  * @property ?array $active_session
  * @property bool is_super_admin
  * @property Role role
