@@ -122,9 +122,9 @@ func ChangePassword(c *gin.Context) {
 			return
 		}
 		user.SetNeedChangePassword(false)
-		res := userRepository.SaveUser(user)
+		res := userRepository.UpdatePassword(user)
 		if res.Error == nil {
-			cache.Caching.ConfirmationEmailLinks.Del(r.PasswordResetToken)
+			cache.Caching.ResetPassword.Del(r.PasswordResetToken)
 
 			if data.Type == constants.Individual {
 				deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(c)

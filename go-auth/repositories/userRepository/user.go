@@ -97,3 +97,23 @@ func SaveUser(user postgres.User) *gorm.DB {
 
 	return database.PostgresInstance.Omit(user.MergeOmit([]string{"Company"})...).Save(model)
 }
+
+func UpdatePassword(user postgres.User) *gorm.DB {
+	var model postgres.User
+
+	if user.StructName() == constants.StructMember {
+		model = user.(*postgres.Member)
+	} else {
+		model = user.(*postgres.Individual)
+	}
+
+	return database.PostgresInstance.Omit(user.MergeOmit([]string{
+		"ID", "FirstName", "LastName", "MiddleName", "Email", "Url", "Phone", "CountryId", "CitizenshipCountryId", "State", "City",
+		"Address", "Zip", "Nationality", "BirthCountryId", "BirthState", "BirthCity", "BirthAt", "Sex",
+		"ProfileAdditionalFields", "PersonalAdditionalFields", "ContactsAdditionalFields", "ApplicantStatusId",
+		"IsVerificationPhone", "FullName", "CompanyId", "MemberGroupRoleId", "ApplicantStateReasonId", "ApplicantRiskLevelId",
+		"AccountManagerMemberId", "LanguageId", "IsVerificationEmail", "Google2FaSecret", "IsActive", "TwoFactorAuthSettingId",
+		"CreatedAt", "UpdatedAt", "BackupCodes", "ClientIpAddresses", "Company",
+	})...).Save(model)
+
+}
