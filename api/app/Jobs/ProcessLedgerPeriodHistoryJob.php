@@ -2,12 +2,11 @@
 
 namespace App\Jobs;
 
-use App\Enums\PeriodEnum;
 use App\Models\Account;
 use App\Models\CompanyLedgerSettings;
 use App\Services\CompanyRevenueAccountCommissionService;
 
-class ProcessLedgerDayHistoryJob extends Job
+class ProcessLedgerPeriodHistoryJob extends Job
 {
     /**
      * Create a new job instance.
@@ -16,6 +15,7 @@ class ProcessLedgerDayHistoryJob extends Job
      */
     public function __construct(
         protected CompanyLedgerSettings $ledgerSettings,
+        protected string $period,
     ) {
         $this->onQueue('revenue_commission');
     }
@@ -31,7 +31,7 @@ class ProcessLedgerDayHistoryJob extends Job
         $companyAccounts = Account::where('company_id', $this->ledgerSettings->company_id)->get();
 
         foreach ($companyAccounts as $account) {
-            $service->calculateRevenueCommissionByPeriod($account, $this->ledgerSettings, PeriodEnum::DAY->value);
+            $service->calculateRevenueCommissionByPeriod($account, $this->ledgerSettings, $this->period);
         }
     }
 }
