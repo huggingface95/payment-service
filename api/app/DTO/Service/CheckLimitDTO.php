@@ -20,7 +20,7 @@ class CheckLimitDTO
         $dto->object = $data;
         $dto->account = Account::query()->with(['clientable', 'limits', 'commissionTemplate.commissionTemplateLimits'])->where('id', $data->account_id)->first();
         $dto->amount = $amount;
-        $dto->clientType = Auth::guard('api')->check() ? ClientTypeEnum::MEMBER->name : ClientTypeEnum::APPLICANT->name;
+        $dto->clientType = Auth::guard('api')->check() ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString();
 
         return $dto;
     }

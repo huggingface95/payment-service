@@ -57,17 +57,16 @@ class CheckLimitRepository implements CheckLimitRepositoryInterface
         return TransferOutgoing::query()
             ->where('requested_by_id', $transfer->requested_by_id)
             ->where('user_type', class_basename($clientType == ClientTypeEnum::MEMBER->toString() ? Members::class : ApplicantIndividual::class))
-            ->whereIn('status_id', [PaymentStatusEnum::PENDING->toString(), PaymentStatusEnum::SENT->value])
+            ->whereIn('status_id', [PaymentStatusEnum::PENDING->value, PaymentStatusEnum::SENT->value])
             ->get()
             ->push($transfer);
     }
 
     public function getAllTransferIncomingProcessedAmount(TransferOutgoing $transfer, string $clientType): Collection
     {
-        return TransferIncoming::query()
-            ->where('requested_by_id', $transfer->requested_by_id)
-            ->where('user_type', class_basename($clientType == ClientTypeEnum::MEMBER->toString() ? Members::class : ApplicantIndividual::class))
-            ->whereIn('status_id', [PaymentStatusEnum::PENDING->toString(), PaymentStatusEnum::SENT->toString()])
+        return $clientType == ClientTypeEnum::MEMBER->toString() ? collect() : TransferIncoming::query()
+            ->where('recipient_id', $transfer->requested_by_id)
+            ->whereIn('status_id', [PaymentStatusEnum::PENDING->value, PaymentStatusEnum::SENT->value])
             ->get();
     }
 

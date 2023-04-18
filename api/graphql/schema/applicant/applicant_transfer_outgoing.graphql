@@ -56,7 +56,7 @@ extend type Mutation @guard {
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: TransferSwiftInput
     ): TransferOutgoing
-        @field(resolver: "TransferOutgoingMutator@create")
+        @field(resolver: "ApplicantTransferOutgoingMutator@create")
 
     """
     Редактировать исходящий перевод
@@ -67,7 +67,7 @@ extend type Mutation @guard {
         "Статус"
         status_id: Int!
     ): TransferOutgoing
-        @field(resolver: "TransferOutgoingMutator@update")
+        @field(resolver: "ApplicantTransferOutgoingMutator@update")
 
     """
     Подписать исходящий перевод
@@ -76,5 +76,5 @@ extend type Mutation @guard {
         "ID"
         id: ID!
     ): TransferOutgoing
-        @field(resolver: "TransferOutgoingMutator@sign")
+        @field(resolver: "ApplicantTransferOutgoingMutator@sign")
 }
