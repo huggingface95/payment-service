@@ -268,6 +268,7 @@ class DashboardQueryTest extends TestCase
         ])
             ->join('payment_status', 'transfer_incomings.status_id', '=', 'payment_status.id')
             ->where('operation_type_id', OperationTypeEnum::INCOMING_WIRE_TRANSFER->value)
+            ->where('payment_bank_id', 1)
             ->groupBy(['status_name']);
 
         $transferOutgoingStatistic = TransferOutgoing::select([
@@ -276,6 +277,7 @@ class DashboardQueryTest extends TestCase
         ])
             ->join('payment_status', 'transfer_outgoings.status_id', '=', 'payment_status.id')
             ->where('operation_type_id', OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value)
+            ->where('payment_bank_id', 1)
             ->groupBy(['status_name']);
 
         $transferBetweenUserStatistic = TransferBetweenUser::select([
