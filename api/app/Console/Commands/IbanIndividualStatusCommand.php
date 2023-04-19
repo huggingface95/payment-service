@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\AccountState;
+use App\Models\ApplicantIndividual;
 use App\Services\EmailService;
 use Illuminate\Console\Command;
 
@@ -41,7 +42,7 @@ class IbanIndividualStatusCommand extends Command
     {
         $individualIbanAccountApprovals = Account::query()
             ->where('account_state_id', AccountState::WAITING_FOR_APPROVAL)
-            ->whereHas('applicantIndividual')
+            ->whereHasMorph('clientable', [ApplicantIndividual::class])
             ->get();
 
         /** @var Account $account */
