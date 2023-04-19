@@ -187,4 +187,17 @@ class ApplicantMutator extends BaseMutator
 
         return $applicant;
     }
+
+
+    /**
+     * @throws \Throwable
+     */
+    public function setPassword($_, array $args): ApplicantIndividual
+    {
+        /** @var ApplicantIndividual $individual */
+        $individual = ApplicantIndividual::query()->findOrFail($args['id']);
+        $individual->updateOrFail(['password_hash'=>Hash::make($args['password']), 'password_salt'=>Hash::make($args['password_confirmation'])]);
+
+        return $individual;
+    }
 }
