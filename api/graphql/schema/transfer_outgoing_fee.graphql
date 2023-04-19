@@ -23,12 +23,6 @@ extend type Mutation @guard {
         payment_provider_id: ID!
         "ID платежной системы"
         payment_system_id: ID!
-        "ID банка получателя"
-        recipient_bank_country_id: ID!
-        requested_by_id: ID!
-        price_list_id: ID!
-        "ID коммиссии"
-        price_list_fee_id: ID!
         "ID срочности операции"
         urgency_id: ID!
         "Исполнить в"
@@ -76,7 +70,7 @@ extend type Mutation @guard {
     """
     Отменить исходящий FEE перевод
     """
-    cancelTransferOutgoingFee(id: ID! @eq): TransferOutgoing 
+    cancelTransferOutgoingFee(id: ID! @eq): TransferOutgoing
         @field(resolver: "TransferOutgoingFeeMutator@cancel")
 
     """
