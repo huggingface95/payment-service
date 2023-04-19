@@ -166,7 +166,7 @@ input QueryAccountListFilterStatic @spread{
     is_primary: Boolean @eq
     hasCommissionTemplateMixedIdOrFullname: Mixed @eq
     account_state_id: ID @eq
-    hasClientableMixedIdOrFullname: Mixed @eq
+    hasClientableMixedIdOrFullnameOrName: Mixed @eq
     payment_provider_id: ID @eq
     iban_provider_id: ID @eq
     current_balance: Float @eq

@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class CompanyLedgerDayHistory extends BaseModel
+class CompanyLedgerWeekHistory extends BaseModel
 {
     public $timestamps = false;
-
+    
     protected $fillable = [
         'account_id',
         'revenue_account_id',

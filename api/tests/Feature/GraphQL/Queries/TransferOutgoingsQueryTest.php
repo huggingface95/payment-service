@@ -2470,7 +2470,7 @@ class TransferOutgoingsQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $transferOutgoing->id,
-                    'sender' => (string)$transferOutgoing->sender_type,
+                    'sender' => (string)$transferOutgoing->sender->fullname ?? $transferOutgoing->sender->name,
                 ]
             ],
             [

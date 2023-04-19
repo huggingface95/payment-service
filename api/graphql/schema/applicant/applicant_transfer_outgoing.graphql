@@ -1,4 +1,4 @@
-extend type Mutation @guard {
+extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQL\\Mutations\\Applicant") {
     """
     Создать исходящий перевод
     """
