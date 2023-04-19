@@ -184,6 +184,10 @@ class TransferExchangeService extends AbstractService
         $this->validateUpdateTransferStatus($transfers, $args);
 
         switch ($args['status_id']) {
+            case PaymentStatusEnum::CANCELED->value:
+                $this->updateTransferStatusToCanceled($transfers);
+
+                break;
             case PaymentStatusEnum::PENDING->value:
                 $this->updateTransferStatusToPending($transfers);
 
@@ -193,6 +197,23 @@ class TransferExchangeService extends AbstractService
 
                 break;
         }
+    }
+
+    private function updateTransferStatusToCanceled(array $transfers): void
+    {
+        DB::transaction(function () use ($transfers) {
+            $this->transferOutgoingRepository->update($transfers['outgoing'], [
+                'status_id' => PaymentStatusEnum::CANCELED->value,
+            ]);
+
+            $this->transferIncomingRepository->update($transfers['incoming'], [
+                'status_id' => PaymentStatusEnum::CANCELED->value,
+            ]);
+            
+            $this->transferExchangeRepository->update($transfers['exchange'], [
+                'status_id' => PaymentStatusEnum::CANCELED->value,
+            ]);
+        });
     }
 
     public function updateTransferStatusToPending(array $transfers): void
@@ -262,6 +283,10 @@ class TransferExchangeService extends AbstractService
                         throw new GraphqlException('This status is not allowed for transfer which has Pending status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
         
+                    break;
+                case PaymentStatusEnum::CANCELED->value:
+                    throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+
                     break;
                 case PaymentStatusEnum::EXECUTED->value:
                     throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
