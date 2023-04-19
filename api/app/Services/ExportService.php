@@ -3,10 +3,14 @@
 namespace App\Services;
 
 use App\Exports\Account\AccountsExport;
+use App\Exports\Applicant\ApplicantCompaniesExport;
+use App\Exports\Applicant\ApplicantIndividualsExport;
 use App\Exports\Transfer\TransferDetailsExport;
 use App\Exports\Transfer\TransferIncomingsExport;
 use App\Exports\Transfer\TransferOutgoingsExport;
 use App\Http\Resources\Account\AccountsListResource;
+use App\Http\Resources\Applicant\ApplicantCompaniesListResource;
+use App\Http\Resources\Applicant\ApplicantIndividualsListResource;
 use App\Http\Resources\Transfer\TransferOutgoingDetailsResource;
 use App\Http\Resources\Transfer\TransfersListResource;
 use App\Models\TransferIncoming;
@@ -50,6 +54,20 @@ class ExportService extends AbstractService
         $accounts = AccountsListResource::collection($data)->sortByDesc('created_at')->jsonSerialize();
 
         return new AccountsExport(['accounts' => $accounts]);
+    }
+
+    private function exportApplicantIndividual(Collection $data): ApplicantIndividualsExport
+    {
+        $applicants = ApplicantIndividualsListResource::collection($data)->sortByDesc('created_at')->jsonSerialize();
+
+        return new ApplicantIndividualsExport(['applicants' => $applicants]);
+    }
+
+    private function exportApplicantCompany(Collection $data): ApplicantCompaniesExport
+    {
+        $companies = ApplicantCompaniesListResource::collection($data)->sortByDesc('created_at')->jsonSerialize();
+
+        return new ApplicantCompaniesExport(['companies' => $companies]);
     }
 
     private function exportTransferIncoming( $data): TransferIncomingsExport

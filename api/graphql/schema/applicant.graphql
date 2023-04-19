@@ -119,6 +119,7 @@ extend type Query @guard {
     Получить пользователя  по ID
     """
     applicantIndividual(id: ID @eq): ApplicantIndividual @find
+
     """
     Получить список частных пользователей
     orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email
@@ -127,7 +128,9 @@ extend type Query @guard {
     applicantIndividuals(
         filter: _ @filterConditions(static: QueryApplicantIndividualsFilterStatic),
         group: Int @scope(name:"GetGroup"),
-        created_at: DateTimeRange @whereBetween, group: Sort @scope(name:"GroupSort"), company: Sort @scope(name:"CompanySort"),
+        created_at: DateTimeRange @whereBetween, 
+        group: Sort @scope(name:"GroupSort"), 
+        company: Sort @scope(name:"CompanySort"),
         orderBy: _ @orderBy(columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"])
     ): [ApplicantIndividual!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
 
@@ -135,9 +138,36 @@ extend type Query @guard {
     owners(
         orderBy: _ @orderBy(columns: ["id","email","created_at","fullname"])
     ): [ApplicantIndividual!]!  @field(resolver:"ApplicantIndividualQuery@owners") @orderBy(column: "id", direction: ASC)
+
+    """
+    Скачать список частных пользователей
+    """
+    downloadApplicantIndividualsList(
+        type: ExportFileType!
+        filter: _ @filterConditions(static: QueryDownloadApplicantIndividualsListFilterStatic)
+        created_at: DateTimeRange @whereBetween
+    ): RawFile
+        @downloadFileWithConditions(model: "ApplicantIndividual")
 }
 
 input QueryApplicantIndividualsFilterStatic @spread{
+    id: ID @eq
+    fullname: String @ilike
+    email: String @ilike
+    phone: String @eq
+    company_id: ID @eq
+    project_id: ID @eq
+    kyc_level_id: ID @eq
+    hasRiskLevelFilterById: ID @eq
+    hasStateReasonFilterById: ID @eq
+    hasStatusFilterById: ID @eq
+    hasGroupRoleMixedIdOrName: Mixed @eq
+    hasModulesFilterById: ID @eq
+    hasAccountFilterByAccountNumber: String @ilike
+    hasAccountFilterByPaymentBankId: ID @eq
+}
+
+input QueryDownloadApplicantIndividualsListFilterStatic @spread{
     id: ID @eq
     fullname: String @ilike
     email: String @ilike

@@ -155,6 +155,16 @@ extend type Query @guard{
         applicant_company_id: ID! @eq,
     ): [ApplicantIndividualCompany!]!
     @field(resolver: "MatchedUsersQuery@getApplicantIndividuals")
+
+    """
+    Скачать список applicant companies
+    """
+    downloadApplicantCompaniesList(
+        type: ExportFileType!
+        filter: _ @filterConditions(static: QueryDownloadApplicantCompaniesListFilterStatic)
+        created_at: DateTimeRange @whereBetween
+    ): RawFile
+        @downloadFileWithConditions(model: "ApplicantCompany")
 }
 
 input QueryApplicantCompaniesFilterStatic @spread{
@@ -178,6 +188,25 @@ input QueryApplicantCompaniesFilterStatic @spread{
 
 input QueryGetMatchedUsersFilterStatic @spread {
     applicant_type: ApplicantType @eq
+}
+
+input QueryDownloadApplicantCompaniesListFilterStatic @spread{
+    id: ID @eq
+    company_id: ID @eq
+    project_id: ID @eq
+    account_manager_member_id: ID @eq
+    hasStateReasonMixedIdOrName: Mixed @eq
+    hasGroupRoleMixedIdOrName: Mixed @eq
+    hasRiskLevelMixedIdOrName: Mixed @eq
+    hasStatusMixedIdOrName: Mixed @eq
+    hasBusinessTypeMixedIdOrName: Mixed @eq
+    hasOwnerMixedIdOrFullname: Mixed @eq
+    hasKycLevelMixedIdOrName: Mixed @eq
+    hasStatusFilterById: ID @eq
+    hasModulesFilterById: ID @eq
+    name: String @eq @ilike
+    url: String @ilike
+    email: String @ilike
 }
 
 extend type Mutation @guard {
