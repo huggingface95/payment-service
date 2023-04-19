@@ -167,7 +167,7 @@ class FilterConditionsHandler
             ->when($isMorph, function (Builder $b) use ($relation, $condition, $operator, $amount) {
                 return $b->whereHasMorph(
                     $relation,
-                    array_keys($condition),
+                    is_array($condition) ? array_keys($condition) : Relation::morphMap(),
                     $condition
                         ? function ($builder) use ($condition): void {
                         $this->__invoke(
