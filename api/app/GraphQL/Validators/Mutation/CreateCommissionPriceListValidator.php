@@ -20,6 +20,7 @@ final class CreateCommissionPriceListValidator extends Validator
             'payment_system_id' => ['required', new NotEmptyString],
             'commission_template_id' => ['required', new NotEmptyString],
             'company_id' => ['required', new NotEmptyString],
+            'region_id' => ['required', new NotEmptyString],
         ];
     }
 }
