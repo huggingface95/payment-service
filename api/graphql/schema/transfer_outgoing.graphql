@@ -58,7 +58,7 @@ type TransferOutgoing {
     "Страна банка получателя"
     recipient_bank_country: Country @belongsTo(relation: "recipientBankCountry")
     "Имя получателя"
-    recipient_name: String!
+    recipient_name: String
     "Страна получателя"
     recipient_country: Country @belongsTo(relation: "recipientCountry")
     "Город получателя"
@@ -165,6 +165,7 @@ input QueryTransferOutgoingsFilterStatic @spread {
     hasSenderMixedNameOrFullname: Mixed @ilike
     hasFeeFilterByFee: String @ilike
     fee_amount: String @gte @lte
+    hasClientableMixedIdOrFullname: Mixed @ilike
 }
 
 input QueryDownloadTransferOutgoingsFilterStatic @spread {
