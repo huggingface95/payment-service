@@ -103,6 +103,10 @@ class CommissionService extends AbstractService
         switch ($transfer->operation_type_id) {
             case OperationTypeEnum::EXCHANGE->value:
                 if ($transfer instanceof TransferOutgoing) {
+                    if ($listFee instanceof PriceListPPFeeCurrency) {
+                        return false;
+                    }
+
                     $dstCurrencies = $listFee->feeDestinationCurrency;
                     if ($dstCurrencies->count() > 0) {
                         foreach ($dstCurrencies as $currency) {

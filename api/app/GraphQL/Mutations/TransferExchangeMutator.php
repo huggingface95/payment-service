@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Exceptions\GraphqlException;
 use App\Models\TransferExchange;
 use App\Repositories\Interfaces\TransferExchangeRepositoryInterface;
 use App\Services\TransferExchangeService;
@@ -14,6 +15,27 @@ class TransferExchangeMutator extends BaseMutator
         protected TransferExchangeService $transferService,
         protected TransferExchangeRepositoryInterface $transferRepository
     ) {
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function cancel($root, array $args): TransferExchange
+    {
+        $transfer = $this->transferRepository->findById($args['id']);
+        if (!$transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', 404);
+        }
+
+        $this->transferService->updateTransferStatus([
+            'exchange' => $transfer,
+            'incoming' => $transfer->transferIncoming,
+            'outgoing' => $transfer->transferOutgoing,
+        ], [
+            'status_id' => PaymentStatusEnum::CANCELED->value,
+        ]);
+
+        return $transfer;
     }
 
     public function create($_, array $args): TransferExchange
@@ -29,6 +51,9 @@ class TransferExchangeMutator extends BaseMutator
     public function sign($_, array $args): TransferExchange
     {
         $transfer = $this->transferRepository->findById($args['id']);
+        if (!$transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', 404);
+        }
 
         $this->transferService->updateTransferStatus([
             'exchange' => $transfer,
@@ -47,6 +72,9 @@ class TransferExchangeMutator extends BaseMutator
     public function execute($_, array $args): TransferExchange
     {
         $transfer = $this->transferRepository->findById($args['id']);
+        if (!$transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', 404);
+        }
 
         $this->transferService->updateTransferStatus([
             'exchange' => $transfer,

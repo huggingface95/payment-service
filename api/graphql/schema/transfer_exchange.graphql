@@ -73,4 +73,10 @@ extend type Mutation @guard {
         id: ID!
     ): TransferExchange
         @field(resolver: "TransferExchangeMutator@execute")
+
+    """
+    Отменить exchange перевод
+    """
+    cancelTransferExchange(id: ID!): TransferExchange 
+        @field(resolver: "TransferExchangeMutator@cancel")
 }
