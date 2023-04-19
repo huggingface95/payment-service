@@ -1,0 +1,52 @@
+<?php
+
+namespace App\Exports\Applicant;
+
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\RegistersEventListeners;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Events\AfterSheet;
+use Maatwebsite\Excel\Events\BeforeSheet;
+
+class ApplicantCompaniesExport implements WithEvents, FromView
+{
+    use RegistersEventListeners;
+
+    private $data;
+
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+
+    public static function beforeSheet(BeforeSheet $event)
+    {
+        $event->sheet
+            ->getPageSetup()
+            ->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
+    }
+
+    public static function AfterSheet(AfterSheet $event)
+    {
+        // All cells
+        $event->sheet
+            ->getStyle('A:M')
+            ->getFont()
+            ->setSize(8);
+
+        // Header
+        $event->sheet
+            ->getDelegate()
+            ->getStyle('A1:M1')
+            ->getFont()
+            ->setSize(13);
+    }
+
+    public function view(): View
+    {
+        return view('exports.applicant.applicant_companies', [
+            'companies' => $this->data['companies'],
+        ]);
+    }
+}
