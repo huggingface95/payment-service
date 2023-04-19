@@ -62,7 +62,7 @@ extend type Mutation @guard {
         region_id: ID
         "ID Компании"
         company_id: ID!
-    ):CommissionPriceList   @create
+    ):CommissionPriceList   @create @validator
 
     "Редактирование частного пользователя"
     updateCommissionPriceList(
