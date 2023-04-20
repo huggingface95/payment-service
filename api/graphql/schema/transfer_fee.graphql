@@ -5,9 +5,17 @@ type TransferFee {
     amount_debt: Decimal!
 }
 
+type TransferFeeExchange {
+    fee_amount: Decimal!
+    fee_qoute: Decimal!
+    fee_total: Decimal!
+    rate: Decimal!
+    converted_amount: Decimal!
+}
+
 extend type Query @guard {
     """
-    Получить расчет коммиссий для трансфера
+    Получить расчет комиссий для трансфера
     """
     getTransferFee(
         price_list_id: ID! @eq
@@ -21,4 +29,16 @@ extend type Query @guard {
         urgency_id: ID @eq
     ): TransferFee!
         @field(resolver: "TransferFeeQuery@get")
+
+    """
+    Получить расчет комиссий для exchange трансфера
+    """
+    getTransferFeeExchange(
+        price_list_id: ID! @eq
+        operation_type_id: ID! @eq
+        currency_src_id: ID! @eq
+        currency_id_dst: ID! @eq
+        amount: Decimal! @eq
+    ): TransferFeeExchange!
+        @field(resolver: "TransferFeeQuery@getExchange")
 }
