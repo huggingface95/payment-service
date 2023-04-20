@@ -67,8 +67,8 @@ trait CheckForEvents
     protected static function filterByRoleActions(?Model $user, string $action, Model $model): bool
     {
         if ($user) {
-            /** @var Members $user */
-            $roleId = $user->role->id;
+            /** @var Members|ApplicantIndividual $user */
+            $roleId = $user->role->id ?? throw new GraphqlException('Add role this user');
 
             if (RoleAction::query()
                 ->where('action', $action)

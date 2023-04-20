@@ -3,11 +3,11 @@
 namespace App\Repositories;
 
 use App\DTO\Service\CheckLimitDTO;
+use App\Enums\ApplicantTypeEnum;
 use App\Enums\ClientTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Models\Account;
 use App\Models\ApplicantBankingAccess;
-use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use App\Models\GroupType;
 use App\Models\Members;
@@ -66,6 +66,7 @@ class CheckLimitRepository implements CheckLimitRepositoryInterface
     {
         return $clientType == ClientTypeEnum::MEMBER->toString() ? collect() : TransferIncoming::query()
             ->where('recipient_id', $transfer->requested_by_id)
+            ->where('recipient_type', ApplicantTypeEnum::INDIVIDUAL->toString())
             ->whereIn('status_id', [PaymentStatusEnum::PENDING->value, PaymentStatusEnum::SENT->value])
             ->get();
     }

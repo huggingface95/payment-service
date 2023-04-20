@@ -1,0 +1,36 @@
+extend type Mutation @guard {
+    """
+    Создать перевод между пользователями
+    """
+    createApplicantTransferBetweenUsers(
+        "Сумма"
+        amount: Decimal!
+        "ID аккаунта отправителя"
+        from_account_id: ID!
+        "ID аккаунта получателя"
+        to_account_id: ID!
+        "ID коммиисии респондента"
+        respondent_fee_id: ID!
+        "Причина перевода"
+        reason: String
+    ): TransferIncoming
+        @field(resolver: "ApplicantTransferBetweenAccountsMutator@create")
+
+    """
+    Подписать перевод между пользователями
+    """
+    signApplicantTransferBetweenUsers(
+        "ID исходящего перевода"
+        transfer_incoming_id: ID!
+    ): TransferIncoming
+        @field(resolver: "ApplicantTransferBetweenAccountsMutator@sign")
+
+    """
+    Исполнить перевод между пользователями
+    """
+    executeApplicantTransferBetweenUsers(
+        "ID исходящего перевода"
+        transfer_incoming_id: ID!
+    ): TransferIncoming
+        @field(resolver: "TransferBetweenUsersMutator@execute")
+}

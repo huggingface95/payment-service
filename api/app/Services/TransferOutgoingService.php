@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
-use App\DTO\Transfer\CreateTransferDTO;
+use App\DTO\Transfer\CreateTransferOutgoingDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
@@ -250,8 +250,8 @@ class TransferOutgoingService extends AbstractService
 
     public function createTransfer(array $args, int $operationType): Builder|Model
     {
-        /** @var CreateTransferDTO $createTransferDto */
-        $createTransferDto = TransformerDTO::transform(CreateTransferDTO::class, $args, $operationType);
+        /** @var CreateTransferOutgoingDTO $createTransferDto */
+        $createTransferDto = TransformerDTO::transform(CreateTransferOutgoingDTO::class, $args, $operationType);
         return DB::transaction(function () use ($createTransferDto) {
             /** @var TransferOutgoing $transfer */
             $transfer = $this->transferRepository->createWithSwift((array) $createTransferDto);

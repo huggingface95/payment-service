@@ -11,7 +11,7 @@ use App\Models\Members;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class CreateTransferDTO
+class CreateTransferOutgoingDTO
 {
     public string $user_type;
     public float $amount_debt;
