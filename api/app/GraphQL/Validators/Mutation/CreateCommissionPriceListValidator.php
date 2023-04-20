@@ -20,7 +20,19 @@ final class CreateCommissionPriceListValidator extends Validator
             'payment_system_id' => ['required', new NotEmptyString],
             'commission_template_id' => ['required', new NotEmptyString],
             'company_id' => ['required', new NotEmptyString],
-            'region_id' => ['required', new NotEmptyString],
+            'region_id' => ['filled', new NotEmptyString],
+        ];
+    }
+
+    /**
+     * Return custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return [
+            'region_id.filled' => 'The region_id field cannot be empty string.',
         ];
     }
 }

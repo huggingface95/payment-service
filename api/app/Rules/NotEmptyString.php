@@ -15,7 +15,7 @@ class NotEmptyString implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $value !== "";
+        return $value !== null && trim($value) !== '';
     }
 
     /**
