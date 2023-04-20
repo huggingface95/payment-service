@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class TransferExchangeService extends AbstractService
 {
@@ -55,7 +56,7 @@ class TransferExchangeService extends AbstractService
                 'status_id' => $outgoing->status_id,
                 'transfer_outgoing_id' => $outgoing->id,
                 'transfer_incoming_id' => $incoming->id,
-                'exchange_rate' => $data['exchange_rate'],
+                'exchange_rate' => Str::decimal($data['exchange_rate']),
             ]);
 
             $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $outgoing, $fromAccount, $toAccount);

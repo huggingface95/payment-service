@@ -116,6 +116,8 @@ extend type Query @guard {
 input QueryAuthenticationLogsByTypeStatic @spread{
     company: String @eq
     email: String @eq
+    ip: String @eq
+    status: String @eq
     created_at: DateTimeRange @like
 }
 
