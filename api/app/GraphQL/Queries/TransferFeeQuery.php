@@ -34,4 +34,27 @@ final class TransferFeeQuery
 
         return $fee;
     }
+
+    /**
+     * @todo: make real calculation
+     * @task: https://docudots.atlassian.net/browse/DBM-572
+     */
+    public function getExchange($_, array $args): array
+    {
+        $feeAmount = 0.3 * $args['amount'];
+        $feeQuote = 0.2 * $args['amount'];
+        $fee = [
+            'fee_amount' => $feeAmount,
+            'fee_qoute' => $feeQuote,
+            'fee_total' => $feeAmount + $feeQuote,
+            'rate' => 1.2,
+            'converted_amount' => 1.2 * $args['amount'] - ($feeAmount + $feeQuote),
+        ];
+
+        foreach ($fee as $key => $value) {
+            $fee[$key] = Str::decimal($value);
+        }
+
+        return $fee;
+    }
 }
