@@ -4,13 +4,6 @@ namespace App\DTO\Transfer;
 
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
-use App\Exceptions\GraphqlException;
-use App\Models\Account;
-use App\Models\ApplicantCompany;
-use App\Models\ApplicantIndividual;
-use App\Models\Members;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 
 class CreateTransferBetweenUsersIncomingDTO extends CreateTransferBetweenUsersDTO
 {
@@ -18,21 +11,21 @@ class CreateTransferBetweenUsersIncomingDTO extends CreateTransferBetweenUsersDT
     public int $account_id;
     public int $currency_id;
     public int $company_id;
-    public int $user_type;
-    public int $amount;
-    public int $amount_debt;
+    public string $user_type;
+    public string $amount;
+    public string $amount_debt;
     public int $status_id;
     public int $urgency_id;
     public int $operation_type_id;
     public int $payment_bank_id;
-    public int $payment_number;
+    public string $payment_number;
     public int $payment_provider_id;
     public int $payment_system_id;
     public int $recipient_id;
-    public int $recipient_type;
-    public int $system_message;
-    public int $channel;
-    public int $reason;
+    public string $recipient_type;
+    public string $system_message;
+    public string $channel;
+    public string $reason;
     public int $sender_country_id;
     public int $respondent_fees_id;
     public int $group_id;
@@ -40,9 +33,8 @@ class CreateTransferBetweenUsersIncomingDTO extends CreateTransferBetweenUsersDT
     public int $project_id;
     public int $price_list_id;
     public int $price_list_fee_id;
-    public int $requested_by_id;
-    public int $created_at;
-    public int $execution_at;
+    public string $created_at;
+    public string $execution_at;
 
     public static function transform(array $args): self
     {
@@ -74,7 +66,6 @@ class CreateTransferBetweenUsersIncomingDTO extends CreateTransferBetweenUsersDT
         $dto->project_id = 1;
         $dto->price_list_id = 1;
         $dto->price_list_fee_id = 121;
-        $dto->requested_by_id = $args['requested_by_id'];
         $dto->created_at = $args['created_at'];
         $dto->execution_at = $args['execution_at'];
 

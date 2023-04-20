@@ -57,11 +57,11 @@ class CreateTransferBetweenUsersDTO
             CreateTransferBetweenUsersIncomingDTO::class => [
                 'account_id' => $to->id,
                 'currency_id' => $to->currencies?->id,
-                'requested_by_id' => $id
             ],
             CreateTransferBetweenUsersOutgoingDTO::class => [
                 'currency_id' => $from->currencies?->id,
-                'account_id' => $from->id
+                'account_id' => $from->id,
+                'requested_by_id' => $id
             ],
             'company_id' => $from->company_id,
             'payment_provider_id' => $from->company->paymentProviderInternal()->first()?->id,

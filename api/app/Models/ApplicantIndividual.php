@@ -25,6 +25,8 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Auth\Authorizable;
 use Laravel\Passport\HasApiTokens;
+use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -47,6 +49,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     use MorphToOne;
     use BelongsToOne;
     use UserPermission;
+    use HasRelationships;
 
     protected $table = 'applicant_individual';
 
@@ -318,6 +321,24 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function groupRole(): \Ankurk91\Eloquent\Relations\MorphToOne
     {
         return $this->morphToOne(GroupRole::class, 'user', GroupRoleUser::class, 'user_id', 'group_role_id');
+    }
+
+    public function role(): HasOneDeep
+    {
+        return $this->hasOneDeep(
+            Role::class,
+            [GroupRoleUser::class, GroupRole::class],
+            [
+                'user_id',
+                'id',
+                'id',
+            ],
+            [
+                'id',
+                'group_role_id',
+                'role_id',
+            ]
+        )->where('user_type', class_basename(self::class));
     }
 
     public function company(): BelongsTo

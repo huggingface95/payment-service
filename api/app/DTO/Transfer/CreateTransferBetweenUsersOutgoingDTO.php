@@ -4,13 +4,6 @@ namespace App\DTO\Transfer;
 
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
-use App\Exceptions\GraphqlException;
-use App\Models\Account;
-use App\Models\ApplicantCompany;
-use App\Models\ApplicantIndividual;
-use App\Models\Members;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 
 class CreateTransferBetweenUsersOutgoingDTO extends CreateTransferBetweenUsersDTO
 {
@@ -44,7 +37,7 @@ class CreateTransferBetweenUsersOutgoingDTO extends CreateTransferBetweenUsersDT
     public string $created_at;
     public string $execution_at;
     public int $sender_id;
-    public int $sender_type;
+    public string $sender_type;
     public int $recipient_bank_country_id;
     public int $recipient_country_id;
 
