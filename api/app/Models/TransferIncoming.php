@@ -19,6 +19,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * Class TransferIncoming
  *
  * @property TransferOutgoing $transferBetweenOutgoing
+ * @property ApplicantIndividual|ApplicantCompany $recipient
+ * @property string recipient_type
+ * @property int recipient_id
  */
 class TransferIncoming extends BaseModel
 {
