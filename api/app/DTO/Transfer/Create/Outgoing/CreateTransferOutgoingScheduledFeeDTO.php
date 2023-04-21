@@ -5,8 +5,7 @@ namespace App\DTO\Transfer\Create\Outgoing;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
-use App\Models\ApplicantCompany;
-use App\Models\Members;
+use App\Models\Account;
 use App\Models\PaymentProvider;
 use App\Models\PaymentSystem;
 use Carbon\Carbon;
@@ -30,7 +29,6 @@ class CreateTransferOutgoingScheduledFeeDTO extends CreateTransferOutgoingDTO
         $args['project_id'] = 1;
         $args['price_list_id'] = 1;
         $args['price_list_fee_id'] = 1;
-        $args['user_type'] = class_basename(Members::class);
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['urgency_id'] = 1;
         $args['operation_type_id'] = OperationTypeEnum::SCHEDULED_FEE->value;
@@ -38,8 +36,6 @@ class CreateTransferOutgoingScheduledFeeDTO extends CreateTransferOutgoingDTO
         $args['payment_system_id'] = $psInternal->id;
         $args['payment_bank_id'] = 2;
         $args['payment_number'] = rand();
-        $args['sender_id'] = 1;
-        $args['sender_type'] = class_basename(ApplicantCompany::class);
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['recipient_country_id'] = 1;
@@ -47,6 +43,6 @@ class CreateTransferOutgoingScheduledFeeDTO extends CreateTransferOutgoingDTO
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $args['created_at'];
 
-        return new parent($args);
+        return new parent($args, Account::findOrFail($args['account_id']));
     }
 }

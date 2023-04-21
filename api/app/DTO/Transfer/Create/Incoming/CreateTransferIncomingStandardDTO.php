@@ -4,8 +4,7 @@ namespace App\DTO\Transfer\Create\Incoming;
 
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
-use App\Models\ApplicantCompany;
-use App\Models\Members;
+use App\Models\Account;
 use Carbon\Carbon;
 
 class CreateTransferIncomingStandardDTO extends CreateTransferIncomingDTO
@@ -15,15 +14,12 @@ class CreateTransferIncomingStandardDTO extends CreateTransferIncomingDTO
     {
         $date = Carbon::now();
 
-        $args['user_type'] = class_basename(Members::class);
         $args['amount_debt'] = $args['amount'];
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['urgency_id'] = 1;
         $args['operation_type_id'] = $operationType;
         $args['payment_bank_id'] = 2;
         $args['payment_number'] = rand();
-        $args['recipient_id'] = 1;
-        $args['recipient_type'] = class_basename(ApplicantCompany::class);
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['reason'] = 'test';
@@ -32,6 +28,6 @@ class CreateTransferIncomingStandardDTO extends CreateTransferIncomingDTO
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $args['created_at'];
 
-        return new parent($args);
+        return new parent($args, Account::findOrFail($args['account_id']));
     }
 }

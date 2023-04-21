@@ -5,8 +5,6 @@ namespace App\DTO\Transfer\Create\Incoming;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
 use App\Models\Account;
-use App\Models\ApplicantCompany;
-use App\Models\Members;
 
 class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
 {
@@ -14,8 +12,7 @@ class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
     {
         $args['account_id'] = $account->id;
         $args['currency_id'] = $account->currencies?->id;
-        $args['company_id'] = 1;
-        $args['user_type'] = class_basename(Members::class);
+        $args['company_id'] = $account->company_id;
         $args['amount'] = $amount;
         $args['amount_debt'] = $amount;
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
@@ -25,8 +22,6 @@ class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
         $args['payment_number'] = $paymentNumber;
         $args['payment_provider_id'] = 1;
         $args['payment_system_id'] = 1;
-        $args['recipient_id'] = 1;
-        $args['recipient_type'] = class_basename(ApplicantCompany::class);
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['reason'] = 'test';
@@ -41,6 +36,6 @@ class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
         $args['created_at'] = $date;
         $args['execution_at'] = $date;
 
-        return new parent($args);
+        return new parent($args, $account);
     }
 }

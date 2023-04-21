@@ -2,6 +2,13 @@
 
 namespace App\DTO\Transfer\Create\Incoming;
 
+use App\Enums\ClientTypeEnum;
+use App\Models\Account;
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
+use App\Models\Members;
+use Illuminate\Support\Facades\Auth;
+
 class CreateTransferIncomingDTO
 {
     public int $company_id;
@@ -42,15 +49,28 @@ class CreateTransferIncomingDTO
     public int $status_id;
     public string $execution_at;
 
-    protected function __construct(array $args)
+    protected function __construct(array $args, Account $account)
     {
         $properties = collect((new \ReflectionObject($this))->getProperties(\ReflectionProperty::IS_PUBLIC))->pluck('name')->toArray();
 
-        foreach ($args as $k => $v) {
+        foreach ($args + $this->mergeGeneralData($account) as $k => $v) {
             if (in_array($k, $properties)) {
                 $this->{$k} = $v;
             }
         }
+    }
+
+
+    //TODO add other parameters too
+    private  function mergeGeneralData(Account $account): array
+    {
+        $clientType = Auth::guard('api') ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString();
+        $id = Auth::guard('api')->check() ? 1 : Auth::guard('api_client')->user()?->id;
+        return [
+            'user_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class),
+            'recipient_id' => $id,
+            'recipient_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(ApplicantCompany::class) : class_basename(ApplicantIndividual::class),
+        ];
     }
 
     public function toArray(): array
