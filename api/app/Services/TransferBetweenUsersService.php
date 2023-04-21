@@ -3,7 +3,8 @@
 namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
-use App\DTO\Transfer\CreateTransferBetweenUsersDTO;
+use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingBetweenUsersDTO;
+use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingBetweenUsersDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\OperationTypeEnum;
@@ -56,13 +57,14 @@ class TransferBetweenUsersService extends AbstractService
 
         $this->validateCreateTransfer($fromAccount, $toAccount);
 
-        $data = $this->populateTransferData($args, $fromAccount, $toAccount, $operationType);
+        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingBetweenUsersDTO::class, $fromAccount, $operationType, $args['amount']);
+        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $operationType, $args['amount'], $outgoingDTO->payment_number, $outgoingDTO->created_at);
 
-        $transfers = DB::transaction(function () use ($data) {
+        $transfers = DB::transaction(function () use ($outgoingDTO, $incomingDTO) {
             /** @var TransferOutgoing $outgoing */
-            $outgoing = $this->transferOutgoingRepository->create($data->betweenUsersOutgoingDTO->toArray());
+            $outgoing = $this->transferOutgoingRepository->create($outgoingDTO->toArray());
             /** @var TransferIncoming $outgoing */
-            $incoming = $this->transferIncomingRepository->create($data->betweenUsersIncomingDTO->toArray());
+            $incoming = $this->transferIncomingRepository->create($incomingDTO->toArray());
 
             TransferBetweenRelation::create([
                 'transfer_outgoing_id' => $outgoing->id,
@@ -136,11 +138,6 @@ class TransferBetweenUsersService extends AbstractService
             $transfer = TransferOutgoing::query()->findOrFail($args['transfer_id']);
             return $this->transferOutgoingRepository->attachFileById($transfer, $args['file_id']);
         }
-    }
-
-    private function populateTransferData(array $args, Account $fromAccount, Account $toAccount, int $operationType): CreateTransferBetweenUsersDTO
-    {
-        return TransformerDTO::transformWithChildren(CreateTransferBetweenUsersDTO::class, $args, $fromAccount, $toAccount, $operationType);
     }
 
     /**

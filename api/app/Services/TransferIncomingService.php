@@ -3,53 +3,35 @@
 namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
+use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingStandardDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\PaymentStatusEnum;
-use App\Enums\TransferChannelEnum;
 use App\Exceptions\GraphqlException;
-use App\Models\ApplicantCompany;
-use App\Models\Members;
 use App\Models\TransferIncoming;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class TransferIncomingService extends AbstractService
 {
     public function __construct(
-        protected AccountService $accountService,
-        protected CommissionService $commissionService,
+        protected AccountService                      $accountService,
+        protected CommissionService                   $commissionService,
         protected TransferIncomingRepositoryInterface $transferRepository,
-        protected TransactionService $transactionService
-    ) {
+        protected TransactionService                  $transactionService
+    )
+    {
     }
 
     public function createTransfer(array $args, int $operationType): Builder|Model
     {
-        $date = Carbon::now();
+        $createTransferIncoming = TransformerDTO::transform(CreateTransferIncomingStandardDTO::class, $args, $operationType);
 
-        $args['user_type'] = class_basename(Members::class);
-        $args['amount_debt'] = $args['amount'];
-        $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
-        $args['urgency_id'] = 1;
-        $args['operation_type_id'] = $operationType;
-        $args['payment_bank_id'] = 2;
-        $args['payment_number'] = rand();
-        $args['recipient_id'] = 1;
-        $args['recipient_type'] = class_basename(ApplicantCompany::class);
-        $args['system_message'] = 'test';
-        $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['reason'] = 'test';
-        $args['sender_country_id'] = 1;
-        $args['respondent_fees_id'] = 2;
-        $args['created_at'] = $date->format('Y-m-d H:i:s');
-        $args['execution_at'] = $args['created_at'];
-
-        return DB::transaction(function () use ($args) {
-            $transfer = $this->transferRepository->createWithSwift($args);
+        return DB::transaction(function () use ($createTransferIncoming) {
+            /** @var TransferIncoming $transfer */
+            $transfer = $this->transferRepository->createWithSwift($createTransferIncoming->toArray());
 
             $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
             $this->commissionService->makeFee($transfer, $transactionDTO);
@@ -80,7 +62,7 @@ class TransferIncomingService extends AbstractService
                     PaymentStatusEnum::EXECUTED->value,
                 ];
 
-                if (! in_array($args['status_id'], $allowedStatuses)) {
+                if (!in_array($args['status_id'], $allowedStatuses)) {
                     throw new GraphqlException('This status is not allowed for transfer which has Pending status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
@@ -94,11 +76,9 @@ class TransferIncomingService extends AbstractService
             case PaymentStatusEnum::CANCELED->value:
                 throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
 
-                break;
             case PaymentStatusEnum::EXECUTED->value:
                 throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
 
-                break;
         }
     }
 
@@ -133,10 +113,6 @@ class TransferIncomingService extends AbstractService
         ]);
     }
 
-    /**
-     * @throws EmailException
-     * @throws GraphqlException
-     */
     public function updateTransferStatusToExecuted(TransferIncoming $transfer, TransactionDTO $transactionDTO = null): void
     {
         DB::beginTransaction();
@@ -155,7 +131,7 @@ class TransferIncomingService extends AbstractService
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            
+
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::ERROR->value,
                 'system_message' => $e->getMessage(),
