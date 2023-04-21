@@ -18,7 +18,7 @@ extend type Query @guard {
     Получить трансфер
     """
     transferExchnage(id: ID! @eq): TransferExchange!    @find
-    
+
     """
     Получить список трансферов
     """
@@ -62,6 +62,8 @@ extend type Mutation @guard {
     signTransferExchange(
         "ID"
         id: ID!
+        "Code"
+        code: String!
     ): TransferExchange
         @field(resolver: "TransferExchangeMutator@sign")
 
@@ -77,6 +79,6 @@ extend type Mutation @guard {
     """
     Отменить exchange перевод
     """
-    cancelTransferExchange(id: ID!): TransferExchange 
+    cancelTransferExchange(id: ID!): TransferExchange
         @field(resolver: "TransferExchangeMutator@cancel")
 }

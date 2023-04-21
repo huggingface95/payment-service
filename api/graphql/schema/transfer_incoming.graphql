@@ -235,6 +235,8 @@ extend type Mutation @guard {
     signTransferIncoming(
         "ID"
         id: ID!
+        "Code"
+        code: String!
     ): TransferIncoming
         @field(resolver: "TransferIncomingMutator@sign")
 }
