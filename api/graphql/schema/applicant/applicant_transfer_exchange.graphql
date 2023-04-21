@@ -1,0 +1,34 @@
+extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQL\\Mutations\\Applicant") {
+    """
+    Создать exchange перевод между аккаунтами
+    """
+    createApplicantTransferExchange(
+        "Сумма"
+        amount: Decimal!
+        "ID аккаунта отправителя"
+        from_account_id: ID!
+        "ID аккаунта получателя"
+        to_account_id: ID!
+        "ID файлов"
+        file_id: [ID]
+    ): TransferExchange
+        @field(resolver: "ApplicantTransferExchangeMutator@create")
+
+    """
+    Подписать exchange перевод
+    """
+    signApplicantTransferExchange(
+        "ID"
+        id: ID!
+    ): TransferExchange
+        @field(resolver: "ApplicantTransferExchangeMutator@sign")
+
+    """
+    Исполнить exchange перевод
+    """
+    executeApplicantTransferExchange(
+        "ID"
+        id: ID!
+    ): TransferExchange
+        @field(resolver: "ApplicantTransferExchangeMutator@execute")
+}
