@@ -22,6 +22,8 @@ extend type Mutation @guard {
     signTransferBetweenUsers(
         "ID исходящего перевода"
         transfer_incoming_id: ID!
+        "Code"
+        code: String!
     ): TransferIncoming
         @field(resolver: "TransferBetweenUsersMutator@sign")
 

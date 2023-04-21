@@ -258,6 +258,8 @@ extend type Mutation @guard {
     signTransferOutgoing(
         "ID"
         id: ID!
+        "Code"
+        code: String!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@sign")
 

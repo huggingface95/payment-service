@@ -79,6 +79,8 @@ extend type Mutation @guard {
     signTransferOutgoingFee(
         "ID"
         id: ID!
+        "Code"
+        code: String!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingFeeMutator@sign")
 

@@ -75,6 +75,8 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
     signApplicantTransferOutgoing(
         "ID"
         id: ID!
+        "Code"
+        code: String!
     ): TransferOutgoing
         @field(resolver: "ApplicantTransferOutgoingMutator@sign")
 }

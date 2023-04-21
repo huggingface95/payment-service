@@ -48,9 +48,15 @@ class TransferBetweenAccountsMutator extends BaseMutator
         }
     }
 
-
+    /**
+     * @throws GraphqlException
+     */
     public function sign($_, array $args): TransferIncoming
     {
+        if (!isset($args['code']) || empty($args['code'])) {
+            throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
+        }
+
         $transfers = $this->transferService->getTransfersByIncomingId($args['transfer_incoming_id']);
 
         $this->transferService->updateTransferStatus($transfers, [

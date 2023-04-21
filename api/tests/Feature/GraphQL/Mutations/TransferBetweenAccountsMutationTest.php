@@ -109,9 +109,10 @@ class TransferBetweenAccountsMutationTest extends TestCase
         $this->postGraphQL(
             [
                 'query' => '
-                    mutation SignTransferBetweenAccounts($transfer: ID!) {
+                    mutation SignTransferBetweenAccounts($transfer: ID!, $code: String!) {
                       signTransferBetweenAccounts(
                         transfer_incoming_id: $transfer
+                        code: $code
                       ) {
                         id
                         amount
@@ -126,6 +127,7 @@ class TransferBetweenAccountsMutationTest extends TestCase
                 ',
                 'variables' => [
                     'transfer' => $transfer->id,
+                    'code' => "658999",
                 ],
             ],
             [

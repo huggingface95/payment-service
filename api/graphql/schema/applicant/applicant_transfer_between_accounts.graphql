@@ -18,6 +18,8 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
     signApplicantTransferBetweenAccounts(
         "ID исходящего перевода"
         transfer_incoming_id: ID!
+        "Code"
+        code: String!
     ): TransferIncoming
         @field(resolver: "ApplicantTransferBetweenAccountsMutator@sign")
 
