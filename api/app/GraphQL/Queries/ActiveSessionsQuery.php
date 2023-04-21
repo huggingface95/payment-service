@@ -7,6 +7,8 @@ use App\Models\ApplicantIndividual;
 use App\Models\Clickhouse\ActiveSession;
 use App\Models\Members;
 use Illuminate\Support\Facades\DB;
+use Tinderbox\Clickhouse\Exceptions\ClientException;
+use Tinderbox\ClickhouseBuilder\Integrations\Laravel\Builder;
 
 final class ActiveSessionsQuery
 {
@@ -18,6 +20,7 @@ final class ActiveSessionsQuery
      */
     public function get($_, array $args): array
     {
+        /** @var Builder $query */
         $query = DB::connection('clickhouse')
             ->query()
             ->from((new ActiveSession())->getTable())
@@ -42,44 +45,23 @@ final class ActiveSessionsQuery
         ];
     }
 
-    public function getCompanySessions($_, array $args): ?array
+    /**
+     * @throws ClientException
+     */
+    public function getCompanyLastSession($_, array $args): ?array
     {
+        /** @var Builder $query */
         $query = DB::connection('clickhouse')
             ->query()
             ->from((new ActiveSession())->getTable())
-            ->orderBy('created_at', 'DESC');
+            ->orderBy('created_at', 'DESC')->limit(1);
 
-        if (isset($args['applicant_company_id'])) {
-            /** @var ApplicantCompany $applicantCompany */
-            $applicantCompany = ApplicantCompany::query()->with('applicantIndividuals')->findOrFail($args['applicant_company_id']);
-            $query->whereIn('email', $applicantCompany->applicantIndividuals->pluck('email')->toArray());
-        }
-        if (isset($args['applicant_individual_id'])) {
-            /** @var ApplicantIndividual $individual */
-            $individual = ApplicantIndividual::query()->findOrFail($args['applicant_individual_id']);
-            $query->where('email', $individual->email);
-        }
-        if (isset($args['owner_id'])) {
-            $individuals = ApplicantIndividual::query()->where('account_manager_member_id', $args['owner_id'])->get();
-            $query->whereIn('email', $individuals->pluck('email')->toArray());
-        }
-        $this->filterByQuery($query, $args);
 
-        $result = $query->paginate($args['page'] ?? 1, $args['count'] ?? env('PAGINATE_DEFAULT_COUNT'));
-        return [
-            'data' => $result->items(),
-            'paginatorInfo' => [
-                'count' => $result->count(),
-                'currentPage' => $result->currentPage(),
-                'firstItem' => $result->firstItem(),
-                'hasMorePages' => $result->hasMorePages(),
-                'lastItem' => $result->lastItem(),
-                'lastPage' => $result->lastPage(),
-                'perPage' => $result->perPage(),
-                'total' => $result->total(),
-            ],
-        ];
+        /** @var ApplicantCompany $applicantCompany */
+        $applicantCompany = ApplicantCompany::query()->with('applicantIndividuals')->findOrFail($args['applicant_company_id']);
+        $query->whereIn('email', $applicantCompany->applicantIndividuals->pluck('email')->toArray());
 
+        return $query->first();
     }
 
 

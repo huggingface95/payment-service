@@ -51,17 +51,12 @@ extend type Query @guard {
     """
     activeMemberSession(member_id: ID! @eq): ActiveSession @field(resolver:"ActiveSessionsQuery@getMemberActiveSession")
     """
-    Получить список сессий по applicant_company_id
+    Получить последнюю сессию по applicant_company_id
     """
-    activeCompanySessions(
+    activeCompanySession(
         applicant_company_id: ID! @eq
-        owner_id: ID @eq
-        applicant_individual_id: ID @eq
-        page: Int = 1,
-        count: Int = 15,
-        query: QueryActiveSessionsStatic
-    ): ActiveSessions
-    @field(resolver:"ActiveSessionsQuery@getCompanySessions")
+    ): ActiveSession
+    @field(resolver:"ActiveSessionsQuery@getCompanyLastSession")
     """
     Получить список сессий
     query: {column: COMPANY, value: "", column: PROVIDER, value: "", column: GROUP, value: "", column: CREATED_AT, value: "2021-10-12"} фильтр по company, member, group, created_at
