@@ -1,0 +1,70 @@
+type PriceListQpFee {
+    id: ID!
+    "Название"
+    name: String!
+    "Тип"
+    fee_type: FeeType @belongsTo(relation: "feeType")
+    "Период"
+    period: FeePeriod @belongsTo(relation: "feePeriod")
+    "Цены"
+    fees: [PriceListFeeCurrency] @belongsTo(relation: "fees")
+    fee_ranges: JSON
+    "Дата создания"
+    created_at: DateTimeUtc
+    "Дата обновления"
+    updated_at: DateTimeUtc
+}
+
+extend type Query @guard {
+    """
+    Получить список прайс листов для QP
+    """
+    PriceListQpFees(
+        filter: _ @filterConditions(static: QueryPriceListQpFeesFilterStatic)
+    ): [PriceListQpFee!]!   
+        @orderBy(column: "id", direction: ASC) @all
+}
+
+input QueryPriceListQpFeesFilterStatic @spread {
+    id: ID @eq
+    type_id: ID @eq
+    period_id: ID @eq
+    hasCompanyFilterById: ID @eq
+    hasPaymentProviderFilterById: ID @eq
+    hasPaymentSystemFilterById: ID @eq
+    hasFeesFilterById: ID @eq
+}
+
+input PriceListQpFeeInput {
+    name: String!
+    type_id: ID!
+    period_id: ID!
+    quote_provider_id: ID!
+    fee_ranges: JSON
+    fees: [PriceListFeesList!]
+}
+
+extend type Mutation @guard {
+    """
+    Создать прайс лист для QP
+    """
+    createPriceListQpFees(
+        input: PriceListQpFeeInput @spread
+    ): PriceListQpFee   
+        @field(resolver: "PriceListQpFeesMutator@create") 
+        @validator
+
+    """
+    Обновить прайс лист для QP
+    """
+    updatePriceListQpFees(
+        id: ID!
+        input: PriceListQpFeeInput @spread
+    ): PriceListQpFee   
+        @field(resolver: "PriceListQpFeesMutator@update")
+
+    """
+    Удалить прайс лист QP
+    """
+    deletePriceListQpFees(id: ID!): PriceListQpFee   @delete
+}

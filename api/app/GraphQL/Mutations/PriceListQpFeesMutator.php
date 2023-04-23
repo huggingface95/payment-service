@@ -3,13 +3,13 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
-use App\Models\PriceListPPFee;
+use App\Models\PriceListQpFee;
 use App\Services\PriceListFeeService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\GraphQL\Mutations\Traits\PriceListFeeTrait;
 
-class PriceListPPFeesMutator
+class PriceListQpFeesMutator
 {
     use PriceListFeeTrait;
 
@@ -22,50 +22,50 @@ class PriceListPPFeesMutator
      * @param  null  $_
      * @param  array<string, mixed>  $args
      */
-    public function create($_, array $args): PriceListPPFee
+    public function create($_, array $args): PriceListQpFee
     {
         if (isset($args['fee_ranges'])) {
             $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args);
         }
 
-        $priceListPPFee = DB::transaction(function () use ($args) {
-            $priceListPPFee = PriceListPPFee::create($args);
+        $PriceListQpFee = DB::transaction(function () use ($args) {
+            $PriceListQpFee = PriceListQpFee::create($args);
 
             if (isset($args['fees'])) {
-                $this->createFeeModes($args, $priceListPPFee);
+                $this->createFeeModes($args, $PriceListQpFee, true);
             }
 
-            return $priceListPPFee;
+            return $PriceListQpFee;
         });
 
-        return $priceListPPFee;
+        return $PriceListQpFee;
     }
 
     /**
      * @param  null  $_
      * @param  array<string, mixed>  $args
      */
-    public function update($_, array $args): PriceListPPFee
+    public function update($_, array $args): PriceListQpFee
     {
         if (isset($args['fee_ranges'])) {
             $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args);
         }
 
-        $priceListPPFee = PriceListPPFee::find($args['id']);
-        if (!$priceListPPFee) {
-            throw new GraphqlException('PriceListPPFee not found', 'use', Response::HTTP_NOT_FOUND);
+        $PriceListQpFee = PriceListQpFee::find($args['id']);
+        if (!$PriceListQpFee) {
+            throw new GraphqlException('PriceListQpFee not found', 'use', Response::HTTP_NOT_FOUND);
         }
 
-        DB::transaction(function () use ($priceListPPFee, $args) {
-            $priceListPPFee->update($args);
+        DB::transaction(function () use ($PriceListQpFee, $args) {
+            $PriceListQpFee->update($args);
 
             if (isset($args['fees'])) {
-                $priceListPPFee->fees()->delete();
+                $PriceListQpFee->fees()->delete();
 
-                $this->createFeeModes($args, $priceListPPFee);
+                $this->createFeeModes($args, $PriceListQpFee, true);
             }
         });
 
-        return $priceListPPFee;
+        return $PriceListQpFee;
     }
 }
