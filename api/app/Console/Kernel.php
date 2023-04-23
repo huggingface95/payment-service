@@ -9,6 +9,7 @@ use App\Console\Commands\ExecuteFeeScheduledTransferCommand;
 use App\Console\Commands\ExecuteWaitingTransferCommand;
 use App\Console\Commands\IbanCompanyCommand;
 use App\Console\Commands\IbanIndividualStatusCommand;
+use App\Console\Commands\ImportCurrenciesCommand;
 use App\Console\Commands\NotificationsCommand;
 use App\Console\Commands\ResetApplicantBankingAccessUsedLimitCommand;
 use App\Console\Commands\SendEmailCommand;
@@ -32,6 +33,7 @@ class Kernel extends ConsoleKernel
         DropTestTables::class,
         IbanCompanyCommand::class,
         IbanIndividualStatusCommand::class,
+        ImportCurrenciesCommand::class,
         ResetApplicantBankingAccessUsedLimitCommand::class,
     ];
 

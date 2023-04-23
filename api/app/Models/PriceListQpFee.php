@@ -7,24 +7,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * Class PriceListPPFee
+ * Class PriceListQpFee
  */
-class PriceListPPFee extends BaseModel
+class PriceListQpFee extends BaseModel
 {
-    protected $table = 'price_list_pp_fees';
+    protected $table = 'price_list_qp_fees';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name',
         'type_id',
         'operation_type_id',
         'period_id',
-        'payment_system_id',
-        'payment_provider_id',
+        'quote_provider_id',
     ];
 
     protected $appends = [
@@ -53,13 +47,8 @@ class PriceListPPFee extends BaseModel
         return $this->belongsTo(FeeType::class, 'type_id');
     }
 
-    public function operationType(): BelongsTo
-    {
-        return $this->belongsTo(OperationType::class, 'operation_type_id');
-    }
-
     public function fees(): HasMany
     {
-        return $this->hasMany(PriceListPPFeeCurrency::class, 'price_list_pp_fee_id');
+        return $this->hasMany(PriceListQpFeeCurrency::class, 'price_list_qp_fee_id');
     }
 }

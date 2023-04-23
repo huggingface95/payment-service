@@ -2,17 +2,18 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Enums\OperationTypeEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\PriceListFee;
-use App\Models\PriceListFeeDestinationCurrency;
 use App\Services\PriceListFeeService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\GraphQL\Mutations\Traits\PriceListFeeTrait;
 
 class PriceListFeesMutator
 {
+    use PriceListFeeTrait;
+
     public function __construct(protected PriceListFeeService $priceListFeeService)
     {
     }
@@ -93,28 +94,5 @@ class PriceListFeesMutator
         });
 
         return $priceListFee;
-    }
-
-    private function createFeeModes(array $args, PriceListFee $priceListFee): void
-    {
-        $currencies = $args['fees'];
-        foreach ($currencies as $currency) {
-            foreach ($currency['fee'] as $fees) {
-                $priceListFeeCurrency = $priceListFee->fees()->create([
-                    'price_list_fee_id' => $priceListFee->id,
-                    'currency_id' => $currency['currency_id'],
-                    'fee' => $fees,
-                ]);
-
-                if ($args['operation_type_id'] == OperationTypeEnum::EXCHANGE->value) {
-                    foreach ($currency['currencies_destination'] as $currency) {
-                        PriceListFeeDestinationCurrency::create([
-                            'price_list_fee_currency_id' => $priceListFeeCurrency->id,
-                            'currency_id' => $currency,
-                        ]);
-                    }
-                }
-            }
-        }
     }
 }
