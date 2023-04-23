@@ -19,7 +19,7 @@ extend type Query @guard {
     """
     Получить список прайс листов для QP
     """
-    PriceListQpFees(
+    priceListQpFees(
         filter: _ @filterConditions(static: QueryPriceListQpFeesFilterStatic)
     ): [PriceListQpFee!]!   
         @orderBy(column: "id", direction: ASC) @all
