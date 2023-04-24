@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Enums\PaymentStatusEnum;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
+use App\Models\CommissionPriceList;
+use App\Models\Region;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -99,5 +101,34 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
             ->where('transfer_outgoings.requested_by_id', $applicantId)
             ->where('transfer_outgoings.user_type', class_basename(ApplicantIndividual::class))
             ->sum('amount_debt');
+    }
+
+    public function getPriceListIdByArgs(array $args): int|null
+    {
+        $regionId = Region::query()
+            ->join('region_countries', 'regions.id', '=', 'region_countries.region_id')
+            ->where('region_countries.country_id', '=', function($query) use ($args) {
+                $query->select('applicant_individual.country_id')
+                    ->from('accounts')
+                    ->join('applicant_individual', 'accounts.owner_id', '=', 'applicant_individual.id')
+                    ->where('accounts.id', '=', $args['account_id']);
+            })
+            ->where('regions.company_id', '=', $args['company_id'])
+            ->first()?->id;
+
+        $priceListId = CommissionPriceList::query()
+            ->where('company_id', '=', $args['company_id'])
+            ->where('commission_template_id', '=', function($query) use ($args) {
+                $query->select('project_settings.commission_template_id')
+                    ->from('projects')
+                    ->join('project_settings', 'projects.id', '=', 'project_settings.project_id')
+                    ->where('projects.id', '=', $args['project_id']);
+            })
+            ->where('provider_id', '=', $args['payment_provider_id'])
+            ->where('payment_system_id', '=', $args['payment_system_id'])
+            ->where('region_id', '=', $regionId)
+            ->first()?->id;
+
+        return $priceListId;
     }
 }

@@ -23,4 +23,6 @@ interface TransferOutgoingRepositoryInterface
     public function getSumOfDailySentTransfersByApplicantIndividualId(int $applicantId): float;
 
     public function getSumOfMonthlySentTransfersByApplicantIndividualId(int $applicantId): float;
+
+    public function getPriceListIdByArgs(array $args): int|null;
 }

@@ -35,7 +35,6 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['project_id'] = 1;
         $args['price_list_id'] = 1;
         $args['price_list_fee_id'] = 121;
-        $args['requested_by_id'] = 1;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $date->format('Y-m-d H:i:s');
         $args['recipient_bank_country_id'] = 1;
