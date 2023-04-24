@@ -245,7 +245,7 @@ class TransferOutgoingService extends AbstractService
 
     public function createTransfer(array $args, int $operationType): Builder|Model
     {
-        $createTransferDto = TransformerDTO::transform(CreateTransferOutgoingStandardDTO::class, $args, $operationType);
+        $createTransferDto = TransformerDTO::transform(CreateTransferOutgoingStandardDTO::class, $args, $operationType, $this->transferRepository);
         return DB::transaction(function () use ($createTransferDto) {
             /** @var TransferOutgoing $transfer */
             $transfer = $this->transferRepository->createWithSwift($createTransferDto->toArray());

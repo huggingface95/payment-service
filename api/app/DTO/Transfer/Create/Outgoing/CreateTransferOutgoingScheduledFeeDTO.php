@@ -20,7 +20,6 @@ class CreateTransferOutgoingScheduledFeeDTO extends CreateTransferOutgoingDTO
         $ppInternal = PaymentProvider::query()->where('name', 'Internal')->first();
         $date = Carbon::now();
 
-        $args['requested_by_id'] = 1;
         $args['amount_debt'] = $args['amount'];
         $args['company_id'] = 1;
         $args['recipient_bank_country_id'] = 1;
