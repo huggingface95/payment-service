@@ -114,7 +114,7 @@ extend type Query @guard {
     """
     downloadTransferIncomings(
         type: ExportFileType!
-        filter: _ @filterConditions(static: QueryTransferIncomingsFilterStatic)
+        filter: _ @filterConditions(static: QueryDownloadTransferIncomingsFilterStatic)
         created_at: DateTimeRange @whereBetween
     ): RawFile
         @downloadFileWithConditions(model: "TransferIncoming")
@@ -148,6 +148,8 @@ input QueryTransferIncomingsFilterStatic @spread {
 
 input QueryDownloadTransferIncomingsFilterStatic @spread {
     id: ID @eq
+    company_id: ID @eq
+    payment_provider_id: ID @eq
     urgency_id: ID @eq
     operation_type_id: ID @eq
     sender_name: String @ilike
@@ -155,6 +157,8 @@ input QueryDownloadTransferIncomingsFilterStatic @spread {
     hasAccountFilterByAccountNumber: String @ilike
     hasFeeFilterByFee: String @ilike
     fee_amount: String @gte @lte
+    amount_debt: String @gte @lte
+    hasRecipientMixedNameOrFullname: Mixed @ilike
 }
 
 extend type Mutation @guard {
