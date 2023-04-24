@@ -64,7 +64,12 @@ class ProjectsMutationTest extends TestCase
         $seq = DB::table('projects')
                 ->max('id') + 1;
 
+        $seqPs = DB::table('project_settings')
+                ->max('id') + 1;
+
         DB::select('ALTER SEQUENCE projects_id_seq RESTART WITH '.$seq);
+
+        DB::select('ALTER SEQUENCE project_settings_id_seq RESTART WITH '.$seqPs);
 
         $this->postGraphQL(
             [

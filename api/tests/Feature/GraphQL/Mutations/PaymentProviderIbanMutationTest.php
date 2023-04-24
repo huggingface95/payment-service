@@ -199,7 +199,7 @@ class PaymentProviderIbanMutationTest extends TestCase
 
     public function testDeletePaymentProviderIban(): void
     {
-        $paymentProviderIban = PaymentProviderIban::orderBy('id', 'ASC')
+        $paymentProviderIban = PaymentProviderIban::orderBy('id', 'DESC')
             ->first();
 
         $this->postGraphQL(['query' => 'mutation DeletePaymentProviderIban(
