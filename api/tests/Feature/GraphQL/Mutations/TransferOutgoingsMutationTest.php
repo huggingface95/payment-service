@@ -25,15 +25,11 @@ class TransferOutgoingsMutationTest extends TestCase
                 $account_id: ID!
                 $payment_provider_id: ID!
                 $payment_system_id: ID!
-                $requested_by_id: ID!
-                $price_list_id: ID!
-                $price_list_fee_id: ID!
                 $urgency_id: ID!
                 $recipient_account: String
                 $recipient_bank_name: String
                 $recipient_bank_address: String
                 $recipient_bank_swift: String
-                $recipient_bank_country_id: ID!
                 $recipient_name: String
                 $recipient_city: String
                 $recipient_address: String
@@ -52,15 +48,11 @@ class TransferOutgoingsMutationTest extends TestCase
                     account_id: $account_id
                     payment_provider_id: $payment_provider_id
                     payment_system_id: $payment_system_id
-                    price_list_id: $price_list_id
-                    price_list_fee_id: $price_list_fee_id
                     urgency_id: $urgency_id
-                    requested_by_id: $requested_by_id
                     recipient_account: $recipient_account
                     recipient_bank_name: $recipient_bank_name
                     recipient_bank_address: $recipient_bank_address
                     recipient_bank_swift: $recipient_bank_swift
-                    recipient_bank_country_id: $recipient_bank_country_id
                     recipient_name: $recipient_name
                     recipient_city: $recipient_city
                     recipient_address: $recipient_address
@@ -174,15 +166,11 @@ class TransferOutgoingsMutationTest extends TestCase
                 'account_id' => 1,
                 'payment_provider_id' => 1,
                 'payment_system_id' => 1,
-                'requested_by_id' => 1,
-                'price_list_id' => 1,
-                'price_list_fee_id' => 1,
                 'urgency_id' => 1,
                 'recipient_account' => 'Sender Account',
                 'recipient_bank_name' => 'recipient_bank_name',
                 'recipient_bank_address' => 'recipient_bank_address',
                 'recipient_bank_swift' => 'recipient_bank_swift',
-                'recipient_bank_country_id' => 4,
                 'recipient_name' => 'recipient_name',
                 'recipient_city' => 'recipient_city',
                 'recipient_address' => 'recipient_address',
@@ -213,15 +201,11 @@ class TransferOutgoingsMutationTest extends TestCase
                 $account_id: ID!
                 $payment_provider_id: ID!
                 $payment_system_id: ID!
-                $price_list_id: ID!
-                $price_list_fee_id: ID!
                 $urgency_id: ID!
-                $requested_by_id: ID!
                 $recipient_account: String
                 $recipient_bank_name: String
                 $recipient_bank_address: String
                 $recipient_bank_swift: String
-                $recipient_bank_country_id: ID!
                 $recipient_name: String
                 $recipient_city: String
                 $recipient_address: String
@@ -240,15 +224,11 @@ class TransferOutgoingsMutationTest extends TestCase
                     account_id: $account_id
                     payment_provider_id: $payment_provider_id
                     payment_system_id: $payment_system_id
-                    requested_by_id: $requested_by_id
-                    price_list_id: $price_list_id
-                    price_list_fee_id: $price_list_fee_id
                     urgency_id: $urgency_id
                     recipient_account: $recipient_account
                     recipient_bank_name: $recipient_bank_name
                     recipient_bank_address: $recipient_bank_address
                     recipient_bank_swift: $recipient_bank_swift
-                    recipient_bank_country_id: $recipient_bank_country_id
                     recipient_name: $recipient_name
                     recipient_city: $recipient_city
                     recipient_address: $recipient_address
@@ -286,15 +266,11 @@ class TransferOutgoingsMutationTest extends TestCase
                     'account_id' => 1,
                     'payment_provider_id' => 1,
                     'payment_system_id' => 1,
-                    'requested_by_id' => 1,
-                    'price_list_id' => 1,
-                    'price_list_fee_id' => 3,
                     'urgency_id' => 1,
                     'recipient_account' => 'Sender Account',
                     'recipient_bank_name' => 'recipient_bank_name',
                     'recipient_bank_address' => 'recipient_bank_address',
                     'recipient_bank_swift' => 'recipient_bank_swift',
-                    'recipient_bank_country_id' => 4,
                     'recipient_name' => 'recipient_name',
                     'recipient_city' => 'recipient_city',
                     'recipient_address' => 'recipient_address',
