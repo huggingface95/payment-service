@@ -26,6 +26,7 @@ class PaymentStatusSeed extends Seeder
             PaymentStatusEnum::PENDING->value => PaymentStatusEnum::PENDING->toString(),
             PaymentStatusEnum::SENT->value => PaymentStatusEnum::SENT->toString(),
             PaymentStatusEnum::WAITING_EXECUTION_DATE->value => PaymentStatusEnum::WAITING_EXECUTION_DATE->toString(),
+            PaymentStatusEnum::REFUND->value => PaymentStatusEnum::REFUND->toString(),
         ];
 
         foreach ($operationTypeExchange as $item => $value) {
