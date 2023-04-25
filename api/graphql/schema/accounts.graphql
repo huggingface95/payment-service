@@ -155,6 +155,7 @@ extend type Query @guard {
 }
 
 input QueryAccountListFilterStatic @spread{
+    id: ID @eq
     hasCompanyMixedIdOrName: Mixed @eq
     hasPaymentSystemMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
