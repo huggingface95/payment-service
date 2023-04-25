@@ -243,7 +243,7 @@ input InputAccount{
     parent_id: ID
     "ID Individual or Company"
     client_id: ID
-    "лимит максимального баланса"createAccount
+    "лимит максимального баланса"
     min_limit_balance: Decimal
     "лимит минимального баланса"
     max_limit_balance: Decimal
