@@ -13,9 +13,15 @@ class TransferFeeAmountScope implements Scope
     {
         $table = $builder->getModel()->getTable();
 
-        return $builder->fromSub(function ($q) use ($table) {
-            return $q->from($table)->selectRaw("{$table}.*, COALESCE(SUM(fees.fee), 0)::NUMERIC(15,5) as fee_amount")
-                ->leftJoin('fees', 'fees.transfer_id', '=', "{$table}.id")
+        $transferType = ($table === 'transfer_incomings') ? 'Incoming' : 'Outgoing';
+
+        return $builder->fromSub(function ($q) use ($table, $transferType) {
+            return $q->from($table)
+                ->selectRaw("{$table}.*, COALESCE(SUM(fees.fee), 0)::NUMERIC(15,5) as fee_amount")
+                ->leftJoin('fees', function ($join) use ($table, $transferType) {
+                    $join->on('fees.transfer_id', '=', "{$table}.id")
+                        ->where('fees.transfer_type', '=', $transferType);
+                })
                 ->groupBy("{$table}.id");
         }, $table);
     }
