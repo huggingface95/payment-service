@@ -13,16 +13,18 @@ class ApplicantDocumentRejectDetailMutator extends BaseMutator
     {
         $memberId = Auth::user()->id;
 
+        if (empty($args['applicant_document_tag_id'])) {
+            throw new GraphqlException('Applicant document tag id is required', 'validation', 422);
+        }
+
         $rejectDetail = DB::transaction(function () use ($args, $memberId) {
             $rejectDetail = ApplicantDocumentRejectDetail::create([
                 'applicant_document_id' => $args['applicant_document_id'],
                 'member_id' => $memberId,
             ]);
 
-            if (isset($args['applicant_document_tag_id'])) {
-                foreach ($args['applicant_document_tag_id'] as $tag) {
-                    $rejectDetail->applicantDocumentTags()->attach($tag);
-                }
+            foreach ($args['applicant_document_tag_id'] as $tag) {
+                $rejectDetail->applicantDocumentTags()->attach($tag);
             }
 
             return $rejectDetail;
