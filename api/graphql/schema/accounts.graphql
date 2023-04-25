@@ -176,6 +176,7 @@ input QueryAccountListFilterStatic @spread{
 }
 
 input QueryDownloadAccountListFilterStatic @spread {
+    id: ID @eq
     hasCompanyMixedIdOrName: Mixed @eq
     hasPaymentSystemMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
@@ -242,7 +243,7 @@ input InputAccount{
     parent_id: ID
     "ID Individual or Company"
     client_id: ID
-    "лимит максимального баланса"
+    "лимит максимального баланса"createAccount
     min_limit_balance: Decimal
     "лимит минимального баланса"
     max_limit_balance: Decimal
