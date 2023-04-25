@@ -360,6 +360,21 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
+        if (strpos($error->getMessage(), 'applicant_document_tag_categories')) {
+            return $next(new Error(
+                'Category couldn\'t be deleted: it contains tags',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => 'Category couldn\'t be deleted: it contains tags',
+                ]
+            ));
+        }
         //$underlyingException = $error->getPrevious();
         if (strpos($error->getMessage(), 'duplicate')) {
             return $next(new Error(
