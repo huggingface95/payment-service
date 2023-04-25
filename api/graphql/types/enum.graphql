@@ -3,7 +3,22 @@ enum ApplicantType {
     ApplicantCompany @enum(value: "ApplicantCompany")
 }
 
+enum FeePeriodEnum {
+    DAILY @enum(value: 1)
+    WEEKLY @enum(value: 2)
+    MONTHLY @enum(value: 3)
+    YEARLY @enum(value: 4)
+    OTHER_SCHEDULE @enum(value: 5)
+    EACH_TIME @enum(value: 6)
+}
+
 enum ProviderTypeEnum {
     PaymentProvider @enum(value: "PaymentProvider")
     PaymentProviderIban @enum(value: "PaymentProviderIban")
+}
+
+enum RespondentFeesEnum {
+    OUR @enum(value: 1)
+    BEN @enum(value: 2)
+    SHA @enum(value: 3)
 }
