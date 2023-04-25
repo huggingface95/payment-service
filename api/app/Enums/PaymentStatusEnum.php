@@ -11,6 +11,7 @@ enum PaymentStatusEnum: int
     case UNSIGNED = 5;
     case WAITING_EXECUTION_DATE = 6;
     case EXECUTED = 7;
+    case REFUND = 8;
 
     public function toString(): string
     {
@@ -22,6 +23,7 @@ enum PaymentStatusEnum: int
             self::UNSIGNED => 'Unsigned',
             self::WAITING_EXECUTION_DATE => 'Waiting execution date',
             self::EXECUTED => 'Executed',
+            self::REFUND => 'Refund',
         };
     }
 }
