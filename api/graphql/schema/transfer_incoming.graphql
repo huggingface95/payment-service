@@ -141,8 +141,8 @@ input QueryTransferIncomingsFilterStatic @spread {
     status_id: ID @eq
     hasAccountFilterByAccountNumber: String @ilike
     hasFeeFilterByFee: String @ilike
-    fee_amount: String @gte @lte
-    amount_debt: String @gte @lte
+    fee_amount: String @eq @gte @lte
+    amount_debt: String @eq @gte @lte
     hasRecipientMixedNameOrFullname: Mixed @ilike
 }
 
