@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Account;
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
@@ -32,6 +34,7 @@ class AccountTableSeeder extends Seeder
                     'commission_template_id' => 1,
                     'payment_system_id' => 1,
                     'payment_provider_id' => 1,
+                    'iban_provider_id' => 1,
                     'account_state_id' => 1,
                     'payment_bank_id' => 1,
                     'is_primary' => true,
@@ -41,6 +44,8 @@ class AccountTableSeeder extends Seeder
                     'min_limit_balance' => 500,
                     'max_limit_balance' => 80000,
                     'account_type' => 'Business',
+                    'client_id' => $i,
+                    'client_type' => $faker->randomElement([class_basename(ApplicantIndividual::class), class_basename(ApplicantCompany::class)]),
                     'created_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                     'updated_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                 ]
@@ -61,6 +66,7 @@ class AccountTableSeeder extends Seeder
                 'commission_template_id' => 1,
                 'payment_system_id' => 1,
                 'payment_provider_id' => 1,
+                'iban_provider_id' => 1,
                 'account_state_id' => 1,
                 'payment_bank_id' => 1,
                 'is_primary' => true,
@@ -70,6 +76,8 @@ class AccountTableSeeder extends Seeder
                 'min_limit_balance' => 500,
                 'max_limit_balance' => 80000,
                 'account_type' => 'Business',
+                'client_id' => 3,
+                'client_type' => class_basename(ApplicantCompany::class),
                 'created_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                 'updated_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
             ]
