@@ -9,7 +9,6 @@ enum FeePeriodEnum {
     MONTHLY @enum(value: 3)
     YEARLY @enum(value: 4)
     OTHER_SCHEDULE @enum(value: 5)
-    EACH_TIME @enum(value: 6)
 }
 
 enum ProviderTypeEnum {
