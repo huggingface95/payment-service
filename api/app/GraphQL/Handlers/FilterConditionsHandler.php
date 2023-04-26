@@ -158,6 +158,7 @@ class FilterConditionsHandler
         if (!preg_match('/^(has)|(Mixed)|(doesntHave)/', $whereConditions['column'] ?? 'null')) {
             if ($column = $whereConditions['column'] ?? null) {
                 $this->assertValidColumnReference($column);
+                $whereConditions = $this->prefixConditionWithTableName($whereConditions, $model);
                 $this->operator->applyConditions($builder, $whereConditions, $boolean);
             }
         }
@@ -265,14 +266,21 @@ class FilterConditionsHandler
     protected function prefixConditionWithTableName(array $condition, Model $model): array
     {
         if (isset($condition['column'])) {
-            $condition['column'] = $model->getTable() . '.' . $condition['column'];
+            if (!str_contains($condition['column'], '.')) {
+                $condition['column'] = $model->getTable() . '.' . $condition['column'];
+            }
+
         } elseif (isset($condition[0]['column'])) {
             foreach ($condition as &$item) {
-                $item['column'] = $model->getTable() . '.' . $item['column'];
+                if (!str_contains($item['column'], '.')) {
+                    $item['column'] = $model->getTable() . '.' . $item['column'];
+                }
             }
         } elseif ((isset($condition['OR']) && is_array($condition['OR'])) || (isset($condition['AND']) && is_array($condition['AND']))) {
             foreach ($condition['OR'] ?? $condition['AND'] as &$item) {
-                $item['column'] = $model->getTable() . '.' . $item['column'];
+                if (!str_contains($item['column'], '.')) {
+                    $item['column'] = $model->getTable() . '.' . $item['column'];
+                }
             }
         }
 
