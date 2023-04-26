@@ -13,6 +13,12 @@ type TransferExchange {
     updated_at: DateTime!
 }
 
+type TransferExchangeStatistic {
+    status_id: ID!
+    name: String!
+    count: Int!
+}
+
 extend type Query @guard {
     """
     Получить трансфер
@@ -28,6 +34,21 @@ extend type Query @guard {
     ): [TransferExchange!]!
         @paginate(defaultCount: 10)
         @orderBy(column: "id", direction: ASC)
+
+    """
+    Получить статистику по входящим платежам
+    """
+    transferExchangeStatistic(
+        created_at: DateTimeRange @whereBetween
+        filter: _ @filterConditions(static: QueryTransferExchangeStatisticFilterStatic)
+    ): [TransferExchangeStatistic]
+    @field(resolver: "TransferExchangeQuery@statistic")
+
+}
+
+input QueryTransferExchangeStatisticFilterStatic @spread {
+    company_id: ID @eq
+    hasJoinTransferOutgoingPivotSenderMixedIdOrFullnameOrName: Mixed @eq
 }
 
 input QueryTransferExchnagesFilterStatic @spread {
