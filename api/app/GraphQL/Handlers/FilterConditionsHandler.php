@@ -111,11 +111,11 @@ class FilterConditionsHandler
 
             if (preg_match('/^(.*?)FilterBy(.*)/', $hasCondition[1], $hasConditionArguments)) {
                 $relation = $hasConditionArguments[1];
-                $condition = $this->prefixConditionWithTableName([
+                $condition = [
                     'column' => strtolower(Str::snake($hasConditionArguments[2])),
                     'value' => $whereConditions['value'],
                     'operator' => $whereConditions['operator'],
-                ], $joinModel ?? $model);
+                ];
             } elseif (preg_match('/^(.*?)Mixed(.*)/', $hasCondition[1], $hasConditionArguments)) {
                 $relation = $hasConditionArguments[1];
                 $relationship = $joinRelationship ?? $model->$relation();
@@ -158,7 +158,6 @@ class FilterConditionsHandler
         if (!preg_match('/^(has)|(Mixed)|(doesntHave)/', $whereConditions['column'] ?? 'null')) {
             if ($column = $whereConditions['column'] ?? null) {
                 $this->assertValidColumnReference($column);
-                $whereConditions = $this->prefixConditionWithTableName($whereConditions, $model);
                 $this->operator->applyConditions($builder, $whereConditions, $boolean);
             }
         }
