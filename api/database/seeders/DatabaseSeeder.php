@@ -72,6 +72,8 @@ class DatabaseSeeder extends Seeder
         $this->call(BankCorrespondentCurrenciesRegionsSeeder::class);
         $this->call(PaymentBankTableSeeder::class);
         $this->call(PaymentBankCurrenciesRegionsSeeder::class);
+        $this->call(FileTableSeeder::class);
+        $this->call(PaymentProviderIbanTableSeeder::class);
         $this->call(AccountTableSeeder::class);
         $this->call(ApplicantBankingAccessTableSeeder::class);
         $this->call(PaymentUrgencyTableSeeder::class);
@@ -82,7 +84,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PaymentsTableSeeder::class);
         $this->call(DocumentStateTableSeeder::class);
         $this->call(DocumentTypeTableSeeder::class);
-        $this->call(FileTableSeeder::class);
         $this->call(ApplicantDocumentTableSeeder::class);
         $this->call(GroupRoleProvidersTableSeeder::class);
         $this->call(PaymentSystemRegionsTableSeeder::class);
@@ -105,5 +106,6 @@ class DatabaseSeeder extends Seeder
         $this->call(KycTimelineTableSeeder::class);
         $this->call(CurrencyExchangeRateTableSeeder::class);
         $this->call(ProjectSettingsTableSeeder::class);
+        $this->call(AccountClientsTableSeeder::class);
     }
 }
