@@ -31,9 +31,10 @@ func encodeCode(provider string, email string, deviceInfo *dto.DeviceDetectorInf
 	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s-%s-%s-%s-%s-%s", provider, email, deviceInfo.Ip, deviceInfo.OsName, deviceInfo.ClientEngine, deviceInfo.Lang)))
 }
 
-func InsertActiveSessionLog(provider string, email string, active bool, trusted bool, expiredAt *time.Time, deviceInfo *dto.DeviceDetectorInfo) *clickhouse.ActiveSession {
+func InsertActiveSessionLog(provider string, email string, companyName string, active bool, trusted bool, expiredAt *time.Time, deviceInfo *dto.DeviceDetectorInfo) *clickhouse.ActiveSession {
 	activeSession := &clickhouse.ActiveSession{
 		Id:             uuid.NewString(),
+		Company:        companyName,
 		Code:           encodeCode(provider, email, deviceInfo),
 		Email:          email,
 		Provider:       provider,
