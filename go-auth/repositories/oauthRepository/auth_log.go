@@ -43,6 +43,7 @@ func InsertAuthLog(provider string, email string, companyName string, status str
 		Country:        deviceInfo.Country,
 		City:           deviceInfo.City,
 		Lang:           deviceInfo.Lang,
+		Domain:         deviceInfo.Domain,
 	}
 
 	result := database.ClickhouseInstance.Create(&authLog)
