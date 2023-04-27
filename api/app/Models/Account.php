@@ -121,12 +121,11 @@ class Account extends BaseModel implements BaseModelInterface
     public function getClientAccountsAttribute(): array
     {
         return self::query()->with('currencies')
-            ->join('account_individuals_companies', 'account_individuals_companies.account_id', '=', 'accounts.id')
-            ->join('account_individuals_companies as aic', function ($join) {
-                $join->on('aic.client_id', '=', 'account_individuals_companies.client_id');
-                $join->on('aic.client_type', '=', 'account_individuals_companies.client_type');
+            ->join('accounts as aic', function ($join) {
+                $join->on('aic.client_id', '=', 'accounts.client_id');
+                $join->on('aic.client_type', '=', 'accounts.client_type');
             })
-            ->join('accounts as a', 'a.id', '=', 'aic.account_id')
+            ->join('accounts as a', 'a.id', '=', 'aic.id')
             ->where('accounts.id', '=', $this->id)
             ->select('a.id', 'a.current_balance', 'a.reserved_balance', 'a.available_balance', 'a.currency_id', 'a.min_limit_balance', 'a.max_limit_balance')
             ->get()
