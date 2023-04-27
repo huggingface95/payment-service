@@ -53,8 +53,10 @@ class TransferExchangeService extends AbstractService
             $incoming = $this->transferIncomingRepository->create($data['incoming']);
             $exchange = $this->transferExchangeRepository->create([
                 'company_id' => $outgoing->company_id,
-                'client_id' => $outgoing->account?->company_id,
+                'client_id' => $outgoing->account?->client_id,
+                'client_type' => $outgoing->account?->client_type,
                 'requested_by_id' => $outgoing->requested_by_id,
+                'user_type' => $outgoing->user_type,
                 'debited_account_id' => $outgoing->account?->id,
                 'credited_account_id' => $incoming->account?->id,
                 'status_id' => $outgoing->status_id,
