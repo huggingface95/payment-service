@@ -7,6 +7,7 @@ use App\Enums\MemberStatusEnum;
 use App\Models\Clickhouse\ActiveSession;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\UserPermission;
+use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -194,8 +195,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
             ->limit(1)
             ->first();
 
-
-        if (!is_null($activeSession) && Auth::guard('api')->user()?->id == $this->id) {
+        if (!is_null($activeSession) && Carbon::parse($activeSession['expired_at'] ?? 0)->timestamp >= Carbon::parse()->timestamp) {
             $activeSession['current_session'] = true;
         }
         return $activeSession;
