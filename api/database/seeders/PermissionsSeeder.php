@@ -665,8 +665,8 @@ class PermissionsSeeder extends Seeder
                                     ],
                                     'Applicants:Corporate List.Add New Corporate' => [
                                         'data' => [
-                                            'name' => 'Applicants:Corporate List.Add New Document',
-                                            'display_name' => 'Add New Document',
+                                            'name' => 'Applicants:Corporate List.Add New Corporate',
+                                            'display_name' => 'Add New Corporate',
                                             'guard_name' => 'api',
                                             'order' => 2,
                                             'type' => 'add',
