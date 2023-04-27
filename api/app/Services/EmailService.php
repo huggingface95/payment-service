@@ -104,6 +104,10 @@ class EmailService
         $verifyToken = $this->verifyService->createVerifyToken($applicant);
 
         $company = $applicant->company;
+        if (! $company) {
+            throw new EmailException('The applicant doesn\'t have a company or the company has been deleted', '404');
+        }
+
         $emailTemplateName = 'Reset Password';
         $emailData = [
             'email' => $applicant->email,
@@ -125,6 +129,10 @@ class EmailService
         $verifyToken = $this->verifyService->createVerifyToken($applicant);
 
         $company = $applicant->company;
+        if (! $company) {
+            throw new EmailException('The applicant doesn\'t have a company or the company has been deleted', '404');
+        }
+        
         $emailTemplateName = 'Sign Up: Email Confirmation';
         $emailData = [
             'email' => $applicant->email,
