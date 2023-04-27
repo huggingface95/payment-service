@@ -107,7 +107,7 @@ func Login(context *gin.Context) {
 	}
 
 	if clientType == constants.Individual && config.Conf.App.CheckDevice && activeSession == nil {
-		if ok, s, data := checkAndUpdateSession(clientType, user.GetEmail(), user.GetFullName(), user.GetCompanyId(), deviceInfo, context); ok == false {
+		if ok, s, data := checkAndUpdateSession(clientType, user.GetEmail(), user.GetFullName(), user.GetCompanyId(), user.GetCompany().Name, deviceInfo, context); ok == false {
 			context.JSON(s, data)
 			return
 		}
@@ -180,7 +180,7 @@ func Login(context *gin.Context) {
 	}
 
 	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusLogin, &expirationTime, deviceInfo)
-	oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), true, true, &expirationTime, deviceInfo)
+	oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), user.GetCompany().Name, true, true, &expirationTime, deviceInfo)
 	context.JSON(http.StatusOK, gin.H{"access_token": tokenJWT, "token_type": "bearer", "expires_in": expirationTime.Unix()})
 
 }
@@ -195,8 +195,8 @@ func checkPassword(c *gin.Context, u postgres.User, r requests.LoginRequest) boo
 	return true
 }
 
-func checkAndUpdateSession(provider string, email string, fullName string, companyId uint64, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
-	activeSessionCreated := oauthRepository.InsertActiveSessionLog(provider, email, true, false, nil, deviceInfo)
+func checkAndUpdateSession(provider string, email string, fullName string, companyId uint64, companyName string, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
+	activeSessionCreated := oauthRepository.InsertActiveSessionLog(provider, email, companyName, true, false, nil, deviceInfo)
 	if activeSessionCreated != nil {
 		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendNewDeviceEmail, &cache.ConfirmationNewDeviceCache{
 			CompanyId: companyId,

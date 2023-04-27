@@ -6,6 +6,7 @@ import (
 
 type ActiveSession struct {
 	Id             string     `gorm:"column:id"`
+	Company        string     `gorm:"column:company"`
 	Provider       string     `gorm:"column:provider"`
 	Email          string     `gorm:"column:email"`
 	Ip             string     `gorm:"column:ip"`
