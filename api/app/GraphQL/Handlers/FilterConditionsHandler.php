@@ -54,27 +54,6 @@ class FilterConditionsHandler
             }
         }
 
-        if (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)[1]['class'] != self::class) {
-            array_walk_recursive($whereConditions, function ($value) use ($builder, $model) {
-                if (str_contains($value, 'hasJoin')) {
-                    preg_match('/hasJoin(.*?)Pivot/', $value, $match);
-                    if (isset($match[1])) {
-                        $relationship = $model->{$match[1]}();
-                        /** @var Relation $relationship */
-                        if ($relationship instanceof BelongsTo && !in_array($match[1], $this->joins)) {
-                            $builder->join(
-                                $relationship->getModel()->getTable(),
-                                $relationship->getQualifiedOwnerKeyName(),
-                                '=',
-                                $relationship->getQualifiedForeignKeyName()
-                            )->select('transfer_exchanges.*');
-                        }
-                        $this->joins[] = $match[1];
-                    }
-                }
-            });
-        }
-
         if ($andConnectedConditions = $whereConditions['AND'] ?? null) {
             $builder->whereNested(
                 function ($builder) use ($andConnectedConditions, $model): void {
@@ -101,12 +80,12 @@ class FilterConditionsHandler
             $condition = null;
             $isMorph = false;
             $joinRelationship = null;
-            $joinModel = null;
+            $pivotModel = null;
 
-            if (preg_match('/^Join(.*?)Pivot(.*?)(Mixed|FilterBy|$)/', $hasCondition[1], $hasJoinConditionArguments)) {
-                $joinModel = $model->{$hasJoinConditionArguments[1]}()->getModel();
-                $joinRelationship = $joinModel->{$hasJoinConditionArguments[2]}();
-                $hasCondition[1] = preg_replace('/(Join.*?Pivot)/', '', $hasCondition[1]);
+            if (preg_match('/^(.*?)Pivot(.*?)(Mixed|FilterBy|$)/', $hasCondition[1], $hasJoinConditionArguments)) {
+                $pivotModel = $model->{$hasJoinConditionArguments[1]}()->getModel();
+                $joinRelationship = $pivotModel->{$hasJoinConditionArguments[2]}();
+                $hasCondition[1] = preg_replace('/(.*?)(Pivot)(.*)/', "$1.$3", $hasCondition[1]);
             }
 
             if (preg_match('/^(.*?)FilterBy(.*)/', $hasCondition[1], $hasConditionArguments)) {
@@ -121,7 +100,7 @@ class FilterConditionsHandler
                 $relationship = $joinRelationship ?? $model->$relation();
                 if ($relationship instanceof MorphTo) {
                     $isMorph = true;
-                    foreach (($joinModel ?? $model)->newModelQuery()->distinct()->pluck($relationship->getMorphType())->filter()->all() as $morph) {
+                    foreach (($pivotModel ?? $model)->newModelQuery()->distinct()->pluck($relationship->getMorphType())->filter()->all() as $morph) {
                         $morph = Relation::getMorphedModel($morph) ?? $morph;
                         $condition[$morph] = $this->getMixedColumns($hasConditionArguments[2], $whereConditions, (new $morph())->getTable());
                     }
@@ -178,45 +157,23 @@ class FilterConditionsHandler
     {
         return $model
             ->newQuery()
-            ->when($isMorph == false, function ($b) use ($relation, $condition, $operator, $amount) {
-                return $b->whereHas(
-                    $relation,
-                    $condition
-                        ? function ($builder) use ($condition): void {
-                        $this->__invoke(
-                            $builder,
-                            $this->prefixConditionWithTableName(
-                                $condition,
-                                $builder->getModel()
-                            ),
+            ->whereHas(
+                $relation,
+                $condition
+                    ? function ($builder) use ($condition, $isMorph): void {
+                    $this->__invoke(
+                        $builder,
+                        $this->prefixConditionWithTableName(
+                            $isMorph ? $condition[get_class($builder->getModel())] : $condition,
                             $builder->getModel()
-                        );
-                    }
-                        : null,
-                    $operator,
-                    $amount
-                );
-            })
-            ->when($isMorph, function (Builder $b) use ($relation, $condition, $operator, $amount) {
-                return $b->whereHasMorph(
-                    $relation,
-                    is_array($condition) ? array_keys($condition) : Relation::morphMap(),
-                    $condition
-                        ? function ($builder) use ($condition): void {
-                        $this->__invoke(
-                            $builder,
-                            $this->prefixConditionWithTableName(
-                                $condition[get_class($builder->getModel())],
-                                $builder->getModel()
-                            ),
-                            $builder->getModel()
-                        );
-                    }
-                        : null,
-                    $operator,
-                    $amount
-                );
-            })
+                        ),
+                        $builder->getModel()
+                    );
+                }
+                    : null,
+                $operator,
+                $amount
+            )
             ->getQuery();
     }
 

@@ -48,7 +48,7 @@ extend type Query @guard {
 
 input QueryTransferExchangeStatisticFilterStatic @spread {
     company_id: ID @eq
-    hasJoinTransferOutgoingPivotSenderMixedIdOrFullnameOrName: Mixed @eq
+    hasTransferOutgoingPivotSenderMixedIdOrFullnameOrName: Mixed @eq
 }
 
 input QueryTransferExchnagesFilterStatic @spread {
