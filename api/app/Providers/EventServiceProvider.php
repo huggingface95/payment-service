@@ -88,6 +88,8 @@ class EventServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        parent::boot();
+
         Account::observe(AccountObserver::class);
         TransferOutgoing::observe(TransferOutgoingObserver::class);
         TransferIncoming::observe(TransferIncomingObserver::class);
@@ -95,6 +97,5 @@ class EventServiceProvider extends ServiceProvider
         foreach (getAllModels() as $model) {
             $model::observe(BaseObserver::class);
         }
-
     }
 }
