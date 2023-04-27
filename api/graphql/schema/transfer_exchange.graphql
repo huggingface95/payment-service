@@ -1,16 +1,29 @@
 type TransferExchange {
     id: ID!
-    company_id: ID!
-    client_id: ID!
-    requested_by_id: ID!
-    debited_account_id: ID!
-    credited_account_id: ID!
-    status_id: ID!
+    "Входящий перевод"
     transfer_incoming: TransferIncoming @belongsTo (relation: "transferIncoming")
+    "Исходящий  перевод"
     transfer_outgoing: TransferOutgoing @belongsTo (relation: "transferOutgoing")
+    "Тип инициатора платежа"
+    user_type: UserType
+    "Статус"
+    status: PaymentStatus @belongsTo(relation: "paymentStatus")
+    "Получить инициатора платежа (Мембер или Апликант)"
+    requested_by: Clientable @morphTo(relation: "clientable")
+    "Получить связанную компанию"
+    company: Company @belongsTo(relation: "company")
+    "валютный курс"
     exchange_rate: Decimal!
-    created_at: DateTime!
-    updated_at: DateTime!
+    "Дата и время создания"
+    created_at: DateTimeUtc
+    "дебетовый счет"
+    debited_account: Account @belongsTo(relation: "debitedAccount")
+    "зачисленный счет"
+    credited_account: Account @belongsTo(relation: "creditedAccount")
+    "Поставщик котировок"
+    quote_providers: [QuoteProvider] @HasManyThrough(relation: "quoteProviders")
+    "Owner Individual|Company"
+    client: Client @morphTo(relation: "client")
 }
 
 type TransferExchangeStatistic {

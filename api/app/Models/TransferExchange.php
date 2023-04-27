@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class TransferExchange extends BaseModel
 {
@@ -16,6 +18,8 @@ class TransferExchange extends BaseModel
         'transfer_outgoing_id',
         'transfer_incoming_id',
         'exchange_rate',
+        'client_type',
+        'user_type',
     ];
 
     protected $casts = [
@@ -32,4 +36,47 @@ class TransferExchange extends BaseModel
     {
         return $this->belongsTo(TransferIncoming::class, 'transfer_incoming_id');
     }
+
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class, 'company_id', 'id');
+    }
+
+    public function debitedAccount(): BelongsTo
+    {
+        return $this->belongsTo(Account::class, 'debited_account_id', 'id');
+    }
+
+    public function creditedAccount(): BelongsTo
+    {
+        return $this->belongsTo(Account::class, 'credited_account_id', 'id');
+    }
+
+    public function clientable(): MorphTo
+    {
+        return $this->morphTo(__FUNCTION__, 'user_type', 'requested_by_id');
+    }
+
+    public function client(): MorphTo
+    {
+        return $this->morphTo(__FUNCTION__, 'client_type', 'client_id');
+    }
+
+    public function paymentStatus(): BelongsTo
+    {
+        return $this->belongsTo(PaymentStatus::class, 'status_id');
+    }
+
+    public function quoteProviders(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            QuoteProvider::class,
+            Company::class,
+            'id',
+            'company_id',
+            'company_id',
+            'id'
+        );
+    }
+
 }
