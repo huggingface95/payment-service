@@ -56,7 +56,9 @@ class TransferExchangeMutationTest extends TestCase
                         to_account_id: $to_account
                       ) {
                         id
-                        status_id
+                        status{
+                            id
+                        }
                     }
                 }
                 ',
@@ -76,7 +78,9 @@ class TransferExchangeMutationTest extends TestCase
             'data' => [
                 'createTransferExchange' => [
                     'id' => $id['data']['createTransferExchange']['id'],
-                    'status_id' => (string) PaymentStatusEnum::UNSIGNED->value,
+                    'status' => [
+                        'id' => (string) PaymentStatusEnum::UNSIGNED->value,
+                    ]
                 ],
             ],
         ]);
