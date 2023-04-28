@@ -6,4 +6,5 @@ type OperationInputs struct {
 
 type OperationHeaders struct {
 	Referer string `header:"pagereferer" binding:"required"`
+	Origin  string `header:"origin" binding:"required"`
 }
