@@ -16,7 +16,7 @@ class CreateCompanyRevenueAccountsTable extends Migration
         Schema::create('company_revenue_accounts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('company_id');
-            $table->string('number', 13);
+            $table->string('number', 100);
 
             $table->unique('number');
             $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade')->onUpdate('cascade');
