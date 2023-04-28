@@ -5,6 +5,7 @@ import (
 	"github.com/gamebtc/devicedetector"
 	"github.com/gin-gonic/gin"
 	"io"
+	"jwt-authentication-golang/requests"
 	"jwt-authentication-golang/responses"
 	"net/http"
 )
@@ -33,6 +34,13 @@ type DeviceDetectorInfo struct {
 }
 
 func (d *DeviceDetectorInfo) Parse(context *gin.Context) *DeviceDetectorInfo {
+	var header requests.OperationHeaders
+	errHeader := context.ShouldBindHeader(&header)
+
+	if errHeader != nil {
+		header.Origin = "PROBLEM DETECT DOMAIN"
+	}
+
 	info := d.detector.Parse(context.Request.UserAgent())
 	os := info.GetOs()
 	client := info.GetClient()
@@ -69,7 +77,7 @@ func (d *DeviceDetectorInfo) Parse(context *gin.Context) *DeviceDetectorInfo {
 		d.BotName = bot.Name
 	}
 
-	d.Domain = context.Request.Host
+	d.Domain = header.Origin
 
 	return d
 }
