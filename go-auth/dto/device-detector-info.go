@@ -34,7 +34,7 @@ type DeviceDetectorInfo struct {
 }
 
 func (d *DeviceDetectorInfo) Parse(context *gin.Context) *DeviceDetectorInfo {
-	var header requests.OperationHeaders
+	var header requests.LoginHeaders
 	errHeader := context.ShouldBindHeader(&header)
 
 	if errHeader != nil {
