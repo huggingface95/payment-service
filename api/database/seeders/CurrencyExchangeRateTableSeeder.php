@@ -27,6 +27,7 @@ class CurrencyExchangeRateTableSeeder extends Seeder
                 ],
                 [
                     'rate' => $faker->randomFloat('2', 0, 2),
+                    'quote_provider_id' => 1,
                 ]
             );
         }
