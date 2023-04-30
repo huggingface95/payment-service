@@ -9,6 +9,8 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         from_account_id: ID!
         "ID аккаунта получателя"
         to_account_id: ID!
+        "ID прайс-лист фии"
+        price_list_fee_id: ID!
         "ID файлов"
         file_id: [ID]
     ): TransferExchange

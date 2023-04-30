@@ -32,7 +32,11 @@ type PriceListFee {
     price_list_id: ID
     fee_ranges: JSON
     scheduled: PriceListFeeScheduled @hasOne(relation: "feeScheduled")
+    "Провайдер квот"
+    quote_provider: QuoteProvider @belongsTo(relation: "quoteProvider")
+    "Дата создания"
     created_at: DateTimeUtc
+    "Дата обновления"
     updated_at: DateTimeUtc
 }
 
@@ -92,6 +96,7 @@ input PriceListFeeInput {
     operation_type_id: ID!
     period_id: ID
     price_list_id: ID!
+    quote_provider_id: ID
     fee_ranges: JSON
     fees: [PriceListFeesList!]
     scheduled: PriceListFeeScheduledInput

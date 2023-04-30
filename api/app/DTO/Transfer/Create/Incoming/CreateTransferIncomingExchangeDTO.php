@@ -8,7 +8,7 @@ use App\Models\Account;
 
 class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
 {
-    public static function transform(Account $account, int $operationType, string $amount, string $paymentNumber, string $date): CreateTransferIncomingDTO
+    public static function transform(Account $account, int $operationType, string $amount, string $paymentNumber, string $date, int $price_list_fee_id): CreateTransferIncomingDTO
     {
         $args['account_id'] = $account->id;
         $args['currency_id'] = $account->currencies?->id;
@@ -31,7 +31,7 @@ class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
         $args['group_type_id'] = 1;
         $args['project_id'] = 1;
         $args['price_list_id'] = 1;
-        $args['price_list_fee_id'] = 121;
+        $args['price_list_fee_id'] = $price_list_fee_id;
         $args['requested_by_id'] = 2;
         $args['created_at'] = $date;
         $args['execution_at'] = $date;

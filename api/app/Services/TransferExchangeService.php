@@ -6,12 +6,14 @@ use App\DTO\Transaction\TransactionDTO;
 use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingExchangeDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingExchangeDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\FeeModeEnum;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
-use App\Models\CurrencyExchangeRate;
+use App\Models\PriceListFee;
 use App\Models\TransferOutgoing;
+use App\Repositories\Interfaces\FeeRepositoryInterface;
 use App\Repositories\Interfaces\TransferExchangeRepositoryInterface;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
@@ -25,6 +27,8 @@ class TransferExchangeService extends AbstractService
 {
     public function __construct(
         protected CommissionService                   $commissionService,
+        protected CompanyRevenueAccountService        $revenueService,
+        protected FeeRepositoryInterface              $feeRepository,
         protected TransferOutgoingService             $transferOutgoingService,
         protected TransferIncomingService             $transferIncomingService,
         protected TransferIncomingRepositoryInterface $transferIncomingRepository,
@@ -83,15 +87,22 @@ class TransferExchangeService extends AbstractService
     /**
      * @throws GraphqlException
      */
-    private function getExchangeRate(Account $fromAccount, Account $toAccount): float
+    private function getExchangeRate(array $args, Account $fromAccount, Account $toAccount): float
     {
-        $exchageRate = CurrencyExchangeRate::where('currency_from_id', $fromAccount->currencies->id)
+        $quoteProvider = PriceListFee::find($args['price_list_fee_id'])?->quoteProvider ?? 
+            throw new GraphqlException('Quote provider not found. Please setup quote provider');
+
+        $exchageRate = $quoteProvider->currencyExchangeRates
+            ->where('currency_from_id', $fromAccount->currencies->id)
             ->where('currency_to_id', $toAccount->currencies->id)
-            ->first()
-            ->rate ?? null;
+            ->first()?->rate;
 
         if ($exchageRate === null) {
             throw new GraphqlException('Exchange rate not found', Response::HTTP_BAD_REQUEST);
+        }
+
+        if (!empty($quoteProvider->margin_commission)) {
+            $exchageRate += $exchageRate * ($quoteProvider->margin_commission / 100);
         }
 
         return $exchageRate;
@@ -100,11 +111,11 @@ class TransferExchangeService extends AbstractService
     /**
      * @throws GraphqlException
      */
-    private function getExchangeAmount(float $amount, Account $fromAccount, Account $toAccount): float
+    private function getExchangeAmount(array $args, Account $fromAccount, Account $toAccount): float
     {
-        $exchageRate = $this->getExchangeRate($fromAccount, $toAccount);
+        $exchageRate = $this->getExchangeRate($args, $fromAccount, $toAccount);
 
-        return $amount * $exchageRate;
+        return $args['amount'] * $exchageRate;
     }
 
     /**
@@ -112,15 +123,15 @@ class TransferExchangeService extends AbstractService
      */
     private function populateTransferData(array $args, Account $fromAccount, Account $toAccount, int $operationType): array
     {
-        $toAmount = (string)$this->getExchangeAmount($args['amount'], $fromAccount, $toAccount);
+        $toAmount = (string)$this->getExchangeAmount($args, $fromAccount, $toAccount);
 
-        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingExchangeDTO::class, $fromAccount, $operationType, $args['amount']);
-        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingExchangeDTO::class, $fromAccount, $operationType, $toAmount, $outgoingDTO->payment_number, $outgoingDTO->created_at);
+        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingExchangeDTO::class, $fromAccount, $operationType, $args['amount'], $args['price_list_fee_id']);
+        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingExchangeDTO::class, $toAccount, $operationType, $toAmount, $outgoingDTO->payment_number, $outgoingDTO->created_at, $args['price_list_fee_id']);
 
         return [
             'outgoing' => $outgoingDTO->toArray(),
             'incoming' => $incomingDTO->toArray(),
-            'exchange_rate' => $this->getExchangeRate($fromAccount, $toAccount),
+            'exchange_rate' => $this->getExchangeRate($args, $fromAccount, $toAccount),
         ];
     }
 
@@ -195,6 +206,11 @@ class TransferExchangeService extends AbstractService
 
         $this->transferOutgoingService->updateTransferStatusToExecuted($transfers['outgoing'], $transactionOutgoing);
         $this->transferIncomingService->updateTransferStatusToExecuted($transfers['incoming'], $transactionIncoming);
+
+        $qpMarginAmount = $this->feeRepository->getFeeByTypeMode($transfers['outgoing']->id, FeeModeEnum::MARGIN->value)->fee ?? 0;
+        if ($qpMarginAmount > 0) {
+            $this->revenueService->addToRevenueAccountBalanceByCompanyId($fromAccount->company_id, $qpMarginAmount, $toAccount->currency_id);
+        }
 
         $this->transferExchangeRepository->update($transfers['exchange'], [
             'status_id' => PaymentStatusEnum::EXECUTED->value,

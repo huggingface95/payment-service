@@ -21,6 +21,8 @@ class FeeModesSeeder extends Seeder
             FeeModeEnum::PERCENT->value,
             FeeModeEnum::BASE->value,
             FeeModeEnum::PROVIDER->value,
+            FeeModeEnum::QUOTEPROVIDER->value,
+            FeeModeEnum::MARGIN->value,
         ];
 
         foreach ($feeModes as $mode) {
