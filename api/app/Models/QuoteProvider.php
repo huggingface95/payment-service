@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class QuoteProvider extends BaseModel
 {
@@ -11,6 +12,9 @@ class QuoteProvider extends BaseModel
         'company_id',
         'status',
         'quote_type',
+        'api_url',
+        'api_secret',
+        'margin_commission',
     ];
 
     protected $casts = [
@@ -21,5 +25,10 @@ class QuoteProvider extends BaseModel
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function currencyExchangeRates(): HasMany
+    {
+        return $this->hasMany(CurrencyExchangeRate::class, 'quote_provider_id');
     }
 }

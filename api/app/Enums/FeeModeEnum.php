@@ -9,6 +9,8 @@ enum FeeModeEnum: int
     case PERCENT = 3;
     case BASE = 4;
     case PROVIDER = 5;
+    case QUOTEPROVIDER = 6;
+    case MARGIN = 7;
 
     public function toString(): string
     {
@@ -18,6 +20,8 @@ enum FeeModeEnum: int
             self::PERCENT => 'Percent',
             self::BASE => 'Base',
             self::PROVIDER => 'Provider',
+            self::QUOTEPROVIDER => 'QuoteProvider',
+            self::MARGIN => 'Margin',
         };
     }
 }

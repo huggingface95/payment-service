@@ -6,19 +6,23 @@ use App\Enums\PeriodEnum;
 use App\Models\Account;
 use App\Models\CompanyLedgerDayHistory;
 use App\Models\CompanyLedgerSettings;
-use App\Models\CompanyRevenueAccount;
 use App\Models\Fee;
-use App\Models\Transactions;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CompanyRevenueAccountCommissionService extends AbstractService
 {
+
+    public function __construct(
+        protected CompanyRevenueAccountService $revenueAccountService,
+    )
+    {
+    }
+
     public function calculateRevenueCommissionByPeriod(Account $account, CompanyLedgerSettings $ledgerSettings, string $period): void
     {
         $dateInterval = $this->getCommissionDateInterval($account, $ledgerSettings, $period);
-        $revenueAccounts = $this->getRevenueAccountsByCompanyId($account->company_id);
+        $revenueAccounts = $this->revenueAccountService->getRevenueAccountsByCompanyId($account->company_id);
 
         if (empty($ledgerSettings->end_of_day_time) || $period === PeriodEnum::DAY->value) {
             $amountByCurrency = $this->getFeeByCurrency($account, $dateInterval);
@@ -34,7 +38,7 @@ class CompanyRevenueAccountCommissionService extends AbstractService
                 $revenueBalance = $revenueAccount->balance;
 
                 if ($this->isAllowToAddBalance($ledgerSettings, $period)) {
-                    $this->addToRevenueAccountBalance($account, $revenueAccount, $amount, $currency_id);
+                    $this->revenueAccountService->addToRevenueAccountBalance($account->id, $revenueAccount, $amount, $currency_id);
                     $revenueBalance += $amount;
                 }
 
@@ -56,30 +60,6 @@ class CompanyRevenueAccountCommissionService extends AbstractService
                 Log::error($e->getMessage());
             }
         });
-    }
-
-    private function addToRevenueAccountBalance(Account $account, CompanyRevenueAccount $revenueAccount, float $amount, int $currency_id): void
-    {
-        $revenueBalance = $revenueAccount->balance + $amount;
-
-        Transactions::create([
-            'company_id' => $account->company_id,
-            'transfer_id' => null,
-            'transfer_type' => class_basename(TransferIncoming::class),
-            'currency_src_id' => $currency_id,
-            'currency_dst_id' => $currency_id,
-            'account_src_id' => null,
-            'account_dst_id' => null,
-            'revenue_account_id' => $revenueAccount->id,
-            'balance_prev' => $revenueAccount->balance,
-            'balance_next' => $revenueBalance,
-            'amount' => $amount,
-            'txtype' => 'revenue',
-        ]);
-
-        $revenueAccount->update([
-            'balance' => $revenueBalance,
-        ]);
     }
 
     private function isAllowToAddBalance(CompanyLedgerSettings $ledgerSettings, string $period): bool
@@ -137,12 +117,5 @@ class CompanyRevenueAccountCommissionService extends AbstractService
         return $fees->groupBy('transfer.currency_id')->map(function ($item) {
             return $item->sum('fee');
         });
-    }
-
-    private function getRevenueAccountsByCompanyId(int $companyId): Collection
-    {
-        return CompanyRevenueAccount::query()
-            ->where('company_id', $companyId)
-            ->get();
     }
 }

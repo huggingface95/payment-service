@@ -40,7 +40,7 @@ class PriceListFee extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['name', 'price_list_id', 'type_id', 'operation_type_id', 'period_id'];
+    protected $fillable = ['name', 'price_list_id', 'type_id', 'operation_type_id', 'period_id', 'quote_provider_id'];
 
     protected $appends = ['fee_ranges'];
 
@@ -156,5 +156,10 @@ class PriceListFee extends BaseModel
     public function feeDestinationCurrency(): HasMany
     {
         return $this->hasMany(PriceListFeeDestinationCurrency::class, 'price_list_fee_currency_id');
+    }
+
+    public function quoteProvider(): BelongsTo
+    {
+        return $this->belongsTo(QuoteProvider::class, 'quote_provider_id');
     }
 }

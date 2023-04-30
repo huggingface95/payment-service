@@ -15,5 +15,6 @@ class CurrencyExchangeRate extends BaseModel
         'currency_from_id',
         'currency_to_id',
         'rate',
+        'quote_provider_id',
     ];
 }

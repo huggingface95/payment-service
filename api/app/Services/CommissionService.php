@@ -12,8 +12,10 @@ use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
 use App\Models\Currencies;
 use App\Models\Fee;
+use App\Models\PriceListFee;
 use App\Models\PriceListFeeCurrency;
 use App\Models\PriceListPPFeeCurrency;
+use App\Models\PriceListQpFeeCurrency;
 use App\Models\TransferIncoming;
 use App\Models\TransferOutgoing;
 use Illuminate\Support\Collection;
@@ -27,7 +29,10 @@ class CommissionService extends AbstractService
     {
         $fee = $this->getAllCommissions($transfer, $transactionDTO);
 
-        $this->createFee($transfer, $fee['fee_amount'], FeeModeEnum::BASE->value)->createFee($transfer, $fee['fee_pp'], FeeModeEnum::PROVIDER->value);
+        $this->createFee($transfer, $fee['fee_amount'], FeeModeEnum::BASE->value)
+            ->createFee($transfer, $fee['fee_pp'], FeeModeEnum::PROVIDER->value)
+            ->createFee($transfer, $fee['fee_qp'], FeeModeEnum::QUOTEPROVIDER->value)
+            ->createFee($transfer, $fee['qp_margin'], FeeModeEnum::MARGIN->value);
 
         if ($fee['amount_debt'] > 0) {
             $transfer->amount_debt = $fee['amount_debt'];
@@ -44,12 +49,18 @@ class CommissionService extends AbstractService
     {
         $feeAmount = $this->commissionCalculation($transfer, $transactionDTO);
         $feePPAmount = $this->commissionPPCalculation($transfer, $transactionDTO);
-        $amountDebt = $this->getTransferAmountDebt($transfer, $feeAmount + $feePPAmount);
+        $feeQPAmount = $this->commissionQPCalculation($transfer, $transactionDTO);
+        $qpMarginAmount = $this->commissionQPMarginCalculation($transfer, $transactionDTO, $feeQPAmount);
+        $feeTotal = $feeAmount + $feePPAmount + $feeQPAmount;
+
+        $amountDebt = $this->getTransferAmountDebt($transfer, $feeTotal);
 
         return [
             'fee_amount' => $feeAmount,
             'fee_pp' => $feePPAmount,
-            'fee_total' => $feeAmount + $feePPAmount,
+            'fee_qp' => $feeQPAmount,
+            'fee_total' => $feeTotal,
+            'qp_margin' => $qpMarginAmount,
             'amount_debt' => $amountDebt,
         ];
     }
@@ -71,7 +82,7 @@ class CommissionService extends AbstractService
      */
     private function commissionPPCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
     {
-        $priceListFees = PriceListPpFeeCurrency::where('currency_id', $transfer->currency_id)
+        $priceListFees = PriceListPPFeeCurrency::where('currency_id', $transfer->currency_id)
             ->whereHas('PriceListPPFee', function ($query) use ($transfer) {
                 $query->where('payment_system_id', $transfer->payment_system_id)
                     ->where('payment_provider_id', $transfer->payment_provider_id);
@@ -79,6 +90,38 @@ class CommissionService extends AbstractService
             ->get();
 
         return $this->calculatePaymentFee($priceListFees, $transfer, $transactionDTO);
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    private function commissionQPCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
+    {
+        $quoteProviderId = PriceListFee::find($transfer->price_list_fee_id)?->quote_provider_id;
+
+        if (empty($quoteProviderId) && $transfer->operation_type_id == OperationTypeEnum::EXCHANGE->value) {
+            return throw new GraphqlException('Quote provider not found. Please setup quote provider');
+        }
+
+        $priceListFees = PriceListQpFeeCurrency::where('currency_id', $transactionDTO->currency_dst_id)
+            ->whereHas('PriceListQpFee', function ($query) use ($quoteProviderId) {
+                $query->where('quote_provider_id', $quoteProviderId);
+            })
+            ->get();
+        
+        return $this->calculatePaymentFee($priceListFees, $transfer, $transactionDTO);
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    private function commissionQPMarginCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null, $feeQPAmount): float
+    {
+        $quoteProvider = PriceListFee::find($transfer->price_list_fee_id)?->quoteProvider;
+
+        $sum = ($transfer->amount_debt - $feeQPAmount) * ($quoteProvider->margin_commission / 100);
+
+        return $sum;
     }
 
     /**
@@ -98,13 +141,20 @@ class CommissionService extends AbstractService
         return (float)$paymentFee;
     }
 
-    private function isAllowToApplyCommission(TransferOutgoing|TransferIncoming $transfer, PriceListFeeCurrency|PriceListPPFeeCurrency $listFee, TransactionDTO $transactionDTO = null): bool
+    private function isAllowToApplyCommission(
+        TransferOutgoing|TransferIncoming $transfer,
+        PriceListFeeCurrency|PriceListPPFeeCurrency|PriceListQpFeeCurrency $listFee,
+        TransactionDTO $transactionDTO = null
+    ): bool
     {
         switch ($transfer->operation_type_id) {
             case OperationTypeEnum::EXCHANGE->value:
                 if ($transfer instanceof TransferOutgoing) {
                     if ($listFee instanceof PriceListPPFeeCurrency) {
                         return false;
+                    }
+                    if ($listFee instanceof PriceListQpFeeCurrency) {
+                        return true;
                     }
 
                     $dstCurrencies = $listFee->feeDestinationCurrency;
@@ -119,6 +169,9 @@ class CommissionService extends AbstractService
                 return false;
             case OperationTypeEnum::BETWEEN_ACCOUNT->value:
             case OperationTypeEnum::BETWEEN_USERS->value:
+                if ($listFee instanceof PriceListQpFeeCurrency) {
+                    return false;
+                }
                 if ($transfer instanceof TransferOutgoing) {
                     return true;
                 }
@@ -128,6 +181,9 @@ class CommissionService extends AbstractService
             case OperationTypeEnum::DEBIT->value:
             case OperationTypeEnum::CREDIT->value:
             case OperationTypeEnum::SCHEDULED_FEE->value:
+                if ($listFee instanceof PriceListQpFeeCurrency) {
+                    return false;
+                }
                 return true;
             default:
                 return false;
@@ -190,6 +246,10 @@ class CommissionService extends AbstractService
      */
     private function getTransferAmountDebt(TransferOutgoing|TransferIncoming $transfer, float $paymentFee): ?float
     {
+        if ($transfer->operation_type_id == OperationTypeEnum::EXCHANGE->value) {
+            return $transfer->amount - $paymentFee;
+        }
+
         return match ((int)$transfer->respondent_fees_id) {
             RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount,
             RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount + $paymentFee,

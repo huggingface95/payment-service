@@ -9,7 +9,7 @@ use Carbon\Carbon;
 
 class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
 {
-    public static function transform(Account $account, int $operationType, string $amount): CreateTransferOutgoingDTO
+    public static function transform(Account $account, int $operationType, string $amount, int $price_list_fee_id): CreateTransferOutgoingDTO
     {
         $date = Carbon::now();
 
@@ -34,7 +34,7 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['group_type_id'] = 1;
         $args['project_id'] = 1;
         $args['price_list_id'] = 1;
-        $args['price_list_fee_id'] = 121;
+        $args['price_list_fee_id'] = $price_list_fee_id;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $date->format('Y-m-d H:i:s');
         $args['recipient_bank_country_id'] = 1;

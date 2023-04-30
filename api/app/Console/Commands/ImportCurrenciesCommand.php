@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\CurrencyExchangeRate;
 use App\Models\CurrencyRateHistory;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class ImportCurrenciesCommand extends Command
 {
@@ -34,16 +36,54 @@ class ImportCurrenciesCommand extends Command
      */
     public function handle()
     {
-        CurrencyRateHistory::factory()->create([
-            'currency_src_id' => 1,
-            'currency_dst_id' => 2,
-        ]);
+        $currencies = [
+            [
+                'currency_src_id' => 1,
+                'currency_dst_id' => 1,
+            ],
+            [
+                'currency_src_id' => 1,
+                'currency_dst_id' => 2,
+            ],
+            [
+                'currency_src_id' => 1,
+                'currency_dst_id' => 3,
+            ],
+            [
+                'currency_src_id' => 1,
+                'currency_dst_id' => 4,
+            ],
+            [
+                'currency_src_id' => 1,
+                'currency_dst_id' => 5,
+            ],
+        ];
 
-        CurrencyRateHistory::factory()->create([
-            'currency_src_id' => 1,
-            'currency_dst_id' => 3,
-        ]);
+        foreach ($currencies as $currency) {
+            $this->logAndUpdateCurrency($currency);
+        }
+    }
 
-        CurrencyRateHistory::factory()->count(10)->create();
+    private function logAndUpdateCurrency($arr): void
+    {
+        try {
+            DB::beginTransaction();
+            
+            $currency = CurrencyRateHistory::factory()->create($arr);
+
+            CurrencyExchangeRate::updateOrCreate([
+                'currency_from_id' => $currency->currency_src_id,
+                'currency_to_id' => $currency->currency_dst_id,
+                'quote_provider_id' => $currency->quote_provider_id,
+            ], [
+                'rate' => $currency->rate,
+            ]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            throw $e->getMessage();
+        }
     }
 }

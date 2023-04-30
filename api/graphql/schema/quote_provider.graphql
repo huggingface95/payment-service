@@ -11,6 +11,8 @@ type QuoteProvider {
     status: ActivityStatusType!
     "Дата создания"
     created_at: DateTimeUtc!
+    "Комиссия"
+    margin_commission: Float
     "Дата обновления"
     updated_at: DateTimeUtc!
 }
@@ -51,6 +53,8 @@ input QuoteProviderInput {
     quote_type: QuoteType!
     "Статус активности"
     status: ActivityStatusType!
+    "Комиссия"
+    margin_commission: Float @rules(apply: [ "numeric", "between:0,100.00"])
 }
 
 extend type Mutation @guard {
