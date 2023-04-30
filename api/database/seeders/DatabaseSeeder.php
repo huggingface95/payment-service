@@ -104,6 +104,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PaymentProviderHistoriesTableSeeder::class);
         $this->call(TransferSwiftsTableSeeder::class);
         $this->call(KycTimelineTableSeeder::class);
+        $this->call(QuoteProviderTableSeeder::class);
         $this->call(CurrencyExchangeRateTableSeeder::class);
         $this->call(ProjectSettingsTableSeeder::class);
         $this->call(AccountClientsTableSeeder::class);
