@@ -20,12 +20,8 @@ type BankCorrespondent {
     bank_account: String!
     "Получить страну"
     country: Country @belongsTo(relation: "country")
-    "Получить валюты"
-    currencies: [Currencies] @hasMany(relation: "currencies")
-    "Получить регионы"
-    regions: [Region] @hasMany(relation: "regions")
     "IDs currencies and regions"
-    currencies_and_regions: [CurrencyAndRegionResponse]!
+    currencies_and_regions: [CurrencyAndRegionResponse]! @field(resolver: "App\\GraphQL\\ArgumentFilters\\PaymentBankArgumentFilter@filter")
     "Активность"
     is_active: Boolean
 }
@@ -51,8 +47,8 @@ input QueryBankCorrespondentsFilterStatic @spread {
     id: ID @eq
     payment_system_id: ID @eq
     name: String @eq @ilike
-    hasCurrenciesFilterById: ID @eq
-    hasRegionsFilterById: ID @eq
+    hasCurrenciesRegionsFilterByCurrencyId: ID @eq
+    hasCurrenciesRegionsFilterByRegionId: ID @eq
 }
 
 input InputBankCorrespondent {
