@@ -5,6 +5,7 @@ namespace App\GraphQL\Mutations;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\Traits\OptimizationCurrencyRegionTrait;
 use App\Models\BankCorrespondent;
+use Illuminate\Database\Eloquent\Builder;
 
 class BankCorrespondentMutator extends BaseMutator
 {
@@ -52,6 +53,26 @@ class BankCorrespondentMutator extends BaseMutator
                 $bank->currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
             }
         }
+
+        return $bank;
+    }
+
+    public function deleteCurrenciesAndRegions($_, array $args): BankCorrespondent
+    {
+        /** @var BankCorrespondent $bank */
+        $bank = BankCorrespondent::query()->findOrFail($args['id']);
+
+        $bank->currenciesRegions()
+            ->where(function (Builder $q) use ($args) {
+                foreach ($args['currencies_and_regions'] as $currencyRegion) {
+                    $q->orWhere(function (Builder $q) use ($currencyRegion) {
+                        $q->whereIn('currency_id', $currencyRegion['currency_id']);
+                        if (!empty($currencyRegion['regions'])) {
+                            $q->whereIn('region_id', $currencyRegion['regions']);
+                        }
+                    });
+                }
+            })->delete();
 
         return $bank;
     }
