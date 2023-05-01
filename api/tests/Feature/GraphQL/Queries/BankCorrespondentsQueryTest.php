@@ -184,7 +184,7 @@ class BankCorrespondentsQueryTest extends TestCase
             [
                 'query' => 'query BankCorrespondents($id: Mixed) {
                     bankCorrespondents (
-                        filter: { column: HAS_CURRENCIES_FILTER_BY_ID, value: $id }
+                        filter: { column: HAS_CURRENCIES_REGIONS_FILTER_BY_CURRENCY_ID, value: $id }
                     ) {
                         data {
                             id
@@ -228,7 +228,7 @@ class BankCorrespondentsQueryTest extends TestCase
             [
                 'query' => 'query BankCorrespondents($id: Mixed) {
                     bankCorrespondents (
-                        filter: { column: HAS_REGIONS_FILTER_BY_ID, value: $id }
+                        filter: { column: HAS_CURRENCIES_REGIONS_FILTER_BY_REGION_ID, value: $id }
                     ) {
                         data {
                             id
