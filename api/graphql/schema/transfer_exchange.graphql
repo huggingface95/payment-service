@@ -16,6 +16,8 @@ type TransferExchange {
     exchange_rate: Decimal!
     "Дата и время создания"
     created_at: DateTimeUtc
+    "Дата и время изменения"
+    updated_at: DateTimeUtc
     "дебетовый счет"
     debited_account: Account @belongsTo(relation: "debitedAccount")
     "зачисленный счет"
