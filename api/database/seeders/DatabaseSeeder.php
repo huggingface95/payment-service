@@ -65,6 +65,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ActivityLogTableSeeder::class);
         $this->call(ActivityLogTestDbTableSeeder::class);
         $this->call(FeeModesSeeder::class);
+        $this->call(QuoteProviderTableSeeder::class);
         $this->call(CommissionPriceListTableSeeder::class);
         $this->call(PriceListFeesTableSeeder::class);
         $this->call(PriceListFeeCurrencyTableSeeder::class);
@@ -104,7 +105,6 @@ class DatabaseSeeder extends Seeder
         $this->call(PaymentProviderHistoriesTableSeeder::class);
         $this->call(TransferSwiftsTableSeeder::class);
         $this->call(KycTimelineTableSeeder::class);
-        $this->call(QuoteProviderTableSeeder::class);
         $this->call(CurrencyExchangeRateTableSeeder::class);
         $this->call(ProjectSettingsTableSeeder::class);
         $this->call(AccountClientsTableSeeder::class);
