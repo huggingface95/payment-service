@@ -21,6 +21,7 @@ class TransferExchangeMutationTest extends TestCase
                     amount: 10
                     from_account_id: $from_account
                     to_account_id: $to_account
+                    price_list_fee_id: 1
                   )
                 {
                   id
@@ -54,6 +55,7 @@ class TransferExchangeMutationTest extends TestCase
                         amount: 10
                         from_account_id: $from_account
                         to_account_id: $to_account
+                        price_list_fee_id: 1
                       ) {
                         id
                         status{
