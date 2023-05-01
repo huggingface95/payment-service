@@ -17,6 +17,7 @@ use Illuminate\Support\Collection;
  * @property string backoffice_support_url
  * @property Collection $paymentProviders
  * @property Collection $paymentProvidersIban
+ * @property PaymentSystem $paymentSystemInternal
  */
 class Company extends BaseModel
 {
