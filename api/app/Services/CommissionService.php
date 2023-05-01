@@ -50,7 +50,7 @@ class CommissionService extends AbstractService
         $feeAmount = $this->commissionCalculation($transfer, $transactionDTO);
         $feePPAmount = $this->commissionPPCalculation($transfer, $transactionDTO);
         $feeQPAmount = $this->commissionQPCalculation($transfer, $transactionDTO);
-        $qpMarginAmount = $this->commissionQPMarginCalculation($transfer, $transactionDTO, $feeQPAmount);
+        $qpMarginAmount = $this->commissionQPMarginCalculation($transfer, $feeQPAmount);
         $feeTotal = $feeAmount + $feePPAmount + $feeQPAmount;
 
         $amountDebt = $this->getTransferAmountDebt($transfer, $feeTotal);
@@ -97,6 +97,10 @@ class CommissionService extends AbstractService
      */
     private function commissionQPCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
     {
+        if ($transfer->operation_type_id != OperationTypeEnum::EXCHANGE->value) {
+            return 0;
+        }
+
         $quoteProviderId = PriceListFee::find($transfer->price_list_fee_id)?->quote_provider_id;
 
         if (empty($quoteProviderId) && $transfer->operation_type_id == OperationTypeEnum::EXCHANGE->value) {
@@ -115,8 +119,12 @@ class CommissionService extends AbstractService
     /**
      * @throws GraphqlException
      */
-    private function commissionQPMarginCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null, $feeQPAmount): float
+    private function commissionQPMarginCalculation(TransferOutgoing|TransferIncoming $transfer, float $feeQPAmount): float
     {
+        if ($transfer->operation_type_id != OperationTypeEnum::EXCHANGE->value) {
+            return 0;
+        }
+        
         $quoteProvider = PriceListFee::find($transfer->price_list_fee_id)?->quoteProvider;
 
         $sum = ($transfer->amount_debt - $feeQPAmount) * ($quoteProvider->margin_commission / 100);
