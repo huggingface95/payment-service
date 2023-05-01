@@ -13,7 +13,7 @@ type PaymentProvider {
     "Активен или нет"
     is_active: Boolean
     "Получить связанные платежные системы"
-    payment_systems: [PaymentSystem] @belongsTo(relation:"paymentSystems")
+    payment_systems: [PaymentSystem] @hasMany(relation:"paymentSystems")
     commission_price_list: CommissionPriceList @hasOne(relation:"commissionPriceList")
     company: Company @belongsTo(relation:"company")
 }
