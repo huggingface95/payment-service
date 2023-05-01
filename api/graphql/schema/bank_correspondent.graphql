@@ -99,4 +99,12 @@ extend type Mutation @guard {
     Удалить банк корреспондент
     """
     deleteBankCorrespondent(id: ID! @eq): BankCorrespondent    @delete
+
+    """
+    Удалить банк корреспондент currency_and_region
+    """
+    deleteBankCorrespondentCurrencyAndRegion(
+        id: ID! @eq
+        currencies_and_regions: [CurrenciesAndRegions!]! @spread
+    ): BankCorrespondent @field(resolver: "BankCorrespondentMutator@deleteCurrenciesAndRegions")
 }
