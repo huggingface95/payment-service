@@ -28,6 +28,8 @@ class TransferIncomingsMutationTest extends TestCase
                 $payment_bank_id: ID!
                 $price_list_id: ID!
                 $price_list_fee_id: ID!
+                $beneficiary_type: BeneficiaryTypeEnum!
+                $beneficiary_name: String!
                 $sender_account: String
                 $sender_bank_name: String
                 $sender_bank_address: String
@@ -55,6 +57,8 @@ class TransferIncomingsMutationTest extends TestCase
                     payment_bank_id: $payment_bank_id
                     price_list_id: $price_list_id
                     price_list_fee_id: $price_list_fee_id
+                    beneficiary_type: $beneficiary_type
+                    beneficiary_name: $beneficiary_name
                     sender_account: $sender_account
                     sender_bank_name: $sender_bank_name
                     sender_bank_address: $sender_bank_address
@@ -180,6 +184,8 @@ class TransferIncomingsMutationTest extends TestCase
                 'payment_bank_id' => 1,
                 'price_list_id' => 1,
                 'price_list_fee_id' => 1,
+                'beneficiary_type' => 'Personal',
+                'beneficiary_name' => 'Beneficiary Test Name',
                 'sender_account' => 'Sender Account',
                 'sender_bank_name' => 'sender_bank_name',
                 'sender_bank_address' => 'sender_bank_address',
@@ -219,6 +225,8 @@ class TransferIncomingsMutationTest extends TestCase
                 $payment_bank_id: ID!
                 $price_list_id: ID!
                 $price_list_fee_id: ID!
+                $beneficiary_type: BeneficiaryTypeEnum!
+                $beneficiary_name: String!
                 $sender_account: String
                 $sender_bank_name: String
                 $sender_bank_address: String
@@ -246,6 +254,8 @@ class TransferIncomingsMutationTest extends TestCase
                     payment_bank_id: $payment_bank_id
                     price_list_id: $price_list_id
                     price_list_fee_id: $price_list_fee_id
+                    beneficiary_type: $beneficiary_type
+                    beneficiary_name: $beneficiary_name
                     sender_account: $sender_account
                     sender_bank_name: $sender_bank_name
                     sender_bank_address: $sender_bank_address
@@ -293,6 +303,8 @@ class TransferIncomingsMutationTest extends TestCase
                     'payment_bank_id' => 1,
                     'price_list_id' => 1,
                     'price_list_fee_id' => 3,
+                    'beneficiary_type' => 'Personal',
+                    'beneficiary_name' => 'Beneficiary Test Name',
                     'sender_account' => 'Sender Account',
                     'sender_bank_name' => 'sender_bank_name',
                     'sender_bank_address' => 'sender_bank_address',

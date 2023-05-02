@@ -43,6 +43,10 @@ type TransferIncoming {
     reason: String
     channel: String
     bank_message: String
+    "Тип бенефициара"
+    beneficiary_type_id: BeneficiaryTypeEnum
+    "Имя бенефициара"
+    beneficiary_name: String
     "Номер счета или IBAN отправителя"
     sender_account: String
     "Название банка отправителя"
