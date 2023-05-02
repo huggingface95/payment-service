@@ -21,21 +21,21 @@ class PaymentSystemTableSeeder extends Seeder
 
         for ($i = 1; $i <= 10; $i++) {
             PaymentSystem::firstOrCreate([
-                'id' => $i,
-            ], [
                 'name' => $faker->company().'Pay',
                 'is_active' => true,
                 'payment_provider_id' => $i,
             ]);
+
+            PaymentSystem::firstOrCreate([
+                'name' => 'Internal',
+                'is_active' => true,
+                'payment_provider_id' => $i,
+            ]);
+
         }
 
         $seq = DB::table('payment_system')->max('id') + 1;
         DB::select('ALTER SEQUENCE payment_system_id_seq RESTART WITH '.$seq);
 
-        PaymentSystem::firstOrCreate([
-            'name' => 'Internal',
-            'is_active' => true,
-            'payment_provider_id' => PaymentProvider::where('name', 'Internal')->first()->id,
-        ]);
     }
 }
