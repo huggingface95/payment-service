@@ -15,6 +15,7 @@ class CreateTransferIncomingStandardDTO extends CreateTransferIncomingDTO
         $date = Carbon::now();
 
         $args['amount_debt'] = $args['amount'];
+        $args['beneficiary_type_id'] = $args['beneficiary_type'];
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['urgency_id'] = 1;
         $args['operation_type_id'] = $operationType;
