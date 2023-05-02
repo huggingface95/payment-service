@@ -33,6 +33,8 @@ class CreateTransferIncomingDTO
     public string $system_message;
     public string $reason;
     public string $channel;
+    public int $beneficiary_type_id;
+    public string $beneficiary_name;
     public string $sender_account;
     public string $sender_bank_name;
     public string $sender_bank_address;

@@ -189,6 +189,10 @@ extend type Mutation @guard {
     " requested_by_id: ID! ?? "
         price_list_id: ID!
         price_list_fee_id: ID!
+        "Тип бенефициара"
+        beneficiary_type: BeneficiaryTypeEnum!
+        "Имя бенефициара"
+        beneficiary_name: String!
         "Номер счета или IBAN отправителя"
         sender_account: String
         "Название банка отправителя"

@@ -52,6 +52,8 @@ class TransferIncoming extends BaseModel
         'reason',
         'channel',
         'bank_message',
+        'beneficiary_type_id',
+        'beneficiary_name',
         'sender_account',
         'sender_bank_name',
         'sender_bank_address',
