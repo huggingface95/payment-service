@@ -1,0 +1,29 @@
+type ApplicantModuleActivity {
+    "ID"
+    id: ID!
+    "ID Модуля"
+    module_id: ID!
+    "Активность"
+    is_active: Boolean!
+    "ID Аппликанта"
+    applicant_id: ID!
+    "Тип Аппликанта"
+    applicant_type: ApplicantType!
+}
+
+extend type Mutation @guard {
+    """
+    Сделать Активным/Неактивным модуль для Аппликанта Индивидуала/Компании
+    """
+    setApplicantModuleActivity(
+        "ID Модуля"
+        module_id: ID!
+        "Активность"
+        is_active: Boolean!
+        "ID Аппликанта"
+        applicant_id: ID!
+        "Тип Аппликанта"
+        applicant_type: ApplicantType!
+    ): ApplicantModuleActivity
+        @field(resolver: "ApplicantModuleActivityMutator@update")
+}
