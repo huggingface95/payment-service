@@ -2,6 +2,7 @@
 
 namespace Feature\GraphQL\Queries;
 
+use App\Enums\BeneficiaryTypeEnum;
 use App\Models\TransferIncoming;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -88,6 +89,8 @@ class TransferIncomingsQueryTest extends TestCase
                       system_message
                       reason
                       channel
+                      beneficiary_name
+                      beneficiary_type_id
                       bank_message
                       sender_account
                       sender_bank_name
@@ -220,6 +223,8 @@ class TransferIncomingsQueryTest extends TestCase
                           reason
                           channel
                           bank_message
+                          beneficiary_name
+                          beneficiary_type_id
                           sender_account
                           sender_bank_name
                           sender_bank_address
@@ -326,6 +331,8 @@ class TransferIncomingsQueryTest extends TestCase
                     'reason' => $transferIncoming->reason,
                     'channel' => $transferIncoming->channel,
                     'bank_message' => $transferIncoming->bank_message,
+                    'beneficiary_name' => $transferIncoming->beneficiary_name,
+                    'beneficiary_type_id' => BeneficiaryTypeEnum::from($transferIncoming->beneficiary_type_id)->toString(),
                     'sender_account' => $transferIncoming->sender_account,
                     'sender_bank_name' => $transferIncoming->sender_bank_name,
                     'sender_bank_address' => $transferIncoming->sender_bank_address,
@@ -454,6 +461,8 @@ class TransferIncomingsQueryTest extends TestCase
                           reason
                           channel
                           bank_message
+                          beneficiary_name
+                          beneficiary_type_id
                           sender_account
                           sender_bank_name
                           sender_bank_address
@@ -560,6 +569,8 @@ class TransferIncomingsQueryTest extends TestCase
                             'reason' => $transferIncoming->reason,
                             'channel' => $transferIncoming->channel,
                             'bank_message' => $transferIncoming->bank_message,
+                            'beneficiary_name' => $transferIncoming->beneficiary_name,
+                            'beneficiary_type_id' => BeneficiaryTypeEnum::from($transferIncoming->beneficiary_type_id)->toString(),
                             'sender_account' => $transferIncoming->sender_account,
                             'sender_bank_name' => $transferIncoming->sender_bank_name,
                             'sender_bank_address' => $transferIncoming->sender_bank_address,
@@ -696,6 +707,8 @@ class TransferIncomingsQueryTest extends TestCase
                           reason
                           channel
                           bank_message
+                          beneficiary_name
+                          beneficiary_type_id
                           sender_account
                           sender_bank_name
                           sender_bank_address
@@ -805,6 +818,8 @@ class TransferIncomingsQueryTest extends TestCase
                             'reason' => $transferIncoming->reason,
                             'channel' => $transferIncoming->channel,
                             'bank_message' => $transferIncoming->bank_message,
+                            'beneficiary_name' => $transferIncoming->beneficiary_name,
+                            'beneficiary_type_id' => BeneficiaryTypeEnum::from($transferIncoming->beneficiary_type_id)->toString(),
                             'sender_account' => $transferIncoming->sender_account,
                             'sender_bank_name' => $transferIncoming->sender_bank_name,
                             'sender_bank_address' => $transferIncoming->sender_bank_address,
@@ -941,6 +956,8 @@ class TransferIncomingsQueryTest extends TestCase
                           reason
                           channel
                           bank_message
+                          beneficiary_name
+                          beneficiary_type_id
                           sender_account
                           sender_bank_name
                           sender_bank_address
@@ -1050,6 +1067,8 @@ class TransferIncomingsQueryTest extends TestCase
                             'reason' => $transferIncoming->reason,
                             'channel' => $transferIncoming->channel,
                             'bank_message' => $transferIncoming->bank_message,
+                            'beneficiary_name' => $transferIncoming->beneficiary_name,
+                            'beneficiary_type_id' => BeneficiaryTypeEnum::from($transferIncoming->beneficiary_type_id)->toString(),
                             'sender_account' => $transferIncoming->sender_account,
                             'sender_bank_name' => $transferIncoming->sender_bank_name,
                             'sender_bank_address' => $transferIncoming->sender_bank_address,
@@ -1186,6 +1205,8 @@ class TransferIncomingsQueryTest extends TestCase
                           reason
                           channel
                           bank_message
+                          beneficiary_name
+                          beneficiary_type_id
                           sender_account
                           sender_bank_name
                           sender_bank_address
@@ -1295,6 +1316,8 @@ class TransferIncomingsQueryTest extends TestCase
                             'reason' => $transferIncoming->reason,
                             'channel' => $transferIncoming->channel,
                             'bank_message' => $transferIncoming->bank_message,
+                            'beneficiary_name' => $transferIncoming->beneficiary_name,
+                            'beneficiary_type_id' => BeneficiaryTypeEnum::from($transferIncoming->beneficiary_type_id)->toString(),
                             'sender_account' => $transferIncoming->sender_account,
                             'sender_bank_name' => $transferIncoming->sender_bank_name,
                             'sender_bank_address' => $transferIncoming->sender_bank_address,
@@ -1431,6 +1454,8 @@ class TransferIncomingsQueryTest extends TestCase
                           reason
                           channel
                           bank_message
+                          beneficiary_name
+                          beneficiary_type_id
                           sender_account
                           sender_bank_name
                           sender_bank_address
@@ -1540,6 +1565,8 @@ class TransferIncomingsQueryTest extends TestCase
                             'reason' => $transferIncoming->reason,
                             'channel' => $transferIncoming->channel,
                             'bank_message' => $transferIncoming->bank_message,
+                            'beneficiary_name' => $transferIncoming->beneficiary_name,
+                            'beneficiary_type_id' => BeneficiaryTypeEnum::from($transferIncoming->beneficiary_type_id)->toString(),
                             'sender_account' => $transferIncoming->sender_account,
                             'sender_bank_name' => $transferIncoming->sender_bank_name,
                             'sender_bank_address' => $transferIncoming->sender_bank_address,
@@ -1677,6 +1704,8 @@ class TransferIncomingsQueryTest extends TestCase
                           reason
                           channel
                           bank_message
+                          beneficiary_name
+                          beneficiary_type_id
                           sender_account
                           sender_bank_name
                           sender_bank_address
@@ -1786,6 +1815,8 @@ class TransferIncomingsQueryTest extends TestCase
                             'reason' => $transferIncoming->reason,
                             'channel' => $transferIncoming->channel,
                             'bank_message' => $transferIncoming->bank_message,
+                            'beneficiary_name' => $transferIncoming->beneficiary_name,
+                            'beneficiary_type_id' => BeneficiaryTypeEnum::from($transferIncoming->beneficiary_type_id)->toString(),
                             'sender_account' => $transferIncoming->sender_account,
                             'sender_bank_name' => $transferIncoming->sender_bank_name,
                             'sender_bank_address' => $transferIncoming->sender_bank_address,
@@ -1923,6 +1954,8 @@ class TransferIncomingsQueryTest extends TestCase
                           reason
                           channel
                           bank_message
+                          beneficiary_name
+                          beneficiary_type_id
                           sender_account
                           sender_bank_name
                           sender_bank_address
@@ -2032,6 +2065,8 @@ class TransferIncomingsQueryTest extends TestCase
                             'reason' => $transferIncoming->reason,
                             'channel' => $transferIncoming->channel,
                             'bank_message' => $transferIncoming->bank_message,
+                            'beneficiary_name' => $transferIncoming->beneficiary_name,
+                            'beneficiary_type_id' => BeneficiaryTypeEnum::from($transferIncoming->beneficiary_type_id)->toString(),
                             'sender_account' => $transferIncoming->sender_account,
                             'sender_bank_name' => $transferIncoming->sender_bank_name,
                             'sender_bank_address' => $transferIncoming->sender_bank_address,
@@ -2169,6 +2204,8 @@ class TransferIncomingsQueryTest extends TestCase
                           reason
                           channel
                           bank_message
+                          beneficiary_name
+                          beneficiary_type_id
                           sender_account
                           sender_bank_name
                           sender_bank_address
@@ -2278,6 +2315,8 @@ class TransferIncomingsQueryTest extends TestCase
                             'reason' => $transferIncoming->reason,
                             'channel' => $transferIncoming->channel,
                             'bank_message' => $transferIncoming->bank_message,
+                            'beneficiary_name' => $transferIncoming->beneficiary_name,
+                            'beneficiary_type_id' => BeneficiaryTypeEnum::from($transferIncoming->beneficiary_type_id)->toString(),
                             'sender_account' => $transferIncoming->sender_account,
                             'sender_bank_name' => $transferIncoming->sender_bank_name,
                             'sender_bank_address' => $transferIncoming->sender_bank_address,
@@ -2415,6 +2454,8 @@ class TransferIncomingsQueryTest extends TestCase
                           reason
                           channel
                           bank_message
+                          beneficiary_name
+                          beneficiary_type_id
                           sender_account
                           sender_bank_name
                           sender_bank_address
@@ -2524,6 +2565,8 @@ class TransferIncomingsQueryTest extends TestCase
                             'reason' => $transferIncoming->reason,
                             'channel' => $transferIncoming->channel,
                             'bank_message' => $transferIncoming->bank_message,
+                            'beneficiary_name' => $transferIncoming->beneficiary_name,
+                            'beneficiary_type_id' => BeneficiaryTypeEnum::from($transferIncoming->beneficiary_type_id)->toString(),
                             'sender_account' => $transferIncoming->sender_account,
                             'sender_bank_name' => $transferIncoming->sender_bank_name,
                             'sender_bank_address' => $transferIncoming->sender_bank_address,

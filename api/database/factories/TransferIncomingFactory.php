@@ -67,6 +67,8 @@ class TransferIncomingFactory extends Factory
             'project_id' => 1,
             'price_list_id' => 1,
             'price_list_fee_id' => 1,
+            'beneficiary_name' => 'Beneficiary ' . $this->faker->name(),
+            'beneficiary_type_id' => $this->faker->randomElement([1,2]),
         ];
     }
 }
