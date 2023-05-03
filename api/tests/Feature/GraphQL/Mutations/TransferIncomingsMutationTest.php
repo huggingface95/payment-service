@@ -173,31 +173,31 @@ class TransferIncomingsMutationTest extends TestCase
                 }
             }
         ', [
-                'company_id' => 1,
-                'group_id' => 1,
-                'group_type_id' => 1,
-                'project_id' => 1,
-                'currency_id' => 1,
-                'account_id' => 1,
-                'payment_provider_id' => 1,
-                'payment_system_id' => 1,
-                'payment_bank_id' => 1,
-                'price_list_id' => 1,
-                'price_list_fee_id' => 1,
-                'beneficiary_type' => 'Personal',
-                'beneficiary_name' => 'Beneficiary Test Name',
-                'sender_account' => 'Sender Account',
-                'sender_bank_name' => 'sender_bank_name',
-                'sender_bank_address' => 'sender_bank_address',
-                'sender_bank_swift' => 'sender_bank_swift',
-                'sender_bank_country_id' => 4,
-                'sender_name' => 'sender_name',
-                'sender_country_id' => 5,
-                'sender_city' => 'sender_city',
-                'sender_address' => 'sender_address',
-                'sender_state' => 'sender_state',
-                'sender_zip' => 'sender_zip',
-                'bank_message' => 'bank_message',
+            'company_id' => 1,
+            'group_id' => 1,
+            'group_type_id' => 1,
+            'project_id' => 1,
+            'currency_id' => 1,
+            'account_id' => 1,
+            'payment_provider_id' => 1,
+            'payment_system_id' => 1,
+            'payment_bank_id' => 1,
+            'price_list_id' => 1,
+            'price_list_fee_id' => 1,
+            'beneficiary_type' => 'Personal',
+            'beneficiary_name' => 'Beneficiary Test Name',
+            'sender_account' => 'Sender Account',
+            'sender_bank_name' => 'sender_bank_name',
+            'sender_bank_address' => 'sender_bank_address',
+            'sender_bank_swift' => 'sender_bank_swift',
+            'sender_bank_country_id' => 4,
+            'sender_name' => 'sender_name',
+            'sender_country_id' => 5,
+            'sender_city' => 'sender_city',
+            'sender_address' => 'sender_address',
+            'sender_state' => 'sender_state',
+            'sender_zip' => 'sender_zip',
+            'bank_message' => 'bank_message',
         ])->seeJson([
             'message' => 'Unauthenticated.',
         ]);
@@ -239,6 +239,8 @@ class TransferIncomingsMutationTest extends TestCase
                 $sender_state: String
                 $sender_zip: String
                 $bank_message: String
+                $urgency_id: ID
+                $respondent_fees_id: ID
             )
             {
                 createTransferIncoming (
@@ -270,6 +272,8 @@ class TransferIncomingsMutationTest extends TestCase
                     bank_message: $bank_message
                     file_id: [1]
                     status_id: 7
+                    urgency_id: $urgency_id
+                    respondent_fees_id: $respondent_fees_id
                 )
                 {
                       id
@@ -289,6 +293,16 @@ class TransferIncomingsMutationTest extends TestCase
                       sender_address
                       sender_state
                       sender_zip
+                      payment_urgency {
+                        id
+                        name
+                      }
+                      respondent_fee {
+                        id
+                        name
+                      }
+                      beneficiary_type_id
+                      beneficiary_name
                 }
                 }',
                 'variables' => [
@@ -317,6 +331,8 @@ class TransferIncomingsMutationTest extends TestCase
                     'sender_state' => 'sender_state',
                     'sender_zip' => 'sender_zip',
                     'bank_message' => 'bank_message',
+                    'urgency_id' => 1,
+                    'respondent_fees_id' => 1,
                 ],
             ],
             [
@@ -346,6 +362,10 @@ class TransferIncomingsMutationTest extends TestCase
                     'sender_address' => $id['data']['createTransferIncoming']['sender_address'],
                     'sender_state' => $id['data']['createTransferIncoming']['sender_state'],
                     'sender_zip' => $id['data']['createTransferIncoming']['sender_zip'],
+                    'payment_urgency' => $id['data']['createTransferIncoming']['payment_urgency'],
+                    'respondent_fee' => $id['data']['createTransferIncoming']['respondent_fee'],
+                    'beneficiary_type_id' => $id['data']['createTransferIncoming']['beneficiary_type_id'],
+                    'beneficiary_name' => $id['data']['createTransferIncoming']['beneficiary_name'],
                 ],
             ],
         ]);
@@ -384,6 +404,16 @@ class TransferIncomingsMutationTest extends TestCase
                       sender_address
                       sender_state
                       sender_zip
+                      payment_urgency {
+                        id
+                        name
+                      }
+                      respondent_fee {
+                        id
+                        name
+                      }
+                      beneficiary_type_id
+                      beneficiary_name
                 }
                 }',
                 'variables' => [
@@ -417,6 +447,10 @@ class TransferIncomingsMutationTest extends TestCase
                     'sender_address' => $id['data']['updateTransferIncoming']['sender_address'],
                     'sender_state' => $id['data']['updateTransferIncoming']['sender_state'],
                     'sender_zip' => $id['data']['updateTransferIncoming']['sender_zip'],
+                    'payment_urgency' => $id['data']['updateTransferIncoming']['payment_urgency'],
+                    'respondent_fee' => $id['data']['updateTransferIncoming']['respondent_fee'],
+                    'beneficiary_type_id' => $id['data']['updateTransferIncoming']['beneficiary_type_id'],
+                    'beneficiary_name' => $id['data']['updateTransferIncoming']['beneficiary_name'],
                 ],
             ],
         ]);
