@@ -112,7 +112,6 @@ class Account extends BaseModel implements BaseModelInterface
     }
 
 
-
     public function getAliasAttribute(): bool
     {
         return !$this->isParent();
@@ -121,11 +120,10 @@ class Account extends BaseModel implements BaseModelInterface
     public function getClientAccountsAttribute(): array
     {
         return self::query()->with('currencies')
-            ->join('accounts as aic', function ($join) {
-                $join->on('aic.client_id', '=', 'accounts.client_id');
-                $join->on('aic.client_type', '=', 'accounts.client_type');
+            ->join('accounts as a', function ($join) {
+                $join->on('a.client_id', '=', 'accounts.client_id');
+                $join->on('a.client_type', '=', 'accounts.client_type');
             })
-            ->join('accounts as a', 'a.id', '=', 'aic.id')
             ->where('accounts.id', '=', $this->id)
             ->select('a.id', 'a.current_balance', 'a.reserved_balance', 'a.available_balance', 'a.currency_id', 'a.min_limit_balance', 'a.max_limit_balance')
             ->get()
