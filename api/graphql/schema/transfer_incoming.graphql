@@ -227,6 +227,10 @@ extend type Mutation @guard {
         transfer_swift: TransferSwiftInput
         "Статус"
         status_id: Int
+        "Важность платежа Normal/Express"
+        urgency_id: ID
+        "Кто платит комиссию"
+        respondent_fees_id: ID
     ): TransferIncoming
         @field(resolver: "TransferIncomingMutator@create")
 
