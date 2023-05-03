@@ -29,10 +29,12 @@ use App\Listeners\Log\LogApplicantIndividualSentEmailVerificationListener;
 use App\Listeners\PaymentCreatedListener;
 use App\Listeners\PaymentUpdatedListener;
 use App\Models\Account;
+use App\Models\PaymentSystem;
 use App\Models\TransferIncoming;
 use App\Models\TransferOutgoing;
 use App\Observers\AccountObserver;
 use App\Observers\BaseObserver;
+use App\Observers\PaymentSystemObserver;
 use App\Observers\TransferIncomingObserver;
 use App\Observers\TransferOutgoingObserver;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
@@ -93,6 +95,7 @@ class EventServiceProvider extends ServiceProvider
         Account::observe(AccountObserver::class);
         TransferOutgoing::observe(TransferOutgoingObserver::class);
         TransferIncoming::observe(TransferIncomingObserver::class);
+        PaymentSystem::observe(PaymentSystemObserver::class);
 
         foreach (getAllModels() as $model) {
             $model::observe(BaseObserver::class);
