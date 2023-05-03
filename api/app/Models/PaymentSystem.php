@@ -15,6 +15,8 @@ use Staudenmeir\EloquentHasManyDeep\HasTableAlias;
  *
  * @property int id
  * @property Company $company
+ * @property string name
+ * @property int payment_provider_id
  */
 class PaymentSystem extends BaseModel
 {
