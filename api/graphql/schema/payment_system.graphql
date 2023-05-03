@@ -48,6 +48,7 @@ input QueryPaymentSystemsFilterStatic @spread{
     hasProvidersFilterById: ID @eq
     hasCompanyFilterById: ID @eq
     hasRegionsFilterById: ID @eq
+    hasСurrenciesFilterById: ID @eq
     hasCommissionTemplateFilterById: ID @eq
 }
 
