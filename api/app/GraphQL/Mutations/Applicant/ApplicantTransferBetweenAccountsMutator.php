@@ -25,7 +25,9 @@ class ApplicantTransferBetweenAccountsMutator extends BaseMutator
 
     public function create($root, array $args): TransferIncoming|Model|Builder|null
     {
-        return $this->transferService->createTransfer($args, OperationTypeEnum::BETWEEN_ACCOUNT->value);
+        $transfers = $this->transferService->createTransfer($args, OperationTypeEnum::BETWEEN_ACCOUNT->value);
+
+        return $transfers['incoming'];
     }
 
     /**

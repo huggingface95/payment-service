@@ -190,6 +190,11 @@ class TransferOutgoing extends BaseModel
         return $this->belongsTo(PaymentUrgency::class, 'urgency_id', 'id');
     }
 
+    public function priceListFee(): BelongsTo
+    {
+        return $this->belongsTo(PriceListFee::class, 'price_list_fee_id', 'id');
+    }
+
     public function recipientBankCountry(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'recipient_bank_country_id', 'id');

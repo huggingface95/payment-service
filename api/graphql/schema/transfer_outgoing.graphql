@@ -35,6 +35,8 @@ type TransferOutgoing {
     payment_bank: PaymentBank @belongsTo(relation: "paymentBank")
     "Номер платежа"
     payment_number: String!
+    "Прайс-лист фии"
+    price_list_fee: PriceListFee @belongsTo(relation: "priceListFee")
     "Получить связанный тип трансфера"
     transfer_type: TypeOfTransfer @belongsTo(relation: "transferType")
     "Получить связанный аккаунт"

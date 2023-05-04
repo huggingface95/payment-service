@@ -1,3 +1,14 @@
+type TransferBetween {
+    "Исходящий трансфер"
+    transfer_incoming: TransferIncoming
+    "Входящий трансфер"
+    transfer_outgoing: TransferOutgoing
+    "Сумма комиссии"
+    fee_amount: Decimal
+    "Общаяя сумма"
+    final_amount: Decimal
+}
+
 extend type Mutation @guard {
     """
     Создать перевод между аккаунтами
@@ -9,7 +20,11 @@ extend type Mutation @guard {
         from_account_id: ID!
         "ID аккаунта получателя"
         to_account_id: ID!
-    ): TransferIncoming
+        "ID прайс-листа"
+        price_list_id: ID!
+        "ID прайс-листа фии"
+        price_list_fee_id: ID!
+    ): TransferBetween
         @field(resolver: "TransferBetweenAccountsMutator@create")
 
     """

@@ -50,15 +50,15 @@ class TransferBetweenUsersService extends AbstractService
         return $transfers;
     }
 
-    public function createTransfer(array $args, int $operationType): Builder|Model
+    public function createTransfer(array $args, int $operationType): array
     {
         $fromAccount = Account::find($args['from_account_id']);
         $toAccount = Account::find($args['to_account_id']);
 
         $this->validateCreateTransfer($fromAccount, $toAccount);
 
-        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingBetweenUsersDTO::class, $fromAccount, $operationType, $args['amount']);
-        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $operationType, $args['amount'], $outgoingDTO->payment_number, $outgoingDTO->created_at);
+        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingBetweenUsersDTO::class, $fromAccount, $operationType, $args);
+        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $operationType, $args, $outgoingDTO->payment_number, $outgoingDTO->created_at);
 
         $transfers = DB::transaction(function () use ($outgoingDTO, $incomingDTO) {
             /** @var TransferOutgoing $outgoing */
@@ -79,7 +79,7 @@ class TransferBetweenUsersService extends AbstractService
             ];
         });
 
-        return $transfers['incoming'];
+        return $transfers;
     }
 
     /**

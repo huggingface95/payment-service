@@ -17,26 +17,24 @@ class TransferBetweenAccountsMutationTest extends TestCase
     public function testCreateTransferBetweenAccountsNoAuth(): void
     {
         $this->graphQL('
-            mutation createTransferBetweenAccounts($from_account: ID!, $to_account: ID!) {
+            mutation createTransferBetweenAccounts($from_account: ID!, $to_account: ID!, $price_list_fee_id: ID!, $price_list_id: ID!) {
                   createTransferBetweenAccounts(
                     amount: 10
                     from_account_id: $from_account
                     to_account_id: $to_account
+                    price_list_fee_id: $price_list_fee_id
+                    price_list_id: $price_list_id
                   )
                 {
-                    id
-                      amount
-                      amount_debt
-                      payment_number
-                      system_message
-                      reason
-                      channel
-                      bank_message
+                    fee_amount
+                    final_amount
                 }
             }
         ', [
                 'from_account' => 1,
                 'to_account' => 2,
+                'price_list_fee_id' => 1,
+                'price_list_id' => 1,
         ])->seeJson([
             'message' => 'Unauthenticated.',
         ]);
@@ -57,26 +55,32 @@ class TransferBetweenAccountsMutationTest extends TestCase
         $this->postGraphQL(
             [
                 'query' => '
-                    mutation CreateTransferBetweenAccounts($from_account: ID!, $to_account: ID!) {
+                    mutation CreateTransferBetweenAccounts($from_account: ID!, $to_account: ID!, $price_list_fee_id: ID!, $price_list_id: ID!) {
                       createTransferBetweenAccounts(
                         amount: 10
                         from_account_id: $from_account
                         to_account_id: $to_account
+                        price_list_fee_id: $price_list_fee_id
+                        price_list_id: $price_list_id
                       ) {
-                        id
-                        amount
-                        amount_debt
-                        payment_number
-                        system_message
-                        reason
-                        channel
-                        bank_message
+                        transfer_outgoing {
+                            id
+                            amount
+                        }
+                        transfer_incoming {
+                            id
+                            amount
+                        }
+                        fee_amount
+                        final_amount
                       }
                     }
                 ',
                     'variables' => [
                         'from_account' => 1,
                         'to_account' => 2,
+                        'price_list_fee_id' => 1,
+                        'price_list_id' => 1,
                     ],
             ],
             [
@@ -84,19 +88,21 @@ class TransferBetweenAccountsMutationTest extends TestCase
             ]
         );
 
-        $id = json_decode($this->response->getContent(), true);
+        $response = json_decode($this->response->getContent(), true);
 
         $this->seeJson([
             'data' => [
                 'createTransferBetweenAccounts' => [
-                    'id' => $id['data']['createTransferBetweenAccounts']['id'],
-                    'amount' => $id['data']['createTransferBetweenAccounts']['amount'],
-                    'amount_debt' => $id['data']['createTransferBetweenAccounts']['amount_debt'],
-                    'payment_number' => $id['data']['createTransferBetweenAccounts']['payment_number'],
-                    'system_message' => $id['data']['createTransferBetweenAccounts']['system_message'],
-                    'reason' => $id['data']['createTransferBetweenAccounts']['reason'],
-                    'channel' => $id['data']['createTransferBetweenAccounts']['channel'],
-                    'bank_message' => $id['data']['createTransferBetweenAccounts']['bank_message'],
+                    'transfer_outgoing' => [
+                        'id' => $response['data']['createTransferBetweenAccounts']['transfer_outgoing']['id'],
+                        'amount' => $response['data']['createTransferBetweenAccounts']['transfer_outgoing']['amount'],
+                    ],
+                    'transfer_incoming' => [
+                        'id' => $response['data']['createTransferBetweenAccounts']['transfer_incoming']['id'],
+                        'amount' => $response['data']['createTransferBetweenAccounts']['transfer_incoming']['amount'],
+                    ],
+                    'fee_amount' => $response['data']['createTransferBetweenAccounts']['fee_amount'],
+                    'final_amount' => $response['data']['createTransferBetweenAccounts']['final_amount'],
                 ],
             ],
         ]);
