@@ -64,6 +64,10 @@ class Company extends BaseModel
     ];
 
     protected $casts = [
+        'additional_fields_info' =>'array',
+        'additional_fields_basic' =>'array',
+        'additional_fields_settings' =>'array',
+        'additional_fields_data' =>'array',
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',

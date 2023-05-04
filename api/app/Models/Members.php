@@ -108,6 +108,8 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $casts = [
         'backup_codes' => 'array',
+        'additional_fields' => 'array',
+        'additional_info_fields' => 'array',
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'last_login_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
