@@ -188,8 +188,6 @@ extend type Mutation @guard {
     Создать исходящий перевод
     """
     createTransferOutgoing(
-        "ID компании"
-        company_id: ID!
         "ID группы"
         group_id: ID!
         "ID типа группы"
@@ -198,8 +196,6 @@ extend type Mutation @guard {
         project_id: ID!
         "Сумма"
         amount: Decimal!
-        "ID валюты"
-        currency_id: ID!
         "ID аккаунта"
         account_id: ID!
         "ID платежного провайдера"
@@ -228,6 +224,10 @@ extend type Mutation @guard {
         recipient_state: String
         "Индекс получателя"
         recipient_zip: String
+        "Кто платит коммиссию"
+        respondent_fees_id: ID!
+        "Основание перевода"
+        reason: String!
         "Сообщение банка"
         bank_message: String
         "ID файлов"

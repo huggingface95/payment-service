@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Account;
+use App\Models\AccountState;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use Faker\Factory as Faker;
@@ -82,5 +83,23 @@ class AccountTableSeeder extends Seeder
                 'updated_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
             ]
         );
+
+        $this->setAccountsBalance(100000);
+    }
+
+    private function setAccountsBalance(float $amount): void
+    {
+        $accounts = Account::all();
+
+        foreach ($accounts as $account) {
+            $account->updateQuietly([
+                'current_balance' => $amount,
+                'reserved_balance' => 0,
+                'available_balance' => $amount,
+                'min_limit_balance' => 0,
+                'max_limit_balance' => $amount,
+                'account_state_id' => AccountState::ACTIVE,
+            ]);
+        }
     }
 }
