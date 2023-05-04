@@ -81,11 +81,20 @@ class MembersTableSeeder extends Seeder
             ],
         ];
 
-        foreach ($members as $id => $member) {
-            Members::firstOrCreate([
-                'id' => $id,
-                'first_name' => 'Member'.$id,
-            ], $member);
-        }
+        Members::withoutEvents(function () use ($members) {
+            foreach ($members as $id => $member) {
+                Members::firstOrCreate(
+                    [
+                        'id' => $id,
+                    ],
+                    array_merge(
+                        [
+                            'first_name' => 'Member' . $id,
+                        ],
+                        $member
+                    )
+                );
+            }
+        });
     }
 }

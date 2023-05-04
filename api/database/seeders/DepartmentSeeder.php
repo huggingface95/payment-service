@@ -14,11 +14,15 @@ class DepartmentSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i <= 5; $i++) {
-            Department::firstOrCreate([
-                'name' => 'Department '.$i,
-                'company_id' => $i,
-            ]);
-        }
+        Department::withoutEvents(function () {
+            for ($i = 1; $i <= 5; $i++) {
+                Department::firstOrCreate([
+                    'id' => $i,
+                ], [
+                    'name' => 'Department #' . $i,
+                    'company_id' => $i,
+                ]);
+            }
+        });
     }
 }

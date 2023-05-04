@@ -19,7 +19,9 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
      */
     public static function transform(array $args, int $operationType, TransferOutgoingRepository $repository): CreateTransferOutgoingDTO
     {
-        $countryId = Company::findOrFail($args['company_id'])->first()?->country_id;
+        $account = Account::findOrFail($args['account_id']);
+        $args['company_id'] = $account->company_id;
+        $countryId = Company::findOrFail($args['company_id'])->country_id;
         $priceListId = $repository->getPriceListIdByArgs($args) ?? throw new GraphqlException('Commission price list not found');
         $priceListFeeId = PriceListFee::query()
             ->where('price_list_id', '=', $priceListId)
@@ -28,18 +30,17 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
 
         $date = Carbon::now();
         $args['amount_debt'] = $args['amount'];
+        $args['currency_id'] = $account->currency_id;
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['operation_type_id'] = $operationType;
         $args['payment_bank_id'] = 2;
         $args['payment_number'] = rand();
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['reason'] = 'test';
         $args['recipient_country_id'] = $countryId;
         $args['recipient_bank_country_id'] = $countryId;
         $args['price_list_id'] = $priceListId;
         $args['price_list_fee_id'] = $priceListFeeId;
-        $args['respondent_fees_id'] = 2;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
 
         if (isset($args['execution_at'])) {
