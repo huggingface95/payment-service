@@ -35,6 +35,8 @@ class TransferOutgoingsMutationTest extends TestCase
                 $recipient_address: String
                 $recipient_state: String
                 $recipient_zip: String
+                $respondent_fees_id: ID!
+                $reason: String!
                 $bank_message: String
             )
             {
@@ -58,6 +60,8 @@ class TransferOutgoingsMutationTest extends TestCase
                     recipient_address: $recipient_address
                     recipient_state: $recipient_state
                     recipient_zip: $recipient_zip
+                    respondent_fees_id: $respondent_fees_id
+                    reason: $reason
                     bank_message: $bank_message
                     file_id: [1]
                 )
@@ -176,6 +180,8 @@ class TransferOutgoingsMutationTest extends TestCase
                 'recipient_address' => 'recipient_address',
                 'recipient_state' => 'recipient_state',
                 'recipient_zip' => 'recipient_zip',
+                'respondent_fees_id' => 2,
+                'reason' => 'Test reason',
                 'bank_message' => 'bank_message',
         ])->seeJson([
             'message' => 'Unauthenticated.',
@@ -211,6 +217,8 @@ class TransferOutgoingsMutationTest extends TestCase
                 $recipient_address: String
                 $recipient_state: String
                 $recipient_zip: String
+                $respondent_fees_id: ID!
+                $reason: String!
                 $bank_message: String
             )
             {
@@ -234,6 +242,8 @@ class TransferOutgoingsMutationTest extends TestCase
                     recipient_address: $recipient_address
                     recipient_state: $recipient_state
                     recipient_zip: $recipient_zip
+                    respondent_fees_id: $respondent_fees_id
+                    reason: $reason
                     bank_message: $bank_message
                     file_id: [1]
                 )
@@ -276,6 +286,8 @@ class TransferOutgoingsMutationTest extends TestCase
                     'recipient_address' => 'recipient_address',
                     'recipient_state' => 'recipient_state',
                     'recipient_zip' => 'recipient_zip',
+                    'respondent_fees_id' => 2,
+                    'reason' => 'Test reason',
                     'bank_message' => 'bank_message',
                 ],
             ],
