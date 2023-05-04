@@ -7,8 +7,12 @@ type OperationType {
 }
 
 enum TransferType {
-    INCOMING @enum(value: "Incoming")
-    OUTGOING @enum(value: "Outgoing")
+    INCOMING @enum(value: "1")
+    OUTGOING @enum(value: "2")
+    BTA @enum(value: "3")
+    BTU @enum(value: "4")
+    EXCHANGE @enum(value: "5")
+    FEE @enum(value: "6")
 }
 
 extend type Query  @guard{
