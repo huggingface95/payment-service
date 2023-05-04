@@ -538,16 +538,17 @@ class AccountsQueryTest extends TestCase
     {
         $accounts = DB::connection('pgsql_test')
             ->table('accounts')
-            ->first();
+            ->where('current_balance', 100000)
+            ->get();
 
-        $this->postGraphQL(
+            $response = $this->postGraphQL(
             [
                 'query' => '
                 {
                     accountList(
                         filter: {
                             column: CURRENT_BALANCE
-                            value: 10000
+                            value: 100000
                         }
                     ) {
                         data {
@@ -562,18 +563,28 @@ class AccountsQueryTest extends TestCase
             [
                 'Authorization' => 'Bearer ' .  $this->login(),
             ]
-        )->seeJsonContains([
-            'id' => (string) $accounts->id,
-            'account_number' => (string) $accounts->account_number,
-            'account_type' => (string) $accounts->account_type,
-            'account_name' => (string) $accounts->account_name,
-        ]);
+            );
+            
+        foreach ($accounts as $account) {
+            $response->seeJson([
+                'id' => (string) $account->id,
+                'account_number' => (string) $account->account_number,
+                'account_type' => (string) $account->account_type,
+                'account_name' => (string) $account->account_name,
+            ]);
+        }
     }
 
     public function testQueryAccountsFilterByReservedBalance(): void
     {
         $accounts = DB::connection('pgsql_test')
             ->table('accounts')
+            ->where('id', 1)
+            ->update(['reserved_balance' => 5000]);
+
+        $accounts = DB::connection('pgsql_test')
+            ->table('accounts')
+            ->where('id', 1)
             ->first();
 
         $this->postGraphQL(
@@ -598,7 +609,9 @@ class AccountsQueryTest extends TestCase
             [
                 'Authorization' => 'Bearer ' .  $this->login(),
             ]
-        )->seeJsonContains([
+            );
+
+        $this->seeJsonContains([
             'id' => (string) $accounts->id,
             'account_number' => (string) $accounts->account_number,
             'account_type' => (string) $accounts->account_type,
@@ -610,6 +623,12 @@ class AccountsQueryTest extends TestCase
     {
         $accounts = DB::connection('pgsql_test')
             ->table('accounts')
+            ->where('id', 1)
+            ->update(['available_balance' => 5050]);
+
+        $accounts = DB::connection('pgsql_test')
+            ->table('accounts')
+            ->where('id', 1)
             ->first();
 
         $this->postGraphQL(
@@ -619,7 +638,7 @@ class AccountsQueryTest extends TestCase
                     accountList(
                         filter: {
                             column: AVAILABLE_BALANCE
-                            value: 10000
+                            value: 5050
                         }
                     ) {
                         data {
