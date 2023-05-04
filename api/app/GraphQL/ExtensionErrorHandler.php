@@ -375,6 +375,21 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
+        if (strpos($error->getMessage(), 'companies_email_unique')) {
+            return $next(new Error(
+                'This email already exists.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'This email already exists.',
+                ]
+            ));
+        }
         //$underlyingException = $error->getPrevious();
         if (strpos($error->getMessage(), 'duplicate')) {
             return $next(new Error(
