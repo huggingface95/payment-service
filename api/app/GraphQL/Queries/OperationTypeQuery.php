@@ -18,7 +18,7 @@ class OperationTypeQuery
 
         if (isset($args['filter']['column']) && $args['filter']['column'] === 'transfer_type') {
             $transfer_type = $args['filter']['value'];
-            $operationTypes->where('transfer_type', 'ilike', '%'.$transfer_type.'%')->get();
+            $operationTypes->where('transfer_type', '=', $transfer_type)->get();
         }
 
         if (isset($args['filter']['column']) && $args['filter']['column'] === 'fee_type_id') {
