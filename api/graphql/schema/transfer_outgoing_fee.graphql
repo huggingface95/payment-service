@@ -23,8 +23,6 @@ extend type Mutation @guard {
         payment_provider_id: ID!
         "ID платежной системы"
         payment_system_id: ID!
-        "ID срочности операции"
-        urgency_id: ID!
         "Исполнить в"
         execution_at: DateTimeUtc
         "Номер счета или IBAN получателя"
