@@ -9,11 +9,15 @@ extend type Mutation @guard {
         from_account_id: ID!
         "ID аккаунта получателя"
         to_account_id: ID!
+        "ID прайс-листа"
+        price_list_id: ID!
+        "ID прайс-листа фии"
+        price_list_fee_id: ID!
         "ID коммиисии респондента"
         respondent_fee_id: ID!
         "Причина перевода"
         reason: String
-    ): TransferIncoming
+    ): TransferBetween
         @field(resolver: "TransferBetweenUsersMutator@create")
 
     """

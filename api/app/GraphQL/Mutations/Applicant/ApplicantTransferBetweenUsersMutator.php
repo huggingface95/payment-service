@@ -26,7 +26,9 @@ class ApplicantTransferBetweenUsersMutator extends BaseMutator
 
     public function create($root, array $args): TransferIncoming|Model|Builder|null
     {
-        return $this->transferService->createTransfer($args, OperationTypeEnum::BETWEEN_USERS->value);
+        $transfers = $this->transferService->createTransfer($args, OperationTypeEnum::BETWEEN_USERS->value);
+
+        return $transfers['incoming'];
     }
 
     /**

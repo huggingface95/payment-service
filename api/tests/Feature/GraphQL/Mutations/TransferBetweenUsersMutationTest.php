@@ -23,16 +23,21 @@ class TransferBetweenUsersMutationTest extends TestCase
                     from_account_id: $from_account
                     to_account_id: $to_account
                     respondent_fee_id: 1
+                    price_list_fee_id: 1
+                    price_list_id: 1
                   )
                 {
-                    id
-                      amount
-                      amount_debt
-                      payment_number
-                      system_message
-                      reason
-                      channel
-                      bank_message
+                    transfer_incoming {
+                        id
+                    }
+                    transfer_outgoing {
+                        id
+                        price_list_fee {
+                            name
+                        }
+                    }
+                    fee_amount
+                    final_amount
                 }
             }
         ', [
@@ -64,15 +69,20 @@ class TransferBetweenUsersMutationTest extends TestCase
                         from_account_id: $from_account
                         to_account_id: $to_account
                         respondent_fee_id: 1
+                        price_list_fee_id: 1
+                        price_list_id: 1
                       ) {
-                        id
-                        amount
-                        amount_debt
-                        payment_number
-                        system_message
-                        reason
-                        channel
-                        bank_message
+                        transfer_incoming {
+                            id
+                        }
+                        transfer_outgoing {
+                            id
+                            price_list_fee {
+                                name
+                            }
+                        }
+                        fee_amount
+                        final_amount
                       }
                     }
                 ',
@@ -86,19 +96,22 @@ class TransferBetweenUsersMutationTest extends TestCase
             ]
         );
 
-        $id = json_decode($this->response->getContent(), true);
+        $response = json_decode($this->response->getContent(), true);
 
         $this->seeJson([
             'data' => [
                 'createTransferBetweenUsers' => [
-                    'id' => $id['data']['createTransferBetweenUsers']['id'],
-                    'amount' => $id['data']['createTransferBetweenUsers']['amount'],
-                    'amount_debt' => $id['data']['createTransferBetweenUsers']['amount_debt'],
-                    'payment_number' => $id['data']['createTransferBetweenUsers']['payment_number'],
-                    'system_message' => $id['data']['createTransferBetweenUsers']['system_message'],
-                    'reason' => $id['data']['createTransferBetweenUsers']['reason'],
-                    'channel' => $id['data']['createTransferBetweenUsers']['channel'],
-                    'bank_message' => $id['data']['createTransferBetweenUsers']['bank_message'],
+                    'transfer_incoming' => [
+                        'id' => $response['data']['createTransferBetweenUsers']['transfer_incoming']['id'],
+                    ],
+                    'transfer_outgoing' => [
+                        'id' => $response['data']['createTransferBetweenUsers']['transfer_outgoing']['id'],
+                        'price_list_fee' => [
+                            'name' => $response['data']['createTransferBetweenUsers']['transfer_outgoing']['price_list_fee']['name'],
+                        ],
+                    ],
+                    'fee_amount' => $response['data']['createTransferBetweenUsers']['fee_amount'],
+                    'final_amount' => $response['data']['createTransferBetweenUsers']['final_amount'],
                 ],
             ],
         ]);

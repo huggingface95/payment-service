@@ -8,14 +8,17 @@ use App\Exceptions\GraphqlException;
 use App\Models\TransferIncoming;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
+use App\Services\CommissionService;
 use App\Services\TransferBetweenUsersService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class TransferBetweenUsersMutator extends BaseMutator
 {
     public function __construct(
+        protected CommissionService                   $commissionService,
         protected TransferBetweenUsersService         $transferService,
         protected TransferOutgoingRepositoryInterface $transferOutgoingRepository,
         protected TransferIncomingRepositoryInterface $transferIncomingRepository
@@ -23,9 +26,18 @@ class TransferBetweenUsersMutator extends BaseMutator
     {
     }
 
-    public function create($root, array $args): TransferIncoming|Model|Builder|null
+    public function create($root, array $args): array
     {
-        return $this->transferService->createTransfer($args, OperationTypeEnum::BETWEEN_USERS->value);
+        $transfers = $this->transferService->createTransfer($args, OperationTypeEnum::BETWEEN_USERS->value);
+
+        $fees = $this->commissionService->getAllCommissions($transfers['outgoing']);
+
+        return [
+            'transfer_incoming' => $transfers['incoming'],
+            'transfer_outgoing' => $transfers['outgoing'],
+            'fee_amount'        => Str::decimal($fees['fee_amount']),
+            'final_amount'      => Str::decimal($fees['amount_debt']),
+        ];
     }
 
     /**
