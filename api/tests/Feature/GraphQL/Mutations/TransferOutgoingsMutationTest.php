@@ -17,11 +17,9 @@ class TransferOutgoingsMutationTest extends TestCase
     {
         $this->graphQL('
             mutation CreateTransferOutgoing(
-                $company_id: ID!
                 $group_id: ID!
                 $group_type_id: ID!
                 $project_id: ID!
-                $currency_id: ID!
                 $account_id: ID!
                 $payment_provider_id: ID!
                 $payment_system_id: ID!
@@ -41,12 +39,10 @@ class TransferOutgoingsMutationTest extends TestCase
             )
             {
                 createTransferOutgoing (
-                    company_id: $company_id
                     group_id: $group_id
                     group_type_id: $group_type_id
                     project_id: $project_id
                     amount: 10
-                    currency_id: $currency_id
                     account_id: $account_id
                     payment_provider_id: $payment_provider_id
                     payment_system_id: $payment_system_id
@@ -162,11 +158,9 @@ class TransferOutgoingsMutationTest extends TestCase
                 }
             }
         ', [
-                'company_id' => 1,
                 'group_id' => 1,
                 'group_type_id' => 1,
                 'project_id' => 1,
-                'currency_id' => 1,
                 'account_id' => 1,
                 'payment_provider_id' => 1,
                 'payment_system_id' => 1,
@@ -199,11 +193,9 @@ class TransferOutgoingsMutationTest extends TestCase
             [
                 'query' => '
                 mutation CreateTransferOutgoing(
-                $company_id: ID!
                 $group_id: ID!
                 $group_type_id: ID!
                 $project_id: ID!
-                $currency_id: ID!
                 $account_id: ID!
                 $payment_provider_id: ID!
                 $payment_system_id: ID!
@@ -223,12 +215,10 @@ class TransferOutgoingsMutationTest extends TestCase
             )
             {
                 createTransferOutgoing (
-                    company_id: $company_id
                     group_id: $group_id
                     group_type_id: $group_type_id
                     project_id: $project_id
                     amount: 10
-                    currency_id: $currency_id
                     account_id: $account_id
                     payment_provider_id: $payment_provider_id
                     payment_system_id: $payment_system_id
@@ -268,11 +258,9 @@ class TransferOutgoingsMutationTest extends TestCase
                 }
                 }',
                 'variables' => [
-                    'company_id' => 1,
                     'group_id' => 1,
                     'group_type_id' => 1,
                     'project_id' => 1,
-                    'currency_id' => 1,
                     'account_id' => 1,
                     'payment_provider_id' => 1,
                     'payment_system_id' => 1,
