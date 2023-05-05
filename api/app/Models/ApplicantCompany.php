@@ -10,6 +10,7 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
@@ -208,6 +209,11 @@ class ApplicantCompany extends BaseModel
     public function modules(): BelongsToMany
     {
         return $this->belongsToMany(Module::class, 'applicant_company_modules', 'applicant_company_id', 'module_id')->withPivot('is_active as is_active');
+    }
+
+    public function moduleActivity(): MorphMany
+    {
+        return $this->morphMany(ApplicantModuleActivity::class, 'applicant');
     }
 
     public function notes(): HasMany
