@@ -243,7 +243,7 @@ class KycTimelineService extends AbstractService
             'creator_id' => $member->id ?? null,
             'action' => 'Comment added',
             'action_type' => KycTimelineActionTypeEnum::PROFILE->value,
-            'company_id' => $applicantCompanyNote->applicant_company_id,
+            'company_id' => $applicantCompanyNote->applicantCompany->company_id,
             'applicant_id' => $applicant->applicant_id,
             'applicant_type' => $applicant->applicant_type,
         ]);
