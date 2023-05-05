@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Auth\Authorizable;
@@ -301,6 +302,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function modules(): BelongsToMany
     {
         return $this->belongsToMany(Module::class, 'applicant_individual_modules', 'applicant_individual_id', 'module_id')->withPivot('is_active as is_active');
+    }
+
+    public function moduleActivity(): MorphMany
+    {
+        return $this->morphMany(ApplicantModuleActivity::class, 'applicant');
     }
 
     public function ApplicantIndividual()
