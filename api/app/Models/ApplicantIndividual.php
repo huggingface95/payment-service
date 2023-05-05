@@ -321,7 +321,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
 
     public function account(): MorphOne
     {
-        return $this->morphOne(Account::class, 'clientable');
+        return $this->morphOne(Account::class, 'clientable', 'client_type', 'client_id');
     }
 
     public function groupRole(): \Ankurk91\Eloquent\Relations\MorphToOne
