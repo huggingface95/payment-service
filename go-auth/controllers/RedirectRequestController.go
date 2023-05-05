@@ -16,12 +16,18 @@ import (
 
 func RedirectRequest(context *gin.Context) {
 	var operations []requests.OperationInputs
+	var operation requests.OperationInputs
 	var header requests.OperationHeaders
 	var user postgres.User
 
 	jsonData, errJson := context.GetRawData()
 	errHeader := context.ShouldBindHeader(&header)
 	errInput := json.Unmarshal(jsonData, &operations)
+
+	if errInput.Error() == "json: cannot unmarshal object into Go value of type []requests.OperationInputs" {
+		errInput = json.Unmarshal(jsonData, &operation)
+		operations = append(operations, operation)
+	}
 
 	if errHeader != nil || errInput != nil || errJson != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Bad Request"})
