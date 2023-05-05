@@ -390,6 +390,21 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
+        if ($error->getMessage() == 'Company not found for this corporate or has been deleted.') {
+            return $next(new Error(
+                'Company not found for this corporate or has been deleted.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Company not found for this corporate or has been deleted.',
+                ]
+            ));
+        }
         //$underlyingException = $error->getPrevious();
         if (strpos($error->getMessage(), 'duplicate')) {
             return $next(new Error(
