@@ -116,7 +116,11 @@ trait CheckForEvents
                 foreach (explode(',', $condition) as $tableWithColumn){
                     list($table, $primary) = explode(':', $tableWithColumn);
                     if (DB::table($table)->whereNull('deleted_at')->where($primary, $modelColumns[$column])->doesntExist()){
-                        throw new GraphqlException("{$column} not found in {$table} table", 'not found', 404);
+                        if ($table == 'companies') {
+                            throw new GraphqlException("Company not found for this corporate or has been deleted.", 'not found', 404);
+                        } else {
+                            throw new GraphqlException("{$column} not found in {$table} table", 'not found', 404);
+                        }
                     }
                 }
             }
