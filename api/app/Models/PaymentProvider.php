@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * @PaymentProvider
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 class PaymentProvider extends BaseModel
 {
     use SoftDeletes;
+    use HasRelationships;
 
     public $timestamps = false;
 
@@ -61,7 +63,7 @@ class PaymentProvider extends BaseModel
     {
         $countries = implode(',', $countryId);
 
-        return $query->where('country_id', '&&', DB::raw('ARRAY['.$countries.']::integer[]'));
+        return $query->where('country_id', '&&', DB::raw('ARRAY[' . $countries . ']::integer[]'));
     }
 
     public function logo(): BelongsTo
@@ -74,10 +76,46 @@ class PaymentProvider extends BaseModel
         return $this->morphMany(ProjectApiSetting::class, 'provider');
     }
 
+    public function countries(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    {
+        return $this->hasManyDeep(
+            Country::class,
+            [Region::class, RegionCountry::class],
+            [
+                'company_id',
+                'region_id',
+                'id',
+            ],
+            [
+                'company_id',
+                'id',
+                'country_id',
+            ],
+        );
+    }
+
+    public function currencies(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    {
+        return $this->hasManyDeep(
+            Currencies::class,
+            [PaymentSystem::class, 'payment_system_currencies'],
+            [
+                'payment_provider_id',
+                'payment_system_id',
+                'id',
+            ],
+            [
+                'id',
+                'id',
+                'currency_id',
+            ],
+        );
+    }
+
     public function scopePaymentProviderCurrency($query, $currencyId)
     {
         $currencies = implode(',', $currencyId);
 
-        return $query->where('country_id', '&&', DB::raw('ARRAY['.$currencies.']::integer[]'));
+        return $query->where('country_id', '&&', DB::raw('ARRAY[' . $currencies . ']::integer[]'));
     }
 }

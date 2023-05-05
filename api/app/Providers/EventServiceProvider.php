@@ -30,11 +30,13 @@ use App\Listeners\PaymentCreatedListener;
 use App\Listeners\PaymentUpdatedListener;
 use App\Models\Account;
 use App\Models\PaymentSystem;
+use App\Models\RegionCountry;
 use App\Models\TransferIncoming;
 use App\Models\TransferOutgoing;
 use App\Observers\AccountObserver;
 use App\Observers\BaseObserver;
 use App\Observers\PaymentSystemObserver;
+use App\Observers\RegionCountryObserver;
 use App\Observers\TransferIncomingObserver;
 use App\Observers\TransferOutgoingObserver;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
@@ -96,6 +98,7 @@ class EventServiceProvider extends ServiceProvider
         TransferOutgoing::observe(TransferOutgoingObserver::class);
         TransferIncoming::observe(TransferIncomingObserver::class);
         PaymentSystem::observe(PaymentSystemObserver::class);
+        RegionCountry::observe(RegionCountryObserver::class);
 
         foreach (getAllModels() as $model) {
             $model::observe(BaseObserver::class);

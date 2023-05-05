@@ -42,6 +42,8 @@ input QueryPaymentProvidersFilterStatic @spread{
     hasCommissionTemplateFilterById: ID @eq
     company_id: ID @eq
     id: ID @eq
+    hasCountriesFilterById: ID @eq
+    hasCurrenciesFilterById: ID @eq
 }
 
 input InputPaymentProvider {
