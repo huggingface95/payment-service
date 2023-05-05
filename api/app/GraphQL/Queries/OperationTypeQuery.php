@@ -16,7 +16,7 @@ class OperationTypeQuery
     {
         $operationTypes = OperationType::query();
 
-        if (isset($args['filter']['column']) && $args['filter']['column'] === 'transfer_type') {
+        if (isset($args['filter']['column']) && $args['filter']['column'] === 'transfer_type_id') {
             $transfer_type = $args['filter']['value'];
             $operationTypes->where('transfer_type_id', '=', $transfer_type)->get();
         }
