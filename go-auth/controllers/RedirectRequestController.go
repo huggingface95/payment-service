@@ -3,7 +3,6 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
@@ -16,13 +15,13 @@ import (
 )
 
 func RedirectRequest(context *gin.Context) {
-	var input requests.OperationInputs
+	var operations []requests.OperationInputs
 	var header requests.OperationHeaders
 	var user postgres.User
 
 	jsonData, errJson := context.GetRawData()
 	errHeader := context.ShouldBindHeader(&header)
-	errInput := json.Unmarshal(jsonData, &input)
+	errInput := json.Unmarshal(jsonData, &operations)
 
 	if errHeader != nil || errInput != nil || errJson != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Bad Request"})
@@ -32,8 +31,9 @@ func RedirectRequest(context *gin.Context) {
 	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetString("bearer"))
 
 	if config.Conf.App.AppEnv != "testing" {
-		if access.CheckOperation(user, input.OperationName, header.Referer) == false {
-			context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("You are not authorized to access %s", input.OperationName)})
+		ok, message := access.CheckOperations(user, operations, header.Referer)
+		if ok == false {
+			context.JSON(http.StatusBadRequest, gin.H{"message": message})
 			return
 		}
 	}

@@ -18,7 +18,7 @@ func GetUserPermissions(user postgres.User) []postgres.Permission {
 		m = constants.ModelIndividual
 	}
 
-	err := query.
+	err := query.Preload("PermissionList.PermissionCategory").
 		Joins("JOIN role_has_permissions on role_has_permissions.permission_id=permissions.id").
 		Joins("JOIN roles on roles.id=role_has_permissions.role_id").
 		Joins("JOIN group_role on group_role.role_id=roles.id").
@@ -58,8 +58,8 @@ func GetStandardOperation(name string, referer string) (operation *postgres.Perm
 
 	rec := query.
 		Model(&postgres.PermissionOperation{}).
-		Preload("BindPermissions").
-		Preload("ParentPermissions").
+		Preload("BindPermissions.PermissionList.PermissionCategory").
+		Preload("ParentPermissions.PermissionList.PermissionCategory").
 		Where("referer = ?", referer).
 		Where("name = ?", name).
 		First(&operation)

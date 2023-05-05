@@ -1,23 +1,23 @@
 package access
 
 import (
+	"fmt"
 	"github.com/juliangruber/go-intersect"
+	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/repositories/permissionRepository"
+	"jwt-authentication-golang/requests"
 	"regexp"
+	"strings"
 )
 
-func CheckOperation(user postgres.User, name string, referer string) bool {
-	referer = optimizeReferer(referer)
-
+func checkOperation(permissions []postgres.Permission, name string, referer string) (bool, []interface{}) {
 	if permissionRepository.IsGlobalOperation(name) == true {
-		return true
+		return true, nil
 	}
-
 	operation := permissionRepository.GetStandardOperation(name, referer)
 
 	if operation != nil {
-		permissions := permissionRepository.GetUserPermissions(user)
 
 		bindPermissions := intersect.Simple(operation.BindPermissions, permissions)
 
@@ -25,17 +25,50 @@ func CheckOperation(user postgres.User, name string, referer string) bool {
 
 		if len(operation.BindPermissions) > 0 {
 			if len(bindPermissions) > 0 && len(operation.ParentPermissions) == 0 {
-				return true
+				return true, bindPermissions
 			} else if len(bindPermissions) > 0 && len(parentPermissions) > 0 {
-				return true
+				return true, append(bindPermissions, parentPermissions...)
 			}
 		} else if len(parentPermissions) > 0 {
-			return true
+			return true, parentPermissions
 		}
+	}
+	return false, nil
+}
 
+func checkModule(individual *postgres.Individual, verifiedPermissions []interface{}) (bool, string) {
+	for _, m := range individual.ApplicantModuleActivity {
+		for _, verifiedPermission := range verifiedPermissions {
+			permission := verifiedPermission.(postgres.Permission)
+			if strings.Contains(permission.PermissionList.PermissionCategory.Name, m.Module.Name) == false {
+				return false, fmt.Sprintf("Permission %s not access in module %s", permission.DisplayName, m.Module.Name)
+			}
+		}
 	}
 
-	return false
+	return true, ""
+}
+
+func CheckOperations(user postgres.User, inputs []requests.OperationInputs, referer string) (bool, string) {
+	var message string
+	referer = optimizeReferer(referer)
+	permissions := permissionRepository.GetUserPermissions(user)
+
+	for _, input := range inputs {
+		ok, verifiedPermissions := checkOperation(permissions, input.OperationName, referer)
+		if ok {
+			if user.ClientType() == constants.Individual {
+				ok, message := checkModule(user.(*postgres.Individual), verifiedPermissions)
+				if ok == false {
+					return ok, message
+				}
+			}
+		} else {
+			return false, fmt.Sprintf("You are not authorized to access %s", input.OperationName)
+		}
+	}
+
+	return true, message
 }
 
 func optimizeReferer(url string) string {
