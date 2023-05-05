@@ -130,8 +130,8 @@ extend type Query @guard {
     applicantIndividuals(
         filter: _ @filterConditions(static: QueryApplicantIndividualsFilterStatic),
         group: Int @scope(name:"GetGroup"),
-        created_at: DateTimeRange @whereBetween, 
-        group: Sort @scope(name:"GroupSort"), 
+        created_at: DateTimeRange @whereBetween,
+        group: Sort @scope(name:"GroupSort"),
         company: Sort @scope(name:"CompanySort"),
         orderBy: _ @orderBy(columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"])
     ): [ApplicantIndividual!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
@@ -166,6 +166,7 @@ input QueryApplicantIndividualsFilterStatic @spread{
     hasGroupRoleMixedIdOrName: Mixed @eq
     hasModulesFilterById: ID @eq
     hasAccountFilterByAccountNumber: String @ilike
+    hasAccountFilterById: ID @eq
     hasAccountFilterByPaymentBankId: ID @eq
 }
 

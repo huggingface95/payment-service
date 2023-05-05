@@ -23,8 +23,8 @@ extend type Query @guard {
     """
     priceListPPFees(
         filter: _ @filterConditions(static: QueryPriceListPPFeesFilterStatic)
-    ): [PriceListPPFee!]!   
-        @orderBy(column: "id", direction: ASC) @all
+    ): [PriceListPPFee!]!
+    @orderBy(column: "id", direction: ASC) @all
 }
 
 input QueryPriceListPPFeesFilterStatic @spread{
@@ -36,6 +36,7 @@ input QueryPriceListPPFeesFilterStatic @spread{
     hasPaymentProviderFilterById: ID @eq
     hasPaymentSystemFilterById: ID @eq
     hasFeesFilterById: ID @eq
+    hasCurrenciesFilterById: ID @eq
 }
 
 input PriceListPPFeeInput {
@@ -55,9 +56,9 @@ extend type Mutation @guard {
     """
     createPriceListPPFees(
         input: PriceListPPFeeInput @spread
-    ): PriceListPPFee   
-        @field(resolver: "PriceListPPFeesMutator@create") 
-        @validator
+    ): PriceListPPFee
+    @field(resolver: "PriceListPPFeesMutator@create")
+    @validator
 
     """
     Обновить прайс лист для PP
@@ -65,8 +66,8 @@ extend type Mutation @guard {
     updatePriceListPPFees(
         id: ID!
         input: PriceListPPFeeInput @spread
-    ): PriceListPPFee   
-        @field(resolver: "PriceListPPFeesMutator@update")
+    ): PriceListPPFee
+    @field(resolver: "PriceListPPFeesMutator@update")
 
     """
     Удалить прайс лист PP
