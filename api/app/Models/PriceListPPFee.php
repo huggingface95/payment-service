@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Services\PriceListFeeService;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -61,5 +62,10 @@ class PriceListPPFee extends BaseModel
     public function fees(): HasMany
     {
         return $this->hasMany(PriceListPPFeeCurrency::class, 'price_list_pp_fee_id');
+    }
+
+    public function currencies(): BelongsToMany
+    {
+        return $this->belongsToMany(Currencies::class, PriceListPPFeeCurrency::class, 'price_list_pp_fee_id', 'currency_id');
     }
 }
