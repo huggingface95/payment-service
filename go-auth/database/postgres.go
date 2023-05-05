@@ -17,7 +17,8 @@ func PostgresConnect(config *config.PostgresConfig) {
 		config.Host, config.Login, config.Password, config.Database, config.Port, config.SslMode, config.TimeZone)
 
 	PostgresInstance, PostgresError = gorm.Open(postgres.Open(connectionString), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Error),
+		Logger:                 logger.Default.LogMode(logger.Error),
+		SkipDefaultTransaction: true,
 	})
 	if PostgresError != nil {
 		log.Fatal(PostgresError)

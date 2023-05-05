@@ -5,7 +5,6 @@ import (
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/helpers"
-	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/repositories/individualRepository"
 	"jwt-authentication-golang/repositories/redisRepository"
 	"jwt-authentication-golang/repositories/userRepository"
@@ -47,11 +46,8 @@ func Register(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	user, err := individualRepository.FillIndividual(request)
-	company, err := individualRepository.FillCompany(request)
-	user.TwoFactorAuthSettingId = 2
-	user.IsVerificationPhone = postgres.ApplicantVerificationNotVerifyed
-	user.IsVerificationEmail = postgres.ApplicantVerificationNotVerifyed
+
+	err, user, company := individualRepository.CreateIndividual(request)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -59,29 +55,9 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	if err := user.HashPassword(request.Password); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		c.Abort()
-		return
-	}
-
-	record := individualRepository.CreateIndividual(&user, &company, request.ClientType)
-
-	if record == nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal server error"})
-		c.Abort()
-		return
-	}
-
-	if record.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": record.Error.Error()})
-		c.Abort()
-		return
-	}
-
 	randomToken := helpers.GenerateRandomString(20)
 	data := &cache.ConfirmationEmailLinksCache{
-		Id: user.ID, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.ID,
+		Id: user.ID, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id,
 	}
 	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 	if ok {
