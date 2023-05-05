@@ -21,11 +21,11 @@ extend type Query  @guard{
     """
    operationTypes(
         filter: _ @filterConditions(static: QueryOperationTypesFilterStatic)
-    ): [OperationType!]!   @field(resolver:"OperationTypeQuery@get")
+    ): [OperationType!]!   @all
 }
 
 input QueryOperationTypesFilterStatic @spread{
     fee_type_id: ID @eq
     transfer_type_id: ID @eq
-    payment_system_id: ID @eq
+    hasPaymentSystemsFilterById: ID @eq
 }
