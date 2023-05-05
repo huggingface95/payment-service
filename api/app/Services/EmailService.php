@@ -65,13 +65,13 @@ class EmailService
         if (! $company) {
             throw new EmailException('The member doesn\'t have a company or the company has been deleted', '404');
         }
-        
+
         $emailTemplateName = 'Sign Up: Email Confirmation';
         $emailData = [
             'email' => $member->email,
             'name' => $member->first_name,
             'logo_company' => $company->logo_link,
-            'email_confirm_url' => $company->member_verify_url.'/email/verify/'.$verifyToken->token,
+            'email_confirm_url' => $company->member_verify_url.'?token='.$verifyToken->token,
             'company_name' => $company->name,
         ];
 
