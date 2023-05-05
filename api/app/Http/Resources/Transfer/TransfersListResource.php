@@ -35,6 +35,12 @@ class TransfersListResource extends JsonResource
             ]);
         } elseif ($this->resource instanceof TransferIncoming) {
             return array_merge($data, [
+                'recipient' => $this->recipient?->name,
+                'sender' => $this->sender_name,
+                'reason' => $this->reason,
+                'urgency' => $this->paymentUrgency?->name,
+                'fee_amount' => $this->fee_amount,
+                'credit_amount' => $this->amount_debt,
                 'currency' => $this->currency?->code,
                 'transaction_description' => $transaction_description ?? '',
                 'credit' => $this->amount,
@@ -48,6 +54,12 @@ class TransfersListResource extends JsonResource
             'debit' => $this->fee,
             'credit' => $this->fee,
             'status' => $this->paymentStatus?->name,
+            'recipient' => $this->recipient?->name,
+            'sender' => $this->sender_name,
+            'reason' => $this->reason,
+            'urgency' => $this->paymentUrgency?->name,
+            'fee_amount' => $this->fee_amount,
+            'credit_amount' => $this->amount_debt,
         ]);
     }
 }
