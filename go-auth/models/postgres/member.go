@@ -30,8 +30,8 @@ type Member struct {
 }
 
 type BackupCodes struct {
-	Use  bool   `json:"use"`
-	Code string `json:"code"`
+	Use  bool `json:"use"`
+	Code int  `json:"code"`
 }
 
 func (user *Member) StructName() string {

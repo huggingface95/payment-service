@@ -17,6 +17,7 @@ import (
 	"jwt-authentication-golang/services/auth"
 	"jwt-authentication-golang/times"
 	"net/http"
+	"strconv"
 )
 
 func GenerateTwoFactorQr(context *gin.Context) {
@@ -76,7 +77,7 @@ func ActivateTwoFactorQr(context *gin.Context) {
 		userRepository.SaveUser(user)
 		codes := make([]postgres.BackupCodes, 9)
 		for k := range codes {
-			codes[k] = postgres.BackupCodes{Code: helpers.GenerateRandomString(3), Use: false}
+			codes[k] = postgres.BackupCodes{Code: helpers.GenerateRandomInteger(100000, 999999), Use: false}
 		}
 		context.JSON(http.StatusOK, gin.H{"message": "2fa activated", "data": codes})
 		context.Abort()
@@ -134,42 +135,30 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	if request.BackupCode != "" {
+	if request.BackupCodes != nil {
+		user.SetBackupCodeData(request.BackupCodes)
+		userRepository.SaveUser(user)
+	}
+
+	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType) == false {
 		var success = false
 		backupCodes := user.GetBackupCodeDataAttribute()
 		for i, v := range backupCodes {
-			if v.Code == request.BackupCode && v.Use == true {
-				context.JSON(http.StatusForbidden, gin.H{"error": "This code has been already used"})
-				context.Abort()
-				return
-			} else if v.Code == request.BackupCode {
+			if strconv.Itoa(v.Code) == request.Code && v.Use == false {
 				backupCodes[i].Use = true
+				user.SetBackupCodeData(backupCodes)
+				userRepository.SaveUser(user)
 				success = true
+				break
 			}
 		}
-		user.SetBackupCodeData(backupCodes)
-		userRepository.SaveUser(user)
-		if success == true {
-			token, expirationTime, _ := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
-			context.JSON(http.StatusOK, gin.H{"access_token": token, "token_type": "bearer", "expires_in": expirationTime.Unix()})
-			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, nil, deviceInfo)
-			oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), user.GetCompany().Name, true, true, &expirationTime, deviceInfo)
-			return
-		} else {
-			context.JSON(http.StatusForbidden, gin.H{"error": "No such code"})
+		if success == false {
+			twoFactorAttempt := cache.Caching.TwoFactorAttempt.GetAttempt(key, false)
+			cache.Caching.TwoFactorAttempt.Set(key, twoFactorAttempt+1)
+			context.JSON(http.StatusForbidden, gin.H{"data": "Unable to verify your code"})
 			context.Abort()
 			return
 		}
-	}
-
-	valid := services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType)
-
-	if valid == false {
-		twoFactorAttempt := cache.Caching.TwoFactorAttempt.GetAttempt(key, false)
-		cache.Caching.TwoFactorAttempt.Set(key, twoFactorAttempt+1)
-		context.JSON(http.StatusForbidden, gin.H{"data": "Unable to verify your code"})
-		context.Abort()
-		return
 	}
 
 	cache.Caching.TwoFactorAttempt.Del(key)
@@ -182,10 +171,6 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	if request.BackupCodes != nil {
-		user.SetBackupCodeData(request.BackupCodes)
-		userRepository.SaveUser(user)
-	}
 	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, nil, deviceInfo)
 	oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), user.GetCompany().Name, true, true, &expirationTime, deviceInfo)
 
