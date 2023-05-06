@@ -43,7 +43,6 @@ func GetUserById(id uint64, provider string) (user postgres.User) {
 }
 
 func GetWithConditions(columns map[string]interface{}, mc func() interface{}) postgres.User {
-	var m string
 	model := mc()
 
 	query := database.PostgresInstance.Limit(1)
@@ -54,15 +53,17 @@ func GetWithConditions(columns map[string]interface{}, mc func() interface{}) po
 
 	rModel := reflect.TypeOf(model)
 
+	rec := query.Preload("Company")
 	if rModel.Elem().Name() == constants.StructMember {
-		m = constants.ModelMember
+		rec.Preload("ClientIpAddresses", "client_type = ?", constants.ModelMember)
 	} else {
-		m = constants.ModelIndividual
+		rec.Preload("ClientIpAddresses", "client_type = ?", constants.ModelIndividual).
+			Preload("ApplicantModuleActivity", func(db *gorm.DB) *gorm.DB {
+				return db.Preload("Module").Where("is_active = ?", false)
+			})
 	}
+	rec.First(model)
 
-	rec := query.Preload("ClientIpAddresses", "client_type = ?", m).
-		Preload("Company").
-		First(model)
 	if rec.Error != nil {
 		return nil
 	}
