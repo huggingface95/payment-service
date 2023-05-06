@@ -19,11 +19,10 @@ type ActivateTwoFactorQrRequest struct {
 }
 
 type VerifyTwoFactorQrRequest struct {
-	Code        string                 `json:"code"`
+	Code        string                 `json:"code" binding:"required"`
 	AccessToken string                 `json:"access_token"`
 	TwoFaToken  string                 `json:"2fa_token"`
 	MemberId    uint64                 `json:"member_id"`
-	BackupCode  string                 `json:"backup_code"`
 	BackupCodes []postgres.BackupCodes `json:"backup_codes" binding:"required"`
 	Type        string                 `json:"client_type"`
 }
