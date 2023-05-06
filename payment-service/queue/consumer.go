@@ -2,44 +2,18 @@ package queue
 
 import (
 	"encoding/json"
-	"github.com/streadway/amqp"
+	"github.com/go-redis/redis/v8"
 )
 
-func StartConsumer(conn *amqp.Connection, queueName string) error {
-	channel, err := conn.Channel()
-	if err != nil {
-		return err
-	}
-	defer channel.Close()
+func StartConsumer(client *redis.Client, queueName string) error {
+	for {
+		msg, err := client.BLPop(ctx, 0, queueName).Result()
+		if err != nil {
+			return err
+		}
 
-	q, err := channel.QueueDeclare(
-		queueName,
-		true,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		return err
-	}
-
-	msgs, err := channel.Consume(
-		q.Name,
-		"",
-		true,
-		false,
-		false,
-		false,
-		nil,
-	)
-	if err != nil {
-		return err
-	}
-
-	for msg := range msgs {
 		var task Task
-		err := json.Unmarshal(msg.Body, &task)
+		err = json.Unmarshal([]byte(msg[1]), &task)
 		if err != nil {
 			continue
 		}
@@ -62,6 +36,4 @@ func StartConsumer(conn *amqp.Connection, queueName string) error {
 			continue
 		}
 	}
-
-	return nil
 }

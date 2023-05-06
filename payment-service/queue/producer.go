@@ -1,36 +1,20 @@
 package queue
 
 import (
-	"github.com/streadway/amqp"
+	"encoding/json"
+	"github.com/go-redis/redis/v8"
 )
 
-func PublishMessage(conn *amqp.Connection, queueName string, body []byte) error {
-	ch, err := conn.Channel()
-	if err != nil {
-		return err
-	}
-	defer ch.Close()
-
-	q, err := ch.QueueDeclare(
-		queueName,
-		true,
-		false,
-		false,
-		false,
-		nil,
-	)
+func PublishMessage(client *redis.Client, queueName string, task *Task) error {
+	bytes, err := json.Marshal(task)
 	if err != nil {
 		return err
 	}
 
-	err = ch.Publish(
-		"",
-		q.Name,
-		false,
-		false,
-		amqp.Publishing{
-			ContentType: "application/json",
-			Body:        body,
-		})
-	return err
+	err = client.RPush(ctx, queueName, bytes).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
