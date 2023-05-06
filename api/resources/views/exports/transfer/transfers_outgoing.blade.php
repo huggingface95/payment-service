@@ -7,7 +7,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="7" valign="top"><b>Transafer outgoings</b></th>
+                <th colspan="7" valign="top"><b>Transfer outgoings</b></th>
             </tr>
             <tr>
                 <th width="10" align="left">Date / Time</th>
