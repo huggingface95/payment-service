@@ -100,7 +100,7 @@ extend type Query @guard {
         created_at: DateTimeRange @whereBetween
     ): [TransferIncoming!]!
         @paginate(defaultCount: 10)
-        @orderBy(column: "id", direction: ASC)
+        @orderBy(column: "created_at", direction: DESC)
 
     """
     Получить статистику по входящим платежам

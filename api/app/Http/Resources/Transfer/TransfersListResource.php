@@ -28,6 +28,13 @@ class TransfersListResource extends JsonResource
 
         if ($this->resource instanceof TransferOutgoing) {
             return array_merge($data, [
+                'requested' => $this->clientable->fullname,
+                'recipient' => $this->sender->fullname,
+                'sender' => $this->recipient_name,
+                'reason' => $this->reason,
+                'urgency' => $this->paymentUrgency?->name,
+                'fee_amount' => $this->fee_amount,
+                'credit_amount' => $this->amount_debt,
                 'currency' => $this->currency?->code,
                 'transaction_description' => $transaction_description ?? '',
                 'debit' => $this->amount,
@@ -49,6 +56,7 @@ class TransfersListResource extends JsonResource
         }
 
         return array_merge($data, [
+            'requested' => $this->clientable?->name,
             'currency' => $this->transferOutgoing?->currency?->code,
             'transaction_description' => 'Fee',
             'debit' => $this->fee,
