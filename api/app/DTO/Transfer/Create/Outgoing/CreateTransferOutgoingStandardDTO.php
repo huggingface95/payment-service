@@ -22,7 +22,7 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
         $account = Account::findOrFail($args['account_id']);
         $args['company_id'] = $account->company_id;
         $countryId = Company::findOrFail($args['company_id'])->country_id;
-        $priceListId = $repository->getPriceListIdByArgs($args) ?? throw new GraphqlException('Commission price list not found');
+        $priceListId = $repository->getPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found');
         $priceListFeeId = PriceListFee::query()
             ->where('price_list_id', '=', $priceListId)
             ->where('operation_type_id', '=', $operationType)
