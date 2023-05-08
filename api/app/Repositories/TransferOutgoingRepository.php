@@ -103,7 +103,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
             ->sum('amount_debt');
     }
 
-    public function getPriceListIdByArgs(array $args): int|null
+    public function getPriceListIdByArgs(array $args, string $clientType): int|null
     {
         $regionId = Region::query()
             ->join('region_countries', 'regions.id', '=', 'region_countries.region_id')
@@ -118,11 +118,12 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
 
         $priceListId = CommissionPriceList::query()
             ->where('company_id', '=', $args['company_id'])
-            ->where('commission_template_id', '=', function($query) use ($args) {
+            ->where('commission_template_id', '=', function($query) use ($args, $clientType) {
                 $query->select('project_settings.commission_template_id')
                     ->from('projects')
                     ->join('project_settings', 'projects.id', '=', 'project_settings.project_id')
-                    ->where('projects.id', '=', $args['project_id']);
+                    ->where('projects.id', '=', $args['project_id'])
+                    ->where('applicant_type', '=', $clientType);
             })
             ->where('provider_id', '=', $args['payment_provider_id'])
             ->where('payment_system_id', '=', $args['payment_system_id'])
