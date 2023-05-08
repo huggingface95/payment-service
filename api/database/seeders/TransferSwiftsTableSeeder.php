@@ -54,5 +54,17 @@ class TransferSwiftsTableSeeder extends Seeder
                 'account_number' => $faker->swiftBicNumber(),
             ]);
         }
+
+        TransferSwift::firstOrCreate([
+            'transfer_id' => 14,
+            'transfer_type' => 'TransferIncoming',
+            'swift' => $faker->swiftBicNumber(),
+            'bank_name' => 'Bank ' . $faker->name(),
+            'bank_address' => $faker->address(),
+            'bank_country_id' => 3,
+            'location' => $faker->city(),
+            'ncs_number' => $faker->randomNumber(9),
+            'account_number' => $faker->swiftBicNumber(),
+        ]);
     }
 }

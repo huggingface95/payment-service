@@ -37,5 +37,11 @@ class TransferFileRelationsTableSeeder extends Seeder
                 'file_id' => $faker->numberBetween(1, 2),
             ]);
         }
+
+        DB::table('transfer_file_relation')->insert([
+            'transfer_id' => 14,
+            'transfer_type' => 'TransferIncoming',
+            'file_id' => 2,
+        ]);
     }
 }

@@ -366,7 +366,7 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsList(): void
     {
-        $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
+        $transferIncoming = TransferIncoming::orderBy('created_at', 'DESC')->first();
 
         $fee = $transferIncoming->feeModeBase()->first();
         $fees = $transferIncoming->fees()->first();
@@ -398,9 +398,6 @@ class TransferIncomingsQueryTest extends TestCase
                           amount_debt
                           fee_amount
                           fee {
-                            fee
-                          }
-                          fees {
                             fee
                           }
                           files {
@@ -508,9 +505,6 @@ class TransferIncomingsQueryTest extends TestCase
                             'fee' => [
                                 'fee' => (string)$fee->fee,
                             ],
-                            'fees' => [[
-                                'fee' => (string)$fees->fee,
-                            ]],
                             'files' => [[
                                 'id' => (string)$files->id,
                                 'file_name' => (string)$files->file_name,
@@ -606,7 +600,7 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterById(): void
     {
-        $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
+        $transferIncoming = TransferIncoming::orderBy('created_at', 'DESC')->first();
 
         $fee = $transferIncoming->feeModeBase()->first();
         $fees = $transferIncoming->fees()->first();
@@ -644,9 +638,6 @@ class TransferIncomingsQueryTest extends TestCase
                           amount_debt
                           fee_amount
                           fee {
-                            fee
-                          }
-                          fees {
                             fee
                           }
                           files {
@@ -757,9 +748,6 @@ class TransferIncomingsQueryTest extends TestCase
                             'fee' => [
                                 'fee' => (string)$fee->fee,
                             ],
-                            'fees' => [[
-                                'fee' => (string)$fees->fee,
-                            ]],
                             'files' => [[
                                 'id' => (string)$files->id,
                                 'file_name' => (string)$files->file_name,
@@ -855,7 +843,7 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByUrgencyId(): void
     {
-        $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
+        $transferIncoming = TransferIncoming::orderBy('created_at', 'DESC')->first();
 
         $fee = $transferIncoming->feeModeBase()->first();
         $fees = $transferIncoming->fees()->first();
@@ -893,9 +881,6 @@ class TransferIncomingsQueryTest extends TestCase
                           amount_debt
                           fee_amount
                           fee {
-                            fee
-                          }
-                          fees {
                             fee
                           }
                           files {
@@ -1006,9 +991,6 @@ class TransferIncomingsQueryTest extends TestCase
                             'fee' => [
                                 'fee' => (string)$fee->fee,
                             ],
-                            'fees' => [[
-                                'fee' => (string)$fees->fee,
-                            ]],
                             'files' => [[
                                 'id' => (string)$files->id,
                                 'file_name' => (string)$files->file_name,
@@ -1104,7 +1086,7 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByOperationTypeId(): void
     {
-        $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
+        $transferIncoming = TransferIncoming::orderBy('created_at', 'DESC')->first();
 
         $fee = $transferIncoming->feeModeBase()->first();
         $fees = $transferIncoming->fees()->first();
@@ -1142,9 +1124,6 @@ class TransferIncomingsQueryTest extends TestCase
                           amount_debt
                           fee_amount
                           fee {
-                            fee
-                          }
-                          fees {
                             fee
                           }
                           files {
@@ -1255,9 +1234,6 @@ class TransferIncomingsQueryTest extends TestCase
                             'fee' => [
                                 'fee' => (string)$fee->fee,
                             ],
-                            'fees' => [[
-                                'fee' => (string)$fees->fee,
-                            ]],
                             'files' => [[
                                 'id' => (string)$files->id,
                                 'file_name' => (string)$files->file_name,
@@ -1353,7 +1329,7 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByStatusId(): void
     {
-        $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
+        $transferIncoming = TransferIncoming::orderBy('created_at', 'DESC')->first();
 
         $fee = $transferIncoming->feeModeBase()->first();
         $fees = $transferIncoming->fees()->first();
@@ -1391,9 +1367,6 @@ class TransferIncomingsQueryTest extends TestCase
                           amount_debt
                           fee_amount
                           fee {
-                            fee
-                          }
-                          fees {
                             fee
                           }
                           files {
@@ -1504,9 +1477,6 @@ class TransferIncomingsQueryTest extends TestCase
                             'fee' => [
                                 'fee' => (string)$fee->fee,
                             ],
-                            'fees' => [[
-                                'fee' => (string)$fees->fee,
-                            ]],
                             'files' => [[
                                 'id' => (string)$files->id,
                                 'file_name' => (string)$files->file_name,
@@ -1602,7 +1572,7 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterBySenderName(): void
     {
-        $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
+        $transferIncoming = TransferIncoming::orderBy('created_at', 'DESC')->first();
 
         $fee = $transferIncoming->feeModeBase()->first();
         $fees = $transferIncoming->fees()->first();
@@ -1641,9 +1611,6 @@ class TransferIncomingsQueryTest extends TestCase
                           amount_debt
                           fee_amount
                           fee {
-                            fee
-                          }
-                          fees {
                             fee
                           }
                           files {
@@ -1754,9 +1721,6 @@ class TransferIncomingsQueryTest extends TestCase
                             'fee' => [
                                 'fee' => (string)$fee->fee,
                             ],
-                            'fees' => [[
-                                'fee' => (string)$fees->fee,
-                            ]],
                             'files' => [[
                                 'id' => (string)$files->id,
                                 'file_name' => (string)$files->file_name,
@@ -1852,7 +1816,7 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByAccountNumber(): void
     {
-        $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
+        $transferIncoming = TransferIncoming::orderBy('created_at', 'DESC')->first();
 
         $fee = $transferIncoming->feeModeBase()->first();
         $fees = $transferIncoming->fees()->first();
@@ -1891,9 +1855,6 @@ class TransferIncomingsQueryTest extends TestCase
                           amount_debt
                           fee_amount
                           fee {
-                            fee
-                          }
-                          fees {
                             fee
                           }
                           files {
@@ -2004,9 +1965,6 @@ class TransferIncomingsQueryTest extends TestCase
                             'fee' => [
                                 'fee' => (string)$fee->fee,
                             ],
-                            'fees' => [[
-                                'fee' => (string)$fees->fee,
-                            ]],
                             'files' => [[
                                 'id' => (string)$files->id,
                                 'file_name' => (string)$files->file_name,
@@ -2102,7 +2060,7 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByFee(): void
     {
-        $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
+        $transferIncoming = TransferIncoming::orderBy('created_at', 'DESC')->first();
 
         $fee = $transferIncoming->feeModeBase()->first();
         $fees = $transferIncoming->fees()->first();
@@ -2141,9 +2099,6 @@ class TransferIncomingsQueryTest extends TestCase
                           amount_debt
                           fee_amount
                           fee {
-                            fee
-                          }
-                          fees {
                             fee
                           }
                           files {
@@ -2254,9 +2209,6 @@ class TransferIncomingsQueryTest extends TestCase
                             'fee' => [
                                 'fee' => (string)$fee->fee,
                             ],
-                            'fees' => [[
-                                'fee' => (string)$fees->fee,
-                            ]],
                             'files' => [[
                                 'id' => (string)$files->id,
                                 'file_name' => (string)$files->file_name,
@@ -2352,7 +2304,7 @@ class TransferIncomingsQueryTest extends TestCase
 
     public function testQueryTransferIncomingsWithFilterByFeeAmount(): void
     {
-        $transferIncoming = TransferIncoming::orderBy('id', 'ASC')->first();
+        $transferIncoming = TransferIncoming::orderBy('created_at', 'DESC')->first();
 
         $fee = $transferIncoming->feeModeBase()->first();
         $fees = $transferIncoming->fees()->first();
@@ -2391,9 +2343,6 @@ class TransferIncomingsQueryTest extends TestCase
                           amount_debt
                           fee_amount
                           fee {
-                            fee
-                          }
-                          fees {
                             fee
                           }
                           files {
@@ -2504,9 +2453,6 @@ class TransferIncomingsQueryTest extends TestCase
                             'fee' => [
                                 'fee' => (string)$fee->fee,
                             ],
-                            'fees' => [[
-                                'fee' => (string)$fees->fee,
-                            ]],
                             'files' => [[
                                 'id' => (string)$files->id,
                                 'file_name' => (string)$files->file_name,
