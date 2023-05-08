@@ -59,7 +59,6 @@ class TransferOutgoingsMutationTest extends TestCase
                     respondent_fees_id: $respondent_fees_id
                     reason: $reason
                     bank_message: $bank_message
-                    file_id: [1]
                 )
                 {
                     id
@@ -235,7 +234,6 @@ class TransferOutgoingsMutationTest extends TestCase
                     respondent_fees_id: $respondent_fees_id
                     reason: $reason
                     bank_message: $bank_message
-                    file_id: [1]
                 )
                 {
                       id

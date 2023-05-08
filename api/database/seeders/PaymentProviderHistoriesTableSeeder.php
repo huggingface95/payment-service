@@ -37,5 +37,11 @@ class PaymentProviderHistoriesTableSeeder extends Seeder
                 'transfer_type' => $faker->randomElement([FeeTransferTypeEnum::OUTGOING->toString(), FeeTransferTypeEnum::INCOMING->toString()]),
             ]);
         }
+
+        PaymentProviderHistory::firstOrCreate([
+            'payment_provider_id' => 2,
+            'transfer_id' => 14,
+            'transfer_type' => FeeTransferTypeEnum::INCOMING->toString(),
+        ]);
     }
 }

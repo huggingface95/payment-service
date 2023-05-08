@@ -15,7 +15,7 @@ class TransferOutgoingTableSeeder extends Seeder
     public function run()
     {
         TransferOutgoing::withoutEvents(function () {
-            for ($i = 1; $i <= 20; $i++) {
+            for ($i = 1; $i <= 10; $i++) {
                 $payment = TransferOutgoing::factory()->definition();
                 $payment['id'] = $i;
                 $payment['payment_number'] = '1000'.$i;
