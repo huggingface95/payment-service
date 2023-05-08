@@ -37,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Str::macro('decimal', function ($amount) {
-            return number_format($amount, 5);
+            return number_format($amount, 5, '.', '');
         });
     }
 
