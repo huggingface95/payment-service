@@ -165,7 +165,7 @@ input QueryApplicantIndividualsFilterStatic @spread{
     hasStatusFilterById: ID @eq
     hasGroupRoleMixedIdOrName: Mixed @eq
     hasModulesFilterById: ID @eq
-    hasAccountFilterByAccountNumber: String @ilike
+    hasAccountFilterByAccountNumber: String @eq
     hasAccountFilterById: ID @eq
     hasAccountFilterByPaymentBankId: ID @eq
 }
