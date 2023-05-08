@@ -1,4 +1,5 @@
 type Fee {
+    id: ID!
     "Дата"
     created_at: DateTimeUtc!
     fee: Decimal!
