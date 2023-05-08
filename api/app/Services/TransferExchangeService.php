@@ -84,6 +84,23 @@ class TransferExchangeService extends AbstractService
         return $transfers['exchange'];
     }
 
+    public function getAllExchangeCommissions(array $args, TransferOutgoing $transfer, TransactionDTO $transaction, Account $fromAccount, Account $toAccount): array
+    {
+        $fees = $this->commissionService->getAllCommissions($transfer, $transaction);
+        $rate = $this->getExchangeRate($args, $fromAccount, $toAccount);
+
+        $args['amount'] = $args['amount'] - $fees['fee_total'];
+        $amount = $this->getExchangeAmount($args, $fromAccount, $toAccount);
+
+        return [
+            'fee_amount' => $fees['fee_amount'],
+            'fee_qoute' => $fees['fee_qp'],
+            'fee_total' => $fees['fee_total'],
+            'rate' => $rate,
+            'converted_amount' => $amount,
+        ];
+    }
+
     /**
      * @throws GraphqlException
      */

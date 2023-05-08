@@ -40,6 +40,7 @@ extend type Query @guard {
         currency_id_dst: ID! @eq
         amount: Decimal! @eq
         price_list_fee_id: ID! @eq
+        urgency_id: ID @eq
     ): TransferFeeExchange!
         @field(resolver: "TransferFeeQuery@getExchange")
 }

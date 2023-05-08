@@ -28,6 +28,7 @@ class QuoteProviderTableSeeder extends Seeder
                     'company_id' => $i,
                     'status' => $faker->randomElement([ActivityStatusEnum::INACTIVE->value, ActivityStatusEnum::ACTIVE->value]),
                     'quote_type' => $faker->randomElement([QuoteTypeEnum::API->toString(), QuoteTypeEnum::MANUAL->toString()]),
+                    'margin_commission' => $faker->randomFloat(2, 0, 40),
                 ]);
             });
         }
