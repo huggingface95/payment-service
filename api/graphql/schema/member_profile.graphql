@@ -86,6 +86,16 @@ extend type Mutation @guard(with: "api") {
         email: String! @rules(apply: ["email"])
     ): StatusType
         @field(resolver: "MemberProfileMutator@sendConfirmChangeEmail")
+
+    """
+    Изменить пароль member
+    """
+    changeMemberPassword (
+        password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
+        password_confirmation: String!
+        old_password: String!
+    ): MemberProfile
+    @field(resolver: "MemberProfileMutator@changeMemberPassword")
 }
 
 
