@@ -264,6 +264,10 @@ extend type Mutation @guard {
         account_name: String!
         "Состояние аккаунта"
         account_state_id: ID!
+        "лимит максимального баланса"
+        min_limit_balance: Decimal
+        "лимит минимального баланса"
+        max_limit_balance: Decimal
         "Основной или нет"
         is_primary: Boolean!
     ): Account   @update
