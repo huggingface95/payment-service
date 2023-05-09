@@ -24,7 +24,6 @@ class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
         $args['payment_system_id'] = 1;
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['reason'] = 'test';
         $args['sender_country_id'] = 1;
         $args['respondent_fees_id'] = 1;
         $args['group_id'] = 1;

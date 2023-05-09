@@ -3,6 +3,7 @@
 namespace App\DTO\Transfer\Create\Outgoing;
 
 use App\Enums\PaymentStatusEnum;
+use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
 use App\Models\Account;
 use Carbon\Carbon;
@@ -19,7 +20,7 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
         $args['amount'] = $args['amount'];
         $args['amount_debt'] = $args['amount'];
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
-        $args['urgency_id'] = 1;
+        $args['urgency_id'] = $args['urgency_id'] ?? PaymentUrgencyEnum::STANDART->value;
         $args['operation_type_id'] = $operationType;
         $args['payment_bank_id'] = 2;
         $args['payment_number'] = 'BTW' . rand();
@@ -27,7 +28,6 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
         $args['payment_system_id'] = $account->company->paymentSystemInternal?->id;
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['reason'] = 'test';
         $args['sender_country_id'] = 1;
         $args['respondent_fees_id'] = 2;
         $args['group_id'] = 1;

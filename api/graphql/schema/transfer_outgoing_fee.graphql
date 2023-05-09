@@ -44,7 +44,7 @@ extend type Mutation @guard {
         "Индекс получателя"
         recipient_zip: String
         "Причина перевода"
-        reason: String!
+        reason: String
         "ID коммиисии респондента"
         respondent_fees_id: ID!
         "Сообщение банка"

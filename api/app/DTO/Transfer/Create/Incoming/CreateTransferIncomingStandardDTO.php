@@ -23,7 +23,6 @@ class CreateTransferIncomingStandardDTO extends CreateTransferIncomingDTO
         $args['payment_number'] = rand();
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['reason'] = 'test';
         $args['sender_country_id'] = 1;
         $args['respondent_fees_id'] = 2;
         $args['created_at'] = $date->format('Y-m-d H:i:s');

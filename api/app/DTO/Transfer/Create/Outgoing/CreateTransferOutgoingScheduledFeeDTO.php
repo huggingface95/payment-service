@@ -4,6 +4,7 @@ namespace App\DTO\Transfer\Create\Outgoing;
 
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
 use App\Models\Account;
 use App\Models\PaymentProvider;
@@ -29,7 +30,7 @@ class CreateTransferOutgoingScheduledFeeDTO extends CreateTransferOutgoingDTO
         $args['price_list_id'] = 1;
         $args['price_list_fee_id'] = 1;
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
-        $args['urgency_id'] = 1;
+        $args['urgency_id'] = $args['urgency_id'] ?? PaymentUrgencyEnum::STANDART->value;
         $args['operation_type_id'] = OperationTypeEnum::SCHEDULED_FEE->value;
         $args['payment_provider_id'] = $ppInternal->id;
         $args['payment_system_id'] = $psInternal->id;
