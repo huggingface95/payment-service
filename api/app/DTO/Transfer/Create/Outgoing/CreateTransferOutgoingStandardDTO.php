@@ -3,6 +3,7 @@
 namespace App\DTO\Transfer\Create\Outgoing;
 
 use App\Enums\PaymentStatusEnum;
+use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
@@ -41,6 +42,7 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
         $args['recipient_bank_country_id'] = $countryId;
         $args['price_list_id'] = $priceListId;
         $args['price_list_fee_id'] = $priceListFeeId;
+        $args['urgency_id'] = $args['urgency_id'] ?? PaymentUrgencyEnum::STANDART->value;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
 
         if (isset($args['execution_at'])) {

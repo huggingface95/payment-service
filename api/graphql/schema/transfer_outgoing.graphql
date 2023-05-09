@@ -46,6 +46,7 @@ type TransferOutgoing {
     "Получить связанную компанию"
     company: Company @belongsTo(relation: "company")
     system_message: String
+    "Основание перевода"
     reason: String
     channel: String
     bank_message: String
@@ -229,7 +230,7 @@ extend type Mutation @guard {
         "Кто платит коммиссию"
         respondent_fees_id: ID!
         "Основание перевода"
-        reason: String!
+        reason: String
         "Сообщение банка"
         bank_message: String
         "ID файлов"
