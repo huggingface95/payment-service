@@ -34,4 +34,25 @@ class ApplicantProfileMutator extends BaseMutator
 
         return $applicant;
     }
+    /**
+     * @param    $_
+     * @param  array  $args
+     * @return array
+     */
+    public function sendFeedback($_, array $args)
+    {
+        $applicant = auth()->user();
+
+        $emailData = [
+            'client_name' => $applicant->fullname,
+            'login_page_url' => $applicant->company->url,
+            'message' => $args['message'],
+        ];
+
+        return [
+            'status' => 'OK',
+            'message' => 'Your feedback sent',
+        ];
+
+    }
 }
