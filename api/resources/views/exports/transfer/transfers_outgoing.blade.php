@@ -7,7 +7,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="14" valign="top"><b>Transfer outgoings</b></th>
+                <th colspan="14" valign="top"><b>Outgoing Transfers</b></th>
             </tr>
             <tr>
                 <th width="10" align="left">Transaction ID</th>

@@ -48,7 +48,7 @@ extend type Query @guard {
         created_at: DateTimeRange @whereBetween
     ): [TransferExchange!]!
         @paginate(defaultCount: 10)
-        @orderBy(column: "id", direction: ASC)
+        @orderBy(column: "created_at", direction: DESC)
 
     """
     Получить статистику по входящим платежам
@@ -59,6 +59,16 @@ extend type Query @guard {
     ): [TransferExchangeStatistic]
     @field(resolver: "TransferExchangeQuery@statistic")
 
+    """
+    Получить выписку по обменным трансферам
+    """
+    downloadTransferExchanges(
+        type: ExportFileType!
+        filter: _ @filterConditions(static: QueryDownloadTransferExchangesFilterStatic)
+        created_at: DateTimeRange @whereBetween
+    ): RawFile
+    @downloadFileWithConditions(model: "TransferExchange")
+
 }
 
 input QueryTransferExchangeStatisticFilterStatic @spread {
@@ -67,6 +77,16 @@ input QueryTransferExchangeStatisticFilterStatic @spread {
 }
 
 input QueryTransferExchnagesFilterStatic @spread {
+    id: ID @eq
+    company_id: ID @eq
+    client_id: ID @eq
+    requested_by_id: ID @eq
+    debited_account_id: ID @eq
+    credited_account_id: ID @eq
+    status_id: ID @eq
+}
+
+input QueryDownloadTransferExchangesFilterStatic @spread {
     id: ID @eq
     company_id: ID @eq
     client_id: ID @eq

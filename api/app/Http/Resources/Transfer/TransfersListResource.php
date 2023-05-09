@@ -3,6 +3,8 @@
 namespace App\Http\Resources\Transfer;
 
 use App\Enums\OperationTypeEnum;
+use App\Models\Members;
+use App\Models\TransferExchange;
 use App\Models\TransferIncoming;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\TransferOutgoing;
@@ -51,6 +53,22 @@ class TransfersListResource extends JsonResource
                 'currency' => $this->currency?->code,
                 'transaction_description' => $transaction_description ?? '',
                 'credit' => $this->amount,
+                'status' => $this->paymentStatus?->name,
+            ]);
+        } elseif ($this->resource instanceof TransferExchange) {
+            return array_merge($data, [
+                'requested' => ($this->clientable instanceof Members) ? "Member" : "Applicant",
+                'client' => $this->client?->fullname,
+                'debited_account' => $this->debitedAccount?->id,
+                'credited_account' => $this->creditedAccount?->id,
+                'quotes_provider' => $this->quoteProviders->first()->name ?? '',
+                'exchange_rate' => $this->exchange_rate,
+                'margin_commission' => $this->quoteProviders->first()->margin_commission ?? '',
+                'debited_amount' => $this->TransferIncoming->amount,
+                'quotes_provider_fee' => $this->TransferOutgoing->amount_debt,
+                'final_amount' => $this->TransferOutgoing->amount_debt,
+                'currency' => $this->currency?->code,
+                'credited_amount' => $this->TransferOutgoing->amount,
                 'status' => $this->paymentStatus?->name,
             ]);
         }
