@@ -11,8 +11,8 @@ class ApplicantService
 
     public function getApplicantRequisites(ApplicantIndividual $applicant, Account $account): array
     {
-        $bank = $account->paymentBank;
-        $bankCorrespondent = $bank->bankCorrespondent;
+        $bank = $account->paymentBank ?? '';
+        $bankCorrespondent = $bank->bankCorrespondent ?? '';
         $applicantCompany = $account->owner->companies->first();
         $defaultLogoPath = storage_path('pdf').self::DEFAULT_LOGO_PATH;
         $companyLogoPath = $account->company->companySettings->logo->link ?? $defaultLogoPath;
