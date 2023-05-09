@@ -5,9 +5,13 @@ namespace App\DTO\Transfer\Create\Outgoing;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
+use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use Carbon\Carbon;
 
+/**
+ * @throws GraphqlException
+ */
 class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
 {
     public static function transform(Account $account, int $operationType, array $args): CreateTransferOutgoingDTO
@@ -24,8 +28,8 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
         $args['operation_type_id'] = $operationType;
         $args['payment_bank_id'] = 2;
         $args['payment_number'] = 'BTW' . rand();
-        $args['payment_provider_id'] = $account->company->paymentProviderInternal?->id;
-        $args['payment_system_id'] = $account->company->paymentSystemInternal?->id;
+        $args['payment_provider_id'] = $account->company->paymentProviderInternal?->id ?? throw new GraphqlException('Internal Payment provider not found');
+        $args['payment_system_id'] = $account->company->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');;
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['sender_country_id'] = 1;
