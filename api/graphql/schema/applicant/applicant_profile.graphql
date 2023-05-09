@@ -115,6 +115,14 @@ extend type Mutation @guard(with: "api_client") @namespace(field: "App\\GraphQL\
         notify_device_email: Boolean
     ): ApplicantProfile
         @field(resolver: "ApplicantProfileMutator@update")
+    """
+    Отправить feedback
+    """
+    sendApplicantFeedback(
+        "Текст"
+        message: String!
+    ): StatusType
+    @field(resolver: "ApplicantProfileMutator@sendFeedback")
 }
 
 
