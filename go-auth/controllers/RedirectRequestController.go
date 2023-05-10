@@ -37,7 +37,7 @@ func RedirectRequest(context *gin.Context) {
 	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetString("bearer"))
 
 	if config.Conf.App.AppEnv != "testing" {
-		ok, message := access.CheckOperations(user, operations, header.Referer)
+		ok, message := access.CheckAccess(user, operations, header.Referer)
 		if ok == false {
 			context.JSON(http.StatusBadRequest, gin.H{"message": message})
 			return

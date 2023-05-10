@@ -10,3 +10,6 @@ const ModelIndividual = "ApplicantIndividual"
 
 const RegisterClientTypePrivate = "Private"
 const RegisterClientTypeCorporate = "Corporate"
+
+const ModuleActivityIndividual = "Individual"
+const ModuleActivityCorporate = "Corporate"
