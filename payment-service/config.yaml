@@ -1,0 +1,6 @@
+server:
+  address: ":50920"
+db:
+  connection_string: "postgres://user:password@localhost/dbname?sslmode=disable"
+rabbitmq:
+  connection_string: "amqp://guest:guest@localhost:5672/"

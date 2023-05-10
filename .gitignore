@@ -1,6 +1,7 @@
 /.idea
-.env
-docker/logs
-docker/data
+/*/.idea
+/docker/.env
+/docker/logs
+/docker/data
 *.sql
 /docker/clickhouse/database

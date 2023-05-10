@@ -103,6 +103,11 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     networks:
       - backend
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      interval: 1s
+      timeout: 5s
+      retries: 5
 
   redis:
     build: ./redis
@@ -114,6 +119,8 @@ services:
       --requirepass ${REDIS_PASS}
     networks:
       - backend
+    healthcheck:
+      test: redis-cli ping
     user: "${REDIS_UID}:${REDIS_GID}"
 
   clickhouse_server:
@@ -163,3 +170,23 @@ services:
       - "${MAIL_WEB_PORT}:8025" # web ui
     networks:
       - backend
+
+  payment-service:
+    build:
+      context: ../payment-service
+      dockerfile: ../docker/payment-service/Dockerfile
+    ports:
+      - "50920:50920"
+    expose:
+      - 50920
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      backend:
+    environment:
+      - DB_CONNECTION_STRING=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/payment-service?sslmode=disable
+      - REDIS_CONNECTION_STRING=redis:${REDIS_PORT}
+      - REDIS_PASS=${REDIS_PASS}
