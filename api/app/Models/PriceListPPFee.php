@@ -26,6 +26,7 @@ class PriceListPPFee extends BaseModel
         'period_id',
         'payment_system_id',
         'payment_provider_id',
+        'company_id',
     ];
 
     protected $appends = [
