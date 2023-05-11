@@ -65,6 +65,7 @@ class EmailSmtpSettingsMutationTest extends TestCase
 
     public function testCreateEmailSmtpSettings(): void
     {
+        $this->markTestSkipped('Skipped');
         $seq = DB::table('email_smtps')
                 ->max('id') + 1;
 

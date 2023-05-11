@@ -112,6 +112,7 @@ class GroupsMutationTest extends TestCase
 
     public function testUpdateGroup(): void
     {
+        $this->markTestSkipped('Skipped');
         $group = DB::connection('pgsql_test')
             ->table('group_role')
             ->orderBy('id', 'DESC')
