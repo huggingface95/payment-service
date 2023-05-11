@@ -6,9 +6,11 @@ use App\DTO\Transaction\TransactionDTO;
 use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingStandardDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\PaymentStatusEnum;
+use App\Enums\TransferHistoryActionEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\TransferIncoming;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
+use App\Traits\TransferHistoryTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
@@ -16,6 +18,8 @@ use Illuminate\Support\Facades\DB;
 
 class TransferIncomingService extends AbstractService
 {
+    use TransferHistoryTrait;
+
     public function __construct(
         protected AccountService                      $accountService,
         protected CommissionService                   $commissionService,
@@ -35,6 +39,8 @@ class TransferIncomingService extends AbstractService
 
             $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
             $this->commissionService->makeFee($transfer, $transactionDTO);
+
+            $this->createTransferHistory($transfer, TransferHistoryActionEnum::INIT->value);
 
             return $transfer;
         });
@@ -108,9 +114,13 @@ class TransferIncomingService extends AbstractService
 
     public function updateTransferStatusToPending(TransferIncoming $transfer): void
     {
-        $this->transferRepository->update($transfer, [
-            'status_id' => PaymentStatusEnum::PENDING->value,
-        ]);
+        DB::transaction(function () use ($transfer) {
+            $this->transferRepository->update($transfer, [
+                'status_id' => PaymentStatusEnum::PENDING->value,
+            ]);
+
+            $this->createTransferHistory($transfer);
+        });
     }
 
     public function updateTransferStatusToExecuted(TransferIncoming $transfer, TransactionDTO $transactionDTO = null): void
@@ -127,6 +137,8 @@ class TransferIncomingService extends AbstractService
             }
 
             $this->accountService->addToBalance($transfer->account, $transfer->amount_debt);
+
+            $this->createTransferHistory($transfer);
 
             DB::commit();
         } catch (\Exception $e) {

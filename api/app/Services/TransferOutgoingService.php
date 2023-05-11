@@ -8,12 +8,15 @@ use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingStandardDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
+use App\Enums\TransferHistoryActionEnum;
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\TransferOutgoingJob;
 use App\Models\ApplicantBankingAccess;
 use App\Models\PriceListFeeCurrency;
 use App\Models\TransferOutgoing;
+use App\Models\TransferOutgoingHistory;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
+use App\Traits\TransferHistoryTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +26,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TransferOutgoingService extends AbstractService
 {
+    use TransferHistoryTrait;
+
     public function __construct(
         protected EmailService                        $emailService,
         protected AccountService                      $accountService,
@@ -33,7 +38,6 @@ class TransferOutgoingService extends AbstractService
     )
     {
     }
-
 
     public function commissionCalculationFeeScheduled($amount, $fee, $currencyId): float
     {
@@ -145,9 +149,13 @@ class TransferOutgoingService extends AbstractService
 
     public function updateTransferStatusToPending(TransferOutgoing $transfer): void
     {
-        $this->transferRepository->update($transfer, [
-            'status_id' => PaymentStatusEnum::PENDING->value,
-        ]);
+        DB::transaction(function () use ($transfer) {
+            $this->transferRepository->update($transfer, [
+                'status_id' => PaymentStatusEnum::PENDING->value,
+            ]);
+
+            $this->createTransferHistory($transfer);
+        });
     }
 
     public function updateTransferStatusToSent(TransferOutgoing $transfer): void
@@ -162,6 +170,8 @@ class TransferOutgoingService extends AbstractService
             $this->accountService->setAmmountReserveOnAccountBalance($transfer);
 
             $this->updateApplicantBankingAccessUsedLimits($transfer);
+
+            $this->createTransferHistory($transfer);
 
             dispatch(new TransferOutgoingJob($transfer))->afterCommit();
         });
@@ -187,6 +197,8 @@ class TransferOutgoingService extends AbstractService
 
             $this->updateApplicantBankingAccessUsedLimits($transfer);
 
+            $this->createTransferHistory($transfer);
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollback();
@@ -205,6 +217,8 @@ class TransferOutgoingService extends AbstractService
                 'status_id' => PaymentStatusEnum::PENDING->value,
             ]);
 
+            $this->createTransferHistory($transfer);
+
             $this->accountService->unsetAmmountReserveOnAccountBalance($transfer);
         });
 
@@ -214,6 +228,8 @@ class TransferOutgoingService extends AbstractService
                 'amount_debt' => $amount,
                 'status_id' => PaymentStatusEnum::SENT->value,
             ]);
+
+            $this->createTransferHistory($transfer);
 
             $this->accountService->setAmmountReserveOnAccountBalance($transfer);
         });
@@ -228,6 +244,8 @@ class TransferOutgoingService extends AbstractService
 
             $this->accountService->setAmmountReserveOnAccountBalance($transfer);
 
+            $this->createTransferHistory($transfer);
+
             dispatch(new TransferOutgoingJob($transfer))->afterCommit();
         });
     }
@@ -240,6 +258,8 @@ class TransferOutgoingService extends AbstractService
             $this->accountService->unsetAmmountReserveOnAccountBalance($transfer);
 
             $this->updateApplicantBankingAccessUsedLimits($transfer);
+
+            $this->createTransferHistory($transfer);
         });
     }
 
@@ -253,6 +273,8 @@ class TransferOutgoingService extends AbstractService
 
             $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
             $this->commissionService->makeFee($transfer, $transactionDTO);
+
+            $this->createTransferHistory($transfer, TransferHistoryActionEnum::INIT->value);
 
             return $transfer;
         });
