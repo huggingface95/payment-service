@@ -64,11 +64,6 @@ type Account {
     alias: Boolean!
 }
 
-type AccountClient {
-    id: ID!
-    client: Client @morphTo(relation:"client")
-}
-
 type AccountState {
     id: ID!
     name: String!
@@ -138,10 +133,8 @@ extend type Query @guard {
     Получить список клиентов
     """
     clientList(
-        group_type: ID @eq
-        company_id: ID @eq
-        group_role_id: ID @eq
-    ): [AccountClient!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
+        filter: _ @filterConditions(static: QueryAccountListFilterStatic)
+    ): [Client!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
 
     """
     Скачать список аккаунтов
@@ -152,6 +145,12 @@ extend type Query @guard {
         created_at: DateTimeRange @whereBetween
     ): RawFile
         @downloadFileWithConditions(model: "Account")
+}
+
+input QueryClientListFilterStatic @spread{
+    group_type_id: ID @eq
+    company_id: ID @eq
+    group_role_id: ID @eq
 }
 
 input QueryAccountListFilterStatic @spread{
