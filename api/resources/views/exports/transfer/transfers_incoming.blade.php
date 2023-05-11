@@ -14,6 +14,7 @@
                 <th width="13">Created at</th>
                 <th width="13">Recipient</th>
                 <th width="13">Sender</th>
+                <th width="10">Account ID</th>
                 <th width="10">IBAN Account</th>
                 <th width="20">Transfer Reason</th>
                 <th width="20">Type</th>
@@ -32,6 +33,7 @@
                 <td valign="top">{{ $transfer['date_time'] }}</td>
                 <td valign="top">{{ $transfer['recipient'] }}</td>
                 <td valign="top">{{ $transfer['sender'] }}</td>
+                <td valign="top">{{ $transfer['account_id'] }}</td>
                 <td valign="top">{{ $transfer['account_number'] }}</td>
                 <td valign="top">{{ $transfer['reason'] }}</td>
                 <td valign="top">{{ $transfer['transaction_description'] }}</td>

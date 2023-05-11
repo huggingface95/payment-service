@@ -7,7 +7,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="15" valign="top"><b>Outgoing Transfers</b></th>
+                <th colspan="16" valign="top"><b>Outgoing Transfers</b></th>
             </tr>
             <tr>
                 <th width="10" align="left">ID</th>
@@ -15,6 +15,7 @@
                 <th width="13">Requested by</th>
                 <th width="13">Recipient</th>
                 <th width="13">Sender</th>
+                <th width="10">Account ID</th>
                 <th width="10">IBAN Account</th>
                 <th width="20">Transfer Reason</th>
                 <th width="20">Type</th>
@@ -35,6 +36,7 @@
                 <td valign="top">{{ $transfer['requested'] }}</td>
                 <td valign="top">{{ $transfer['recipient'] }}</td>
                 <td valign="top">{{ $transfer['sender'] }}</td>
+                <td valign="top">{{ $transfer['account_id'] }}</td>
                 <td valign="top">{{ $transfer['account_number'] }}</td>
                 <td valign="top">{{ $transfer['reason'] }}</td>
                 <td valign="top">{{ $transfer['transaction_description'] }}</td>
