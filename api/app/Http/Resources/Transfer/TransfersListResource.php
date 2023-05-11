@@ -36,6 +36,7 @@ class TransfersListResource extends JsonResource
                 'reason' => $this->reason,
                 'urgency' => $this->paymentUrgency?->name,
                 'fee_amount' => $this->fee_amount,
+                'account_number' => $this->account->account_number,
                 'credit_amount' => $this->amount_debt,
                 'currency' => $this->currency?->code,
                 'transaction_description' => $transaction_description ?? '',
@@ -49,6 +50,7 @@ class TransfersListResource extends JsonResource
                 'reason' => $this->reason,
                 'urgency' => $this->paymentUrgency?->name,
                 'fee_amount' => $this->fee_amount,
+                'account_number' => $this->account->account_number,
                 'credit_amount' => $this->amount_debt,
                 'currency' => $this->currency?->code,
                 'transaction_description' => $transaction_description ?? '',
@@ -75,6 +77,7 @@ class TransfersListResource extends JsonResource
 
         return array_merge($data, [
             'requested' => $this->clientable?->name,
+            'account_number' => $this->account->account_number,
             'currency' => $this->transferOutgoing?->currency?->code,
             'transaction_description' => 'Fee',
             'debit' => $this->fee,
