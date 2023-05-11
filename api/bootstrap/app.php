@@ -149,6 +149,7 @@ $app->register(\Tinderbox\ClickhouseBuilder\Integrations\Laravel\ClickhouseServi
 $app->register(App\Providers\RepositoryServiceProvider::class);
 $app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
 $app->register(\App\Providers\AddGraphqlTypesServiceProvider::class);
+$app->register(\Nuwave\Lighthouse\SoftDeletes\SoftDeletesServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------

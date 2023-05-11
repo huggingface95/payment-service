@@ -26,3 +26,9 @@ enum RespondentFeesEnum {
     BEN @enum(value: 2)
     SHA @enum(value: 3)
 }
+
+enum Trashed {
+    ONLY @enum(value: "only")
+    WITH @enum(value: "with")
+    WITHOUT @enum(value: "without")
+}
