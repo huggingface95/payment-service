@@ -48,7 +48,6 @@ func Remove(key string, val interface{}) bool {
 
 func Set(key string, val interface{}) bool {
 	cmd := RedisInstance.Set(context.Background(), key, val, -1)
-	fmt.Println(cmd.Err())
 	return cmd.Err() == nil
 }
 

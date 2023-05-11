@@ -4,8 +4,8 @@ namespace App\Services\Jwt\Guards;
 
 use App\DTO\Auth\Credentials;
 use App\Services\Jwt\Guards\contract\GuardCustomActions;
-use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Auth\GuardHelpers;
+use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Traits\Macroable;
 
 class JwtGuard implements GuardCustomActions
@@ -18,7 +18,7 @@ class JwtGuard implements GuardCustomActions
 
     protected Credentials $credentials;
 
-    public function __construct(EloquentUserProvider $provider, Credentials $credentials)
+    public function __construct(UserProvider $provider, Credentials $credentials)
     {
         $this->provider = $provider;
         $this->credentials = $credentials;

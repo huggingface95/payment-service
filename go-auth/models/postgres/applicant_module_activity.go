@@ -20,8 +20,8 @@ func (*ApplicantModuleActivity) TableName() string {
 func (a *ApplicantModuleActivity) getType() string {
 	switch a.ApplicantType {
 	case "ApplicantCompany":
-		return constants.ModuleActivityCorporate
+		return constants.Corporate
 	default:
-		return constants.ModuleActivityIndividual
+		return constants.Individual
 	}
 }

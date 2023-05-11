@@ -44,6 +44,10 @@ return [
             'driver' => 'go-auth',
             'provider' => 'applicant',
         ],
+        'api_corporate' => [
+            'driver' => 'go-auth',
+            'provider' => 'corporate',
+        ],
     ],
 
     /*
@@ -71,6 +75,10 @@ return [
         'applicant' => [
             'driver' => 'eloquent',
             'model' => App\Models\ApplicantIndividual::class,
+        ],
+        'corporate' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\ApplicantCompany::class,
         ],
     ],
 

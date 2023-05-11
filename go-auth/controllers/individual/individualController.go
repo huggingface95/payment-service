@@ -57,7 +57,7 @@ func Register(c *gin.Context) {
 
 	randomToken := helpers.GenerateRandomString(20)
 	data := &cache.ConfirmationEmailLinksCache{
-		Id: user.ID, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id,
+		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id,
 	}
 	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 	if ok {

@@ -17,7 +17,7 @@ func ProcessRemoveExpiredCache() {
 	deleteConfirmationIps()
 	deleteConfirmationNewDevices()
 	deleteResetPassword()
-	deleteTotp()
+	deleteCorporateLogin()
 }
 
 func deleteLoginAttempt() {
@@ -100,10 +100,10 @@ func deleteResetPassword() {
 	}
 }
 
-func deleteTotp() {
-	records := database.GetKeys(fmt.Sprintf(constants.CacheTotp, "*"))
+func deleteCorporateLogin() {
+	records := database.GetKeys(fmt.Sprintf(constants.CacheCorporateToken, "*"))
 	for _, id := range records {
-		r := cache.Caching.Totp.Get(id, true)
+		r := cache.Caching.CorporateLogin.Get(id)
 		if r != nil && r.ExpiredAt.Unix() <= time.Now().Unix() {
 			r.Del(id)
 		}

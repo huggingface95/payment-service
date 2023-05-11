@@ -88,11 +88,11 @@ func parseJWT(signedToken string, jwtType string, replaceBearer bool) (claims *J
 
 	oauthClients := oauthRepository.GetOauthClients(jwtType)
 
-	for _, provider := range []string{constants.Member, constants.Individual} {
+	for _, provider := range []string{constants.Member, constants.Individual, constants.Corporate} {
 		token, err := new(jwt.Parser).ParseWithClaims(signedToken, &JWTClaim{}, func(token *jwt.Token) (interface{}, error) {
 			return []byte(oauthClients[provider].Secret), nil
 		})
-		if err == nil {
+		if err == nil && token.Valid {
 			claims, ok := token.Claims.(*JWTClaim)
 			if ok {
 				if claims.ExpiresAt.Unix() < time.Now().UTC().Unix() {
