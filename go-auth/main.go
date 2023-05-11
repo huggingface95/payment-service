@@ -73,6 +73,7 @@ func initRouter() *gin.Engine {
 		}
 		auth.POST("reset-password", controllers.ResetPassword)
 		auth.POST("login", controllers.Login)
+		auth.POST("change", controllers.SelectAccount)
 		auth.POST("login-two-factor", controllers.GenerateTwoFactorQr)
 		auth.POST("verify-two-factor", controllers.VerifyTwoFactorQr)
 		auth.POST("activate-two-factor", controllers.ActivateTwoFactorQr)

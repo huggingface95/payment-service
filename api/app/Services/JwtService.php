@@ -21,23 +21,13 @@ class JwtService extends JWT
 
     public function parseJWT(string $token): ?stdClass
     {
-        foreach (['member', 'applicant'] as $provider) {
-            $personalClient = $this->repository->getPersonalAccessToken($provider);
-            if ($personalClient) {
-                return self::decode($token, new Key($personalClient->secret, env('JWT_ALGO')));
-            }
-        }
-
-        return null;
+        return self::decoding($token);
     }
 
-    public static function decode(
-        string $jwt,
-        $keyOrKeyArray
-    ): stdClass {
-        if (empty($keyOrKeyArray)) {
-            throw new InvalidArgumentException('Key may not be empty');
-        }
+    public static function decoding(
+        string $jwt
+    ): stdClass
+    {
         $tks = \explode('.', $jwt);
         if (\count($tks) !== 3) {
             throw new UnexpectedValueException('Wrong number of segments');

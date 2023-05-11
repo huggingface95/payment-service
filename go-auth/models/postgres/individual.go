@@ -10,7 +10,7 @@ import (
 )
 
 type Individual struct {
-	ID                        uint64                       `gorm:"primarykey,column:id"`
+	Id                        uint64                       `gorm:"primarykey,column:id"`
 	FirstName                 string                       `gorm:"column:first_name"`
 	LastName                  string                       `gorm:"column:last_name"`
 	MiddleName                string                       `gorm:"column:middle_name"`
@@ -51,10 +51,11 @@ type Individual struct {
 	CreatedAt                 time.Time                    `gorm:"column:created_at"`
 	UpdatedAt                 time.Time                    `gorm:"column:updated_at"`
 	BackupCodes               datatypes.JSON               `gorm:"column:backup_codes"`
-	ClientIpAddresses         []*ClientIpAddress           `gorm:"foreignKey:ClientId;references:ID"`
+	ClientIpAddresses         []*ClientIpAddress           `gorm:"foreignKey:ClientId;references:Id"`
 	Company                   *Company                     `gorm:"foreignKey:CompanyId"`
 	ApplicantIndividualModule []*ApplicantIndividualModule `gorm:"foreignKey:ApplicantIndividualId"`
 	ApplicantModuleActivity   []*ApplicantModuleActivity   `gorm:"foreignKey:ApplicantId"`
+	ApplicantCompany          []ApplicantCompany           `gorm:"many2many:applicant_individual_company;foreignKey:Id;joinForeignKey:ApplicantId;References:Id;joinReferences:ApplicantCompanyId"`
 }
 
 func (user *Individual) StructName() string {
@@ -132,7 +133,7 @@ func (user *Individual) GetBackupCodeDataAttribute() []BackupCodes {
 }
 
 func (user *Individual) GetId() uint64 {
-	return user.ID
+	return user.Id
 }
 
 func (user *Individual) GetFullName() string {
@@ -212,4 +213,15 @@ func (user *Individual) SetGoogle2FaSecret(v string) {
 
 func (user *Individual) SetTwoFactorAuthSettingId(v uint64) {
 	user.TwoFactorAuthSettingId = v
+}
+
+func (user *Individual) IsCorporate() bool {
+	keys := make(map[string]bool)
+	for _, entry := range user.ApplicantModuleActivity {
+		if _, value := keys[entry.ApplicantType]; !value {
+			keys[entry.ApplicantType] = true
+		}
+	}
+
+	return len(keys) > 1
 }

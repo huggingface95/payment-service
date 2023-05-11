@@ -33,9 +33,28 @@ func HasUserByEmail(email string, provider string) bool {
 	return false
 }
 
+func GetCorporateById(id uint64, individualId uint64) postgres.User {
+	var model *postgres.ApplicantCompany
+
+	query := database.PostgresInstance.Limit(1)
+	query.
+		Preload("Company").
+		Preload("Individual", "id = ?", individualId).
+		Where("id = ?", id).
+		First(&model)
+
+	if query.Error != nil {
+		return nil
+	}
+
+	return reflect.ValueOf(model).Interface().(postgres.User)
+}
+
 func GetUserById(id uint64, provider string) (user postgres.User) {
 	if provider == constants.Individual {
 		user = GetWithConditions(map[string]interface{}{"id": id}, func() interface{} { return new(postgres.Individual) })
+	} else if provider == constants.Corporate {
+		user = GetWithConditions(map[string]interface{}{"id": id}, func() interface{} { return new(postgres.ApplicantCompany) })
 	} else {
 		user = GetWithConditions(map[string]interface{}{"id": id}, func() interface{} { return new(postgres.Member) })
 	}
@@ -56,10 +75,12 @@ func GetWithConditions(columns map[string]interface{}, mc func() interface{}) po
 	rec := query.Preload("Company")
 	if rModel.Elem().Name() == constants.StructMember {
 		rec.Preload("ClientIpAddresses", "client_type = ?", constants.ModelMember)
-	} else {
-		rec.Preload("ClientIpAddresses", "client_type = ?", constants.ModelIndividual).
-			Preload("ApplicantModuleActivity", func(db *gorm.DB) *gorm.DB {
-				return db.Preload("Module").Where("is_active = ?", false)
+	} else if rModel.Elem().Name() == constants.StructIndividual {
+		rec.
+			Preload("ClientIpAddresses", "client_type = ?", constants.ModelIndividual).
+			Preload("ApplicantCompany").
+			Preload("ApplicantModuleActivity", "is_active = ?", true, func(db *gorm.DB) *gorm.DB {
+				return db.Preload("Module").Where("is_active = ?", true)
 			})
 	}
 	rec.First(model)

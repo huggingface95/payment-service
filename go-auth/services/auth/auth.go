@@ -39,8 +39,6 @@ func GetAuthUserByToken(jwtType string, jwtAccessType string, token string) post
 		err = services.ValidateAccessToken(token, jwtType, false)
 	} else if jwtAccessType == constants.ForTwoFactor {
 		err = services.ValidateForTwoFactorToken(token, jwtType, false)
-	} else {
-		err = services.ValidateForTwoFactorToken(token, jwtType, false)
 	}
 	if err != nil {
 		return nil

@@ -79,9 +79,9 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterRequest
 		if err != nil {
 			return
 		}
-		var appCompanyForeign postgres.ApplicantCompanyForeign
-		appCompanyForeign.IndividualId = user.ID
-		appCompanyForeign.CompanyId = applicantCompany.ID
+		var appCompanyForeign postgres.ApplicantIndividualCompany
+		appCompanyForeign.ApplicantId = user.Id
+		appCompanyForeign.ApplicantCompanyId = applicantCompany.Id
 		appCompanyForeign.PositionId = 1
 		appCompanyForeign.RelationId = 1
 		err = instance.Create(&appCompanyForeign).Error
@@ -92,14 +92,14 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterRequest
 
 	for _, pivotModule := range company.CompanyModules {
 		instance.Create(&postgres.ApplicantIndividualModule{
-			ApplicantIndividualId: user.ID,
+			ApplicantIndividualId: user.Id,
 			ModuleId:              pivotModule.Module.Id,
 			IsActive:              pivotModule.IsActive,
 		})
 		if pivotModule.Module.Name != postgres2.KYC {
 
 			instance.Create(&postgres.ApplicantModuleActivity{
-				ApplicantId:   user.ID,
+				ApplicantId:   user.Id,
 				ApplicantType: constants.ModelIndividual,
 				ModuleId:      pivotModule.Module.Id,
 				IsActive:      false,

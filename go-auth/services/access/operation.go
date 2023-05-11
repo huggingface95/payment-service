@@ -8,7 +8,6 @@ import (
 	"jwt-authentication-golang/repositories/permissionRepository"
 	"jwt-authentication-golang/requests"
 	"regexp"
-	"strings"
 )
 
 func checkOperation(permissions []postgres.Permission, name string, referer string) (bool, []interface{}) {
@@ -40,7 +39,7 @@ func checkModule(individual *postgres.Individual, verifiedPermissions []interfac
 	for _, m := range individual.ApplicantModuleActivity {
 		for _, verifiedPermission := range verifiedPermissions {
 			permission := verifiedPermission.(postgres.Permission)
-			if strings.Contains(permission.PermissionList.PermissionCategory.Name, m.Module.Name) == false {
+			if permission.PermissionList.PermissionCategory.CheckActivityModule(m.Module) {
 				return false, fmt.Sprintf("Permission %s not access in module %s", permission.DisplayName, m.Module.Name)
 			}
 		}
@@ -49,20 +48,22 @@ func checkModule(individual *postgres.Individual, verifiedPermissions []interfac
 	return true, ""
 }
 
-func CheckOperations(user postgres.User, inputs []requests.OperationInputs, referer string) (bool, string) {
+func CheckAccess(user postgres.User, inputs []requests.OperationInputs, referer string) (bool, string) {
 	var message string
 	referer = optimizeReferer(referer)
 	permissions := permissionRepository.GetUserPermissions(user)
 
 	for _, input := range inputs {
 		ok, verifiedPermissions := checkOperation(permissions, input.OperationName, referer)
-		if ok {
+		if ok && len(verifiedPermissions) > 0 {
 			if user.ClientType() == constants.Individual {
 				ok, message := checkModule(user.(*postgres.Individual), verifiedPermissions)
 				if ok == false {
-					return ok, message
+					return false, message
 				}
 			}
+		} else if ok && len(verifiedPermissions) == 0 {
+			return true, message
 		} else {
 			return false, fmt.Sprintf("You are not authorized to access %s", input.OperationName)
 		}
