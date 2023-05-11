@@ -10,8 +10,8 @@
                 <th colspan="15" valign="top"><b>Exchange Transactions</b></th>
             </tr>
             <tr>
-                <th width="10" align="left">Transaction ID</th>
-                <th width="13">Date / Time</th>
+                <th width="10" align="left">ID</th>
+                <th width="13">Created at</th>
                 <th width="13">Requested by</th>
                 <th width="13">Client</th>
                 <th width="13">Debited Account</th>
