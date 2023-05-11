@@ -102,11 +102,12 @@ extend type Query @guard {
     created_at: {from:"2021-10-11", to: "2021-10-12"} фильтр по дате
     """
     companies(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryCompaniesFilterStatic),
         created_at: DateTimeRange @whereBetween,
         country: Sort @scope(name:"CountrySort"), member_count: Sort @scope(name:"MemberSort"),
         orderBy: _ @orderBy(columns: ["id","created_at","name","email","url"])
-    ): [Company!]!   @paginate(defaultCount: 100) @orderBy(column: "id", direction: ASC)
+    ): [Company!]! @paginate(defaultCount: 100) @orderBy(column: "id", direction: ASC) @softDeletes
 }
 
 input QueryCompaniesFilterStatic @spread {

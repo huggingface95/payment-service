@@ -79,9 +79,10 @@ extend type Query @guard {
     where:{column: ID, operator: EQ, value: ""} фильтр по ID, ID группы, ID роли, ID платежного провайдера, ID шаблона комиссий, по статусу
     """
     groups(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryGroupsFilterStatic),
         orderBy: _ @orderBy(columns: ["id","is_active","name"],
-        )): [GroupRole!]!   @paginate(defaultCount: 10)
+        )): [GroupRole!]!   @paginate(defaultCount: 10) @softDeletes
 
     groupList(
         filter: _ @filterConditions(static: QueryGroupListFilterStatic),
