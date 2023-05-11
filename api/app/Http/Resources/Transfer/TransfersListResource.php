@@ -31,11 +31,12 @@ class TransfersListResource extends JsonResource
         if ($this->resource instanceof TransferOutgoing) {
             return array_merge($data, [
                 'requested' => $this->clientable->fullname,
-                'recipient' => $this->sender->fullname,
-                'sender' => $this->recipient_name,
+                'sender' => $this->sender->fullname,
+                'recipient' => $this->recipient_name,
                 'reason' => $this->reason,
                 'urgency' => $this->paymentUrgency?->name,
                 'fee_amount' => $this->fee_amount,
+                'fee_account' => ($this->fee) ? $this->fee->account->account_number : '',
                 'account_number' => $this->account->account_number,
                 'credit_amount' => $this->amount_debt,
                 'currency' => $this->currency?->code,
@@ -74,10 +75,10 @@ class TransfersListResource extends JsonResource
                 'status' => $this->paymentStatus?->name,
             ]);
         }
-
         return array_merge($data, [
             'requested' => $this->clientable?->name,
             'account_number' => $this->account->account_number,
+            'fee_account' => $this->fee,
             'currency' => $this->transferOutgoing?->currency?->code,
             'transaction_description' => 'Fee',
             'debit' => $this->fee,
