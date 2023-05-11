@@ -7,7 +7,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="14" valign="top"><b>Outgoing Transfers</b></th>
+                <th colspan="15" valign="top"><b>Outgoing Transfers</b></th>
             </tr>
             <tr>
                 <th width="10" align="left">ID</th>
@@ -22,7 +22,8 @@
                 <th width="10">Currency</th>
                 <th width="10">Amount</th>
                 <th width="10">Fee Amount</th>
-                <th width="10">Credit Amount</th>
+                <th width="10">Fee Account</th>
+                <th width="10">Debit Amount</th>
                 <th width="10" align="right">Status</th>
             </tr>
         </thead>
@@ -41,6 +42,7 @@
                 <td valign="top">{{ $transfer['currency'] }}</td>
                 <td valign="top">{{ $transfer['debit'] }}</td>
                 <td valign="top">{{ $transfer['fee_amount'] }}</td>
+                <td valign="top">{{ $transfer['fee_account'] }}</td>
                 <td valign="top">{{ $transfer['credit_amount'] }}</td>
                 <td align="right" valign="top">{{ $transfer['status'] }}</td>
             </tr>
