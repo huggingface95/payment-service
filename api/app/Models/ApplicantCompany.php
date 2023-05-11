@@ -85,7 +85,7 @@ class ApplicantCompany extends BaseModel
     protected $casts = [
         'company_info_additional_fields'=>'array',
         'contacts_additional_fields'=>'array',
-        'profile_additional_field'=>'array',
+        'profile_additional_fields'=>'array',
         'basic_info_additional_field' => 'array',
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
