@@ -17,6 +17,7 @@ use App\Repositories\Interfaces\FeeRepositoryInterface;
 use App\Repositories\Interfaces\TransferExchangeRepositoryInterface;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
+use App\Traits\TransferHistoryTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
@@ -25,6 +26,8 @@ use Illuminate\Support\Str;
 
 class TransferExchangeService extends AbstractService
 {
+    use TransferHistoryTrait;
+
     public function __construct(
         protected CommissionService                   $commissionService,
         protected CompanyRevenueAccountService        $revenueService,
@@ -71,6 +74,9 @@ class TransferExchangeService extends AbstractService
 
             $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $outgoing, $fromAccount, $toAccount);
             $this->commissionService->makeFee($outgoing, $transactionOutgoing);
+
+            $this->createTransferHistory($outgoing);
+            $this->createTransferHistory($incoming);
 
             return [
                 'outgoing' => $outgoing,
@@ -189,19 +195,17 @@ class TransferExchangeService extends AbstractService
             $this->transferExchangeRepository->update($transfers['exchange'], [
                 'status_id' => PaymentStatusEnum::CANCELED->value,
             ]);
+
+            $this->createTransferHistory($transfers['outgoing']);
+            $this->createTransferHistory($transfers['incoming']);
         });
     }
 
     public function updateTransferStatusToPending(array $transfers): void
     {
         DB::transaction(function () use ($transfers) {
-            $this->transferOutgoingRepository->update($transfers['outgoing'], [
-                'status_id' => PaymentStatusEnum::PENDING->value,
-            ]);
-
-            $this->transferIncomingRepository->update($transfers['incoming'], [
-                'status_id' => PaymentStatusEnum::PENDING->value,
-            ]);
+            $this->transferOutgoingService->updateTransferStatusToPending($transfers['outgoing']);
+            $this->transferIncomingService->updateTransferStatusToPending($transfers['incoming']);
 
             $this->transferExchangeRepository->update($transfers['exchange'], [
                 'status_id' => PaymentStatusEnum::PENDING->value,

@@ -9,6 +9,7 @@ use App\DTO\TransformerDTO;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Enums\TransferHistoryActionEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\TransferBetweenRelation;
@@ -16,6 +17,7 @@ use App\Models\TransferIncoming;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
+use App\Traits\TransferHistoryTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
@@ -23,6 +25,8 @@ use Illuminate\Support\Facades\DB;
 
 class TransferBetweenUsersService extends AbstractService
 {
+    use TransferHistoryTrait;
+
     public function __construct(
         protected CommissionService                   $commissionService,
         protected TransferOutgoingService             $transferOutgoingService,
@@ -73,6 +77,9 @@ class TransferBetweenUsersService extends AbstractService
 
             $this->commissionService->makeFee($outgoing);
 
+            $this->createTransferHistory($outgoing, TransferHistoryActionEnum::INIT->value);
+            $this->createTransferHistory($incoming, TransferHistoryActionEnum::INIT->value);
+
             return [
                 'outgoing' => $outgoing,
                 'incoming' => $incoming,
@@ -104,13 +111,8 @@ class TransferBetweenUsersService extends AbstractService
     public function updateTransferStatusToPending(array $transfers): void
     {
         DB::transaction(function () use ($transfers) {
-            $this->transferOutgoingRepository->update($transfers['outgoing'], [
-                'status_id' => PaymentStatusEnum::PENDING->value,
-            ]);
-
-            $this->transferIncomingRepository->update($transfers['incoming'], [
-                'status_id' => PaymentStatusEnum::PENDING->value,
-            ]);
+            $this->transferOutgoingService->updateTransferStatusToPending($transfers['outgoing']);
+            $this->transferIncomingService->updateTransferStatusToPending($transfers['incoming']);
         });
     }
 
