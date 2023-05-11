@@ -151,6 +151,11 @@ input QueryClientListFilterStatic @spread{
     group_type_id: ID @eq
     company_id: ID @eq
     group_role_id: ID @eq
+    payment_bank_id: ID @eq
+    account_number: String @ilike
+    hasClientableFilterById: ID @eq
+    hasClientableFilterByEmail: String @ilike
+    hasClientableFilterByPhone: String @ilike
 }
 
 input QueryAccountListFilterStatic @spread{
