@@ -1472,11 +1472,14 @@ class AccountsQueryTest extends TestCase
     {
         $expected = Account::query()->whereHas('clientable')->with('clientable')
             ->get()
-            ->map(function ($account) {
+            ->pluck('clientable')
+            ->unique()
+            ->map(function ($client) {
                 return [
-                    'id' => $account->clientable->id
+                    'id' => (string)$client->id
                 ];
             })
+            ->values()
             ->toArray();
 
         $response = $this->postGraphQL(
@@ -1510,11 +1513,14 @@ class AccountsQueryTest extends TestCase
         $expected = Account::query()->whereHas('clientable')->with('clientable')
             ->where('group_type_id', '=', 3)
             ->get()
-            ->map(function ($account) {
+            ->pluck('clientable')
+            ->unique()
+            ->map(function ($client) {
                 return [
-                    'id' => $account->clientable->id
+                    'id' => (string)$client->id
                 ];
             })
+            ->values()
             ->toArray();
 
         $response = $this->postGraphQL(
@@ -1549,11 +1555,14 @@ class AccountsQueryTest extends TestCase
         $expected = Account::query()->whereHas('clientable')->with('clientable')
             ->where('company_id', '=', $args['company_id'])
             ->get()
-            ->map(function ($account) {
+            ->pluck('clientable')
+            ->unique()
+            ->map(function ($client) {
                 return [
-                    'id' => $account->clientable->id
+                    'id' => (string)$client->id
                 ];
             })
+            ->values()
             ->toArray();
 
         $response = $this->postGraphQL(
