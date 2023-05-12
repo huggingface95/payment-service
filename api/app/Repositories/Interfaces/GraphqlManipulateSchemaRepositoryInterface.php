@@ -13,4 +13,8 @@ interface GraphqlManipulateSchemaRepositoryInterface
 
     public function getAllPermissionsList(?string $type): Collection;
 
+    public function hasDocumentStateTable(): bool;
+
+    public function hasPermissionsTable(): bool;
+
 }

@@ -10,6 +10,7 @@ use App\Models\PermissionsList;
 use App\Repositories\Interfaces\GraphqlManipulateSchemaRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class GraphqlManipulateSchemaRepository implements GraphqlManipulateSchemaRepositoryInterface
@@ -21,6 +22,17 @@ class GraphqlManipulateSchemaRepository implements GraphqlManipulateSchemaReposi
     {
         $this->formatNumber = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
     }
+
+    public function hasDocumentStateTable(): bool
+    {
+        return Schema::hasTable($this->documentState->getTable());
+    }
+
+    public function hasPermissionsTable(): bool
+    {
+        return Schema::hasTable($this->permissions->getTable());
+    }
+
 
     public function getDocumentStates(): array
     {
@@ -42,7 +54,7 @@ class GraphqlManipulateSchemaRepository implements GraphqlManipulateSchemaReposi
     {
         return PermissionsList::query()->with('permissions')->when($type, function ($q, $t) {
             return $q->where('type', $t);
-        })->get()->pluck(  'permissions', 'name')->map(function ($permissions) {
+        })->get()->pluck('permissions', 'name')->map(function ($permissions) {
             return $permissions->pluck('id', 'display_name');
         });
     }
