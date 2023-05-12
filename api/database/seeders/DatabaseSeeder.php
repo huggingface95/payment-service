@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CommissionTemplateLimitTypeTableSeeder::class);
         $this->call(CommissionTemplateTableSeeder::class);
         $this->call(RolesTableSeeder::class);
+        $this->call(PermissionsSeeder::class);
         $this->call(SuperAdminSeeder::class);
         $this->call(GroupRoleTableSeeder::class);
         $this->call(GroupRoleMembersIndividualsTableSeeder::class);
@@ -58,7 +59,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EmailNotificationTemplatesTableSeeder::class);
         $this->call(RegionsTableSeeder::class);
         $this->call(RegionCountriesTableSeeder::class);
-        $this->call(PermissionsSeeder::class);
         $this->call(ActiveSessionTableSeeder::class);
         $this->call(ActiveSessionTestDbTableSeeder::class);
         $this->call(AuthenticationLogTableSeeder::class);

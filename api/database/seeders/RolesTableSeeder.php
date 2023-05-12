@@ -33,11 +33,19 @@ class RolesTableSeeder extends Seeder
                 'group_type_id' => 1,
             ], [
                 'id' => 3,
-                'name' => 'Test Role',
+                'name' => 'Company Role',
                 'guard_name' => GuardEnum::GUARD_NAME,
                 'description' => 'api role',
                 'company_id' => 1,
                 'group_type_id' => 2,
+            ],
+            [
+                'id' => 4,
+                'name' => 'Individual Role',
+                'guard_name' => GuardEnum::GUARD_NAME,
+                'description' => 'api role',
+                'company_id' => 1,
+                'group_type_id' => 3,
             ],
         ];
 

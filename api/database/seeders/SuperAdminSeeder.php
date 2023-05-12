@@ -16,7 +16,7 @@ class SuperAdminSeeder extends Seeder
     public function run()
     {
         /** @var Role $role */
-        if ($role = Role::find(Role::SUPER_ADMIN_ID)) {
+        if ($role = Role::query()->find(Role::SUPER_ADMIN_ID)) {
             $role->update([
                 'name' => 'superadmin',
                 'description' => 'Superadmin role',
@@ -32,6 +32,6 @@ class SuperAdminSeeder extends Seeder
                 'group_type_id' => 1,
             ]);
         }
-        $role->permissions()->sync(Permissions::all()->pluck('id'), true);
+        $role->permissions()->sync(Permissions::all()->pluck('id'));
     }
 }
