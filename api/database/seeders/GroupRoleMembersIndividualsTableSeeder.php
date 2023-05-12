@@ -20,12 +20,12 @@ class GroupRoleMembersIndividualsTableSeeder extends Seeder
 
         GroupRoleUser::query()->firstOrCreate([
             'group_role_id' => 1,
-            'user_id' => 1,
+            'user_id' => 2,
             'user_type' => class_basename(Members::class),
         ]);
         GroupRoleUser::query()->firstOrCreate([
             'group_role_id' => 2,
-            'user_id' => 2,
+            'user_id' => 1,
             'user_type' => class_basename(Members::class),
         ]);
         GroupRoleUser::query()->firstOrCreate([
