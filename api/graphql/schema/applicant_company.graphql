@@ -83,8 +83,6 @@ type ApplicantCompany {
     notes: [ApplicantCompanyNotes] @hasMany(relation: "notes")
     "Модули"
     modules: [ApplicantCompanyModules] @belongsToMany (relation: "modules")
-    "Получить активность компании в модуле"
-    module_activity: [ApplicantModuleActivity] @morphTo(relation: "moduleActivity")
     company_position: ApplicantIndividualCompany @belongsTo(relation: "applicantIndividualCompany")
     owner_relation: ApplicantIndividualCompany @belongsTo(relation: "ownerRelation")
     owner_position: ApplicantIndividualCompany @belongsTo(relation: "ownerPosition")
