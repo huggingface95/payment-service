@@ -47,6 +47,22 @@ class GroupRoleTableSeeder extends Seeder
                 'description' => 'Test description Role 2',
                 'module_id' => 2,
             ],
+            [
+                'name' => 'Company',
+                'group_type_id' => 2,
+                'role_id' => 3,
+                'company_id' => 1,
+                'description' => 'Test description Role 2',
+                'module_id' => 2,
+            ],
+            [
+                'name' => 'Individual',
+                'group_type_id' => 3,
+                'role_id' => 4,
+                'company_id' => 1,
+                'description' => 'Test description Role 2',
+                'module_id' => 2,
+            ],
         ];
 
         $i = 1;
