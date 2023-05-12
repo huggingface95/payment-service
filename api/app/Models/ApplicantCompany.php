@@ -211,11 +211,6 @@ class ApplicantCompany extends BaseModel
         return $this->belongsToMany(Module::class, 'applicant_company_modules', 'applicant_company_id', 'module_id')->withPivot('is_active as is_active');
     }
 
-    public function moduleActivity(): MorphMany
-    {
-        return $this->morphMany(ApplicantModuleActivity::class, 'applicant');
-    }
-
     public function notes(): HasMany
     {
         return$this->hasMany(ApplicantCompanyNotes::class, 'applicant_company_id');

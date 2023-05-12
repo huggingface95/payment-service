@@ -15,8 +15,8 @@ class ApplicantModuleActivity extends BaseModel
      */
     protected $fillable = [
         'module_id',
-        'is_active',
+        'individual',
+        'corporate',
         'applicant_id',
-        'applicant_type',
     ];
 }
