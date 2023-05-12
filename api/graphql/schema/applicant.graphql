@@ -81,7 +81,7 @@ type ApplicantIndividual {
     "Получить модули"
     modules: [ApplicantIndividualModules] @belongsToMany (relation: "modules")
     "Получить активность аппликанта в модуле"
-    module_activity: [ApplicantModuleActivity] @morphTo(relation: "moduleActivity")
+    module_activity: [ApplicantModuleActivity] @hasMany(relation: "moduleActivity")
     "Получить компании к которым принадлежит апликант"
     applicant_companies: [ApplicantCompany] @belongsToMany (relation: "companies")
     "Получить группу"

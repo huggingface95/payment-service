@@ -3,12 +3,12 @@ type ApplicantModuleActivity {
     id: ID!
     "ID Модуля"
     module_id: ID!
-    "Активность"
-    is_active: Boolean!
+    "Активность Individual"
+    individual: Boolean!
+    "Активность Corporate"
+    corporate: Boolean!
     "ID Аппликанта"
     applicant_id: ID!
-    "Тип Аппликанта"
-    applicant_type: ApplicantType!
 }
 
 extend type Mutation @guard {
@@ -18,12 +18,12 @@ extend type Mutation @guard {
     setApplicantModuleActivity(
         "ID Модуля"
         module_id: ID!
-        "Активность"
-        is_active: Boolean!
+        "Активность Individual"
+        individual: Boolean!
+        "Активность Corporate"
+        corporate: Boolean!
         "ID Аппликанта"
         applicant_id: ID!
-        "Тип Аппликанта"
-        applicant_type: ApplicantType!
     ): ApplicantModuleActivity
         @field(resolver: "ApplicantModuleActivityMutator@update")
 }
