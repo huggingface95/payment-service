@@ -20,7 +20,7 @@ class DepartmentPositionTableSeeder extends Seeder
                 'company_id' => 1,
             ], [
                 'name' => 'Test Department 2',
-                'company_id' => 2,
+                'company_id' => 1,
             ],
         ];
 

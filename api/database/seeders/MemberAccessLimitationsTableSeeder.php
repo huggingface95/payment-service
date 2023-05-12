@@ -16,7 +16,7 @@ class MemberAccessLimitationsTableSeeder extends Seeder
     {
             MemberAccessLimitation::firstOrCreate([
                 'member_id' => 4,
-                'company_id' => 2,
+                'company_id' => 1,
                 'module_id' => 1,
                 'project_id' => 1,
                 'payment_provider_id' => 1,

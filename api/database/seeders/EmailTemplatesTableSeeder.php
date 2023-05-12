@@ -60,49 +60,6 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Sign Up: Email Confirmation',
         ]);
 
-        EmailTemplate::firstOrCreate([
-            'id' => 5,
-            'subject' => 'Waiting for approval',
-        ], [
-            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-            'member_id' => 3,
-            'company_id' => 2,
-            'created_at' => Carbon::now(),
-            'name' => 'Waiting for approval',
-        ]);
-
-        EmailTemplate::firstOrCreate([
-            'id' => 6,
-            'subject' => 'Reset Password',
-        ], [
-            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-            'member_id' => 3,
-            'company_id' => 2,
-            'created_at' => Carbon::now(),
-            'name' => 'Reset Password',
-        ]);
-
-        EmailTemplate::firstOrCreate([
-            'id' => 7,
-            'subject' => '{company_name} has invited you to join team',
-        ], [
-            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-            'member_id' => 3,
-            'company_id' => 2,
-            'created_at' => Carbon::now(),
-            'name' => 'Sign Up: Email Confirmation',
-        ]);
-
-        EmailTemplate::firstOrCreate([
-            'id' => 8,
-            'subject' => '{company_name} has invited you to join team',
-        ], [
-            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-            'member_id' => 3,
-            'company_id' => 3,
-            'created_at' => Carbon::now(),
-            'name' => 'Sign Up: Email Confirmation',
-        ]);
 
         EmailTemplate::firstOrCreate([
             'id' => 9,
