@@ -11,12 +11,10 @@ use Nuwave\Lighthouse\Schema\TypeRegistry;
 
 class GraphqlManipulateSchemaService
 {
-    protected bool $testMode;
     protected array $permissionsList;
 
     public function __construct(protected GraphqlManipulateSchemaRepositoryInterface $repository)
     {
-        $this->testMode = env('APP_ENV') == 'testing';
     }
 
     /**
@@ -38,7 +36,7 @@ class GraphqlManipulateSchemaService
      */
     public function registerDocumentStateEnums(TypeRegistry $typeRegistry): TypeRegistry
     {
-        if ($this->testMode) {
+        if (!$this->repository->hasDocumentStateTable()) {
             return $this->registerTestDocumentStateEnums($typeRegistry);
         } else {
             $enums = $this->repository->getDocumentStates();
@@ -91,7 +89,7 @@ class GraphqlManipulateSchemaService
     public function registerPermissionEnums(TypeRegistry $typeRegistry): TypeRegistry
     {
 
-        if ($this->testMode) {
+        if (!$this->repository->hasPermissionsTable()) {
             return $this->registerTestPermissionEnums($typeRegistry);
         }
 
