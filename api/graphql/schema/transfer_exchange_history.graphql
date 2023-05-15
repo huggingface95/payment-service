@@ -1,0 +1,17 @@
+"""
+История Exchange
+"""
+type TransferExchangeHistory {
+    "История исходящего трансфера"
+    transfer_incoming_history: [TransferIncomingHistory] @hasMany (relation: "transferIncomingHistory")
+    "История входящего трансфера"
+    transfer_outgoing_history: [TransferOutgoingHistory] @hasMany (relation: "transferOutgoingHistory")
+}
+
+extend type Query @guard {
+    """
+    Получить историю Exchange
+    """
+    transferExchangeHistory(id: ID!): TransferExchangeHistory
+        @field(resolver: "TransferExchangeQuery@get")
+}
