@@ -10,6 +10,7 @@ use App\Models\PaymentSystem;
 use App\Models\State;
 use Illuminate\Support\Carbon;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
+use Illuminate\Support\Facades\DB;
 
 class CompanyMutator extends BaseMutator
 {
@@ -20,47 +21,56 @@ class CompanyMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
-        $company = Company::create($args);
+        try {
+            DB::beginTransaction();
 
-        $company->state_id = State::INACTIVE;
-        $company->save();
+            $company = Company::create($args);
 
-        $relationsData = [
-          'Director',
-          'Shareholder',
-          'Beneficiary',
-        ];
+            $company->state_id = State::INACTIVE;
+            $company->save();
 
-        foreach ($relationsData as $relationData) {
-            ApplicantIndividualCompanyRelation::firstOrCreate([
-                'name' => $relationData,
-                'company_id' => $company->id,
+            $relationsData = [
+                'Director',
+                'Shareholder',
+                'Beneficiary',
+            ];
+
+            foreach ($relationsData as $relationData) {
+                ApplicantIndividualCompanyRelation::firstOrCreate([
+                    'name' => $relationData,
+                    'company_id' => $company->id,
+                ]);
+            }
+
+            $positionsData = [
+                'Director',
+                'CEO',
+                'CFO',
+                'CAO',
+                'CIO',
+                'COO',
+            ];
+
+            foreach ($positionsData as $positionData) {
+                ApplicantIndividualCompanyPosition::firstOrCreate([
+                    'name' => $positionData,
+                    'company_id' => $company->id,
+                ]);
+            }
+
+            $company->paymentProviders()->create(['name' => 'Internal']);
+            $company->paymentSystem()->create([
+                'name' => 'Internal',
+                'payment_provider_id' => $company->paymentProviders()->first()->id,
             ]);
+
+            DB::commit();
+
+            return $company;
+        } catch (\Throwable $exception) {
+            DB::rollback();
+            throw new GraphqlException($exception->getMessage(), $exception->getCode());
         }
-
-        $positionsData = [
-            'Director',
-            'CEO',
-            'CFO',
-            'CAO',
-            'CIO',
-            'COO',
-        ];
-
-        foreach ($positionsData as $positionData) {
-            ApplicantIndividualCompanyPosition::firstOrCreate([
-                'name' => $positionData,
-                'company_id' => $company->id,
-            ]);
-        }
-
-        $company->paymentProviders()->create(['name' => 'Internal']);
-        $company->paymentSystem()->create([
-            'name' => 'Internal',
-            'payment_provider_id' => $company->paymentProviders()->first()->id,
-        ]);
-
-        return $company;
     }
 
     /**
