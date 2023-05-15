@@ -3,6 +3,7 @@
 namespace App\GraphQL\Queries;
 
 use App\GraphQL\Handlers\FilterConditionsHandler;
+use App\Models\TransferBetweenRelation;
 use App\Models\TransferExchange;
 use GraphQL\Error\Error;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,6 +15,13 @@ class TransferExchangeQuery
         protected FilterConditionsHandler $handler
     )
     {
+    }
+
+    public function get($root, array $args): TransferBetweenRelation
+    {
+        $transfers = TransferBetweenRelation::findOrFail($args['id']);
+
+        return $transfers;
     }
 
     /**
