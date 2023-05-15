@@ -6,9 +6,12 @@ use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividualCompanyPosition;
 use App\Models\ApplicantIndividualCompanyRelation;
 use App\Models\Company;
+use App\Models\EmailTemplate;
+use App\Models\Members;
 use App\Models\PaymentSystem;
 use App\Models\State;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Illuminate\Support\Facades\DB;
 
@@ -23,6 +26,9 @@ class CompanyMutator extends BaseMutator
     {
         try {
             DB::beginTransaction();
+
+            /** @var Members $member */
+            $member = Auth::user();
 
             $company = Company::create($args);
 
@@ -63,6 +69,39 @@ class CompanyMutator extends BaseMutator
                 'name' => 'Internal',
                 'payment_provider_id' => $company->paymentProviders()->first()->id,
             ]);
+
+            $templateSubjects = [
+                'Sign Up: Email Confirmation',
+                'Waiting for approval',
+                'Reset Password',
+                'Account Requisites',
+                'Confirm change email',
+                'Welcome! Confirm your email address',
+                'Account suspended',
+                'Minimum balance limit has been reached for client',
+                'Maximum balance limit has been reached for client',
+            ];
+
+            $existingTemplates = EmailTemplate::whereIn('name', $templateSubjects)
+                ->where('type', 'administration')
+                ->where('service_type', 'BankingAdminNotify')
+                ->where('use_layout', 'false')
+                ->get();
+
+            foreach ($existingTemplates as $template) {
+                $newTemplateData = [
+                    'type' => $template->type,
+                    'service_type' => $template->service_type,
+                    'use_layout' => $template->use_layout,
+                    'subject' => $template->subject,
+                    'content' => $template->content,
+                    'member_id' => $member->id,
+                    'company_id' => $company->id,
+                    'name' => $template->name,
+                ];
+
+                EmailTemplate::firstOrCreate($newTemplateData);
+            }
 
             DB::commit();
 
