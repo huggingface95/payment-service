@@ -18,6 +18,7 @@ class ProjectSettings extends BaseModel
         'commission_template_id',
         'payment_provider_id',
         'iban_provider_id',
+        'quote_provider_id',
         'applicant_type',
     ];
 
@@ -51,5 +52,10 @@ class ProjectSettings extends BaseModel
     public function ibanProvider(): BelongsTo
     {
         return $this->belongsTo(PaymentProviderIban::class, 'iban_provider_id');
+    }
+
+    public function quoteProvider(): BelongsTo
+    {
+        return $this->belongsTo(QuoteProvider::class, 'quote_provider_id');
     }
 }

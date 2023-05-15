@@ -10,6 +10,8 @@ type CompanyModule {
     payment_providers: [CompanyModulePaymentProvider] @hasMany(relation: "paymentProviders")
     "IBAN провайдеры"
     iban_providers: [CompanyModuleIbanProvider] @hasMany(relation: "ibanProviders")
+    "QUOTE провайдеры"
+    quote_providers: [CompanyModuleQuoteProvider] @hasMany(relation: "quoteProviders")
     "Активность"
     is_active: Boolean!
 }

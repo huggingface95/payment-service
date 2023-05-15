@@ -34,4 +34,9 @@ class CompanyModule extends BaseModel
     {
         return $this->hasMany(CompanyModuleIbanProvider::class, 'company_module_id', 'id');
     }
+
+    public function quoteProviders(): HasMany
+    {
+        return $this->hasMany(CompanyModuleQuoteProvider::class, 'company_module_id', 'id');
+    }
 }

@@ -49,6 +49,8 @@ type ProjectSettings {
     payment_provider: PaymentProvider @belongsTo(relation: "paymentProvider")
     "Связанный iban провайдер"
     iban_provider: PaymentProviderIban @belongsTo(relation: "ibanProvider")
+    "Связанный iban провайдер"
+    quote_provider: QuoteProvider @belongsTo(relation: "quoteProvider")
     "Связанный платежный шаблон"
     commission_template: CommissionTemplate @belongsTo(relation: "commissionTemplate")
     "Индивидуал или компани"
@@ -82,6 +84,7 @@ input InputProjectSettings @spread {
     commission_template_id: ID
     payment_provider_id: ID
     iban_provider_id: ID
+    quote_provider_id: ID
     applicant_type: ApplicantType!
 }
 

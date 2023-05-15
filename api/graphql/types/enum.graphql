@@ -19,6 +19,7 @@ enum FeePeriodEnum {
 enum ProviderTypeEnum {
     PaymentProvider @enum(value: "PaymentProvider")
     PaymentProviderIban @enum(value: "PaymentProviderIban")
+    QuoteProvider @enum(value: "QuoteProvider")
 }
 
 enum RespondentFeesEnum {

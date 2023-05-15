@@ -1,0 +1,63 @@
+"""
+Company Module QUOTE Provider
+"""
+type CompanyModuleQuoteProvider {
+    "ID"
+    id: ID!
+    "ID модуля компании"
+    company_module_id: ID!
+    "ID QUOTE провайдера"
+    quote_provider: QuoteProvider! @belongsTo(relation: "quoteProvider")
+    "Активность"
+    is_active: Boolean!
+}
+
+type CompanyModuleQuoteProviderPassword {
+    "ID"
+    id: ID!
+    "Пароль"
+    password: String!
+}
+
+extend type Query @guard {
+    """
+    Получить пароль
+    """
+    companyModuleQuoteProviderPassword(id: ID! @eq): CompanyModuleQuoteProviderPassword
+        @field(resolver: "CompanyModuleQuoteProviderQuery@getPassword")
+}
+
+input InputCompanyModuleQuoteProvider {
+    "ID модуля компании"
+    company_module_id: ID
+    "ID QUOTE провайдера"
+    quote_provider_id: ID
+    "Активность"
+    is_active: Boolean
+}
+
+extend type Mutation @guard {
+    """
+    Добавить QUOTE провайдер к модулю компании
+    """
+    createCompanyModuleQuoteProvider(
+        input: InputCompanyModuleQuoteProvider! @spread
+    ): CompanyModuleQuoteProvider
+        @field(resolver: "CompanyModuleQuoteProviderMutator@create")
+
+    """
+    Изменить QUOTE провайдер
+    """
+    updateCompanyModuleQuoteProvider(
+        "ID"
+        id: ID!
+        "Активность"
+        is_active: Boolean!
+    ): CompanyModuleQuoteProvider
+        @field(resolver: "CompanyModuleQuoteProviderMutator@update")
+
+    """
+    Удалить QUOTE провайдер
+    """
+    deleteCompanyModuleQuoteProvider(id: ID!): CompanyModuleQuoteProvider  @delete
+}
