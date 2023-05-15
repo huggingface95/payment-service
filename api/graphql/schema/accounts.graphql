@@ -234,7 +234,7 @@ input InputAccount{
     "Основной или нет"
     is_primary: Boolean
     "ID групроле"
-    group_role_id: ID!
+    group_role_id: ID
     "ID группы"
     group_type_id: ID!
     "ID платежной системы"
