@@ -6,11 +6,22 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"log"
+	"net/http"
 	"payment-service/api"
 	"payment-service/db"
+	"payment-service/providers"
+	"payment-service/providers/clearjunction"
 	"payment-service/queue"
 	"strings"
 )
+
+type OriginalHeaderResponseWriter struct {
+	http.ResponseWriter
+}
+
+func (w *OriginalHeaderResponseWriter) WriteHeader(statusCode int) {
+	// Ничего не делаем, чтобы сохранить исходные заголовки
+}
 
 func main() {
 	app := fiber.New()
@@ -39,10 +50,23 @@ func main() {
 		}
 	}()
 
-	// Настройка маршрутизации
-	api.SetupRoutes(app)
+	// Получаем конфигурацию провайдеров
+	providersConfig := viper.Get("providers").(map[string]interface{})
+	config := providersConfig["clearjunction"].(map[string]interface{})
+
+	// Создаем экземпляр провайдера ClearJunction
+	clearJunction := clearjunction.NewClearJunction(
+		config["key"].(string), config["password"].(string), config["url"].(string),
+	)
+
+	// Создаем экземпляр ProviderService и регистрируем провайдеры
+	providerService := providers.NewProviderService(clearJunction)
+
+	// Регистрируем маршруты API и передаем экземпляр ProviderService
+	api.SetupRoutes(app, providerService)
 
 	// Запуск приложения
+
 	if err := app.Listen(viper.GetString("server.address")); err != nil {
 		panic(err)
 	}

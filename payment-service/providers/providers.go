@@ -6,7 +6,7 @@ type PaymentProvider interface {
 	Auth(request AuthRequester) (AuthResponder, error)
 
 	// SetAuthHeaders - устанавливает заголовки аутентификации для запросов
-	SetAuthHeaders(headers map[string]string)
+	SetAuthHeaders(headers map[string]string, body string)
 
 	// IBAN - отправка запроса на генерацию IBAN
 	IBAN(request IBANRequester) (IBANResponder, error)
@@ -36,8 +36,9 @@ type IBANRequester interface {
 	// Методы для получения данных из запроса IBAN
 }
 
+// IBANResponder Содержит методы для получения данных из ответа IBAN
 type IBANResponder interface {
-	// Методы для получения данных из ответа IBAN
+	GetIBANs() []string
 }
 
 type PayInRequester interface {
