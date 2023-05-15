@@ -47,7 +47,7 @@ class Project extends BaseModel
 
     public function getProjectApiSettingsAttribute()
     {
-        return TransformerDTO::transform(ProjectApiSettingsResponse::class, $this->paymentProviders()->get(), $this->paymentProvidersIban()->get());
+        return TransformerDTO::transform(ProjectApiSettingsResponse::class, $this->paymentProviders()->get(), $this->paymentProvidersIban()->get(), $this->quoteProviders()->get());
     }
 
     public function avatar(): BelongsTo
