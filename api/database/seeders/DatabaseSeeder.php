@@ -108,5 +108,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CurrencyExchangeRateTableSeeder::class);
         $this->call(ProjectSettingsTableSeeder::class);
         $this->call(AccountClientsTableSeeder::class);
+        $this->call(StateTableSeeder::class);
     }
 }
