@@ -270,4 +270,22 @@ extend type Mutation @guard {
         id: ID!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@send")
+
+    """
+    Исполнить исходящий перевод
+    """
+    executeTransferOutgoing(
+        "ID"
+        id: ID!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@execute")
+
+    """
+    Отменить (Refund) исходящий перевод
+    """
+    refundTransferOutgoing(
+        "ID"
+        id: ID!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@refund")
 }
