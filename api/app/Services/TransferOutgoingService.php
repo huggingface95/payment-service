@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
+use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingRefundDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingScheduledFeeDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingStandardDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferHistoryActionEnum;
@@ -14,7 +16,6 @@ use App\Jobs\Redis\TransferOutgoingJob;
 use App\Models\ApplicantBankingAccess;
 use App\Models\PriceListFeeCurrency;
 use App\Models\TransferOutgoing;
-use App\Models\TransferOutgoingHistory;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Traits\TransferHistoryTrait;
 use Exception;
@@ -33,6 +34,7 @@ class TransferOutgoingService extends AbstractService
         protected AccountService                      $accountService,
         protected CommissionService                   $commissionService,
         protected TransferOutgoingRepositoryInterface $transferRepository,
+        protected TransferIncomingService             $transferIncomingService,
         protected TransactionService                  $transactionService,
         protected CheckLimitService                   $checkLimitService
     )
@@ -101,7 +103,7 @@ class TransferOutgoingService extends AbstractService
 
                 break;
             case PaymentStatusEnum::SENT->value:
-                if ($args['status_id'] != PaymentStatusEnum::CANCELED->value && $args['status_id'] != PaymentStatusEnum::ERROR->value) {
+                if ($args['status_id'] != PaymentStatusEnum::EXECUTED->value && $args['status_id'] != PaymentStatusEnum::ERROR->value) {
                     throw new GraphqlException('This status is not allowed for transfer which has Sent status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
@@ -115,7 +117,9 @@ class TransferOutgoingService extends AbstractService
             case PaymentStatusEnum::CANCELED->value:
                 throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
             case PaymentStatusEnum::EXECUTED->value:
-                throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                if ($args['status_id'] != PaymentStatusEnum::REFUND->value) {
+                    throw new GraphqlException('This status is not allowed for transfer which has Executed status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
         }
     }
 
@@ -138,6 +142,15 @@ class TransferOutgoingService extends AbstractService
                 break;
             case PaymentStatusEnum::SENT->value:
                 $this->updateTransferStatusToSent($transfer);
+
+                break;
+            case PaymentStatusEnum::EXECUTED->value:
+                $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
+                $this->updateTransferStatusToExecuted($transfer, $transactionDTO);
+
+                break;
+            case PaymentStatusEnum::REFUND->value:
+                $this->updateTransferStatusToCancelAndRefund($transfer);
 
                 break;
             default:
@@ -176,7 +189,6 @@ class TransferOutgoingService extends AbstractService
             dispatch(new TransferOutgoingJob($transfer))->afterCommit();
         });
     }
-
 
     public function updateTransferStatusToExecuted(TransferOutgoing $transfer, TransactionDTO $transactionDTO = null): void
     {
@@ -260,6 +272,19 @@ class TransferOutgoingService extends AbstractService
             $this->updateApplicantBankingAccessUsedLimits($transfer);
 
             $this->createTransferHistory($transfer);
+        });
+    }
+
+    private function updateTransferStatusToCancelAndRefund(TransferOutgoing $transfer): void
+    {
+        DB::transaction(function () use ($transfer) {
+            $this->transferRepository->update($transfer, ['status_id' => PaymentStatusEnum::CANCELED->value]);
+
+            $this->createTransferHistory($transfer);
+
+            // Create incoming transfer
+            $transferDto = TransformerDTO::transform(CreateTransferIncomingRefundDTO::class, $transfer->toArray(), OperationTypeEnum::INCOMING_WIRE_TRANSFER->value);
+            $this->transferIncomingService->createTransfer($transferDto->toArray(), OperationTypeEnum::INCOMING_WIRE_TRANSFER->value);
         });
     }
 

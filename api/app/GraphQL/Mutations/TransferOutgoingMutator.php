@@ -93,4 +93,34 @@ class TransferOutgoingMutator extends BaseMutator
 
         return $transfer;
     }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function execute($_, array $args): TransferOutgoing
+    {
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => PaymentStatusEnum::EXECUTED->value,
+        ]);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function refund($_, array $args): TransferOutgoing
+    {
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => PaymentStatusEnum::REFUND->value,
+        ]);
+
+        return $transfer;
+    }
 }
