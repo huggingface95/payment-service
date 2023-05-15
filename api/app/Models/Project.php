@@ -85,6 +85,11 @@ class Project extends BaseModel
         return $this->morphedByMany(PaymentProviderIban::class, 'provider', ProjectApiSetting::class)->withPivot(Schema::getColumnListing('project_api_settings'));
     }
 
+    public function quoteProviders(): MorphToMany
+    {
+        return $this->morphedByMany(QuoteProvider::class, 'provider', ProjectApiSetting::class)->withPivot(Schema::getColumnListing('project_api_settings'));
+    }
+
     public function applicantCompanies(): HasMany
     {
         return $this->hasMany(ApplicantCompany::class);

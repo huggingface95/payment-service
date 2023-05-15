@@ -2,22 +2,15 @@
 
 namespace App\GraphQL\Mutations;
 
-use App\Exceptions\GraphqlException;
 use App\Models\Project;
 
 class ProjectApiSettingMutator extends BaseMutator
 {
-    /**
-     * @param    $root
-     * @param  array  $args
-     * @return mixed
-     *
-     * @throws GraphqlException
-     */
-    public function update($root, array $args)
+
+    public function update($root, array $args): \Illuminate\Database\Eloquent\Collection
     {
         /** @var Project $project */
-        $project = Project::find($args['project_id']);
+        $project = Project::query()->find($args['project_id']);
         foreach ($args['input'] as $setting) {
             $project->projectApiSettings()
                 ->where('provider_id', $setting['provider_id'])

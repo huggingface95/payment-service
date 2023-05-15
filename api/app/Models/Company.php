@@ -17,6 +17,7 @@ use Illuminate\Support\Collection;
  * @property string backoffice_support_url
  * @property Collection $paymentProviders
  * @property Collection $paymentProvidersIban
+ * @property Collection $quoteProviders
  * @property PaymentSystem $paymentSystemInternal
  */
 class Company extends BaseModel
@@ -163,6 +164,11 @@ class Company extends BaseModel
     public function paymentProvidersIban(): HasMany
     {
         return $this->hasMany(PaymentProviderIban::class, 'company_id');
+    }
+
+    public function quoteProviders(): HasMany
+    {
+        return $this->hasMany(QuoteProvider::class, 'company_id');
     }
 
     public function paymentSystem(): HasOneThrough
