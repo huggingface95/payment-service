@@ -6,4 +6,5 @@ type CurrencyAndRegionResponse{
 type ProjectApiSettingsResponse{
     payment_providers: [ProjectApiSetting!]
     iban_providers: [ProjectApiSetting!]
+    quote_providers: [ProjectApiSetting!]
 }

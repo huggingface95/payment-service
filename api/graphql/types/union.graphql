@@ -4,6 +4,6 @@ union AuthClientType = ApplicantIndividual | Members
 
 union Client = ApplicantIndividual | ApplicantCompany
 
-union ProviderType = PaymentProvider | PaymentProviderIban
+union ProviderType = PaymentProvider | PaymentProviderIban | QuoteProvider
 
 union TransferObjectType = TransferIncoming | TransferOutgoing
