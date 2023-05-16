@@ -117,6 +117,7 @@ input QueryGroupListFilterStatic @spread {
     module_id: ID @eq
     hasGroupRoleProvidersFilterByCommissionTemplateId: ID @eq
     hasGroupRoleProvidersFilterByPaymentProviderId: ID @eq
+    hasProjectsFilterById: ID @eq
 }
 
 input InputGroupRoleProvider {
