@@ -24,7 +24,7 @@ func RedirectRequest(context *gin.Context) {
 	errHeader := context.ShouldBindHeader(&header)
 	errInput := json.Unmarshal(jsonData, &operations)
 
-	if errInput.Error() == "json: cannot unmarshal object into Go value of type []requests.OperationInputs" {
+	if errInput != nil && errInput.Error() == "json: cannot unmarshal object into Go value of type []requests.OperationInputs" {
 		errInput = json.Unmarshal(jsonData, &operation)
 		operations = append(operations, operation)
 	}
