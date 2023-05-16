@@ -216,12 +216,11 @@ func (user *Individual) SetTwoFactorAuthSettingId(v uint64) {
 }
 
 func (user *Individual) IsCorporate() bool {
-	keys := make(map[string]bool)
 	for _, entry := range user.ApplicantModuleActivity {
-		if _, value := keys[entry.ApplicantType]; !value {
-			keys[entry.ApplicantType] = true
+		if entry.Corporate {
+			return true
 		}
 	}
 
-	return len(keys) > 1
+	return false
 }
