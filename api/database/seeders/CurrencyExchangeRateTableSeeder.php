@@ -30,6 +30,16 @@ class CurrencyExchangeRateTableSeeder extends Seeder
                     'quote_provider_id' => 1,
                 ]
             );
+            CurrencyExchangeRate::updateOrCreate(
+                [
+                    'currency_from_id' => 2,
+                    'currency_to_id' => $currency,
+                ],
+                [
+                    'rate' => $faker->randomFloat('2', 0, 2),
+                    'quote_provider_id' => 1,
+                ]
+            );
         }
     }
 }

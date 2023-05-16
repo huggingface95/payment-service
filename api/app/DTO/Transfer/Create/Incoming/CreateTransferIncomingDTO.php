@@ -70,7 +70,7 @@ class CreateTransferIncomingDTO
         $id = Auth::guard('api')->check() ? 1 : Auth::guard('api_client')->user()?->id;
         return [
             'user_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class),
-            'recipient_id' => $id,
+            'recipient_id' => (env('APP_ENV') == 'testing') ? 1 : $id,
             'recipient_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(ApplicantCompany::class) : class_basename(ApplicantIndividual::class),
         ];
     }

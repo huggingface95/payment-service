@@ -101,13 +101,14 @@ class DatabaseSeeder extends Seeder
         $this->call(TransferOutgoingTableSeeder::class);
         $this->call(AccountReachedLimitsTableSeeder::class);
         $this->call(FeeTableSeeder::class);
-        $this->call(TransferFileRelationsTableSeeder::class);
-        $this->call(PaymentProviderHistoriesTableSeeder::class);
         $this->call(TransferSwiftsTableSeeder::class);
         $this->call(KycTimelineTableSeeder::class);
         $this->call(CurrencyExchangeRateTableSeeder::class);
         $this->call(ProjectSettingsTableSeeder::class);
         $this->call(AccountClientsTableSeeder::class);
         $this->call(StateTableSeeder::class);
+        $this->call(TransferExchangeTableSeeder::class);
+        $this->call(TransferFileRelationsTableSeeder::class);
+        $this->call(PaymentProviderHistoriesTableSeeder::class);
     }
 }
