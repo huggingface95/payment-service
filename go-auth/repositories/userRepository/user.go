@@ -79,9 +79,7 @@ func GetWithConditions(columns map[string]interface{}, mc func() interface{}) po
 		rec.
 			Preload("ClientIpAddresses", "client_type = ?", constants.ModelIndividual).
 			Preload("ApplicantCompany").
-			Preload("ApplicantModuleActivity", "is_active = ?", true, func(db *gorm.DB) *gorm.DB {
-				return db.Preload("Module").Where("is_active = ?", true)
-			})
+			Preload("ApplicantModuleActivity.Module")
 	}
 	rec.First(model)
 

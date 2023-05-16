@@ -20,10 +20,22 @@ func fillIndividual(request individual.RegisterRequest) (user postgres.Individua
 	return
 }
 
-func fillCompany(request individual.RegisterRequest) (applicantCompany postgres.ApplicantCompany, err error) {
+func fillCompany(request individual.RegisterRequest, company *postgres.Company) (applicantCompany postgres.ApplicantCompany, err error) {
 	applicantCompany.Email = request.Email
 	applicantCompany.Name = request.CompanyName
 	applicantCompany.Url = request.Url
+	applicantCompany.CompanyId = company.Id
+	applicantCompany.IsVerificationEmail = postgres.ApplicantVerificationNotVerifyed
+	applicantCompany.IsActive = postgres.ApplicantStateSuspended
+	return
+}
+
+func fillApplicantCompanyForeign(user postgres.Individual, applicantCompany postgres.ApplicantCompany) (appCompanyForeign postgres.ApplicantIndividualCompany) {
+	appCompanyForeign.ApplicantId = user.Id
+	appCompanyForeign.ApplicantCompanyId = applicantCompany.Id
+	appCompanyForeign.PositionId = 1
+	appCompanyForeign.RelationId = 1
+	appCompanyForeign.ApplicantType = constants.ModelIndividual
 	return
 }
 
@@ -39,15 +51,12 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterRequest
 		return
 	}
 
-	applicantCompany, err := fillCompany(request)
-	if err != nil {
-		return
-	}
-
-	err = instance.Where("name = ?", "Docu").
+	err = instance.Where("id = ?", 1).
 		Limit(1).
 		Preload("CompanyModules.Module").
-		Preload("Project.Settings.GroupRole").
+		Preload("Project.Settings", "applicant_type = ?", constants.ModelIndividual, func(db *gorm.DB) *gorm.DB {
+			return db.Preload("GroupRole")
+		}).
 		First(&company).Error
 
 	if err != nil {
@@ -66,6 +75,11 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterRequest
 		return
 	}
 
+	applicantCompany, err := fillCompany(request, company)
+	if err != nil {
+		return
+	}
+
 	user.SetCompanyId(company.Id)
 	err = instance.Omit(user.Omit()...).
 		Create(&user).Error
@@ -74,16 +88,18 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterRequest
 		return
 	}
 
+	isIndividual := true
+	isCorporate := false
 	if request.ClientType == constants.RegisterClientTypeCorporate {
-		err = instance.Create(&applicantCompany).Error
+		isIndividual = false
+		isCorporate = true
+
+		err = instance.Omit(applicantCompany.Omit()...).Create(&applicantCompany).Error
 		if err != nil {
 			return
 		}
-		var appCompanyForeign postgres.ApplicantIndividualCompany
-		appCompanyForeign.ApplicantId = user.Id
-		appCompanyForeign.ApplicantCompanyId = applicantCompany.Id
-		appCompanyForeign.PositionId = 1
-		appCompanyForeign.RelationId = 1
+
+		appCompanyForeign := fillApplicantCompanyForeign(user, applicantCompany)
 		err = instance.Create(&appCompanyForeign).Error
 		if err != nil {
 			return
@@ -97,12 +113,11 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterRequest
 			IsActive:              pivotModule.IsActive,
 		})
 		if pivotModule.Module.Name != postgres2.KYC {
-
 			instance.Create(&postgres.ApplicantModuleActivity{
-				ApplicantId:   user.Id,
-				ApplicantType: constants.ModelIndividual,
-				ModuleId:      pivotModule.Module.Id,
-				IsActive:      false,
+				ApplicantId: user.Id,
+				ModuleId:    pivotModule.Module.Id,
+				Individual:  isIndividual,
+				Corporate:   isCorporate,
 			})
 		}
 
