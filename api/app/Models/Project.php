@@ -92,7 +92,12 @@ class Project extends BaseModel
 
     public function applicantCompanies(): HasMany
     {
-        return $this->hasMany(ApplicantCompany::class);
+        return $this->hasMany(ApplicantCompany::class, 'project_id');
+    }
+
+    public function applicantIndividuals(): HasMany
+    {
+        return $this->hasMany(ApplicantIndividual::class, 'project_id');
     }
 
     public function state(): BelongsTo

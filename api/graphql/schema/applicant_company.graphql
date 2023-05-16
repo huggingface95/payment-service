@@ -171,6 +171,7 @@ input QueryApplicantCompaniesFilterStatic @spread{
     id: ID @eq
     company_id: ID @eq
     project_id: ID @eq
+    owner_id: ID @eq
     account_manager_member_id: ID @eq
     hasStateReasonMixedIdOrName: Mixed @eq
     hasGroupRoleMixedIdOrName: Mixed @eq

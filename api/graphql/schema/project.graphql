@@ -76,6 +76,8 @@ input QueryProjectsFilterStatic @spread {
     id: ID @eq
     company_id: ID @eq
     module_id: ID @eq
+    hasApplicantCompaniesFilterById: ID @eq
+    hasApplicantIndividualsFilterById: ID @eq
 }
 
 input InputProjectSettings @spread {
