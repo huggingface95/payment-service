@@ -17,12 +17,10 @@ class TransferOutgoingTableSeeder extends Seeder
         TransferOutgoing::withoutEvents(function () {
             for ($i = 1; $i <= 10; $i++) {
                 $payment = TransferOutgoing::factory()->definition();
-                $payment['id'] = $i;
                 $payment['payment_number'] = '1000'.$i;
 
-                TransferOutgoing::firstOrCreate(
+                TransferOutgoing::query()->firstOrCreate(
                     [
-                        'id' => $i,
                         'payment_number' => '1000'.$i,
                     ],
                     $payment

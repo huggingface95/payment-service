@@ -19,12 +19,7 @@ class TransactionTableSeeder extends Seeder
                 $transaction = Transactions::factory()->definition();
                 $transaction['transfer_id'] = $i;
 
-                Transactions::firstOrCreate(
-                    [
-                        'id' => $i,
-                    ],
-                    $transaction
-                );
+                Transactions::query()->firstOrCreate($transaction);
             }
         });
     }

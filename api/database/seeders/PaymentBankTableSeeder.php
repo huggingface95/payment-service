@@ -18,11 +18,7 @@ class PaymentBankTableSeeder extends Seeder
         $faker = Factory::create();
 
         for ($i = 1; $i <= 10; $i++) {
-            PaymentBank::firstOrCreate(
-                [
-                    'id' => $i,
-                ],
-                [
+            PaymentBank::query()->firstOrCreate([
                     'name' => 'Bank '.$i,
                     'address' => $faker->address(),
                     'bank_code' => $faker->numberBetween(1000000, 2000000),

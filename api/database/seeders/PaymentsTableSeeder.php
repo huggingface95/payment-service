@@ -17,12 +17,10 @@ class PaymentsTableSeeder extends Seeder
         Payments::withoutEvents(function () {
             for ($i = 1; $i <= 10; $i++) {
                 $payment = Payments::factory()->definition();
-                $payment['id'] = $i;
                 $payment['payment_number'] = '1000'.$i;
 
-                Payments::firstOrCreate(
+                Payments::query()->firstOrCreate(
                     [
-                        'id' => $i,
                         'payment_number' => '1000'.$i,
                     ],
                     $payment

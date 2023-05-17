@@ -83,10 +83,7 @@ class MembersTableSeeder extends Seeder
 
         Members::withoutEvents(function () use ($members) {
             foreach ($members as $id => $member) {
-                Members::firstOrCreate(
-                    [
-                        'id' => $id,
-                    ],
+                Members::query()->firstOrCreate(
                     array_merge(
                         [
                             'first_name' => 'Member' . $id,

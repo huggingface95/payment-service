@@ -19,9 +19,8 @@ class StateTableSeeder extends Seeder
             2 => 'Active',
         ];
 
-        foreach ($states as $id => $state) {
-            State::firstOrCreate([
-                'id' => $id,
+        foreach ($states as $state) {
+            State::query()->firstOrCreate([
                 'name' => $state,
             ]);
         }

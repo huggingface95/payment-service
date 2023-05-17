@@ -17,7 +17,6 @@ class RolesTableSeeder extends Seeder
     {
         $roles = [
             [
-                'id' => 1,
                 'name' => 'Test Role 1',
                 'guard_name' => GuardEnum::GUARD_NAME,
                 'description' => 'api role',
@@ -25,14 +24,12 @@ class RolesTableSeeder extends Seeder
                 'group_type_id' => 1,
             ],
             [
-                'id' => 2,
                 'name' => 'Super Role',
                 'guard_name' => GuardEnum::GUARD_NAME,
-                'description' => 'api role',
+                'description' => 'Super admin role',
                 'company_id' => 1,
                 'group_type_id' => 1,
             ], [
-                'id' => 3,
                 'name' => 'Company Role',
                 'guard_name' => GuardEnum::GUARD_NAME,
                 'description' => 'api role',
@@ -40,7 +37,6 @@ class RolesTableSeeder extends Seeder
                 'group_type_id' => 2,
             ],
             [
-                'id' => 4,
                 'name' => 'Individual Role',
                 'guard_name' => GuardEnum::GUARD_NAME,
                 'description' => 'api role',
@@ -50,9 +46,7 @@ class RolesTableSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            Role::firstOrCreate([
-                'id' => $role['id'],
-            ], $role);
+            Role::query()->firstOrCreate($role);
         }
     }
 }

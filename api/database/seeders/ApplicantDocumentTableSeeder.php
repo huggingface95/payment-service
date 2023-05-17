@@ -17,7 +17,7 @@ class ApplicantDocumentTableSeeder extends Seeder
     public function run()
     {
         $documents = [
-            1 => [
+            [
                 'document_type_id' => 1,
                 'document_state_id' => 1,
                 'file_id' => 1,
@@ -43,8 +43,8 @@ class ApplicantDocumentTableSeeder extends Seeder
             ],
         ];
 
-        foreach ($documents as $id => $document) {
-            ApplicantDocument::firstOrCreate(['id' => $id], $document);
+        foreach ($documents as $document) {
+            ApplicantDocument::query()->firstOrCreate($document);
         }
     }
 }

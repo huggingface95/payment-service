@@ -15,15 +15,11 @@ class PaymentUrgencyTableSeeder extends Seeder
      */
     public function run()
     {
-        PaymentUrgency::updateOrCreate([
-            'id' => 1,
-        ], [
+        PaymentUrgency::query()->updateOrCreate([
             'name' => PaymentUrgencyEnum::STANDART->toString(),
         ]);
 
-        PaymentUrgency::updateOrCreate([
-            'id' => 2,
-        ], [
+        PaymentUrgency::query()->updateOrCreate([
             'name' => PaymentUrgencyEnum::EXPRESS->toString(),
         ]);
     }

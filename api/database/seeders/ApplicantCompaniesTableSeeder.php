@@ -20,7 +20,6 @@ class ApplicantCompaniesTableSeeder extends Seeder
         for ($i = 1; $i <= 3; $i++) {
             ApplicantCompany::firstOrCreate(
                 [
-                    'id' => $i,
                     'name' => 'Applicant Company Test '.$i,
                 ],
                 [

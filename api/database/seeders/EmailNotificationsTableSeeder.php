@@ -15,8 +15,7 @@ class EmailNotificationsTableSeeder extends Seeder
      */
     public function run()
     {
-        EmailNotification::firstOrCreate([
-            'id' => 1,
+        EmailNotification::query()->firstOrCreate([
             'company_id' => 1,
             'group_role_id' => 3,
             'group_type_id' => 2,
@@ -25,7 +24,7 @@ class EmailNotificationsTableSeeder extends Seeder
         $accounts = Account::query()->select(['company_id'])->groupBy('company_id')->get();
 
         foreach ($accounts as $account) {
-            EmailNotification::updateOrCreate([
+            EmailNotification::query()->updateOrCreate([
                 'company_id' => $account->company_id,
                 'group_role_id' => 3,
                 'group_type_id' => 2,

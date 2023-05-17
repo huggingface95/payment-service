@@ -34,13 +34,8 @@ class GroupRoleProvidersTableSeeder extends Seeder
             ],
         ];
 
-        $i = 1;
         foreach ($groupRoles as $group) {
-            GroupRoleProvider::firstOrCreate([
-                'id' => $i,
-            ], $group);
-
-            $i++;
+            GroupRoleProvider::query()->firstOrCreate($group);
         }
     }
 }
