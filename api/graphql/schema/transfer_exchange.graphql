@@ -38,12 +38,12 @@ extend type Query @guard {
     """
     Получить трансфер
     """
-    transferExchnage(id: ID! @eq): TransferExchange!    @find
+    transferExchange(id: ID! @eq): TransferExchange!    @find
 
     """
     Получить список трансферов
     """
-    transferExchnages(
+    transferExchanges(
         filter: _ @filterConditions(static: QueryTransferExchnagesFilterStatic)
         created_at: DateTimeRange @whereBetween
     ): [TransferExchange!]!
