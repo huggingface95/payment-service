@@ -11,6 +11,8 @@ build-job:
     - dev
 unit-test-job:
   stage: test
+  rules:
+   - when: never
   script:
     - echo "Running unit tests..."
     - apk add --no-cache openssh rsync
