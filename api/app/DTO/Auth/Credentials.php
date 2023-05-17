@@ -16,7 +16,7 @@ class Credentials
     public ?string $type;
 
     public const MEMBER = 'member';
-    public const INDIVIDUAL = 'individual';
+    public const INDIVIDUAL = 'applicant';
     public const CORPORATE = 'corporate';
 
     public static function transform(stdClass $credentials): self
