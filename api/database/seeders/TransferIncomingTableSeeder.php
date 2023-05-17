@@ -2,12 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Enums\TransferHistoryActionEnum;
 use App\Models\TransferIncoming;
+use App\Models\TransferIncomingHistory;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use App\Traits\TransferHistoryTrait;
 
 class TransferIncomingTableSeeder extends Seeder
 {
+    use TransferHistoryTrait;
     /**
      * Run the database seeds.
      *
@@ -28,6 +32,14 @@ class TransferIncomingTableSeeder extends Seeder
                     ],
                     $payment
                 );
+
+                $transferIncoming = TransferIncoming::find(1);
+                TransferIncomingHistory::firstOrCreate([
+                    'transfer_id' => $transferIncoming->id,
+                    'status_id' => $transferIncoming->status_id,
+                    'action' => TransferHistoryActionEnum::INIT->value,
+                    'created_at' => Carbon::now(),
+                ]);
         });
 
         TransferIncoming::withoutEvents(function () {
@@ -43,6 +55,14 @@ class TransferIncomingTableSeeder extends Seeder
                     ],
                     $payment
                 );
+
+                $transferIncoming = TransferIncoming::find($i);
+                TransferIncomingHistory::firstOrCreate([
+                    'transfer_id' => $transferIncoming->id,
+                    'status_id' => $transferIncoming->status_id,
+                    'action' => TransferHistoryActionEnum::INIT->value,
+                    'created_at' => Carbon::now(),
+                ]);
             }
         });
     }
