@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\GroupRole;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class GroupRoleTableSeeder extends Seeder
@@ -18,7 +19,7 @@ class GroupRoleTableSeeder extends Seeder
             [
                 'name' => 'Super Admin Group',
                 'group_type_id' => 1,
-                'role_id' => 35,
+                'role_id' => Role::SUPER_ADMIN_ID,
                 'company_id' => 1,
                 'description' => 'Test description 2',
                 'module_id' => 2,
@@ -65,13 +66,8 @@ class GroupRoleTableSeeder extends Seeder
             ],
         ];
 
-        $i = 1;
         foreach ($groupRoles as $group) {
-            GroupRole::firstOrCreate([
-                'id' => $i,
-            ], $group);
-
-            $i++;
+            GroupRole::query()->firstOrCreate($group);
         }
     }
 }

@@ -17,13 +17,11 @@ class TransferIncomingTableSeeder extends Seeder
     {
         TransferIncoming::withoutEvents(function () {
                 $payment = TransferIncoming::factory()->definition();
-                $payment['id'] = 1;
                 $payment['payment_number'] = '20001';
                 $payment['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
 
-                TransferIncoming::firstOrCreate(
+                TransferIncoming::query()->firstOrCreate(
                     [
-                        'id' => 1,
                         'payment_number' => '20001',
                     ],
                     $payment
@@ -33,12 +31,10 @@ class TransferIncomingTableSeeder extends Seeder
         TransferIncoming::withoutEvents(function () {
             for ($i = 2; $i <= 10; $i++) {
                 $payment = TransferIncoming::factory()->definition();
-                $payment['id'] = $i;
                 $payment['payment_number'] = '2000'.$i;
 
-                TransferIncoming::firstOrCreate(
+                TransferIncoming::query()->firstOrCreate(
                     [
-                        'id' => $i,
                         'payment_number' => '2000'.$i,
                     ],
                     $payment

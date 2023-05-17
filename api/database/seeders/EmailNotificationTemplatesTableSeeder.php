@@ -30,7 +30,7 @@ class EmailNotificationTemplatesTableSeeder extends Seeder
             ]);
             DB::table('email_notification_templates')->insert([
                 'email_notification_id' => 1,
-                'email_template_id' => 12,
+                'email_template_id' => 3,
             ]);
         }
     }

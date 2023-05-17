@@ -18,10 +18,7 @@ class BankCorrespondentTableSeeder extends Seeder
         $faker = Factory::create();
 
         for ($i = 1; $i <= 10; $i++) {
-            BankCorrespondent::firstOrCreate(
-                [
-                    'id' => $i,
-                ],
+            BankCorrespondent::query()->firstOrCreate(
                 [
                     'name' => 'Bank Correspondent '.$i,
                     'address' => $faker->address(),

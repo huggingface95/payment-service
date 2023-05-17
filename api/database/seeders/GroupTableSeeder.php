@@ -21,8 +21,7 @@ class GroupTableSeeder extends Seeder
         ];
 
         foreach ($groupTypes as $id => $type) {
-            GroupType::firstOrCreate([
-                'id' => $id,
+            GroupType::query()->firstOrCreate([
                 'name' => $type,
             ]);
         }

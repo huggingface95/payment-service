@@ -19,9 +19,7 @@ class ProjectSettingsTableSeeder extends Seeder
         $faker = Factory::create();
 
         for ($i = 1; $i <= 10; $i++) {
-            ProjectSettings::firstOrCreate([
-                'id' => $i,
-            ], [
+            ProjectSettings::query()->firstOrCreate([
                 'project_id' => $i,
                 'group_type_id' => $faker->randomElement([1, 3]),
                 'group_role_id' => $faker->randomElement([1, 3]),

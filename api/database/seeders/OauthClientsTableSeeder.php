@@ -68,14 +68,10 @@ class OauthClientsTableSeeder extends Seeder
             ],
         ];
 
-        $i = 1;
         foreach ($oauthClients as $oaClient) {
             OauthClient::query()->firstOrCreate([
-                'id' => $i,
                 'name' => 'Docudots',
             ], $oaClient);
-
-            $i++;
         }
     }
 }
