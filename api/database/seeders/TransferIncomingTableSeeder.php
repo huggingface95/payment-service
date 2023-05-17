@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\TransferHistoryActionEnum;
+use App\Models\PaymentProviderHistory;
 use App\Models\TransferIncoming;
 use App\Models\TransferIncomingHistory;
 use Carbon\Carbon;
@@ -38,6 +39,12 @@ class TransferIncomingTableSeeder extends Seeder
                     'action' => TransferHistoryActionEnum::INIT->value,
                     'created_at' => Carbon::now(),
                 ]);
+
+                PaymentProviderHistory::create([
+                    'payment_provider_id' => $transferIncoming->payment_provider_id,
+                    'transfer_id' => $transferIncoming->id,
+                    'transfer_type' => 'Incoming',
+                ]);
         });
 
         TransferIncoming::withoutEvents(function () {
@@ -58,6 +65,12 @@ class TransferIncomingTableSeeder extends Seeder
                     'status_id' => $transferIncoming->status_id,
                     'action' => TransferHistoryActionEnum::INIT->value,
                     'created_at' => Carbon::now(),
+                ]);
+
+                PaymentProviderHistory::create([
+                    'payment_provider_id' => $transferIncoming->payment_provider_id,
+                    'transfer_id' => $transferIncoming->id,
+                    'transfer_type' => 'Incoming',
                 ]);
             }
         });

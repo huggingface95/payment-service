@@ -136,7 +136,7 @@ class ApplicantMutator extends BaseMutator
 
         $verifyToken = $this->verifyService->createVerifyToken($applicant);
 
-        $emailTemplateName = 'Welcome! Confirm your email address';
+        $emailTemplateName = 'Sign Up: Email Confirmation';
         $emailData = [
             'client_name' => $applicant->first_name,
             'email_confirm_url' => $company->client_url.'/email/registration/verify/'.$verifyToken->token,

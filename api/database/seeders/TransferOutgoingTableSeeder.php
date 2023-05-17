@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\TransferHistoryActionEnum;
+use App\Models\PaymentProviderHistory;
 use App\Models\TransferOutgoing;
 use App\Models\TransferOutgoingHistory;
 use Carbon\Carbon;
@@ -35,6 +36,12 @@ class TransferOutgoingTableSeeder extends Seeder
                     'status_id' => $transferOutgoing->status_id,
                     'action' => TransferHistoryActionEnum::INIT->value,
                     'created_at' => Carbon::now(),
+                ]);
+
+                PaymentProviderHistory::create([
+                    'payment_provider_id' => $transferOutgoing->payment_provider_id,
+                    'transfer_id' => $transferOutgoing->id,
+                    'transfer_type' => 'Outgoing',
                 ]);
             }
         });
