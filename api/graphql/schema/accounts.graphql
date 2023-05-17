@@ -133,7 +133,7 @@ extend type Query @guard {
     Получить список клиентов
     """
     clientList(
-        filter: _ @filterConditions(static: QueryAccountListFilterStatic)
+        filter: _ @filterConditions(static: QueryClientListFilterStatic)
     ): [Client!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
 
     """
@@ -141,7 +141,7 @@ extend type Query @guard {
     """
     downloadAccountList(
         type: ExportFileType!
-        filter: _ @filterConditions(static: QueryAccountListFilterStatic)
+        filter: _ @filterConditions(static: QueryDownloadAccountListFilterStatic)
         created_at: DateTimeRange @whereBetween
     ): RawFile
         @downloadFileWithConditions(model: "Account")
@@ -156,6 +156,7 @@ input QueryClientListFilterStatic @spread{
     hasClientableFilterById: ID @eq
     hasClientableFilterByEmail: String @ilike
     hasClientableFilterByPhone: String @ilike
+    hasClientableMixedIdOrFullnameOrName: Mixed @eq
 }
 
 input QueryAccountListFilterStatic @spread{
