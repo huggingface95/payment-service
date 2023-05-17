@@ -10,6 +10,7 @@ type ClearJunction struct {
 	Password   string
 	BaseURL    string
 	httpClient *http.Client
+	headers    map[string]string
 }
 
 // IBANRequest represents a request to IBAN.

@@ -1,6 +1,7 @@
 package clearjunction
 
 import (
+	"bytes"
 	"crypto/sha512"
 	"encoding/json"
 	"fmt"
@@ -18,6 +19,7 @@ func NewClearJunction(apiKey, password string, baseURL string) *ClearJunction {
 		Password:   password,
 		BaseURL:    baseURL,
 		httpClient: &http.Client{},
+		headers:    make(map[string]string),
 	}
 }
 
@@ -26,20 +28,28 @@ func (cj *ClearJunction) Auth(request providers.AuthRequester) (providers.AuthRe
 	return nil, nil
 }
 
-func (cj *ClearJunction) SetAuthHeaders(headers map[string]string, body string) {
+func (cj *ClearJunction) SetAuthHeaders(body []byte) {
+	// Получаем текущее время и форматируем его в соответствии с требуемым форматом
 	date := time.Now().UTC().Format("2006-01-02T15:04:05.000Z")
 
+	// Создаем подпись, используя пароль, и преобразуем ее в верхний регистр
 	signatureData := []byte(fmt.Sprintf("%s", cj.Password))
 	signature := strings.ToUpper(fmt.Sprintf("%x", sha512.Sum512(signatureData)))
 
-	signatureData = []byte(fmt.Sprint(strings.ToUpper(cj.APIKey), date, signature, strings.ToUpper(body)))
+	// Создаем новую подпись, используя API-ключ, дату и подпись, полученную на предыдущем шаге
+	// К тому же добавляем тело запроса, преобразуя его в верхний регистр
+	signatureData = []byte(fmt.Sprint(strings.ToUpper(cj.APIKey), date, signature))
+	signatureData = append(signatureData, bytes.ToUpper(body)...)
 	signature = fmt.Sprintf("%x", sha512.Sum512(signatureData))
 
+	// Создаем значение заголовка авторизации, используя полученную подпись
 	authHeaderValue := fmt.Sprintf("Bearer %s", signature)
-	headers["Authorization"] = authHeaderValue
-	headers["X-API-KEY"] = cj.APIKey
-	headers["Content-Type"] = "application/json"
-	headers["Date"] = date
+
+	// Устанавливаем заголовки для последующих запросов
+	cj.headers["Authorization"] = authHeaderValue
+	cj.headers["X-API-KEY"] = cj.APIKey
+	cj.headers["Content-Type"] = "application/json"
+	cj.headers["Date"] = date
 }
 
 func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANResponder, error) {
@@ -52,10 +62,7 @@ func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANRe
 		return nil, fmt.Errorf("failed to create IBAN request: %v", err)
 	}
 
-	headers := make(map[string]string)
-	cj.SetAuthHeaders(headers, "")
-
-	for key, value := range headers {
+	for key, value := range cj.headers {
 		req.Header[key] = []string{value}
 	}
 

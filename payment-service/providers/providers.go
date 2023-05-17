@@ -5,9 +5,6 @@ type PaymentProvider interface {
 	// Auth - авторизация у провайдера
 	Auth(request AuthRequester) (AuthResponder, error)
 
-	// SetAuthHeaders - устанавливает заголовки аутентификации для запросов
-	SetAuthHeaders(headers map[string]string, body string)
-
 	// IBAN - отправка запроса на генерацию IBAN
 	IBAN(request IBANRequester) (IBANResponder, error)
 

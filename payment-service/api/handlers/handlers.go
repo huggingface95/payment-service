@@ -58,19 +58,23 @@ func Status(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queu
 
 // PostBack Реализация обработчика PostBack
 func PostBack(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
-	// Читаем тело и преобразуем его в байтовый массив
-	body := c.Body()
+	// Получаем тело из локального контекста
+	bodyBytes, ok := c.Locals("body").([]byte)
+	// Проверяем, есть ли тело запроса
+	if !ok {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Empty request body"})
+	}
 
 	// Получаем данные запроса из JSON-тела
 	var request clearjunction.PostBackRequest
-	if err := json.Unmarshal(body, &request); err != nil {
+	if err := json.Unmarshal(bodyBytes, &request); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request"})
 	}
 
 	// Создаем задачу для обработчика очереди
 	task := queue.Task{
 		Type:     "postback",
-		Payload:  body,
+		Payload:  bodyBytes,
 		Provider: c.Path(),
 	}
 

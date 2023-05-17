@@ -19,11 +19,20 @@ func SetupRoutes(service *Service, providersService *providers.Service, queueSer
 	provider := clearjunction.NewClearJunction(
 		providerConfig["key"].(string), providerConfig["password"].(string), providerConfig["url"].(string),
 	)
+	group.Use(func(c *fiber.Ctx) error {
+		// Читаем тело и преобразуем его в байтовый массив
+		bodyBytes := c.Body()
+
+		// Устанавливаем заголовки для авторизации с учётом тела запроса
+		provider.SetAuthHeaders(bodyBytes)
+
+		// Сохраняем тело в локальном контексте, чтобы можно было прочитать его снова
+		c.Locals("body", bodyBytes)
+
+		return c.Next()
+	})
 	group.Get("/iban-company/check", func(c *fiber.Ctx) error {
 		return handlers.IBAN(c, provider, queueService)
-	})
-	group.Post("/postback", func(c *fiber.Ctx) error {
-		return handlers.PostBack(c, provider, queueService)
 	})
 	group.Post("/payin", func(c *fiber.Ctx) error {
 		return handlers.PayIn(c, provider, queueService)
