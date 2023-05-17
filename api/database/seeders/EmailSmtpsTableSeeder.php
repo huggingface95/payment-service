@@ -17,8 +17,7 @@ class EmailSmtpsTableSeeder extends Seeder
     {
         EmailSmtp::truncate();
 
-        EmailSmtp::firstOrCreate([
-            'id' => 1,
+        EmailSmtp::query()->firstOrCreate([
             'member_id' => 2,
             'security' => 'ssl',
             'host_name' => 'mail.lavachange.com',
@@ -34,7 +33,6 @@ class EmailSmtpsTableSeeder extends Seeder
         ]);
 
         EmailSmtp::firstOrCreate([
-            'id' => 2,
             'member_id' => 3,
             'security' => 'ssl',
             'host_name' => 'mail.lavachange.com',
@@ -54,8 +52,7 @@ class EmailSmtpsTableSeeder extends Seeder
         EmailSmtp::withoutEvents(function () use ($accounts) {
             $i = 3;
             foreach ($accounts as $account) {
-                EmailSmtp::firstOrCreate([
-                    'id' => $i,
+                EmailSmtp::query()->firstOrCreate([
                     'company_id' => $account->company_id,
                     'name' => 'Test smtp company ' . $i++,
                 ], [

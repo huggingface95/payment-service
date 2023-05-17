@@ -18,9 +18,7 @@ class ApplicantStatusTableSeeder extends Seeder
         $applicantStatus = ApplicantStatusEnum::cases();
 
         foreach ($applicantStatus as $status) {
-            ApplicantStatus::updateOrCreate([
-                'id' => $status->value,
-            ], [
+            ApplicantStatus::query()->firstOrCreate([
                 'name' => $status->toString(),
             ]);
         }

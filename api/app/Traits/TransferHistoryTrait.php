@@ -4,6 +4,8 @@ namespace App\Traits;
 
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferHistoryActionEnum;
+use App\Enums\TransferTypeEnum;
+use App\Models\PaymentProviderHistory;
 use App\Models\TransferIncoming;
 use App\Models\TransferIncomingHistory;
 use App\Models\TransferOutgoing;
@@ -11,25 +13,40 @@ use App\Models\TransferOutgoingHistory;
 
 trait TransferHistoryTrait
 {
-    public function createTransferHistory(TransferOutgoing | TransferIncoming $transfer, string $action = ''): void
+    public function createPPHistory(TransferOutgoing | TransferIncoming $transfer): self
+    {
+        $transferType = $transfer instanceof TransferOutgoing ?
+            TransferTypeEnum::OUTGOING_WIRE_TRANSFER->toAltString() :
+            TransferTypeEnum::INCOMING_WIRE_TRANSFER->toAltString();
+
+        PaymentProviderHistory::create([
+            'payment_provider_id' => $transfer->payment_provider_id,
+            'transfer_id' => $transfer->id,
+            'transfer_type' => $transferType,
+        ]);
+
+        return $this;
+    }
+
+    public function createTransferHistory(TransferOutgoing | TransferIncoming $transfer, string $action = ''): self
     {
         if (empty($action)) {
             $action = $this->getAction($transfer->status_id);
         }
 
+        $data = [
+            'transfer_id' => $transfer->id,
+            'status_id' => $transfer->status_id,
+            'action' => $action,
+        ];
+
         if ($transfer instanceof TransferOutgoing) {
-            TransferOutgoingHistory::create([
-                'transfer_id' => $transfer->id,
-                'status_id' => $transfer->status_id,
-                'action' => $action,
-            ]);
+            TransferOutgoingHistory::create($data);
         } elseif ($transfer instanceof TransferIncoming) {
-            TransferIncomingHistory::create([
-                'transfer_id' => $transfer->id,
-                'status_id' => $transfer->status_id,
-                'action' => $action,
-            ]);
+            TransferIncomingHistory::create($data);
         }
+
+        return $this;
     }
 
     private function getAction(int $statusId): string

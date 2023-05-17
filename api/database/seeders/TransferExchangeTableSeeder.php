@@ -6,7 +6,6 @@ use App\GraphQL\Mutations\TransferExchangeMutator;
 use Faker\Factory;
 use Illuminate\Container\Container;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class TransferExchangeTableSeeder extends Seeder
 {
@@ -24,14 +23,6 @@ class TransferExchangeTableSeeder extends Seeder
      */
     public function run()
     {
-        $seqIncoming = DB::table('transfer_incomings')
-                ->max('id') + 1;
-        DB::select('ALTER SEQUENCE transfer_incomings_id_seq RESTART WITH '.$seqIncoming);
-
-        $seqOutgoings = DB::table('transfer_outgoings')
-                ->max('id') + 1;
-        DB::select('ALTER SEQUENCE transfer_outgoings_id_seq RESTART WITH '.$seqOutgoings);
-
         $container = Container::getInstance();
         $mutation = $container->make(TransferExchangeMutator::class);
 

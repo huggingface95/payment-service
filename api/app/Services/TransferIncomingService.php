@@ -40,7 +40,7 @@ class TransferIncomingService extends AbstractService
             $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
             $this->commissionService->makeFee($transfer, $transactionDTO);
 
-            $this->createTransferHistory($transfer, TransferHistoryActionEnum::INIT->value);
+            $this->createTransferHistory($transfer, TransferHistoryActionEnum::INIT->value)->createPPHistory($transfer);
 
             return $transfer;
         });

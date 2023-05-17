@@ -15,10 +15,7 @@ class ApplicantIndividualNotesTableSeeder extends Seeder
     public function run()
     {
         for ($i = 1; $i <= 3; $i++) {
-            ApplicantIndividualNotes::firstOrCreate(
-                [
-                    'id' => $i,
-                ],
+            ApplicantIndividualNotes::query()->firstOrCreate(
                 [
                     'note' => 'Test Note ' . $i,
                     'applicant_individual_id' => 1,

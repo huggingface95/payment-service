@@ -14,8 +14,7 @@ class RegionsTableSeeder extends Seeder
      */
     public function run()
     {
-        Region::firstOrCreate([
-            'id' => 1,
+        Region::query()->firstOrCreate([
             'name' => 'TestRegion',
             'company_id' => 1,
         ]);

@@ -18,8 +18,7 @@ class TicketStatusTableSeeder extends Seeder
         $statuses = TicketStatusEnum::cases();
 
         foreach ($statuses as $status) {
-            TicketStatus::firstOrCreate([
-                'id' => $status->value,
+            TicketStatus::query()->firstOrCreate([
                 'name' => $status->toString(),
             ]);
         }

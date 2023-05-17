@@ -18,8 +18,7 @@ class ApplicantVerificationStatusTableSeeder extends Seeder
         $applicantVerificationStatuses = ApplicantVerificationStatusEnum::cases();
 
         foreach ($applicantVerificationStatuses as $status) {
-            ApplicantVerificationStatus::firstOrCreate([
-                'id' => $status->value,
+            ApplicantVerificationStatus::query()->firstOrCreate([
                 'name' => $status->toString(),
             ]);
         }

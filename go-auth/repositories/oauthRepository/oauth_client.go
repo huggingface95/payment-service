@@ -17,12 +17,15 @@ func getOauthClientWithConditions(columns map[string]interface{}) *gorm.DB {
 	return query
 }
 
-func GetFirst(columns map[string]interface{}) *postgres.OauthClient {
-	var oauthClient *postgres.OauthClient
+func GetFirst(columns map[string]interface{}) (oauthClient *postgres.OauthClient) {
 	query := getOauthClientWithConditions(columns).Limit(1)
-	query.First(&oauthClient)
+	exists := query.First(&oauthClient)
 
-	return oauthClient
+	if exists.RowsAffected > 0 {
+		return oauthClient
+	}
+
+	return nil
 }
 
 func Get(columns map[string]interface{}) []postgres.OauthClient {

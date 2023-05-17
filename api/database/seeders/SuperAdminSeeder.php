@@ -16,22 +16,8 @@ class SuperAdminSeeder extends Seeder
     public function run()
     {
         /** @var Role $role */
-        if ($role = Role::query()->find(Role::SUPER_ADMIN_ID)) {
-            $role->update([
-                'name' => 'superadmin',
-                'description' => 'Superadmin role',
-                'company_id' => 1,
-                'group_type_id' => 1,
-            ]);
-        } else {
-            $role = Role::create([
-                'id' => Role::SUPER_ADMIN_ID,
-                'name' => 'superadmin',
-                'description' => 'Superadmin role',
-                'company_id' => 1,
-                'group_type_id' => 1,
-            ]);
-        }
+        $role = Role::query()->findOrFail(Role::SUPER_ADMIN_ID);
+
         $role->permissions()->sync(Permissions::all()->pluck('id'));
     }
 }

@@ -75,8 +75,8 @@ class TransferExchangeService extends AbstractService
             $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $outgoing, $fromAccount, $toAccount);
             $this->commissionService->makeFee($outgoing, $transactionOutgoing);
 
-            $this->createTransferHistory($outgoing);
-            $this->createTransferHistory($incoming);
+            $this->createTransferHistory($outgoing)->createPPHistory($outgoing);
+            $this->createTransferHistory($incoming)->createPPHistory($incoming);
 
             return [
                 'outgoing' => $outgoing,

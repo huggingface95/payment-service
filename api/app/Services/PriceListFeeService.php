@@ -153,11 +153,12 @@ class PriceListFeeService extends AbstractService
             $currenciesDestination = $feeItems->feeDestinationCurrency?->pluck('currency_id')->toArray() ?? [];
             $feeItems = $feeItems->toArray();
 
-            if (array_search(FeeModeEnum::RANGE->toString(), array_column($feeItems['fee'], 'mode')) !== false) {
+            if (array_search(FeeModeEnum::RANGE->toString(), $arr = array_column($feeItems['fee'], 'mode')) !== false) {
+                $index = array_search(FeeModeEnum::RANGE->toString(), $arr);
                 $feeRanges[$key]['feeState'] = 'Range';
                 $feeRanges[$key]['range'] = [
-                    'from' => $feeItems['fee'][0]['amount_from'],
-                    'to' => $feeItems['fee'][0]['amount_to'],
+                    'from' => $feeItems['fee'][$index]['amount_from'],
+                    'to' => $feeItems['fee'][$index]['amount_to'],
                 ];
                 $feeRanges[$key]['fees']['currencies'][] = $feeItems['currency_id'];
                 if (count($currenciesDestination)) {
@@ -203,7 +204,7 @@ class PriceListFeeService extends AbstractService
         // group fees by range value
         foreach ($f as $feeRange) {
             if ($feeRange['feeState'] == 'Range') {
-                $k = $feeRange['range']['from'].'_'.$feeRange['range']['to'];
+                $k = $feeRange['range']['from'] . '_' . $feeRange['range']['to'];
 
                 $ranges[$k]['feeState'] = 'Range';
                 $ranges[$k]['range'] = [

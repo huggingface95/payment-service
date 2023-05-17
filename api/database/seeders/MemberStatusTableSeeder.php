@@ -18,8 +18,7 @@ class MemberStatusTableSeeder extends Seeder
         $statuses = MemberStatusEnum::cases();
 
         foreach ($statuses as $status) {
-            MemberStatus::firstOrCreate([
-                'id' => $status->value,
+            MemberStatus::query()->firstOrCreate([
                 'name' => $status->toString(),
             ]);
         }
