@@ -44,7 +44,7 @@ extend type Query @guard {
     Получить список трансферов
     """
     transferExchanges(
-        filter: _ @filterConditions(static: QueryTransferExchnagesFilterStatic)
+        filter: _ @filterConditions(static: QueryTransferExchangesFilterStatic)
         created_at: DateTimeRange @whereBetween
     ): [TransferExchange!]!
         @paginate(defaultCount: 10)
@@ -76,7 +76,7 @@ input QueryTransferExchangeStatisticFilterStatic @spread {
     hasTransferOutgoingPivotSenderMixedIdOrFullnameOrName: Mixed @eq
 }
 
-input QueryTransferExchnagesFilterStatic @spread {
+input QueryTransferExchangesFilterStatic @spread {
     id: ID @eq
     company_id: ID @eq
     client_id: ID @eq
