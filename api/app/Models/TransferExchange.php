@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
@@ -31,10 +32,19 @@ class TransferExchange extends BaseModel
     {
         return $this->belongsTo(TransferOutgoing::class, 'transfer_outgoing_id');
     }
+    public function transferOutgoingHistory(): HasMany
+    {
+        return $this->hasMany(TransferOutgoingHistory::class, 'transfer_id', 'transfer_outgoing_id');
+    }
 
     public function transferIncoming(): BelongsTo
     {
         return $this->belongsTo(TransferIncoming::class, 'transfer_incoming_id');
+    }
+
+    public function transferIncomingHistory(): HasMany
+    {
+        return $this->hasMany(TransferIncomingHistory::class, 'transfer_id', 'transfer_incoming_id');
     }
 
     public function company(): BelongsTo
