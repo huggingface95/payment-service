@@ -2,39 +2,59 @@ package providers
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
 	"path/filepath"
 	"runtime"
 	"strings"
 )
 
-// ProviderService - сервис для управления провайдерами
-type ProviderService struct {
-	providers map[string]PaymentProvider
+// Service - сервис для управления провайдерами
+type Service struct {
+	Config    map[string]interface{}
+	Current   *PaymentProvider
+	providers map[string]*PaymentProvider
 }
 
-// NewProviderService - создает новый экземпляр ProviderService
-func NewProviderService(providers ...PaymentProvider) *ProviderService {
-	ps := &ProviderService{
-		providers: make(map[string]PaymentProvider),
+// NewService - создает новый экземпляр Service
+func NewService() *Service {
+	service := &Service{
+		Config: viper.Get("providers").(map[string]interface{}),
 	}
 
-	for _, provider := range providers {
-		ps.RegisterProvider(provider)
-	}
-
-	return ps
+	return service
 }
 
-// RegisterProvider - регистрирует провайдера
-func (ps *ProviderService) RegisterProvider(provider PaymentProvider) {
-	providerName := getProviderName()
-	ps.providers[providerName] = provider
+// IBAN - генерирует IBAN с помощью провайдера
+func (ps *Service) IBAN(request IBANRequester) (IBANResponder, error) {
+	provider, err := ps.GetProvider()
+	if err != nil {
+		return nil, err
+	}
+
+	// Вызов метода генерации IBAN у провайдера
+	ibanResponse, err := (*provider).IBAN(request)
+	if err != nil {
+		return nil, fmt.Errorf("Failed to generate IBAN: %w", err)
+	}
+
+	return ibanResponse, nil
+}
+
+// UseProvider - устанавливает текущего провайдера по его имени
+func (ps *Service) UseProvider(providerName string) {
+	ps.Current = ps.providers[providerName]
 }
 
 // GetProvider - возвращает провайдера по его имени
-func (ps *ProviderService) GetProvider(providerName string) (PaymentProvider, bool) {
+func (ps *Service) GetProvider() (*PaymentProvider, error) {
+	// Получение провайдера из запроса
+	providerName := getProviderName()
+
 	provider, ok := ps.providers[providerName]
-	return provider, ok
+	if !ok {
+		return nil, fmt.Errorf("provider '%s' not found", providerName)
+	}
+	return provider, nil
 }
 
 func getProviderName() string {
@@ -47,22 +67,4 @@ func getPackageName(pc uintptr) string {
 	fullPackageName := runtime.FuncForPC(pc).Name()
 	packageName := filepath.Base(strings.TrimSuffix(fullPackageName, filepath.Ext(fullPackageName)))
 	return packageName
-}
-
-// IBAN - генерирует IBAN с помощью провайдера
-func (ps *ProviderService) IBAN(request IBANRequester) (IBANResponder, error) {
-	// Получение провайдера из запроса
-	providerName := getProviderName()
-	provider, ok := ps.GetProvider(providerName)
-	if !ok {
-		return nil, fmt.Errorf("Provider '%s' not found", providerName)
-	}
-
-	// Вызов метода генерации IBAN у провайдера
-	ibanResponse, err := provider.IBAN(request)
-	if err != nil {
-		return nil, fmt.Errorf("Failed to generate IBAN: %w", err)
-	}
-
-	return ibanResponse, nil
 }
