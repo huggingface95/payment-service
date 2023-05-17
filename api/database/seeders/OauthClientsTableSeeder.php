@@ -15,34 +15,62 @@ class OauthClientsTableSeeder extends Seeder
      */
     public function run()
     {
-        $oaClients = [
+        $oauthClients = [
             [
                 'secret' => Hash::make(rand(100, 999)),
-                'provider' => null,
+                'provider' => '',
                 'redirect' => 'http://localhost',
-                'personal_access_client' => 1,
-                'password_client' => 0,
+                'personal_access_client' => true,
+                'password_client' => false,
                 'revoked' => 0,
             ], [
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => 'member',
                 'redirect' => 'http://localhost',
-                'personal_access_client' => 0,
-                'password_client' => 1,
+                'personal_access_client' => false,
+                'password_client' => true,
                 'revoked' => 0,
             ], [
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => 'applicant',
                 'redirect' => 'http://localhost',
-                'personal_access_client' => 1,
-                'password_client' => 0,
+                'personal_access_client' => true,
+                'password_client' => false,
+                'revoked' => 0,
+            ], [
+                'secret' => Hash::make(rand(100, 999)),
+                'provider' => 'applicant',
+                'redirect' => 'http://localhost',
+                'personal_access_client' => false,
+                'password_client' => true,
+                'revoked' => 0,
+            ], [
+                'secret' => Hash::make(rand(100, 999)),
+                'provider' => 'member',
+                'redirect' => 'http://localhost',
+                'personal_access_client' => true,
+                'password_client' => false,
+                'revoked' => 0,
+            ], [
+                'secret' => Hash::make(rand(100, 999)),
+                'provider' => 'corporate',
+                'redirect' => 'http://localhost',
+                'personal_access_client' => true,
+                'password_client' => false,
+                'revoked' => 0,
+            ], [
+                'secret' => Hash::make(rand(100, 999)),
+                'provider' => 'corporate',
+                'redirect' => 'http://localhost',
+                'personal_access_client' => false,
+                'password_client' => true,
                 'revoked' => 0,
             ],
         ];
 
         $i = 1;
-        foreach ($oaClients as $oaClient) {
-            OauthClient::firstOrCreate([
+        foreach ($oauthClients as $oaClient) {
+            OauthClient::query()->firstOrCreate([
                 'id' => $i,
                 'name' => 'Docudots',
             ], $oaClient);

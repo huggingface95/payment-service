@@ -59,6 +59,10 @@ func GenerateJWT(id uint64, name string, provider string, jwtType string, access
 
 	claims := getJWTClaims(id, name, provider, accessType)
 	oauthClient := oauthRepository.GetOauthClientByType(provider, jwtType)
+	if oauthClient == nil {
+		err = errors.New("oauth client not found")
+		return
+	}
 
 	token, err = GetToken(claims, oauthClient.Secret)
 
