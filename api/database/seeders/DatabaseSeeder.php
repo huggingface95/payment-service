@@ -81,7 +81,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RespondentFeesTableSeeder::class);
         $this->call(CommissionTemplateBusinessActivityTableSeeder::class);
         $this->call(RoleActionsSeeder::class);
-        $this->call(OuthClientsTableSeeder::class);
+        $this->call(OauthClientsTableSeeder::class);
         $this->call(PaymentsTableSeeder::class);
         $this->call(DocumentStateTableSeeder::class);
         $this->call(DocumentTypeTableSeeder::class);
