@@ -134,6 +134,7 @@ class GroupsQueryTest extends TestCase
     {
         $group = DB::connection('pgsql_test')
             ->table('group_role')
+            ->where('role_id', 1)
             ->first();
 
         $this->postGraphQL(
