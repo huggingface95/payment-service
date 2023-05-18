@@ -154,7 +154,6 @@ class TransferOutgoingService extends AbstractService
                 break;
             default:
                 $this->transferRepository->update($transfer, ['status_id' => $args['status_id']]);
-
                 break;
         }
     }

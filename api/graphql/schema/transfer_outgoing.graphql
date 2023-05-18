@@ -76,7 +76,7 @@ type TransferOutgoing {
     "История трансфера"
     transfer_history: [TransferOutgoingHistory] @hasMany(relation: "transferHistory")
     "SWIFT field 56A (Intermediary Bank)"
-    transfer_swift: TransferSwift @hasOne(relation: "transferSwift")
+    transfer_swift: [TransferSwift] @hasMany(relation: "transferSwift")
     "Дата и время выполнения транзакции"
     execution_at: DateTimeUtc
     "Дата и время создания"
@@ -250,7 +250,7 @@ extend type Mutation @guard {
         "ID файлов"
         file_id: [ID]
         "SWIFT field 56A (Intermediary Bank)"
-        transfer_swift: TransferSwiftInput
+        transfer_swift: [TransferSwiftInput]
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@create")
 
@@ -305,7 +305,7 @@ extend type Mutation @guard {
         "Сообщение банка"
         bank_message: String
         "SWIFT field 56A (Intermediary Bank)"
-        transfer_swift: TransferSwiftInput
+        transfer_swift: [TransferSwiftInput]
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@update")
 
