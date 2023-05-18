@@ -38,6 +38,7 @@ deploy-job:
     - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev composer install"
     - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev php artisan migrate"
     - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev php artisan  lighthouse:clear-cache"
+    - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose restart php-dev"
   only:
     - dev
 deploy-job-stage:
