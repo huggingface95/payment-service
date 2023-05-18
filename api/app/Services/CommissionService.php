@@ -287,9 +287,27 @@ class CommissionService extends AbstractService
                 'client_type' => class_basename(ApplicantCompany::class),
                 'account_id' => $transfer->account_id,
                 'price_list_fee_id' => $transfer->price_list_fee_id,
+                'reason' => $this->getReasonDescription($transfer, $mode),
             ]
         );
 
         return $this;
+    }
+
+    private function getReasonDescription(TransferOutgoing|TransferIncoming $transfer, int $mode): string
+    {
+        match($mode) {
+            FeeModeEnum::BASE->value => $description = $transfer->paymentSystem?->name,
+            FeeModeEnum::PROVIDER->value => $description = $transfer->paymentProvider?->name,
+            FeeModeEnum::QUOTEPROVIDER->value => $description = '',
+            FeeModeEnum::MARGIN->value => $description = '',
+            default => $description = '',
+        };
+
+        return sprintf(
+            'Transfer Fee %s%s',
+            FeeModeEnum::from($mode)?->toString(),
+            $description ? ': ' . $description : ''
+        );
     }
 }

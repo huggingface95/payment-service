@@ -109,8 +109,6 @@ extend type Mutation @guard {
         to_account_id: ID!
         "ID прайс-лист фии"
         price_list_fee_id: ID!
-        "ID файлов"
-        file_id: [ID]
     ): TransferExchange
         @field(resolver: "TransferExchangeMutator@create")
 
@@ -139,4 +137,13 @@ extend type Mutation @guard {
     """
     cancelTransferExchange(id: ID!): TransferExchange
         @field(resolver: "TransferExchangeMutator@cancel")
+
+    """
+    Привязать файлы
+    """
+    attachFIleToTransferExchange(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferExchange
+        @field(resolver: "TransferExchangeMutator@attachFile")
 }

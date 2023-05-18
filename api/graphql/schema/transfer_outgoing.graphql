@@ -73,6 +73,8 @@ type TransferOutgoing {
     "Индекс получателя"
     recipient_zip: String!
     respondent_fee: RespondentFee @belongsTo(relation: "respondentFee")
+    "История трансфера"
+    transfer_history: [TransferOutgoingHistory] @hasMany(relation: "transferHistory")
     "SWIFT field 56A (Intermediary Bank)"
     transfer_swift: TransferSwift @hasOne(relation: "transferSwift")
     "Дата и время выполнения транзакции"
@@ -259,7 +261,51 @@ extend type Mutation @guard {
         "ID"
         id: ID!
         "Статус"
-        status_id: Int!
+        status_id: Int
+        "ID группы"
+        group_id: ID!
+        "ID типа группы"
+        group_type_id: ID!
+        "ID проекта"
+        project_id: ID!
+        "Сумма"
+        amount: Decimal!
+        "ID аккаунта"
+        account_id: ID!
+        "ID платежного провайдера"
+        payment_provider_id: ID!
+        "ID платежной системы"
+        payment_system_id: ID!
+        "ID срочности операции"
+        urgency_id: ID!
+        "Исполнить в"
+        execution_at: DateTimeUtc
+        "Номер счета или IBAN получателя"
+        recipient_account: String
+        "Имя банка получателя"
+        recipient_bank_name: String
+        "Адрес банка получателя"
+        recipient_bank_address: String
+        "SWIFT банка получателя"
+        recipient_bank_swift: String
+        "Имя получателя"
+        recipient_name: String
+        "Город получателя"
+        recipient_city: String
+        "Адрес получателя"
+        recipient_address: String
+        "Штат получателя"
+        recipient_state: String
+        "Индекс получателя"
+        recipient_zip: String
+        "Кто платит коммиссию"
+        respondent_fees_id: ID!
+        "Основание перевода"
+        reason: String
+        "Сообщение банка"
+        bank_message: String
+        "SWIFT field 56A (Intermediary Bank)"
+        transfer_swift: TransferSwiftInput
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@update")
 
@@ -300,4 +346,13 @@ extend type Mutation @guard {
         id: ID!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@refund")
+
+    """
+    Привязать файлы
+    """
+    attachFIleToTransferOutgoing(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@attachFile")
 }
