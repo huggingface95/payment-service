@@ -49,12 +49,14 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
         $transfer = $this->query()->create($data);
 
         if (isset($data['transfer_swift'])) {
-            $transfer->transferSwift()->create(
-                array_merge(
-                    $data['transfer_swift'],
-                    ['transfer_type' => class_basename(TransferOutgoing::class)]
-                )
-            );
+            foreach ($data['transfer_swift'] as $tSwift) {
+                $transfer->transferSwift()->create(
+                    array_merge(
+                        $tSwift,
+                        ['transfer_type' => class_basename(TransferOutgoing::class)]
+                    )
+                );
+            }
         }
 
         return $transfer;
@@ -77,7 +79,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
 
     public function getSumOfDailySentTransfersByApplicantIndividualId(int $applicantId): float
     {
-        return (float) $this->query()
+        return (float)$this->query()
             ->join('applicant_banking_access', function ($join) {
                 $join->on('applicant_banking_access.applicant_company_id', '=', 'transfer_outgoings.sender_id')
                     ->where('transfer_outgoings.sender_type', '=', class_basename(ApplicantCompany::class));
@@ -91,7 +93,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
 
     public function getSumOfMonthlySentTransfersByApplicantIndividualId(int $applicantId): float
     {
-        return (float) $this->query()
+        return (float)$this->query()
             ->join('applicant_banking_access', function ($join) {
                 $join->on('applicant_banking_access.applicant_company_id', '=', 'transfer_outgoings.sender_id')
                     ->where('transfer_outgoings.sender_type', '=', class_basename(ApplicantCompany::class));

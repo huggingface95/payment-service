@@ -1,6 +1,7 @@
 type TransferSwift {
     swift: String
     bank_name: String
+    bank_type: TransferSwiftBankType
     bank_address: String
     bank_country: Country @belongsTo(relation: "bankCountry")
     location: String
@@ -8,10 +9,15 @@ type TransferSwift {
     aba: String
     account_number: String
 }
+enum TransferSwiftBankType{
+    Correspondent @enum(value: "Correspondent")
+    Intermediary @enum(value: "Intermediary")
+}
 
 input TransferSwiftInput {
     swift: String
     bank_name: String
+    bank_type: TransferSwiftBankType
     bank_address: String
     bank_country_id: ID
     location: String
