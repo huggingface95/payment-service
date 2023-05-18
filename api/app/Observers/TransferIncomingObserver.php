@@ -13,7 +13,7 @@ class TransferIncomingObserver extends BaseObserver
 {
     public function creating(TransferIncoming|BaseModel $model): bool
     {
-        if (!parent::creating($model)) {
+        if (! parent::creating($model)) {
             return false;
         }
         /** @var ApplicantIndividual $applicant */
@@ -22,12 +22,13 @@ class TransferIncomingObserver extends BaseObserver
                 throw new GraphqlException('requested_by_id must match id applicant', 'use');
             }
         }
+
         return true;
     }
 
     public function updating(TransferIncoming|BaseModel $model): bool
     {
-        if (!parent::updating($model)) {
+        if (! parent::updating($model)) {
             return false;
         }
         /** @var ApplicantIndividual $applicant */
@@ -36,6 +37,7 @@ class TransferIncomingObserver extends BaseObserver
                 throw new GraphqlException('requested_by_id must match id applicant', 'use');
             }
         }
+
         return true;
     }
 }

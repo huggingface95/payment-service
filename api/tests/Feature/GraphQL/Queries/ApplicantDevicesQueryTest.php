@@ -47,7 +47,7 @@ class ApplicantDevicesQueryTest extends TestCase
                     }
         ', ],
             [
-                'Authorization' => 'Bearer ' . $this->login(['email' => 'applicant1@test.com', 'password' => '1234567Qa', 'client_type' => 'applicant']),
+                'Authorization' => 'Bearer '.$this->login(['email' => 'applicant1@test.com', 'password' => '1234567Qa', 'client_type' => 'applicant']),
             ]
         );
 

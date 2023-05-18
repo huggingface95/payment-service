@@ -18,7 +18,7 @@ class ApplicantIndividualNotesMutationTest extends TestCase
         $seq = DB::table('applicant_individual_notes')
                 ->max('id') + 1;
 
-        DB::select('ALTER SEQUENCE applicant_individual_notes_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE applicant_individual_notes_id_seq RESTART WITH '.$seq);
 
         $this->graphQL('
             mutation CreateApplicantIndividualNote(
@@ -49,7 +49,7 @@ class ApplicantIndividualNotesMutationTest extends TestCase
         $seq = DB::table('applicant_individual_notes')
                 ->max('id') + 1;
 
-        DB::select('ALTER SEQUENCE applicant_individual_notes_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE applicant_individual_notes_id_seq RESTART WITH '.$seq);
 
         $this->postGraphQL(['query' => 'mutation CreateApplicantIndividualNote(
                   $note: String!
@@ -72,7 +72,7 @@ class ApplicantIndividualNotesMutationTest extends TestCase
             ],
         ],
         [
-            'Authorization' => 'Bearer ' . $this->login(),
+            'Authorization' => 'Bearer '.$this->login(),
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -104,7 +104,7 @@ class ApplicantIndividualNotesMutationTest extends TestCase
             ],
         ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]);
 
         $id = json_decode($this->response->getContent(), true);

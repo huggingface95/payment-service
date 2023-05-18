@@ -9,10 +9,9 @@ use App\Models\PaymentSystem;
 
 class PaymentSystemObserver extends BaseObserver
 {
-
     public function creating(PaymentSystem|BaseModel $model): bool
     {
-        if (!parent::creating($model)) {
+        if (! parent::creating($model)) {
             return false;
         }
 
@@ -24,9 +23,10 @@ class PaymentSystemObserver extends BaseObserver
                 ->where('payment_system.name', '=', PaymentSystem::NAME_INTERNAL)
                 ->where('p.name', '=', PaymentSystem::NAME_INTERNAL)
                 ->where('payment_provider.id', '=', $model->payment_provider_id)->exists()) {
-                throw new GraphqlException("Payment System internal is already in company");
+                throw new GraphqlException('Payment System internal is already in company');
             }
         }
+
         return true;
     }
 }

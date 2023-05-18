@@ -111,10 +111,9 @@ class Account extends BaseModel implements BaseModelInterface
         static::addGlobalScope(new ApplicantFilterByMemberScope());
     }
 
-
     public function getAliasAttribute(): bool
     {
-        return !$this->isParent();
+        return ! $this->isParent();
     }
 
     public function getClientAccountsAttribute(): array
@@ -152,7 +151,7 @@ class Account extends BaseModel implements BaseModelInterface
         $lastIncomingTransaction = $this->transferIncomings()->orderBy('execution_at', 'desc')->first()?->execution_at;
         $lastOutgoingTransaction = $this->transferOutgoings()->orderBy('execution_at', 'desc')->first()?->execution_at;
 
-        if (!$lastIncomingTransaction && !$lastOutgoingTransaction) {
+        if (! $lastIncomingTransaction && ! $lastOutgoingTransaction) {
             return null;
         }
 
@@ -173,12 +172,12 @@ class Account extends BaseModel implements BaseModelInterface
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Account::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(Account::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function member(): BelongsTo

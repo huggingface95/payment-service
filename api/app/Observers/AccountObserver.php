@@ -17,7 +17,7 @@ class AccountObserver extends BaseObserver
 
     public function creating(Account|BaseModel $model): bool
     {
-        if (!parent::creating($model)) {
+        if (! parent::creating($model)) {
             return false;
         }
 
@@ -27,8 +27,8 @@ class AccountObserver extends BaseObserver
             $parent = $model->parent;
 
             $model->account_number = isset($model->account_number)
-                ? sprintf("%s-%s", $model->account_number, $currency->code)
-                : sprintf("%s-%s", $parent->account_number, $currency->code);
+                ? sprintf('%s-%s', $model->account_number, $currency->code)
+                : sprintf('%s-%s', $parent->account_number, $currency->code);
 
             $this->accountService->cloneParentAccountColumns($model, $parent->id);
         }
@@ -36,18 +36,18 @@ class AccountObserver extends BaseObserver
         return true;
     }
 
-
     public function created(Account|BaseModel $model): bool
     {
         if (isset($model->parent_id)) {
             $this->accountService->cloneParentAccountMorphRecords($model, $model->parent_id);
         }
+
         return true;
     }
 
     public function updating(Account|BaseModel $model): bool
     {
-        if (!parent::updating($model)) {
+        if (! parent::updating($model)) {
             return false;
         }
 

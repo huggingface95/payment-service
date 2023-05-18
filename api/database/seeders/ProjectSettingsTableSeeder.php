@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Project;
 use App\Models\ProjectSettings;
 use Faker\Factory;
 use Illuminate\Database\Seeder;

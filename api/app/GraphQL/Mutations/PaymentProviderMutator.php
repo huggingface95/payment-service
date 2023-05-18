@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class PaymentProviderMutator
 {
-
     /**
      * @throws GraphqlException
      */
@@ -21,7 +20,7 @@ class PaymentProviderMutator
             /** @var Company $company */
             $company = Company::query()->with('paymentSystemInternal')->findOrFail($args['company_id']);
 
-            if (!$company->paymentSystemInternal) {
+            if (! $company->paymentSystemInternal) {
                 throw new GraphqlException('Payment System Internal not found in company', 'use');
             }
             $paymentProvider = new PaymentProvider($args);
@@ -40,6 +39,7 @@ class PaymentProviderMutator
             $paymentProvider->paymentSystems()->saveMany($paymentSystems);
 
             DB::commit();
+
             return $paymentProvider;
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -48,8 +48,8 @@ class PaymentProviderMutator
     }
 
     /**
-     * @param null $_
-     * @param array<string, mixed> $args
+     * @param  null  $_
+     * @param  array<string, mixed>  $args
      */
     public function update($_, array $args)
     {

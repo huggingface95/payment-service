@@ -20,7 +20,7 @@ class PaymentProviderTableSeeder extends Seeder
         for ($i = 1; $i <= 10; $i++) {
             PaymentProvider::withTrashed()->firstOrCreate(
                 [
-                    'name' => 'PaymentProvider ' . $i,
+                    'name' => 'PaymentProvider '.$i,
                 ],
                 [
                     'description' => $faker->text(100),
@@ -38,7 +38,6 @@ class PaymentProviderTableSeeder extends Seeder
                     'is_active' => true,
                 ]
             );
-
         }
     }
 }

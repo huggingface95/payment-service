@@ -3,10 +3,8 @@
 namespace App\GraphQL\Handlers;
 
 use GraphQL\Error\Error;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -30,18 +28,17 @@ class FilterConditionsHandler
     }
 
     /**
-     * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $builder
-     * @param array<string, mixed> $whereConditions
+     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder  $builder
+     * @param  array<string, mixed>  $whereConditions
      *
      * @throws Error
      */
     public function __invoke(
         object $builder,
-        array  $whereConditions,
-        Model  $model = null,
+        array $whereConditions,
+        Model $model = null,
         string $boolean = 'and'
-    ): void
-    {
+    ): void {
         if ($builder instanceof EloquentBuilder) {
             $model = $builder->getModel();
         } else {
@@ -85,7 +82,7 @@ class FilterConditionsHandler
             if (preg_match('/^(.*?)Pivot(.*?)(Mixed|FilterBy|$)/', $hasCondition[1], $hasJoinConditionArguments)) {
                 $pivotModel = $model->{$hasJoinConditionArguments[1]}()->getModel();
                 $joinRelationship = $pivotModel->{$hasJoinConditionArguments[2]}();
-                $hasCondition[1] = preg_replace('/(.*?)(Pivot)(.*)/', "$1.$3", $hasCondition[1]);
+                $hasCondition[1] = preg_replace('/(.*?)(Pivot)(.*)/', '$1.$3', $hasCondition[1]);
             }
 
             if (preg_match('/^(.*?)FilterBy(.*)/', $hasCondition[1], $hasConditionArguments)) {
@@ -134,7 +131,7 @@ class FilterConditionsHandler
             $this->__invoke($builder, $condition, $model);
         }
 
-        if (!preg_match('/^(has)|(Mixed)|(doesntHave)/', $whereConditions['column'] ?? 'null')) {
+        if (! preg_match('/^(has)|(Mixed)|(doesntHave)/', $whereConditions['column'] ?? 'null')) {
             if ($column = $whereConditions['column'] ?? null) {
                 $this->assertValidColumnReference($column);
                 $whereConditions = $this->prefixConditionWithTableName($whereConditions, $model);
@@ -144,24 +141,23 @@ class FilterConditionsHandler
     }
 
     /**
-     * @param array<string, mixed>|null $condition
+     * @param  array<string, mixed>|null  $condition
      */
     public function handleHasCondition(
-        Model  $model,
+        Model $model,
         string $relation,
         string $operator,
-        int    $amount,
+        int $amount,
         ?array $condition = null,
-        bool   $isMorph = false
-    ): QueryBuilder
-    {
+        bool $isMorph = false
+    ): QueryBuilder {
         return $model
             ->newQuery()
             ->whereHas(
                 $relation,
                 $condition
                     ? function ($builder) use ($condition, $isMorph): void {
-                    $this->__invoke(
+                        $this->__invoke(
                         $builder,
                         $this->prefixConditionWithTableName(
                             $isMorph ? $condition[get_class($builder->getModel())] : $condition,
@@ -169,7 +165,7 @@ class FilterConditionsHandler
                         ),
                         $builder->getModel()
                     );
-                }
+                    }
                     : null,
                 $operator,
                 $amount
@@ -178,10 +174,9 @@ class FilterConditionsHandler
     }
 
     public function handleDoesntHaveCondition(
-        Model  $model,
+        Model $model,
         string $relation,
-    ): QueryBuilder
-    {
+    ): QueryBuilder {
         return $model
             ->newQuery()
             ->whereDoesntHave($relation)
@@ -217,26 +212,25 @@ class FilterConditionsHandler
      * This is important for queries which can otherwise be ambiguous, for
      * example when multiple tables with a column "id" are involved.
      *
-     * @param array<string, mixed> $condition
+     * @param  array<string, mixed>  $condition
      * @return array<string, mixed>
      */
     protected function prefixConditionWithTableName(array $condition, Model $model): array
     {
         if (isset($condition['column'])) {
-            if (!str_contains($condition['column'], '.')) {
-                $condition['column'] = $model->getTable() . '.' . $condition['column'];
+            if (! str_contains($condition['column'], '.')) {
+                $condition['column'] = $model->getTable().'.'.$condition['column'];
             }
-
         } elseif (isset($condition[0]['column'])) {
             foreach ($condition as &$item) {
-                if (!str_contains($item['column'], '.')) {
-                    $item['column'] = $model->getTable() . '.' . $item['column'];
+                if (! str_contains($item['column'], '.')) {
+                    $item['column'] = $model->getTable().'.'.$item['column'];
                 }
             }
         } elseif ((isset($condition['OR']) && is_array($condition['OR'])) || (isset($condition['AND']) && is_array($condition['AND']))) {
             foreach ($condition['OR'] ?? $condition['AND'] as &$item) {
-                if (!str_contains($item['column'], '.')) {
-                    $item['column'] = $model->getTable() . '.' . $item['column'];
+                if (! str_contains($item['column'], '.')) {
+                    $item['column'] = $model->getTable().'.'.$item['column'];
                 }
             }
         }

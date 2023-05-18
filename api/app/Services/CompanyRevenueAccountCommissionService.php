@@ -12,11 +12,9 @@ use Illuminate\Support\Facades\Log;
 
 class CompanyRevenueAccountCommissionService extends AbstractService
 {
-
     public function __construct(
         protected CompanyRevenueAccountService $revenueAccountService,
-    )
-    {
+    ) {
     }
 
     public function calculateRevenueCommissionByPeriod(Account $account, CompanyLedgerSettings $ledgerSettings, string $period): void
@@ -42,7 +40,7 @@ class CompanyRevenueAccountCommissionService extends AbstractService
                     $revenueBalance += $amount;
                 }
 
-                $model = 'App\\Models\\CompanyLedger' . $period . 'History';
+                $model = 'App\\Models\\CompanyLedger'.$period.'History';
                 $model::firstOrCreate([
                     'account_id' => $account->id,
                     'revenue_account_id' => $revenueAccount->id,
@@ -64,11 +62,11 @@ class CompanyRevenueAccountCommissionService extends AbstractService
 
     private function isAllowToAddBalance(CompanyLedgerSettings $ledgerSettings, string $period): bool
     {
-        if (!empty($ledgerSettings->end_of_day_time) && $period === PeriodEnum::DAY->value) {
+        if (! empty($ledgerSettings->end_of_day_time) && $period === PeriodEnum::DAY->value) {
             return true;
-        } else if (empty($ledgerSettings->end_of_day_time) && $period === PeriodEnum::WEEK->value) {
+        } elseif (empty($ledgerSettings->end_of_day_time) && $period === PeriodEnum::WEEK->value) {
             return true;
-        } else if (empty($ledgerSettings->end_of_day_time) && empty($ledgerSettings->end_of_week_time) && $period === PeriodEnum::MONTH->value) {
+        } elseif (empty($ledgerSettings->end_of_day_time) && empty($ledgerSettings->end_of_week_time) && $period === PeriodEnum::MONTH->value) {
             return true;
         }
 
@@ -78,14 +76,14 @@ class CompanyRevenueAccountCommissionService extends AbstractService
     private function getCommissionDateInterval(Account $account, CompanyLedgerSettings $ledgerSettings, string $period = null): array
     {
         $period = $period ?? PeriodEnum::DAY->value;
-        $model = 'App\\Models\\CompanyLedger' . $period . 'History';
+        $model = 'App\\Models\\CompanyLedger'.$period.'History';
         $lastCommission = $model::query()
             ->where('account_id', $account->id)
             ->orderBy('id', 'desc')
             ->first();
 
         $startDateTime = $lastCommission?->created_at->toDateTimeString() ?? $account->created_at->toDateTimeString();
-        $endDateTime = $ledgerSettings->{'end_of_' . strtolower($period) . '_time'}?->toDateTimeString();
+        $endDateTime = $ledgerSettings->{'end_of_'.strtolower($period).'_time'}?->toDateTimeString();
 
         return [
             'start_date_time' => $startDateTime,

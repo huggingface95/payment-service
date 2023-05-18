@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\Auth;
 class CheckLimitDTO
 {
     public TransferOutgoing $object;
+
     public ?Account $account;
+
     public float $amount;
+
     public string $clientType;
 
     public static function transform(TransferOutgoing $data, float $amount): self

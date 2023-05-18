@@ -28,7 +28,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
 
     public function attachFileById(Model|Builder $model, array $data): Model|Builder|null
     {
-        if (!empty($data)) {
+        if (! empty($data)) {
             $model->files()->detach();
             $model->files()->attach(
                 $data,
@@ -107,7 +107,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
     {
         $regionId = Region::query()
             ->join('region_countries', 'regions.id', '=', 'region_countries.region_id')
-            ->where('region_countries.country_id', '=', function($query) use ($args) {
+            ->where('region_countries.country_id', '=', function ($query) use ($args) {
                 $query->select('applicant_individual.country_id')
                     ->from('accounts')
                     ->join('applicant_individual', 'accounts.owner_id', '=', 'applicant_individual.id')
@@ -118,7 +118,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
 
         $priceListId = CommissionPriceList::query()
             ->where('company_id', '=', $args['company_id'])
-            ->where('commission_template_id', '=', function($query) use ($args, $clientType) {
+            ->where('commission_template_id', '=', function ($query) use ($args, $clientType) {
                 $query->select('project_settings.commission_template_id')
                     ->from('projects')
                     ->join('project_settings', 'projects.id', '=', 'project_settings.project_id')

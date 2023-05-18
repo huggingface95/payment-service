@@ -21,12 +21,11 @@ class TransferIncomingService extends AbstractService
     use TransferHistoryTrait;
 
     public function __construct(
-        protected AccountService                      $accountService,
-        protected CommissionService                   $commissionService,
+        protected AccountService $accountService,
+        protected CommissionService $commissionService,
         protected TransferIncomingRepositoryInterface $transferRepository,
-        protected TransactionService                  $transactionService
-    )
-    {
+        protected TransactionService $transactionService
+    ) {
     }
 
     public function createTransfer(array $args, int $operationType): Builder|Model
@@ -68,7 +67,7 @@ class TransferIncomingService extends AbstractService
                     PaymentStatusEnum::EXECUTED->value,
                 ];
 
-                if (!in_array($args['status_id'], $allowedStatuses)) {
+                if (! in_array($args['status_id'], $allowedStatuses)) {
                     throw new GraphqlException('This status is not allowed for transfer which has Pending status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
@@ -81,10 +80,8 @@ class TransferIncomingService extends AbstractService
                 break;
             case PaymentStatusEnum::CANCELED->value:
                 throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-
             case PaymentStatusEnum::EXECUTED->value:
                 throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-
         }
     }
 

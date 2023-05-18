@@ -13,14 +13,13 @@ use Illuminate\Support\Str;
 
 final class AuthenticationLogsQuery
 {
-
     use GetMemberOrIndividualClickhouseTrait;
 
     /**
      * Get data with pagination and filteration
      *
-     * @param null $_
-     * @param array<string, mixed> $args
+     * @param  null  $_
+     * @param  array<string, mixed>  $args
      */
     public function get($_, array $args)
     {
@@ -61,7 +60,7 @@ final class AuthenticationLogsQuery
 
         if (isset($args['member_id'])) {
             $member = Members::find($args['member_id']);
-            if (!$member) {
+            if (! $member) {
                 throw new GraphqlException('Not found Member', 'not found', 404);
             }
             $query->where('email', $member->email);
@@ -101,7 +100,7 @@ final class AuthenticationLogsQuery
         if (isset($args['individual_id'])) {
             /** @var ApplicantIndividual $individual */
             $individual = ApplicantIndividual::query()->find($args['individual_id']);
-            if (!$individual) {
+            if (! $individual) {
                 throw new GraphqlException('Not found ApplicantIndividual', 'not found', 404);
             }
             $query->where('email', $individual->email);
@@ -141,7 +140,7 @@ final class AuthenticationLogsQuery
         if (isset($args['applicant_company_id'])) {
             /** @var ApplicantCompany $applicantCompany */
             $applicantCompany = ApplicantCompany::query()->with('applicantIndividuals')->find($args['applicant_company_id']);
-            if (!$applicantCompany) {
+            if (! $applicantCompany) {
                 throw new GraphqlException('Not found ApplicantCompany', 'not found', 404);
             }
             $query->whereIn('email', $applicantCompany->applicantIndividuals->pluck('email')->toArray());
@@ -150,7 +149,7 @@ final class AuthenticationLogsQuery
         if (isset($args['applicant_individual_id'])) {
             /** @var ApplicantIndividual $individual */
             $individual = ApplicantIndividual::query()->find($args['applicant_individual_id']);
-            if (!$individual) {
+            if (! $individual) {
                 throw new GraphqlException('Not found ApplicantIndividual', 'not found', 404);
             }
             $query->where('email', $individual->email);
@@ -182,7 +181,6 @@ final class AuthenticationLogsQuery
         ];
     }
 
-
     protected function filterByQueryAndSort(object $query, array $args): void
     {
         if (isset($args['query']) && count($args['query']) > 0) {
@@ -190,15 +188,14 @@ final class AuthenticationLogsQuery
 
             if (isset($fields['expired_at'])) {
                 $value = $fields['expired_at'];
-                $query->whereBetween('expired_at', [substr($value['from'], 0, 10) . ' 00:00:00', substr($value['to'], 0, 10) . ' 23:59:59']);
+                $query->whereBetween('expired_at', [substr($value['from'], 0, 10).' 00:00:00', substr($value['to'], 0, 10).' 23:59:59']);
 
                 unset($fields['expired_at']);
             }
 
-
             if (isset($fields['created_at'])) {
                 $value = $fields['created_at'];
-                $query->whereBetween('created_at', [substr($value['from'], 0, 10) . ' 00:00:00', substr($value['to'], 0, 10) . ' 23:59:59']);
+                $query->whereBetween('created_at', [substr($value['from'], 0, 10).' 00:00:00', substr($value['to'], 0, 10).' 23:59:59']);
 
                 unset($fields['created_at']);
             }
@@ -221,6 +218,5 @@ final class AuthenticationLogsQuery
         } else {
             $query->orderBy('id', 'DESC');
         }
-
     }
 }

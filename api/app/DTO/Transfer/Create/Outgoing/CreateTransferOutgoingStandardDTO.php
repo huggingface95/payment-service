@@ -14,7 +14,6 @@ use Carbon\Carbon;
 
 class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
 {
-
     /**
      * @throws GraphqlException
      */
@@ -55,5 +54,4 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
 
         return new parent($args, Account::findOrFail($args['account_id']));
     }
-
 }

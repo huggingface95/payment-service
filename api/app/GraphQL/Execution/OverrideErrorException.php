@@ -42,11 +42,10 @@ class OverrideErrorException implements ErrorHandler
             return $next($error);
         }
 
-
         $previous = $error->getPrevious();
 
         if (null !== $previous) {
-            if ($previous instanceof \Illuminate\Database\QueryException){
+            if ($previous instanceof \Illuminate\Database\QueryException) {
                 $newPreviousError = new QueryException($previous->getMessage(), $previous->getCode(), $previous->getPrevious());
                 $error = new Error(
                     $newPreviousError->getMessage(),

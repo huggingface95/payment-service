@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class PaymentSystemMutator
 {
-
     public function __construct(protected CompanyRevenueAccountService $companyRevenueAccountService)
     {
     }
@@ -36,7 +35,6 @@ class PaymentSystemMutator
         }
     }
 
-
     /**
      * @throws GraphqlException
      */
@@ -55,7 +53,6 @@ class PaymentSystemMutator
             DB::commit();
 
             return $paymentSystem;
-
         } catch (\Throwable $e) {
             DB::rollBack();
             throw new GraphqlException($e->getMessage(), $e->getCode());
@@ -63,8 +60,8 @@ class PaymentSystemMutator
     }
 
     /**
-     * @param null $_
-     * @param array<string, mixed> $args
+     * @param  null  $_
+     * @param  array<string, mixed>  $args
      */
     public function delete($_, array $args)
     {
@@ -81,7 +78,7 @@ class PaymentSystemMutator
     public function attachRespondentFee($root, array $args): PaymentSystem
     {
         $paymentSystem = PaymentSystem::find($args['payment_system_id']);
-        if (!$paymentSystem) {
+        if (! $paymentSystem) {
             throw new GraphqlException('Payment system not found', 'not found', 404);
         }
 
@@ -94,7 +91,7 @@ class PaymentSystemMutator
     public function detachRespondentFee($root, array $args): PaymentSystem
     {
         $paymentSystem = PaymentSystem::find($args['payment_system_id']);
-        if (!$paymentSystem) {
+        if (! $paymentSystem) {
             throw new GraphqlException('Payment system not found', 'not found', 404);
         }
 
@@ -119,5 +116,4 @@ class PaymentSystemMutator
             $this->companyRevenueAccountService->sync($paymentSystem, $args['currencies']['sync']);
         }
     }
-
 }

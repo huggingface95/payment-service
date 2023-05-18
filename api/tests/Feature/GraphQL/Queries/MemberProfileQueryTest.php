@@ -55,7 +55,7 @@ class MemberProfileQueryTest extends TestCase
             }
         '],
         [
-            'Authorization' => 'Bearer ' . $this->login(),
+            'Authorization' => 'Bearer '.$this->login(),
         ]);
 
         $response = json_decode($this->response->getContent(), true);

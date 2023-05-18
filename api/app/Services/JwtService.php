@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Repositories\Interfaces\JWTRepositoryInterface;
 use App\Repositories\JWTRepository;
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-use InvalidArgumentException;
 use stdClass;
 use UnexpectedValueException;
 
@@ -26,8 +24,7 @@ class JwtService extends JWT
 
     public static function decoding(
         string $jwt
-    ): stdClass
-    {
+    ): stdClass {
         $tks = \explode('.', $jwt);
         if (\count($tks) !== 3) {
             throw new UnexpectedValueException('Wrong number of segments');

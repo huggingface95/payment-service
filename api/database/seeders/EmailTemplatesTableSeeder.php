@@ -56,7 +56,6 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Sign Up: Email Confirmation',
         ]);
 
-
         EmailTemplate::query()->firstOrCreate([
             'subject' => 'Account Requisites',
         ], [
@@ -136,6 +135,5 @@ class EmailTemplatesTableSeeder extends Seeder
             'created_at' => Carbon::now(),
             'name' => 'Waiting for IBAN Generation',
         ]);
-
     }
 }

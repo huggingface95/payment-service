@@ -37,7 +37,7 @@ class AddCountryIdSwiftAccountNumberNcsNumberFiledsInBankCorrespondentsTable ext
                 'country_id',
                 'swift',
                 'account_number',
-                'ncs_number'
+                'ncs_number',
             ]);
         });
     }

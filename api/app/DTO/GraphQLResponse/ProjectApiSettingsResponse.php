@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 class ProjectApiSettingsResponse
 {
     public Collection $payment_providers;
+
     public Collection $iban_providers;
 
     public Collection $quote_providers;

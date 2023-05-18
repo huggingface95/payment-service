@@ -42,7 +42,7 @@ class BusinessActivityQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -78,7 +78,7 @@ class BusinessActivityQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -116,7 +116,7 @@ class BusinessActivityQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -126,10 +126,10 @@ class BusinessActivityQueryTest extends TestCase
         $businessActivities = BusinessActivity::orderBy('id', 'ASC')
             ->first();
 
-            $data['data']['businessActivities']['data'][] = [
-                'id' => (string) $businessActivities->id,
-                'name' => (string) $businessActivities->name,
-            ];
+        $data['data']['businessActivities']['data'][] = [
+            'id' => (string) $businessActivities->id,
+            'name' => (string) $businessActivities->name,
+        ];
 
         $this->postGraphQL(
             [
@@ -148,7 +148,7 @@ class BusinessActivityQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -183,7 +183,7 @@ class BusinessActivityQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }

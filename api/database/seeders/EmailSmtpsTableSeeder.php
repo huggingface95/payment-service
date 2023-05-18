@@ -54,7 +54,7 @@ class EmailSmtpsTableSeeder extends Seeder
             foreach ($accounts as $account) {
                 EmailSmtp::query()->firstOrCreate([
                     'company_id' => $account->company_id,
-                    'name' => 'Test smtp company ' . $i++,
+                    'name' => 'Test smtp company '.$i++,
                 ], [
                     'member_id' => 2,
                     'security' => 'auto',

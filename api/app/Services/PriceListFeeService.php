@@ -204,7 +204,7 @@ class PriceListFeeService extends AbstractService
         // group fees by range value
         foreach ($f as $feeRange) {
             if ($feeRange['feeState'] == 'Range') {
-                $k = $feeRange['range']['from'] . '_' . $feeRange['range']['to'];
+                $k = $feeRange['range']['from'].'_'.$feeRange['range']['to'];
 
                 $ranges[$k]['feeState'] = 'Range';
                 $ranges[$k]['range'] = [

@@ -68,7 +68,7 @@ class ImportCurrenciesCommand extends Command
     {
         try {
             DB::beginTransaction();
-            
+
             $currency = CurrencyRateHistory::factory()->create($arr);
 
             CurrencyExchangeRate::updateOrCreate([

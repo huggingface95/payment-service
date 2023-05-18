@@ -2,7 +2,6 @@
 
 namespace Feature\GraphQL\Mutations;
 
-use App\Models\Account;
 use App\Models\TransferIncoming;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -41,8 +40,8 @@ class TransferBetweenUsersMutationTest extends TestCase
                 }
             }
         ', [
-                'from_account' => 1,
-                'to_account' => 2,
+            'from_account' => 1,
+            'to_account' => 2,
         ])->seeJson([
             'message' => 'Unauthenticated.',
         ]);
@@ -87,13 +86,13 @@ class TransferBetweenUsersMutationTest extends TestCase
                       }
                     }
                 ',
-                    'variables' => [
-                        'from_account' => 1,
-                        'to_account' => 2,
-                    ],
+                'variables' => [
+                    'from_account' => 1,
+                    'to_account' => 2,
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -144,11 +143,11 @@ class TransferBetweenUsersMutationTest extends TestCase
                 ',
                 'variables' => [
                     'transfer' => $transfer->id,
-                    'code' => "658999",
+                    'code' => '658999',
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -198,7 +197,7 @@ class TransferBetweenUsersMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 

@@ -13,7 +13,7 @@ class CompanyRevenueAccount extends BaseModel
     protected $table = 'company_revenue_accounts';
 
     protected $fillable = [
-        'number', 
+        'number',
         'company_id',
         'currency_id',
         'balance',
@@ -25,5 +25,4 @@ class CompanyRevenueAccount extends BaseModel
     {
         parent::booted();
     }
-
 }

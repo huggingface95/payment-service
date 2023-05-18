@@ -33,7 +33,7 @@ class ApplicantTransferExchangeMutator extends BaseMutator
     public function sign($_, array $args): TransferExchange|Builder
     {
         $transfer = $this->transferRepository->findById($args['id']);
-        if (!$transfer) {
+        if (! $transfer) {
             throw new GraphqlException('Transfer not found', 'not found', 404);
         }
 
@@ -54,7 +54,7 @@ class ApplicantTransferExchangeMutator extends BaseMutator
     public function execute($_, array $args): TransferExchange|Builder
     {
         $transfer = $this->transferRepository->findById($args['id']);
-        if (!$transfer) {
+        if (! $transfer) {
             throw new GraphqlException('Transfer not found', 'not found', 404);
         }
 

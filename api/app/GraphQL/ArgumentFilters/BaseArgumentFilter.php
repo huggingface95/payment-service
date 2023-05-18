@@ -46,7 +46,6 @@ abstract class BaseArgumentFilter
         return $result;
     }
 
-
     private function parseArguments(array $argument, array &$conditions): void
     {
         if (isset($argument['value']['fields'])) {
@@ -55,20 +54,19 @@ abstract class BaseArgumentFilter
                 $this->parseArguments($field, $c);
             }
             $conditions[$argument['name']['value']] = $c;
-        } else if (isset($argument['fields']) && !isset($argument['name'])) {
+        } elseif (isset($argument['fields']) && ! isset($argument['name'])) {
             $c = [];
             foreach ($argument['fields'] as $field) {
                 $this->parseArguments($field, $c);
             }
             $conditions[] = $c;
-        } else if (isset($argument['value']['values'])) {
+        } elseif (isset($argument['value']['values'])) {
             $c = [];
             foreach ($argument['value']['values'] as $value) {
                 $this->parseArguments($value, $c);
             }
             $conditions[$argument['name']['value']] = $c;
-
-        } else if (isset($argument['value']['value'])) {
+        } elseif (isset($argument['value']['value'])) {
             $conditions[$argument['name']['value']] = $argument['value']['value'];
         }
     }
@@ -80,11 +78,11 @@ abstract class BaseArgumentFilter
                 if (in_array(strtoupper($k), ['AND', 'OR'])) {
                     $default = strtoupper($k);
                     $this->searchVariablesRecursive($filter, $result, $default);
-                } else if (isset($filter['column']) && array_key_exists($filter['column'], static::$filters)) {
+                } elseif (isset($filter['column']) && array_key_exists($filter['column'], static::$filters)) {
                     $filter['column'] = static::$filters[$filter['column']];
                     $filter['operator'] = self::$operators[strtolower($filter['operator'])] ?? $filter['operator'];
                     $result[$default][] = [$filter['column'], $filter['operator'] ?? '=', $filter['value']];
-                } else if (is_array($filter)) {
+                } elseif (is_array($filter)) {
                     $this->searchVariablesRecursive($filter, $result, $default);
                 }
             } catch (\Throwable) {

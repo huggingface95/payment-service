@@ -7,10 +7,10 @@ use App\Enums\PaymentStatusEnum;
 use App\Models\TransferExchange;
 use App\Models\TransferIncoming;
 use App\Models\TransferOutgoing;
+use App\Traits\TransferHistoryTrait;
 use Carbon\Carbon;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
-use App\Traits\TransferHistoryTrait;
 
 class TransferExchangeTableSeeder extends Seeder
 {
@@ -32,7 +32,7 @@ class TransferExchangeTableSeeder extends Seeder
     {
         $amount = $this->faker->randomNumber(3);
 
-        $paymentNumber = 'EXCH' . rand();
+        $paymentNumber = 'EXCH'.rand();
 
         $accountIds = [3, 4];
         $uniqueAccountPairs = $this->faker->randomElements($accountIds, 2, false);

@@ -34,6 +34,7 @@ class ApplicantProfileMutator extends BaseMutator
 
         return $applicant;
     }
+
     /**
      * @param    $_
      * @param  array  $args
@@ -53,6 +54,5 @@ class ApplicantProfileMutator extends BaseMutator
             'status' => 'OK',
             'message' => 'Your feedback sent',
         ];
-
     }
 }

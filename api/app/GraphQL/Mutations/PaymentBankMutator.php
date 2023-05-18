@@ -14,8 +14,9 @@ class PaymentBankMutator extends BaseMutator
 
     /**
      * @param    $_
-     * @param array $args
+     * @param  array  $args
      * @return mixed
+     *
      * @throws GraphqlException
      */
     public function create($_, array $args)
@@ -25,7 +26,6 @@ class PaymentBankMutator extends BaseMutator
 
             /** @var PaymentBank $bank */
             $bank = PaymentBank::query()->create($args);
-
 
             if (isset($args['currencies_and_regions'])) {
                 $requestCurrenciesRegions = $this->optimizeCurrencyRegionInput($args['currencies_and_regions']);
@@ -51,8 +51,9 @@ class PaymentBankMutator extends BaseMutator
 
     /**
      * @param    $_
-     * @param array $args
+     * @param  array  $args
      * @return mixed
+     *
      * @throws GraphqlException
      */
     public function update($_, array $args)
@@ -62,7 +63,7 @@ class PaymentBankMutator extends BaseMutator
 
             /** @var PaymentBank $bank */
             $bank = PaymentBank::query()->find($args['id']);
-            if (!$bank) {
+            if (! $bank) {
                 throw new GraphqlException('Not found', 'not found', 404);
             }
             $bank->update($args);

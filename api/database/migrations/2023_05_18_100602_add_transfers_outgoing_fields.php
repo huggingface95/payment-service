@@ -14,9 +14,9 @@ class AddTransfersOutgoingFields extends Migration
     public function up()
     {
         Schema::table('transfer_outgoings', function (Blueprint $table) {
-            $table->string('recipient_bank_location',255)->nullable();
-            $table->string('recipient_bank_ncs_number',255)->nullable();
-            $table->string('recipient_bank_rtn',50)->nullable();
+            $table->string('recipient_bank_location', 255)->nullable();
+            $table->string('recipient_bank_ncs_number', 255)->nullable();
+            $table->string('recipient_bank_rtn', 50)->nullable();
             $table->unsignedInteger('beneficiary_type_id')->default(1);
         });
     }

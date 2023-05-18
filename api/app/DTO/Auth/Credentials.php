@@ -13,10 +13,13 @@ use stdClass;
 class Credentials
 {
     public BaseModel|Model $model;
+
     public ?string $type;
 
     public const MEMBER = 'member';
+
     public const INDIVIDUAL = 'applicant';
+
     public const CORPORATE = 'corporate';
 
     public static function transform(stdClass $credentials): self

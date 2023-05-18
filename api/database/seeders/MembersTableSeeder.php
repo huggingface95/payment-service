@@ -86,7 +86,7 @@ class MembersTableSeeder extends Seeder
                 Members::query()->firstOrCreate(
                     array_merge(
                         [
-                            'first_name' => 'Member' . $id,
+                            'first_name' => 'Member'.$id,
                         ],
                         $member
                     )

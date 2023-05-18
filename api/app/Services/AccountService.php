@@ -12,10 +12,9 @@ use App\Repositories\Interfaces\AccountRepositoryInterface;
 class AccountService extends AbstractService
 {
     public function __construct(
-        protected PaymentsService            $paymentsService,
+        protected PaymentsService $paymentsService,
         protected AccountRepositoryInterface $accountRepository
-    )
-    {
+    ) {
     }
 
     public function addToBalance(Account $account, float $amount): void
@@ -65,7 +64,7 @@ class AccountService extends AbstractService
      */
     public function getAccountAmountRealWithCommission(TransferOutgoing $transfer, float $paymentFee): ?float
     {
-        return match ((int)$transfer->respondent_fees_id) {
+        return match ((int) $transfer->respondent_fees_id) {
             RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount + $paymentFee,
             RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount,
             RespondentFeesEnum::SHARED_FEES->value => $transfer->amount + $paymentFee / 2,
@@ -143,7 +142,6 @@ class AccountService extends AbstractService
         foreach ($columns as $k => $v) {
             $account->{$k} = $v;
         }
-
     }
 
     public function cloneParentAccountMorphRecords(Account $account, int $parentId): void

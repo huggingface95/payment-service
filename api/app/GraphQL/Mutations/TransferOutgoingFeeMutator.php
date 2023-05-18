@@ -15,12 +15,11 @@ use App\Services\TransferOutgoingService;
 class TransferOutgoingFeeMutator extends BaseMutator
 {
     public function __construct(
-        protected TransferOutgoingService             $transferService,
-        protected CompanyRevenueAccountService        $companyRevenueAccountService,
-        protected AccountRepository                   $accountRepository,
+        protected TransferOutgoingService $transferService,
+        protected CompanyRevenueAccountService $companyRevenueAccountService,
+        protected AccountRepository $accountRepository,
         protected TransferOutgoingRepositoryInterface $transferRepository
-    )
-    {
+    ) {
     }
 
     public function cancel($root, array $args): TransferOutgoing
@@ -43,7 +42,7 @@ class TransferOutgoingFeeMutator extends BaseMutator
             throw new GraphqlException('Operation type is not Fee');
         }
 
-        if (!$this->companyRevenueAccountService->exist($args['company_id'], $args['currency_id'])) {
+        if (! $this->companyRevenueAccountService->exist($args['company_id'], $args['currency_id'])) {
             throw new GraphqlException('Revenue Account not found in this company');
         }
 
@@ -62,7 +61,7 @@ class TransferOutgoingFeeMutator extends BaseMutator
     public function update($_, array $args): TransferOutgoing
     {
         $transfer = $this->transferRepository->findById($args['id']);
-        if (!$transfer) {
+        if (! $transfer) {
             throw new GraphqlException('Transfer not found');
         }
         if ($transfer->status_id !== PaymentStatusEnum::SENT->value) {
@@ -80,7 +79,7 @@ class TransferOutgoingFeeMutator extends BaseMutator
      */
     public function sign($_, array $args): TransferOutgoing
     {
-        if (!isset($args['code']) || empty($args['code'])) {
+        if (! isset($args['code']) || empty($args['code'])) {
             throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
         }
 

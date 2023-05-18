@@ -3,12 +3,12 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
+use App\GraphQL\Mutations\Traits\PriceListFeeTrait;
 use App\Models\PriceListFee;
 use App\Services\PriceListFeeService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\GraphQL\Mutations\Traits\PriceListFeeTrait;
 
 class PriceListFeesMutator
 {

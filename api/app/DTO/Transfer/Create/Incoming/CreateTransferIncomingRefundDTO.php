@@ -11,16 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class CreateTransferIncomingRefundDTO extends CreateTransferIncomingDTO
 {
-
     public static function transform(array $args, int $operationType): CreateTransferIncomingDTO
     {
         $date = Carbon::now();
         $account = Account::findOrFail($args['account_id']);
-    
+
         $args['amount_debt'] = $args['amount'];
         $args['beneficiary_type_id'] = $account->account_type == BeneficiaryTypeEnum::PERSONAL->value ? BeneficiaryTypeEnum::PERSONAL->value : BeneficiaryTypeEnum::CORPORATE->value;
         $args['requested_by_id'] = Auth::guard('api')->check() ? 1 : Auth::guard('api_client')->user()?->id;
-        $args['reason'] = 'Refund #' . $args['id'];
+        $args['reason'] = 'Refund #'.$args['id'];
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['urgency_id'] = 1;
         $args['operation_type_id'] = $operationType;

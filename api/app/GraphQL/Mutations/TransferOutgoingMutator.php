@@ -60,7 +60,7 @@ class TransferOutgoingMutator extends BaseMutator
     public function sign($_, array $args): TransferOutgoing
     {
         /** @var TransferOutgoing $transfer */
-        if (!isset($args['code']) || empty($args['code'])) {
+        if (! isset($args['code']) || empty($args['code'])) {
             throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
         }
 

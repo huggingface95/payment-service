@@ -2,9 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\ApplicantIndividual;
 use App\Models\DocumentState;
-use App\Models\Members;
 use App\Models\Permissions;
 use App\Models\PermissionsList;
 use App\Repositories\Interfaces\GraphqlManipulateSchemaRepositoryInterface;
@@ -15,12 +13,11 @@ use Illuminate\Support\Str;
 
 class GraphqlManipulateSchemaRepository implements GraphqlManipulateSchemaRepositoryInterface
 {
-
     protected \NumberFormatter $formatNumber;
 
     public function __construct(protected DocumentState $documentState, protected Permissions $permissions, protected PermissionsList $list)
     {
-        $this->formatNumber = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
+        $this->formatNumber = new \NumberFormatter('en', \NumberFormatter::SPELLOUT);
     }
 
     public function hasDocumentStateTable(): bool
@@ -32,7 +29,6 @@ class GraphqlManipulateSchemaRepository implements GraphqlManipulateSchemaReposi
     {
         return Schema::hasTable($this->permissions->getTable());
     }
-
 
     public function getDocumentStates(): array
     {
@@ -59,24 +55,23 @@ class GraphqlManipulateSchemaRepository implements GraphqlManipulateSchemaReposi
         });
     }
 
-
     private function keysToEnumFormat(Collection $list): Collection
     {
         return $list->mapWithKeys(function ($v, $k) {
             $v = $v->mapWithKeys(function ($v, $k) {
                 return [$this->toEnumFormat($k) => $v];
             });
-            return ['PERMISSION_' . $this->toEnumFormat($k) => $v];
+
+            return ['PERMISSION_'.$this->toEnumFormat($k) => $v];
         });
     }
-
 
     private function toEnumFormat(string $str): string
     {
         $str = preg_replace_callback("/\d/", function ($match) {
             return $this->formatNumber->format($match[0]);
         }, $str);
+
         return strtoupper(Str::snake(preg_replace("/(\/)|(&)|(\()|(\))|(:)/", '', $str)));
     }
-
 }

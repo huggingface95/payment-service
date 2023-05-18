@@ -40,19 +40,18 @@ class AccountMutator
             $args['member_id'] = Auth::user()->id;
 
             $args['account_type'] = $this->setAccountType($args['group_type_id']);
-            if (!isset($args['account_number'])) {
+            if (! isset($args['account_number'])) {
                 $args['account_state_id'] = AccountState::WAITING_FOR_ACCOUNT_GENERATION;
             } else {
                 $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;
             }
 
             if (isset($args['client_id'])) {
-                    $args['client_type'] = $args['group_type_id'] == GroupTypeEnum::COMPANY->value ? ApplicantTypeEnum::COMPANY->toString() : ApplicantTypeEnum::INDIVIDUAL->toString();
+                $args['client_type'] = $args['group_type_id'] == GroupTypeEnum::COMPANY->value ? ApplicantTypeEnum::COMPANY->toString() : ApplicantTypeEnum::INDIVIDUAL->toString();
             }
 
             /** @var Account $account */
             $account = Account::query()->create($args);
-
 
             $this->emailService->sendAccountStatusEmail($account);
 
@@ -100,6 +99,7 @@ class AccountMutator
         } elseif ($groupId == GroupRole::COMPANY) {
             return AccountTypeEnum::BUSINESS->value;
         }
+
         return null;
     }
 }

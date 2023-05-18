@@ -119,15 +119,16 @@ class GroupRole extends BaseModel
             return $this->members();
         }
     }
+
     public function projects(): HasManyThrough
     {
         return $this->hasManyThrough(
             Project::class,
             ProjectSettings::class,
-            "group_role_id",
-            "id",
-            "id",
-            "project_id"
+            'group_role_id',
+            'id',
+            'id',
+            'project_id'
         );
     }
 }

@@ -59,7 +59,7 @@ class DashboardQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -102,7 +102,7 @@ class DashboardQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -136,7 +136,7 @@ class DashboardQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'status_id' => (string) $statistic->status_id,
@@ -192,7 +192,7 @@ class DashboardQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'transfer_type' => (string) $statistic[0]['transfer_type'],
@@ -251,7 +251,7 @@ class DashboardQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'transfer_type' => (string) $statistic[0]['transfer_type'],
@@ -312,7 +312,7 @@ class DashboardQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'transfer_type' => (string) $statistic[0]['transfer_type'],
@@ -371,7 +371,7 @@ class DashboardQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'transfer_type' => (string) $statistic[0]['transfer_type'],
@@ -430,7 +430,7 @@ class DashboardQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'transfer_type' => (string) $statistic[0]['transfer_type'],
@@ -482,7 +482,7 @@ class DashboardQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'applicant_type' => (string) $statistic[0]['applicant_type'],
@@ -537,7 +537,7 @@ class DashboardQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'applicant_type' => (string) $statistic[0]['applicant_type'],
@@ -591,7 +591,7 @@ class DashboardQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'applicant_type' => (string) $statistic[0]['applicant_type'],

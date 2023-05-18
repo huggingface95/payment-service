@@ -6,13 +6,14 @@ use App\Enums\TransferHistoryActionEnum;
 use App\Models\PaymentProviderHistory;
 use App\Models\TransferIncoming;
 use App\Models\TransferIncomingHistory;
+use App\Traits\TransferHistoryTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use App\Traits\TransferHistoryTrait;
 
 class TransferIncomingTableSeeder extends Seeder
 {
     use TransferHistoryTrait;
+
     /**
      * Run the database seeds.
      *
@@ -21,30 +22,30 @@ class TransferIncomingTableSeeder extends Seeder
     public function run()
     {
         TransferIncoming::withoutEvents(function () {
-                $payment = TransferIncoming::factory()->definition();
-                $payment['payment_number'] = '20001';
-                $payment['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
+            $payment = TransferIncoming::factory()->definition();
+            $payment['payment_number'] = '20001';
+            $payment['created_at'] = Carbon::now()->format('Y-m-d H:i:s');
 
-                TransferIncoming::query()->firstOrCreate(
+            TransferIncoming::query()->firstOrCreate(
                     [
                         'payment_number' => '20001',
                     ],
                     $payment
                 );
 
-                $transferIncoming = TransferIncoming::find(1);
-                TransferIncomingHistory::firstOrCreate([
-                    'transfer_id' => $transferIncoming->id,
-                    'status_id' => $transferIncoming->status_id,
-                    'action' => TransferHistoryActionEnum::INIT->value,
-                    'created_at' => Carbon::now(),
-                ]);
+            $transferIncoming = TransferIncoming::find(1);
+            TransferIncomingHistory::firstOrCreate([
+                'transfer_id' => $transferIncoming->id,
+                'status_id' => $transferIncoming->status_id,
+                'action' => TransferHistoryActionEnum::INIT->value,
+                'created_at' => Carbon::now(),
+            ]);
 
-                PaymentProviderHistory::create([
-                    'payment_provider_id' => $transferIncoming->payment_provider_id,
-                    'transfer_id' => $transferIncoming->id,
-                    'transfer_type' => 'Incoming',
-                ]);
+            PaymentProviderHistory::create([
+                'payment_provider_id' => $transferIncoming->payment_provider_id,
+                'transfer_id' => $transferIncoming->id,
+                'transfer_type' => 'Incoming',
+            ]);
         });
 
         TransferIncoming::withoutEvents(function () {

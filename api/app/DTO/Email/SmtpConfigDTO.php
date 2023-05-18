@@ -27,7 +27,7 @@ class SmtpConfigDTO
             $dto->username = '';
             $dto->password = '';
             $dto->port = env('MAIL_PORT', '1025');
-            $dto->host = env('MAIL_HOST', 'mailhog');;
+            $dto->host = env('MAIL_HOST', 'mailhog');
             $dto->security = '';
             $dto->subject = $smtp->from_name;
             $dto->from = $smtp->from_email;

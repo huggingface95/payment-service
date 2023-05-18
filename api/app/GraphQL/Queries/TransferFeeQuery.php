@@ -28,7 +28,7 @@ final class TransferFeeQuery
         $transfer->period_id = $args['period_id'];
         $transfer->currency_id = $args['currency_id'];
         $transfer->respondent_fees_id = $args['respondent_fees_id'];
-        $transfer->urgency_id = !empty($args['urgency_id']) ? $args['urgency_id'] : PaymentUrgencyEnum::STANDART->value;
+        $transfer->urgency_id = ! empty($args['urgency_id']) ? $args['urgency_id'] : PaymentUrgencyEnum::STANDART->value;
         $transfer->payment_system_id = $args['payment_system_id'];
         $transfer->payment_provider_id = $args['payment_provider_id'];
         $transfer->amount = $args['amount'];
@@ -58,7 +58,7 @@ final class TransferFeeQuery
             'price_list_fee_id' => $args['price_list_fee_id'],
             'operation_type_id' => OperationTypeEnum::EXCHANGE->value,
             'currency_id' => $args['currency_src_id'],
-            'urgency_id' => !empty($args['urgency_id']) ? $args['urgency_id'] : PaymentUrgencyEnum::STANDART->value,
+            'urgency_id' => ! empty($args['urgency_id']) ? $args['urgency_id'] : PaymentUrgencyEnum::STANDART->value,
             'amount' => $args['amount'],
         ]);
         $transfer->id = 1;

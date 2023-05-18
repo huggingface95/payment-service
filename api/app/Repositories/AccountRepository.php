@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class AccountRepository extends Repository implements AccountRepositoryInterface
 {
-
     public const PARENT_CLONE_COLUMNS = [
         'owner_id',
         'payment_provider_id',
@@ -39,7 +38,7 @@ class AccountRepository extends Repository implements AccountRepositoryInterface
         'clientable' => [
             ApplicantIndividual::class => 'applicantIndividual',
             ApplicantCompany::class => 'applicantCompany',
-        ]
+        ],
     ];
 
     protected function model(): string

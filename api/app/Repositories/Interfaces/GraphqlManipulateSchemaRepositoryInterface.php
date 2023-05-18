@@ -6,7 +6,6 @@ use Illuminate\Support\Collection;
 
 interface GraphqlManipulateSchemaRepositoryInterface
 {
-
     public function getDocumentStates(): array;
 
     public function getAllPermissionsListWithClientType(): array;
@@ -16,5 +15,4 @@ interface GraphqlManipulateSchemaRepositoryInterface
     public function hasDocumentStateTable(): bool;
 
     public function hasPermissionsTable(): bool;
-
 }

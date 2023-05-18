@@ -15,9 +15,9 @@ class CompanyModulesTableSeeder extends Seeder
     public function run()
     {
         CompanyModule::firstOrCreate([
-                'company_id' => 1,
-                'module_id' => 2,
-                'is_active' => true,
-            ]);
+            'company_id' => 1,
+            'module_id' => 2,
+            'is_active' => true,
+        ]);
     }
 }

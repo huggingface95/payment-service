@@ -12,16 +12,14 @@ use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Services\TransferBetweenUsersService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class ApplicantTransferBetweenUsersMutator extends BaseMutator
 {
     public function __construct(
-        protected TransferBetweenUsersService         $transferService,
+        protected TransferBetweenUsersService $transferService,
         protected TransferOutgoingRepositoryInterface $transferOutgoingRepository,
         protected TransferIncomingRepositoryInterface $transferIncomingRepository
-    )
-    {
+    ) {
     }
 
     public function create($root, array $args): TransferIncoming|Model|Builder|null
@@ -36,7 +34,7 @@ class ApplicantTransferBetweenUsersMutator extends BaseMutator
      */
     public function sign($_, array $args): TransferIncoming
     {
-        if (!isset($args['code']) || empty($args['code'])) {
+        if (! isset($args['code']) || empty($args['code'])) {
             throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
         }
 

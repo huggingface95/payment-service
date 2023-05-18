@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class CurrencyRateHistory extends BaseModel
 {
     use HasFactory;
-    
+
     public $timestamps = false;
 
     protected $fillable = [

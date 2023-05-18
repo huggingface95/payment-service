@@ -18,12 +18,11 @@ use Illuminate\Support\Str;
 class TransferBetweenUsersMutator extends BaseMutator
 {
     public function __construct(
-        protected CommissionService                   $commissionService,
-        protected TransferBetweenUsersService         $transferService,
+        protected CommissionService $commissionService,
+        protected TransferBetweenUsersService $transferService,
         protected TransferOutgoingRepositoryInterface $transferOutgoingRepository,
         protected TransferIncomingRepositoryInterface $transferIncomingRepository
-    )
-    {
+    ) {
     }
 
     public function create($root, array $args): array
@@ -49,11 +48,11 @@ class TransferBetweenUsersMutator extends BaseMutator
             DB::beginTransaction();
             /** @var TransferIncoming $transfer */
             $transfer = TransferIncoming::query()->with('transferBetweenOutgoing')->where('operation_type_id', OperationTypeEnum::BETWEEN_USERS->value)->find($args['transfer_incoming_id']);
-            if (!$transfer) {
+            if (! $transfer) {
                 throw new GraphqlException('Transfer incoming not found', 'bad request', 400);
             }
 
-            if (!$transfer->transferBetweenOutgoing) {
+            if (! $transfer->transferBetweenOutgoing) {
                 throw new GraphqlException('transfer between outgoing not found in selected incoming transfer', 'bad request', 400);
             }
 
@@ -73,7 +72,7 @@ class TransferBetweenUsersMutator extends BaseMutator
      */
     public function sign($_, array $args): TransferIncoming
     {
-        if (!isset($args['code']) || empty($args['code'])) {
+        if (! isset($args['code']) || empty($args['code'])) {
             throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
         }
 

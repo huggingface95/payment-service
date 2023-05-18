@@ -41,7 +41,7 @@ class ExportService extends AbstractService
     {
         $type = $this->getTypeOfFile($type);
 
-        $method = 'export' . $model;
+        $method = 'export'.$model;
         if (method_exists($this, $method)) {
             $exportData = $this->{$method}($data);
         } else {
@@ -72,7 +72,7 @@ class ExportService extends AbstractService
         return new ApplicantCompaniesExport(['companies' => $companies]);
     }
 
-    private function exportTransferIncoming( $data): TransferIncomingsExport
+    private function exportTransferIncoming($data): TransferIncomingsExport
     {
         $transfersList = $this->collectTransfers($data);
         $transfersList = TransfersListResource::collection($transfersList ?? [])->sortByDesc('created_at')->jsonSerialize();
@@ -80,7 +80,7 @@ class ExportService extends AbstractService
         return new TransferIncomingsExport(['transfers' => $transfersList]);
     }
 
-    private function exportTransferOutgoing( $data): TransferOutgoingsExport
+    private function exportTransferOutgoing($data): TransferOutgoingsExport
     {
         $transfersList = $this->collectTransfers($data);
         $transfersList = TransfersListResource::collection($transfersList ?? [])->sortByDesc('created_at')->jsonSerialize();
@@ -88,7 +88,7 @@ class ExportService extends AbstractService
         return new TransferOutgoingsExport(['transfers' => $transfersList]);
     }
 
-    private function exportTransferExchange( $data): TransferExchangesExport
+    private function exportTransferExchange($data): TransferExchangesExport
     {
         $transfersList = $this->collectTransfers($data);
         $transfersList = TransfersListResource::collection($transfersList ?? [])->sortByDesc('created_at')->jsonSerialize();

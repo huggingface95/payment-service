@@ -70,7 +70,7 @@ class EmailSmtpMutator extends BaseMutator
             $smtp = new EmailSmtp();
             $smtp->replay_to = (isset($args['reply_to'])) ? $args['reply_to'] : $emails;
             $smtp->security = '';
-            $smtp->host_name = env('MAIL_HOST', 'mailhog');;
+            $smtp->host_name = env('MAIL_HOST', 'mailhog');
             $smtp->username = '';
             $smtp->password = '';
             $smtp->from_email = (isset($args['from_email'])) ? $args['from_email'] : $emails;

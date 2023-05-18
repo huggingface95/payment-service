@@ -29,7 +29,6 @@ class PaymentSystemTableSeeder extends Seeder
                 'is_active' => true,
                 'payment_provider_id' => $i,
             ]);
-
         }
     }
 }

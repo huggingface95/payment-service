@@ -13,7 +13,7 @@ use App\Services\TransferExchangeService;
 class TransferExchangeMutator extends BaseMutator
 {
     use AttachFileTrait;
-    
+
     public function __construct(
         protected TransferExchangeService $transferService,
         protected TransferExchangeRepositoryInterface $transferRepository
@@ -26,7 +26,7 @@ class TransferExchangeMutator extends BaseMutator
     public function cancel($root, array $args): TransferExchange
     {
         $transfer = $this->transferRepository->findById($args['id']);
-        if (!$transfer) {
+        if (! $transfer) {
             throw new GraphqlException('Transfer not found', 'not found', 404);
         }
 
@@ -53,12 +53,12 @@ class TransferExchangeMutator extends BaseMutator
      */
     public function sign($_, array $args): TransferExchange
     {
-        if (!isset($args['code']) || empty($args['code'])) {
+        if (! isset($args['code']) || empty($args['code'])) {
             throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
         }
 
         $transfer = $this->transferRepository->findById($args['id']);
-        if (!$transfer) {
+        if (! $transfer) {
             throw new GraphqlException('Transfer not found', 'not found', 404);
         }
 
@@ -79,7 +79,7 @@ class TransferExchangeMutator extends BaseMutator
     public function execute($_, array $args): TransferExchange
     {
         $transfer = $this->transferRepository->findById($args['id']);
-        if (!$transfer) {
+        if (! $transfer) {
             throw new GraphqlException('Transfer not found', 'not found', 404);
         }
 

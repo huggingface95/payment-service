@@ -17,7 +17,7 @@ class CompanyModuleQuoteProviderMutator extends BaseMutator
     {
         /** @var CompanyModule $companyModule */
         $companyModule = CompanyModule::query()->find($args['company_module_id']);
-        if (!$companyModule) {
+        if (! $companyModule) {
             throw new GraphqlException('Company module not found', 'not found', 404);
         }
 
@@ -31,7 +31,7 @@ class CompanyModuleQuoteProviderMutator extends BaseMutator
     {
         /** @var CompanyModuleQuoteProvider $companyModuleProvider */
         $companyModuleProvider = CompanyModuleQuoteProvider::query()->find($args['id']);
-        if (!$companyModuleProvider) {
+        if (! $companyModuleProvider) {
             throw new GraphqlException('Company module QUOTE provider not found', 'not found', 404);
         }
 

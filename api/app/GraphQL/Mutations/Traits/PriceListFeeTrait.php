@@ -19,17 +19,17 @@ trait PriceListFeeTrait
         foreach ($currencies as $currency) {
             foreach ($currency['fee'] as $fees) {
                 $priceListFeeCurrency = $priceListFee->fees()->create([
-                    $fieldBase . '_id' => $priceListFee->id,
+                    $fieldBase.'_id' => $priceListFee->id,
                     'currency_id' => $currency['currency_id'],
                     'fee' => $fees,
                 ]);
 
                 if ((isset($args['operation_type_id']) && $args['operation_type_id'] == OperationTypeEnum::EXCHANGE->value) || $isExchange) {
-                    $model = 'App\\Models\\' . $modelBase . 'DestinationCurrency';
+                    $model = 'App\\Models\\'.$modelBase.'DestinationCurrency';
 
                     foreach ($currency['currencies_destination'] as $currency) {
                         $model::create([
-                            $fieldBase . '_currency_id' => $priceListFeeCurrency->id,
+                            $fieldBase.'_currency_id' => $priceListFeeCurrency->id,
                             'currency_id' => $currency,
                         ]);
                     }

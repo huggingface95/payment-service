@@ -19,7 +19,7 @@ class PriceListQpFeesTableSeeder extends Seeder
 
         foreach ($quoteProviders as $provider) {
             PriceListQpFee::updateOrCreate([
-                'name' => 'Test QP fee ' . $provider->id,
+                'name' => 'Test QP fee '.$provider->id,
                 'quote_provider_id' => $provider->id,
                 'period_id' => 1,
                 'type_id' => 1,

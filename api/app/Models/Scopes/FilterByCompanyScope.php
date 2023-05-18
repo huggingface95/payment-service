@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Scope;
 class FilterByCompanyScope implements Scope
 {
     use CheckForEvents;
+
     public function apply(Builder $builder, Model $model)
     {
         if (BaseModel::$currentCompanyId && preg_match('/^(SELECT|select)/', $builder->getQuery()->toSql())) {
@@ -20,7 +21,7 @@ class FilterByCompanyScope implements Scope
 
             if (preg_match(sprintf('/%s/', implode('|', $filteredTables)), $builder->getQuery()->toSql(), $matches)) {
                 foreach ($matches as $match) {
-                    $column = $match . '.' . self::$FILTER_BY_COMPANY_TABLES[$match];
+                    $column = $match.'.'.self::$FILTER_BY_COMPANY_TABLES[$match];
                     $builder->where($column, BaseModel::$currentCompanyId);
                 }
             }

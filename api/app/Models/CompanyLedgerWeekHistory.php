@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class CompanyLedgerWeekHistory extends BaseModel
 {
     public $timestamps = false;
-    
+
     protected $fillable = [
         'account_id',
         'revenue_account_id',

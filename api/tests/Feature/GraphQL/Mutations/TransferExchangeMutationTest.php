@@ -28,8 +28,8 @@ class TransferExchangeMutationTest extends TestCase
                 }
             }
         ', [
-                'from_account' => 1,
-                'to_account' => 2,
+            'from_account' => 1,
+            'to_account' => 2,
         ])->seeJson([
             'message' => 'Unauthenticated.',
         ]);
@@ -65,13 +65,13 @@ class TransferExchangeMutationTest extends TestCase
                     }
                 }
                 ',
-                    'variables' => [
-                        'from_account' => 1,
-                        'to_account' => 4,
-                    ],
+                'variables' => [
+                    'from_account' => 1,
+                    'to_account' => 4,
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -83,7 +83,7 @@ class TransferExchangeMutationTest extends TestCase
                     'id' => $id['data']['createTransferExchange']['id'],
                     'status' => [
                         'id' => (string) PaymentStatusEnum::UNSIGNED->value,
-                    ]
+                    ],
                 ],
             ],
         ]);

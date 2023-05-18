@@ -10,10 +10,9 @@ use Illuminate\Support\Facades\Auth;
 
 class TransferOutgoingObserver extends BaseObserver
 {
-
     public function creating(TransferOutgoing|BaseModel $model): bool
     {
-        if (!parent::creating($model)) {
+        if (! parent::creating($model)) {
             return false;
         }
 
@@ -29,7 +28,7 @@ class TransferOutgoingObserver extends BaseObserver
 
     public function updating(TransferOutgoing|BaseModel $model): bool
     {
-        if (!parent::updating($model)) {
+        if (! parent::updating($model)) {
             return false;
         }
 
@@ -42,5 +41,4 @@ class TransferOutgoingObserver extends BaseObserver
 
         return true;
     }
-
 }

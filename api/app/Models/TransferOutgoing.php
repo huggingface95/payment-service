@@ -7,7 +7,6 @@ use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
 use App\Models\Scopes\TransferFeeAmountScope;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

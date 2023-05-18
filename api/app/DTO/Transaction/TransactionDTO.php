@@ -11,17 +11,29 @@ use Illuminate\Support\Carbon;
 class TransactionDTO
 {
     public int $company_id;
+
     public int $currency_src_id;
+
     public int $currency_dst_id;
+
     public ?int $account_src_id = null;
+
     public ?int $account_dst_id = null;
+
     public float $balance_prev;
+
     public ?float $balance_next = null;
+
     public float $amount;
+
     public ?string $txtype = null;
+
     public string $created_at;
+
     public string $updated_at;
+
     public int $transfer_id;
+
     public string $transfer_type;
 
     public static function transform(TransferOutgoing|TransferIncoming $transfer, Account $account, Account $accountTo = null): self
@@ -84,5 +96,3 @@ class TransactionDTO
         return $dto;
     }
 }
-
-

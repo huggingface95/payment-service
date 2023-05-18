@@ -23,7 +23,7 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['urgency_id'] = $args['urgency_id'] ?? PaymentUrgencyEnum::STANDART->value;
         $args['operation_type_id'] = $operationType;
         $args['payment_bank_id'] = 2;
-        $args['payment_number'] = 'EXCH' . rand();
+        $args['payment_number'] = 'EXCH'.rand();
         $args['payment_provider_id'] = 1;
         $args['payment_system_id'] = 1;
         $args['system_message'] = 'test';

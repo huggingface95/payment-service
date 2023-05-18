@@ -3,7 +3,6 @@
 namespace Feature\GraphQL\Mutations;
 
 use App\Models\MemberAccessLimitation;
-use App\Models\PaymentBank;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -19,7 +18,7 @@ class MemberAccessLimitationsMutationTest extends TestCase
         $seq = DB::table('member_access_limitations')
                 ->max('id') + 1;
 
-        DB::select('ALTER SEQUENCE member_access_limitations_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE member_access_limitations_id_seq RESTART WITH '.$seq);
 
         $this->graphQL('
             mutation CreateMemberAccessLimitation(

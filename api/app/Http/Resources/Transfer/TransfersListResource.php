@@ -6,8 +6,8 @@ use App\Enums\OperationTypeEnum;
 use App\Models\Members;
 use App\Models\TransferExchange;
 use App\Models\TransferIncoming;
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\TransferOutgoing;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class TransfersListResource extends JsonResource
 {
@@ -60,7 +60,7 @@ class TransfersListResource extends JsonResource
             ]);
         } elseif ($this->resource instanceof TransferExchange) {
             return array_merge($data, [
-                'requested' => ($this->clientable instanceof Members) ? "Member" : "Applicant",
+                'requested' => ($this->clientable instanceof Members) ? 'Member' : 'Applicant',
                 'client' => $this->client?->fullname,
                 'debited_account' => $this->debitedAccount?->id,
                 'credited_account' => $this->creditedAccount?->id,
@@ -75,6 +75,7 @@ class TransfersListResource extends JsonResource
                 'status' => $this->paymentStatus?->name,
             ]);
         }
+
         return array_merge($data, [
             'requested' => $this->clientable?->name,
             'account_number' => $this->account->account_number,

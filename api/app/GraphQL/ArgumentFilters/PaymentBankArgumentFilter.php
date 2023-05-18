@@ -22,7 +22,7 @@ class PaymentBankArgumentFilter extends BaseArgumentFilter
     public function filter(PaymentBank|BankCorrespondent $paymentBank, array $args, Context $c, ResolveInfo $resolveInfo): array
     {
         $result = $this->filterVariables($resolveInfo->variableValues);
-        if (!count($result)) {
+        if (! count($result)) {
             $result = $this->filterQuery($resolveInfo->operation->selectionSet->toArray(true));
         }
 
@@ -44,5 +44,4 @@ class PaymentBankArgumentFilter extends BaseArgumentFilter
 
         return $this->optimizeCurrencyRegionResponse($currenciesRegions);
     }
-
 }

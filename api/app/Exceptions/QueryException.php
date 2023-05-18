@@ -2,16 +2,15 @@
 
 namespace App\Exceptions;
 
+use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
-use Exception;
 
 /**
  * Class RepositoryException
  */
 class QueryException extends Exception
 {
-
     public array $codes = [
         '23503' => [
             'code' => 401,
@@ -29,9 +28,8 @@ class QueryException extends Exception
 
     protected function formatException($message, $code): array
     {
-
-        if (!array_key_exists($code, $this->codes)) {
-            return [$message, (int)$code];
+        if (! array_key_exists($code, $this->codes)) {
+            return [$message, (int) $code];
         }
 
         $definition = $this->codes[$code];
@@ -47,10 +45,9 @@ class QueryException extends Exception
     {
         preg_match_all("/{$regexp}/", $message, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
-            $replacement = str_replace("{table}", $match[1], $replacement);
+            $replacement = str_replace('{table}', $match[1], $replacement);
         }
 
         return $replacement;
     }
-
 }

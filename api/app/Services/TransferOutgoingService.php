@@ -30,15 +30,14 @@ class TransferOutgoingService extends AbstractService
     use TransferHistoryTrait;
 
     public function __construct(
-        protected EmailService                        $emailService,
-        protected AccountService                      $accountService,
-        protected CommissionService                   $commissionService,
+        protected EmailService $emailService,
+        protected AccountService $accountService,
+        protected CommissionService $commissionService,
         protected TransferOutgoingRepositoryInterface $transferRepository,
-        protected TransferIncomingService             $transferIncomingService,
-        protected TransactionService                  $transactionService,
-        protected CheckLimitService                   $checkLimitService
-    )
-    {
+        protected TransferIncomingService $transferIncomingService,
+        protected TransactionService $transactionService,
+        protected CheckLimitService $checkLimitService
+    ) {
     }
 
     public function commissionCalculationFeeScheduled($amount, $fee, $currencyId): float
@@ -53,7 +52,7 @@ class TransferOutgoingService extends AbstractService
             $paymentFee += $this->commissionService->getFee($listFee->fee, $amount, PaymentUrgencyEnum::STANDART->value);
         }
 
-        return (float)$paymentFee;
+        return (float) $paymentFee;
     }
 
     public function updateApplicantBankingAccessUsedLimits(TransferOutgoing $transaction): void
@@ -291,7 +290,7 @@ class TransferOutgoingService extends AbstractService
     public function createTransfer(array $args, int $operationType): Builder|Model
     {
         $createTransferDto = TransformerDTO::transform(CreateTransferOutgoingStandardDTO::class, $args, $operationType, $this->transferRepository);
-        
+
         return DB::transaction(function () use ($createTransferDto) {
             /** @var TransferOutgoing $transfer */
             $transfer = $this->transferRepository->createWithSwift($createTransferDto->toArray());

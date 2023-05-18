@@ -19,9 +19,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Auth\Authorizable;
@@ -192,9 +191,10 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
             ->limit(1)
             ->first();
 
-        if (!is_null($activeSession) && Carbon::parse($activeSession['expired_at'] ?? 0)->timestamp >= Carbon::parse()->timestamp) {
+        if (! is_null($activeSession) && Carbon::parse($activeSession['expired_at'] ?? 0)->timestamp >= Carbon::parse()->timestamp) {
             $activeSession['current_session'] = true;
         }
+
         return $activeSession;
     }
 

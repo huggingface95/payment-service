@@ -9,7 +9,6 @@ use Carbon\Carbon;
 
 class CreateTransferIncomingStandardDTO extends CreateTransferIncomingDTO
 {
-
     public static function transform(array $args, int $operationType): CreateTransferIncomingDTO
     {
         $date = Carbon::now();

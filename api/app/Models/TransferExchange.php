@@ -32,6 +32,7 @@ class TransferExchange extends BaseModel
     {
         return $this->belongsTo(TransferOutgoing::class, 'transfer_outgoing_id');
     }
+
     public function transferOutgoingHistory(): HasMany
     {
         return $this->hasMany(TransferOutgoingHistory::class, 'transfer_id', 'transfer_outgoing_id');
@@ -88,5 +89,4 @@ class TransferExchange extends BaseModel
             'id'
         );
     }
-
 }

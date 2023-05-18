@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
-
 class TransferBetweenRelation extends BaseModel
 {
     protected $table = 'transfer_between_relation';

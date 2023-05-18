@@ -18,7 +18,6 @@ use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Traits\TransferHistoryTrait;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -28,14 +27,13 @@ class TransferBetweenUsersService extends AbstractService
     use TransferHistoryTrait;
 
     public function __construct(
-        protected CommissionService                   $commissionService,
-        protected TransferOutgoingService             $transferOutgoingService,
-        protected TransferIncomingService             $transferIncomingService,
+        protected CommissionService $commissionService,
+        protected TransferOutgoingService $transferOutgoingService,
+        protected TransferIncomingService $transferIncomingService,
         protected TransferIncomingRepositoryInterface $transferIncomingRepository,
         protected TransferOutgoingRepositoryInterface $transferOutgoingRepository,
-        protected TransactionService                  $transactionService,
-    )
-    {
+        protected TransactionService $transactionService,
+    ) {
     }
 
     /**
@@ -135,9 +133,11 @@ class TransferBetweenUsersService extends AbstractService
     {
         if ($args['type'] == FeeTransferTypeEnum::INCOMING->toString()) {
             $transfer = TransferIncoming::query()->findOrFail($args['transfer_id']);
+
             return $this->transferIncomingRepository->attachFileById($transfer, $args['file_id']);
         } else {
             $transfer = TransferOutgoing::query()->findOrFail($args['transfer_id']);
+
             return $this->transferOutgoingRepository->attachFileById($transfer, $args['file_id']);
         }
     }
@@ -165,7 +165,7 @@ class TransferBetweenUsersService extends AbstractService
                         PaymentStatusEnum::EXECUTED->value,
                     ];
 
-                    if (!in_array($args['status_id'], $allowedStatuses)) {
+                    if (! in_array($args['status_id'], $allowedStatuses)) {
                         throw new GraphqlException('This status is not allowed for transfer which has Pending status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
@@ -181,11 +181,11 @@ class TransferBetweenUsersService extends AbstractService
      */
     private function validateCreateTransfer(Account $fromAccount, Account $toAccount): void
     {
-        if (!$fromAccount) {
+        if (! $fromAccount) {
             throw new GraphqlException('From account not found', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if (!$toAccount) {
+        if (! $toAccount) {
             throw new GraphqlException('To account not found', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 

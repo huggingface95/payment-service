@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PaymentBank extends BaseModel
 {
-
     public $timestamps = false;
 
     protected $table = 'payment_banks';

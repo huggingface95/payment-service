@@ -18,12 +18,11 @@ use Illuminate\Support\Str;
 class TransferBetweenAccountsMutator extends BaseMutator
 {
     public function __construct(
-        protected CommissionService                   $commissionService,
-        protected TransferBetweenUsersService         $transferService,
+        protected CommissionService $commissionService,
+        protected TransferBetweenUsersService $transferService,
         protected TransferOutgoingRepositoryInterface $transferOutgoingRepository,
         protected TransferIncomingRepositoryInterface $transferIncomingRepository
-    )
-    {
+    ) {
     }
 
     public function create($root, array $args): array
@@ -65,7 +64,7 @@ class TransferBetweenAccountsMutator extends BaseMutator
      */
     public function sign($_, array $args): TransferIncoming
     {
-        if (!isset($args['code']) || empty($args['code'])) {
+        if (! isset($args['code']) || empty($args['code'])) {
             throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
         }
 

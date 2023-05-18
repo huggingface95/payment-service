@@ -49,7 +49,7 @@ class TransferIncomingRepository extends Repository implements TransferIncomingR
                 )
             );
         }
-        
+
         return $transfer;
     }
 

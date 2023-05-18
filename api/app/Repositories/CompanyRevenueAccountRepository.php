@@ -8,7 +8,6 @@ use App\Repositories\Interfaces\CompanyRevenueAccountRepositoryInterface;
 
 class CompanyRevenueAccountRepository extends Repository implements CompanyRevenueAccountRepositoryInterface
 {
-
     protected function model(): string
     {
         return CompanyRevenueAccount::class;
@@ -34,5 +33,4 @@ class CompanyRevenueAccountRepository extends Repository implements CompanyReven
     {
         return $this->query()->where('number', $code)->exists();
     }
-
 }

@@ -188,7 +188,6 @@ class ApplicantMutator extends BaseMutator
         return $applicant;
     }
 
-
     /**
      * @throws \Throwable
      */

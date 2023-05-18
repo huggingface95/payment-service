@@ -27,9 +27,9 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
         $args['urgency_id'] = $args['urgency_id'] ?? PaymentUrgencyEnum::STANDART->value;
         $args['operation_type_id'] = $operationType;
         $args['payment_bank_id'] = 2;
-        $args['payment_number'] = 'BTW' . rand();
+        $args['payment_number'] = 'BTW'.rand();
         $args['payment_provider_id'] = $account->company->paymentProviderInternal?->id ?? throw new GraphqlException('Internal Payment provider not found');
-        $args['payment_system_id'] = $account->company->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');;
+        $args['payment_system_id'] = $account->company->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['sender_country_id'] = 1;

@@ -11,7 +11,7 @@ class ApplicantIndividualModulesMutator extends BaseMutator
      * Return a value for the field.
      *
      * @param  @param  null  $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
+     * @param  array<string, mixed>  $args The field arguments passed by the client.
      * @return mixed
      */
     public function create($root, array $args)

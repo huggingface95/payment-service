@@ -63,7 +63,7 @@ class PaymentProviderIbanQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -126,7 +126,7 @@ class PaymentProviderIbanQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -150,7 +150,7 @@ class PaymentProviderIbanQueryTest extends TestCase
                         'logo' => [
                             'id' => (string) $logo->id,
                             'file_name' => (string) $logo->file_name,
-                        ]],
+                        ], ],
                     ],
                 ],
             ],
@@ -192,7 +192,7 @@ class PaymentProviderIbanQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -208,7 +208,7 @@ class PaymentProviderIbanQueryTest extends TestCase
                         'currency' => [
                             'id' => (string) $currency->id,
                             'name' => (string) $currency->name,
-                        ]],
+                        ], ],
                     ],
                 ],
             ],
@@ -256,7 +256,7 @@ class PaymentProviderIbanQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }

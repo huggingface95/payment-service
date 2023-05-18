@@ -2,7 +2,6 @@
 
 namespace Feature\GraphQL\Mutations;
 
-use App\Models\Account;
 use App\Models\TransferIncoming;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -31,10 +30,10 @@ class TransferBetweenAccountsMutationTest extends TestCase
                 }
             }
         ', [
-                'from_account' => 1,
-                'to_account' => 2,
-                'price_list_fee_id' => 1,
-                'price_list_id' => 1,
+            'from_account' => 1,
+            'to_account' => 2,
+            'price_list_fee_id' => 1,
+            'price_list_id' => 1,
         ])->seeJson([
             'message' => 'Unauthenticated.',
         ]);
@@ -77,15 +76,15 @@ class TransferBetweenAccountsMutationTest extends TestCase
                       }
                     }
                 ',
-                    'variables' => [
-                        'from_account' => 1,
-                        'to_account' => 2,
-                        'price_list_fee_id' => 1,
-                        'price_list_id' => 1,
-                    ],
+                'variables' => [
+                    'from_account' => 1,
+                    'to_account' => 2,
+                    'price_list_fee_id' => 1,
+                    'price_list_id' => 1,
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -135,11 +134,11 @@ class TransferBetweenAccountsMutationTest extends TestCase
                 ',
                 'variables' => [
                     'transfer' => $transfer->id,
-                    'code' => "658999",
+                    'code' => '658999',
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -189,7 +188,7 @@ class TransferBetweenAccountsMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 

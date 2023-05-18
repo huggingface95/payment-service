@@ -17,5 +17,4 @@ class BankCorrespondentCurrencyRegion extends Pivot
     {
         return $this->belongsTo(Region::class, 'region_id');
     }
-
 }

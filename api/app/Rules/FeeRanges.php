@@ -20,7 +20,7 @@ class FeeRanges implements ImplicitRule
         }
 
         foreach ($value as $feeRange) {
-            if (!isset($feeRange->fees) || !isset($feeRange->feeState)) {
+            if (! isset($feeRange->fees) || ! isset($feeRange->feeState)) {
                 return false;
             }
         }

@@ -2,11 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Account;
 use App\Models\AccountClient;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
-use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class AccountClientsTableSeeder extends Seeder

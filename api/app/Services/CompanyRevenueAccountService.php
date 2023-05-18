@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 
 class CompanyRevenueAccountService
 {
-
     protected string $format = '0000000000';
 
     public function __construct(protected CompanyRevenueAccountRepositoryInterface $repository)
@@ -55,7 +54,7 @@ class CompanyRevenueAccountService
     {
         $id = (string) $id;
 
-        return sprintf("%s%s%s", strtoupper($code), substr($this->format, 0, -strlen($id)), $id);
+        return sprintf('%s%s%s', strtoupper($code), substr($this->format, 0, -strlen($id)), $id);
     }
 
     public function addToRevenueAccountBalance(int $companyId, CompanyRevenueAccount|Collection $revenueAccount, float $amount, int $currencyId): void

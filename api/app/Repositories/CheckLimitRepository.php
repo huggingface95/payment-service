@@ -70,5 +70,4 @@ class CheckLimitRepository implements CheckLimitRepositoryInterface
             ->whereIn('status_id', [PaymentStatusEnum::PENDING->value, PaymentStatusEnum::SENT->value])
             ->get();
     }
-
 }

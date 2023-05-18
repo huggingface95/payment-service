@@ -30,17 +30,16 @@ class TransferExchangeService extends AbstractService
     use TransferHistoryTrait;
 
     public function __construct(
-        protected CommissionService                   $commissionService,
-        protected CompanyRevenueAccountService        $revenueService,
-        protected FeeRepositoryInterface              $feeRepository,
-        protected TransferOutgoingService             $transferOutgoingService,
-        protected TransferIncomingService             $transferIncomingService,
+        protected CommissionService $commissionService,
+        protected CompanyRevenueAccountService $revenueService,
+        protected FeeRepositoryInterface $feeRepository,
+        protected TransferOutgoingService $transferOutgoingService,
+        protected TransferIncomingService $transferIncomingService,
         protected TransferIncomingRepositoryInterface $transferIncomingRepository,
         protected TransferOutgoingRepositoryInterface $transferOutgoingRepository,
         protected TransferExchangeRepositoryInterface $transferExchangeRepository,
-        protected TransactionService                  $transactionService,
-    )
-    {
+        protected TransactionService $transactionService,
+    ) {
     }
 
     /**
@@ -113,7 +112,7 @@ class TransferExchangeService extends AbstractService
      */
     private function getExchangeRate(array $args, Account $fromAccount, Account $toAccount): float
     {
-        $quoteProvider = PriceListFee::find($args['price_list_fee_id'])?->quoteProvider ?? 
+        $quoteProvider = PriceListFee::find($args['price_list_fee_id'])?->quoteProvider ??
             throw new GraphqlException('Quote provider not found. Please setup quote provider');
 
         $exchageRate = $quoteProvider->currencyExchangeRates
@@ -125,7 +124,7 @@ class TransferExchangeService extends AbstractService
             throw new GraphqlException('Exchange rate not found', Response::HTTP_BAD_REQUEST);
         }
 
-        if (!empty($quoteProvider->margin_commission)) {
+        if (! empty($quoteProvider->margin_commission)) {
             $exchageRate += $exchageRate * ($quoteProvider->margin_commission / 100);
         }
 
@@ -147,7 +146,7 @@ class TransferExchangeService extends AbstractService
      */
     private function populateTransferData(array $args, Account $fromAccount, Account $toAccount, int $operationType): array
     {
-        $toAmount = (string)$this->getExchangeAmount($args, $fromAccount, $toAccount);
+        $toAmount = (string) $this->getExchangeAmount($args, $fromAccount, $toAccount);
 
         $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingExchangeDTO::class, $fromAccount, $operationType, $args['amount'], $args['price_list_fee_id']);
         $incomingDTO = TransformerDTO::transform(CreateTransferIncomingExchangeDTO::class, $toAccount, $operationType, $toAmount, $outgoingDTO->payment_number, $outgoingDTO->created_at, $args['price_list_fee_id']);
@@ -264,17 +263,15 @@ class TransferExchangeService extends AbstractService
                         PaymentStatusEnum::EXECUTED->value,
                     ];
 
-                    if (!in_array($args['status_id'], $allowedStatuses)) {
+                    if (! in_array($args['status_id'], $allowedStatuses)) {
                         throw new GraphqlException('This status is not allowed for transfer which has Pending status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
                     break;
                 case PaymentStatusEnum::CANCELED->value:
                     throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-
                 case PaymentStatusEnum::EXECUTED->value:
                     throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-
             }
         }
     }
@@ -284,11 +281,11 @@ class TransferExchangeService extends AbstractService
      */
     private function validateCreateTransfer(Account $fromAccount, Account $toAccount): void
     {
-        if (!$fromAccount) {
+        if (! $fromAccount) {
             throw new GraphqlException('From account not found', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        if (!$toAccount) {
+        if (! $toAccount) {
             throw new GraphqlException('To account not found', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 

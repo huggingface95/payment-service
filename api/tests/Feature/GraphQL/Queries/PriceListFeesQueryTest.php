@@ -33,7 +33,7 @@ class PriceListFeesQueryTest extends TestCase
         $expect = [
             'data' => [
                 'priceListFees' => [
-                    'data' => []
+                    'data' => [],
                 ],
             ],
         ];
@@ -87,7 +87,7 @@ class PriceListFeesQueryTest extends TestCase
         $expect = [
             'data' => [
                 'priceListFees' => [
-                    'data' => []
+                    'data' => [],
                 ],
             ],
         ];

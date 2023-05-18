@@ -33,13 +33,13 @@ class ChangeTxtypeFieldToTransactionsTable extends Migration
 
     private function changeEnum(string $table, string $column, array $types): void
     {
-        DB::statement("ALTER TABLE $table DROP CONSTRAINT " . $table . '_' . $column . '_check');
+        DB::statement("ALTER TABLE $table DROP CONSTRAINT ".$table.'_'.$column.'_check');
 
         $result = implode(', ', array_map(function ($value) {
             return sprintf("'%s'::character varying", $value);
         }, $types));
 
-        DB::statement("ALTER TABLE $table ADD CONSTRAINT " . $table . '_' . $column . '_check CHECK (' . $column . "::text = ANY (ARRAY[$result]::text[]))");
-        DB::statement("ALTER TABLE $table ALTER COLUMN " . $column . " SET DEFAULT '" . $types[0] . "'");
+        DB::statement("ALTER TABLE $table ADD CONSTRAINT ".$table.'_'.$column.'_check CHECK ('.$column."::text = ANY (ARRAY[$result]::text[]))");
+        DB::statement("ALTER TABLE $table ALTER COLUMN ".$column." SET DEFAULT '".$types[0]."'");
     }
 }

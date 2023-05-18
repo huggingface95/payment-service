@@ -11,7 +11,7 @@ class ProjectMutator extends BaseMutator
 {
     /**
      * @param    $root
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      *
      * @throws \Throwable
@@ -37,7 +37,7 @@ class ProjectMutator extends BaseMutator
 
     /**
      * @param    $root
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      *
      * @throws GraphqlException

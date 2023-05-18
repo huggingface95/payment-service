@@ -71,7 +71,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateApplicantIndividual',
                                                 'referer' => 'management/applicants/individual/list',
-                                                'parents' => ['Applicants Individual list.Enabled']
+                                                'parents' => ['Applicants Individual list.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -96,7 +96,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'DeleteApplicantIndividual',
                                                 'referer' => 'management/applicants/individual/list',
-                                                'parents' => ['Applicants Individual list.Enabled']
+                                                'parents' => ['Applicants Individual list.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -675,7 +675,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateApplicantCorporate',
                                                 'referer' => 'management/applicants/corporate/list',
-                                                'parents' => ['Applicants:Corporate List.Enabled']
+                                                'parents' => ['Applicants:Corporate List.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -700,7 +700,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'DeleteApplicantCompany',
                                                 'referer' => 'management/applicants/corporate/list',
-                                                'parents' => ['Applicants:Corporate List.Enabled']
+                                                'parents' => ['Applicants:Corporate List.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -761,7 +761,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateApplicantCompany',
                                                 'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
-                                                'parents' => ['Corporate Full Profile:General.Enabled']
+                                                'parents' => ['Corporate Full Profile:General.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -777,7 +777,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateApplicantCompany',
                                                 'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
-                                                'parents' => ['Corporate Full Profile:General.Enabled', 'Corporate Full Profile:General.Edit']
+                                                'parents' => ['Corporate Full Profile:General.Enabled', 'Corporate Full Profile:General.Edit'],
                                             ],
                                         ],
                                     ],
@@ -793,7 +793,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateApplicantCompanyLabel',
                                                 'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
-                                                'parents' => ['Corporate Full Profile:General.Enabled', 'Corporate Full Profile:General.Edit']
+                                                'parents' => ['Corporate Full Profile:General.Enabled', 'Corporate Full Profile:General.Edit'],
                                             ],
                                         ],
                                     ],
@@ -809,7 +809,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'ApplicantBoardMembers',
                                                 'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
-                                                'parents' => ['Corporate Full Profile:General.Enabled', 'Corporate Full Profile:General.Edit']
+                                                'parents' => ['Corporate Full Profile:General.Enabled', 'Corporate Full Profile:General.Edit'],
                                             ],
                                         ],
                                     ],
@@ -825,7 +825,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateApplicantIndividualCompany',
                                                 'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
-                                                'parents' => ['Corporate Full Profile:General.Enabled']
+                                                'parents' => ['Corporate Full Profile:General.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -1463,7 +1463,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateGroup',
                                                 'referer' => 'settings/manager-groups/settings',
-                                                'parents' => ['Groups Settings.Enabled']
+                                                'parents' => ['Groups Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -1479,7 +1479,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'DeleteGroupSetting',
                                                 'referer' => 'settings/manager-groups/settings',
-                                                'parents' => ['Groups Settings.Enabled']
+                                                'parents' => ['Groups Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -1560,7 +1560,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateMemberCompany',
                                                 'referer' => 'administration/member-info/member-company-list',
-                                                'parents' => ['Member Company List.Enabled']
+                                                'parents' => ['Member Company List.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -1576,7 +1576,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'DeleteCompany',
                                                 'referer' => 'administration/member-info/member-company-list',
-                                                'parents' => ['Member Company List.Enabled']
+                                                'parents' => ['Member Company List.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -1633,22 +1633,22 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateMemberCompanyInfoForm',
                                                 'referer' => 'administration/member-info/full-profile/new/profile/general',
-                                                'parents' => ['Member Company Profile:General.Enabled']
+                                                'parents' => ['Member Company Profile:General.Enabled'],
                                             ],
                                             [
                                                 'name' => 'UpdateBasicInfoCompanyForm',
                                                 'referer' => 'administration/member-info/full-profile/new/profile/general',
-                                                'parents' => ['Member Company Profile:General.Enabled']
+                                                'parents' => ['Member Company Profile:General.Enabled'],
                                             ],
                                             [
                                                 'name' => 'UpdateSettingsCompanyForm',
                                                 'referer' => 'administration/member-info/full-profile/new/profile/general',
-                                                'parents' => ['Member Company Profile:General.Enabled']
+                                                'parents' => ['Member Company Profile:General.Enabled'],
                                             ],
                                             [
                                                 'name' => 'UpdateProfileDataCompanyForm',
                                                 'referer' => 'administration/member-info/full-profile/new/profile/general',
-                                                'parents' => ['Member Company Profile:General.Enabled']
+                                                'parents' => ['Member Company Profile:General.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -1674,7 +1674,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'GetDepartmentsCompany',
                                                 'referer' => 'administration/member-info/full-profile/new/profile/departments',
-                                            ]
+                                            ],
                                         ],
                                     ],
                                     'Member Company Profile:Departments.Edit' => [
@@ -1689,8 +1689,8 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateDepartment',
                                                 'referer' => 'administration/member-info/full-profile/new/profile/departments',
-                                                'parents' => ['Member Company Profile:Departments.Enabled']
-                                            ]
+                                                'parents' => ['Member Company Profile:Departments.Enabled'],
+                                            ],
                                         ],
                                     ],
                                     'Member Company Profile:Departments.Add New Department' => [
@@ -1705,8 +1705,8 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateDepartment',
                                                 'referer' => 'administration/member-info/full-profile/new/profile/departments',
-                                                'parents' => ['Member Company Profile:Departments.Enabled', 'Member Company Profile:Departments.Edit']
-                                            ]
+                                                'parents' => ['Member Company Profile:Departments.Enabled', 'Member Company Profile:Departments.Edit'],
+                                            ],
                                         ],
                                     ],
                                 ],
@@ -1731,7 +1731,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'GetModules',
                                                 'referer' => 'administration/member-info/full-profile/new/profile/modules',
-                                            ]
+                                            ],
                                         ],
                                     ],
                                     'Member Company Profile:Modules.Edit' => [
@@ -1746,8 +1746,8 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateApplicantCompanyModule',
                                                 'referer' => 'administration/member-info/full-profile/new/profile/modules',
-                                                'parents' => ['Member Company Profile:Modules.Enabled']
-                                            ]
+                                                'parents' => ['Member Company Profile:Modules.Enabled'],
+                                            ],
                                         ],
                                     ],
                                     'Member Company Profile:Modules.Add Banking Module' => [
@@ -1762,8 +1762,8 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'AddApplicantCompanyModule',
                                                 'referer' => 'administration/member-info/full-profile/new/profile/module',
-                                                'parents' => ['Member Company Profile:Modules.Enabled']
-                                            ]
+                                                'parents' => ['Member Company Profile:Modules.Enabled'],
+                                            ],
                                         ],
                                     ],
                                     'Member Company Profile:Modules.Edit Module Status' => [
@@ -1778,8 +1778,8 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateApplicantCompanyModule',
                                                 'referer' => 'administration/member-info/full-profile/new/profile/modules',
-                                                'parents' => ['Member Company Profile:Modules.Enabled', 'Member Company Profile:Modules.Edit']
-                                            ]
+                                                'parents' => ['Member Company Profile:Modules.Enabled', 'Member Company Profile:Modules.Edit'],
+                                            ],
                                         ],
                                     ],
                                     'Member Company Profile:Modules.Payment Provider List' => [
@@ -1822,7 +1822,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'GetProjects',
                                                 'referer' => 'administration/member-info/full-profile/new/projects/projects-list',
-                                            ]
+                                            ],
                                         ],
                                     ],
                                     'Member Company Profile:Projects List.Add New Project' => [
@@ -1837,8 +1837,8 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateProject',
                                                 'referer' => 'administration/member-info/full-profile/new/projects/projects-list',
-                                                'parents' => ['Member Company Profile:Projects List.Enabled']
-                                            ]
+                                                'parents' => ['Member Company Profile:Projects List.Enabled'],
+                                            ],
                                         ],
                                     ],
                                 ],
@@ -1862,12 +1862,12 @@ class PermissionsSeeder extends Seeder
                                         'operations' => [
                                             [
                                                 'name' => 'GetCommonProjectDataById',
-                                                'referer' => 'administration/member-info/full-profile/$id/projects/general-settings'
+                                                'referer' => 'administration/member-info/full-profile/$id/projects/general-settings',
                                             ],
                                             [
                                                 'name' => 'GetSettingsProjectDataById',
-                                                'referer' => 'administration/member-info/full-profile/$id/projects/general-settings'
-                                            ]
+                                                'referer' => 'administration/member-info/full-profile/$id/projects/general-settings',
+                                            ],
                                         ],
                                     ],
                                     'Projects:General Settings.Edit' => [
@@ -1882,7 +1882,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateProject',
                                                 'referer' => 'administration/member-info/full-profile/$id/projects/general-settings',
-                                                'parents' => ['Projects:General Settings.Enabled']
+                                                'parents' => ['Projects:General Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -1941,7 +1941,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateProjectApiSettings',
                                                 'referer' => 'administration/member-info/full-profile/$id/projects/api-settings',
-                                                'parents' => ['Projects:API Settings.Enabled']
+                                                'parents' => ['Projects:API Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2000,7 +2000,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateMember',
                                                 'referer' => 'administration/member-info/new-member/new-member',
-                                                'parents' => ['Member Company Profile:Member List.Enabled']
+                                                'parents' => ['Member Company Profile:Member List.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2035,12 +2035,12 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateMember',
                                                 'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
-                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                                'parents' => ['Member Profile:General Settings.Enabled'],
                                             ],
                                             [
                                                 'name' => 'UpdateMemberSettings',
                                                 'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
-                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                                'parents' => ['Member Profile:General Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2056,7 +2056,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'GetMemberBasicInfo',
                                                 'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
-                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                                'parents' => ['Member Profile:General Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2072,7 +2072,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'GetMemberSettings',
                                                 'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
-                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                                'parents' => ['Member Profile:General Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2088,7 +2088,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'GetAccessLimitations',
                                                 'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
-                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                                'parents' => ['Member Profile:General Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2104,7 +2104,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateAccessLimitation',
                                                 'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
-                                                'parents' => ['Member Profile:General Settings.Enabled']
+                                                'parents' => ['Member Profile:General Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2158,7 +2158,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'ChangeMemberPassword',
                                                 'referer' => 'administration/member-info/full-profile/$id/members/security/password',
-                                                'parents' => ['Member:Security.Enabled', 'Member:Security.Edit']
+                                                'parents' => ['Member:Security.Enabled', 'Member:Security.Edit'],
                                             ],
                                         ],
                                     ],
@@ -2192,7 +2192,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateMemberSecuritySettings',
                                                 'referer' => 'administration/member-info/full-profile/$id/members/security/password',
-                                                'parents' => ['Member:Security.Enabled', 'Member:Security.Edit']
+                                                'parents' => ['Member:Security.Enabled', 'Member:Security.Edit'],
                                             ],
                                         ],
                                     ],
@@ -2302,7 +2302,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateSmtpDetails',
                                                 'referer' => 'administration/email/smtp-templates',
-                                                'parents' => ['Email Templates:SMTP Details.Enabled']
+                                                'parents' => ['Email Templates:SMTP Details.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2318,7 +2318,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'DeleteSmtpDetails',
                                                 'referer' => 'administration/email/smtp-templates',
-                                                'parents' => ['Email Templates:SMTP Details.Enabled']
+                                                'parents' => ['Email Templates:SMTP Details.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2359,7 +2359,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateEmailTemplate',
                                                 'referer' => 'administration/email/email-template-settings',
-                                                'parents' => ['Email Templates:Settings.Enabled']
+                                                'parents' => ['Email Templates:Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2482,7 +2482,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateEmailNotification',
                                                 'referer' => 'administration/email/email-notifications',
-                                                'parents' => ['Email Templates:Notifications.Enabled']
+                                                'parents' => ['Email Templates:Notifications.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2690,7 +2690,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateAccount',
                                                 'referer' => 'banking/accounts/details/$id',
-                                                'parents' => ['Account Details.Enabled']
+                                                'parents' => ['Account Details.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2706,7 +2706,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'GetAccount',
                                                 'referer' => 'banking/accounts/details/$id',
-                                                'parents' => ['Account Details.Enabled']
+                                                'parents' => ['Account Details.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2801,7 +2801,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'DownloadRequisiteDetails',
                                                 'referer' => 'banking/accounts/requisites',
-                                                'parents' => ['Requisites.Enabled']
+                                                'parents' => ['Requisites.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -2817,7 +2817,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'SendRequisiteDetails',
                                                 'referer' => 'banking/accounts/requisites',
-                                                'parents' => ['Requisites.Enabled']
+                                                'parents' => ['Requisites.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -3389,7 +3389,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateCommissionTemplate',
                                                 'referer' => 'banking/payment-provider/full-profile/settings/create',
-                                                'parents' => ['Commission Template:List.Enabled']
+                                                'parents' => ['Commission Template:List.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -3430,7 +3430,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdateCommissionTemplate',
                                                 'referer' => 'banking/payment-provider/full-profile/settings/create',
-                                                'parents' => ['Commission Template:Settings.Enabled']
+                                                'parents' => ['Commission Template:Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -3446,7 +3446,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateCommissionTemplateLimit',
                                                 'referer' => 'banking/payment-provider/full-profile/settings/create',
-                                                'parents' => ['Commission Template:Settings.Enabled', 'Commission Template:Settings.Edit']
+                                                'parents' => ['Commission Template:Settings.Enabled', 'Commission Template:Settings.Edit'],
                                             ],
                                         ],
                                     ],
@@ -3462,7 +3462,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'DeleteCommissionTemplate',
                                                 'referer' => 'banking/payment-provider/full-profile/commission-templates',
-                                                'parents' => ['Commission Template:Settings.Enabled']
+                                                'parents' => ['Commission Template:Settings.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -3503,7 +3503,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CreateCommissionPriceList',
                                                 'referer' => 'banking/payment-provider/full-profile/price-lists',
-                                                'parents' => ['Commission Template:Price Lists.Enabled']
+                                                'parents' => ['Commission Template:Price Lists.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -3544,7 +3544,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdatePriceListFee',
                                                 'referer' => 'banking/payment-provider/full-profile/fees',
-                                                'parents' => ['Commission Template:Price Lists:Fees List.Enabled']
+                                                'parents' => ['Commission Template:Price Lists:Fees List.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -3560,7 +3560,7 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'DeletePriceListFee',
                                                 'referer' => 'banking/payment-provider/full-profile/fees',
-                                                'parents' => ['Commission Template:Price Lists:Fees List.Enabled']
+                                                'parents' => ['Commission Template:Price Lists:Fees List.Enabled'],
                                             ],
                                         ],
                                     ],
@@ -3918,7 +3918,6 @@ class PermissionsSeeder extends Seeder
 
                             $p->save();
 
-
                             foreach ($permission['operations'] ?? [] as $o) {
                                 $operation = PermissionOperation::firstOrCreate(['name' => $o['name'], 'referer' => $o['referer']]);
                                 $ids = $operation->binds()->get()->pluck('id')->push($p->id)->unique()->toArray();
@@ -3943,14 +3942,14 @@ class PermissionsSeeder extends Seeder
         }
 
         $filters = [
-//            [
-//                'mode' => PermissionFilter::SCOPE_MODE,
-//                'action' => null,
-//                'table' => 'email_templates',
-//                'column' => 'service_type',
-//                'value' => 'banking',
-//                'binds' => ['Email Templates:Tag.Administration: Banking'],
-//            ],
+            //            [
+            //                'mode' => PermissionFilter::SCOPE_MODE,
+            //                'action' => null,
+            //                'table' => 'email_templates',
+            //                'column' => 'service_type',
+            //                'value' => 'banking',
+            //                'binds' => ['Email Templates:Tag.Administration: Banking'],
+            //            ],
             [
                 'mode' => PermissionFilter::EVENT_MODE,
                 'action' => PermissionFilter::EVENT_CREATING,
@@ -3960,7 +3959,7 @@ class PermissionsSeeder extends Seeder
                 'binds' => [
                     'Email Templates:Notifications.Enabled',
                     'Email Templates:Notifications.Edit',
-                    'Email Templates:Notifications.Recipient Type: Group'
+                    'Email Templates:Notifications.Recipient Type: Group',
                 ],
             ],
             [
@@ -3972,7 +3971,7 @@ class PermissionsSeeder extends Seeder
                 'binds' => [
                     'Email Templates:Notifications.Enabled',
                     'Email Templates:Notifications.Edit',
-                    'Email Templates:Notifications.Recipient Type: Person'
+                    'Email Templates:Notifications.Recipient Type: Person',
                 ],
             ],
             [
@@ -3984,7 +3983,7 @@ class PermissionsSeeder extends Seeder
                 'binds' => [
                     'Email Templates:Notifications.Enabled',
                     'Email Templates:Notifications.Edit',
-                    'Email Templates:Notifications.Group Type: Individual'
+                    'Email Templates:Notifications.Group Type: Individual',
                 ],
             ],
             [
@@ -3996,7 +3995,7 @@ class PermissionsSeeder extends Seeder
                 'binds' => [
                     'Email Templates:Notifications.Enabled',
                     'Email Templates:Notifications.Edit',
-                    'Email Templates:Notifications.Group Type: Corporate'
+                    'Email Templates:Notifications.Group Type: Corporate',
                 ],
             ],
             [
@@ -4008,7 +4007,7 @@ class PermissionsSeeder extends Seeder
                 'binds' => [
                     'Email Templates:Notifications.Enabled',
                     'Email Templates:Notifications.Edit',
-                    'Email Templates:Notifications.Group Type: Member'
+                    'Email Templates:Notifications.Group Type: Member',
                 ],
             ],
             [
@@ -4019,7 +4018,7 @@ class PermissionsSeeder extends Seeder
                 'value' => FeeTypeEnum::SERVICE_FEE->value,
                 'binds' => [
                     'Commission Template:Price Lists:Add New Fee.Enabled',
-                    'Commission Template:Price Lists:Add New Fee.Service Fee'
+                    'Commission Template:Price Lists:Add New Fee.Service Fee',
                 ],
             ],
             [
@@ -4030,7 +4029,7 @@ class PermissionsSeeder extends Seeder
                 'value' => FeeTypeEnum::EXCHANGE_FEE->value,
                 'binds' => [
                     'Commission Template:Price Lists:Add New Fee.Enabled',
-                    'Commission Template:Price Lists:Add New Fee.Exchange Fee'
+                    'Commission Template:Price Lists:Add New Fee.Exchange Fee',
                 ],
             ],
             [
@@ -4041,7 +4040,7 @@ class PermissionsSeeder extends Seeder
                 'value' => FeeTypeEnum::EXCHANGE_FEE->value,
                 'binds' => [
                     'Commission Template:Price Lists:Add New Fee.Enabled',
-                    'Commission Template:Price Lists:Add New Fee.Exchange Fee'
+                    'Commission Template:Price Lists:Add New Fee.Exchange Fee',
                 ],
             ],
             [
@@ -4052,7 +4051,7 @@ class PermissionsSeeder extends Seeder
                 'value' => FeeTypeEnum::BTU_FEE->value,
                 'binds' => [
                     'Commission Template:Price Lists:Add New Fee.Enabled',
-                    'Commission Template:Price Lists:Add New Fee.BTU Fee'
+                    'Commission Template:Price Lists:Add New Fee.BTU Fee',
                 ],
             ],
             [
@@ -4063,7 +4062,7 @@ class PermissionsSeeder extends Seeder
                 'value' => FeeTypeEnum::BTA_FEE->value,
                 'binds' => [
                     'Commission Template:Price Lists:Add New Fee.Enabled',
-                    'Commission Template:Price Lists:Add New Fee.BTA Fee'
+                    'Commission Template:Price Lists:Add New Fee.BTA Fee',
                 ],
             ],
             [
@@ -4074,7 +4073,7 @@ class PermissionsSeeder extends Seeder
                 'value' => FeeTypeEnum::TRANSFERS_FEE->value,
                 'binds' => [
                     'Commission Template:Price Lists:Add New Fee.Enabled',
-                    'Commission Template:Price Lists:Add New Fee.Transfers Fee'
+                    'Commission Template:Price Lists:Add New Fee.Transfers Fee',
                 ],
             ],
             [
@@ -4085,7 +4084,7 @@ class PermissionsSeeder extends Seeder
                 'value' => GroupTypeEnum::INDIVIDUAL->value,
                 'binds' => [
                     'Role List.Add New Role',
-                    'Roles Settings.Group Type: Individual'
+                    'Roles Settings.Group Type: Individual',
                 ],
             ],
             [
@@ -4096,7 +4095,7 @@ class PermissionsSeeder extends Seeder
                 'value' => GroupTypeEnum::COMPANY->value,
                 'binds' => [
                     'Role List.Add New Role',
-                    'Roles Settings.Group Type: Corporate'
+                    'Roles Settings.Group Type: Corporate',
                 ],
             ],
             [
@@ -4107,7 +4106,7 @@ class PermissionsSeeder extends Seeder
                 'value' => GroupTypeEnum::MEMBER->value,
                 'binds' => [
                     'Role List.Add New Role',
-                    'Roles Settings.Group Type: Member'
+                    'Roles Settings.Group Type: Member',
                 ],
             ],
             [
@@ -4118,7 +4117,7 @@ class PermissionsSeeder extends Seeder
                 'value' => GroupTypeEnum::INDIVIDUAL->value,
                 'binds' => [
                     'Groups List.Add New Group',
-                    'Groups Settings.Group Type: Individual'
+                    'Groups Settings.Group Type: Individual',
                 ],
             ],
             [
@@ -4129,7 +4128,7 @@ class PermissionsSeeder extends Seeder
                 'value' => GroupTypeEnum::COMPANY->value,
                 'binds' => [
                     'Groups List.Add New Group',
-                    'Groups Settings.Group Type: Corporate'
+                    'Groups Settings.Group Type: Corporate',
                 ],
             ],
             [
@@ -4140,7 +4139,7 @@ class PermissionsSeeder extends Seeder
                 'value' => GroupTypeEnum::MEMBER->value,
                 'binds' => [
                     'Groups List.Add New Group',
-                    'Groups Settings.Group Type: Member'
+                    'Groups Settings.Group Type: Member',
                 ],
             ],
             [

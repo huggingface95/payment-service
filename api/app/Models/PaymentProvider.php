@@ -12,7 +12,9 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * @PaymentProvider
+ *
  * @property int id
+ *
  * @method static findOrFail(int $providerId)
  */
 class PaymentProvider extends BaseModel
@@ -25,6 +27,7 @@ class PaymentProvider extends BaseModel
     protected $table = 'payment_provider';
 
     public const NAME_INTERNAL = 'Internal';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -63,7 +66,7 @@ class PaymentProvider extends BaseModel
     {
         $countries = implode(',', $countryId);
 
-        return $query->where('country_id', '&&', DB::raw('ARRAY[' . $countries . ']::integer[]'));
+        return $query->where('country_id', '&&', DB::raw('ARRAY['.$countries.']::integer[]'));
     }
 
     public function logo(): BelongsTo
@@ -116,6 +119,6 @@ class PaymentProvider extends BaseModel
     {
         $currencies = implode(',', $currencyId);
 
-        return $query->where('country_id', '&&', DB::raw('ARRAY[' . $currencies . ']::integer[]'));
+        return $query->where('country_id', '&&', DB::raw('ARRAY['.$currencies.']::integer[]'));
     }
 }

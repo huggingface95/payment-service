@@ -56,6 +56,7 @@ class AuthServiceProvider extends ServiceProvider
             try {
                 $credentials = $jwtService->parseJWT($token);
                 $credentialsDto = TransformerDTO::transform(Credentials::class, $credentials);
+
                 return new JwtGuard(Auth::createUserProvider($config['provider']), $credentialsDto);
             } catch (\Throwable $e) {
                 Log::log('error', $e->getMessage());

@@ -5,7 +5,6 @@ namespace App\GraphQL\Mutations;
 use App\Enums\ModuleEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Company;
-use App\Models\CompanyModule;
 use Illuminate\Support\Facades\DB;
 
 class CompanyModuleMutator extends BaseMutator
@@ -18,7 +17,7 @@ class CompanyModuleMutator extends BaseMutator
         try {
             DB::beginTransaction();
             $company = Company::find($args['company_id']);
-            if (!$company) {
+            if (! $company) {
                 throw new GraphqlException('Company does not exist', 'not found', 404);
             }
 

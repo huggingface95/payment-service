@@ -7,7 +7,7 @@ use App\Models\ApplicantModuleActivity;
 class ApplicantModuleActivityMutator
 {
     /**
-     * @param  $root
+     * @param    $root
      * @param  array  $args
      * @return mixed
      */

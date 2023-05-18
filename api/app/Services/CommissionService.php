@@ -39,7 +39,7 @@ class CommissionService extends AbstractService
             $transfer->save();
         }
 
-        return (float)$fee['amount_debt'];
+        return (float) $fee['amount_debt'];
     }
 
     /**
@@ -112,7 +112,7 @@ class CommissionService extends AbstractService
                 $query->where('quote_provider_id', $quoteProviderId);
             })
             ->get();
-        
+
         return $this->calculatePaymentFee($priceListFees, $transfer, $transactionDTO);
     }
 
@@ -124,7 +124,7 @@ class CommissionService extends AbstractService
         if ($transfer->operation_type_id != OperationTypeEnum::EXCHANGE->value) {
             return 0;
         }
-        
+
         $quoteProvider = PriceListFee::find($transfer->price_list_fee_id)?->quoteProvider;
 
         $sum = ($transfer->amount_debt - $feeQPAmount) * ($quoteProvider->margin_commission / 100);
@@ -139,22 +139,21 @@ class CommissionService extends AbstractService
     {
         $paymentFee = 0;
         foreach ($priceListFees as $listFee) {
-            if (!$this->isAllowToApplyCommission($transfer, $listFee, $transactionDTO)) {
+            if (! $this->isAllowToApplyCommission($transfer, $listFee, $transactionDTO)) {
                 continue;
             }
 
             $paymentFee += $this->getFee($listFee->fee, $transfer->amount, $transfer->urgency_id);
         }
 
-        return (float)$paymentFee;
+        return (float) $paymentFee;
     }
 
     private function isAllowToApplyCommission(
         TransferOutgoing|TransferIncoming $transfer,
         PriceListFeeCurrency|PriceListPPFeeCurrency|PriceListQpFeeCurrency $listFee,
         TransactionDTO $transactionDTO = null
-    ): bool
-    {
+    ): bool {
         switch ($transfer->operation_type_id) {
             case OperationTypeEnum::EXCHANGE->value:
                 if ($transfer instanceof TransferOutgoing) {
@@ -174,6 +173,7 @@ class CommissionService extends AbstractService
                         }
                     }
                 }
+
                 return false;
             case OperationTypeEnum::BETWEEN_ACCOUNT->value:
             case OperationTypeEnum::BETWEEN_USERS->value:
@@ -183,6 +183,7 @@ class CommissionService extends AbstractService
                 if ($transfer instanceof TransferOutgoing) {
                     return true;
                 }
+
                 return false;
             case OperationTypeEnum::INCOMING_WIRE_TRANSFER->value:
             case OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value:
@@ -192,6 +193,7 @@ class CommissionService extends AbstractService
                 if ($listFee instanceof PriceListQpFeeCurrency) {
                     return false;
                 }
+
                 return true;
             default:
                 return false;
@@ -219,7 +221,7 @@ class CommissionService extends AbstractService
     private static function getFeeByRangeMode(array $data, int $modeKey, float $amount, int $urgency): ?float
     {
         $fees = null;
-        if ((float)$data[$modeKey]['amount_from'] <= $amount && $amount <= (float)$data[$modeKey]['amount_to']) {
+        if ((float) $data[$modeKey]['amount_from'] <= $amount && $amount <= (float) $data[$modeKey]['amount_to']) {
             unset($data[$modeKey]);
 
             foreach ($data as $fee) {
@@ -258,7 +260,7 @@ class CommissionService extends AbstractService
             return $transfer->amount - $paymentFee;
         }
 
-        return match ((int)$transfer->respondent_fees_id) {
+        return match ((int) $transfer->respondent_fees_id) {
             RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount,
             RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount + $paymentFee,
             RespondentFeesEnum::SHARED_FEES->value => $transfer->amount + $paymentFee / 2,
@@ -296,7 +298,7 @@ class CommissionService extends AbstractService
 
     private function getReasonDescription(TransferOutgoing|TransferIncoming $transfer, int $mode): string
     {
-        match($mode) {
+        match ($mode) {
             FeeModeEnum::BASE->value => $description = $transfer->paymentSystem?->name,
             FeeModeEnum::PROVIDER->value => $description = $transfer->paymentProvider?->name,
             FeeModeEnum::QUOTEPROVIDER->value => $description = '',
@@ -307,7 +309,7 @@ class CommissionService extends AbstractService
         return sprintf(
             'Transfer Fee %s%s',
             FeeModeEnum::from($mode)?->toString(),
-            $description ? ': ' . $description : ''
+            $description ? ': '.$description : ''
         );
     }
 }

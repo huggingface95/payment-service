@@ -15,7 +15,7 @@ class ChangeForeignKeyInTransferOutgoingHistoriesTable extends Migration
     {
         Schema::table('transfer_outgoing_histories', function (Blueprint $table) {
             $table->dropForeign(['transfer_id']);
-            
+
             $table->foreign('transfer_id')->references('id')->on('transfer_outgoings')->onDelete('cascade');
         });
     }

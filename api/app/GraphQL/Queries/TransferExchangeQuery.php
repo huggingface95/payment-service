@@ -44,5 +44,4 @@ class TransferExchangeQuery
 
         return $statistic->get();
     }
-
 }

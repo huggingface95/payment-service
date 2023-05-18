@@ -8,18 +8,17 @@ use App\Models\ApplicantIndividualCompanyRelation;
 use App\Models\Company;
 use App\Models\EmailTemplate;
 use App\Models\Members;
-use App\Models\PaymentSystem;
 use App\Models\State;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 use Illuminate\Support\Facades\DB;
+use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class CompanyMutator extends BaseMutator
 {
     /**
      * @param    $root
-     * @param array $args
+     * @param  array  $args
      * @return mixed
      */
     public function create($root, array $args)
@@ -83,7 +82,6 @@ class CompanyMutator extends BaseMutator
                 'Maximum balance limit has been reached for client',
             ];
 
-
             foreach ($templateSubjects as $name) {
                 $template = EmailTemplate::query()->where('name', '=', $name)
                     ->where('type', 'administration')
@@ -118,9 +116,9 @@ class CompanyMutator extends BaseMutator
      * Return a value for the field.
      *
      * @param  @param  null  $root Always null, since this field has no parent.
-     * @param array<string, mixed> $args The field arguments passed by the client.
-     * @param \Nuwave\Lighthouse\Support\Contracts\GraphQLContext $context Shared between all fields.
-     * @param \GraphQL\Type\Definition\ResolveInfo $resolveInfo Metadata for advanced query resolution.
+     * @param  array<string, mixed>  $args The field arguments passed by the client.
+     * @param  \Nuwave\Lighthouse\Support\Contracts\GraphQLContext  $context Shared between all fields.
+     * @param  \GraphQL\Type\Definition\ResolveInfo  $resolveInfo Metadata for advanced query resolution.
      * @return mixed
      */
     public function update($root, array $args, GraphQLContext $context)

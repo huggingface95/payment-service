@@ -40,7 +40,7 @@ class ModulesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -75,7 +75,7 @@ class ModulesQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'data' => [
@@ -115,7 +115,7 @@ class ModulesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'data' => [
@@ -130,10 +130,10 @@ class ModulesQueryTest extends TestCase
     {
         $modules = Module::where('name', '<>', 'KYC')->get();
 
-            $data = [
-                'id' => (string) $modules[0]->id,
-                'name' => (string) $modules[0]->name,
-            ];
+        $data = [
+            'id' => (string) $modules[0]->id,
+            'name' => (string) $modules[0]->name,
+        ];
 
         $this->postGraphQL(
             [
@@ -152,7 +152,7 @@ class ModulesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             $data,
@@ -179,7 +179,7 @@ class ModulesQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             $data,

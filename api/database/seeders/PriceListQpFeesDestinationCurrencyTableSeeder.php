@@ -26,7 +26,6 @@ class PriceListQpFeesDestinationCurrencyTableSeeder extends Seeder
                     'currency_id' => $currency->id,
                 ]);
             }
-
         }
     }
 }

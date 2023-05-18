@@ -6,7 +6,6 @@ use App\Models\Project;
 
 class ProjectApiSettingMutator extends BaseMutator
 {
-
     public function update($root, array $args): \Illuminate\Database\Eloquent\Collection
     {
         /** @var Project $project */

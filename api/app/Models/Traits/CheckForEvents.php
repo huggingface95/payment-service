@@ -34,12 +34,11 @@ trait CheckForEvents
         'companies' => [],
     ];
 
-
     // 'company_id' => 'companies:id,test:test_id',
     private static array $CHECK_SOFT_DELETED_RECORDS = [
         'creating' => [
             'company_id' => 'companies:id',
-        ]
+        ],
     ];
 
     protected static function filterByPermissionFilters(?Model $user, string $action, Model $model): bool
@@ -112,12 +111,12 @@ trait CheckForEvents
         if (array_key_exists($action, self::$CHECK_SOFT_DELETED_RECORDS)) {
             $columns = self::$CHECK_SOFT_DELETED_RECORDS[$action];
             $modelColumns = $model->getAttributes();
-            foreach (array_intersect_key($columns, $modelColumns) as $column => $condition){
-                foreach (explode(',', $condition) as $tableWithColumn){
+            foreach (array_intersect_key($columns, $modelColumns) as $column => $condition) {
+                foreach (explode(',', $condition) as $tableWithColumn) {
                     list($table, $primary) = explode(':', $tableWithColumn);
-                    if (DB::table($table)->whereNull('deleted_at')->where($primary, $modelColumns[$column])->doesntExist()){
+                    if (DB::table($table)->whereNull('deleted_at')->where($primary, $modelColumns[$column])->doesntExist()) {
                         if ($table == 'companies') {
-                            throw new GraphqlException("Company not found for this corporate or has been deleted.", 'not found', 404);
+                            throw new GraphqlException('Company not found for this corporate or has been deleted.', 'not found', 404);
                         } else {
                             throw new GraphqlException("{$column} not found in {$table} table", 'not found', 404);
                         }
@@ -125,6 +124,7 @@ trait CheckForEvents
                 }
             }
         }
+
         return true;
     }
 
