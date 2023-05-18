@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\CurrencyExchangeRate;
 use App\Models\CurrencyRateHistory;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -64,6 +65,9 @@ class ImportCurrenciesCommand extends Command
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     private function logAndUpdateCurrency($arr): void
     {
         try {
@@ -82,8 +86,7 @@ class ImportCurrenciesCommand extends Command
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-
-            throw $e->getMessage();
+            Log::error($e->getMessage());
         }
     }
 }
