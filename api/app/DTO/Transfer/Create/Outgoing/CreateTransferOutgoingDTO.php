@@ -72,14 +72,14 @@ class CreateTransferOutgoingDTO
     private  function mergeGeneralData(Account $account): array
     {
         $clientType = Auth::guard('api') ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString();
-        $id = Auth::guard('api')->check() ? 1 : Auth::guard('api_client')->user()?->id;
+        $id = Auth::guard('api')->user()?->id ?? Auth::guard('api_client')->user()?->id;
 
         return [
             'user_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class),
-            'recipient_id' => (env('APP_ENV') == 'testing') ? 1 : $id,
+            'recipient_id' => $id,
             'recipient_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(ApplicantCompany::class) : class_basename(ApplicantIndividual::class),
-            'requested_by_id' => (env('APP_ENV') == 'testing') ? 1 : auth()->user()?->id,
-            'sender_id' => (env('APP_ENV') == 'testing') ? 1 : $id,
+            'requested_by_id' => auth()->user()?->id,
+            'sender_id' => $id,
             'sender_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(ApplicantCompany::class) : class_basename(ApplicantIndividual::class),
         ];
     }
