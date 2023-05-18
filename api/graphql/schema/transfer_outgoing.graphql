@@ -205,10 +205,16 @@ extend type Mutation @guard {
         payment_provider_id: ID!
         "ID платежной системы"
         payment_system_id: ID!
+        "ID прайс листа"
+        price_list_id: ID
+        "ID комисии"
+        price_list_fee_id: ID
         "ID срочности операции"
         urgency_id: ID!
         "Исполнить в"
         execution_at: DateTimeUtc
+        "Тип бенефициара"
+        beneficiary_type_id: BeneficiaryTypeEnum
         "Номер счета или IBAN получателя"
         recipient_account: String
         "Имя банка получателя"
@@ -227,6 +233,12 @@ extend type Mutation @guard {
         recipient_state: String
         "Индекс получателя"
         recipient_zip: String
+        "ID страны банка получателя"
+        recipient_bank_country_id: ID
+        "ncs number"
+        recipient_bank_ncs_number: String
+        "location"
+        recipient_bank_location: String
         "Кто платит коммиссию"
         respondent_fees_id: ID!
         "Основание перевода"
