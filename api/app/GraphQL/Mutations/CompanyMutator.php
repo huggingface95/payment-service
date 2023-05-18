@@ -73,6 +73,7 @@ class CompanyMutator extends BaseMutator
             $templateSubjects = [
                 'Sign Up: Email Confirmation',
                 'Waiting for approval',
+                'Waiting for IBAN Generation',
                 'Reset Password',
                 'Account Requisites',
                 'Confirm change email',

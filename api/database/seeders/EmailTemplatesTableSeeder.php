@@ -127,5 +127,15 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Account Requisites2',
         ]);
 
+        EmailTemplate::query()->firstOrCreate([
+            'subject' => 'Waiting for IBAN Generation',
+        ], [
+            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'member_id' => 2,
+            'company_id' => 1,
+            'created_at' => Carbon::now(),
+            'name' => 'Waiting for IBAN Generation',
+        ]);
+
     }
 }
