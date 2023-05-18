@@ -19,7 +19,7 @@ class CompanyMutator extends BaseMutator
 {
     /**
      * @param    $root
-     * @param  array  $args
+     * @param array $args
      * @return mixed
      */
     public function create($root, array $args)
@@ -82,13 +82,14 @@ class CompanyMutator extends BaseMutator
                 'Maximum balance limit has been reached for client',
             ];
 
-            $existingTemplates = EmailTemplate::whereIn('name', $templateSubjects)
-                ->where('type', 'administration')
-                ->where('service_type', 'BankingAdminNotify')
-                ->where('use_layout', 'false')
-                ->get()->unique();
 
-            foreach ($existingTemplates as $template) {
+            foreach ($templateSubjects as $name) {
+                $template = EmailTemplate::query()->where('name', '=', $name)
+                    ->where('type', 'administration')
+                    ->where('service_type', 'BankingAdminNotify')
+                    ->where('use_layout', 'false')
+                    ->first();
+
                 $newTemplateData = [
                     'type' => $template->type,
                     'service_type' => $template->service_type,
@@ -100,7 +101,7 @@ class CompanyMutator extends BaseMutator
                     'name' => $template->name,
                 ];
 
-                EmailTemplate::firstOrCreate($newTemplateData);
+                EmailTemplate::query()->firstOrCreate($newTemplateData);
             }
 
             DB::commit();
@@ -116,9 +117,9 @@ class CompanyMutator extends BaseMutator
      * Return a value for the field.
      *
      * @param  @param  null  $root Always null, since this field has no parent.
-     * @param  array<string, mixed>  $args The field arguments passed by the client.
-     * @param  \Nuwave\Lighthouse\Support\Contracts\GraphQLContext  $context Shared between all fields.
-     * @param  \GraphQL\Type\Definition\ResolveInfo  $resolveInfo Metadata for advanced query resolution.
+     * @param array<string, mixed> $args The field arguments passed by the client.
+     * @param \Nuwave\Lighthouse\Support\Contracts\GraphQLContext $context Shared between all fields.
+     * @param \GraphQL\Type\Definition\ResolveInfo $resolveInfo Metadata for advanced query resolution.
      * @return mixed
      */
     public function update($root, array $args, GraphQLContext $context)
