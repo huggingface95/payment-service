@@ -6,6 +6,7 @@ use App\DTO\GraphQLResponse\AccountGenerateIbanResponse;
 use App\DTO\TransformerDTO;
 use App\Enums\AccountTypeEnum;
 use App\Enums\ApplicantTypeEnum;
+use App\Enums\GroupTypeEnum;
 use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\IbanIndividualActivationJob;
@@ -46,11 +47,7 @@ class AccountMutator
             }
 
             if (isset($args['client_id'])) {
-                if (AccountTypeEnum::BUSINESS == $args['account_type']) {
-                    $args['client_type'] = ApplicantTypeEnum::COMPANY->toString();
-                } else {
-                    $args['client_type'] = ApplicantTypeEnum::INDIVIDUAL->toString();
-                }
+                    $args['client_type'] = $args['group_type_id'] == GroupTypeEnum::COMPANY->value ? ApplicantTypeEnum::COMPANY->toString() : ApplicantTypeEnum::INDIVIDUAL->toString();
             }
 
             /** @var Account $account */
