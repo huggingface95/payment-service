@@ -161,6 +161,7 @@ input QueryClientListFilterStatic @spread{
 
 input QueryAccountListFilterStatic @spread{
     id: ID @eq
+    project_id: ID @eq
     hasCompanyMixedIdOrName: Mixed @eq
     hasPaymentSystemMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
