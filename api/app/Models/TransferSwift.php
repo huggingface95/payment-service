@@ -21,6 +21,7 @@ class TransferSwift extends BaseModel
         'transfer_type',
         'swift',
         'bank_name',
+        'bank_type',
         'bank_address',
         'bank_country_id',
         'location',

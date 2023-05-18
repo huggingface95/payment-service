@@ -219,9 +219,9 @@ class TransferOutgoing extends BaseModel
         return $this->hasMany(TransferOutgoingHistory::class, 'transfer_id');
     }
 
-    public function transferSwift(): HasOne
+    public function transferSwift(): HasMany
     {
-        return $this->hasOne(TransferSwift::class, 'transfer_id', 'id')
+        return $this->hasMany(TransferSwift::class, 'transfer_id', 'id')
             ->where('transfer_type', class_basename(self::class));
     }
 
