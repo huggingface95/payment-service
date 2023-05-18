@@ -12,6 +12,7 @@ use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\PriceListFee;
+use App\Models\TransferExchange;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\FeeRepositoryInterface;
 use App\Repositories\Interfaces\TransferExchangeRepositoryInterface;
@@ -300,11 +301,11 @@ class TransferExchangeService extends AbstractService
         }
     }
 
-    public function attachFileById(array $transfers, array $fileIds): void
+    public function attachFileById(TransferExchange $transfer, array $fileIds): void
     {
-        DB::transaction(function () use ($transfers, $fileIds) {
-            $this->transferOutgoingRepository->attachFileById($transfers['outgoing'], $fileIds);
-            $this->transferIncomingRepository->attachFileById($transfers['incoming'], $fileIds);
+        DB::transaction(function () use ($transfer, $fileIds) {
+            $this->transferOutgoingRepository->attachFileById($transfer->transferOutgoing, $fileIds);
+            $this->transferIncomingRepository->attachFileById($transfer->transferIncoming, $fileIds);
         });
     }
 }
