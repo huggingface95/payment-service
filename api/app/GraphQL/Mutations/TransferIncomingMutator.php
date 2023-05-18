@@ -5,12 +5,15 @@ namespace App\GraphQL\Mutations;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
+use App\GraphQL\Mutations\Traits\AttachFileTrait;
 use App\Models\TransferIncoming;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Services\TransferIncomingService;
 
 class TransferIncomingMutator extends BaseMutator
 {
+    use AttachFileTrait;
+
     public function __construct(
         protected TransferIncomingService $transferService,
         protected TransferIncomingRepositoryInterface $transferRepository
@@ -20,10 +23,6 @@ class TransferIncomingMutator extends BaseMutator
     public function create($root, array $args): TransferIncoming
     {
         $transfer = $this->transferService->createTransfer($args, (int) OperationTypeEnum::INCOMING_WIRE_TRANSFER->value);
-
-        if ($transfer) {
-            $this->transferService->attachFileById($transfer, $args['file_id'] ?? []);
-        }
 
         return $transfer;
     }

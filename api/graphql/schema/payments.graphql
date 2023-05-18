@@ -58,9 +58,9 @@ type Sender {
 }
 
 extend type Query @guard {
-    senders: [Sender] @all(builder: "App\\GraphQL\\Builders\\Sender@filter")
+    senders: [Sender] @all(builder: "App\\GraphQL\\Builders\\Sender@filter") @deprecated
     "Получить платеж по ID"
-    payment(id: ID @eq): Payments @find
+    payment(id: ID @eq): Payments @find @deprecated
     """
     Получить список платежей
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -74,7 +74,7 @@ extend type Query @guard {
         AccountNumber: Sort @scope(name:"AccountNumber"),
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id", "created_at", "amount", "fee", "payment_number"])
-    ): [Payments!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [Payments!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC) @deprecated
 }
 
 input QueryPaymentsFilterStatic @spread{
@@ -124,17 +124,17 @@ extend type Mutation @guard {
         "Компания"
         company_id: ID!
         execution_at: DateTimeUtc
-    ):Payments   @field(resolver: "PaymentsMutator@create")
+    ):Payments   @field(resolver: "PaymentsMutator@create") @deprecated
 
     "Редактировать платеж"
     updatePayment(
         id: ID!
         "Статус"
         status_id: ID!
-    ):Payments   @field(resolver: "PaymentsMutator@update")
+    ):Payments   @field(resolver: "PaymentsMutator@update") @deprecated
 
     "Удалить платеж"
     deletePayment(
         id: ID!
-    ): Payments   @delete
+    ): Payments   @delete @deprecated
 }

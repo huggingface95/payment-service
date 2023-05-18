@@ -27,6 +27,7 @@ class Fee extends BaseModel
         'price_list_fee_id',
         'transfer_type',
         'fee_type_mode_id',
+        'reason',
     ];
 
     protected $casts = [

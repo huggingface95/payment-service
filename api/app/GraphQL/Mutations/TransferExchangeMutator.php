@@ -5,12 +5,15 @@ namespace App\GraphQL\Mutations;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
+use App\GraphQL\Mutations\Traits\AttachFileTrait;
 use App\Models\TransferExchange;
 use App\Repositories\Interfaces\TransferExchangeRepositoryInterface;
 use App\Services\TransferExchangeService;
 
 class TransferExchangeMutator extends BaseMutator
 {
+    use AttachFileTrait;
+    
     public function __construct(
         protected TransferExchangeService $transferService,
         protected TransferExchangeRepositoryInterface $transferRepository
