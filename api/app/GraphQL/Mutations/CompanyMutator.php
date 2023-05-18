@@ -86,7 +86,7 @@ class CompanyMutator extends BaseMutator
                 ->where('type', 'administration')
                 ->where('service_type', 'BankingAdminNotify')
                 ->where('use_layout', 'false')
-                ->get();
+                ->get()->unique();
 
             foreach ($existingTemplates as $template) {
                 $newTemplateData = [
