@@ -241,11 +241,11 @@ extend type Mutation @guard {
         "ID"
         id: ID!
         "ID компании"
-        company_id: ID!
+        company_id: ID
         "ID группы"
-        group_id: ID!
+        group_id: ID
         "ID типа группы"
-        group_type_id: ID!
+        group_type_id: ID
         "ID проекта"
         project_id: ID
         "Сумма"
