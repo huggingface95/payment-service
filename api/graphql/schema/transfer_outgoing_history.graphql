@@ -21,5 +21,5 @@ extend type Query @guard {
     """
     transferOutgoingHistory(transfer_id: ID! @eq): [TransferOutgoingHistory!]!
         @paginate(defaultCount: 10)
-        @orderBy(column: "id", direction: ASC)
+        @orderBy(column: "id", direction: DESC)
 }
