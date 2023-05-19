@@ -15,6 +15,7 @@ class PriceListFeesMutationTest extends TestCase
             'period_id' => 1,
             'operation_type_id' => 1,
             'price_list_id' => 1,
+            'company_id' => 1,
         ];
 
         $this->graphQL('
@@ -24,6 +25,7 @@ class PriceListFeesMutationTest extends TestCase
             $period_id: ID!
             $operation_type_id: ID!
             $price_list_id: ID!
+            $company_id: ID!
         ) {
             createPriceListFees(
                 input: {
@@ -32,6 +34,7 @@ class PriceListFeesMutationTest extends TestCase
                     period_id: $period_id
                     operation_type_id: $operation_type_id
                     price_list_id: $price_list_id
+                    company_id: $company_id
                     fees: [
                         {
                             currency_id: 1
@@ -59,6 +62,7 @@ class PriceListFeesMutationTest extends TestCase
             'fix' => 'Fix',
             'range' => 'Range',
             'percent' => 'Percent',
+            'company_id' => 1,
         ];
 
         $fees = [
@@ -98,6 +102,7 @@ class PriceListFeesMutationTest extends TestCase
                 $fix: String!
                 $range: String!
                 $percent: String!
+                $company_id: ID!
             ) {
                 createPriceListFees(
                     input: {
@@ -106,6 +111,7 @@ class PriceListFeesMutationTest extends TestCase
                         period_id: $period_id
                         operation_type_id: $operation_type_id
                         price_list_id: $price_list_id
+                        company_id: $company_id
                         fees: [
                             {
                                 currency_id: 1
@@ -181,6 +187,7 @@ class PriceListFeesMutationTest extends TestCase
             'fix' => 'Fix',
             'range' => 'Range',
             'percent' => 'Percent',
+            'company_id' => 1,
         ];
 
         $fees = [
@@ -221,6 +228,7 @@ class PriceListFeesMutationTest extends TestCase
                 $fix: String!
                 $range: String!
                 $percent: String!
+                $company_id: ID!
             ) {
                 updatePriceListFees(
                     id: $id
@@ -230,6 +238,7 @@ class PriceListFeesMutationTest extends TestCase
                         period_id: $period_id
                         operation_type_id: $operation_type_id
                         price_list_id: $price_list_id
+                        company_id: $company_id
                         fees: [
                             {
                                 currency_id: 1
@@ -300,6 +309,7 @@ class PriceListFeesMutationTest extends TestCase
             'fix' => 'Fix',
             'range' => 'Range',
             'percent' => 'Percent',
+            'company_id' => 1,
         ];
 
         $this->postGraphQL(
@@ -314,6 +324,7 @@ class PriceListFeesMutationTest extends TestCase
                 $fix: String!
                 $range: String!
                 $percent: String!
+                $company_id: ID!
             ) {
                 createPriceListFees(
                     input: {
@@ -322,6 +333,7 @@ class PriceListFeesMutationTest extends TestCase
                         period_id: $period_id
                         operation_type_id: $operation_type_id
                         price_list_id: $price_list_id
+                        company_id: $company_id
                         fees: [
                             {
                                 currency_id: 1

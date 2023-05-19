@@ -121,39 +121,6 @@ class PriceListFeesQueryTest extends TestCase
         )->seeJsonContains($expect);
     }
 
-    public function testQueryPriceListFeesWithFilterByCompanyId(): void
-    {
-        $priceListFees = PriceListFee::orderBy('id', 'DESC')->first();
-
-        $company = $priceListFees->company()->first();
-
-        $expect = [
-            'id' => (string) $priceListFees->id,
-            'name' => (string) $priceListFees->name,
-        ];
-
-        $this->postGraphQL(
-            [
-                'query' => 'query PriceListFees($id: Mixed) {
-                    priceListFees (
-                        filter: { column: HAS_COMPANY_FILTER_BY_ID, value: $id }
-                    ) {
-                         data{
-                            id
-                            name
-                        }
-                    }
-                }',
-                'variables' => [
-                    'id' => $company->id,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer '.$this->login(),
-            ]
-        )->seeJsonContains($expect);
-    }
-
     public function testQueryPriceListFeesWithFilterByPaymentProviderId(): void
     {
         $priceListFees = PriceListFee::orderBy('id', 'DESC')->first();
@@ -261,6 +228,7 @@ class PriceListFeesQueryTest extends TestCase
             ['type_id', '1'],
             ['operation_type_id', '1'],
             ['period_id', '1'],
+            ['company_id', '1'],
         ];
     }
 }
