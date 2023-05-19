@@ -19,7 +19,7 @@ extend type Query @guard {
     """
     Получить историю входящего платежа
     """
-    transferIncomingHistory(transfer_id: ID!): [TransferIncomingHistory!]!
+    transferIncomingHistory(transfer_id: ID! @eq): [TransferIncomingHistory!]!
         @paginate(defaultCount: 10)
         @orderBy(column: "id", direction: ASC)
 }

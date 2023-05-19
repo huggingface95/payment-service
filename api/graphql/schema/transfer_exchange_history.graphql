@@ -12,6 +12,6 @@ extend type Query @guard {
     """
     Получить историю Exchange
     """
-    transferExchangeHistory(id: ID!): TransferExchangeHistory
+    transferExchangeHistory(id: ID! @eq): TransferExchangeHistory
         @field(resolver: "TransferExchangeQuery@get")
 }
