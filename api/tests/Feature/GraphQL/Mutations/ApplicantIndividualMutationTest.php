@@ -120,7 +120,6 @@ class ApplicantIndividualMutationTest extends TestCase
                     $last_name: String!
                     $email: EMAIL!
                     $phone: String!
-                    $company_id: ID!
                 )
                 {
                     updateApplicantIndividual (
@@ -129,7 +128,6 @@ class ApplicantIndividualMutationTest extends TestCase
                         last_name: $last_name
                         email: $email
                         phone: $phone
-                        company_id: $company_id
                         module_ids: []
                     )
                     {
@@ -143,7 +141,6 @@ class ApplicantIndividualMutationTest extends TestCase
                     'last_name' => 'Last_name test',
                     'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
                     'phone' => '+938276532222',
-                    'company_id' => 1,
                 ],
             ],
             [

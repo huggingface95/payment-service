@@ -113,7 +113,6 @@ class ApplicantCompanyMutationTest extends TestCase
                     $id: ID!
                     $name: String!
                     $email: EMAIL!
-                    $company_id: ID!
                     $project_id: ID!
                 )
                 {
@@ -121,7 +120,6 @@ class ApplicantCompanyMutationTest extends TestCase
                         id: $id
                         name: $name
                         email: $email
-                        company_id: $company_id
                         project_id: $project_id
                     )
                     {
@@ -133,7 +131,6 @@ class ApplicantCompanyMutationTest extends TestCase
                     'id' => (string) $applicant[0]->id,
                     'name' => 'Updated name',
                     'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
-                    'company_id' => 2,
                     'project_id' => 2,
                 ],
             ],
