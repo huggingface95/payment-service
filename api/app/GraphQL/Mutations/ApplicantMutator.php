@@ -89,12 +89,7 @@ class ApplicantMutator extends BaseMutator
         }
 
         if (isset($args['ip_address'])) {
-            $ip_address = str_replace(' ', '', explode(',', $args['ip_address']));
-            for ($i = 0; $i < count($ip_address); $i++) {
-                if (! filter_var($ip_address[$i], FILTER_VALIDATE_IP)) {
-                    throw new GraphqlException('Not a valid ip address. Address format xxx.xxx.xxx.xxx and must be comma separated', 'internal', 403);
-                }
-            }
+            $ip_address = $this->validIp($args['ip_address']);
             if (count($ip_address) > 0) {
                 $applicant->ipAddress()->delete();
             }
