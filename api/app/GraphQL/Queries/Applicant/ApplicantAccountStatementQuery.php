@@ -18,8 +18,7 @@ final class ApplicantAccountStatementQuery
 {
     public function __construct(
         protected AccountRepositoryInterface $accountRepository,
-        protected AccountStatementService    $accountStatementService,
-        protected FilterConditionsHandler    $handler
+        protected AccountStatementService    $accountStatementService
     )
     {
     }
