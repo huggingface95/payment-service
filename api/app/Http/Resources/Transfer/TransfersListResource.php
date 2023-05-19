@@ -37,6 +37,7 @@ class TransfersListResource extends JsonResource
                 'urgency' => $this->paymentUrgency?->name,
                 'fee_amount' => $this->fee_amount,
                 'fee_account' => ($this->fee) ? $this->fee->account->account_number : '',
+                'fee_provider' => $this->fee()->where('fee_type_mode_id', 5)->where('transfer_id', $data['transaction_id'])->where('transfer_type', 'Outgoing')->first()->fee ?? 0,
                 'account_number' => $this->account->account_number,
                 'credit_amount' => $this->amount_debt,
                 'currency' => $this->currency?->code,
@@ -51,6 +52,7 @@ class TransfersListResource extends JsonResource
                 'reason' => $this->reason,
                 'urgency' => $this->paymentUrgency?->name,
                 'fee_amount' => $this->fee_amount,
+                'fee_provider' => $this->fee()->where('fee_type_mode_id', 5)->where('transfer_id', $data['transaction_id'])->where('transfer_type', 'Incoming')->first()->fee ?? 0,
                 'account_number' => $this->account->account_number,
                 'credit_amount' => $this->amount_debt,
                 'currency' => $this->currency?->code,
@@ -67,6 +69,7 @@ class TransfersListResource extends JsonResource
                 'quotes_provider' => $this->quoteProviders->first()->name ?? '',
                 'exchange_rate' => $this->exchange_rate,
                 'margin_commission' => $this->quoteProviders->first()->margin_commission ?? '',
+                'margin_fee' => $this->TransferOutgoing->fee()->where('fee_type_mode_id', 7)->where('transfer_id', $this->TransferOutgoing->id)->where('transfer_type', 'Outgoing')->first()->fee ?? 0,
                 'debited_amount' => $this->TransferIncoming->amount,
                 'quotes_provider_fee' => $this->TransferOutgoing->amount_debt,
                 'final_amount' => $this->TransferOutgoing->amount_debt,
@@ -76,21 +79,6 @@ class TransfersListResource extends JsonResource
             ]);
         }
 
-        return array_merge($data, [
-            'requested' => $this->clientable?->name,
-            'account_number' => $this->account->account_number,
-            'fee_account' => $this->fee,
-            'currency' => $this->transferOutgoing?->currency?->code,
-            'transaction_description' => 'Fee',
-            'debit' => $this->fee,
-            'credit' => $this->fee,
-            'status' => $this->paymentStatus?->name,
-            'recipient' => $this->recipient?->name,
-            'sender' => $this->sender_name,
-            'reason' => $this->reason,
-            'urgency' => $this->paymentUrgency?->name,
-            'fee_amount' => $this->fee_amount,
-            'credit_amount' => $this->amount_debt,
-        ]);
+        return [];
     }
 }
