@@ -5,7 +5,6 @@ namespace App\GraphQL\Queries\Applicant;
 use App\Enums\ApplicantTypeEnum;
 use App\Exceptions\GraphqlException;
 use App\Exports\AccountStatementExport;
-use App\GraphQL\Handlers\FilterConditionsHandler;
 use App\Models\Account;
 use App\Repositories\Interfaces\AccountRepositoryInterface;
 use App\Services\Account\AccountStatementService;
