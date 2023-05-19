@@ -54,8 +54,8 @@ class TransferBetweenUsersService extends AbstractService
 
     public function createTransfer(array $args, int $operationType): array
     {
-        $fromAccount = Account::find($args['from_account_id']);
-        $toAccount = Account::find($args['to_account_id']);
+        $fromAccount = Account::findOrFail($args['from_account_id']);
+        $toAccount = Account::findOrFail($args['to_account_id']);
 
         $this->validateCreateTransfer($fromAccount, $toAccount);
 
@@ -78,9 +78,10 @@ class TransferBetweenUsersService extends AbstractService
             $this->createTransferHistory($outgoing, TransferHistoryActionEnum::INIT->value);
             $this->createTransferHistory($incoming, TransferHistoryActionEnum::INIT->value);
 
+            // @todo: try to fix this in feature versions of lumen
             return [
-                'outgoing' => $outgoing,
-                'incoming' => $incoming,
+                'outgoing' => TransferOutgoing::query()->findOrFail($outgoing->id),
+                'incoming' => TransferIncoming::query()->findOrFail($incoming->id),
             ];
         });
 
