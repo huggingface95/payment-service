@@ -47,8 +47,8 @@ class TransferExchangeService extends AbstractService
      */
     public function createTransfer(array $args, int $operationType): Builder|Model
     {
-        $fromAccount = Account::find($args['from_account_id']);
-        $toAccount = Account::find($args['to_account_id']);
+        $fromAccount = Account::findOrFail($args['from_account_id']);
+        $toAccount = Account::findOrFail($args['to_account_id']);
 
         $this->validateCreateTransfer($fromAccount, $toAccount);
 
@@ -84,8 +84,6 @@ class TransferExchangeService extends AbstractService
                 'exchange' => $exchange,
             ];
         });
-
-        $this->attachFileById($transfers, $args['file_id'] ?? []);
 
         return $transfers['exchange'];
     }
