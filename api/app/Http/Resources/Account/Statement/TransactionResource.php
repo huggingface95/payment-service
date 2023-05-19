@@ -36,7 +36,7 @@ class TransactionResource extends JsonResource
             'account_client' => $accountClient,
             'status' => $this->paymentStatus->name ?? null,
             'account_balance' => $this->transaction->balance_next ?? null,
-            'transfer_type' => $this->transferType->name ?? null,
+            'transfer_type' => $this->transaction->transfer_type ?? null,
         ];
     }
 }
