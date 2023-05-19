@@ -17,6 +17,7 @@ class OauthClientsTableSeeder extends Seeder
     {
         $oauthClients = [
             [
+                'name' => 'Docudots',
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => '',
                 'redirect' => 'http://localhost',
@@ -24,6 +25,7 @@ class OauthClientsTableSeeder extends Seeder
                 'password_client' => false,
                 'revoked' => 0,
             ], [
+                'name' => 'Docudots',
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => 'member',
                 'redirect' => 'http://localhost',
@@ -31,6 +33,7 @@ class OauthClientsTableSeeder extends Seeder
                 'password_client' => true,
                 'revoked' => 0,
             ], [
+                'name' => 'Docudots',
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => 'applicant',
                 'redirect' => 'http://localhost',
@@ -38,6 +41,7 @@ class OauthClientsTableSeeder extends Seeder
                 'password_client' => false,
                 'revoked' => 0,
             ], [
+                'name' => 'Docudots',
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => 'applicant',
                 'redirect' => 'http://localhost',
@@ -45,6 +49,7 @@ class OauthClientsTableSeeder extends Seeder
                 'password_client' => true,
                 'revoked' => 0,
             ], [
+                'name' => 'Docudots',
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => 'member',
                 'redirect' => 'http://localhost',
@@ -52,6 +57,7 @@ class OauthClientsTableSeeder extends Seeder
                 'password_client' => false,
                 'revoked' => 0,
             ], [
+                'name' => 'Docudots',
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => 'corporate',
                 'redirect' => 'http://localhost',
@@ -59,6 +65,7 @@ class OauthClientsTableSeeder extends Seeder
                 'password_client' => false,
                 'revoked' => 0,
             ], [
+                'name' => 'Docudots',
                 'secret' => Hash::make(rand(100, 999)),
                 'provider' => 'corporate',
                 'redirect' => 'http://localhost',
@@ -69,9 +76,7 @@ class OauthClientsTableSeeder extends Seeder
         ];
 
         foreach ($oauthClients as $oaClient) {
-            OauthClient::query()->firstOrCreate([
-                'name' => 'Docudots',
-            ], $oaClient);
+            OauthClient::query()->firstOrCreate($oaClient);
         }
     }
 }

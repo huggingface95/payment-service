@@ -71,7 +71,6 @@ class TransferIncomingsMutationTest extends TestCase
                     sender_state: $sender_state
                     sender_zip: $sender_zip
                     bank_message: $bank_message
-                    file_id: [1]
                 )
                 {
                     id
@@ -205,7 +204,6 @@ class TransferIncomingsMutationTest extends TestCase
 
     public function testCreateTransferIncoming(): void
     {
-        $this->markTestSkipped('Skipped');
         $seq = DB::table('transfer_incomings')
                 ->max('id') + 1;
 
@@ -271,7 +269,6 @@ class TransferIncomingsMutationTest extends TestCase
                     sender_state: $sender_state
                     sender_zip: $sender_zip
                     bank_message: $bank_message
-                    file_id: [1]
                     status_id: 7
                     urgency_id: $urgency_id
                     respondent_fees_id: $respondent_fees_id
@@ -374,7 +371,6 @@ class TransferIncomingsMutationTest extends TestCase
 
     public function testUpdateTransferIncoming(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'DESC')->first();
 
         $this->postGraphQL(
@@ -382,11 +378,17 @@ class TransferIncomingsMutationTest extends TestCase
                 'query' => '
                 mutation UpdateTransferIncoming(
                 $id: ID!
+                $company_id: ID!
+                $group_id: ID!
+                $group_type_id: ID!
             )
             {
                 updateTransferIncoming (
                     id: $id
                     status_id: 7
+                    company_id: $company_id
+                    group_id: $group_id
+                    group_type_id: $group_type_id
                 )
                 {
                       id
@@ -420,6 +422,9 @@ class TransferIncomingsMutationTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $transferIncoming->id,
+                    'company_id' => 1,
+                    'group_id' => 1,
+                    'group_type_id' => 1,
                 ],
             ],
             [

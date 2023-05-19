@@ -348,11 +348,11 @@ class TransferOutgoingsQueryTest extends TestCase
                         'id' => (string) $respondentFee->id,
                         'name' => (string) $respondentFee->name,
                     ],
-                    'transfer_swift' => [
+                    'transfer_swift' => [[
                         'swift' => (string) $transferSwift->swift,
                         'bank_name' => (string) $transferSwift->bank_name,
                         'bank_address' => (string) $transferSwift->bank_address,
-                    ],
+                    ]],
                 ],
             ],
         ]);
@@ -586,11 +586,11 @@ class TransferOutgoingsQueryTest extends TestCase
                                 'id' => (string) $respondentFee->id,
                                 'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
+                            'transfer_swift' => [[
                                 'swift' => (string) $transferSwift->swift,
                                 'bank_name' => (string) $transferSwift->bank_name,
                                 'bank_address' => (string) $transferSwift->bank_address,
-                            ],
+                            ]],
                         ],
                     ],
                 ],
@@ -834,11 +834,11 @@ class TransferOutgoingsQueryTest extends TestCase
                                 'id' => (string) $respondentFee->id,
                                 'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
+                            'transfer_swift' => [[
                                 'swift' => (string) $transferSwift->swift,
                                 'bank_name' => (string) $transferSwift->bank_name,
                                 'bank_address' => (string) $transferSwift->bank_address,
-                            ],
+                            ]],
                         ],
                     ],
                 ],
@@ -1082,11 +1082,11 @@ class TransferOutgoingsQueryTest extends TestCase
                                 'id' => (string) $respondentFee->id,
                                 'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
+                            'transfer_swift' => [[
                                 'swift' => (string) $transferSwift->swift,
                                 'bank_name' => (string) $transferSwift->bank_name,
                                 'bank_address' => (string) $transferSwift->bank_address,
-                            ],
+                            ]],
                         ],
                     ],
                 ],
@@ -1330,11 +1330,11 @@ class TransferOutgoingsQueryTest extends TestCase
                                 'id' => (string) $respondentFee->id,
                                 'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
+                            'transfer_swift' => [[
                                 'swift' => (string) $transferSwift->swift,
                                 'bank_name' => (string) $transferSwift->bank_name,
                                 'bank_address' => (string) $transferSwift->bank_address,
-                            ],
+                            ]],
                         ],
                     ],
                 ],
@@ -1578,11 +1578,11 @@ class TransferOutgoingsQueryTest extends TestCase
                                 'id' => (string) $respondentFee->id,
                                 'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
+                            'transfer_swift' => [[
                                 'swift' => (string) $transferSwift->swift,
                                 'bank_name' => (string) $transferSwift->bank_name,
                                 'bank_address' => (string) $transferSwift->bank_address,
-                            ],
+                            ]],
                         ],
                     ],
                 ],
@@ -1826,11 +1826,11 @@ class TransferOutgoingsQueryTest extends TestCase
                                 'id' => (string) $respondentFee->id,
                                 'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
+                            'transfer_swift' => [[
                                 'swift' => (string) $transferSwift->swift,
                                 'bank_name' => (string) $transferSwift->bank_name,
                                 'bank_address' => (string) $transferSwift->bank_address,
-                            ],
+                            ]],
                         ],
                     ],
                 ],
@@ -2074,11 +2074,11 @@ class TransferOutgoingsQueryTest extends TestCase
                                 'id' => (string) $respondentFee->id,
                                 'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
+                            'transfer_swift' => [[
                                 'swift' => (string) $transferSwift->swift,
                                 'bank_name' => (string) $transferSwift->bank_name,
                                 'bank_address' => (string) $transferSwift->bank_address,
-                            ],
+                            ]],
                         ],
                     ],
                 ],
@@ -2322,11 +2322,11 @@ class TransferOutgoingsQueryTest extends TestCase
                                 'id' => (string) $respondentFee->id,
                                 'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
+                            'transfer_swift' => [[
                                 'swift' => (string) $transferSwift->swift,
                                 'bank_name' => (string) $transferSwift->bank_name,
                                 'bank_address' => (string) $transferSwift->bank_address,
-                            ],
+                            ]],
                         ],
                     ],
                 ],
@@ -2570,11 +2570,11 @@ class TransferOutgoingsQueryTest extends TestCase
                                 'id' => (string) $respondentFee->id,
                                 'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
+                            'transfer_swift' => [[
                                 'swift' => (string) $transferSwift->swift,
                                 'bank_name' => (string) $transferSwift->bank_name,
                                 'bank_address' => (string) $transferSwift->bank_address,
-                            ],
+                            ]],
                         ],
                     ],
                 ],
@@ -2818,11 +2818,11 @@ class TransferOutgoingsQueryTest extends TestCase
                                 'id' => (string) $respondentFee->id,
                                 'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
+                            'transfer_swift' => [[
                                 'swift' => (string) $transferSwift->swift,
                                 'bank_name' => (string) $transferSwift->bank_name,
                                 'bank_address' => (string) $transferSwift->bank_address,
-                            ],
+                            ]],
                         ],
                     ],
                 ],
@@ -3066,11 +3066,11 @@ class TransferOutgoingsQueryTest extends TestCase
                                 'id' => (string) $respondentFee->id,
                                 'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
+                            'transfer_swift' => [[
                                 'swift' => (string) $transferSwift->swift,
                                 'bank_name' => (string) $transferSwift->bank_name,
                                 'bank_address' => (string) $transferSwift->bank_address,
-                            ],
+                            ]],
                         ],
                     ],
                 ],
