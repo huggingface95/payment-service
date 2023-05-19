@@ -2,7 +2,6 @@
 /.idea
 Homestead.json
 Homestead.yaml
-composer.lock
 storage/api-docs/*
 public/data.txt
 .env
