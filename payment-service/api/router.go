@@ -32,7 +32,7 @@ func SetupRoutes(service *Service, providersService *providers.Service, queueSer
 		return c.Next()
 	})
 	group.Get("/iban-company/check", func(c *fiber.Ctx) error {
-		return handlers.IBAN(c, provider, queueService)
+		return handlers.Status(c, provider, queueService)
 	})
 	group.Post("/payin", func(c *fiber.Ctx) error {
 		return handlers.PayIn(c, provider, queueService)

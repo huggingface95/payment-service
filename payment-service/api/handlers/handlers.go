@@ -17,8 +17,18 @@ func Auth(c *fiber.Ctx, provider providers.PaymentProvider) error {
 	return nil
 }
 
-// IBAN Реализация обработчика проверки IBAN
-func IBAN(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
+func PayIn(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
+	// Реализация обработчика PayIn
+	return nil
+}
+
+func PayOut(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
+	// Реализация обработчика PayOut
+	return nil
+}
+
+// Status Реализация обработчика проверки статуса аккаунта
+func Status(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
 	// Получаем данные запроса из JSON-тела
 	var request clearjunction.IBANRequest
 	if err := c.QueryParser(&request); err != nil {
@@ -39,21 +49,6 @@ func IBAN(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.
 
 	// Отправляем ответ клиенту
 	return c.JSON(response)
-}
-
-func PayIn(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
-	// Реализация обработчика PayIn
-	return nil
-}
-
-func PayOut(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
-	// Реализация обработчика PayOut
-	return nil
-}
-
-func Status(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
-	// Реализация обработчика запроса статуса транзакции
-	return nil
 }
 
 // PostBack Реализация обработчика PostBack

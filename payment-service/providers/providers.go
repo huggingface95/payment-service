@@ -14,7 +14,7 @@ type PaymentProvider interface {
 	// PayOut - отправка запроса на выплату
 	PayOut(request PayOutRequester) (PayOutResponder, error)
 
-	// Status - запрос состояния транзакции
+	// Status - запрос состояния аккаунта
 	Status(request StatusRequester) (StatusResponder, error)
 
 	// PostBack - прием постбеков от провайдера с информацией о транзакции или генерируемом IBAN
