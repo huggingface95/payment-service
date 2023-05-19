@@ -24,7 +24,7 @@
                 <th width="10">Amount</th>
                 <th width="10">Fee Amount</th>
                 <th width="10">Fee Account</th>
-                <th width="10">Fee Provider</th>
+                <th width="10">Provider Fee</th>
                 <th width="10">Debit Amount</th>
                 <th width="10" align="right">Status</th>
             </tr>
