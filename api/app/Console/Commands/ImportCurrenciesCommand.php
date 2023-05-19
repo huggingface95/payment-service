@@ -4,9 +4,9 @@ namespace App\Console\Commands;
 
 use App\Models\CurrencyExchangeRate;
 use App\Models\CurrencyRateHistory;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ImportCurrenciesCommand extends Command
 {
