@@ -40,7 +40,7 @@ class PriceListFee extends BaseModel
      *
      * @var array
      */
-    protected $fillable = ['name', 'price_list_id', 'type_id', 'operation_type_id', 'period_id', 'quote_provider_id'];
+    protected $fillable = ['name', 'price_list_id', 'type_id', 'operation_type_id', 'period_id', 'quote_provider_id', 'company_id'];
 
     protected $appends = ['fee_ranges'];
 
@@ -80,16 +80,9 @@ class PriceListFee extends BaseModel
         return $this->belongsTo(CommissionPriceList::class, 'price_list_id');
     }
 
-    public function company(): HasOneThrough
+    public function company(): BelongsTo
     {
-        return $this->hasOneThrough(
-            Company::class,
-            CommissionPriceList::class,
-            'id',
-            'id',
-            'price_list_id',
-            'company_id',
-        );
+        return $this->belongsTo(Company::class, 'company_id');
     }
 
     public function paymentProvider(): HasOneThrough
