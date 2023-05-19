@@ -89,14 +89,16 @@ class AccountRepository extends Repository implements AccountRepositoryInterface
 
     public function getTransfersForPeriodByAccountId(int $accountId, string $dateFrom, string $dateTo): Collection
     {
-        $otgoings = TransferOutgoing::whereDate('created_at', '>=', $dateFrom)
+        $otgoings = TransferOutgoing::query()->whereDate('created_at', '>=', $dateFrom)
+            ->whereHas('transaction')
             ->whereDate('created_at', '<=', $dateTo)
             ->where('account_id', $accountId)
             ->with('sender')
             ->with('transaction')
             ->get();
 
-        $incomings = TransferIncoming::whereDate('created_at', '>=', $dateFrom)
+        $incomings = TransferIncoming::query()->whereDate('created_at', '>=', $dateFrom)
+            ->whereHas('transaction')
             ->whereDate('created_at', '<=', $dateTo)
             ->where('account_id', $accountId)
             ->with('recipient')
