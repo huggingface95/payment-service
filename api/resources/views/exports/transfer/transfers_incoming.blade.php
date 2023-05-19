@@ -22,7 +22,7 @@
                 <th width="10">Currency</th>
                 <th width="10">Amount</th>
                 <th width="10">Fee Amount</th>
-                <th width="10">Fee Provider</th>
+                <th width="10">Provider Fee</th>
                 <th width="10">Credit Amount</th>
                 <th width="10" align="right">Status</th>
             </tr>
