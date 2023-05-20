@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/spf13/viper"
 	"payment-service/api"
 	"payment-service/db"
 	"payment-service/providers"
@@ -27,6 +28,11 @@ func Start() {
 	service.QueueService = queue.NewService(service.ProvidersService)
 	service.DBService = db.NewService()
 	service.APIService = api.NewService(service.ProvidersService, service.QueueService)
+
+	// Запуск HTTP сервера приложения
+	if err := service.APIService.Client.Listen(viper.GetString("server.address")); err != nil {
+		panic(err)
+	}
 
 	return
 }
