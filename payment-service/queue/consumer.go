@@ -18,21 +18,26 @@ func StartConsumer(service *Service, providersService *providers.Service, queueN
 			continue
 		}
 
+		provider, err := providersService.GetProvider(task.Provider)
+		if err != nil {
+			return err
+		}
+
 		switch task.Type {
 		case "iban":
 			var payload IBANPayload
 			json.Unmarshal(task.Payload, &payload)
-			HandleIBAN(providersService, &payload)
+			HandleIBAN(provider, &payload)
 		case "payin":
 			var payload PayInPayload
 			json.Unmarshal(task.Payload, &payload)
-			HandlePayIn(providersService, &payload)
+			HandlePayIn(provider, &payload)
 		case "payout":
 			var payload PayOutPayload
 			json.Unmarshal(task.Payload, &payload)
-			HandlePayOut(providersService, &payload)
+			HandlePayOut(provider, &payload)
 		case "postback":
-			HandlePostBack(providersService, &task.Payload)
+			HandlePostBack(provider, &task.Payload)
 		default:
 			// Неизвестный тип задачи, пропускаем
 			continue

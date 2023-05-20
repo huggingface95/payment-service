@@ -17,6 +17,7 @@ func SetupRoutes(service *Service, providersService *providers.Service, queueSer
 	providerConfig := providersService.Config["clearjunction"].(map[string]interface{})
 	// Создаем экземпляр провайдера ClearJunction
 	provider := clearjunction.NewClearJunction(
+		providersService,
 		providerConfig["key"].(string), providerConfig["password"].(string), providerConfig["url"].(string),
 	)
 	group.Use(func(c *fiber.Ctx) error {

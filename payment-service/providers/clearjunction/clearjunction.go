@@ -14,14 +14,16 @@ import (
 
 var _ providers.PaymentProvider = (*ClearJunction)(nil)
 
-func NewClearJunction(apiKey, password string, baseURL string) *ClearJunction {
-	return &ClearJunction{
+func NewClearJunction(service *providers.Service, apiKey, password, baseURL string) *ClearJunction {
+	provider := &ClearJunction{
 		APIKey:     apiKey,
 		Password:   password,
 		BaseURL:    baseURL,
 		httpClient: &http.Client{},
 		headers:    make(map[string]string),
 	}
+	service.Providers[utils.GetCurrentPackageName()] = provider
+	return provider
 }
 
 func (cj *ClearJunction) Auth(request providers.AuthRequester) (providers.AuthResponder, error) {
