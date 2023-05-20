@@ -35,7 +35,7 @@ type IBANRequester interface {
 
 // IBANResponder Содержит методы для получения данных из ответа IBAN
 type IBANResponder interface {
-	GetIBANs() []string
+	// Методы для получения данных из ответа Status
 }
 
 type PayInRequester interface {
@@ -59,7 +59,6 @@ type StatusRequester interface {
 }
 
 type StatusResponder interface {
-	// Методы для получения данных из ответа Status
 }
 
 type PostBackRequester interface {

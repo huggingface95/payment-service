@@ -17,42 +17,26 @@ func Auth(c *fiber.Ctx, provider providers.PaymentProvider) error {
 	return nil
 }
 
-func PayIn(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
-	// Реализация обработчика PayIn
-	return nil
-}
-
-func PayOut(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
-	// Реализация обработчика PayOut
-	return nil
-}
-
-// Status Реализация обработчика проверки статуса аккаунта
-func Status(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
+// CheckStatus Реализация обработчика проверки статуса аккаунта
+func CheckStatus(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
 	// Получаем данные запроса из JSON-тела
-	var request clearjunction.IBANRequest
+	var request clearjunction.StatusRequest
 	if err := c.QueryParser(&request); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid request"})
 	}
 
 	// Вызываем метод генерации IBAN провайдера
-	ibanRequest := providers.IBANRequester(request)
-	ibanResponse, err := provider.IBAN(ibanRequest)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": "Failed to generate IBAN"})
-	}
-
-	// Формируем ответ со сгенерированными IBAN
-	response := clearjunction.IBANResponse{
-		Ibans: ibanResponse.GetIBANs(),
+	statusRequest := providers.StatusRequester(request)
+	if _, err := provider.Status(statusRequest); err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	// Отправляем ответ клиенту
-	return c.JSON(response)
+	return c.JSON(fiber.Map{"status": "success"})
 }
 
-// PostBack Реализация обработчика PostBack
-func PostBack(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
+// IBANPostback Реализация обработчика postback
+func IBANPostback(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
 	// Получаем тело из локального контекста
 	bodyBytes, ok := c.Locals("body").([]byte)
 	// Проверяем, есть ли тело запроса
@@ -81,4 +65,24 @@ func PostBack(c *fiber.Ctx, provider providers.PaymentProvider, queueService *qu
 
 	// Возвращаем успешный ответ
 	return c.SendString("Task successfully added to the queue")
+}
+
+func PayPostback(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
+	// Реализация обработчика PayPostback
+	return nil
+}
+
+func IBANQueue(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
+	// Реализация обработчика IBANQueue
+	return nil
+}
+
+func PayInQueue(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
+	// Реализация обработчика PayInQueue
+	return nil
+}
+
+func PayOutQueue(c *fiber.Ctx, provider providers.PaymentProvider, queueService *queue.Service) error {
+	// Реализация обработчика PayOutQueue
+	return nil
 }

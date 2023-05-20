@@ -40,6 +40,22 @@ func (ps *Service) IBAN(request IBANRequester) (IBANResponder, error) {
 	return ibanResponse, nil
 }
 
+// Status - проверяет статус аккаунта с помощью провайдера
+func (ps *Service) Status(request StatusRequester) (StatusResponder, error) {
+	provider, err := ps.GetProvider()
+	if err != nil {
+		return nil, err
+	}
+
+	// Вызов метода проверки статуса аккаунта у провайдера
+	statusResponse, err := (*provider).Status(request)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get account status: %w", err)
+	}
+
+	return statusResponse, nil
+}
+
 // UseProvider - устанавливает текущего провайдера по его имени
 func (ps *Service) UseProvider(providerName string) {
 	ps.Current = ps.providers[providerName]

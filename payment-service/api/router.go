@@ -32,18 +32,21 @@ func SetupRoutes(service *Service, providersService *providers.Service, queueSer
 		return c.Next()
 	})
 	group.Get("/iban-company/check", func(c *fiber.Ctx) error {
-		return handlers.Status(c, provider, queueService)
+		return handlers.CheckStatus(c, provider, queueService)
 	})
-	group.Post("/payin", func(c *fiber.Ctx) error {
-		return handlers.PayIn(c, provider, queueService)
-	})
-	group.Post("/payout", func(c *fiber.Ctx) error {
-		return handlers.PayOut(c, provider, queueService)
-	})
-	group.Get("/status/:transactionId", func(c *fiber.Ctx) error {
-		return handlers.Status(c, provider, queueService)
+	group.Post("/iban/postback", func(c *fiber.Ctx) error {
+		return handlers.IBANPostback(c, provider, queueService)
 	})
 	group.Post("/postback", func(c *fiber.Ctx) error {
-		return handlers.PostBack(c, provider, queueService)
+		return handlers.PayPostback(c, provider, queueService)
+	})
+	group.Post("/iban-queue", func(c *fiber.Ctx) error {
+		return handlers.IBANQueue(c, provider, queueService)
+	})
+	group.Post("/payin-queue", func(c *fiber.Ctx) error {
+		return handlers.PayInQueue(c, provider, queueService)
+	})
+	group.Post("/payout-queue", func(c *fiber.Ctx) error {
+		return handlers.PayOutQueue(c, provider, queueService)
 	})
 }

@@ -13,13 +13,13 @@ type ClearJunction struct {
 	headers    map[string]string
 }
 
-// IBANRequest represents a request to IBAN.
-type IBANRequest struct {
+// StatusRequest represents a request to Status.
+type StatusRequest struct {
 	ClientCustomerId string `json:"clientCustomerId"`
 }
 
-// IBANResponse represents a response of IBAN.
-type IBANResponse struct {
+// StatusResponse represents a response of Status.
+type StatusResponse struct {
 	RequestReference string   `json:"requestReference"`
 	ClientCustomerId string   `json:"clientCustomerId"`
 	Ibans            []string `json:"ibans"`
@@ -54,6 +54,6 @@ type PostBackRequest struct {
 // PostBackResponse represents a response of PostBack.
 type PostBackResponse struct{}
 
-func (r IBANResponse) GetIBANs() []string {
+func (r StatusResponse) GetIBANs() []string {
 	return r.Ibans
 }

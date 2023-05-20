@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/http"
 	"payment-service/providers"
+	"payment-service/utils"
 	"strings"
 	"time"
 )
@@ -53,9 +54,24 @@ func (cj *ClearJunction) SetAuthHeaders(body []byte) {
 }
 
 func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANResponder, error) {
-	ibanRequest, _ := request.(IBANRequest)
+	//TODO implement me
+	panic("implement me")
+}
 
-	url := fmt.Sprintf("%sv7/gate/allocate/v2/list/iban/%s", cj.BaseURL, ibanRequest.ClientCustomerId)
+func (cj *ClearJunction) PayIn(request providers.PayInRequester) (providers.PayInResponder, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (cj *ClearJunction) PayOut(request providers.PayOutRequester) (providers.PayOutResponder, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (cj *ClearJunction) Status(request providers.StatusRequester) (providers.StatusResponder, error) {
+	statusRequest, _ := request.(StatusRequest)
+
+	url := fmt.Sprintf("%sv7/gate/allocate/v2/list/iban/%s", cj.BaseURL, statusRequest.ClientCustomerId)
 
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
@@ -74,31 +90,16 @@ func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANRe
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("IBAN request failed with status code: %d", res.StatusCode)
+		return nil, utils.HandleResponseError(res)
 	}
 
-	var ibanResponse IBANResponse
-	err = json.NewDecoder(res.Body).Decode(&ibanResponse)
+	var statusResponse StatusResponse
+	err = json.NewDecoder(res.Body).Decode(&statusResponse)
 	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal IBAN response: %v", err)
+		return nil, fmt.Errorf("failed to unmarshal Status response: %v", err)
 	}
 
-	return &ibanResponse, nil
-}
-
-func (cj *ClearJunction) PayIn(request providers.PayInRequester) (providers.PayInResponder, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (cj *ClearJunction) PayOut(request providers.PayOutRequester) (providers.PayOutResponder, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (cj *ClearJunction) Status(request providers.StatusRequester) (providers.StatusResponder, error) {
-	//TODO implement me
-	panic("implement me")
+	return &statusResponse, nil
 }
 
 func (cj *ClearJunction) PostBack(request providers.PostBackRequester) (providers.PostBackResponder, error) {
