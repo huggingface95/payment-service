@@ -12,7 +12,7 @@ type FastHTTP struct {
 	ReqHeaders map[string]string
 }
 
-// Request - выполняет HTTP запрос с заданным методом, эндпоинтом и параметрами
+// Request - выполняет HTTP запрос с заданным методом, endpoint-ом и параметрами
 func (c *FastHTTP) Request(method string, endpoint string, params map[string]interface{}) ([]byte, error) {
 	var responseBody []byte
 

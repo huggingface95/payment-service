@@ -92,7 +92,7 @@ type PayRequestCustomInfo struct {
 	PaymentId uint64 `json:"payment_id"`
 }
 
-// PayPostbackSubStatuses представляет модель данных для подстатусов в PayIn и PayOut postback.
+// PayPostbackSubStatuses представляет модель данных для под-статусов в PayIn и PayOut postback.
 type PayPostbackSubStatuses struct {
 	OperStatus       string `json:"operStatus"`
 	ComplianceStatus string `json:"complianceStatus"`
