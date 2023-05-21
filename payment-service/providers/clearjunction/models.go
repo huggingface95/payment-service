@@ -1,16 +1,21 @@
 package clearjunction
 
 import (
-	"net/http"
+	"payment-service/utils"
 	"time"
 )
 
 type ClearJunction struct {
-	APIKey     string
-	Password   string
-	BaseURL    string
-	httpClient *http.Client
-	headers    map[string]string
+	fastHTTP utils.FastHTTP
+	APIKey   string
+	Password string
+	BaseURL  string
+	headers  map[string]string
+}
+
+// AuthRequest represents a request to Auth.
+type AuthRequest struct {
+	Body []byte `json:"body"`
 }
 
 // StatusRequest represents a request to Status.

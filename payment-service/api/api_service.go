@@ -7,18 +7,18 @@ import (
 	"payment-service/queue"
 )
 
-// Service - сервис для управления очередями
+// Service - сервис для управления HTTP запросами
 type Service struct {
-	Client *fiber.App
+	FiberClient *fiber.App
 }
 
 // NewService - создает новый экземпляр Service
 func NewService(providersService *providers.Service, queueService *queue.Service) *Service {
 	service := &Service{
-		Client: fiber.New(),
+		FiberClient: fiber.New(),
 	}
 
-	service.Client.Use(logger.New())
+	service.FiberClient.Use(logger.New())
 
 	// Регистрируем маршруты API и передаем экземпляр Service
 	SetupRoutes(service, providersService, queueService)

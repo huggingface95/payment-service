@@ -30,7 +30,7 @@ func Start() {
 	service.APIService = api.NewService(service.ProvidersService, service.QueueService)
 
 	// Запуск HTTP сервера приложения
-	if err := service.APIService.Client.Listen(viper.GetString("server.address")); err != nil {
+	if err := service.APIService.FiberClient.Listen(viper.GetString("server.address")); err != nil {
 		panic(err)
 	}
 

@@ -5,7 +5,7 @@ import (
 	"crypto/sha512"
 	"encoding/json"
 	"fmt"
-	"net/http"
+	"github.com/valyala/fasthttp"
 	"payment-service/providers"
 	"payment-service/utils"
 	"strings"
@@ -16,22 +16,21 @@ var _ providers.PaymentProvider = (*ClearJunction)(nil)
 
 func NewClearJunction(service *providers.Service, apiKey, password, baseURL string) *ClearJunction {
 	provider := &ClearJunction{
-		APIKey:     apiKey,
-		Password:   password,
-		BaseURL:    baseURL,
-		httpClient: &http.Client{},
-		headers:    make(map[string]string),
+		fastHTTP: utils.FastHTTP{Client: &fasthttp.Client{}, Headers: map[string]string{}},
+		APIKey:   apiKey,
+		Password: password,
+		BaseURL:  baseURL,
 	}
+
+	provider.Auth(providers.AuthRequester(AuthRequest{}))
+
 	service.Providers[utils.GetCurrentPackageName()] = provider
 	return provider
 }
 
 func (cj *ClearJunction) Auth(request providers.AuthRequester) (providers.AuthResponder, error) {
-	// Реализуйте метод Auth здесь
-	return nil, nil
-}
+	authRequest, _ := request.(AuthRequest)
 
-func (cj *ClearJunction) SetAuthHeaders(body []byte) {
 	// Получаем текущее время и форматируем его в соответствии с требуемым форматом
 	date := time.Now().UTC().Format("2006-01-02T15:04:05.000Z")
 
@@ -42,17 +41,19 @@ func (cj *ClearJunction) SetAuthHeaders(body []byte) {
 	// Создаем новую подпись, используя API-ключ, дату и подпись, полученную на предыдущем шаге
 	// К тому же добавляем тело запроса, преобразуя его в верхний регистр
 	signatureData = []byte(fmt.Sprint(strings.ToUpper(cj.APIKey), date, signature))
-	signatureData = append(signatureData, bytes.ToUpper(body)...)
+	signatureData = append(signatureData, bytes.ToUpper(authRequest.Body)...)
 	signature = fmt.Sprintf("%x", sha512.Sum512(signatureData))
 
 	// Создаем значение заголовка авторизации, используя полученную подпись
 	authHeaderValue := fmt.Sprintf("Bearer %s", signature)
 
 	// Устанавливаем заголовки для последующих запросов
-	cj.headers["Authorization"] = authHeaderValue
-	cj.headers["X-API-KEY"] = cj.APIKey
-	cj.headers["Content-Type"] = "application/json"
-	cj.headers["Date"] = date
+	cj.fastHTTP.Headers["Authorization"] = authHeaderValue
+	cj.fastHTTP.Headers["X-API-KEY"] = cj.APIKey
+	cj.fastHTTP.Headers["Content-Type"] = "application/json"
+	cj.fastHTTP.Headers["Date"] = date
+
+	return nil, nil
 }
 
 func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANResponder, error) {
@@ -75,30 +76,17 @@ func (cj *ClearJunction) Status(request providers.StatusRequester) (providers.St
 
 	url := fmt.Sprintf("%sv7/gate/allocate/v2/list/iban/%s", cj.BaseURL, statusRequest.ClientCustomerId)
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	// Выполнение GET запроса с помощью HTTP клиента из API сервиса
+	responseBody, err := cj.fastHTTP.Request(fasthttp.MethodGet, url, nil)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create IBAN request: %v", err)
+		return nil, fmt.Errorf("failed to send IBAN request: %w", err)
 	}
 
-	for key, value := range cj.headers {
-		req.Header[key] = []string{value}
-	}
-
-	client := http.Client{}
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to send IBAN request: %v", err)
-	}
-	defer res.Body.Close()
-
-	if res.StatusCode != http.StatusOK {
-		return nil, utils.HandleResponseError(res)
-	}
-
+	// Преобразование тела ответа в структуру StatusResponse
 	var statusResponse StatusResponse
-	err = json.NewDecoder(res.Body).Decode(&statusResponse)
+	err = json.Unmarshal(responseBody, &statusResponse)
 	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal Status response: %v", err)
+		return nil, fmt.Errorf("failed to unmarshal Status response: %w", err)
 	}
 
 	return &statusResponse, nil
