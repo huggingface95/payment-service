@@ -14,12 +14,12 @@ import (
 
 var _ providers.PaymentProvider = (*ClearJunction)(nil)
 
-func NewClearJunction(service *providers.Service, apiKey, password, baseURL string) *ClearJunction {
+func New(service *providers.Service, apiKey, password, baseURL string) *ClearJunction {
 	provider := &ClearJunction{
-		fastHTTP: utils.FastHTTP{Client: &fasthttp.Client{}, Headers: map[string]string{}},
-		APIKey:   apiKey,
-		Password: password,
-		BaseURL:  baseURL,
+		transport: utils.FastHTTP{Client: &fasthttp.Client{}, ReqHeaders: map[string]string{}},
+		APIKey:    apiKey,
+		Password:  password,
+		BaseURL:   baseURL,
 	}
 
 	provider.Auth(providers.AuthRequester(AuthRequest{}))
@@ -48,10 +48,10 @@ func (cj *ClearJunction) Auth(request providers.AuthRequester) (providers.AuthRe
 	authHeaderValue := fmt.Sprintf("Bearer %s", signature)
 
 	// Устанавливаем заголовки для последующих запросов
-	cj.fastHTTP.Headers["Authorization"] = authHeaderValue
-	cj.fastHTTP.Headers["X-API-KEY"] = cj.APIKey
-	cj.fastHTTP.Headers["Content-Type"] = "application/json"
-	cj.fastHTTP.Headers["Date"] = date
+	cj.transport.ReqHeaders["Authorization"] = authHeaderValue
+	cj.transport.ReqHeaders["X-API-KEY"] = cj.APIKey
+	cj.transport.ReqHeaders["Content-Type"] = "application/json"
+	cj.transport.ReqHeaders["Date"] = date
 
 	return nil, nil
 }
@@ -77,7 +77,7 @@ func (cj *ClearJunction) Status(request providers.StatusRequester) (providers.St
 	url := fmt.Sprintf("%sv7/gate/allocate/v2/list/iban/%s", cj.BaseURL, statusRequest.ClientCustomerId)
 
 	// Выполнение GET запроса с помощью HTTP клиента из API сервиса
-	responseBody, err := cj.fastHTTP.Request(fasthttp.MethodGet, url, nil)
+	responseBody, err := cj.transport.Request(fasthttp.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send IBAN request: %w", err)
 	}

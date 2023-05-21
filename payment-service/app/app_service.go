@@ -27,7 +27,11 @@ func Start() {
 	service.ProvidersService = providers.NewService()
 	service.QueueService = queue.NewService(service.ProvidersService)
 	service.DBService = db.NewService()
-	service.APIService = api.NewService(service.ProvidersService, service.QueueService)
+	service.APIService = api.NewService(api.Services{
+		Providers: service.ProvidersService,
+		Queue:     service.QueueService,
+		DB:        service.DBService,
+	})
 
 	// Запуск HTTP сервера приложения
 	if err := service.APIService.FiberClient.Listen(viper.GetString("server.address")); err != nil {

@@ -9,7 +9,7 @@ import (
 
 type FastHTTP struct {
 	*fasthttp.Client
-	Headers map[string]string
+	ReqHeaders map[string]string
 }
 
 // Request - выполняет HTTP запрос с заданным методом, эндпоинтом и параметрами
@@ -20,12 +20,16 @@ func (c *FastHTTP) Request(method string, endpoint string, params map[string]int
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 
-	for k, v := range c.Headers {
+	for k, v := range c.ReqHeaders {
 		req.Header.Set(k, v)
 	}
 
 	req.Header.SetContentType("application/json")
 	req.SetRequestURI(endpoint)
+
+	// Создание объекта ответа fasthttp
+	res := fasthttp.AcquireResponse()
+	defer fasthttp.ReleaseResponse(res)
 
 	switch method {
 	case fiber.MethodPost:
@@ -38,10 +42,6 @@ func (c *FastHTTP) Request(method string, endpoint string, params map[string]int
 		req.Header.SetMethod(fiber.MethodPost)
 		req.SetBody(body)
 
-		// Создание объекта ответа fasthttp
-		res := fasthttp.AcquireResponse()
-		defer fasthttp.ReleaseResponse(res)
-
 		// Отправка POST запроса с использованием клиента fasthttp
 		if err := c.Do(req, res); err != nil {
 			return nil, fmt.Errorf("ошибка отправки POST запроса: %w", err)
@@ -49,7 +49,7 @@ func (c *FastHTTP) Request(method string, endpoint string, params map[string]int
 
 		// Проверка статусного кода ответа
 		if res.StatusCode() != fasthttp.StatusOK {
-			return nil, fmt.Errorf("неожиданный статусный код: %d", res.StatusCode())
+			return nil, c.handleResponseError(res)
 		}
 
 		responseBody = res.Body()
@@ -61,10 +61,6 @@ func (c *FastHTTP) Request(method string, endpoint string, params map[string]int
 			req.URI().QueryArgs().Add(key, fmt.Sprintf("%v", value))
 		}
 
-		// Создание объекта ответа fasthttp
-		res := fasthttp.AcquireResponse()
-		defer fasthttp.ReleaseResponse(res)
-
 		// Отправка GET запроса с использованием клиента fasthttp
 		if err := c.Do(req, res); err != nil {
 			return nil, fmt.Errorf("ошибка отправки GET запроса: %w", err)
@@ -72,7 +68,7 @@ func (c *FastHTTP) Request(method string, endpoint string, params map[string]int
 
 		// Проверка статусного кода ответа
 		if res.StatusCode() != fasthttp.StatusOK {
-			return nil, fmt.Errorf("неожиданный статусный код: %d", res.StatusCode())
+			return nil, c.handleResponseError(res)
 		}
 
 		responseBody = res.Body()
@@ -81,4 +77,27 @@ func (c *FastHTTP) Request(method string, endpoint string, params map[string]int
 	}
 
 	return responseBody, nil
+}
+
+// handleResponseError - обрабатывает ошибку ответа
+func (c *FastHTTP) handleResponseError(response *fasthttp.Response) error {
+	if response.StatusCode() >= 400 {
+		// Чтение тела ответа
+		body := response.Body()
+
+		// Преобразование тела ответа в json.RawMessage
+		rawMessage := json.RawMessage(body)
+
+		// Попытка разбора JSON из тела ответа
+		var errorResponse interface{}
+		if json.Unmarshal(body, &errorResponse) == nil {
+			// Если удалось разобрать JSON, создаем ошибку с текстом из JSON и кодом состояния
+			return fmt.Errorf("ошибка ответа (статус %d): %v", response.StatusCode(), errorResponse)
+		}
+
+		// Если не удалось разобрать JSON, создаем ошибку с текстом из тела ответа и кодом состояния
+		return fmt.Errorf("ошибка ответа (статус %d): %s", response.StatusCode(), string(rawMessage))
+	}
+
+	return nil
 }

@@ -2,40 +2,37 @@ package api
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"payment-service/api/handlers"
-	"payment-service/providers"
 	"payment-service/providers/clearjunction"
-	"payment-service/queue"
 )
 
-func SetupRoutes(service *Service, providersService *providers.Service, queueService *queue.Service) {
+func SetupRoutes(services Services) {
 	// Эндпоинт для проверки здоровья сервиса
-	service.FiberClient.Get("/health", handlers.HealthCheck)
+	services.API.FiberClient.Get("/health", HealthCheck)
 
 	// Группа handler-ов провайдера clearjunction
-	group := service.FiberClient.Group("/clearjunction")
-	providerConfig := providersService.Config["clearjunction"].(map[string]interface{})
+	group := services.API.FiberClient.Group("/clearjunction")
+	providerConfig := services.Providers.Config["clearjunction"].(map[string]interface{})
 	// Создаем экземпляр провайдера ClearJunction
-	provider := clearjunction.NewClearJunction(
-		providersService,
+	provider := clearjunction.New(
+		services.Providers,
 		providerConfig["key"].(string), providerConfig["password"].(string), providerConfig["url"].(string),
 	)
 	group.Get("/iban-company/check", func(c *fiber.Ctx) error {
-		return handlers.ClearjunctionCheckStatus(c, provider, queueService)
+		return ClearjunctionCheckStatus(c, provider, services)
 	})
 	group.Post("/iban/postback", func(c *fiber.Ctx) error {
-		return handlers.ClearjunctionIBANPostback(c, provider, queueService)
+		return ClearjunctionIBANPostback(c, provider, services)
 	})
 	group.Post("/postback", func(c *fiber.Ctx) error {
-		return handlers.ClearjunctionPayPostback(c, provider, queueService)
+		return ClearjunctionPayPostback(c, provider, services)
 	})
 	group.Post("/iban-queue", func(c *fiber.Ctx) error {
-		return handlers.ClearjunctionIBANQueue(c, provider, queueService)
+		return ClearjunctionIBANQueue(c, provider, services)
 	})
 	group.Post("/payin-queue", func(c *fiber.Ctx) error {
-		return handlers.ClearjunctionPayInQueue(c, provider, queueService)
+		return ClearjunctionPayInQueue(c, provider, services)
 	})
 	group.Post("/payout-queue", func(c *fiber.Ctx) error {
-		return handlers.ClearjunctionPayOutQueue(c, provider, queueService)
+		return ClearjunctionPayOutQueue(c, provider, services)
 	})
 }

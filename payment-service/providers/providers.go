@@ -1,6 +1,6 @@
 package providers
 
-// PaymentProvider - интерфейс для платежных провайдеров
+// PaymentProvider - интерфейс для платежных провайдеров. И
 type PaymentProvider interface {
 	// Auth - авторизация у провайдера
 	Auth(request AuthRequester) (AuthResponder, error)

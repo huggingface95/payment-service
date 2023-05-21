@@ -135,3 +135,27 @@ func (db *DB) GetAllProviders() ([]Provider, error) {
 	}
 	return providers, nil
 }
+
+func (db *DB) UpdateAccount(account *Account, pkField string, updateFields map[string]interface{}) error {
+	ctx := context.Background()
+
+	// Формируем SQL-запрос для обновления полей
+	sql := "UPDATE accounts SET "
+	var values []interface{}
+	i := 1
+	for field, value := range updateFields {
+		sql += field + "=$" + fmt.Sprint(i) + ", "
+		values = append(values, value)
+		i++
+	}
+	sql = sql[:len(sql)-2] + " WHERE " + pkField + "=$" + fmt.Sprint(i)
+	values = append(values, account.ID)
+
+	// Выполняем SQL-запрос
+	_, err := db.conn.Exec(ctx, sql, values...)
+	if err != nil {
+		return fmt.Errorf("unable to update account: %v", err)
+	}
+
+	return nil
+}
