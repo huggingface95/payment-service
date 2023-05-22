@@ -120,14 +120,24 @@ class TransferBetweenUsersService extends AbstractService
      */
     public function updateTransferStatusToExecuted(array $transfers): void
     {
-        $fromAccount = Account::find($transfers['outgoing']->account_id);
-        $toAccount = Account::find($transfers['incoming']->account_id);
+        DB::beginTransaction();
 
-        $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $transfers['outgoing'], $fromAccount, $toAccount);
-        $transactionIncoming = TransformerDTO::transform(TransactionDTO::class, $transfers['incoming'], $fromAccount, $toAccount);
+        try {
+            $fromAccount = Account::find($transfers['outgoing']->account_id);
+            $toAccount = Account::find($transfers['incoming']->account_id);
 
-        $this->transferOutgoingService->updateTransferStatusToExecuted($transfers['outgoing'], $transactionOutgoing);
-        $this->transferIncomingService->updateTransferStatusToExecuted($transfers['incoming'], $transactionIncoming);
+            $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $transfers['outgoing'], $fromAccount, $toAccount);
+            $transactionIncoming = TransformerDTO::transform(TransactionDTO::class, $transfers['incoming'], $fromAccount, $toAccount);
+
+            $this->transferOutgoingService->updateTransferStatusToExecuted($transfers['outgoing'], $transactionOutgoing);
+            $this->transferIncomingService->updateTransferStatusToExecuted($transfers['incoming'], $transactionIncoming);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            throw new GraphqlException($e->getMessage(), 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 
     public function attachFile(array $args): TransferOutgoing|TransferIncoming|Model|null
