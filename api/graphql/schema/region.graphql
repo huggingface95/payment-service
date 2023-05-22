@@ -38,7 +38,7 @@ input InputRegion{
 extend type Mutation @guard {
     createRegion(
         input: InputRegion! @spread
-    ): Region @field(resolver:"RegionMutator@create")
+    ): Region @create
 
     updateRegion(
         "ID региона"
