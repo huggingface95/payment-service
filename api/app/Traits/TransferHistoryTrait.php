@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferHistoryActionEnum;
+use App\Enums\TransferHistoryCommentEnum;
 use App\Enums\TransferTypeEnum;
 use App\Models\PaymentProviderHistory;
 use App\Models\TransferIncoming;
@@ -34,10 +35,15 @@ trait TransferHistoryTrait
             $action = $this->getAction($transfer->status_id);
         }
 
+        if (empty($comment)) {
+            $comment = $this->getComment($transfer->status_id);
+        }
+
         $data = [
             'transfer_id' => $transfer->id,
             'status_id' => $transfer->status_id,
             'action' => $action,
+            'comment' => $comment,
         ];
 
         if ($transfer instanceof TransferOutgoing) {
@@ -63,5 +69,21 @@ trait TransferHistoryTrait
         };
 
         return $action;
+    }
+
+    private function getComment(int $statusId): string
+    {
+        match ($statusId) {
+            PaymentStatusEnum::PENDING->value => $comment = TransferHistoryCommentEnum::PENDING->value,
+            PaymentStatusEnum::SENT->value => $comment = TransferHistoryCommentEnum::SENT->value,
+            PaymentStatusEnum::ERROR->value => $comment = TransferHistoryCommentEnum::ERROR->value,
+            PaymentStatusEnum::CANCELED->value => $comment = TransferHistoryCommentEnum::CANCELED->value,
+            PaymentStatusEnum::UNSIGNED->value => $comment = TransferHistoryCommentEnum::UNSIGNED->value,
+            PaymentStatusEnum::WAITING_EXECUTION_DATE->value => $comment = TransferHistoryCommentEnum::WAITING_EXECUTION_DATE->value,
+            PaymentStatusEnum::EXECUTED->value => $comment = TransferHistoryCommentEnum::EXECUTED->value,
+            PaymentStatusEnum::REFUND->value => $comment = TransferHistoryCommentEnum::REFUND->value,
+        };
+
+        return $comment;
     }
 }
