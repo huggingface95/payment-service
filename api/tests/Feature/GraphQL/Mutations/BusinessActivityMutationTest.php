@@ -75,7 +75,6 @@ class BusinessActivityMutationTest extends TestCase
 
     public function testUpdateBusinessActivity(): void
     {
-        $this->markTestSkipped('Skipped');
         $businessActivity = BusinessActivity::orderBy('id', 'DESC')
             ->first();
 

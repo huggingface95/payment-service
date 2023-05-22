@@ -76,7 +76,6 @@ class CompanyMutator extends BaseMutator
                 'Reset Password',
                 'Account Requisites',
                 'Confirm change email',
-                'Welcome! Confirm your email address',
                 'Account suspended',
                 'Minimum balance limit has been reached for client',
                 'Maximum balance limit has been reached for client',
