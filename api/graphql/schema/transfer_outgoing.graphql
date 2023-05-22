@@ -232,7 +232,7 @@ extend type Mutation @guard {
         "Имя получателя"
         recipient_name: String
         "Страна получателя"
-        recipient_country_id: ID
+        recipient_country_id: ID!
         "Город получателя"
         recipient_city: String
         "Адрес получателя"
