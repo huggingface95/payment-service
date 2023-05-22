@@ -20,7 +20,7 @@ class Region extends BaseModel
 
     public function countries(): BelongsToMany
     {
-        return $this->belongsToMany(Country::class, 'region_countries', 'region_id', 'country_id')->using(RegionCountry::class);
+        return $this->belongsToMany(Country::class, 'region_countries', 'region_id', 'country_id');
     }
 
     public function company(): BelongsTo
