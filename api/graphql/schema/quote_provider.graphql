@@ -28,6 +28,7 @@ enum ActivityStatusType {
 }
 
 extend type Query @guard {
+    quoteProvider(id: ID! @eq): QuoteProvider! @find
     """
     Получить список провайдеров квот
     """
