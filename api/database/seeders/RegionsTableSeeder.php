@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Region;
 use Illuminate\Database\Seeder;
+use Faker\Factory;
 
 class RegionsTableSeeder extends Seeder
 {
@@ -14,9 +15,20 @@ class RegionsTableSeeder extends Seeder
      */
     public function run()
     {
-        Region::query()->firstOrCreate([
-            'name' => 'TestRegion',
-            'company_id' => 1,
-        ]);
+        $faker = Factory::create();
+
+        $regions = [
+            'North Americ',
+            'South America',
+            'Europe',
+            'Central America',
+        ];
+
+        foreach ($regions as $region) {
+            Region::query()->firstOrCreate([
+                'name' => $region,
+                'company_id' => 1,
+            ]);
+        }
     }
 }
