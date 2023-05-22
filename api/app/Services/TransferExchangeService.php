@@ -216,24 +216,34 @@ class TransferExchangeService extends AbstractService
      */
     public function updateTransferStatusToExecuted(array $transfers): void
     {
-        $fromAccount = Account::find($transfers['outgoing']->account_id);
-        $toAccount = Account::find($transfers['incoming']->account_id);
+        DB::beginTransaction();
 
-        $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $transfers['outgoing'], $fromAccount, $toAccount);
-        $transactionIncoming = TransformerDTO::transform(TransactionDTO::class, $transfers['incoming'], $fromAccount, $toAccount);
-        $this->commissionService->makeFee($transfers['outgoing'], $transactionOutgoing);
+        try {
+            $fromAccount = Account::find($transfers['outgoing']->account_id);
+            $toAccount = Account::find($transfers['incoming']->account_id);
 
-        $this->transferOutgoingService->updateTransferStatusToExecuted($transfers['outgoing'], $transactionOutgoing);
-        $this->transferIncomingService->updateTransferStatusToExecuted($transfers['incoming'], $transactionIncoming);
+            $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $transfers['outgoing'], $fromAccount, $toAccount);
+            $transactionIncoming = TransformerDTO::transform(TransactionDTO::class, $transfers['incoming'], $fromAccount, $toAccount);
+            $this->commissionService->makeFee($transfers['outgoing'], $transactionOutgoing);
 
-        $qpMarginAmount = $this->feeRepository->getFeeByTypeMode($transfers['outgoing']->id, FeeModeEnum::MARGIN->value)->fee ?? 0;
-        if ($qpMarginAmount > 0) {
-            $this->revenueService->addToRevenueAccountBalanceByCompanyId($fromAccount->company_id, $qpMarginAmount, $toAccount->currency_id);
+            $this->transferOutgoingService->updateTransferStatusToExecuted($transfers['outgoing'], $transactionOutgoing);
+            $this->transferIncomingService->updateTransferStatusToExecuted($transfers['incoming'], $transactionIncoming);
+
+            $qpMarginAmount = $this->feeRepository->getFeeByTypeMode($transfers['outgoing']->id, FeeModeEnum::MARGIN->value)->fee ?? 0;
+            if ($qpMarginAmount > 0) {
+                $this->revenueService->addToRevenueAccountBalanceByCompanyId($fromAccount->company_id, $qpMarginAmount, $toAccount->currency_id);
+            }
+
+            $this->transferExchangeRepository->update($transfers['exchange'], [
+                'status_id' => PaymentStatusEnum::EXECUTED->value,
+            ]);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            throw new GraphqlException($e->getMessage(), 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-
-        $this->transferExchangeRepository->update($transfers['exchange'], [
-            'status_id' => PaymentStatusEnum::EXECUTED->value,
-        ]);
     }
 
     /**

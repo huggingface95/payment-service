@@ -120,6 +120,9 @@ class TransferIncomingService extends AbstractService
         });
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function updateTransferStatusToExecuted(TransferIncoming $transfer, TransactionDTO $transactionDTO = null): void
     {
         DB::beginTransaction();
@@ -145,6 +148,8 @@ class TransferIncomingService extends AbstractService
                 'status_id' => PaymentStatusEnum::ERROR->value,
                 'system_message' => $e->getMessage(),
             ]);
+
+            throw new GraphqlException($e->getMessage(), 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 
