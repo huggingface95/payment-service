@@ -4409,7 +4409,7 @@ class PermissionsSeeder extends Seeder
 
                                 foreach ($permission['operations'] ?? [] as $o) {
                                     /** @var PermissionOperation $operation */
-                                    $operation = PermissionOperation::query()->firstOrCreate(
+                                    $operation = PermissionOperation::query()->updateOrCreate(
                                         ['name' => $o['name'], 'referer' => $o['referer'],],
                                         ['name' => $o['name'], 'referer' => $o['referer'], 'method' => $o['method'], 'type' => $o['type']]
                                     );

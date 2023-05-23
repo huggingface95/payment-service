@@ -7,7 +7,8 @@ type OperationInputs struct {
 }
 
 type OperationHeaders struct {
-	Referer string `header:"pagereferer" binding:"required"`
+	Referer  string `header:"pagereferer"`
+	TestMode bool   `header:"test-mode"`
 }
 
 type LoginHeaders struct {
