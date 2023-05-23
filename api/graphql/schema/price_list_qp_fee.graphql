@@ -29,6 +29,7 @@ input QueryPriceListQpFeesFilterStatic @spread {
     id: ID @eq
     type_id: ID @eq
     period_id: ID @eq
+    quote_provider_id: ID @eq
     hasCompanyFilterById: ID @eq
     hasPaymentProviderFilterById: ID @eq
     hasPaymentSystemFilterById: ID @eq
