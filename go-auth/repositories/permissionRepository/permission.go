@@ -33,7 +33,7 @@ func GetUserPermissions(user postgres.User) []postgres.Permission {
 	return permissions
 }
 
-func IsGlobalOperation(name string) bool {
+func IsGlobalOperation(name string, method string, t string) bool {
 	var operation *postgres.PermissionOperation
 
 	query := database.PostgresInstance
@@ -43,7 +43,8 @@ func IsGlobalOperation(name string) bool {
 		Preload("BindPermissions").
 		Preload("ParentPermissions").
 		Where("referer IS NULL").
-		Where("name = ?", name).
+		Where("type = ?", t).
+		Where(query.Where("name = ?", name).Or("method = ?", method)).
 		First(&operation)
 
 	if rec.RowsAffected == 0 || operation == nil || len(operation.BindPermissions) > 0 || len(operation.ParentPermissions) > 0 {
@@ -53,7 +54,7 @@ func IsGlobalOperation(name string) bool {
 	return true
 }
 
-func GetStandardOperation(name string, referer string) (operation *postgres.PermissionOperation) {
+func GetStandardOperation(name string, method string, t string, referer string) (operation *postgres.PermissionOperation) {
 	query := database.PostgresInstance
 
 	rec := query.
@@ -61,7 +62,8 @@ func GetStandardOperation(name string, referer string) (operation *postgres.Perm
 		Preload("BindPermissions.PermissionList.PermissionCategory").
 		Preload("ParentPermissions.PermissionList.PermissionCategory").
 		Where("referer = ?", referer).
-		Where("name = ?", name).
+		Where("type = ?", t).
+		Where(query.Where("name = ?", name).Or("method = ?", method)).
 		First(&operation)
 
 	if rec.RowsAffected == 0 {

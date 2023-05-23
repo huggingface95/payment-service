@@ -1,7 +1,10 @@
 package access
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/graphql-go/graphql/language/ast"
+	"github.com/graphql-go/graphql/language/parser"
 	"github.com/juliangruber/go-intersect"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/models/postgres"
@@ -10,11 +13,11 @@ import (
 	"regexp"
 )
 
-func checkOperation(permissions []postgres.Permission, name string, referer string) (bool, []interface{}) {
-	if permissionRepository.IsGlobalOperation(name) == true {
+func checkOperation(permissions []postgres.Permission, name string, method string, t string, referer string) (bool, []interface{}) {
+	if permissionRepository.IsGlobalOperation(name, method, t) == true {
 		return true, nil
 	}
-	operation := permissionRepository.GetStandardOperation(name, referer)
+	operation := permissionRepository.GetStandardOperation(name, method, t, referer)
 
 	if operation != nil {
 
@@ -48,13 +51,52 @@ func checkModule(individual *postgres.Individual, verifiedPermissions []interfac
 	return true, ""
 }
 
-func CheckAccess(user postgres.User, inputs []requests.OperationInputs, referer string) (bool, string) {
+func CheckAccess(jsonData []byte, user postgres.User, referer string) (bool, string) {
+	var operationInput requests.OperationInputs
+	var operationInputs []requests.OperationInputs
+	var operationDetails []requests.OperationDetails
+
 	var message string
+
+	if jsonData[0] == '{' {
+		if err := json.Unmarshal(jsonData, &operationInput); err != nil {
+			return false, err.Error()
+		}
+		operationInputs = append(operationInputs, operationInput)
+	} else if jsonData[0] == '[' {
+		if err := json.Unmarshal(jsonData, &operationInputs); err != nil {
+			return false, err.Error()
+		}
+	} else {
+		return false, "json unmarshal error"
+	}
+
+	for _, oInput := range operationInputs {
+		z, err := parser.Parse(parser.ParseParams{Source: oInput.Query})
+		if err != nil {
+			return false, err.Error()
+		}
+		for _, d := range z.Definitions {
+			if operationDefinition, ok := d.(*ast.OperationDefinition); ok {
+				details := requests.OperationDetails{}
+				if operationDefinition.GetName() != nil {
+					details.Operation = operationDefinition.GetName().Value
+				}
+				if len(operationDefinition.SelectionSet.Selections) == 1 {
+					details.Method = operationDefinition.SelectionSet.Selections[0].(*ast.Field).Name.Value
+				}
+				details.Type = operationDefinition.GetOperation()
+
+				operationDetails = append(operationDetails, details)
+			}
+		}
+	}
+
 	referer = optimizeReferer(referer)
 	permissions := permissionRepository.GetUserPermissions(user)
 
-	for _, input := range inputs {
-		ok, verifiedPermissions := checkOperation(permissions, input.OperationName, referer)
+	for _, input := range operationDetails {
+		ok, verifiedPermissions := checkOperation(permissions, input.Operation, input.Method, input.Type, referer)
 		if ok && len(verifiedPermissions) > 0 {
 			if user.ClientType() == constants.Individual {
 				ok, message := checkModule(user.(*postgres.Individual), verifiedPermissions)
@@ -65,7 +107,11 @@ func CheckAccess(user postgres.User, inputs []requests.OperationInputs, referer 
 		} else if ok && len(verifiedPermissions) == 0 {
 			return true, message
 		} else {
-			return false, fmt.Sprintf("You are not authorized to access %s", input.OperationName)
+			n := input.Operation
+			if input.Operation == "" {
+				n = input.Method
+			}
+			return false, fmt.Sprintf("You are not authorized to access %s", n)
 		}
 	}
 
