@@ -2,6 +2,8 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\EmailTemplatesTypeEnum;
+use App\Enums\ModuleTagEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividualCompanyPosition;
 use App\Models\ApplicantIndividualCompanyRelation;
@@ -26,13 +28,7 @@ class CompanyMutator extends BaseMutator
         try {
             DB::beginTransaction();
 
-            /** @var Members $member */
-            $member = Auth::user();
-
             $company = Company::create($args);
-
-            $company->state_id = State::INACTIVE;
-            $company->save();
 
             $relationsData = [
                 'Director',
@@ -72,31 +68,28 @@ class CompanyMutator extends BaseMutator
             $templateSubjects = [
                 'Sign Up: Email Confirmation',
                 'Waiting for approval',
-                'Waiting for IBAN Generation',
                 'Reset Password',
+                'KYC: Common Sign Up: Email Confirmation',
                 'Account Requisites',
                 'Confirm change email',
                 'Account suspended',
                 'Minimum balance limit has been reached for client',
                 'Maximum balance limit has been reached for client',
+                'Forgot Password',
+                'Waiting for IBAN Generation'
             ];
 
             foreach ($templateSubjects as $name) {
-                $template = EmailTemplate::query()->where('name', '=', $name)
-                    ->where('type', 'administration')
-                    ->where('service_type', 'BankingAdminNotify')
-                    ->where('use_layout', 'false')
-                    ->first();
 
                 $newTemplateData = [
-                    'type' => $template->type,
-                    'service_type' => $template->service_type,
-                    'use_layout' => $template->use_layout,
-                    'subject' => $template->subject,
-                    'content' => $template->content,
-                    'member_id' => $member->id,
+                    'type' => EmailTemplatesTypeEnum::ADMINISTRATION,
+                    'service_type' => ModuleTagEnum::BANKING_ADMIN_NOTIFY,
+                    'use_layout' => false,
+                    'subject' => $name,
+                    'content' => "",
+                    'member_id' => Auth::user()->id,
                     'company_id' => $company->id,
-                    'name' => $template->name,
+                    'name' => $name,
                 ];
 
                 EmailTemplate::query()->firstOrCreate($newTemplateData);
