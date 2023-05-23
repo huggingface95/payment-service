@@ -21,7 +21,7 @@ class PermissionOperation extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'referer', 'hidden',
+        'id', 'name', 'referer', 'hidden', 'type', 'method'
     ];
 
     public $timestamps = false;

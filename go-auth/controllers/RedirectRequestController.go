@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"bytes"
-	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
@@ -15,21 +14,11 @@ import (
 )
 
 func RedirectRequest(context *gin.Context) {
-	var operations []requests.OperationInputs
-	var operation requests.OperationInputs
-	var header requests.OperationHeaders
 	var user postgres.User
+	var header requests.OperationHeaders
 
-	jsonData, errJson := context.GetRawData()
-	errHeader := context.ShouldBindHeader(&header)
-	errInput := json.Unmarshal(jsonData, &operations)
-
-	if errInput != nil && errInput.Error() == "json: cannot unmarshal object into Go value of type []requests.OperationInputs" {
-		errInput = json.Unmarshal(jsonData, &operation)
-		operations = append(operations, operation)
-	}
-
-	if errHeader != nil || errInput != nil || errJson != nil {
+	jsonData, err := context.GetRawData()
+	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"message": "Bad Request"})
 		return
 	}
@@ -37,7 +26,12 @@ func RedirectRequest(context *gin.Context) {
 	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetString("bearer"))
 
 	if config.Conf.App.AppEnv != "testing" {
-		ok, message := access.CheckAccess(user, operations, header.Referer)
+		if err := context.ShouldBindHeader(&header); err != nil {
+			context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+			return
+		}
+
+		ok, message := access.CheckAccess(jsonData, user, header.Referer)
 		if ok == false {
 			context.JSON(http.StatusBadRequest, gin.H{"message": message})
 			return
