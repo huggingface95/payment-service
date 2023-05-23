@@ -21,12 +21,21 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
     {
         $account = Account::findOrFail($args['account_id']);
         $args['company_id'] = $account->company_id;
-        $countryId = Company::findOrFail($args['company_id'])->country_id;
-        $priceListId = $repository->getPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found');
-        $priceListFeeId = PriceListFee::query()
-            ->where('price_list_id', '=', $priceListId)
-            ->where('operation_type_id', '=', $operationType)
-            ->first()?->id ?? throw new GraphqlException('Price list fee not found');
+
+        if (!isset($args['price_list_id'])) {
+            $priceListId = $repository->getPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found');
+
+            $args['price_list_id'] = $priceListId;
+        }
+
+        if (!isset($args['price_list_fee_id'])) {
+            $priceListFeeId = PriceListFee::query()
+                ->where('price_list_id', '=', $args['price_list_id'])
+                ->where('operation_type_id', '=', $operationType)
+                ->first()?->id ?? throw new GraphqlException('Price list fee not found');
+
+            $args['price_list_fee_id'] = $priceListFeeId;
+        }
 
         $date = Carbon::now();
         $args['amount_debt'] = $args['amount'];
@@ -37,9 +46,7 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
         $args['payment_number'] = rand();
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['recipient_bank_country_id'] = $countryId;
-        $args['price_list_id'] = $priceListId;
-        $args['price_list_fee_id'] = $priceListFeeId;
+        $args['recipient_bank_country_id'] = Company::findOrFail($args['company_id'])->country_id;
         $args['urgency_id'] = $args['urgency_id'] ?? PaymentUrgencyEnum::STANDART->value;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
 
@@ -51,6 +58,6 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
             $args['execution_at'] = $args['created_at'];
         }
 
-        return new parent($args, Account::findOrFail($args['account_id']));
+        return new parent($args, $account);
     }
 }

@@ -172,8 +172,6 @@ extend type Mutation @guard {
     Создать входящий перевод
     """
     createTransferIncoming(
-        "ID компании"
-        company_id: ID!
         "ID группы"
         group_id: ID!
         "ID типа группы"
@@ -193,8 +191,8 @@ extend type Mutation @guard {
         "ID платежного банка"
         payment_bank_id: ID!
     " requested_by_id: ID! ?? "
-        price_list_id: ID!
-        price_list_fee_id: ID!
+        price_list_id: ID
+        price_list_fee_id: ID
         "Тип бенефициара"
         beneficiary_type: BeneficiaryTypeEnum!
         "Имя бенефициара"
@@ -211,8 +209,8 @@ extend type Mutation @guard {
         sender_bank_country_id: ID
         "Имя отправителя"
         sender_name: String
-        "ID страны отправителя"
-        sender_country_id: ID
+        "ID страна отправителя"
+        sender_country_id: ID!
         "Город отправителя"
         sender_city: String
         "Адрес отправителя"
@@ -225,8 +223,6 @@ extend type Mutation @guard {
         bank_message: String
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: TransferSwiftInput
-        "Статус"
-        status_id: Int
         "Важность платежа Normal/Express"
         urgency_id: ID
         "Кто платит комиссию"
@@ -240,8 +236,6 @@ extend type Mutation @guard {
     updateTransferIncoming(
         "ID"
         id: ID!
-        "ID компании"
-        company_id: ID
         "ID группы"
         group_id: ID
         "ID типа группы"
@@ -292,8 +286,6 @@ extend type Mutation @guard {
         bank_message: String
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: TransferSwiftInput
-        "Статус"
-        status_id: Int
         "Важность платежа Normal/Express"
         urgency_id: ID
         "Кто платит комиссию"

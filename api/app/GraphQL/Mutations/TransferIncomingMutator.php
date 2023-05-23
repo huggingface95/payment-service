@@ -34,7 +34,7 @@ class TransferIncomingMutator extends BaseMutator
     {
         $transfer = $this->transferRepository->findById($args['id']);
 
-        $this->transferService->updateTransferStatus($transfer, $args);
+        $this->transferService->updateTransfer($transfer, $args);
 
         return $transfer;
     }

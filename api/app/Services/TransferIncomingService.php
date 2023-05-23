@@ -11,6 +11,7 @@ use App\Exceptions\GraphqlException;
 use App\Models\TransferIncoming;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Traits\TransferHistoryTrait;
+use App\Traits\UpdateTransferStatusTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\DB;
 
 class TransferIncomingService extends AbstractService
 {
-    use TransferHistoryTrait;
+    use TransferHistoryTrait, UpdateTransferStatusTrait;
 
     public function __construct(
         protected AccountService $accountService,
@@ -30,7 +31,7 @@ class TransferIncomingService extends AbstractService
 
     public function createTransfer(array $args, int $operationType): Builder|Model
     {
-        $createTransferIncoming = TransformerDTO::transform(CreateTransferIncomingStandardDTO::class, $args, $operationType);
+        $createTransferIncoming = TransformerDTO::transform(CreateTransferIncomingStandardDTO::class, $args, $operationType, $this->transferRepository);
 
         return DB::transaction(function () use ($createTransferIncoming) {
             /** @var TransferIncoming $transfer */
@@ -102,19 +103,27 @@ class TransferIncomingService extends AbstractService
                 $this->updateTransferStatusToExecuted($transfer, $transactionDTO);
 
                 break;
-            default:
-                $this->transferRepository->update($transfer, ['status_id' => $args['status_id']]);
-
-                break;
         }
     }
 
-    public function updateTransferStatusToPending(TransferIncoming $transfer): void
+    public function updateTransfer(TransferIncoming $transfer, array $args): void
     {
-        DB::transaction(function () use ($transfer) {
-            $this->transferRepository->update($transfer, [
-                'status_id' => PaymentStatusEnum::PENDING->value,
-            ]);
+        if ($transfer->status_id !== PaymentStatusEnum::UNSIGNED->value) {
+            throw new GraphqlException('Transfer status is not Unsigned');
+        }
+
+        DB::transaction(function () use ($transfer, $args) {
+            if (isset($args['amount']) && $args['amount'] != $transfer->amount) {
+                $transfer->amount = $args['amount'];
+                $this->commissionService->deleteFee($transfer);
+
+                $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
+                $this->commissionService->makeFee($transfer, $transactionDTO);
+
+                $this->createPPHistory($transfer);
+            }
+
+            $this->transferRepository->update($transfer, $args);
 
             $this->createTransferHistory($transfer);
         });
