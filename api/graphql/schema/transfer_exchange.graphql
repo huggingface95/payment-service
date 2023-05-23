@@ -146,4 +146,13 @@ extend type Mutation @guard {
         file_id: [ID!]!
     ): TransferExchange
         @field(resolver: "TransferExchangeMutator@attachFile")
+
+    """
+    Отвязать файлы
+    """
+    detachFIleFromTransferExchange(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferExchange
+    @field(resolver: "TransferExchangeMutator@detachFile")
 }

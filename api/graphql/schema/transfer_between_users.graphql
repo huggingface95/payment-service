@@ -48,4 +48,13 @@ extend type Mutation @guard {
         file_id: [ID!]!
     ): TransferIncoming
     @field(resolver: "TransferBetweenUsersMutator@attachFile")
+
+    """
+    Отвязать файлы
+    """
+    detachFIleFromTransferBetweenUsers(
+        transfer_incoming_id: ID!
+        file_id: [ID!]!
+    ): TransferIncoming
+    @field(resolver: "TransferBetweenUsersMutator@detachFile")
 }

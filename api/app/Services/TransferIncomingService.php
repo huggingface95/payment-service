@@ -166,4 +166,9 @@ class TransferIncomingService extends AbstractService
     {
         $this->transferRepository->attachFileById($transfer, $fileIds);
     }
+
+    public function detachFileById(TransferIncoming $transfer, array $fileIds): void
+    {
+        $this->transferRepository->detachFileById($transfer, $fileIds);
+    }
 }

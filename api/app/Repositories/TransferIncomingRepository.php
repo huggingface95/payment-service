@@ -34,6 +34,15 @@ class TransferIncomingRepository extends Repository implements TransferIncomingR
         return $model;
     }
 
+    public function detachFileById(Model|Builder $model, array $data): Model|Builder|null
+    {
+        if (isset($data)) {
+            $model->files()->detach($data);
+        }
+
+        return $model;
+    }
+
     public function create(array $data): Model|Builder
     {
         return $this->query()->create($data);

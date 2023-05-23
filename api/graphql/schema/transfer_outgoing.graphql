@@ -359,4 +359,13 @@ extend type Mutation @guard {
         file_id: [ID!]!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@attachFile")
+
+    """
+    Отвязать файлы
+    """
+    detachFIleFromTransferOutgoing(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferOutgoing
+    @field(resolver: "TransferOutgoingMutator@detachFile")
 }

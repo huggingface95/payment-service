@@ -70,6 +70,34 @@ class TransferBetweenUsersMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
+    public function detachFile($root, array $args): TransferIncoming|Model|Builder|null
+    {
+        try {
+            DB::beginTransaction();
+            /** @var TransferIncoming $transfer */
+            $transfer = TransferIncoming::query()->with('transferBetweenOutgoing')->where('operation_type_id', OperationTypeEnum::BETWEEN_USERS->value)->find($args['transfer_incoming_id']);
+            if (! $transfer) {
+                throw new GraphqlException('Transfer incoming not found', 'bad request', 400);
+            }
+
+            if (! $transfer->transferBetweenOutgoing) {
+                throw new GraphqlException('transfer between outgoing not found in selected incoming transfer', 'bad request', 400);
+            }
+
+            $this->transferIncomingRepository->detachFileById($transfer, $args['file_id']);
+            $this->transferOutgoingRepository->detachFileById($transfer->transferBetweenOutgoing, $args['file_id']);
+            DB::commit();
+
+            return $transfer;
+        } catch (\Throwable $exception) {
+            DB::rollBack();
+            throw new GraphqlException($exception->getMessage(), $exception->getCategory() ?? 'internal', $exception->getCode());
+        }
+    }
+
+    /**
+     * @throws GraphqlException
+     */
     public function sign($_, array $args): TransferIncoming
     {
         if (! isset($args['code']) || empty($args['code'])) {
