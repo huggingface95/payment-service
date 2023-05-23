@@ -88,9 +88,10 @@ func initRouter() *gin.Engine {
 		}
 	}
 
-	redirect := router.Group("/api").Use(middlewares.AccessAuth())
+	redirect := router.Group("/api")
 	{
-		redirect.POST("", controllers.RedirectRequest)
+		redirect.GET("", controllers.RedirectGetRequest)
+		redirect.POST("", controllers.RedirectRequest).Use(middlewares.AccessAuth())
 	}
 	return router
 }
