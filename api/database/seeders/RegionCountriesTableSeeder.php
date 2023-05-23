@@ -19,9 +19,18 @@ class RegionCountriesTableSeeder extends Seeder
         RegionCountry::unsetEventDispatcher();
 
         $regions = Region::all();
-        $countries = Country::inRandomOrder()->take(5)->get();
+
+        $regionCountries = [
+            1 => [57, 144, 236],  // North America
+            2 => [11, 32, 49],   // South America
+            3 => [76, 83, 110],  // Europe
+        ];
+
 
         foreach ($regions as $region) {
+            $countryIds = $regionCountries[$region->id] ?? [];
+            $countries = Country::whereIn('id', $countryIds)->get();
+
             foreach ($countries as $country) {
                 RegionCountry::create([
                     'region_id' => $region->id,

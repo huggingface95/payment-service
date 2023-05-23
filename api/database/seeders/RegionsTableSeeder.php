@@ -18,10 +18,9 @@ class RegionsTableSeeder extends Seeder
         $faker = Factory::create();
 
         $regions = [
-            'North Americ',
+            'North America',
             'South America',
             'Europe',
-            'Central America',
         ];
 
         foreach ($regions as $region) {
