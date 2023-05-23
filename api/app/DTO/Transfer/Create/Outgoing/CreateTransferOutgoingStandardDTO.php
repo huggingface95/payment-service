@@ -37,7 +37,6 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
         $args['payment_number'] = rand();
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['recipient_country_id'] = $countryId;
         $args['recipient_bank_country_id'] = $countryId;
         $args['price_list_id'] = $priceListId;
         $args['price_list_fee_id'] = $priceListFeeId;

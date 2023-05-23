@@ -296,6 +296,8 @@ extend type Mutation @guard {
         recipient_bank_swift: String
         "Имя получателя"
         recipient_name: String
+        "Страна получателя"
+        recipient_country_id: ID
         "Город получателя"
         recipient_city: String
         "Адрес получателя"
