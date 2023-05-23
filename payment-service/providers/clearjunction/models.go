@@ -1,6 +1,7 @@
 package clearjunction
 
 import (
+	"payment-service/providers"
 	"payment-service/utils"
 	"time"
 )
@@ -12,6 +13,11 @@ const (
 	StatusDeclined  = "declined"
 	StatusCreated   = "created"
 )
+
+type PaymentProvider interface {
+	providers.PaymentProvider
+	PayoutApprove(orderReference string) (result PayoutApproveResponse, err error)
+}
 
 type ClearJunction struct {
 	APIKey   string
@@ -102,4 +108,16 @@ type PayPostbackSubStatuses struct {
 type PayPostbackPayeePayer struct {
 	WalletUuid       string `json:"walletUuid"`
 	ClientCustomerId string `json:"clientCustomerId"`
+}
+
+// PayoutApproveResponse представляет ответ на утверждение PayOut.
+type PayoutApproveResponse struct {
+	OrderReference         string    `json:"orderReference"`
+	ActionProcessingStatus string    `json:"actionProcessingStatus"`
+	Messages               []Message `json:"messages"`
+}
+
+type PayoutApproveResponseWrapper struct {
+	RequestReference string                  `json:"requestReference"`
+	ActionResult     []PayoutApproveResponse `json:"actionResult"`
 }

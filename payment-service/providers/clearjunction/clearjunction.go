@@ -13,6 +13,7 @@ import (
 )
 
 var _ providers.PaymentProvider = (*ClearJunction)(nil)
+var _ PaymentProvider = (*ClearJunction)(nil)
 
 func New(service *providers.Service, apiKey, password, baseURL string) *ClearJunction {
 	provider := &ClearJunction{
@@ -95,4 +96,29 @@ func (cj *ClearJunction) Status(request providers.StatusRequester) (providers.St
 func (cj *ClearJunction) PostBack(request providers.PostBackRequester) (providers.PostBackResponder, error) {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (cj *ClearJunction) PayoutApprove(orderReference string) (result PayoutApproveResponse, err error) {
+	params := map[string]interface{}{
+		"orderReferenceArray": []string{orderReference},
+	}
+
+	responseData, err := cj.transport.Request("POST", "gate/transactionAction/approve", params)
+	if err != nil {
+		return result, err
+	}
+
+	response := &PayoutApproveResponseWrapper{}
+	err = json.Unmarshal(responseData, response)
+	if err != nil {
+		return result, err
+	}
+
+	if len(response.ActionResult) > 0 {
+		result = response.ActionResult[0]
+	} else {
+		err = fmt.Errorf("empty action result")
+	}
+
+	return result, err
 }

@@ -1,7 +1,6 @@
 package queue
 
 import (
-	"encoding/json"
 	"payment-service/providers"
 )
 
@@ -17,7 +16,7 @@ func HandlePayOut(paymentProvider providers.PaymentProvider, payload *PayOutPayl
 	// используйте paymentProvider для выполнения действий, связанных с PayOut
 }
 
-func HandlePostBack(paymentProvider providers.PaymentProvider, payload *json.RawMessage) {
+func HandleEmail(paymentProvider providers.PaymentProvider, payload *EmailPayload) {
 	// Вызов метода PostBack провайдера
 	_, err := paymentProvider.PostBack(payload) // Измените параметры в соответствии с интерфейсом PaymentProvider
 	if err != nil {

@@ -33,6 +33,8 @@ func Start() {
 		DB:        service.DBService,
 	})
 
+	defer service.DBService.Pg.Close()
+
 	// Запуск HTTP сервера приложения
 	if err := service.APIService.FiberClient.Listen(viper.GetString("server.address")); err != nil {
 		panic(err)

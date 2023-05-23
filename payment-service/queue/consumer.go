@@ -5,9 +5,9 @@ import (
 	"payment-service/providers"
 )
 
-func StartConsumer(service *Service, providersService *providers.Service, queueName string) error {
+func StartConsumer(service *Service, providersService *providers.Service) error {
 	for {
-		msg, err := service.Client.BLPop(ctx, 0, queueName).Result()
+		msg, err := service.Client.BLPop(ctx, 0, service.Name).Result()
 		if err != nil {
 			return err
 		}
@@ -36,8 +36,10 @@ func StartConsumer(service *Service, providersService *providers.Service, queueN
 			var payload PayOutPayload
 			json.Unmarshal(task.Payload, &payload)
 			HandlePayOut(provider, &payload)
-		case "postback":
-			HandlePostBack(provider, &task.Payload)
+		case "email":
+			var payload EmailPayload
+			json.Unmarshal(task.Payload, &payload)
+			HandleEmail(provider, &payload)
 		default:
 			// Неизвестный тип задачи, пропускаем
 			continue

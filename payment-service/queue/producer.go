@@ -2,16 +2,15 @@ package queue
 
 import (
 	"encoding/json"
-	"github.com/go-redis/redis/v8"
 )
 
-func PublishMessage(client *redis.Client, queueName string, task *Task) error {
+func PublishMessage(service *Service, task *Task) error {
 	bytes, err := json.Marshal(task)
 	if err != nil {
 		return err
 	}
 
-	err = client.RPush(ctx, queueName, bytes).Err()
+	err = service.Client.RPush(ctx, service.Name, bytes).Err()
 	if err != nil {
 		return err
 	}

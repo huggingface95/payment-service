@@ -6,7 +6,7 @@ import (
 
 // Service - сервис для управления БД
 type Service struct {
-	Conn *DB
+	Pg *Pg
 }
 
 // NewService - создает новый экземпляр Service
@@ -14,13 +14,12 @@ func NewService() *Service {
 	service := &Service{}
 
 	// Инициализация базы данных PostgreSQL
-	dbConn, err := NewDB(viper.GetString("db.connection_string"))
+	newDB, err := NewDB(viper.GetString("db.connection_string"))
 	if err != nil {
 		panic(err)
 	}
-	defer dbConn.Close()
 
-	service.Conn = dbConn
+	service.Pg = newDB
 
 	return service
 }

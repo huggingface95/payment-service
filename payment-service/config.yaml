@@ -5,6 +5,7 @@ db:
 redis:
   connection_string: "localhost:6379"
   pass: ""
+  queue_name: "payment-service"
 providers:
   clearjunction:
     url: "https://sandbox.clearjunction.com/"
