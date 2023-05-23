@@ -19,7 +19,7 @@ class RegionCountriesTableSeeder extends Seeder
         RegionCountry::unsetEventDispatcher();
 
         $regions = Region::all();
-        $countries = Country::all();
+        $countries = Country::inRandomOrder()->take(5)->get();
 
         foreach ($regions as $region) {
             foreach ($countries as $country) {
