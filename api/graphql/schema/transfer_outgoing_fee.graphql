@@ -64,9 +64,9 @@ extend type Mutation @guard {
         id: ID!
         "Сумма"
         amount: Decimal!
-        "Причина"
         "Страна получателя"
         recipient_country_id: ID
+        "Причина"
         reason: String
         "ID файлов"
         file_id: [ID]
