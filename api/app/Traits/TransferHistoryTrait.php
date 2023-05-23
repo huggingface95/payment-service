@@ -29,7 +29,7 @@ trait TransferHistoryTrait
         return $this;
     }
 
-    public function createTransferHistory(TransferOutgoing | TransferIncoming $transfer, string $action = ''): self
+    public function createTransferHistory(TransferOutgoing | TransferIncoming $transfer, string $action = '', string $comment = ''): self
     {
         if (empty($action)) {
             $action = $this->getAction($transfer->status_id);
