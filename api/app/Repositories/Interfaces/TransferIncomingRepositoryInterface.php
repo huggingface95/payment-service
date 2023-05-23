@@ -16,4 +16,6 @@ interface TransferIncomingRepositoryInterface
     public function createWithSwift(array $data): Model|Builder;
 
     public function update(Model|Builder $model, array $data): Model|Builder;
+
+    public function getPriceListIdByArgs(array $args, string $clientType): int|null;
 }

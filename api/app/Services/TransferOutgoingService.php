@@ -11,6 +11,7 @@ use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferHistoryActionEnum;
+use App\Enums\TransferTypeEnum;
 use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\TransferOutgoingJob;
 use App\Models\ApplicantBankingAccess;
@@ -18,6 +19,7 @@ use App\Models\PriceListFeeCurrency;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Traits\TransferHistoryTrait;
+use App\Traits\UpdateTransferStatusTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -27,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TransferOutgoingService extends AbstractService
 {
-    use TransferHistoryTrait;
+    use TransferHistoryTrait, UpdateTransferStatusTrait;
 
     public function __construct(
         protected EmailService $emailService,
@@ -152,18 +154,27 @@ class TransferOutgoingService extends AbstractService
                 $this->updateTransferStatusToCancelAndRefund($transfer);
 
                 break;
-            default:
-                $this->transferRepository->update($transfer, ['status_id' => $args['status_id']]);
-                break;
         }
     }
 
-    public function updateTransferStatusToPending(TransferOutgoing $transfer): void
+    public function updateTransfer(TransferOutgoing $transfer, array $args): void
     {
-        DB::transaction(function () use ($transfer) {
-            $this->transferRepository->update($transfer, [
-                'status_id' => PaymentStatusEnum::PENDING->value,
-            ]);
+        if ($transfer->status_id !== PaymentStatusEnum::UNSIGNED->value) {
+            throw new GraphqlException('Transfer status is not Unsigned');
+        }
+
+        DB::transaction(function () use ($transfer, $args) {
+            if ($transfer->transfer_type_id !== TransferTypeEnum::FEE->value && isset($args['amount']) && $args['amount'] != $transfer->amount) {
+                $transfer->amount = $args['amount'];
+                $this->commissionService->deleteFee($transfer);
+
+                $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
+                $this->commissionService->makeFee($transfer, $transactionDTO);
+
+                $this->createPPHistory($transfer);
+            }
+
+            $this->transferRepository->update($transfer, $args);
 
             $this->createTransferHistory($transfer);
         });

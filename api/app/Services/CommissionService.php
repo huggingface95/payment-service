@@ -296,6 +296,20 @@ class CommissionService extends AbstractService
         return $this;
     }
 
+    public function deleteFee(TransferOutgoing|TransferIncoming $transfer): void
+    {
+        Fee::query()
+            ->where('transfer_id', $transfer->id)
+            ->where('transfer_type', $transfer instanceof TransferOutgoing ? FeeTransferTypeEnum::OUTGOING->toString() : FeeTransferTypeEnum::INCOMING->toString())
+            ->whereIn('fee_type_mode_id', [
+                FeeModeEnum::BASE->value, 
+                FeeModeEnum::PROVIDER->value, 
+                FeeModeEnum::QUOTEPROVIDER->value, 
+                FeeModeEnum::MARGIN->value
+            ])
+            ->delete();
+    }
+
     private function getReasonDescription(TransferOutgoing|TransferIncoming $transfer, int $mode): string
     {
         match ($mode) {

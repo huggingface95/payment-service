@@ -253,8 +253,6 @@ extend type Mutation @guard {
         reason: String
         "Сообщение банка"
         bank_message: String
-        "ID файлов"
-        file_id: [ID]
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: [TransferSwiftInput]
     ): TransferOutgoing
@@ -266,8 +264,6 @@ extend type Mutation @guard {
     updateTransferOutgoing(
         "ID"
         id: ID!
-        "Статус"
-        status_id: Int
         "ID группы"
         group_id: ID
         "ID типа группы"
