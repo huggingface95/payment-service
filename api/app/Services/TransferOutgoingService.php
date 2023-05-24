@@ -7,6 +7,7 @@ use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingRefundDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingScheduledFeeDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingStandardDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\ClientTypeEnum;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
@@ -24,6 +25,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -155,6 +157,8 @@ class TransferOutgoingService extends AbstractService
 
                 break;
         }
+
+        $this->updateTransferChangedBy($transfer);
     }
 
     public function updateTransfer(TransferOutgoing $transfer, array $args): void
@@ -324,6 +328,18 @@ class TransferOutgoingService extends AbstractService
         $createTransferDto = TransformerDTO::transform(CreateTransferOutgoingScheduledFeeDTO::class, $args);
 
         return $this->transferRepository->create($createTransferDto->toArray());
+    }
+
+    private function updateTransferChangedBy(TransferOutgoing $transfer): void
+    {
+        $changedByType = Auth::guard('api') ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString();
+
+        DB::transaction(function () use ($transfer, $changedByType) {
+            $this->transferRepository->update($transfer, [
+                'changed_by_type' => $changedByType == ClientTypeEnum::MEMBER->toString() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class),
+                'changed_by_id' => auth()->user()?->id,
+            ]);
+        });
     }
 
     public function attachFileById(TransferOutgoing $transfer, array $fileIds): void

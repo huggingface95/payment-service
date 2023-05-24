@@ -79,6 +79,8 @@ class TransferOutgoing extends BaseModel
         'price_list_id',
         'price_list_fee_id',
         'fee_amount',
+        'changed_by_type',
+        'changed_by_id',
     ];
 
     protected $casts = [
@@ -118,6 +120,11 @@ class TransferOutgoing extends BaseModel
     public function clientable(): MorphTo
     {
         return $this->morphTo(__FUNCTION__, 'user_type', 'requested_by_id');
+    }
+
+    public function changedBy(): MorphTo
+    {
+        return $this->morphTo(__FUNCTION__, 'changed_by_type', 'changed_by_id');
     }
 
     public function currency(): BelongsTo

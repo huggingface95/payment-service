@@ -10,6 +10,8 @@ type TransferExchange {
     status: PaymentStatus @belongsTo(relation: "paymentStatus")
     "Получить инициатора платежа (Мембер или Апликант)"
     requested_by: Clientable @morphTo(relation: "clientable")
+    "Получить инициатора изменения статуса платежа (Мембер или Апликант)"
+    changed_by: Clientable @morphTo(relation: "changedBy")
     "Получить связанную компанию"
     company: Company @belongsTo(relation: "company")
     "валютный курс"

@@ -21,6 +21,8 @@ class TransferExchange extends BaseModel
         'exchange_rate',
         'client_type',
         'user_type',
+        'changed_by_type',
+        'changed_by_id',
     ];
 
     protected $casts = [
@@ -71,6 +73,11 @@ class TransferExchange extends BaseModel
     public function client(): MorphTo
     {
         return $this->morphTo(__FUNCTION__, 'client_type', 'client_id');
+    }
+
+    public function changedBy(): MorphTo
+    {
+        return $this->morphTo(__FUNCTION__, 'changed_by_type', 'changed_by_id');
     }
 
     public function paymentStatus(): BelongsTo
