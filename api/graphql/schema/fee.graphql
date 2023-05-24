@@ -18,6 +18,8 @@ type Fee {
     account: Account @belongsTo(relation: "account")
     "Статус"
     status: PaymentStatus @belongsTo(relation: "paymentStatus")
+    "Fee mode"
+    mode: FeeMode @belongsTo(relation: "mode")
 }
 
 extend type Query @guard {
