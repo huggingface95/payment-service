@@ -36,9 +36,9 @@ func GetAuthUserFromRequest(c *gin.Context) postgres.User {
 func GetAuthUserByToken(jwtType string, jwtAccessType string, token string) postgres.User {
 	var err error
 	if jwtAccessType == constants.AccessToken {
-		err = services.ValidateAccessToken(token, jwtType, false)
+		err = services.ValidateAccessToken(token, jwtType)
 	} else if jwtAccessType == constants.ForTwoFactor {
-		err = services.ValidateForTwoFactorToken(token, jwtType, false)
+		err = services.ValidateForTwoFactorToken(token, jwtType)
 	}
 	if err != nil {
 		return nil

@@ -49,7 +49,7 @@ func getJWTClaims(id uint64, name string, provider string, accessType string) *J
 func GenerateJWT(id uint64, name string, provider string, jwtType string, accessType string) (token string, expirationTime time.Time, err error) {
 	jwtObject := cache.Caching.Jwt.Get(fmt.Sprintf(constants.CacheJwt, jwtType, accessType, provider, id))
 	if jwtObject != nil {
-		_, err = parseJWT(jwtObject.Token, jwtType, false)
+		_, err = parseJWT(jwtObject.Token, jwtType)
 		if err == nil {
 			expirationTime = jwtObject.ExpiredAt
 			token = jwtObject.Token
@@ -85,10 +85,8 @@ func GetToken(claims jwt.Claims, secret string) (tokenString string, err error) 
 	return
 }
 
-func parseJWT(signedToken string, jwtType string, replaceBearer bool) (claims *JWTClaim, err error) {
-	if replaceBearer {
-		signedToken = strings.Replace(signedToken, "Bearer ", "", -1)
-	}
+func parseJWT(signedToken string, jwtType string) (claims *JWTClaim, err error) {
+	signedToken = strings.Replace(signedToken, "Bearer ", "", -1)
 
 	oauthClients := oauthRepository.GetOauthClients(jwtType)
 
@@ -110,8 +108,8 @@ func parseJWT(signedToken string, jwtType string, replaceBearer bool) (claims *J
 	return claims, err
 }
 
-func ValidateAccessToken(token string, jwtType string, replaceBearer bool) (err error) {
-	claims, err := parseJWT(token, jwtType, replaceBearer)
+func ValidateAccessToken(token string, jwtType string) (err error) {
+	claims, err := parseJWT(token, jwtType)
 	if err == nil {
 		if claims.Type != constants.AccessToken {
 			err = errors.New("bad access token")
@@ -121,8 +119,8 @@ func ValidateAccessToken(token string, jwtType string, replaceBearer bool) (err 
 	return
 }
 
-func ValidateForTwoFactorToken(token string, jwtType string, replaceBearer bool) (err error) {
-	claims, err := parseJWT(token, jwtType, replaceBearer)
+func ValidateForTwoFactorToken(token string, jwtType string) (err error) {
+	claims, err := parseJWT(token, jwtType)
 	if err == nil {
 		if claims.Type != constants.ForTwoFactor {
 			err = errors.New("bad two factor token")
@@ -133,5 +131,5 @@ func ValidateForTwoFactorToken(token string, jwtType string, replaceBearer bool)
 }
 
 func GetClaims(token string, jwtType string, replaceBearer bool) (claims *JWTClaim, err error) {
-	return parseJWT(token, jwtType, replaceBearer)
+	return parseJWT(token, jwtType)
 }
