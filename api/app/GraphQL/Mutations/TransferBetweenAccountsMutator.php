@@ -62,6 +62,26 @@ class TransferBetweenAccountsMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
+    public function detachFile($root, array $args): TransferIncoming|Model|Builder|null
+    {
+        try {
+            DB::beginTransaction();
+            /** @var TransferIncoming $transfer */
+            $transfer = TransferIncoming::query()->with('transferBetweenOutgoing')->where('operation_type_id', OperationTypeEnum::BETWEEN_ACCOUNT->value)->findOrFail($args['transfer_incoming_id']);
+            $this->transferIncomingRepository->detachFileById($transfer, $args['file_id']);
+            $this->transferOutgoingRepository->detachFileById($transfer->transferBetweenOutgoing, $args['file_id']);
+            DB::commit();
+
+            return $transfer;
+        } catch (\Throwable $exception) {
+            DB::rollBack();
+            throw new GraphqlException($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    /**
+     * @throws GraphqlException
+     */
     public function sign($_, array $args): TransferIncoming
     {
         if (! isset($args['code']) || empty($args['code'])) {

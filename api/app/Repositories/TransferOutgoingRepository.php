@@ -39,6 +39,15 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
         return $model;
     }
 
+    public function detachFileById(Model|Builder $model, array $data): Model|Builder|null
+    {
+        if (! empty($data)) {
+            $model->files()->detach($data);
+        }
+
+        return $model;
+    }
+
     public function create(array $data): Model|Builder
     {
         return $this->query()->create($data);

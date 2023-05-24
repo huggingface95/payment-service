@@ -313,4 +313,12 @@ class TransferExchangeService extends AbstractService
             $this->transferIncomingRepository->attachFileById($transfer->transferIncoming, $fileIds);
         });
     }
+
+    public function detachFileById(TransferExchange $transfer, array $fileIds): void
+    {
+        DB::transaction(function () use ($transfer, $fileIds) {
+            $this->transferOutgoingRepository->detachFileById($transfer->transferOutgoing, $fileIds);
+            $this->transferIncomingRepository->detachFileById($transfer->transferIncoming, $fileIds);
+        });
+    }
 }
