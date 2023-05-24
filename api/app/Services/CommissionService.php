@@ -302,9 +302,9 @@ class CommissionService extends AbstractService
             ->where('transfer_id', $transfer->id)
             ->where('transfer_type', $transfer instanceof TransferOutgoing ? FeeTransferTypeEnum::OUTGOING->toString() : FeeTransferTypeEnum::INCOMING->toString())
             ->whereIn('fee_type_mode_id', [
-                FeeModeEnum::BASE->value, 
-                FeeModeEnum::PROVIDER->value, 
-                FeeModeEnum::QUOTEPROVIDER->value, 
+                FeeModeEnum::BASE->value,
+                FeeModeEnum::PROVIDER->value,
+                FeeModeEnum::QUOTEPROVIDER->value,
                 FeeModeEnum::MARGIN->value
             ])
             ->delete();
@@ -315,7 +315,7 @@ class CommissionService extends AbstractService
         match ($mode) {
             FeeModeEnum::BASE->value => $description = $transfer->paymentSystem?->name,
             FeeModeEnum::PROVIDER->value => $description = $transfer->paymentProvider?->name,
-            FeeModeEnum::QUOTEPROVIDER->value => $description = '',
+            FeeModeEnum::QUOTEPROVIDER->value => $description = $transfer->priceListFee->quoteProvider?->name,
             FeeModeEnum::MARGIN->value => $description = '',
             default => $description = '',
         };

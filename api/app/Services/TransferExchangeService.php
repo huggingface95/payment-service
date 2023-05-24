@@ -72,6 +72,8 @@ class TransferExchangeService extends AbstractService
                 'exchange_rate' => Str::decimal($data['exchange_rate']),
             ]);
 
+            $outgoing->reason = 'Exchange: Buy (Rate 1 ' . $outgoing->currency->code . '-> ' . (1 * $exchange->exchange_rate) . ' ' . $incoming->currency->code . ')';
+
             $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $outgoing, $fromAccount, $toAccount);
             $this->commissionService->makeFee($outgoing, $transactionOutgoing);
 
