@@ -61,9 +61,9 @@ class CreateTransferOutgoingDTO
 
     public int $requested_by_id;
 
-    public int $price_list_id;
+    public ?int $price_list_id;
 
-    public int $price_list_fee_id;
+    public ?int $price_list_fee_id;
 
     public int $urgency_id;
 
