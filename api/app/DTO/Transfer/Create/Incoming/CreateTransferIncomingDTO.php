@@ -39,9 +39,9 @@ class CreateTransferIncomingDTO
 
     public int $payment_bank_id;
 
-    public int $price_list_id;
+    public ?int $price_list_id;
 
-    public int $price_list_fee_id;
+    public ?int $price_list_fee_id;
 
     public int $recipient_id;
 
