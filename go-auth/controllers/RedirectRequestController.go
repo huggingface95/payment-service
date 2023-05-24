@@ -25,7 +25,7 @@ func RedirectRequest(context *gin.Context) {
 		return
 	}
 
-	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetString("bearer"))
+	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetHeader("Authorization"))
 
 	if config.Conf.App.AppEnv != "testing" {
 		if err := context.ShouldBindHeader(&header); err != nil {
