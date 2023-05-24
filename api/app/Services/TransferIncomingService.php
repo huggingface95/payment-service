@@ -5,6 +5,7 @@ namespace App\Services;
 use App\DTO\Transaction\TransactionDTO;
 use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingStandardDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\ClientTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferHistoryActionEnum;
 use App\Exceptions\GraphqlException;
@@ -15,6 +16,7 @@ use App\Traits\UpdateTransferStatusTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TransferIncomingService extends AbstractService
@@ -104,6 +106,8 @@ class TransferIncomingService extends AbstractService
 
                 break;
         }
+
+        $this->updateTransferChangedBy($transfer);
     }
 
     public function updateTransfer(TransferIncoming $transfer, array $args): void
@@ -160,6 +164,18 @@ class TransferIncomingService extends AbstractService
 
             throw new GraphqlException($e->getMessage(), 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+    }
+
+    private function updateTransferChangedBy(TransferIncoming $transfer): void
+    {
+        $changedByType = Auth::guard('api') ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString();
+
+        DB::transaction(function () use ($transfer, $changedByType) {
+            $this->transferRepository->update($transfer, [
+                'changed_by_type' => $changedByType == ClientTypeEnum::MEMBER->toString() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class),
+                'changed_by_id' => auth()->user()?->id,
+            ]);
+        });
     }
 
     public function attachFileById(TransferIncoming $transfer, array $fileIds): void

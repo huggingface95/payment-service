@@ -75,6 +75,8 @@ class TransferIncoming extends BaseModel
         'price_list_id',
         'price_list_fee_id',
         'fee_amount',
+        'changed_by_type',
+        'changed_by_id',
     ];
 
     protected $casts = [
@@ -173,6 +175,11 @@ class TransferIncoming extends BaseModel
     public function recipient(): MorphTo
     {
         return $this->morphTo(__FUNCTION__, 'recipient_type', 'recipient_id');
+    }
+
+    public function changedBy(): MorphTo
+    {
+        return $this->morphTo(__FUNCTION__, 'changed_by_type', 'changed_by_id');
     }
 
     public function respondentFee(): BelongsTo

@@ -39,6 +39,8 @@ type TransferIncoming {
     recipient: Client @morphTo(relation: "recipient")
     "Получить связанную компанию"
     company: Company @belongsTo(relation: "company")
+    "Получить инициатора изменения статуса платежа (Мембер или Апликант)"
+    changed_by: Clientable @morphTo(relation: "changedBy")
     system_message: String
     reason: String
     channel: String
