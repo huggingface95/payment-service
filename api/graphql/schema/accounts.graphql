@@ -148,7 +148,6 @@ extend type Query @guard {
 }
 
 input QueryClientListFilterStatic @spread{
-    id: ID @eq
     group_type_id: ID @eq
     company_id: ID @eq
     group_role_id: ID @eq
