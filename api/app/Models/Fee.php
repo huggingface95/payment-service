@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
@@ -83,5 +84,10 @@ class Fee extends BaseModel
     public function mode(): BelongsTo
     {
         return $this->belongsTo(FeeMode::class, 'fee_type_mode_id');
+    }
+
+    public function files(): BelongsToMany
+    {
+        return $this->belongsToMany(Files::class, 'fee_file_relation', 'fee_id', 'file_id');
     }
 }
