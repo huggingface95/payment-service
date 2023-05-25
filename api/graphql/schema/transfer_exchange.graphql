@@ -84,6 +84,7 @@ input QueryTransferExchangesFilterStatic @spread {
     debited_account_id: ID @eq
     credited_account_id: ID @eq
     status_id: ID @eq
+    user_type: UserType @eq
 }
 
 input QueryDownloadTransferExchangesFilterStatic @spread {
