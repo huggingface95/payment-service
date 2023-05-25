@@ -27,10 +27,10 @@ trait PriceListFeeTrait
                 if ((isset($args['operation_type_id']) && $args['operation_type_id'] == OperationTypeEnum::EXCHANGE->value) || $isExchange) {
                     $model = 'App\\Models\\'.$modelBase.'DestinationCurrency';
 
-                    foreach ($currency['currencies_destination'] as $currency) {
+                    foreach ($currency['currencies_destination'] as $cId) {
                         $model::create([
                             $fieldBase.'_currency_id' => $priceListFeeCurrency->id,
-                            'currency_id' => $currency,
+                            'currency_id' => $cId,
                         ]);
                     }
                 }
