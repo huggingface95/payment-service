@@ -13,7 +13,7 @@ type FastHTTP struct {
 }
 
 // Request - выполняет HTTP запрос с заданным методом, endpoint-ом и параметрами
-func (c *FastHTTP) Request(method string, endpoint string, params map[string]interface{}) ([]byte, error) {
+func (c *FastHTTP) Request(method string, endpoint string, params map[string]interface{}, middleware func(requestBody []byte)) ([]byte, error) {
 	var responseBody []byte
 
 	// Создание объекта запроса fasthttp
@@ -40,7 +40,14 @@ func (c *FastHTTP) Request(method string, endpoint string, params map[string]int
 		}
 
 		req.Header.SetMethod(fiber.MethodPost)
+		req.Header.SetContentType(fiber.MIMEApplicationJSON)
 		req.SetBody(body)
+
+		middleware(body)
+
+		for k, v := range c.ReqHeaders {
+			req.Header.Set(k, v)
+		}
 
 		// Отправка POST запроса с использованием клиента fasthttp
 		if err := c.Do(req, res); err != nil {

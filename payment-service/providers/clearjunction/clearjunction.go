@@ -27,8 +27,6 @@ func New(services Services, apiKey, password, baseURL string) *ClearJunction {
 		transport: utils.FastHTTP{Client: &fasthttp.Client{}, ReqHeaders: map[string]string{}},
 	}
 
-	provider.Auth(providers.AuthRequester(AuthRequest{}))
-
 	services.Providers.ProvidersList[utils.GetCurrentPackageName()] = provider
 	return provider
 }
@@ -67,10 +65,10 @@ func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANRe
 		return nil, fmt.Errorf("invalid IBAN request")
 	}
 
-	url := fmt.Sprintf("%sv7/gate/allocate/v2/iban", cj.BaseURL)
+	url := fmt.Sprintf("%sv7/gate/allocate/v2/create/iban", cj.BaseURL)
 
 	// Выполнение POST запроса с помощью HTTP клиента из API сервиса
-	responseBody, err := cj.transport.Request("POST", url, ibanRequest)
+	responseBody, err := cj.transport.Request("POST", url, ibanRequest, cj.authMiddleware)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send IBAN request: %w", err)
 	}
@@ -104,7 +102,7 @@ func (cj *ClearJunction) Status(request providers.StatusRequester) (providers.St
 	url := fmt.Sprintf("%sv7/gate/allocate/v2/list/iban/%s", cj.BaseURL, statusRequest.ClientCustomerId)
 
 	// Выполнение GET запроса с помощью HTTP клиента из API сервиса
-	responseBody, err := cj.transport.Request(fasthttp.MethodGet, url, nil)
+	responseBody, err := cj.transport.Request(fasthttp.MethodGet, url, nil, cj.authMiddleware)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send Status request: %w", err)
 	}
@@ -128,6 +126,10 @@ func (cj *ClearJunction) PostBack(request providers.PostBackRequester) (provider
 	default:
 		return nil, fmt.Errorf("unsupported postback request type")
 	}
+}
+
+func (cj *ClearJunction) authMiddleware(requestBody []byte) {
+	cj.Auth(AuthRequest{Body: requestBody})
 }
 
 func (cj *ClearJunction) handleIbanPostback(request *IbanPostbackRequest) (providers.PostBackResponder, error) {
@@ -225,7 +227,7 @@ func (cj *ClearJunction) payoutApprove(orderReference string) (result PayoutAppr
 		"orderReferenceArray": []string{orderReference},
 	}
 
-	responseData, err := cj.transport.Request("POST", "gate/transactionAction/approve", params)
+	responseData, err := cj.transport.Request("POST", "gate/transactionAction/approve", params, cj.authMiddleware)
 	if err != nil {
 		return result, err
 	}
