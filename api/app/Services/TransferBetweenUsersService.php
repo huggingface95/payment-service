@@ -6,7 +6,6 @@ use App\DTO\Transaction\TransactionDTO;
 use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingBetweenUsersDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingBetweenUsersDTO;
 use App\DTO\TransformerDTO;
-use App\Enums\ClientTypeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
@@ -21,7 +20,6 @@ use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Traits\TransferHistoryTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TransferBetweenUsersService extends AbstractService
@@ -107,8 +105,6 @@ class TransferBetweenUsersService extends AbstractService
 
                 break;
         }
-
-        $this->updateTransferChangedBy($transfers);
     }
 
     public function updateTransferStatusToPending(array $transfers): void
@@ -207,23 +203,6 @@ class TransferBetweenUsersService extends AbstractService
         if ($fromAccount->currencies->id != $toAccount->currencies->id) {
             throw new GraphqlException('Account currencies are different', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-    }
-
-    private function updateTransferChangedBy(array $transfers): void
-    {
-        $changedByType = Auth::guard('api') ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString();
-
-        DB::transaction(function () use ($transfers, $changedByType) {
-            $this->transferOutgoingRepository->update($transfers['outgoing'], [
-                'changed_by_type' => $changedByType == ClientTypeEnum::MEMBER->toString() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class),
-                'changed_by_id' => auth()->user()?->id,
-            ]);
-
-            $this->transferIncomingRepository->update($transfers['incoming'], [
-                'changed_by_type' => $changedByType == ClientTypeEnum::MEMBER->toString() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class),
-                'changed_by_id' => auth()->user()?->id,
-            ]);
-        });
     }
 
     public function attachFileById(array $transfers, array $fileIds): void
