@@ -5,8 +5,6 @@ type TransferOutgoing {
     id: ID!
     "Получить инициатора платежа (Мембер или Апликант)"
     requested_by: Clientable @morphTo(relation: "clientable")
-    "Получить инициатора изменения статуса платежа (Мембер или Апликант)"
-    changed_by: Clientable @morphTo(relation: "changedBy")
     "Тип инициатора платежа"
     user_type: UserType
     "Сумма"
