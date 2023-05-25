@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
@@ -18,6 +19,7 @@ use Illuminate\Support\Carbon;
  */
 class EmailTemplateLayout extends BaseModel
 {
+    use BaseObServerTrait;
     /**
      * The attributes that are mass assignable.
      *

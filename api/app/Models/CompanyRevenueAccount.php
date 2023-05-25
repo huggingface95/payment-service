@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
+
 /**
  * Class Account
  *
@@ -10,6 +12,8 @@ namespace App\Models;
  */
 class CompanyRevenueAccount extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'company_revenue_accounts';
 
     protected $fillable = [

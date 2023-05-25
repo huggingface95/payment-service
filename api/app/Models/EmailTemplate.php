@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\PermissionFilterScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
@@ -26,6 +27,8 @@ use Illuminate\Support\Carbon;
  */
 class EmailTemplate extends BaseModel
 {
+    use BaseObServerTrait;
+
     public const ADMINISTRATION = 'administration';
 
     public const CLIENT = 'client';

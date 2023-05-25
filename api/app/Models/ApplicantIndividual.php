@@ -8,6 +8,7 @@ use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantIndividualUpdatedEvent;
 use App\Models\Clickhouse\ActiveSession;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use App\Models\Traits\UserPermission;
 use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
@@ -38,6 +39,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property int company_id
  * @property ApplicantBankingAccess $applicantBankingAccess
  * @property Company company
+ * @property Account $account
  * @property ?array $active_session
  */
 class ApplicantIndividual extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
@@ -50,6 +52,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     use BelongsToOne;
     use UserPermission;
     use HasRelationships;
+    use BaseObServerTrait;
 
     protected $table = 'applicant_individual';
 

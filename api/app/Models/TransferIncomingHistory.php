@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
 
 class TransferIncomingHistory extends BaseModel
 {
+    use BaseObServerTrait;
+
     public $timestamps = false;
 
     protected $fillable = [

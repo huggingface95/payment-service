@@ -2,11 +2,22 @@
 
 namespace App\Models;
 
+use App\Models\Interfaces\CustomObServerInterface;
+use App\Models\Traits\BaseObServerTrait;
+use App\Observers\CompanyModuleObserver;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class CompanyModule extends BaseModel
+/**
+ * Class CompanyModule
+ *
+ * @property boolean is_active
+ * @property Company company
+ */
+class CompanyModule extends BaseModel implements CustomObServerInterface
 {
+    use BaseObServerTrait;
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -38,5 +49,10 @@ class CompanyModule extends BaseModel
     public function quoteProviders(): HasMany
     {
         return $this->hasMany(CompanyModuleQuoteProvider::class, 'company_module_id', 'id');
+    }
+
+    public static function getObServer(): string
+    {
+        return CompanyModuleObserver::class;
     }
 }

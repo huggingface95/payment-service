@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use App\Services\PriceListFeeService;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class PriceListPPFee extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'price_list_pp_fees';
 
     /**

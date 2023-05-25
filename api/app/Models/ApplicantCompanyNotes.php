@@ -4,10 +4,13 @@ namespace App\Models;
 
 use App\Events\Applicant\ApplicantCompanyNoteCreatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApplicantCompanyNotes extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'applicant_company_notes';
 
     protected $dispatchesEvents = [

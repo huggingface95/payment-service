@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 class CommissionPriceList extends BaseModel
 {
     use HasFactory;
+    use BaseObServerTrait;
 
     public $timestamps = false;
 

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Models\Scopes\MemberScope;
+use App\Models\Traits\BaseObServerTrait;
 
 class ApplicantIndividualLabel extends BaseModel
 {
+    use BaseObServerTrait;
+
     /**
      * The attributes that are mass assignable.
      *

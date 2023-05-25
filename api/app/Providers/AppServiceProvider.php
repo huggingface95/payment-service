@@ -64,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
             'QuoteProvider' => 'App\Models\QuoteProvider',
             'Outgoing' => 'App\Models\TransferOutgoing',
             'Incoming' => 'App\Models\TransferIncoming',
+            'Account' => 'App\Models\Account',
         ]);
     }
 }

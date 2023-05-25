@@ -3,11 +3,14 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ApplicantIndividualCompany extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'applicant_individual_company';
 
     /**

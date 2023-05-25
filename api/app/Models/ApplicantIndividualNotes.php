@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Events\Applicant\ApplicantIndividualNoteCreatedEvent;
+use App\Models\Traits\BaseObServerTrait;
 
 class ApplicantIndividualNotes extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'applicant_individual_notes';
 
     protected $dispatchesEvents = [

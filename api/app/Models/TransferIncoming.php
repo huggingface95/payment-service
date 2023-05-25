@@ -6,7 +6,10 @@ use Ankurk91\Eloquent\BelongsToOne;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
+use App\Models\Interfaces\CustomObServerInterface;
 use App\Models\Scopes\TransferFeeAmountScope;
+use App\Models\Traits\BaseObServerTrait;
+use App\Observers\TransferIncomingObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -20,13 +23,15 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  *
  * @property TransferOutgoing $transferBetweenOutgoing
  * @property ApplicantIndividual|ApplicantCompany $recipient
+ * @property Account $account
  * @property string recipient_type
  * @property int recipient_id
  */
-class TransferIncoming extends BaseModel
+class TransferIncoming extends BaseModel implements CustomObServerInterface
 {
     use HasFactory;
     use BelongsToOne;
+    use BaseObServerTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -215,5 +220,10 @@ class TransferIncoming extends BaseModel
     public function transferBetweenOutgoing(): \Ankurk91\Eloquent\Relations\BelongsToOne
     {
         return $this->belongsToOne(TransferOutgoing::class, TransferBetweenRelation::class, 'transfer_incoming_id', 'transfer_outgoing_id');
+    }
+
+    public static function getObServer(): string
+    {
+        return TransferIncomingObserver::class;
     }
 }

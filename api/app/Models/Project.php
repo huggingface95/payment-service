@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\DTO\GraphQLResponse\ProjectApiSettingsResponse;
 use App\DTO\TransformerDTO;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Schema;
  */
 class Project extends BaseModel
 {
+
+    use BaseObServerTrait;
     /**
      * The attributes that are mass assignable.
      *

@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApplicantCompanyModules extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'applicant_company_modules';
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ModuleEnum;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -23,6 +24,7 @@ use Illuminate\Support\Collection;
 class Company extends BaseModel
 {
     use SoftDeletes;
+    use BaseObServerTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -236,5 +238,15 @@ class Company extends BaseModel
     public function revenues(): HasMany
     {
         return $this->hasMany(CompanyRevenueAccount::class, 'company_id');
+    }
+
+    public function applicantIndividuals(): HasMany
+    {
+        return $this->hasMany(ApplicantIndividual::class, 'company_id');
+    }
+
+    public function applicantCompanies(): HasMany
+    {
+        return $this->hasMany(ApplicantCompany::class, 'company_id');
     }
 }

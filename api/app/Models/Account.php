@@ -6,7 +6,11 @@ use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\PaymentStatusEnum;
 use App\Models\Interfaces\BaseModelInterface;
+use App\Models\Interfaces\CustomObServerInterface;
+use App\Models\Interfaces\HistoryInterface;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
+use App\Observers\AccountObserver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -41,10 +45,11 @@ use Illuminate\Support\Collection;
  * @method static find(int $id)
  * @method static findOrFail(int $id)
  */
-class Account extends BaseModel implements BaseModelInterface
+class Account extends BaseModel implements BaseModelInterface, CustomObServerInterface, HistoryInterface
 {
     use MorphToOne;
     use BelongsToOne;
+    use BaseObServerTrait;
 
     protected $table = 'accounts';
 
@@ -113,7 +118,7 @@ class Account extends BaseModel implements BaseModelInterface
 
     public function getAliasAttribute(): bool
     {
-        return ! $this->isParent();
+        return !$this->isParent();
     }
 
     public function getClientAccountsAttribute(): array
@@ -151,7 +156,7 @@ class Account extends BaseModel implements BaseModelInterface
         $lastIncomingTransaction = $this->transferIncomings()->orderBy('execution_at', 'desc')->first()?->execution_at;
         $lastOutgoingTransaction = $this->transferOutgoings()->orderBy('execution_at', 'desc')->first()?->execution_at;
 
-        if (! $lastIncomingTransaction && ! $lastOutgoingTransaction) {
+        if (!$lastIncomingTransaction && !$lastOutgoingTransaction) {
             return null;
         }
 
@@ -390,4 +395,25 @@ class Account extends BaseModel implements BaseModelInterface
 
         return $sql;
     }
+
+    public function getHistoryColumns(): array
+    {
+        return ['account_state_id'];
+    }
+
+    public function getHistoryActions(): array
+    {
+        return ['updating'];
+    }
+
+    public function enableHistory(): bool
+    {
+        return true;
+    }
+
+    public static function getObServer(): string
+    {
+        return AccountObserver::class;
+    }
+
 }

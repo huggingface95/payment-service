@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
@@ -22,6 +23,8 @@ use Illuminate\Support\Collection;
  */
 class MemberAccessLimitation extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $fillable = [
         'member_id',
         'company_id',

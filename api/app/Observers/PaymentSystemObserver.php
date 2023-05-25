@@ -9,9 +9,9 @@ use App\Models\PaymentSystem;
 
 class PaymentSystemObserver extends BaseObserver
 {
-    public function creating(PaymentSystem|BaseModel $model): bool
+    public function creating(PaymentSystem|BaseModel $model, bool $callHistory = false): bool
     {
-        if (! parent::creating($model)) {
+        if (!parent::creating($model, $callHistory)) {
             return false;
         }
 
@@ -26,6 +26,8 @@ class PaymentSystemObserver extends BaseObserver
 //                throw new GraphqlException('Payment System internal is already in company');
 //            }
 //        }
+
+        $this->checkAndCreateHistory($model, 'creating');
 
         return true;
     }

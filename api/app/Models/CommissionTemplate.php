@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\MemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,6 +19,8 @@ use Illuminate\Support\Facades\DB;
  */
 class CommissionTemplate extends BaseModel
 {
+    use BaseObServerTrait;
+
     public $timestamps = false;
 
     protected $table = 'commission_template';

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class TransferExchange extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $fillable = [
         'company_id',
         'client_id',

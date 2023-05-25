@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Interfaces\CustomObServerInterface;
+use App\Models\Traits\BaseObServerTrait;
+use App\Observers\PaymentSystemObserver;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -18,10 +21,11 @@ use Staudenmeir\EloquentHasManyDeep\HasTableAlias;
  * @property string name
  * @property int payment_provider_id
  */
-class PaymentSystem extends BaseModel
+class PaymentSystem extends BaseModel implements CustomObServerInterface
 {
     use HasRelationships;
     use HasTableAlias;
+    use BaseObServerTrait;
 
     public $timestamps = false;
 
@@ -108,5 +112,10 @@ class PaymentSystem extends BaseModel
     public function commissionTemplate(): HasOneThrough
     {
         return $this->hasOneThrough(CommissionTemplate::class, PaymentProvider::class, 'id', 'payment_provider_id', 'payment_provider_id', 'id');
+    }
+
+    public static function getObServer(): string
+    {
+        return PaymentSystemObserver::class;
     }
 }

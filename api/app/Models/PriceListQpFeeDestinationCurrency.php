@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
+
 class PriceListQpFeeDestinationCurrency extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'price_list_qp_fee_destination_currencies';
 
     protected $fillable = [

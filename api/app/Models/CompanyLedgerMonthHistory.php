@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CompanyLedgerMonthHistory extends BaseModel
 {
+    use BaseObServerTrait;
+
     public $timestamps = false;
 
     protected $fillable = [
