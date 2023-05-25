@@ -9,6 +9,8 @@ func SetupRoutes(services Services) {
 	// Эндпоинт для проверки здоровья сервиса
 	services.API.FiberClient.Get("/health", HealthCheck)
 
+	serverConfig := services.API.Config
+
 	{ // Группа handler-ов провайдера clearjunction
 		group := services.API.FiberClient.Group("/clearjunction")
 		providerConfig := services.Providers.Config["clearjunction"].(map[string]interface{})
@@ -23,7 +25,10 @@ func SetupRoutes(services Services) {
 		// Создаем экземпляр провайдера ClearJunction
 		provider := clearjunction.New(
 			providerServices,
-			providerConfig["key"].(string), providerConfig["password"].(string), providerConfig["url"].(string),
+			providerConfig["key"].(string),
+			providerConfig["password"].(string),
+			providerConfig["url"].(string),
+			serverConfig["public_url"].(string),
 		)
 		group.Get("/iban-company/check", func(c *fiber.Ctx) error {
 			return ClearjunctionCheckStatus(c, provider)

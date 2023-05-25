@@ -17,12 +17,12 @@ import (
 var _ providers.PaymentProvider = (*ClearJunction)(nil)
 var _ PaymentProvider = (*ClearJunction)(nil)
 
-func New(services Services, apiKey, password, baseURL string) *ClearJunction {
+func New(services Services, apiKey, password, baseURL, publicURL string) *ClearJunction {
 	provider := &ClearJunction{
-		APIKey:   apiKey,
-		Password: password,
-		BaseURL:  baseURL,
-
+		APIKey:    apiKey,
+		Password:  password,
+		BaseURL:   baseURL,
+		PublicURL: publicURL,
 		Services:  services,
 		transport: utils.FastHTTP{Client: &fasthttp.Client{}, ReqHeaders: map[string]string{}},
 	}
@@ -173,7 +173,8 @@ func (cj *ClearJunction) authMiddleware(requestBody []byte) {
 }
 
 func (cj *ClearJunction) handleIbanPostback(request *IbanPostbackRequest) (providers.PostBackResponder, error) {
-	if request.Status == StatusAccepted {
+	switch request.Status {
+	case StatusAccepted:
 		// Формируем map с полями для обновления и условиями where и передаём в функцию обновления таблицы
 		if err := cj.Services.DB.Pg.Update("accounts",
 			map[string]interface{}{"account_state_id": db.AccountStateWaitingForApproval, "account_number": request.Iban},
@@ -183,9 +184,9 @@ func (cj *ClearJunction) handleIbanPostback(request *IbanPostbackRequest) (provi
 		}
 
 		return &IbanPostbackResponse{OrderReference: request.OrderReference}, nil
+	default:
+		return nil, fmt.Errorf("wrong IBAN postback status. Messages: %v", request.Messages)
 	}
-
-	return nil, fmt.Errorf("wrong request")
 }
 
 func (cj *ClearJunction) handlePayPostback(request *PayPostbackRequest) (providers.PostBackResponder, error) {

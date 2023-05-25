@@ -14,8 +14,6 @@ type FastHTTP struct {
 
 // Request - выполняет HTTP запрос с заданным методом, endpoint-ом и параметрами
 func (c *FastHTTP) Request(method string, endpoint string, params map[string]interface{}, middleware func(requestBody []byte)) ([]byte, error) {
-	var responseBody []byte
-
 	// Создание объекта запроса fasthttp
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
@@ -33,33 +31,17 @@ func (c *FastHTTP) Request(method string, endpoint string, params map[string]int
 
 	switch method {
 	case fiber.MethodPost:
+		req.Header.SetMethod(fiber.MethodPost)
+
 		// Преобразование параметров запроса в JSON
 		body, err := json.Marshal(params)
 		if err != nil {
 			return nil, fmt.Errorf("ошибка преобразования параметров запроса в JSON: %w", err)
 		}
 
-		req.Header.SetMethod(fiber.MethodPost)
-		req.Header.SetContentType(fiber.MIMEApplicationJSON)
 		req.SetBody(body)
 
 		middleware(body)
-
-		for k, v := range c.ReqHeaders {
-			req.Header.Set(k, v)
-		}
-
-		// Отправка POST запроса с использованием клиента fasthttp
-		if err := c.Do(req, res); err != nil {
-			return nil, fmt.Errorf("ошибка отправки POST запроса: %w", err)
-		}
-
-		// Проверка статусного кода ответа
-		if res.StatusCode() != fasthttp.StatusOK {
-			return nil, c.handleResponseError(res)
-		}
-
-		responseBody = res.Body()
 	case fiber.MethodGet:
 		req.Header.SetMethod(fiber.MethodGet)
 
@@ -68,22 +50,28 @@ func (c *FastHTTP) Request(method string, endpoint string, params map[string]int
 			req.URI().QueryArgs().Add(key, fmt.Sprintf("%v", value))
 		}
 
-		// Отправка GET запроса с использованием клиента fasthttp
-		if err := c.Do(req, res); err != nil {
-			return nil, fmt.Errorf("ошибка отправки GET запроса: %w", err)
-		}
-
-		// Проверка статусного кода ответа
-		if res.StatusCode() != fasthttp.StatusOK {
-			return nil, c.handleResponseError(res)
-		}
-
-		responseBody = res.Body()
+		middleware(nil)
 	default:
 		return nil, fmt.Errorf("неподдерживаемый HTTP метод: %s", method)
 	}
 
-	return responseBody, nil
+	req.Header.SetContentType(fiber.MIMEApplicationJSON)
+
+	for k, v := range c.ReqHeaders {
+		req.Header.Set(k, v)
+	}
+
+	// Отправка запроса с использованием клиента fasthttp
+	if err := c.Do(req, res); err != nil {
+		return nil, fmt.Errorf("ошибка отправки GET запроса: %w", err)
+	}
+
+	// Проверка статусного кода ответа
+	if res.StatusCode() != fasthttp.StatusOK {
+		return nil, c.handleResponseError(res)
+	}
+
+	return res.Body(), nil
 }
 
 // handleResponseError - обрабатывает ошибку ответа

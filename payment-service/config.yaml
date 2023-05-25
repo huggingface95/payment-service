@@ -1,5 +1,6 @@
 server:
   address: ":50920"
+  public_url: "https://dev.api.docudots.com/"
 db:
   connection_string: "postgres://user:password@localhost/dbname?sslmode=disable"
 redis:

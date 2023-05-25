@@ -9,52 +9,38 @@ type Task struct {
 }
 
 type IBANPayload struct {
-	ClientOrder string `json:"clientOrder"`
-	PostbackURL string `json:"postbackUrl"`
-	WalletUUID  string `json:"walletUuid"`
-	IbansGroup  string `json:"ibansGroup"`
-	IbanCountry string `json:"ibanCountry"`
-	Registrant  struct {
-		ClientCustomerId string `json:"clientCustomerId"`
-		Individual       struct {
-			Phone      string `json:"phone"`
-			Email      string `json:"email"`
-			BirthDate  string `json:"birthDate"`
-			BirthPlace string `json:"birthPlace"`
-			Address    struct {
-				Country string `json:"country"`
-				Zip     string `json:"zip"`
-				City    string `json:"city"`
-				Street  string `json:"street"`
-			} `json:"address"`
-			Document struct {
-				Type              string `json:"type"`
-				Number            string `json:"number"`
-				IssuedCountryCode string `json:"issuedCountryCode"`
-				IssuedBy          string `json:"issuedBy"`
-				IssuedDate        string `json:"issuedDate"`
-				ExpirationDate    string `json:"expirationDate"`
-			} `json:"document"`
-			LastName   string `json:"lastName"`
-			FirstName  string `json:"firstName"`
-			MiddleName string `json:"middleName"`
-		} `json:"individual"`
-	} `json:"registrant"`
-	CustomInfo struct {
-		MyExampleParam1  string `json:"MyExampleParam1"`
-		MyExampleObject1 struct {
-			MyExampleParam2 string `json:"MyExampleParam2"`
-			MyExampleParam3 string `json:"MyExampleParam3"`
-		} `json:"MyExampleObject1"`
-	} `json:"customInfo"`
+	ClientOrder string     `json:"clientOrder"`
+	PostbackURL string     `json:"postbackUrl"`
+	WalletUUID  string     `json:"walletUuid"`
+	IbansGroup  string     `json:"ibansGroup"`
+	IbanCountry string     `json:"ibanCountry"`
+	Registrant  Registrant `json:"registrant"`
+	CustomInfo  CustomInfo `json:"customInfo"`
 }
 
 type PayInPayload struct {
-	// Определите поля структуры для пакета данных PayIn.
+	ClientOrder string            `json:"clientOrder"`
+	Currency    string            `json:"currency"`
+	Amount      float64           `json:"amount"`
+	Description string            `json:"description"`
+	ProductName string            `json:"productName"`
+	SiteAddress string            `json:"siteAddress"`
+	Label       string            `json:"label"`
+	PostbackURL string            `json:"postbackUrl"`
+	SuccessURL  string            `json:"successUrl"`
+	FailURL     string            `json:"failUrl"`
+	CustomInfo  interface{}       `json:"customInfo"`
+	Payer       Payer             `json:"payer"`
+	Payee       IndividualRuPayee `json:"payee"`
 }
 
 type PayOutPayload struct {
-	// Определите поля структуры для пакета данных PayOut.
+	ClientOrder string          `json:"clientOrder"`
+	Currency    string          `json:"currency"`
+	Amount      float64         `json:"amount"`
+	Description string          `json:"description"`
+	Payee       IndividualPayee `json:"payee"`
+	CustomInfo  CustomInfo      `json:"customInfo"`
 }
 
 type EmailPayload struct {

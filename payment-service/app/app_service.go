@@ -1,7 +1,6 @@
 package app
 
 import (
-	"github.com/spf13/viper"
 	"payment-service/api"
 	"payment-service/db"
 	"payment-service/providers"
@@ -36,7 +35,7 @@ func Start() {
 	defer service.DBService.Pg.Close()
 
 	// Запуск HTTP сервера приложения
-	if err := service.APIService.FiberClient.Listen(viper.GetString("server.address")); err != nil {
+	if err := service.APIService.FiberClient.Listen(service.APIService.Config["address"].(string)); err != nil {
 		panic(err)
 	}
 

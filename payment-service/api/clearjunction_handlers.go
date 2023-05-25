@@ -37,6 +37,7 @@ func ClearjunctionIBANPostback(c *fiber.Ctx, provider *clearjunction.ClearJuncti
 
 	responder, err := provider.PostBack(request)
 	if err != nil {
+		fmt.Printf("error: %v\n", err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": err.Error()})
 	}
 
@@ -53,6 +54,7 @@ func ClearjunctionPayPostback(c *fiber.Ctx, provider *clearjunction.ClearJunctio
 
 	responder, err := provider.PostBack(providers.PostBackRequester(request))
 	if err != nil {
+		fmt.Printf("error: %v\n", err.Error())
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{"error": err.Error()})
 	}
 
@@ -68,6 +70,8 @@ func ClearjunctionIBANQueue(c *fiber.Ctx, provider providers.PaymentProvider) er
 			"error": "Invalid request payload",
 		})
 	}
+
+	payload.PostbackURL = provider.(*clearjunction.ClearJunction).PublicURL + "clearjunction/iban/postback"
 
 	task := queue.Task{
 		Type:     "IBAN",
@@ -96,6 +100,8 @@ func ClearjunctionPayInQueue(c *fiber.Ctx, provider providers.PaymentProvider) e
 			"error": "Invalid request payload",
 		})
 	}
+
+	payload.PostbackURL = provider.(*clearjunction.ClearJunction).PublicURL + "clearjunction/iban/postback"
 
 	task := queue.Task{
 		Type:     "PayIn",

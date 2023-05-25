@@ -19,9 +19,10 @@ type PaymentProvider interface {
 }
 
 type ClearJunction struct {
-	APIKey   string
-	Password string
-	BaseURL  string
+	APIKey    string
+	Password  string
+	BaseURL   string
+	PublicURL string
 
 	Services  Services
 	transport utils.FastHTTP
