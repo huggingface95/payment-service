@@ -25,18 +25,13 @@ class PaymentProviderMutator
             }
             $paymentProvider = new PaymentProvider($args);
             $paymentProvider->save();
-
-            $paymentSystems = collect([$company->paymentSystemInternal]);
-
-            if (isset($args['payment_systems'])) {
-                $getSystem = PaymentSystem::query()->whereIn('id', $args['payment_systems'])->get();
-                if ($getSystem->isEmpty()) {
-                    throw new GraphqlException('Payment System does not exist', 'use');
-                } else {
-                    $paymentSystems = $paymentSystems->merge($getSystem);
-                }
-            }
-            $paymentProvider->paymentSystems()->saveMany($paymentSystems);
+            PaymentSystem::query()->create(
+                [
+                    'name' => PaymentSystem::NAME_INTERNAL,
+                    'payment_provider' => $paymentProvider->id,
+                    'is_active' => true,
+                ]
+            );
 
             DB::commit();
 
