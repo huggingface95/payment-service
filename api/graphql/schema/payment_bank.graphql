@@ -50,6 +50,7 @@ input QueryPaymentBankCondition {
     payment_system_code: String @eq
     payment_provider_id: ID! @eq
     payment_system_id: ID! @eq
+    is_active: Boolean @eq
 }
 
 input QueryPaymentBanksFilterStatic @spread{
