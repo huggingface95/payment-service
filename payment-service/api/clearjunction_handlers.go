@@ -70,7 +70,7 @@ func ClearjunctionIBANQueue(c *fiber.Ctx, provider providers.PaymentProvider) er
 	}
 
 	task := queue.Task{
-		Type:     "iban",
+		Type:     "IBAN",
 		Payload:  json.RawMessage(c.Body()),
 		Provider: "clearjunction", // Идентификатор провайдера
 	}
@@ -87,14 +87,58 @@ func ClearjunctionIBANQueue(c *fiber.Ctx, provider providers.PaymentProvider) er
 	})
 }
 
-// ClearjunctionPayInQueue Реализация обработчика добавления задачи в очередь для PayIn
+// ClearjunctionPayInQueue реализует обработчик добавления задачи в очередь для PayIn.
 func ClearjunctionPayInQueue(c *fiber.Ctx, provider providers.PaymentProvider) error {
-	// TODO: Реализовать обработчик ClearjunctionPayInQueue
-	return nil
+	var payload queue.PayInPayload
+	err := json.Unmarshal(c.Body(), &payload)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request payload",
+		})
+	}
+
+	task := queue.Task{
+		Type:     "PayIn",
+		Provider: "clearjunction",
+		Payload:  json.RawMessage(c.Body()),
+	}
+
+	err = queue.PublishMessage(provider.(*clearjunction.ClearJunction).Services.Queue, &task)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to publish message to queue",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Task added to PayIn queue",
+	})
 }
 
-// ClearjunctionPayOutQueue Реализация обработчика добавления задачи в очередь для PayOut
+// ClearjunctionPayOutQueue реализует обработчик добавления задачи в очередь для PayIn.
 func ClearjunctionPayOutQueue(c *fiber.Ctx, provider providers.PaymentProvider) error {
-	// TODO: Реализовать обработчик ClearjunctionPayOutQueue
-	return nil
+	var payload queue.PayOutPayload
+	err := json.Unmarshal(c.Body(), &payload)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request payload",
+		})
+	}
+
+	task := queue.Task{
+		Type:     "PayOut",
+		Provider: "clearjunction",
+		Payload:  json.RawMessage(c.Body()),
+	}
+
+	err = queue.PublishMessage(provider.(*clearjunction.ClearJunction).Services.Queue, &task)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to publish message to queue",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "Task added to PayOut queue",
+	})
 }

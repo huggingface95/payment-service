@@ -68,7 +68,7 @@ func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANRe
 	url := fmt.Sprintf("%sv7/gate/allocate/v2/create/iban", cj.BaseURL)
 
 	// Выполнение POST запроса с помощью HTTP клиента из API сервиса
-	responseBody, err := cj.transport.Request("POST", url, ibanRequest, cj.authMiddleware)
+	responseBody, err := cj.transport.Request(fasthttp.MethodPost, url, ibanRequest, cj.authMiddleware)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send IBAN request: %w", err)
 	}
@@ -84,13 +84,53 @@ func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANRe
 }
 
 func (cj *ClearJunction) PayIn(request providers.PayInRequester) (providers.PayInResponder, error) {
-	//TODO implement me
-	panic("implement me")
+	payinRequest, ok := request.(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("invalid PayIn request")
+	}
+
+	// Формирование URL для запроса
+	url := fmt.Sprintf("%s/v7/gate/invoice/creditCard", cj.BaseURL)
+
+	// Выполнение запроса с помощью метода Request из пакета utils
+	responseBody, err := cj.transport.Request(fasthttp.MethodPost, url, payinRequest, cj.authMiddleware)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка выполнения запроса: %w", err)
+	}
+
+	// Разбор ответа
+	var response providers.PayInResponder
+	err = json.Unmarshal(responseBody, &response)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка разбора ответа: %w", err)
+	}
+
+	return response, nil
 }
 
 func (cj *ClearJunction) PayOut(request providers.PayOutRequester) (providers.PayOutResponder, error) {
-	//TODO implement me
-	panic("implement me")
+	payoutRequest, ok := request.(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("invalid PayIn request")
+	}
+
+	// Формирование URL для запроса
+	url := fmt.Sprintf("%s/v7/gate/payout/bankTransfer/swift", cj.BaseURL)
+
+	// Выполнение запроса с помощью метода Request из пакета utils
+	responseBody, err := cj.transport.Request(fasthttp.MethodPost, url, payoutRequest, cj.authMiddleware)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка выполнения запроса: %w", err)
+	}
+
+	// Разбор ответа
+	var response providers.PayOutResponder
+	err = json.Unmarshal(responseBody, &response)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка разбора ответа: %w", err)
+	}
+
+	return response, nil
 }
 
 func (cj *ClearJunction) Status(request providers.StatusRequester) (providers.StatusResponder, error) {
@@ -227,7 +267,9 @@ func (cj *ClearJunction) payoutApprove(orderReference string) (result PayoutAppr
 		"orderReferenceArray": []string{orderReference},
 	}
 
-	responseData, err := cj.transport.Request("POST", "gate/transactionAction/approve", params, cj.authMiddleware)
+	url := fmt.Sprintf("%s/v7/gate/transactionAction/approve", cj.BaseURL)
+
+	responseData, err := cj.transport.Request("POST", url, params, cj.authMiddleware)
 	if err != nil {
 		return result, err
 	}

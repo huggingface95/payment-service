@@ -24,15 +24,15 @@ func StartConsumer(service *Service, providersService *providers.Service) error 
 		}
 
 		switch task.Type {
-		case "iban":
+		case "IBAN":
 			var payload providers.IBANRequester
 			json.Unmarshal(task.Payload, &payload)
 			HandleIBAN(provider, payload)
-		case "payin":
+		case "PayIn":
 			var payload providers.PayInRequester
 			json.Unmarshal(task.Payload, &payload)
 			HandlePayIn(provider, payload)
-		case "payout":
+		case "PayOut":
 			var payload providers.PayOutRequester
 			json.Unmarshal(task.Payload, &payload)
 			HandlePayOut(provider, payload)
