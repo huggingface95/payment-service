@@ -5,7 +5,10 @@ namespace App\Models;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
+use App\Models\Interfaces\CustomObServerInterface;
 use App\Models\Scopes\TransferFeeAmountScope;
+use App\Models\Traits\BaseObServerTrait;
+use App\Observers\TransferOutgoingObserver;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -28,9 +31,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property float amount_debt
  * @property Carbon execution_at
  */
-class TransferOutgoing extends BaseModel
+class TransferOutgoing extends BaseModel implements CustomObServerInterface
 {
     use HasFactory;
+    use BaseObServerTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -229,5 +233,10 @@ class TransferOutgoing extends BaseModel
     {
         return $this->hasOne(Transactions::class, 'transfer_id')
             ->where('transfer_type', class_basename(self::class));
+    }
+
+    public static function getObServer(): string
+    {
+        return TransferOutgoingObserver::class;
     }
 }

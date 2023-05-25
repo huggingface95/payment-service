@@ -15,9 +15,9 @@ class AccountObserver extends BaseObserver
     {
     }
 
-    public function creating(Account|BaseModel $model): bool
+    public function creating(Account|BaseModel $model, bool $callHistory = false): bool
     {
-        if (! parent::creating($model)) {
+        if (!parent::creating($model)) {
             return false;
         }
 
@@ -36,8 +36,10 @@ class AccountObserver extends BaseObserver
         return true;
     }
 
-    public function created(Account|BaseModel $model): bool
+    public function created(Account|BaseModel $model, bool $callHistory = false): bool
     {
+        parent::created($model);
+
         if (isset($model->parent_id)) {
             $this->accountService->cloneParentAccountMorphRecords($model, $model->parent_id);
         }
@@ -45,9 +47,9 @@ class AccountObserver extends BaseObserver
         return true;
     }
 
-    public function updating(Account|BaseModel $model): bool
+    public function updating(Account|BaseModel $model, bool $callHistory = false): bool
     {
-        if (! parent::updating($model)) {
+        if (!parent::updating($model)) {
             return false;
         }
 
@@ -62,12 +64,18 @@ class AccountObserver extends BaseObserver
     }
 
     /**
+     * @param Account|BaseModel $model
+     * @param bool $callHistory
      * @throws EmailException
      */
-    public function updated(Account|BaseModel $model): void
+    public function updated(Account|BaseModel $model, bool $callHistory = true): bool
     {
+        parent::updated($model, $callHistory);
+
         if (array_key_exists('account_state_id', $model->getChanges())) {
             $this->emailService->sendAccountStatusEmail($model);
         }
+
+        return true;
     }
 }

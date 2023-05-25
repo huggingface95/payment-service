@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property ApplicantIndividual $applicantIndividuals
  * @property ApplicantIndividual $applicantsWithBankingAccess
  * @property Company company
+ * @property Account $account
  */
 class ApplicantCompany extends BaseModel
 {
@@ -260,7 +261,7 @@ class ApplicantCompany extends BaseModel
 
     public function account(): MorphOne
     {
-        return $this->morphOne(Account::class, 'clientable');
+        return $this->morphOne(Account::class, 'clientable', 'client_type', 'client_id');
     }
 
     public function verificationEmailStatus(): BelongsTo

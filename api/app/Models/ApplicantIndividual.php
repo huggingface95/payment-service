@@ -38,6 +38,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property int company_id
  * @property ApplicantBankingAccess $applicantBankingAccess
  * @property Company company
+ * @property Account $account
  * @property ?array $active_session
  */
 class ApplicantIndividual extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract

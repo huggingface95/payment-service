@@ -237,4 +237,14 @@ class Company extends BaseModel
     {
         return $this->hasMany(CompanyRevenueAccount::class, 'company_id');
     }
+
+    public function applicantIndividuals(): HasMany
+    {
+        return $this->hasMany(ApplicantIndividual::class, 'company_id');
+    }
+
+    public function applicantCompanies(): HasMany
+    {
+        return $this->hasMany(ApplicantCompany::class, 'company_id');
+    }
 }
