@@ -62,7 +62,7 @@ func (cj *ClearJunction) Auth(request providers.AuthRequester) (providers.AuthRe
 }
 
 func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANResponder, error) {
-	ibanRequest, ok := request.(*IBANRequest)
+	ibanRequest, ok := request.(map[string]interface{})
 	if !ok {
 		return nil, fmt.Errorf("invalid IBAN request")
 	}
@@ -70,7 +70,7 @@ func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANRe
 	url := fmt.Sprintf("%sv7/gate/allocate/v2/iban", cj.BaseURL)
 
 	// Выполнение POST запроса с помощью HTTP клиента из API сервиса
-	responseBody, err := cj.transport.Request("POST", url, ibanRequest.GetIBANRequest())
+	responseBody, err := cj.transport.Request("POST", url, ibanRequest)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send IBAN request: %w", err)
 	}

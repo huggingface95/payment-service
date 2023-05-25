@@ -1,7 +1,6 @@
 package clearjunction
 
 import (
-	"github.com/fatih/structs"
 	"payment-service/providers"
 	"payment-service/utils"
 	"time"
@@ -100,17 +99,6 @@ type PayoutApproveResponseWrapper struct {
 	ActionResult     []PayoutApproveResponse `json:"actionResult"`
 }
 
-// IBANRequest представляет запрос на выделение IBAN.
-type IBANRequest struct {
-	ClientOrder string                 `json:"clientOrder"`
-	PostbackURL string                 `json:"postbackUrl"`
-	WalletUUID  string                 `json:"walletUuid"`
-	IBANGroup   string                 `json:"ibansGroup"`
-	IBANCountry string                 `json:"ibanCountry"`
-	Registrant  Registrant             `json:"registrant"`
-	CustomInfo  map[string]interface{} `json:"customInfo"`
-}
-
 // IBANResponse представляет ответ на запрос о выделении IBAN.
 type IBANResponse struct {
 	RequestReference string            `json:"requestReference"`
@@ -119,8 +107,4 @@ type IBANResponse struct {
 	Status           string            `json:"status"`
 	ResponseMessages []ResponseMessage `json:"responseMessages"`
 	IBANs            []string          `json:"ibans"`
-}
-
-func (r IBANRequest) GetIBANRequest() map[string]interface{} {
-	return structs.Map(r)
 }
