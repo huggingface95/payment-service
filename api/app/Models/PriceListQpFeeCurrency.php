@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PriceListQpFeeCurrency extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'price_list_qp_fee_currency';
 
     protected $fillable = [

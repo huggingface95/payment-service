@@ -6,6 +6,7 @@ use App\Events\PaymentCreatedEvent;
 use App\Events\PaymentUpdatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\MemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,6 +35,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 class Payments extends BaseModel
 {
     use HasFactory;
+    use BaseObServerTrait;
 
     protected $table = 'payments';
 

@@ -6,6 +6,7 @@ use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\MemberStatusEnum;
 use App\Models\Clickhouse\ActiveSession;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use App\Models\Traits\UserPermission;
 use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
@@ -68,6 +69,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     use MorphToOne;
     use HasRelationships;
     use UserPermission;
+    use BaseObServerTrait;
 
     public $password_confirmation;
 

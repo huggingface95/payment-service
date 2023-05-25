@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class KycTimeline extends BaseModel
 {
+    use BaseObServerTrait;
+
     public $table = 'kyc_timeline';
 
     public $timestamps = false;

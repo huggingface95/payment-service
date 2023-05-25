@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -15,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  */
 class EmailNotificationClient extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'email_notification_clients';
 
     /**

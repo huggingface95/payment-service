@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use App\Services\PriceListFeeService;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -27,6 +28,7 @@ use Illuminate\Support\Carbon;
  */
 class PriceListFee extends BaseModel
 {
+    use BaseObServerTrait;
     public const RANGE = 'range';
 
     public const FIX = 'fix';

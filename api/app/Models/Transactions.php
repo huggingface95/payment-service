@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Transactions extends BaseModel
 {
+    use BaseObServerTrait;
     use HasFactory;
 
     protected $table = 'transactions';

@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class PaymentProviderIban extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $fillable = [
         'name',
         'swift',

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class BankCorrespondentCurrencyRegion extends Pivot
 {
+    use BaseObServerTrait;
+
     protected $table = 'bank_correspondent_currencies_regions';
 
     public function currency()

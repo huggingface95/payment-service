@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Events\Applicant\ApplicantDocumentCreatedEvent;
 use App\Events\Applicant\ApplicantDocumentUpdatedEvent;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ApplicantDocument extends BaseModel
 {
+    use BaseObServerTrait;
     protected $dispatchesEvents = [
         'created' => ApplicantDocumentCreatedEvent::class,
         'updated' => ApplicantDocumentUpdatedEvent::class,

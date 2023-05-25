@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -29,6 +30,8 @@ use Illuminate\Support\Carbon;
  */
 class Ticket extends BaseModel
 {
+
+    use BaseObServerTrait;
     /**
      * The attributes that are mass assignable.
      *

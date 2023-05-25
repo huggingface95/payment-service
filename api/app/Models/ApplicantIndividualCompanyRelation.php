@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApplicantIndividualCompanyRelation extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'applicant_individual_company_relation';
 
     /**

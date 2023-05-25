@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\MorphToOne;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
@@ -22,6 +23,8 @@ use Illuminate\Support\Carbon;
  */
 class EmailNotification extends BaseModel
 {
+    use BaseObServerTrait;
+
     use MorphToOne;
 
     public const ADMINISTRATION = 'administration';

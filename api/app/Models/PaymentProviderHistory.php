@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
+
 class PaymentProviderHistory extends BaseModel
 {
+    use BaseObServerTrait;
     /**
      * The attributes that are mass assignable.
      *

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class QuoteProvider extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $fillable = [
         'name',
         'company_id',

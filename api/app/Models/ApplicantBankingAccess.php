@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\RoleFilterSuperAdminScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
@@ -21,6 +22,9 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  */
 class ApplicantBankingAccess extends BaseModel
 {
+    use BaseObServerTrait;
+
+
     use HasFactory;
     use HasRelationships;
 

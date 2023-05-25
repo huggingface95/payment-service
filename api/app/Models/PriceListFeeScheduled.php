@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PriceListFeeScheduled extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'price_list_fee_scheduled';
 
     public $timestamps = false;

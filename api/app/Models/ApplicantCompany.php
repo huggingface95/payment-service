@@ -7,6 +7,7 @@ use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantCompanyUpdatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -24,6 +25,7 @@ class ApplicantCompany extends BaseModel
 {
     use MorphToOne;
     use BelongsToOne;
+    use BaseObServerTrait;
 
     protected $table = 'applicant_companies';
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\RoleFilterSuperAdminScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,6 +22,7 @@ use Illuminate\Support\Collection;
 class GroupRole extends BaseModel
 {
     use SoftDeletes;
+    use BaseObServerTrait;
 
     public const INDIVIDUAL = '3';
 

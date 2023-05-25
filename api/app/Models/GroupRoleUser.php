@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class GroupRoleUser extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'group_role_members_individuals';
 
     /**

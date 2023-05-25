@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GroupRoleProvider extends BaseModel
 {
+    use BaseObServerTrait;
     /**
      * The attributes that are mass assignable.
      *
