@@ -6,6 +6,7 @@ use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class BankCorrespondent extends BaseModel
 {
@@ -72,4 +73,17 @@ class BankCorrespondent extends BaseModel
             'bank_correspondent_id',
         );
     }
+
+    public function paymentProvider(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            PaymentProvider::class,
+            PaymentSystem::class,
+            'id',
+            'id',
+            'payment_system_id',
+            'payment_provider_id',
+        );
+    }
+
 }
