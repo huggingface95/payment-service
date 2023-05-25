@@ -1,6 +1,7 @@
 package clearjunction
 
 import (
+	"github.com/fatih/structs"
 	"payment-service/providers"
 	"payment-service/utils"
 	"time"
@@ -16,7 +17,6 @@ const (
 
 type PaymentProvider interface {
 	providers.PaymentProvider
-	PayoutApprove(orderReference string) (result PayoutApproveResponse, err error)
 }
 
 type ClearJunction struct {
@@ -24,6 +24,7 @@ type ClearJunction struct {
 	Password string
 	BaseURL  string
 
+	Services  Services
 	transport utils.FastHTTP
 }
 
@@ -86,30 +87,6 @@ type PayPostbackResponse struct {
 	OrderReference string `json:"orderReference"`
 }
 
-// PayRequestMessage представляет модель данных для сообщений в PayIn и PayOut postback.
-type PayRequestMessage struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
-	Details string `json:"details"`
-}
-
-// PayRequestCustomInfo представляет модель данных для пользовательской информации в PayIn и PayOut postback.
-type PayRequestCustomInfo struct {
-	PaymentId uint64 `json:"payment_id"`
-}
-
-// PayPostbackSubStatuses представляет модель данных для под-статусов в PayIn и PayOut postback.
-type PayPostbackSubStatuses struct {
-	OperStatus       string `json:"operStatus"`
-	ComplianceStatus string `json:"complianceStatus"`
-}
-
-// PayPostbackPayeePayer представляет модель данных для получателя и плательщика в PayIn и PayOut postback.
-type PayPostbackPayeePayer struct {
-	WalletUuid       string `json:"walletUuid"`
-	ClientCustomerId string `json:"clientCustomerId"`
-}
-
 // PayoutApproveResponse представляет ответ на утверждение PayOut.
 type PayoutApproveResponse struct {
 	OrderReference         string    `json:"orderReference"`
@@ -117,7 +94,33 @@ type PayoutApproveResponse struct {
 	Messages               []Message `json:"messages"`
 }
 
+// PayoutApproveResponseWrapper представляет обёртку на ответ на утверждение PayOut.
 type PayoutApproveResponseWrapper struct {
 	RequestReference string                  `json:"requestReference"`
 	ActionResult     []PayoutApproveResponse `json:"actionResult"`
+}
+
+// IBANRequest представляет запрос на выделение IBAN.
+type IBANRequest struct {
+	ClientOrder string                 `json:"clientOrder"`
+	PostbackURL string                 `json:"postbackUrl"`
+	WalletUUID  string                 `json:"walletUuid"`
+	IBANGroup   string                 `json:"ibansGroup"`
+	IBANCountry string                 `json:"ibanCountry"`
+	Registrant  Registrant             `json:"registrant"`
+	CustomInfo  map[string]interface{} `json:"customInfo"`
+}
+
+// IBANResponse представляет ответ на запрос о выделении IBAN.
+type IBANResponse struct {
+	RequestReference string            `json:"requestReference"`
+	ClientOrder      string            `json:"clientOrder"`
+	OrderReference   string            `json:"orderReference"`
+	Status           string            `json:"status"`
+	ResponseMessages []ResponseMessage `json:"responseMessages"`
+	IBANs            []string          `json:"ibans"`
+}
+
+func (r IBANRequest) GetIBANRequest() map[string]interface{} {
+	return structs.Map(r)
 }

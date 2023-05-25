@@ -25,21 +25,17 @@ func StartConsumer(service *Service, providersService *providers.Service) error 
 
 		switch task.Type {
 		case "iban":
-			var payload IBANPayload
+			var payload providers.IBANRequester
 			json.Unmarshal(task.Payload, &payload)
-			HandleIBAN(provider, &payload)
+			HandleIBAN(provider, payload)
 		case "payin":
-			var payload PayInPayload
+			var payload providers.PayInRequester
 			json.Unmarshal(task.Payload, &payload)
-			HandlePayIn(provider, &payload)
+			HandlePayIn(provider, payload)
 		case "payout":
-			var payload PayOutPayload
+			var payload providers.PayOutRequester
 			json.Unmarshal(task.Payload, &payload)
-			HandlePayOut(provider, &payload)
-		case "email":
-			var payload EmailPayload
-			json.Unmarshal(task.Payload, &payload)
-			HandleEmail(provider, &payload)
+			HandlePayOut(provider, payload)
 		default:
 			// Неизвестный тип задачи, пропускаем
 			continue

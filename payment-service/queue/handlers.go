@@ -4,23 +4,29 @@ import (
 	"payment-service/providers"
 )
 
-func HandleIBAN(paymentProvider providers.PaymentProvider, payload *IBANPayload) {
-	// используйте paymentProvider для выполнения действий, связанных с IBAN
-}
-
-func HandlePayIn(paymentProvider providers.PaymentProvider, payload *PayInPayload) {
-	// используйте paymentProvider для выполнения действий, связанных с PayIn
-}
-
-func HandlePayOut(paymentProvider providers.PaymentProvider, payload *PayOutPayload) {
-	// используйте paymentProvider для выполнения действий, связанных с PayOut
-}
-
-func HandleEmail(paymentProvider providers.PaymentProvider, payload *EmailPayload) {
-	// Вызов метода PostBack провайдера
-	_, err := paymentProvider.PostBack(payload) // Измените параметры в соответствии с интерфейсом PaymentProvider
+func HandleIBAN(paymentProvider providers.PaymentProvider, payload providers.IBANRequester) {
+	// Вызов метода API провайдера для отправки запроса на генерацию IBAN
+	_, err := paymentProvider.IBAN(payload) // Измените параметры в соответствии с интерфейсом PaymentProvider
 	if err != nil {
-		// Обработка ошибки при вызове PostBack провайдера
+		// Обработка ошибки при вызове метода для генерации IBAN
+		return
+	}
+}
+
+func HandlePayIn(paymentProvider providers.PaymentProvider, payload providers.PayInRequester) {
+	// Вызов метода API провайдера для отправки запроса на получение платежа
+	_, err := paymentProvider.PayIn(payload) // Измените параметры в соответствии с интерфейсом PaymentProvider
+	if err != nil {
+		// Обработка ошибки при вызове метода для получения платежа
+		return
+	}
+}
+
+func HandlePayOut(paymentProvider providers.PaymentProvider, payload providers.PayOutRequester) {
+	// Вызов метода API провайдера для отправки запроса на выплату
+	_, err := paymentProvider.PayOut(payload) // Измените параметры в соответствии с интерфейсом PaymentProvider
+	if err != nil {
+		// Обработка ошибки при вызове метода для выплаты
 		return
 	}
 }

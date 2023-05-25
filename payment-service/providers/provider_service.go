@@ -7,15 +7,15 @@ import (
 
 // Service - сервис для управления провайдерами
 type Service struct {
-	Config    map[string]interface{}
-	Providers map[string]PaymentProvider
+	Config        map[string]interface{}
+	ProvidersList map[string]PaymentProvider
 }
 
 // NewService - создает новый экземпляр Service
 func NewService() *Service {
 	service := &Service{
-		Config:    viper.Get("providers").(map[string]interface{}),
-		Providers: map[string]PaymentProvider{},
+		Config:        viper.Get("providers").(map[string]interface{}),
+		ProvidersList: map[string]PaymentProvider{},
 	}
 
 	return service
@@ -23,7 +23,7 @@ func NewService() *Service {
 
 // GetProvider - возвращает провайдера по его имени
 func (ps *Service) GetProvider(providerName string) (PaymentProvider, error) {
-	provider, ok := ps.Providers[providerName]
+	provider, ok := ps.ProvidersList[providerName]
 	if !ok {
 		return nil, fmt.Errorf("provider '%s' not found", providerName)
 	}
