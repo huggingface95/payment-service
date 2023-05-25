@@ -23,12 +23,12 @@ class PaymentProviderMutator
             if (! $company->paymentSystemInternal) {
                 throw new GraphqlException('Payment System Internal not found in company', 'use');
             }
-            $paymentProvider = new PaymentProvider($args);
-            $paymentProvider->save();
+            $paymentProvider = PaymentProvider::query()->create($args);
+
             PaymentSystem::query()->create(
                 [
                     'name' => PaymentSystem::NAME_INTERNAL,
-                    'payment_provider' => $paymentProvider->id,
+                    'payment_provider_id' => $paymentProvider->id,
                     'is_active' => true,
                 ]
             );
