@@ -5,6 +5,7 @@ namespace App\Models;
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\PaymentStatusEnum;
+use App\Models\Builders\AccountBuilder;
 use App\Models\Interfaces\BaseModelInterface;
 use App\Models\Interfaces\CustomObServerInterface;
 use App\Models\Interfaces\HistoryInterface;
@@ -114,6 +115,11 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope());
+    }
+
+    public function newEloquentBuilder($builder): AccountBuilder
+    {
+        return new AccountBuilder($builder);
     }
 
     public function getAliasAttribute(): bool
