@@ -73,6 +73,10 @@ class EmailSmtpMutator extends BaseMutator
                 throw new GraphqlException("Email {$email} not correct", 'Bad Request', 400);
             }
         }
+        if (isset($args['host_name']) && $args['host_name'] == 'mailhog') {
+            $args['username'] = '';
+            $args['password'] = '';
+        }
         /** @var EmailSmtp $smtp */
         if (env('APP_ENV') == 'testing' || env('APP_ENV') == 'local') {
             $smtp = new EmailSmtp();
