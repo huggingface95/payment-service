@@ -85,7 +85,8 @@ class CommissionService extends AbstractService
         $priceListFees = PriceListPPFeeCurrency::where('currency_id', $transfer->currency_id)
             ->whereHas('PriceListPPFee', function ($query) use ($transfer) {
                 $query->where('payment_system_id', $transfer->payment_system_id)
-                    ->where('payment_provider_id', $transfer->payment_provider_id);
+                    ->where('payment_provider_id', $transfer->payment_provider_id)
+                    ->where('operation_type_id', $transfer->operation_type_id);
             })
             ->get();
 

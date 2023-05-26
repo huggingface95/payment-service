@@ -7,11 +7,12 @@ use App\Models\AccountState;
 use App\Models\ApplicantIndividual;
 use App\Models\BaseModel;
 use App\Models\TransferOutgoing;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class TransferOutgoingObserver extends BaseObserver
 {
-    public function creating(TransferOutgoing|BaseModel $model, bool $callHistory = false): bool
+    public function creating(TransferOutgoing|BaseModel|Model $model, bool $callHistory = false): bool
     {
         if (!parent::creating($model, $callHistory)) {
             return false;
@@ -33,7 +34,7 @@ class TransferOutgoingObserver extends BaseObserver
         return true;
     }
 
-    public function updating(TransferOutgoing|BaseModel $model, bool $callHistory = false): bool
+    public function updating(TransferOutgoing|BaseModel|Model $model, bool $callHistory = false): bool
     {
         if (!parent::updating($model, $callHistory)) {
             return false;

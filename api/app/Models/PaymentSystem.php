@@ -91,12 +91,12 @@ class PaymentSystem extends BaseModel implements CustomObServerInterface
 
     public function banks(): BelongsToMany
     {
-        return $this->belongsToMany(PaymentBank::class, 'payment_system_banks', 'payment_system_id', 'payment_bank_id');
+        return $this->belongsToMany(PaymentBank::class, 'payment_system_banks', 'payment_system_id', 'payment_bank_id')->orderByDesc('id');
     }
 
     public function bankCorrespondent(): BelongsTo
     {
-        return $this->belongsTo(BankCorrespondent::class, 'id', 'payment_system_id');
+        return $this->belongsTo(BankCorrespondent::class, 'id', 'payment_system_id')->orderByDesc('id');
     }
 
     public function logo(): BelongsTo

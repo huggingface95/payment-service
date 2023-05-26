@@ -21,6 +21,10 @@ class EmailSmtpMutator extends BaseMutator
         if (isset($args['is_sending_mail']) && $args['is_sending_mail'] === true) {
             EmailSmtp::where('company_id', $args['company_id'])->update(['is_sending_mail'=>false]);
         }
+        if (isset($args['host_name']) && $args['host_name'] == 'mailhog') {
+            $args['username'] = '';
+            $args['password'] = '';
+        }
         if ($this->checkSmtp($args)) {
             return EmailSmtp::create($args);
         }
@@ -34,6 +38,10 @@ class EmailSmtpMutator extends BaseMutator
         }
         if (isset($args['is_sending_mail']) && $args['is_sending_mail'] === true) {
             EmailSmtp::where('company_id', $emailSmtp->company_id)->update(['is_sending_mail'=>false]);
+        }
+        if (isset($args['host_name']) && $args['host_name'] == 'mailhog') {
+            $args['username'] = '';
+            $args['password'] = '';
         }
 
         if ($this->checkSmtp($args)) {
@@ -64,6 +72,10 @@ class EmailSmtpMutator extends BaseMutator
             if (! $this->validEmail($email)) {
                 throw new GraphqlException("Email {$email} not correct", 'Bad Request', 400);
             }
+        }
+        if (isset($args['host_name']) && $args['host_name'] == 'mailhog') {
+            $args['username'] = '';
+            $args['password'] = '';
         }
         /** @var EmailSmtp $smtp */
         if (env('APP_ENV') == 'testing' || env('APP_ENV') == 'local') {
@@ -99,20 +111,12 @@ class EmailSmtpMutator extends BaseMutator
     public function checkSmtp(array $args)
     {
         try {
-            if (env('APP_ENV') == 'testing' || env('APP_ENV') == 'local') {
-                $transport = new Swift_SmtpTransport('mailhog', env('MAIL_SMTP_PORT', '1025'), '');
-                $transport->setUsername('');
-                $transport->setPassword('');
-                $mailer = new \Swift_Mailer($transport);
-                $mailer->getTransport()->start();
-
-                return true;
-            } else {
                 if (isset($args['security'])) {
                     $args['security'] == 'auto' || empty($args['security']) ? $args['security'] = null : $args['security'];
                 } else {
                     $args['security'] = null;
                 }
+
                 $transport = new Swift_SmtpTransport($args['host_name'], $args['port'], $args['security']);
                 $transport->setUsername($args['username']);
                 $transport->setPassword($args['password']);
@@ -120,7 +124,6 @@ class EmailSmtpMutator extends BaseMutator
                 $mailer->getTransport()->start();
 
                 return true;
-            }
         } catch (Exception $e) {
             Log::error($e->getMessage());
             throw new GraphqlException('SMTP doesnt work correctly. Please check configuration', 'internal', 403);

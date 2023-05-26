@@ -6,13 +6,13 @@ use App\Enums\ApplicantTypeEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\AccountState;
 use App\Models\ApplicantIndividual;
-use App\Models\BaseModel;
 use App\Models\TransferIncoming;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class TransferIncomingObserver extends BaseObserver
 {
-    public function creating(TransferIncoming|BaseModel $model, bool $callHistory = false): bool
+    public function creating(TransferIncoming|Model $model, bool $callHistory = false): bool
     {
         if (!parent::creating($model, $callHistory)) {
             return false;
@@ -33,7 +33,7 @@ class TransferIncomingObserver extends BaseObserver
         return true;
     }
 
-    public function updating(TransferIncoming|BaseModel $model, bool $callHistory = false): bool
+    public function updating(TransferIncoming|Model $model, bool $callHistory = false): bool
     {
         if (!parent::updating($model, $callHistory)) {
             return false;
