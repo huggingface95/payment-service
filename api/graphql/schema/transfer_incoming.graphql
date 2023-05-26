@@ -303,7 +303,25 @@ extend type Mutation @guard {
         code: String!
     ): TransferIncoming
         @field(resolver: "TransferIncomingMutator@sign")
+    
+    """
+    Исполнить входящий перевод
+    """
+    executeTransferIncoming(
+        "ID"
+        id: ID!
+    ): TransferIncoming
+        @field(resolver: "TransferIncomingMutator@execute")
 
+    """
+    Отменить входящий перевод
+    """
+    cancelTransferIncoming(
+        "ID"
+        id: ID!
+    ): TransferIncoming
+        @field(resolver: "TransferIncomingMutator@cancel")
+    
     """
     Привязать файлы
     """
