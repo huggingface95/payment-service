@@ -7,11 +7,12 @@ use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use App\Models\BaseModel;
 use App\Models\CompanyModule;
+use Illuminate\Database\Eloquent\Model;
 
 class CompanyModuleObserver extends BaseObserver
 {
 
-    public function updated(CompanyModule|BaseModel $model, bool $callHistory = true): bool
+    public function updated(CompanyModule|BaseModel|Model $model, bool $callHistory = true): bool
     {
         parent::updated($model, $callHistory);
 
