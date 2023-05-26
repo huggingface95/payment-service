@@ -2,13 +2,12 @@
 
 namespace App\Observers;
 
-use App\Models\BaseModel;
 use App\Models\PaymentSystem;
 use Illuminate\Database\Eloquent\Model;
 
 class PaymentSystemObserver extends BaseObserver
 {
-    public function creating(PaymentSystem|BaseModel|Model $model, bool $callHistory = false): bool
+    public function creating(PaymentSystem|Model $model, bool $callHistory = false): bool
     {
         if (!parent::creating($model, $callHistory)) {
             return false;

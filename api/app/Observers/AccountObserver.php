@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Exceptions\EmailException;
 use App\Models\Account;
-use App\Models\BaseModel;
 use App\Models\Currencies;
 use App\Services\AccountService;
 use App\Services\EmailService;
@@ -16,7 +15,7 @@ class AccountObserver extends BaseObserver
     {
     }
 
-    public function creating(Account|BaseModel|Model $model, bool $callHistory = false): bool
+    public function creating(Account|Model $model, bool $callHistory = false): bool
     {
         if (!parent::creating($model)) {
             return false;
@@ -37,7 +36,7 @@ class AccountObserver extends BaseObserver
         return true;
     }
 
-    public function created(Account|BaseModel|Model $model, bool $callHistory = false): bool
+    public function created(Account|Model $model, bool $callHistory = false): bool
     {
         parent::created($model);
 
@@ -48,7 +47,7 @@ class AccountObserver extends BaseObserver
         return true;
     }
 
-    public function updating(Account|BaseModel|Model $model, bool $callHistory = false): bool
+    public function updating(Account|Model $model, bool $callHistory = false): bool
     {
         if (!parent::updating($model)) {
             return false;
@@ -64,12 +63,11 @@ class AccountObserver extends BaseObserver
         return true;
     }
 
+
     /**
-     * @param Account|BaseModel $model
-     * @param bool $callHistory
      * @throws EmailException
      */
-    public function updated(Account|BaseModel|Model $model, bool $callHistory = true): bool
+    public function updated(Account|Model $model, bool $callHistory = true): bool
     {
         parent::updated($model, $callHistory);
 

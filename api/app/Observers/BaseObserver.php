@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividual;
-use App\Models\BaseModel;
 use App\Models\History;
 use App\Models\Members;
 use App\Models\Traits\CheckForEvents;
@@ -16,28 +15,28 @@ class BaseObserver
     use CheckForEvents;
 
 
-    public function created(BaseModel|Model $model, bool $callHistory = true): bool
+    public function created(Model $model, bool $callHistory = true): bool
     {
         if ($callHistory)
             $this->checkAndCreateHistory($model, 'created');
         return true;
     }
 
-    public function updated(BaseModel|Model $model, bool $callHistory = true): bool
+    public function updated(Model $model, bool $callHistory = true): bool
     {
         if ($callHistory)
             $this->checkAndCreateHistory($model, 'updated');
         return true;
     }
 
-    public function deleted(BaseModel|Model $model, bool $callHistory = true): bool
+    public function deleted(Model $model, bool $callHistory = true): bool
     {
         if ($callHistory)
             $this->checkAndCreateHistory($model, 'deleted');
         return true;
     }
 
-    public function saved(BaseModel|Model $model, bool $callHistory = true): bool
+    public function saved(Model $model, bool $callHistory = true): bool
     {
         if ($callHistory)
             $this->checkAndCreateHistory($model, 'saved');
@@ -47,7 +46,7 @@ class BaseObserver
     /**
      * @throws GraphqlException
      */
-    public function creating(BaseModel|Model $model, bool $callHistory = true): bool
+    public function creating(Model $model, bool $callHistory = true): bool
     {
         /** @var Members|ApplicantIndividual $user */
         $user = Auth::user();
@@ -67,7 +66,7 @@ class BaseObserver
     /**
      * @throws GraphqlException
      */
-    public function saving(BaseModel|Model $model, bool $callHistory = true): bool
+    public function saving(Model $model, bool $callHistory = true): bool
     {
         /** @var Members|ApplicantIndividual $user */
         $user = Auth::user();
@@ -87,7 +86,7 @@ class BaseObserver
     /**
      * @throws GraphqlException
      */
-    public function updating(BaseModel|Model $model, bool $callHistory = true): bool
+    public function updating(Model $model, bool $callHistory = true): bool
     {
         /** @var Members|ApplicantIndividual $user */
         $user = Auth::user();
@@ -107,7 +106,7 @@ class BaseObserver
     /**
      * @throws GraphqlException
      */
-    public function deleting(BaseModel|Model $model, bool $callHistory = true): bool
+    public function deleting(Model $model, bool $callHistory = true): bool
     {
         /** @var Members|ApplicantIndividual $user */
         $user = Auth::user();
@@ -123,7 +122,7 @@ class BaseObserver
         return $success;
     }
 
-    protected function checkAndCreateHistory(BaseModel|Model $model, string $action): void
+    protected function checkAndCreateHistory(Model $model, string $action): void
     {
         if (!method_exists($model, 'enableHistory') || !$model->enableHistory()) {
             return;
@@ -152,7 +151,7 @@ class BaseObserver
         return Auth::user() ? get_class(Auth::user()) : null;
     }
 
-    private static function filter(BaseModel $model, string $action): bool
+    private static function filter(Model $model, string $action): bool
     {
         return in_array($action, $model->getHistoryActions());
     }
