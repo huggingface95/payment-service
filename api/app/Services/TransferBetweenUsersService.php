@@ -57,7 +57,7 @@ class TransferBetweenUsersService extends AbstractService
         $fromAccount = Account::findOrFail($args['from_account_id']);
         $toAccount = Account::findOrFail($args['to_account_id']);
 
-        $this->validateCreateTransfer($fromAccount, $toAccount);
+        $this->validateCreateTransfer($fromAccount, $toAccount, $operationType);
 
         $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingBetweenUsersDTO::class, $fromAccount, $operationType, $args);
         $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $operationType, $args, $outgoingDTO->payment_number, $outgoingDTO->created_at);
@@ -190,7 +190,7 @@ class TransferBetweenUsersService extends AbstractService
     /**
      * @throws GraphqlException
      */
-    private function validateCreateTransfer(Account $fromAccount, Account $toAccount): void
+    private function validateCreateTransfer(Account $fromAccount, Account $toAccount, int $operationType): void
     {
         if (! $fromAccount) {
             throw new GraphqlException('From account not found', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -198,6 +198,12 @@ class TransferBetweenUsersService extends AbstractService
 
         if (! $toAccount) {
             throw new GraphqlException('To account not found', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        if ($operationType == OperationTypeEnum::BETWEEN_USERS->value) {
+            if ($fromAccount->owner_id == $toAccount->owner_id) {
+                throw new GraphqlException('This operation is not allowed for the same accounts owner', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
         }
 
         if ($fromAccount->currencies->id != $toAccount->currencies->id) {
