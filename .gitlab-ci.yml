@@ -72,5 +72,5 @@ deploy-job-testapi:
     - ssh $SSH_USER_HOST "cd /opt/test-api/docker && docker-compose exec -T php-dev php artisan migrate"
     - ssh $SSH_USER_HOST "cd /opt/test-api/docker && docker-compose exec -T php-dev php artisan  lighthouse:clear-cache"
   only:
-    - master
+    - test
 
