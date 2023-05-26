@@ -9,7 +9,7 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         from_account_id: ID!
         "ID аккаунта получателя"
         to_account_id: ID!
-    ): TransferIncoming
+    ): TransferBetween
         @field(resolver: "ApplicantTransferBetweenAccountsMutator@create")
 
     """
@@ -31,4 +31,13 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         transfer_incoming_id: ID!
     ): TransferIncoming
         @field(resolver: "ApplicantTransferBetweenAccountsMutator@execute")
+
+    """
+    Привязать файлы
+    """
+    attachFIleToApplicantTransferBetweenAccounts(
+        transfer_incoming_id: ID!
+        file_id: [ID!]!
+    ): TransferIncoming
+        @field(resolver: "ApplicantTransferBetweenAccountsMutator@attachFile")
 }
