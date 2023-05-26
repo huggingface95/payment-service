@@ -45,6 +45,7 @@ input QueryPaymentProvidersFilterStatic @spread{
     id: ID @eq
     hasCountriesFilterById: ID @eq
     hasCurrenciesFilterById: ID @eq
+    is_active: Boolean @eq
 }
 
 input InputPaymentProvider {
