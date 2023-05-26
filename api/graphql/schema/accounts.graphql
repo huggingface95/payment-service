@@ -119,8 +119,10 @@ extend type Query @guard {
     Получить список активных аккаунтов
     """
     accountActiveList(
-        client_id: InputAccountClients @eq
-    ): [Account] @field(resolver:"AccountsQuery@accountActiveList") @orderBy(column: "id", direction: ASC)
+        filter: _ @filterConditions(static: QueryAccountActiveListFilterStatic),
+        created_at: DateTimeRange @whereBetween,
+        orderBy: _ @orderBy(columns: ["id", "created_at"])
+    ): [Account] @all(scopes: ["active"]) @orderBy(column: "id", direction: ASC)
 
     """
     Получить список account states
@@ -136,6 +138,12 @@ extend type Query @guard {
         filter: _ @filterConditions(static: QueryClientListFilterStatic)
     ): [Client!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
 
+
+    clientListActive(
+        filter: _ @filterConditions(static: QueryClientListActiveFilterStatic)
+    ): [Client!]! @field(resolver:"AccountsQuery@clientListActive") @orderBy(column: "id", direction: ASC)
+
+
     """
     Скачать список аккаунтов
     """
@@ -148,6 +156,17 @@ extend type Query @guard {
 }
 
 input QueryClientListFilterStatic @spread{
+    group_type_id: ID @eq
+    company_id: ID @eq
+    group_role_id: ID @eq
+    account_number: String @ilike
+    hasClientableFilterById: ID @eq
+    hasClientableFilterByEmail: String @ilike
+    hasClientableFilterByPhone: String @ilike
+    hasClientableMixedIdOrFullnameOrName: Mixed @eq
+}
+
+input QueryClientListActiveFilterStatic @spread{
     group_type_id: ID @eq
     company_id: ID @eq
     group_role_id: ID @eq
@@ -180,6 +199,29 @@ input QueryAccountListFilterStatic @spread{
     reserved_balance: Float @eq
 }
 
+input QueryAccountActiveListFilterStatic @spread{
+    id: ID @eq
+    project_id: ID @eq
+    hasCompanyMixedIdOrName: Mixed @eq
+    hasPaymentSystemMixedIdOrName: Mixed @eq
+    hasOwnerMixedIdOrFullname: Mixed @eq
+    MixedAccountNumberOrAccountName: String @ilike
+    currency_id: ID @eq @neq
+    hasGroupRoleMixedIdOrName: Mixed @eq
+    group_type_id: ID @eq
+    hasMemberMixedIdOrFullname: Mixed @eq
+    is_primary: Boolean @eq
+    hasCommissionTemplateMixedIdOrFullname: Mixed @eq
+    account_state_id: ID @eq
+    hasClientableMixedIdOrFullnameOrName: Mixed @eq
+    payment_provider_id: ID @eq
+    iban_provider_id: ID @eq
+    current_balance: Float @eq
+    available_balance: Float @eq
+    reserved_balance: Float @eq
+}
+
+
 input QueryDownloadAccountListFilterStatic @spread {
     id: ID @eq
     hasCompanyMixedIdOrName: Mixed @eq
@@ -210,10 +252,10 @@ input QueryClientCondition {
     id: ID!
 }
 
-input InputAccountClients{
-    id: ID!
-    client_type: AccountClientsType!
-}
+#input InputAccountClients{
+#    id: ID!
+#    client_type: AccountClientsType!
+#}
 
 input InputAccount{
     "ID компании",
