@@ -10,6 +10,6 @@ func GetTokenTimes() (newTime time.Time, blockedTime time.Time, authUserTime tim
 	blockedTime = newTime.Add(time.Second * time.Duration(config.Conf.Jwt.BlockAccountTtl))
 	authUserTime = newTime.Add(time.Second * time.Duration(config.Conf.Jwt.BlockAccountTtl))
 	oauthCodeTime = newTime.Add(time.Second * time.Duration(900))
-	expirationJWTTime = time.Now().UTC().Add(1 * time.Hour)
+	expirationJWTTime = newTime.Add(time.Second * time.Duration(config.Conf.Jwt.Ttl))
 	return
 }

@@ -29,9 +29,9 @@ func sendEmailByData(e *cache.ConfirmationIpLinksCache) {
 	if template != nil {
 		content := helpers.ReplaceData(template.Content,
 			"{client_name}", e.FullName,
-			"{client_datetime_login}", e.CreatedAt,
-			"{client_ip}", e.Ip,
-			"{change_ip_confirm_link}", convertConfirmationIp("auth/ip", e.ConfirmationLink),
+			"{created_at}", e.CreatedAt,
+			"{ip}", e.Ip,
+			"{change_ip_confirm_link}", convertConfirmationIp("auth/login", e.ConfirmationLink, e.Email),
 		)
 		err := pkg.Mail(template.Subject, content, e.Email)
 		if err != nil {
