@@ -61,6 +61,18 @@ class TransferIncomingService extends AbstractService
         }
 
         switch ($transfer->status_id) {
+            case PaymentStatusEnum::UNSIGNED->value:
+                $allowedStatuses = [
+                    PaymentStatusEnum::ERROR->value,
+                    PaymentStatusEnum::CANCELED->value,
+                    PaymentStatusEnum::PENDING->value,
+                ];
+
+                if (! in_array($args['status_id'], $allowedStatuses)) {
+                    throw new GraphqlException('This status is not allowed for transfer which has Unsigned status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+
+                break;
             case PaymentStatusEnum::PENDING->value:
                 $allowedStatuses = [
                     PaymentStatusEnum::ERROR->value,
@@ -74,7 +86,12 @@ class TransferIncomingService extends AbstractService
 
                 break;
             case PaymentStatusEnum::ERROR->value:
-                if ($args['status_id'] != PaymentStatusEnum::PENDING->value) {
+                $allowedStatuses = [
+                    PaymentStatusEnum::CANCELED->value,
+                    PaymentStatusEnum::EXECUTED->value,
+                ];
+
+                if (! in_array($args['status_id'], $allowedStatuses)) {
                     throw new GraphqlException('This status is not allowed for transfer which has Error status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
@@ -94,6 +111,11 @@ class TransferIncomingService extends AbstractService
         $this->validateUpdateTransferStatus($transfer, $args);
 
         switch ($args['status_id']) {
+            case PaymentStatusEnum::ERROR->value:
+            case PaymentStatusEnum::CANCELED->value:
+                $this->updateTransferStatusToCancelOrError($transfer, $args['status_id']);
+
+                break;
             case PaymentStatusEnum::PENDING->value:
                 $this->updateTransferStatusToPending($transfer);
 
@@ -124,6 +146,18 @@ class TransferIncomingService extends AbstractService
             }
 
             $this->transferRepository->update($transfer, $args);
+
+            $this->createTransferHistory($transfer);
+        });
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function updateTransferStatusToCancelOrError(TransferIncoming $transfer, int $status): void
+    {
+        DB::transaction(function () use ($transfer, $status) {
+            $this->transferRepository->update($transfer, ['status_id' => $status]);
 
             $this->createTransferHistory($transfer);
         });
