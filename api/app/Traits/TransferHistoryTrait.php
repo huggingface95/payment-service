@@ -11,10 +11,11 @@ use App\Models\TransferIncoming;
 use App\Models\TransferIncomingHistory;
 use App\Models\TransferOutgoing;
 use App\Models\TransferOutgoingHistory;
+use Carbon\Carbon;
 
 trait TransferHistoryTrait
 {
-    public function createPPHistory(TransferOutgoing | TransferIncoming $transfer): self
+    public function createPPHistory(TransferOutgoing|TransferIncoming $transfer): self
     {
         $transferType = $transfer instanceof TransferOutgoing ?
             TransferTypeEnum::OUTGOING_WIRE_TRANSFER->toAltString() :
@@ -29,7 +30,7 @@ trait TransferHistoryTrait
         return $this;
     }
 
-    public function createTransferHistory(TransferOutgoing | TransferIncoming $transfer, string $action = '', string $comment = ''): self
+    public function createTransferHistory(TransferOutgoing|TransferIncoming $transfer, string $action = '', string $comment = ''): self
     {
         if (empty($action)) {
             $action = $this->getAction($transfer->status_id);
@@ -44,6 +45,7 @@ trait TransferHistoryTrait
             'status_id' => $transfer->status_id,
             'action' => $action,
             'comment' => $comment,
+            'created_at' => Carbon::now(),
         ];
 
         if ($transfer instanceof TransferOutgoing) {
