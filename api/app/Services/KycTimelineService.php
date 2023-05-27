@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\ApplicantRiskLevelEnum;
+use App\Enums\ApplicantStateEnum;
 use App\Enums\ApplicantStateReasonEnum;
 use App\Enums\ApplicantStatusEnum;
 use App\Enums\DocumentStateEnum;
@@ -326,6 +327,9 @@ class KycTimelineService extends AbstractService
                     break;
                 case 'applicant_risk_level_id':
                     $result['applicant_risk_level'] = ApplicantRiskLevelEnum::tryFrom($value)->toString();
+                    break;
+                case 'applicant_state_id':
+                    $result['applicant_state'] = ApplicantStateEnum::tryFrom($value)->toString();
                     break;
                 case 'applicant_state_reason_id':
                     $result['applicant_state_reason'] = ApplicantStateReasonEnum::tryFrom($value)->toString();
