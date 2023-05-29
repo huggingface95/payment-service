@@ -13,8 +13,8 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         respondent_fee_id: ID!
         "Причина перевода"
         reason: String
-    ): TransferIncoming
-        @field(resolver: "ApplicantTransferBetweenAccountsMutator@create")
+    ): TransferBetween
+        @field(resolver: "TransferBetweenUsersMutator@create")
 
     """
     Подписать перевод между пользователями
@@ -35,4 +35,13 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         transfer_incoming_id: ID!
     ): TransferIncoming
         @field(resolver: "TransferBetweenUsersMutator@execute")
+
+    """
+    Привязать файлы
+    """
+    attachFIleToApplicantTransferBetweenUsers(
+        transfer_incoming_id: ID!
+        file_id: [ID!]!
+    ): TransferIncoming
+        @field(resolver: "TransferBetweenUsersMutator@attachFile")
 }

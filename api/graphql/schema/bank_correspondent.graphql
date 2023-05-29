@@ -45,11 +45,12 @@ extend type Query @guard {
 
 input QueryBankCorrespondentsFilterStatic @spread {
     id: ID @eq
+    country_id: ID @eq
     payment_system_id: ID @eq
     name: String @eq @ilike
     is_active: Boolean @eq
-    hasCurrenciesRegionsFilterByCurrencyId: ID @eq
-    hasCurrenciesRegionsFilterByRegionId: ID @eq
+    hasCurrenciesFilterById: ID @eq
+    hasRegionsFilterById: ID @eq
     hasPaymentProviderFilterById: ID @eq
 }
 

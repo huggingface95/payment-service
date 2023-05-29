@@ -14,11 +14,11 @@ var MailError error
 func MailConnect(config *config.EmailConfig) {
 	server := mail.NewSMTPClient()
 
-	server.Host = config.Server
-	server.Port = config.Port
-	server.Username = config.Username
-	server.Password = config.Password
-	server.Encryption = mail.EncryptionTLS
+	server.Host = "mailhog"
+	server.Port = 1025
+	//server.Username = ""
+	//server.Password = ""
+	//server.Encryption = mail.EncryptionNone
 	// Variable to keep alive connection
 	server.KeepAlive = false
 	// Timeout for connect to SMTP Server

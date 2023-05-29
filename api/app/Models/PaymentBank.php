@@ -6,10 +6,13 @@ use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class PaymentBank extends BaseModel
 {
     use BaseObServerTrait;
+    use HasRelationships;
 
     public $timestamps = false;
 
@@ -34,12 +37,49 @@ class PaymentBank extends BaseModel
         'is_active',
     ];
 
+    public function currencies(): HasManyDeep
+    {
+        return $this->hasManyDeep(
+            Currencies::class,
+            [PaymentSystem::class, 'payment_system_currencies'],
+            [
+                'id',
+                'payment_system_id',
+                'id',
+            ],
+            [
+                'payment_system_id',
+                'id',
+                'currency_id',
+            ],
+        );
+    }
+
+    public function regions(): HasManyDeep
+    {
+        return $this->hasManyDeep(
+            Region::class,
+            [PaymentSystem::class, 'payment_system_regions'],
+            [
+                'id',
+                'payment_system_id',
+                'id',
+            ],
+            [
+                'payment_system_id',
+                'id',
+                'region_id',
+            ],
+        );
+    }
+
+
     public function bankCorrespondents(): HasMany
     {
         return $this->hasMany(BankCorrespondent::class, 'payment_bank_id');
     }
 
-    public function currencies(): BelongsToMany
+    public function currenciesRegions_currencies(): BelongsToMany
     {
         return $this->belongsToMany(
             Currencies::class,
@@ -49,7 +89,7 @@ class PaymentBank extends BaseModel
         )->distinct('id');
     }
 
-    public function regions(): BelongsToMany
+    public function currenciesRegions_regions(): BelongsToMany
     {
         return $this->belongsToMany(
             Region::class,

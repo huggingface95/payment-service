@@ -3,8 +3,6 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
     Создать исходящий перевод
     """
     createApplicantTransferOutgoing(
-        "ID компании"
-        company_id: ID!
         "ID группы"
         group_id: ID!
         "ID типа группы"
@@ -13,8 +11,6 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         project_id: ID!
         "Сумма"
         amount: Decimal!
-        "ID валюты"
-        currency_id: ID!
         "ID аккаунта"
         account_id: ID!
         "ID платежного провайдера"
@@ -23,7 +19,6 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         payment_system_id: ID!
         "ID страны банка получателя"
         recipient_bank_country_id: ID!
-        requested_by_id: ID!
         price_list_id: ID!
         "ID коммиссии"
         price_list_fee_id: ID!
@@ -39,6 +34,8 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         recipient_bank_address: String
         "SWIFT банка получателя"
         recipient_bank_swift: String
+        "Страна получателя"
+        recipient_country_id: ID!
         "Имя получателя"
         recipient_name: String
         "Город получателя"
@@ -49,10 +46,10 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         recipient_state: String
         "Индекс получателя"
         recipient_zip: String
+        "Кто платит коммиссию"
+        respondent_fees_id: ID!
         "Сообщение банка"
         bank_message: String
-        "ID файлов"
-        file_id: [ID]
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: TransferSwiftInput
     ): TransferOutgoing
@@ -79,4 +76,13 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         code: String!
     ): TransferOutgoing
         @field(resolver: "ApplicantTransferOutgoingMutator@sign")
+
+    """
+    Привязать файлы
+    """
+    attachApplicantFIleToTransferOutgoing(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferOutgoing
+        @field(resolver: "ApplicantTransferOutgoingMutator@attachFile")
 }

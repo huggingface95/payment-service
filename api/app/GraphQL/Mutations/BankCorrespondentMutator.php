@@ -13,18 +13,19 @@ class BankCorrespondentMutator extends BaseMutator
 
     /**
      * @param    $_
-     * @param  array  $args
+     * @param array $args
      * @return mixed
      */
     public function create($_, array $args)
     {
-        $bank = BankCorrespondent::create($args);
+        /** @var BankCorrespondent $bank */
+        $bank = BankCorrespondent::query()->create($args);
 
         if (isset($args['currencies_and_regions'])) {
             $requestCurrenciesRegions = $this->optimizeCurrencyRegionInput($args['currencies_and_regions']);
 
             foreach ($requestCurrenciesRegions->where('region_id', '>', 0) as $currenciesRegion) {
-                $bank->currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
+                $bank->currenciesRegions_currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
             }
         }
 
@@ -33,15 +34,16 @@ class BankCorrespondentMutator extends BaseMutator
 
     /**
      * @param    $_
-     * @param  array  $args
+     * @param array $args
      * @return mixed
      *
      * @throws GraphqlException
      */
     public function update($_, array $args)
     {
+        /** @var BankCorrespondent $bank */
         $bank = BankCorrespondent::find($args['id']);
-        if (! $bank) {
+        if (!$bank) {
             throw new GraphqlException('Not found', 'not found', 404);
         }
         $bank->update($args);
@@ -49,9 +51,9 @@ class BankCorrespondentMutator extends BaseMutator
         if (isset($args['currencies_and_regions'])) {
             $requestCurrenciesRegions = $this->optimizeCurrencyRegionInput($args['currencies_and_regions']);
 
-            $bank->currencies()->detach();
+            $bank->currenciesRegions_currencies()->detach();
             foreach ($requestCurrenciesRegions->where('region_id', '>', 0) as $currenciesRegion) {
-                $bank->currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
+                $bank->currenciesRegions_currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
             }
         }
 
@@ -68,7 +70,7 @@ class BankCorrespondentMutator extends BaseMutator
                 foreach ($args['currencies_and_regions'] as $currencyRegion) {
                     $q->orWhere(function (Builder $q) use ($currencyRegion) {
                         $q->whereIn('currency_id', $currencyRegion['currency_id']);
-                        if (! empty($currencyRegion['regions'])) {
+                        if (!empty($currencyRegion['regions'])) {
                             $q->whereIn('region_id', $currencyRegion['regions']);
                         }
                     });
