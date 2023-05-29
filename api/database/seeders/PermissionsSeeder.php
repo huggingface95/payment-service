@@ -4300,6 +4300,14 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'PaymentProvidersList',
+                                                    'referer' => 'banking/payment-provider/list',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ]
+                                            ],
                                         ],
                                     ],
                                 ],
