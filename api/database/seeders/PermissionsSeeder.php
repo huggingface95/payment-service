@@ -3703,6 +3703,14 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'MemberProfile',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'memberProfile',
+                                                ],
+                                            ],
                                         ],
                                         'Make Transfer.IWT' => [
                                             'data' => [
