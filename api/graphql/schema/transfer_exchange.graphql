@@ -114,6 +114,23 @@ extend type Mutation @guard {
         @field(resolver: "TransferExchangeMutator@create")
 
     """
+    Редактировать exchange перевод
+    """
+    updateTransferExchange(
+        "ID"
+        id: ID!
+        "Сумма"
+        amount: Decimal!
+        "ID аккаунта отправителя"
+        from_account_id: ID!
+        "ID аккаунта получателя"
+        to_account_id: ID!
+        "ID прайс-лист фии"
+        price_list_fee_id: ID!
+    ): TransferExchange
+        @field(resolver: "TransferExchangeMutator@update")
+
+    """
     Подписать exchange перевод
     """
     signTransferExchange(
@@ -123,15 +140,6 @@ extend type Mutation @guard {
         code: String!
     ): TransferExchange
         @field(resolver: "TransferExchangeMutator@sign")
-
-    """
-    Исполнить exchange перевод
-    """
-    executeTransferExchange(
-        "ID"
-        id: ID!
-    ): TransferExchange
-        @field(resolver: "TransferExchangeMutator@execute")
 
     """
     Отменить exchange перевод
