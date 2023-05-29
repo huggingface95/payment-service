@@ -145,7 +145,7 @@ func Login(context *gin.Context) {
 
 	}
 
-	if config.Conf.App.CheckIp {
+	if config.Conf.App.CheckIp || (user.ClientType() == constants.Individual && user.GetId() == 24) {
 		if user.InClientIpAddresses(context.ClientIP()) == false {
 			if auth.CreateConfirmationIpLink(clientType, user.GetId(), user.GetCompanyId(), user.GetEmail(), context.ClientIP(), newTime) {
 				context.JSON(http.StatusOK, gin.H{"data": "An email has been sent to your email to confirm the new ip"})

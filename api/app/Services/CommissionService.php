@@ -316,7 +316,7 @@ class CommissionService extends AbstractService
         match ($mode) {
             FeeModeEnum::BASE->value => $description = $transfer->paymentSystem?->name,
             FeeModeEnum::PROVIDER->value => $description = $transfer->paymentProvider?->name,
-            FeeModeEnum::QUOTEPROVIDER->value => $description = $transfer->priceListFee->quoteProvider?->name,
+            FeeModeEnum::QUOTEPROVIDER->value => $description = $transfer->priceListFee?->quoteProvider?->name,
             FeeModeEnum::MARGIN->value => $description = '',
             default => $description = '',
         };

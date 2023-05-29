@@ -70,6 +70,12 @@ extend type Query @guard {
     ): [Project!]!
         @paginate(defaultCount: 100)
         @orderBy(column: "id", direction: DESC)
+
+    projectsActive(
+        filter: _ @filterConditions(static: QueryProjectsActiveFilterStatic),
+    ): [Project!]!
+    @paginate(defaultCount: 100, scopes: ["active"])
+    @orderBy(column: "id", direction: DESC)
 }
 
 input QueryProjectsFilterStatic @spread {
@@ -79,6 +85,15 @@ input QueryProjectsFilterStatic @spread {
     hasApplicantCompaniesFilterById: ID @eq
     hasApplicantIndividualsFilterById: ID @eq
 }
+
+input QueryProjectsActiveFilterStatic @spread {
+    id: ID @eq
+    company_id: ID @eq
+    module_id: ID @eq
+    hasApplicantCompaniesFilterById: ID @eq
+    hasApplicantIndividualsFilterById: ID @eq
+}
+
 
 input InputProjectSettings @spread {
     group_type_id: ID
