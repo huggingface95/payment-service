@@ -47,15 +47,28 @@ func RedirectRequest(context *gin.Context) {
 		}
 	}
 
-	sendProxy(context)
+	sendProxy(context, "/api")
 }
 
 func RedirectGetRequest(c *gin.Context) {
-	sendProxy(c)
+	sendProxy(c, "/api")
 }
 
-func sendProxy(c *gin.Context) {
-	remote, err := url.Parse(config.Conf.App.RedirectUrl + "/api")
+func RedirectFilesRequest(c *gin.Context) {
+	sendProxy(c, "/api/files")
+}
+func RedirectEmailRequest(c *gin.Context) {
+	sendProxy(c, "/api/email")
+}
+func RedirectSmsRequest(c *gin.Context) {
+	sendProxy(c, "/api/sms")
+}
+func RedirectPdfRequest(c *gin.Context) {
+	sendProxy(c, "/api/pdf")
+}
+
+func sendProxy(c *gin.Context, path string) {
+	remote, err := url.Parse(config.Conf.App.RedirectUrl + path)
 	if err != nil {
 		panic(err)
 	}
@@ -66,7 +79,7 @@ func sendProxy(c *gin.Context) {
 		req.Host = remote.Host
 		req.URL.Scheme = remote.Scheme
 		req.URL.Host = remote.Host
-		req.URL.Path = config.Conf.App.RedirectUrl + "/api"
+		req.URL.Path = config.Conf.App.RedirectUrl + path
 	}
 
 	proxy.ServeHTTP(c.Writer, c.Request)
