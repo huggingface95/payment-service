@@ -2391,6 +2391,13 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'members',
 
                                                 ],
+                                                [
+                                                    'name' => 'GetMembersList',
+                                                    'referer' => 'administration/member-info/full-profile/new/members/members-list',
+                                                    'type' => 'query',
+                                                    'method' => 'members',
+
+                                                ],
                                             ],
                                         ],
                                         'Member Company Profile:Member List.Add New Member' => [
