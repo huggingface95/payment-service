@@ -1744,22 +1744,10 @@ class PermissionsSeeder extends Seeder
 
                                                 ],
                                                 [
-                                                    'name' => 'MemberProfile',
-                                                    'referer' => 'settings/manager-groups/settings',
-                                                    'type' => 'query',
-                                                    'method' => 'memberProfile',
-                                                ],
-                                                [
                                                     'name' => 'GetInternalProvideFilter',
                                                     'referer' => 'settings/manager-groups/settings',
                                                     'type' => 'query',
                                                     'method' => 'paymentProviders',
-                                                ],
-                                                [
-                                                    'name' => 'MemberProfile',
-                                                    'referer' => 'settings/manager-groups/new',
-                                                    'type' => 'query',
-                                                    'method' => 'memberProfile',
                                                 ],
                                                 [
                                                     'name' => 'GetInternalProvideFilter',
@@ -1951,13 +1939,6 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'administration/member-info/full-profile/new/profile/general',
                                                     'type' => 'query',
                                                     'method' => 'company',
-
-                                                ],
-                                                [
-                                                    'name' => 'MemberProfile',
-                                                    'referer' => 'administration/member-info/full-profile/new/profile/general',
-                                                    'type' => 'query',
-                                                    'method' => 'memberProfile',
 
                                                 ],
                                                 [
@@ -3710,14 +3691,6 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
-                                            'operations' => [
-                                                [
-                                                    'name' => 'MemberProfile',
-                                                    'referer' => 'banking/payments/make-payment',
-                                                    'type' => 'query',
-                                                    'method' => 'memberProfile',
-                                                ],
-                                            ],
                                         ],
                                         'Make Transfer.IWT' => [
                                             'data' => [
@@ -4510,6 +4483,11 @@ class PermissionsSeeder extends Seeder
                 [
                     'name' => 'GetAvatarFile',
                     'method' => 'GetAvatarFile',
+                    'type' => 'query',
+                ],
+                [
+                    'name' => 'MemberProfile',
+                    'method' => 'memberProfile',
                     'type' => 'query',
                 ],
             ];
