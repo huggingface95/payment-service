@@ -1523,6 +1523,20 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'roles',
 
                                                 ],
+                                                [
+                                                    'name' => 'GetAllPermissions',
+                                                    'referer' => 'settings/manager-roles/settings',
+                                                    'type' => 'query',
+                                                    'method' => 'permissions',
+
+                                                ],
+                                                [
+                                                    'name' => 'GetAllPermissions',
+                                                    'referer' => 'settings/manager-roles/new',
+                                                    'type' => 'query',
+                                                    'method' => 'permissions',
+
+                                                ],
                                             ],
                                         ],
                                         'Role List.Add New Role' => [
@@ -1729,6 +1743,18 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'groups',
 
                                                 ],
+                                                [
+                                                    'name' => 'GetInternalProvideFilter',
+                                                    'referer' => 'settings/manager-groups/settings',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ],
+                                                [
+                                                    'name' => 'GetInternalProvideFilter',
+                                                    'referer' => 'settings/manager-groups/new',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ],
                                             ],
                                         ],
                                         'Groups Settings.Edit' => [
@@ -1831,7 +1857,7 @@ class PermissionsSeeder extends Seeder
                                                 [
                                                     'name' => 'MemberCompanies',
                                                     'referer' => 'administration/member-info/member-company-list',
-                                                    'type' => 'mutation',
+                                                    'type' => 'query',
                                                     'method' => 'companies',
 
                                                 ],
@@ -1916,15 +1942,8 @@ class PermissionsSeeder extends Seeder
 
                                                 ],
                                                 [
-                                                    'name' => 'MemberProfile',
-                                                    'referer' => 'administration/member-info/full-profile/new/profile/general',
-                                                    'type' => 'query',
-                                                    'method' => 'memberProfile',
-
-                                                ],
-                                                [
                                                     'name' => 'GetSettingsCompanyById',
-                                                    'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                                    'referer' => 'administration/member-info/full-profile/$id/profile/general',
                                                     'type' => 'query',
                                                     'method' => 'company',
 
@@ -2352,6 +2371,39 @@ class PermissionsSeeder extends Seeder
                                                     'type' => 'query',
                                                     'method' => 'members',
 
+                                                ],
+                                                [
+                                                    'name' => 'GetMembersList',
+                                                    'referer' => 'administration/member-info/full-profile/new/members/members-list',
+                                                    'type' => 'query',
+                                                    'method' => 'members',
+
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'administration/member-info/full-profile/$id/members/members-list',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'administration/member-info/full-profile/new/members/members-list',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+
+                                                ],
+                                                [
+                                                    'name' => 'GetMemberCompanyById',
+                                                    'referer' => 'administration/member-info/full-profile/new/members/members-list',
+                                                    'type' => 'query',
+                                                    'method' => 'company',
+                                                ],
+                                                [
+                                                    'name' => 'GetMemberCompanyById',
+                                                    'referer' => 'administration/member-info/full-profile/$id/members/members-list',
+                                                    'type' => 'query',
+                                                    'method' => 'company',
                                                 ],
                                             ],
                                         ],
@@ -2885,6 +2937,12 @@ class PermissionsSeeder extends Seeder
                                                     'type' => 'query',
                                                     'method' => 'emailNotification',
 
+                                                ],
+                                                [
+                                                    'name' => 'GroupTypeListFilter',
+                                                    'referer' => 'administration/email/email-notifications',
+                                                    'type' => 'query',
+                                                    'method' => 'groupTypeList',
                                                 ],
                                             ],
                                         ],
@@ -3659,6 +3717,32 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetCompaniesHasAccounts',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'accountList',
+                                                ],
+                                                [
+                                                    'name' => 'GetGroupTypeHasAccounts',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'accountList',
+                                                ],
+                                                [
+                                                    'name' => 'GetGroupRoleHasAccounts',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'accountList',
+                                                ],
+                                                [
+                                                    'name' => 'GetProjectHasAccounts',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'accountList',
+                                                ],
+                                            ],
                                         ],
                                         'Make Transfer.IWT' => [
                                             'data' => [
@@ -3824,7 +3908,18 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'banking/payment-provider/full-profile/commission-templates',
                                                     'type' => 'query',
                                                     'method' => 'commissionTemplates',
-
+                                                ],
+                                                [
+                                                    'name' => 'CommissionTemplatesList',
+                                                    'referer' => 'banking/commission-templates/commission-template',
+                                                    'type' => 'query',
+                                                    'method' => 'commissionTemplates',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/commission-templates/commission-template',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
                                                 ],
                                             ],
                                         ],
@@ -4256,6 +4351,14 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'PaymentProvidersList',
+                                                    'referer' => 'banking/payment-provider/list',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ]
+                                            ],
                                         ],
                                     ],
                                 ],
@@ -4443,6 +4546,11 @@ class PermissionsSeeder extends Seeder
                 [
                     'name' => 'GetAvatarFile',
                     'method' => 'GetAvatarFile',
+                    'type' => 'query',
+                ],
+                [
+                    'name' => 'MemberProfile',
+                    'method' => 'memberProfile',
                     'type' => 'query',
                 ],
             ];
