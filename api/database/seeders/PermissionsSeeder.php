@@ -1523,6 +1523,20 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'roles',
 
                                                 ],
+                                                [
+                                                    'name' => 'GetAllPermissions',
+                                                    'referer' => 'settings/manager-roles/settings',
+                                                    'type' => 'query',
+                                                    'method' => 'permissions',
+
+                                                ],
+                                                [
+                                                    'name' => 'GetAllPermissions',
+                                                    'referer' => 'settings/manager-roles/new',
+                                                    'type' => 'query',
+                                                    'method' => 'permissions',
+
+                                                ],
                                             ],
                                         ],
                                         'Role List.Add New Role' => [
@@ -1729,6 +1743,30 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'groups',
 
                                                 ],
+                                                [
+                                                    'name' => 'MemberProfile',
+                                                    'referer' => 'settings/manager-groups/settings',
+                                                    'type' => 'query',
+                                                    'method' => 'memberProfile',
+                                                ],
+                                                [
+                                                    'name' => 'GetInternalProvideFilter',
+                                                    'referer' => 'settings/manager-groups/settings',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ],
+                                                [
+                                                    'name' => 'MemberProfile',
+                                                    'referer' => 'settings/manager-groups/new',
+                                                    'type' => 'query',
+                                                    'method' => 'memberProfile',
+                                                ],
+                                                [
+                                                    'name' => 'GetInternalProvideFilter',
+                                                    'referer' => 'settings/manager-groups/new',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ],
                                             ],
                                         ],
                                         'Groups Settings.Edit' => [
@@ -1831,7 +1869,7 @@ class PermissionsSeeder extends Seeder
                                                 [
                                                     'name' => 'MemberCompanies',
                                                     'referer' => 'administration/member-info/member-company-list',
-                                                    'type' => 'mutation',
+                                                    'type' => 'query',
                                                     'method' => 'companies',
 
                                                 ],
@@ -1924,7 +1962,7 @@ class PermissionsSeeder extends Seeder
                                                 ],
                                                 [
                                                     'name' => 'GetSettingsCompanyById',
-                                                    'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                                    'referer' => 'administration/member-info/full-profile/$id/profile/general',
                                                     'type' => 'query',
                                                     'method' => 'company',
 
@@ -2885,6 +2923,12 @@ class PermissionsSeeder extends Seeder
                                                     'type' => 'query',
                                                     'method' => 'emailNotification',
 
+                                                ],
+                                                [
+                                                    'name' => 'GroupTypeListFilter',
+                                                    'referer' => 'administration/email/email-notifications',
+                                                    'type' => 'query',
+                                                    'method' => 'groupTypeList',
                                                 ],
                                             ],
                                         ],
