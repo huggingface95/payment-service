@@ -133,7 +133,7 @@ func UpdatePassword(user postgres.User) *gorm.DB {
 		"ProfileAdditionalFields", "PersonalAdditionalFields", "ContactsAdditionalFields", "ApplicantStatusId",
 		"IsVerificationPhone", "FullName", "CompanyId", "MemberGroupRoleId", "ApplicantStateReasonId", "ApplicantRiskLevelId",
 		"AccountManagerMemberId", "LanguageId", "IsVerificationEmail", "Google2FaSecret", "IsActive", "TwoFactorAuthSettingId",
-		"CreatedAt", "UpdatedAt", "BackupCodes", "ClientIpAddresses", "Company",
+		"CreatedAt", "UpdatedAt", "BackupCodes", "ClientIpAddresses", "Company", "ApplicantCompany",
 	})...).Save(model)
 
 }
