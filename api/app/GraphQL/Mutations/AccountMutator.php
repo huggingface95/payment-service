@@ -12,8 +12,11 @@ use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Account;
 use App\Models\AccountState;
+use App\Models\Company;
+use App\Models\EmailNotification;
 use App\Models\GroupRole;
 use App\Models\Groups;
+use App\Models\Members;
 use App\Services\EmailService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +42,14 @@ class AccountMutator
 
             $args['member_id'] = Auth::user()->id;
 
+            $company = Members::find($args['member_id'])->company()?->first();
+
+            $groupRoleIds = GroupRole::where('company_id', $company->id)->pluck('id');
+
+            $notifications = EmailNotification::where('company_id', $company->id)
+                ->whereIn('group_role_id', $groupRoleIds)
+                ->get();
+
             $args['account_type'] = $this->setAccountType($args['group_type_id']);
             if (! isset($args['account_number'])) {
                 $args['account_state_id'] = AccountState::WAITING_FOR_ACCOUNT_GENERATION;
@@ -53,7 +64,9 @@ class AccountMutator
             /** @var Account $account */
             $account = Account::query()->create($args);
 
-            $this->emailService->sendAccountStatusEmail($account);
+            if ($notifications) {
+                $this->emailService->sendAccountStatusEmail($account);
+            }
 
             if ($account->isParent() && $account->account_number == null && $account->group->name == Groups::INDIVIDUAL) {
                 dispatch(new IbanIndividualActivationJob($account));
