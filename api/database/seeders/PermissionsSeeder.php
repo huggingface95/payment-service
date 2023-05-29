@@ -2391,6 +2391,13 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'members',
 
                                                 ],
+                                                [
+                                                    'name' => 'GetMembersList',
+                                                    'referer' => 'administration/member-info/full-profile/new/members/members-list',
+                                                    'type' => 'query',
+                                                    'method' => 'members',
+
+                                                ],
                                             ],
                                         ],
                                         'Member Company Profile:Member List.Add New Member' => [
@@ -3702,6 +3709,14 @@ class PermissionsSeeder extends Seeder
                                                 'guard_name' => 'api',
                                                 'order' => 1,
                                                 'type' => 'read',
+                                            ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'MemberProfile',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'memberProfile',
+                                                ],
                                             ],
                                         ],
                                         'Make Transfer.IWT' => [
