@@ -3717,6 +3717,32 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetCompaniesHasAccounts',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'accountList',
+                                                ],
+                                                [
+                                                    'name' => 'GetGroupTypeHasAccounts',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'accountList',
+                                                ],
+                                                [
+                                                    'name' => 'GetGroupRoleHasAccounts',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'accountList',
+                                                ],
+                                                [
+                                                    'name' => 'GetProjectHasAccounts',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'accountList',
+                                                ],
+                                            ],
                                         ],
                                         'Make Transfer.IWT' => [
                                             'data' => [
@@ -3882,7 +3908,18 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'banking/payment-provider/full-profile/commission-templates',
                                                     'type' => 'query',
                                                     'method' => 'commissionTemplates',
-
+                                                ],
+                                                [
+                                                    'name' => 'CommissionTemplatesList',
+                                                    'referer' => 'banking/commission-templates/commission-template',
+                                                    'type' => 'query',
+                                                    'method' => 'commissionTemplates',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/commission-templates/commission-template',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
                                                 ],
                                             ],
                                         ],
