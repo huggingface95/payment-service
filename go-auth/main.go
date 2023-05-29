@@ -94,6 +94,10 @@ func initRouter() *gin.Engine {
 		redirectPost := redirect.Group("").Use(middlewares.AccessAuth())
 		{
 			redirectPost.POST("", controllers.RedirectRequest)
+			redirectPost.POST("/files", controllers.RedirectFilesRequest)
+			redirectPost.POST("/email", controllers.RedirectEmailRequest)
+			redirectPost.POST("/sms", controllers.RedirectSmsRequest)
+			redirectPost.GET("/pdf", controllers.RedirectPdfRequest)
 		}
 	}
 	return router
