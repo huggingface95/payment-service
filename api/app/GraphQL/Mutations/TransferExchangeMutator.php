@@ -25,7 +25,7 @@ class TransferExchangeMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
-    public function cancel($root, array $args): TransferExchange
+    public function cancel($_, array $args): TransferExchange
     {
         $transfer = $this->transferRepository->findById($args['id']);
         if (! $transfer) {
@@ -53,24 +53,11 @@ class TransferExchangeMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
-    public function sign($_, array $args): TransferExchange
+    public function update($_, array $args): TransferExchange
     {
-        if (! isset($args['code']) || empty($args['code'])) {
-            throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
-        }
-
         $transfer = $this->transferRepository->findById($args['id']);
-        if (! $transfer) {
-            throw new GraphqlException('Transfer not found', 'not found', 404);
-        }
 
-        $this->transferService->updateTransferStatus([
-            'exchange' => $transfer,
-            'incoming' => $transfer->transferIncoming,
-            'outgoing' => $transfer->transferOutgoing,
-        ], [
-            'status_id' => PaymentStatusEnum::PENDING->value,
-        ]);
+        $this->transferService->updateTransfer($transfer, $args);
 
         return $transfer;
     }
@@ -78,8 +65,12 @@ class TransferExchangeMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
-    public function execute($_, array $args): TransferExchange
+    public function sign($_, array $args): TransferExchange
     {
+        if (! isset($args['code']) || empty($args['code'])) {
+            throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
+        }
+
         $transfer = $this->transferRepository->findById($args['id']);
         if (! $transfer) {
             throw new GraphqlException('Transfer not found', 'not found', 404);

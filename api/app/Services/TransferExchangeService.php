@@ -158,6 +158,55 @@ class TransferExchangeService extends AbstractService
         ];
     }
 
+    public function updateTransfer(TransferExchange $transfer, array $args): Builder|Model
+    {
+        if ($transfer->transferOutgoing->status_id !== PaymentStatusEnum::UNSIGNED->value) {
+            throw new GraphqlException('Transfer status is not Unsigned');
+        }
+        if ($transfer->transferIncoming->status_id !== PaymentStatusEnum::UNSIGNED->value) {
+            throw new GraphqlException('Transfer status is not Unsigned');
+        }
+
+        $fromAccount = Account::findOrFail($args['from_account_id']);
+        $toAccount = Account::findOrFail($args['to_account_id']);
+
+        $this->validateCreateTransfer($fromAccount, $toAccount);
+
+        $data = $this->populateTransferData($args, $fromAccount, $toAccount, OperationTypeEnum::EXCHANGE->value);
+
+        $transfers = DB::transaction(function () use ($data, $transfer, $fromAccount, $toAccount) {
+            /** @var TransferOutgoing $outgoing */
+            $outgoing = $this->transferOutgoingRepository->update($transfer->transferOutgoing, $data['outgoing']);
+            $incoming = $this->transferIncomingRepository->update($transfer->transferIncoming, $data['incoming']);
+            $exchange = $this->transferExchangeRepository->update($transfer, [
+                'company_id' => $outgoing->company_id,
+                'client_id' => $outgoing->account?->client_id,
+                'client_type' => $outgoing->account?->client_type,
+                'requested_by_id' => $outgoing->requested_by_id,
+                'user_type' => $outgoing->user_type,
+                'debited_account_id' => $outgoing->account?->id,
+                'credited_account_id' => $incoming->account?->id,
+                'exchange_rate' => Str::decimal($data['exchange_rate']),
+            ]);
+
+            $outgoing->reason = 'Exchange: Buy (Rate 1 ' . $outgoing->currency->code . '-> ' . (1 * $exchange->exchange_rate) . ' ' . $incoming->currency->code . ')';
+
+            $transactionOutgoing = TransformerDTO::transform(TransactionDTO::class, $outgoing, $fromAccount, $toAccount);
+            $this->commissionService->makeFee($outgoing, $transactionOutgoing);
+
+            $this->createTransferHistory($outgoing)->createPPHistory($outgoing);
+            $this->createTransferHistory($incoming)->createPPHistory($incoming);
+
+            return [
+                'outgoing' => $outgoing,
+                'incoming' => $incoming,
+                'exchange' => $exchange,
+            ];
+        });
+
+        return $transfers['exchange'];
+    }
+
     /**
      * @throws GraphqlException
      */
@@ -262,11 +311,6 @@ class TransferExchangeService extends AbstractService
 
             switch ($transfer['status_id']) {
                 case PaymentStatusEnum::UNSIGNED->value:
-                    if ($args['status_id'] != PaymentStatusEnum::PENDING->value) {
-                        throw new GraphqlException('This status is not allowed for transfer which has Unsigned status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-                    }
-                    break;
-                case PaymentStatusEnum::PENDING->value:
                     $allowedStatuses = [
                         PaymentStatusEnum::ERROR->value,
                         PaymentStatusEnum::CANCELED->value,
@@ -274,12 +318,14 @@ class TransferExchangeService extends AbstractService
                     ];
 
                     if (! in_array($args['status_id'], $allowedStatuses)) {
-                        throw new GraphqlException('This status is not allowed for transfer which has Pending status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                        throw new GraphqlException('This status is not allowed for transfer which has Unsigned status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
 
                     break;
                 case PaymentStatusEnum::CANCELED->value:
                     throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                case PaymentStatusEnum::ERROR->value:
+                    throw new GraphqlException('Transfer has final status which is Error', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                 case PaymentStatusEnum::EXECUTED->value:
                     throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
