@@ -4434,6 +4434,25 @@ class PermissionsSeeder extends Seeder
                 }
             }
 
+            $globalOperations = [
+                [
+                    'name' => 'GetMemberAccess',
+                    'method' => 'GetMemberAccess',
+                    'type' => 'query',
+                ],
+                [
+                    'name' => 'GetAvatarFile',
+                    'method' => 'GetAvatarFile',
+                    'type' => 'query',
+                ],
+            ];
+
+
+            foreach ($globalOperations as $globalOperation){
+                PermissionOperation::query()->firstOrCreate($globalOperation);
+            }
+
+
             $filters = [
                 //            [
                 //                'mode' => PermissionFilter::SCOPE_MODE,
@@ -4754,15 +4773,9 @@ class PermissionsSeeder extends Seeder
                 unset($filter['binds']);
                 $permissionFilter = PermissionFilter::firstOrCreate($filter);
 
-                foreach ($binds ?? [] as $perName) {
-                    /** @var Permissions $permission */
-                    $permission = Permissions::query()->where('name', $perName)->whereIn('permission_list_id', $lists)->first();
-                    if ($permission) {
-                        $ids = $permissionFilter->binds()->get()->pluck('id')->push($permission->id)->unique()->toArray();
-                        $operation->binds()->sync($ids, true);
-                    } else {
-                        throw new Exception("Not found bind permission in {$perName} filter");
-                    }
+                if (is_array($binds)){
+                    $ids = Permissions::query()->whereIn('name', $binds)->whereIn('permission_list_id', $lists)->get()->pluck('id');
+                    $permissionFilter->binds()->sync($ids, true);
                 }
             }
             DB::commit();
