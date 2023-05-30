@@ -109,5 +109,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AccountClientsTableSeeder::class);
         $this->call(TransferExchangeTableSeeder::class);
         $this->call(TransferFileRelationsTableSeeder::class);
+        $this->call(PaymentSystemCurrenciesTableSeeder::class);
     }
 }

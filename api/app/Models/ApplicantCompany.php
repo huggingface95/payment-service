@@ -261,6 +261,7 @@ class ApplicantCompany extends BaseModel
         return $this->morphToOne(GroupRole::class, 'user', GroupRoleUser::class, 'user_id', 'group_role_id');
     }
 
+    //TODO change morphOne to MorphMany
     public function account(): MorphOne
     {
         return $this->morphOne(Account::class, 'clientable', 'client_type', 'client_id');

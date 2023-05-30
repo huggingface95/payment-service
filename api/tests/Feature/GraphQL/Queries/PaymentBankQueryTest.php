@@ -263,7 +263,6 @@ class PaymentBankQueryTest extends TestCase
 
     public function testQueryPaymentBanksWithFilterByCurrencyId(): void
     {
-        $this->markTestSkipped('Skipped');
         $paymentBanks = PaymentBank::orderBy('id', 'ASC')
             ->first();
 
@@ -279,7 +278,7 @@ class PaymentBankQueryTest extends TestCase
             [
                 'query' => 'query PaymentBanks($id: Mixed) {
                     paymentBanks (
-                        filter: { column: HAS_CURRENCIES_REGIONS_FILTER_BY_CURRENCY_ID, value: $id }
+                        filter: { column: HAS_CURRENCIES_FILTER_BY_ID, value: $id }
                     ) {
                         data {
                             id
@@ -302,7 +301,6 @@ class PaymentBankQueryTest extends TestCase
 
     public function testQueryPaymentBanksWithFilterByRegionId(): void
     {
-        $this->markTestSkipped('Skipped');
         $paymentBanks = PaymentBank::orderBy('id', 'ASC')
             ->first();
 
@@ -318,7 +316,7 @@ class PaymentBankQueryTest extends TestCase
             [
                 'query' => 'query PaymentBanks($id: Mixed) {
                     paymentBanks (
-                        filter: { column: HAS_CURRENCIES_REGIONS_FILTER_BY_REGION_ID, value: $id }
+                        filter: { column: HAS_REGIONS_FILTER_BY_ID, value: $id }
                     ) {
                         data {
                             id

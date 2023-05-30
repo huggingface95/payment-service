@@ -323,6 +323,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         return $this->belongsToMany(ApplicantCompany::class, 'applicant_individual_company', 'applicant_id', 'applicant_company_id');
     }
 
+    //TODO change morphOne to MorphMany
     public function account(): MorphOne
     {
         return $this->morphOne(Account::class, 'clientable', 'client_type', 'client_id');

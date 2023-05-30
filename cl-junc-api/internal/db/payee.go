@@ -11,12 +11,10 @@ type Payee struct {
 	Email       string `bun:"email"`
 	Phone       string `bun:"phone"`
 	State       string `bun:"state"`
-	City        string `bun:"phone"`
+	City        string `bun:"city"`
 	Zip         string `bun:"zip"`
 	Address     string `bun:"address"`
 	Nationality string `bun:"nationality"`
-
-	//Account []*Account `bun:"m2m:account_individuals_companies,join:Payee=Account"`
 
 	//WalletUuid       string
 	//clientCustomerId string
