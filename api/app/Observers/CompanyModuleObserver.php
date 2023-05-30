@@ -15,20 +15,20 @@ class CompanyModuleObserver extends BaseObserver
     {
         parent::updated($model, $callHistory);
 
-        $model->load(['company.applicantIndividuals', 'company.applicantCompanies']);
-        $clients = $model->company->applicantIndividuals->merge($model->company->applicantCompanies)
-            ->filter(function (ApplicantIndividual|ApplicantCompany $c) {
-                return $c && $c->account;
-            });
+        $model->load(['company.accounts.clientable']);
+        //TODO remove filter when createAccount client_id required
+        $accounts = $model->company->accounts->filter(function ($a) {
+            return $a->clientable;
+        });
 
         if ($model->is_active === false) {
-            $clients->each(function (ApplicantIndividual|ApplicantCompany $client) {
-                $client->account->update(['account_state_id' => AccountState::SUSPENDED]);
-            });
+            foreach ($accounts as $account) {
+                $account->update(['account_state_id' => AccountState::SUSPENDED]);
+            }
         } else {
-            $clients->each(function (ApplicantIndividual|ApplicantCompany $client) {
-                $client->account->restoreLast();
-            });
+            foreach ($accounts as $account) {
+                $account->restoreLast();
+            }
         }
 
         return true;
