@@ -9,7 +9,7 @@ build-job:
   only:
     - dev
 unit-test-job:
-  stage: test
+  stage: testing
   script:
     - echo "Running unit tests..."
     - apk add --no-cache openssh rsync
