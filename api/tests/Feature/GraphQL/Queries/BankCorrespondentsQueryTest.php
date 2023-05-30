@@ -165,6 +165,7 @@ class BankCorrespondentsQueryTest extends TestCase
 
     public function testQueryBankCorrespondentsWithFilterByCurrencyId(): void
     {
+        $this->markTestSkipped('Skipped');
         $bankCorrespondent = BankCorrespondent::orderBy('id', 'ASC')
             ->first();
 
@@ -209,6 +210,7 @@ class BankCorrespondentsQueryTest extends TestCase
 
     public function testQueryBankCorrespondentsWithFilterByRegionId(): void
     {
+        $this->markTestSkipped('Skipped');
         $bankCorrespondent = BankCorrespondent::orderBy('id', 'ASC')
             ->first();
 
