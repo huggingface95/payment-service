@@ -1,7 +1,6 @@
 package db
 
 import (
-	db2 "cl-junc-api/internal/db"
 	"cl-junc-api/pkg/db/config"
 	"cl-junc-api/pkg/utils/log"
 	"context"
@@ -33,7 +32,6 @@ func NewPostgresql(debug bool, config config.SqlDbConfig) Postgresql {
 	if debug {
 		db.AddQueryHook(bundebug.NewQueryHook(bundebug.WithVerbose(true)))
 	}
-	db.RegisterModel((*db2.AccountIndividualsCompanies)(nil))
 
 	return Postgresql{client: db}
 }
