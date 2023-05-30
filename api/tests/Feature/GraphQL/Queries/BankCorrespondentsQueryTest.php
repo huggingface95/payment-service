@@ -165,7 +165,13 @@ class BankCorrespondentsQueryTest extends TestCase
 
     public function testQueryBankCorrespondentsWithFilterByCurrencyId(): void
     {
-        $bankCorrespondent = BankCorrespondent::orderBy('id', 'ASC')
+        $bankCorrespondent = BankCorrespondent::whereHas('currencies', function ($query) {
+            $query->where('currency_id', 1);
+        })
+            ->with(['currencies' => function ($query) {
+                $query->where('currency_id', 1);
+            }])
+            ->orderBy('id', 'ASC')
             ->first();
 
         $data = [
@@ -183,7 +189,7 @@ class BankCorrespondentsQueryTest extends TestCase
             [
                 'query' => 'query BankCorrespondents($id: Mixed) {
                     bankCorrespondents (
-                        filter: { column: HAS_CURRENCIES_REGIONS_FILTER_BY_CURRENCY_ID, value: $id }
+                        filter: { column: HAS_CURRENCIES_FILTER_BY_ID, value: $id }
                     ) {
                         data {
                             id
@@ -227,7 +233,7 @@ class BankCorrespondentsQueryTest extends TestCase
             [
                 'query' => 'query BankCorrespondents($id: Mixed) {
                     bankCorrespondents (
-                        filter: { column: HAS_CURRENCIES_REGIONS_FILTER_BY_REGION_ID, value: $id }
+                        filter: { column: HAS_REGIONS_FILTER_BY_ID, value: $id }
                     ) {
                         data {
                             id

@@ -31,6 +31,7 @@ class TransferOutgoingsMutationTest extends TestCase
                 $recipient_name: String
                 $recipient_city: String
                 $recipient_address: String
+                $recipient_country_id: ID!
                 $recipient_state: String
                 $recipient_zip: String
                 $respondent_fees_id: ID!
@@ -54,6 +55,7 @@ class TransferOutgoingsMutationTest extends TestCase
                     recipient_name: $recipient_name
                     recipient_city: $recipient_city
                     recipient_address: $recipient_address
+                    recipient_country_id: $recipient_country_id
                     recipient_state: $recipient_state
                     recipient_zip: $recipient_zip
                     respondent_fees_id: $respondent_fees_id
@@ -167,6 +169,7 @@ class TransferOutgoingsMutationTest extends TestCase
             'recipient_account' => 'Sender Account',
             'recipient_bank_name' => 'recipient_bank_name',
             'recipient_bank_address' => 'recipient_bank_address',
+            'recipient_country_id' => 1,
             'recipient_bank_swift' => 'recipient_bank_swift',
             'recipient_name' => 'recipient_name',
             'recipient_city' => 'recipient_city',
@@ -202,6 +205,7 @@ class TransferOutgoingsMutationTest extends TestCase
                 $recipient_account: String
                 $recipient_bank_name: String
                 $recipient_bank_address: String
+                $recipient_country_id: ID!
                 $recipient_bank_swift: String
                 $recipient_name: String
                 $recipient_city: String
@@ -225,6 +229,7 @@ class TransferOutgoingsMutationTest extends TestCase
                     recipient_account: $recipient_account
                     recipient_bank_name: $recipient_bank_name
                     recipient_bank_address: $recipient_bank_address
+                    recipient_country_id: $recipient_country_id
                     recipient_bank_swift: $recipient_bank_swift
                     recipient_name: $recipient_name
                     recipient_city: $recipient_city
@@ -266,6 +271,7 @@ class TransferOutgoingsMutationTest extends TestCase
                     'recipient_account' => 'Sender Account',
                     'recipient_bank_name' => 'recipient_bank_name',
                     'recipient_bank_address' => 'recipient_bank_address',
+                    'recipient_country_id' => 1,
                     'recipient_bank_swift' => 'recipient_bank_swift',
                     'recipient_name' => 'recipient_name',
                     'recipient_city' => 'recipient_city',
@@ -309,7 +315,7 @@ class TransferOutgoingsMutationTest extends TestCase
         ]);
     }
 
-    public function skipTestUpdateTransferOutgoing(): void
+    public function TestUpdateTransferOutgoing(): void
     {
         $TransferOutgoing = TransferOutgoing::orderBy('id', 'DESC')
             ->first();
@@ -323,7 +329,7 @@ class TransferOutgoingsMutationTest extends TestCase
             {
                 updateTransferOutgoing (
                     id: $id
-                    status_id: 1
+                    project_id: 1
                 )
                 {
                       id

@@ -142,7 +142,7 @@ class EmailTemplatesMutationTest extends TestCase
                     'id' => strval($email_template[0]->id),
                     'subject' =>  'updated_subject',
                     'content' => '<html></html>',
-                    'company_id' => 1,
+                    'company_id' => 2,
                 ],
             ],
             [
