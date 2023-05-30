@@ -263,7 +263,6 @@ class PaymentBankQueryTest extends TestCase
 
     public function testQueryPaymentBanksWithFilterByCurrencyId(): void
     {
-        $this->markTestSkipped('Skipped');
         $paymentBanks = PaymentBank::orderBy('id', 'ASC')
             ->first();
 
@@ -302,7 +301,6 @@ class PaymentBankQueryTest extends TestCase
 
     public function testQueryPaymentBanksWithFilterByRegionId(): void
     {
-        $this->markTestSkipped('Skipped');
         $paymentBanks = PaymentBank::orderBy('id', 'ASC')
             ->first();
 

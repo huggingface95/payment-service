@@ -31,7 +31,6 @@ class PaymentProviderQueryTest extends TestCase
 
     public function testQueryPaymentProvider(): void
     {
-        $this->markTestSkipped('Skipped');
         $payment_provider = DB::connection('pgsql_test')
             ->table('payment_provider')
             ->orderBy('id', 'ASC')
