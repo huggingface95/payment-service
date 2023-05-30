@@ -62,14 +62,14 @@ abstract class TestCase extends BaseTestCase
         }
 
         $key = $data['email'];
-        if (Cache::store('file')->has($key)) {
-            return Cache::store('file')->get($key);
+        if (Cache::store('redis')->has($key)) {
+            return Cache::store('redis')->get($key);
         }
 
         $token = Http::accept('application/json')->post(env('AUTH_URL', 'http://go-auth:2491/auth/login'), $data);
         $accessToken = $token->json('access_token');
 
-        Cache::store('file')->put($key, $accessToken, env('JWT_TTL', 1800));
+        Cache::store('redis')->put($key, $accessToken, env('JWT_TTL', 600));
 
         return $accessToken;
     }
