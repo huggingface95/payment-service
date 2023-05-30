@@ -1,5 +1,6 @@
 stages:
   - build
+  - testing
   - deploy
 
 build-job:
