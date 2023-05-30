@@ -785,6 +785,12 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'applicantCompanies',
 
                                                 ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'referer' => 'management/applicants/corporate/list',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                ],
                                             ],
                                         ],
                                         'Applicants:Corporate List.Add New Corporate' => [
@@ -893,7 +899,36 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
                                                     'type' => 'query',
                                                     'method' => 'getMatchedUsers',
-
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'OwnersFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'owners',
                                                 ],
                                             ],
                                         ],
@@ -950,7 +985,13 @@ class PermissionsSeeder extends Seeder
                                                     'parents' => ['Corporate Full Profile:General.Enabled', 'Corporate Full Profile:General.Edit'],
                                                     'type' => 'mutation',
                                                     'method' => 'updateApplicantCompanyLabel',
-
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompanyLabelsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'parents' => ['Corporate Full Profile:General.Enabled', 'Corporate Full Profile:General.Edit'],
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanyLabels',
                                                 ],
                                             ],
                                         ],
@@ -1044,7 +1085,30 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
                                                     'type' => 'query',
                                                     'method' => 'applicantBankingAccesses',
-
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'OwnersFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'owners',
                                                 ],
                                             ],
                                         ],
@@ -1241,6 +1305,38 @@ class PermissionsSeeder extends Seeder
                                                 'guard_name' => 'api',
                                                 'order' => 1,
                                                 'type' => 'read',
+                                            ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCorporateItem',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantNameFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'getMatchedUsers',
+                                                ],
                                             ],
                                         ],
                                     ],
@@ -1601,7 +1697,42 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'settings/manager-roles/settings',
                                                     'type' => 'query',
                                                     'method' => 'role',
-
+                                                ],
+                                                [
+                                                    'name' => 'GetAllPermissions',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'permissions',
+                                                ],
+                                                [
+                                                    'name' => 'GetRole',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'role',
+                                                ],
+                                                [
+                                                    'name' => 'GetRolePermissions',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'role',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GetGroupTypes',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'group_types',
+                                                ],
+                                                [
+                                                    'name' => 'GetRolesFilterNames',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'roles',
                                                 ],
                                             ],
                                         ],
@@ -4513,7 +4644,7 @@ class PermissionsSeeder extends Seeder
                                 foreach ($permission['operations'] ?? [] as $o) {
                                     /** @var PermissionOperation $operation */
                                     $operation = PermissionOperation::query()->updateOrCreate(
-                                        ['name' => $o['name'], 'referer' => $o['referer'],],
+                                        ['name' => $o['name'], 'referer' => $o['referer'], 'method' => $o['method'], 'type' => $o['type']],
                                         ['name' => $o['name'], 'referer' => $o['referer'], 'method' => $o['method'], 'type' => $o['type']]
                                     );
                                     $ids = $operation->binds()->get()->pluck('id')->push($p->id)->unique()->toArray();
