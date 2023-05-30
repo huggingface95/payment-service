@@ -31,16 +31,9 @@ class PaymentProviderQueryTest extends TestCase
 
     public function testQueryPaymentProvider(): void
     {
-        $this->markTestSkipped('Skipped');
         $payment_provider = DB::connection('pgsql_test')
             ->table('payment_provider')
             ->orderBy('id', 'ASC')
-            ->first();
-
-        $paymentSystems = DB::connection('pgsql_test')
-            ->table('payment_system')
-            ->select('name')
-            ->where('payment_provider_id', $payment_provider->id)
             ->first();
 
         $this->postGraphQL(
@@ -49,9 +42,8 @@ class PaymentProviderQueryTest extends TestCase
                 query PaymentProvider($id:ID!){
                     paymentProvider(id: $id) {
                         id
-                        payment_systems {
-                            name
-                        }
+                        name
+                        description
                     }
                 }',
                 'variables' => [
@@ -65,9 +57,8 @@ class PaymentProviderQueryTest extends TestCase
             'data' => [
                 'paymentProvider' => [
                     'id' => (string) $payment_provider->id,
-                    'payment_systems' => [[
-                        'name' => $paymentSystems->name,
-                    ]],
+                    'name' => (string) $payment_provider->name,
+                    'description' => (string) $payment_provider->description,
                 ],
             ],
         ]);

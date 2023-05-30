@@ -15,10 +15,8 @@ class TransferIncomingsMutationTest extends TestCase
      */
     public function testCreateTransferIncomingNoAuth(): void
     {
-        $this->markTestSkipped('Skipped');
         $this->graphQL('
             mutation CreateTransferIncoming(
-                $company_id: ID!
                 $group_id: ID!
                 $group_type_id: ID!
                 $project_id: ID!
@@ -37,7 +35,7 @@ class TransferIncomingsMutationTest extends TestCase
                 $sender_bank_swift: String
                 $sender_bank_country_id: ID
                 $sender_name: String
-                $sender_country_id: ID
+                $sender_country_id: ID!
                 $sender_city: String
                 $sender_address: String
                 $sender_state: String
@@ -46,7 +44,6 @@ class TransferIncomingsMutationTest extends TestCase
             )
             {
                 createTransferIncoming (
-                    company_id: $company_id
                     group_id: $group_id
                     group_type_id: $group_type_id
                     project_id: $project_id
@@ -173,7 +170,6 @@ class TransferIncomingsMutationTest extends TestCase
                 }
             }
         ', [
-            'company_id' => 1,
             'group_id' => 1,
             'group_type_id' => 1,
             'project_id' => 1,
@@ -205,7 +201,6 @@ class TransferIncomingsMutationTest extends TestCase
 
     public function testCreateTransferIncoming(): void
     {
-        $this->markTestSkipped('Skipped');
         $seq = DB::table('transfer_incomings')
                 ->max('id') + 1;
 
@@ -215,7 +210,6 @@ class TransferIncomingsMutationTest extends TestCase
             [
                 'query' => '
                 mutation CreateTransferIncoming(
-                $company_id: ID!
                 $group_id: ID!
                 $group_type_id: ID!
                 $project_id: ID!
@@ -234,7 +228,7 @@ class TransferIncomingsMutationTest extends TestCase
                 $sender_bank_swift: String
                 $sender_bank_country_id: ID
                 $sender_name: String
-                $sender_country_id: ID
+                $sender_country_id: ID!
                 $sender_city: String
                 $sender_address: String
                 $sender_state: String
@@ -245,7 +239,6 @@ class TransferIncomingsMutationTest extends TestCase
             )
             {
                 createTransferIncoming (
-                    company_id: $company_id
                     group_id: $group_id
                     group_type_id: $group_type_id
                     project_id: $project_id
@@ -271,7 +264,6 @@ class TransferIncomingsMutationTest extends TestCase
                     sender_state: $sender_state
                     sender_zip: $sender_zip
                     bank_message: $bank_message
-                    status_id: 7
                     urgency_id: $urgency_id
                     respondent_fees_id: $respondent_fees_id
                 )
@@ -306,7 +298,6 @@ class TransferIncomingsMutationTest extends TestCase
                 }
                 }',
                 'variables' => [
-                    'company_id' => 1,
                     'group_id' => 1,
                     'group_type_id' => 1,
                     'project_id' => 1,
@@ -373,7 +364,6 @@ class TransferIncomingsMutationTest extends TestCase
 
     public function testUpdateTransferIncoming(): void
     {
-        $this->markTestSkipped('Skipped');
         $transferIncoming = TransferIncoming::orderBy('id', 'DESC')->first();
 
         $this->postGraphQL(
@@ -381,15 +371,12 @@ class TransferIncomingsMutationTest extends TestCase
                 'query' => '
                 mutation UpdateTransferIncoming(
                 $id: ID!
-                $company_id: ID!
                 $group_id: ID!
                 $group_type_id: ID!
             )
             {
                 updateTransferIncoming (
                     id: $id
-                    status_id: 7
-                    company_id: $company_id
                     group_id: $group_id
                     group_type_id: $group_type_id
                 )
@@ -425,7 +412,6 @@ class TransferIncomingsMutationTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $transferIncoming->id,
-                    'company_id' => 1,
                     'group_id' => 1,
                     'group_type_id' => 1,
                 ],

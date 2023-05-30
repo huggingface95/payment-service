@@ -130,7 +130,6 @@ class RegionsQueryTest extends TestCase
 
     public function testQueryRegionsByCountryName(): void
     {
-        $this->markTestSkipped('Skipped');
         $this->login();
 
         $region = DB::connection('pgsql_test')
@@ -153,7 +152,7 @@ class RegionsQueryTest extends TestCase
                     }
                 }',
                 'variables' => [
-                    'name' => 'Afghanistan',
+                    'name' => 'Cuba',
                 ], ],
             [
                 'Authorization' => 'Bearer '.$this->login(),

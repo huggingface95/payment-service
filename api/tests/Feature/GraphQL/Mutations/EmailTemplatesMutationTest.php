@@ -108,7 +108,6 @@ class EmailTemplatesMutationTest extends TestCase
 
     public function testUpdateEmailTemplate(): void
     {
-        $this->markTestSkipped('Skipped');
         $email_template = DB::connection('pgsql_test')
             ->table('email_templates')
             ->orderBy('id', 'DESC')
@@ -143,7 +142,7 @@ class EmailTemplatesMutationTest extends TestCase
                     'id' => strval($email_template[0]->id),
                     'subject' =>  'updated_subject',
                     'content' => '<html></html>',
-                    'company_id' => 1,
+                    'company_id' => 2,
                 ],
             ],
             [
