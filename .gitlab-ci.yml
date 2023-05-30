@@ -1,5 +1,6 @@
 stages:
   - build
+  - testing
   - deploy
 
 build-job:
@@ -8,22 +9,22 @@ build-job:
     - echo "Compile complete."
   only:
     - dev
-#unit-test-job:
-#  stage: test
-#  script:
-#    - echo "Running unit tests..."
-#    - apk add --no-cache openssh rsync
-#    - mkdir -p ~/.ssh
-#    - echo "$SSH_KEY" >> ~/.ssh/id_dsa
-#    - chmod 600 ~/.ssh/id_dsa
-#    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-#    - rsync -rav  ./api/ $SSH_USER_HOST:/opt/test/api/
-#    - ssh $SSH_USER_HOST "docker exec php-dev-test composer install"
-#    - ssh $SSH_USER_HOST "docker exec php-dev-test php artisan cache:clear"
-#    - ssh $SSH_USER_HOST "docker exec php-dev-test php artisan lighthouse:clear-cache"
-#    - ssh $SSH_USER_HOST "docker exec php-dev-test ./vendor/bin/phpunit"
-#  only:
-#    - dev
+unit-test-job:
+  stage: testing
+  script:
+    - echo "Running unit tests..."
+    - apk add --no-cache openssh rsync
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KEY" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - rsync -rav  ./api/ $SSH_USER_HOST:/opt/test/api/
+    - ssh $SSH_USER_HOST "docker exec php-dev-test composer install"
+    - ssh $SSH_USER_HOST "docker exec php-dev-test php artisan cache:clear"
+    - ssh $SSH_USER_HOST "docker exec php-dev-test php artisan lighthouse:clear-cache"
+    - ssh $SSH_USER_HOST "docker exec php-dev-test ./vendor/bin/phpunit"
+  only:
+    - test
 deploy-job:
   stage: deploy
   image: alpine

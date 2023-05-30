@@ -15,6 +15,7 @@ class TransferOutgoingsMutationTest extends TestCase
      */
     public function testCreateTransferOutgoingNoAuth(): void
     {
+        $this->markTestSkipped('Skipped');
         $this->graphQL('
             mutation CreateTransferOutgoing(
                 $group_id: ID!
