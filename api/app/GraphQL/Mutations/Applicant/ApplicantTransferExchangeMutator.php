@@ -33,6 +33,18 @@ class ApplicantTransferExchangeMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
+    public function update($_, array $args): TransferExchange
+    {
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransfer($transfer, $args);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
     public function sign($_, array $args): TransferExchange|Builder
     {
         $transfer = $this->transferRepository->findById($args['id']);
@@ -45,7 +57,7 @@ class ApplicantTransferExchangeMutator extends BaseMutator
             'incoming' => $transfer->transferIncoming,
             'outgoing' => $transfer->transferOutgoing,
         ], [
-            'status_id' => PaymentStatusEnum::PENDING->value,
+            'status_id' => PaymentStatusEnum::EXECUTED->value,
         ]);
 
         return $transfer;
@@ -54,7 +66,7 @@ class ApplicantTransferExchangeMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
-    public function execute($_, array $args): TransferExchange|Builder
+    public function cancel($_, array $args): TransferExchange
     {
         $transfer = $this->transferRepository->findById($args['id']);
         if (! $transfer) {
@@ -66,7 +78,7 @@ class ApplicantTransferExchangeMutator extends BaseMutator
             'incoming' => $transfer->transferIncoming,
             'outgoing' => $transfer->transferOutgoing,
         ], [
-            'status_id' => PaymentStatusEnum::EXECUTED->value,
+            'status_id' => PaymentStatusEnum::CANCELED->value,
         ]);
 
         return $transfer;

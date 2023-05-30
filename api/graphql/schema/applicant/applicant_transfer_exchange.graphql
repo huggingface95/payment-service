@@ -15,22 +15,38 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         @field(resolver: "ApplicantTransferExchangeMutator@create")
 
     """
+    Редактировать exchange перевод
+    """
+    updateApplicantTransferExchange(
+        "ID"
+        id: ID!
+        "Сумма"
+        amount: Decimal!
+        "ID аккаунта отправителя"
+        from_account_id: ID!
+        "ID аккаунта получателя"
+        to_account_id: ID!
+        "ID прайс-лист фии"
+        price_list_fee_id: ID!
+    ): TransferExchange
+        @field(resolver: "ApplicantTransferExchangeMutator@update")
+    
+    """
     Подписать exchange перевод
     """
     signApplicantTransferExchange(
         "ID"
         id: ID!
+        "Code"
+        code: String!
     ): TransferExchange
         @field(resolver: "ApplicantTransferExchangeMutator@sign")
 
     """
-    Исполнить exchange перевод
+    Отменить exchange перевод
     """
-    executeApplicantTransferExchange(
-        "ID"
-        id: ID!
-    ): TransferExchange
-        @field(resolver: "ApplicantTransferExchangeMutator@execute")
+    cancelApplicantTransferExchange(id: ID!): TransferExchange
+        @field(resolver: "ApplicantTransferExchangeMutator@cancel")
 
     """
     Привязать файлы
