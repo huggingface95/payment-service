@@ -54,7 +54,7 @@ class ApplicantTransferOutgoingMutator extends BaseMutator
         /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
 
-        $this->transferService->updateTransferStatus($transfer, $args);
+        $this->transferService->updateTransfer($transfer, $args);
 
         return $transfer;
     }
@@ -78,6 +78,66 @@ class ApplicantTransferOutgoingMutator extends BaseMutator
 
         $this->transferService->updateTransferStatus($transfer, [
             'status_id' => $statusId,
+        ]);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function send($_, array $args): TransferOutgoing
+    {
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => PaymentStatusEnum::SENT->value,
+        ]);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function execute($_, array $args): TransferOutgoing
+    {
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => PaymentStatusEnum::EXECUTED->value,
+        ]);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function refund($_, array $args): TransferOutgoing
+    {
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => PaymentStatusEnum::REFUND->value,
+        ]);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function cancel($_, array $args): TransferOutgoing
+    {
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => PaymentStatusEnum::CANCELED->value,
         ]);
 
         return $transfer;

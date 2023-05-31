@@ -35,10 +35,17 @@ class AccountService extends AbstractService
         if ($account->available_balance < $amount) {
             throw new GraphqlException('Available balance less than payment amount', 'use');
         }
+        
+        try {
+            /** @var Account $account */
+            $account = $this->accountRepository->update($account, [
+                'current_balance' => $account->current_balance - $transfer->amount_debt,
+                'reserved_balance' => $account->reserved_balance - $transfer->amount_debt,
+            ]);
 
-        $account->current_balance = $account->current_balance - $amount;
-        $account->available_balance = $account->current_balance;
-        $account->save();
+        } catch (\Exception $e) {
+            throw new GraphqlException('Failed to update account balance', 'use');
+        }
     }
 
     /**
