@@ -29,8 +29,8 @@ class SmtpConfigDTO
             $dto->port = env('MAIL_PORT', '1025');
             $dto->host = env('MAIL_HOST', 'mailhog');
             $dto->security = '';
-            $dto->subject = $smtp->from_name;
-            $dto->from = $smtp->from_email;
+            $dto->subject = $smtp->from_name ?? '';
+            $dto->from = $smtp->from_email ?? '';
         } else {
             $dto = new self();
             $dto->username = $smtp->username;
@@ -38,8 +38,8 @@ class SmtpConfigDTO
             $dto->port = $smtp->port;
             $dto->host = $smtp->host_name;
             $dto->security = ($smtp->security == 'auto') ? '' : $smtp->security;
-            $dto->subject = $smtp->from_name;
-            $dto->from = $smtp->from_email;
+            $dto->subject = $smtp->from_name ?? '';
+            $dto->from = $smtp->from_email ?? '';
         }
 
         return $dto;
