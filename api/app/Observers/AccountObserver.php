@@ -3,10 +3,11 @@
 namespace App\Observers;
 
 use App\Exceptions\EmailException;
+use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\Currencies;
-use App\Services\AccountService;
 use App\Services\EmailService;
+use App\Services\AccountService;
 use Illuminate\Database\Eloquent\Model;
 
 class AccountObserver extends BaseObserver
@@ -19,6 +20,10 @@ class AccountObserver extends BaseObserver
     {
         if (!parent::creating($model)) {
             return false;
+        }
+
+        if (!$model->isActiveBankingModule()){
+            throw new GraphqlException('Create or Enable Company Banking module in this account', 'use', 401);
         }
 
         if ($model->isChild()) {
@@ -51,6 +56,10 @@ class AccountObserver extends BaseObserver
     {
         if (!parent::updating($model)) {
             return false;
+        }
+
+        if (!$model->isActiveBankingModule()){
+            throw new GraphqlException('Create or Enable Company Banking module in this account', 'use', 401);
         }
 
         if ($model->isParent()) {
