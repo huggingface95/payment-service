@@ -343,6 +343,15 @@ extend type Mutation @guard {
         @field(resolver: "TransferOutgoingMutator@execute")
 
     """
+    Отменить исходящий перевод
+    """
+    cancelTransferOutgoing(
+        "ID"
+        id: ID!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@cancel")
+    
+    """
     Отменить (Refund) исходящий перевод
     """
     refundTransferOutgoing(
