@@ -25,7 +25,7 @@ class BankCorrespondentMutator extends BaseMutator
             $requestCurrenciesRegions = $this->optimizeCurrencyRegionInput($args['currencies_and_regions']);
 
             foreach ($requestCurrenciesRegions->where('region_id', '>', 0) as $currenciesRegion) {
-                $bank->currenciesRegions_currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
+                $bank->currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
             }
         }
 
@@ -51,9 +51,9 @@ class BankCorrespondentMutator extends BaseMutator
         if (isset($args['currencies_and_regions'])) {
             $requestCurrenciesRegions = $this->optimizeCurrencyRegionInput($args['currencies_and_regions']);
 
-            $bank->currenciesRegions_currencies()->detach();
+            $bank->currencies()->detach();
             foreach ($requestCurrenciesRegions->where('region_id', '>', 0) as $currenciesRegion) {
-                $bank->currenciesRegions_currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
+                $bank->currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
             }
         }
 
