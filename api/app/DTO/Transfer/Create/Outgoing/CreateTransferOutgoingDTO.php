@@ -87,7 +87,7 @@ class CreateTransferOutgoingDTO
 
     public string $recipient_zip;
 
-    public string $bank_message;
+    public ?string $bank_message;
 
     public array $file_id;
 
