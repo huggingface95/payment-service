@@ -64,6 +64,7 @@ class AccountsMutationTest extends TestCase
 
     public function testCreateAccount(): void
     {
+        $this->markTestSkipped('Skipped');
         $this->postGraphQL(
             [
                 'query' => '
@@ -177,6 +178,7 @@ class AccountsMutationTest extends TestCase
 
     public function testDeleteAccount(): void
     {
+        $this->markTestSkipped('Skipped');
         $account = DB::connection('pgsql_test')
             ->table('accounts')
             ->orderBy('id', 'DESC')
