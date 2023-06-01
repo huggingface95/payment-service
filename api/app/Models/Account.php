@@ -428,7 +428,7 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
 
     public function getHistoryActions(): array
     {
-        return ['updating'];
+        return ['saving'];
     }
 
     public function enableHistory(): bool
