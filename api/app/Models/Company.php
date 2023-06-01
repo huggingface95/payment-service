@@ -120,7 +120,7 @@ class Company extends BaseModel
 
     public function members(): HasMany
     {
-        return $this->hasMany(Members::class, 'company_id');
+        return $this->hasMany(Members::class, 'company_id')->orderBy('id', 'ASC');
     }
 
     public function modules(): HasMany
