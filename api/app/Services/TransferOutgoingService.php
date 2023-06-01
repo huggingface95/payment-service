@@ -78,49 +78,78 @@ class TransferOutgoingService extends AbstractService
     public function validateUpdateTransferStatus(TransferOutgoing $transfer, array $args): void
     {
         $date = Carbon::today();
-
-        switch ($transfer->status_id) {
+        $statusId = $transfer->status_id;
+        $allowedStatuses = [];
+        $errorMessage = '';
+    
+        switch ($statusId) {
             case PaymentStatusEnum::UNSIGNED->value:
-                if ($args['status_id'] != PaymentStatusEnum::PENDING->value && $args['status_id'] != PaymentStatusEnum::WAITING_EXECUTION_DATE->value) {
-                    throw new GraphqlException('This status is not allowed for transfer which has Unsigned status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
+                $allowedStatuses = [
+                    PaymentStatusEnum::CANCELED->value,
+                    PaymentStatusEnum::PENDING->value,
+                    PaymentStatusEnum::WAITING_EXECUTION_DATE->value,
+                ];
 
                 break;
             case PaymentStatusEnum::WAITING_EXECUTION_DATE->value:
+                $allowedStatuses = [
+                    PaymentStatusEnum::SENT->value,
+                    PaymentStatusEnum::CANCELED->value,
+                ];
+
                 $executionAt = Carbon::parse($transfer->execution_at)->format('Y-m-d');
                 if ($date->lt($executionAt)) {
                     if ($args['status_id'] == PaymentStatusEnum::SENT->value) {
                         throw new GraphqlException('The execution date has not yet arrived, please change the execution date', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
-
+    
                     throw new GraphqlException('Waiting execution date', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 break;
             case PaymentStatusEnum::PENDING->value:
-                if ($args['status_id'] != PaymentStatusEnum::SENT->value && $args['status_id'] != PaymentStatusEnum::CANCELED->value) {
-                    throw new GraphqlException('This status is not allowed for transfer which has Pending status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
+                $allowedStatuses = [
+                    PaymentStatusEnum::SENT->value,
+                    PaymentStatusEnum::CANCELED->value,
+                ];
 
                 break;
             case PaymentStatusEnum::SENT->value:
-                if ($args['status_id'] != PaymentStatusEnum::EXECUTED->value && $args['status_id'] != PaymentStatusEnum::ERROR->value) {
-                    throw new GraphqlException('This status is not allowed for transfer which has Sent status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
+                $allowedStatuses = [
+                    PaymentStatusEnum::EXECUTED->value,
+                    PaymentStatusEnum::ERROR->value,
+                ];
 
                 break;
             case PaymentStatusEnum::ERROR->value:
-                if ($args['status_id'] != PaymentStatusEnum::PENDING->value) {
-                    throw new GraphqlException('This status is not allowed for transfer which has Error status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
+                $allowedStatuses = [
+                    PaymentStatusEnum::SENT->value,
+                    PaymentStatusEnum::CANCELED->value,
+                ];
 
                 break;
             case PaymentStatusEnum::CANCELED->value:
-                throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                $errorMessage = 'Transfer has final status which is Canceled';
+
+                break;
+            case PaymentStatusEnum::REFUND->value:
+                $errorMessage = 'Transfer has final status which is Refund';
+
+                break;
             case PaymentStatusEnum::EXECUTED->value:
-                if ($args['status_id'] != PaymentStatusEnum::REFUND->value) {
-                    throw new GraphqlException('This status is not allowed for transfer which has Executed status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-                }
+                $allowedStatuses = [
+                    PaymentStatusEnum::REFUND->value,
+                ];
+
+                break;
+        }
+    
+        if (!in_array($args['status_id'], $allowedStatuses)) {
+            if (empty($errorMessage)) {
+                $errorMessage = sprintf('This status is not allowed for transfer which has %s status', PaymentStatusEnum::tryFrom($statusId)->toString());
+            }
+
+            throw new GraphqlException($errorMessage, 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 
@@ -166,7 +195,6 @@ class TransferOutgoingService extends AbstractService
         DB::transaction(function () use ($transfer, $args) {
             if ($transfer->transfer_type_id !== TransferTypeEnum::FEE->value && isset($args['amount']) && $args['amount'] != $transfer->amount) {
                 $transfer->amount = $args['amount'];
-                $this->commissionService->deleteFee($transfer);
 
                 $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
                 $this->commissionService->makeFee($transfer, $transactionDTO);
@@ -182,7 +210,9 @@ class TransferOutgoingService extends AbstractService
 
     public function updateTransferStatusToSent(TransferOutgoing $transfer): void
     {
-        DB::transaction(function () use ($transfer) {
+        DB::beginTransaction();
+
+        try {
             $this->checkLimitService->checkApplicantBankingAccessUsedLimits($transfer);
 
             $this->transferRepository->update($transfer, [
@@ -196,7 +226,18 @@ class TransferOutgoingService extends AbstractService
             $this->createTransferHistory($transfer);
 
             dispatch(new TransferOutgoingJob($transfer))->afterCommit();
-        });
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+
+            $this->transferRepository->update($transfer, [
+                'status_id' => PaymentStatusEnum::ERROR->value,
+                'system_message' => $e->getMessage(),
+            ]);
+
+            throw new GraphqlException($e->getMessage(), 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 
     /**
@@ -207,8 +248,6 @@ class TransferOutgoingService extends AbstractService
         DB::beginTransaction();
 
         try {
-            $this->checkLimitService->checkApplicantBankingAccessUsedLimits($transfer);
-
             $this->transferRepository->update($transfer, [
                 'status_id' => PaymentStatusEnum::EXECUTED->value,
             ]);
@@ -218,8 +257,6 @@ class TransferOutgoingService extends AbstractService
             }
 
             $this->accountService->withdrawFromBalance($transfer);
-
-            $this->updateApplicantBankingAccessUsedLimits($transfer);
 
             $this->createTransferHistory($transfer);
 

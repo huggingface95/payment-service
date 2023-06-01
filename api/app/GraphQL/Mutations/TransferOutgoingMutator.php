@@ -124,4 +124,19 @@ class TransferOutgoingMutator extends BaseMutator
 
         return $transfer;
     }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function cancel($_, array $args): TransferOutgoing
+    {
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => PaymentStatusEnum::CANCELED->value,
+        ]);
+
+        return $transfer;
+    }
 }

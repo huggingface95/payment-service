@@ -137,7 +137,6 @@ class TransferIncomingService extends AbstractService
         DB::transaction(function () use ($transfer, $args) {
             if (isset($args['amount']) && $args['amount'] != $transfer->amount) {
                 $transfer->amount = $args['amount'];
-                $this->commissionService->deleteFee($transfer);
 
                 $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
                 $this->commissionService->makeFee($transfer, $transactionDTO);

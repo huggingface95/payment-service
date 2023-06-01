@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Enums\ModuleEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Models\Builders\AccountBuilder;
 use App\Models\Interfaces\BaseModelInterface;
@@ -15,6 +16,7 @@ use App\Observers\AccountObserver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -225,6 +227,23 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
     {
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
+
+    public function companyModules(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            CompanyModule::class, Company::class,
+            'id',
+            'company_id',
+            'company_id',
+            'id',
+        );
+    }
+
+    public function isActiveBankingModule(): bool
+    {
+        return $this->companyModules()->where('module_id', ModuleEnum::BANKING->value)->where('is_active', true)->exists();
+    }
+
 
     /**
      * Get relation Payment Provider
