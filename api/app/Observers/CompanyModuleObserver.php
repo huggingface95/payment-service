@@ -3,8 +3,6 @@
 namespace App\Observers;
 
 use App\Models\AccountState;
-use App\Models\ApplicantCompany;
-use App\Models\ApplicantIndividual;
 use App\Models\CompanyModule;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +18,15 @@ class CompanyModuleObserver extends BaseObserver
         $accounts = $model->company->accounts->filter(function ($a) {
             return $a->clientable;
         });
+
+
+        /*   may be needed in the future */
+//        $dispatcher = Account::getEventDispatcher();
+//        $payload = $dispatcher->getListeners('eloquent.updating: ' . Account::class);
+//        //disable updating event
+//        $dispatcher->forget('eloquent.updating: ' . Account::class);
+//        //enable updating event
+//        $dispatcher->push('eloquent.updating: ' . Account::class, $payload);
 
         if ($model->is_active === false) {
             foreach ($accounts as $account) {
