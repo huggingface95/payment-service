@@ -219,7 +219,7 @@ class TransferIncoming extends BaseModel implements CustomObServerInterface
 
     public function transferBetweenOutgoing(): \Ankurk91\Eloquent\Relations\BelongsToOne
     {
-        return $this->belongsToOne(TransferOutgoing::class, TransferBetweenRelation::class, 'transfer_incoming_id', 'transfer_outgoing_id');
+        return $this->belongsToOne(TransferOutgoing::class, TransferBetween::class, 'transfer_incoming_id', 'transfer_outgoing_id');
     }
 
     public static function getObServer(): string

@@ -67,7 +67,7 @@ class TransferExchangeMutator extends BaseMutator
      */
     public function sign($_, array $args): TransferExchange
     {
-        if (! isset($args['code']) || empty($args['code'])) {
+        if (empty($args['code'])) {
             throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
         }
 

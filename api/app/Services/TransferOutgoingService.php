@@ -326,14 +326,14 @@ class TransferOutgoingService extends AbstractService
         });
     }
 
-    private function updateTransferStatusToCancelAndRefund(TransferOutgoing $transfer): void
+    public function updateTransferStatusToCancelAndRefund(TransferOutgoing $transfer): void
     {
         DB::transaction(function () use ($transfer) {
             $this->transferRepository->update($transfer, ['status_id' => PaymentStatusEnum::CANCELED->value]);
 
             $this->createTransferHistory($transfer);
 
-            // Create incoming transfer
+            // Create IWT
             $transferDto = TransformerDTO::transform(CreateTransferIncomingRefundDTO::class, $transfer->toArray(), OperationTypeEnum::INCOMING_WIRE_TRANSFER->value);
             $this->transferIncomingService->createTransfer($transferDto->toArray(), OperationTypeEnum::INCOMING_WIRE_TRANSFER->value);
         });

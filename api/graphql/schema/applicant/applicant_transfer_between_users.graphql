@@ -13,35 +13,54 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         respondent_fee_id: ID!
         "Причина перевода"
         reason: String
-    ): TransferBetween
+    ): TransferBetweenWithFees
         @field(resolver: "TransferBetweenUsersMutator@create")
 
     """
     Подписать перевод между пользователями
     """
     signApplicantTransferBetweenUsers(
-        "ID исходящего перевода"
-        transfer_incoming_id: ID!
+        "ID"
+        id: ID!
         "Code"
         code: String!
-    ): TransferIncoming
-        @field(resolver: "ApplicantTransferBetweenAccountsMutator@sign")
+    ): TransferBetween
+        @field(resolver: "TransferBetweenUsersMutator@sign")
 
     """
     Исполнить перевод между пользователями
     """
     executeApplicantTransferBetweenUsers(
-        "ID исходящего перевода"
-        transfer_incoming_id: ID!
-    ): TransferIncoming
+        "ID"
+        id: ID!
+    ): TransferBetween
         @field(resolver: "TransferBetweenUsersMutator@execute")
 
+    """
+    Отменить перевод между пользователями
+    """
+    cancelApplicantTransferBetweenUsers(
+        "ID"
+        id: ID!
+    ): TransferBetween
+        @field(resolver: "TransferBetweenUsersMutator@cancel")
+
+    """
+    Сделать возврат перевода между пользователями
+    """
+    refundApplicantTransferBetweenUsers(
+        "ID"
+        id: ID!
+    ): TransferBetween
+        @field(resolver: "TransferBetweenUsersMutator@refund")
+    
     """
     Привязать файлы
     """
     attachFIleToApplicantTransferBetweenUsers(
-        transfer_incoming_id: ID!
+        "ID"
+        id: ID!
         file_id: [ID!]!
-    ): TransferIncoming
+    ): TransferBetween
         @field(resolver: "TransferBetweenUsersMutator@attachFile")
 }

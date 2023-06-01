@@ -19,9 +19,13 @@ class AccountService extends AbstractService
 
     public function addToBalance(Account $account, float $amount): void
     {
-        $account->current_balance = $account->current_balance + $amount;
-        $account->available_balance = $account->current_balance - $account->reserved_balance;
-        $account->save();
+        $currentBalance = $account->current_balance + $amount;
+
+        /** @var Account $account */
+        $account = $this->accountRepository->update($account, [
+            'current_balance' => $currentBalance,
+            'available_balance' => $currentBalance - $account->reserved_balance,
+        ]);
     }
 
     /**
