@@ -36,8 +36,14 @@ trait BaseObServerTrait
     {
         switch ($event) {
             case 'updating':
+                return static::filterAttributes($this, array_intersect_key(
+                        $this->getOriginal(), $this->getDirty())
+                );
             case 'saving':
-                return static::filterAttributes($this, array_intersect_key($this->getOriginal(), $this->getDirty()));
+                return static::filterAttributes($this, array_intersect_key(
+                        $this->getOriginal(),
+                        count($this->getDirty()) ? $this->getDirty() : $this->getOriginal())
+                );
             case 'updated':
             case 'saved':
                 $changes = $this->getDirty();

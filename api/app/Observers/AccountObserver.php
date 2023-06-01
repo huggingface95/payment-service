@@ -22,10 +22,6 @@ class AccountObserver extends BaseObserver
             return false;
         }
 
-        if (!$model->isActiveBankingModule()) {
-            throw new GraphqlException('Create or Enable Company Banking module in this account', 'use', 401);
-        }
-
         if ($model->isChild()) {
             /** @var Currencies $currency */
             $currency = $model->currencies;
@@ -52,16 +48,24 @@ class AccountObserver extends BaseObserver
         return true;
     }
 
-    public function updating(Account|Model $model, bool $callHistory = true): bool
+    public function saving(Account|Model $model, bool $callHistory = true): bool
     {
         if (!$this->hasCalledClass(CompanyModuleObserver::class, 'updated') && !$model->isActiveBankingModule()) {
             throw new GraphqlException('Create or Enable Company Banking module in this account', 'use', 401);
         }
 
-        if (!parent::updating($model, $callHistory)) {
+        if (!parent::saving($model, $callHistory)) {
             return false;
         }
 
+        return true;
+    }
+
+    public function updating(Account|Model $model, bool $callHistory = true): bool
+    {
+        if (!parent::updating($model, $callHistory)) {
+            return false;
+        }
 
         if ($model->isParent()) {
             foreach ($model->children as $child) {
