@@ -22,7 +22,7 @@ class AccountObserver extends BaseObserver
             return false;
         }
 
-        if (!$model->isActiveBankingModule()){
+        if (!$model->isActiveBankingModule()) {
             throw new GraphqlException('Create or Enable Company Banking module in this account', 'use', 401);
         }
 
@@ -52,15 +52,16 @@ class AccountObserver extends BaseObserver
         return true;
     }
 
-    public function updating(Account|Model $model, bool $callHistory = false): bool
+    public function updating(Account|Model $model, bool $callHistory = true): bool
     {
-        if (!parent::updating($model)) {
+        if (!$this->hasCalledClass(CompanyModuleObserver::class, 'updated') && !$model->isActiveBankingModule()) {
+            throw new GraphqlException('Create or Enable Company Banking module in this account', 'use', 401);
+        }
+
+        if (!parent::updating($model, $callHistory)) {
             return false;
         }
 
-        if (!$model->isActiveBankingModule()){
-            throw new GraphqlException('Create or Enable Company Banking module in this account', 'use', 401);
-        }
 
         if ($model->isParent()) {
             foreach ($model->children as $child) {
@@ -85,5 +86,16 @@ class AccountObserver extends BaseObserver
         }
 
         return true;
+    }
+
+    protected function hasCalledClass(string $class, string $method): bool
+    {
+        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $call) {
+            if (isset($call['function']) && isset($call['class']) && $call['class'] == $class && $call['function'] == $method) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

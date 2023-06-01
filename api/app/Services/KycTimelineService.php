@@ -344,6 +344,9 @@ class KycTimelineService extends AbstractService
                     $result['password'] = 'Changed';
                     unset($result['password_hash']);
                     break;
+                case 'account_manager_member_id':
+                    $result['account_manager'] = Members::find($value)->fullname ?? 'Unknown';
+                    break;
 
                 default:
                     $result[$key] = $value;
