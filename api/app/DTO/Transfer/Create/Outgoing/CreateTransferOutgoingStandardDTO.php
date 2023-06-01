@@ -29,7 +29,7 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
             ->where('operation_type_id', $operationType)
             ->first()?->id;
 
-        $date = Carbon::now();
+        $date = Carbon::now()->format('Y-m-d H:i:s');
         $args['amount_debt'] = $args['amount'];
         $args['currency_id'] = $account->currency_id;
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
@@ -38,11 +38,14 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
         $args['payment_number'] = rand();
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['recipient_bank_country_id'] = Company::findOrFail($args['company_id'])->country_id;
         $args['urgency_id'] ??= PaymentUrgencyEnum::STANDART->value;
-        $args['created_at'] = $date->format('Y-m-d H:i:s');
+        $args['created_at'] = $date;
 
-        if (isset($args['execution_at'])) {
+        if (empty($args['recipient_bank_country_id'])) {
+            $args['recipient_bank_country_id'] = Company::findOrFail($args['company_id'])->country_id;
+        }
+
+        if (!empty($args['execution_at'])) {
             if (Carbon::parse($args['execution_at'])->lt($date)) {
                 throw new GraphqlException('execution_at cannot be earlier than current date and time', 'use');
             }

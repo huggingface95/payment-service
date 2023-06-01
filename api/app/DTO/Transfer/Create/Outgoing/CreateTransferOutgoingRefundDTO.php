@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO\Transfer\Create\Incoming;
+namespace App\DTO\Transfer\Create\Outgoing;
 
 use App\Enums\BeneficiaryTypeEnum;
 use App\Enums\PaymentStatusEnum;
@@ -9,9 +9,9 @@ use App\Models\Account;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
-class CreateTransferIncomingRefundDTO extends CreateTransferIncomingDTO
+class CreateTransferOutgoingRefundDTO extends CreateTransferOutgoingDTO
 {
-    public static function transform(array $args, int $operationType): CreateTransferIncomingDTO
+    public static function transform(array $args, int $operationType): CreateTransferOutgoingDTO
     {
         $date = Carbon::now();
         $account = Account::findOrFail($args['account_id']);
@@ -27,7 +27,7 @@ class CreateTransferIncomingRefundDTO extends CreateTransferIncomingDTO
         $args['payment_number'] = rand();
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['sender_country_id'] = $args['recipient_country_id'];
+        $args['recipient_country_id'] = $args['sender_country_id'];
         $args['respondent_fees_id'] = 2;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $args['created_at'];
