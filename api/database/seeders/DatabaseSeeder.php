@@ -110,5 +110,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TransferExchangeTableSeeder::class);
         $this->call(TransferFileRelationsTableSeeder::class);
         $this->call(PaymentSystemCurrenciesTableSeeder::class);
+        $this->call(CompanyRevenueAccountTableSeeder::class);
     }
 }
