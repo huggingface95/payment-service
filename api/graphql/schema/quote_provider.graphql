@@ -35,6 +35,7 @@ extend type Query @guard {
     Получить список провайдеров квот
     """
     quoteProviders(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryQuoteProvidersFilterStatic)
     ): [QuoteProvider!]!
         @paginate(defaultCount: 100)
