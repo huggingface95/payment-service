@@ -5,42 +5,39 @@ import (
 	"payment-service/providers"
 )
 
-func getPaymentProvider(provider string) (providers.PaymentProvider, error) {
-	switch provider {
-	default:
-		return nil, fmt.Errorf("unknown payment provider: %s", provider)
-	}
-}
-
-func HandleIBAN(provider string, payload *IBANPayload) {
-	paymentProvider, err := getPaymentProvider(provider)
+func HandleIBAN(paymentProvider providers.PaymentProvider, payload providers.IBANRequester) {
+	// Вызов метода API провайдера для отправки запроса на генерацию IBAN
+	response, err := paymentProvider.IBAN(payload) // Измените параметры в соответствии с интерфейсом PaymentProvider
 	if err != nil {
-		// обработка ошибки, связанной с неизвестным провайдером
+		// Обработка ошибки при вызове метода для генерации IBAN
+		fmt.Printf("Failed to generate IBAN: %v\n", err)
 		return
 	}
 
-	// используйте paymentProvider для выполнения действий, связанных с IBAN
-	_ = paymentProvider
+	// Обработка успешного ответа на генерацию IBAN
+	fmt.Printf("Generated IBAN response: %v\n", response)
 }
 
-func HandlePayIn(provider string, payload *PayInPayload) {
-	paymentProvider, err := getPaymentProvider(provider)
+func HandlePayIn(paymentProvider providers.PaymentProvider, payload providers.PayInRequester) {
+	// Вызов метода API провайдера для отправки запроса на PayIn
+	response, err := paymentProvider.PayIn(payload)
 	if err != nil {
-		// обработка ошибки, связанной с неизвестным провайдером
+		fmt.Printf("Failed to PayIn: %v\n", err)
 		return
 	}
 
-	// используйте paymentProvider для выполнения действий, связанных с PayIn
-	_ = paymentProvider
+	// Обработка успешного ответа на PayIn
+	fmt.Printf("PayIn response: %v\n", response)
 }
 
-func HandlePayOut(provider string, payload *PayOutPayload) {
-	paymentProvider, err := getPaymentProvider(provider)
+func HandlePayOut(paymentProvider providers.PaymentProvider, payload providers.PayOutRequester) {
+	// Вызов метода API провайдера для отправки запроса на PayOut
+	response, err := paymentProvider.PayOut(payload)
 	if err != nil {
-		// обработка ошибки, связанной с неизвестным провайдером
+		fmt.Printf("Failed to PayOut: %v\n", err)
 		return
 	}
 
-	// используйте paymentProvider для выполнения действий, связанных с PayOut
-	_ = paymentProvider
+	// Обработка успешного ответа на PayOut
+	fmt.Printf("PayOut response: %v\n", response)
 }
