@@ -26,7 +26,7 @@ class EmailSmtpSettingsMutationTest extends TestCase
                       $name: String!
                       $host_name: String!
                       $from_name: String
-                      $from_email: String
+                      $from_email: String!
                       $username: String!
                       $password: String!
                       $replay_to: String
@@ -78,7 +78,7 @@ class EmailSmtpSettingsMutationTest extends TestCase
                           $name: String!
                           $host_name: String!
                           $from_name: String
-                          $from_email: String
+                          $from_email: String!
                           $username: String!
                           $password: String!
                           $replay_to: String
@@ -142,7 +142,7 @@ class EmailSmtpSettingsMutationTest extends TestCase
                       $id: ID!
                       $host_name: String!
                       $from_name: String
-                      $from_email: String
+                      $from_email: String!
                       $username: String!
                       $password: String!
                       $replay_to: String
