@@ -27,7 +27,7 @@ class CreateTransferIncomingRefundDTO extends CreateTransferIncomingDTO
         $args['payment_number'] = rand();
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['sender_country_id'] = 1;
+        $args['sender_country_id'] = $args['recipient_country_id'];
         $args['respondent_fees_id'] = 2;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $args['created_at'];

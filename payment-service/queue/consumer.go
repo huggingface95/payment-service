@@ -2,12 +2,12 @@ package queue
 
 import (
 	"encoding/json"
-	"github.com/go-redis/redis/v8"
+	"payment-service/providers"
 )
 
-func StartConsumer(client *redis.Client, queueName string) error {
+func StartConsumer(service *Service, providersService *providers.Service) error {
 	for {
-		msg, err := client.BLPop(ctx, 0, queueName).Result()
+		msg, err := service.Client.BLPop(ctx, 0, service.Name).Result()
 		if err != nil {
 			return err
 		}
@@ -18,19 +18,24 @@ func StartConsumer(client *redis.Client, queueName string) error {
 			continue
 		}
 
+		provider, err := providersService.GetProvider(task.Provider)
+		if err != nil {
+			return err
+		}
+
 		switch task.Type {
-		case "iban":
-			var payload IBANPayload
+		case "IBAN":
+			var payload providers.IBANRequester
 			json.Unmarshal(task.Payload, &payload)
-			HandleIBAN(task.Provider, &payload) // передайте task.Provider
-		case "payin":
-			var payload PayInPayload
+			HandleIBAN(provider, payload)
+		case "PayIn":
+			var payload providers.PayInRequester
 			json.Unmarshal(task.Payload, &payload)
-			HandlePayIn(task.Provider, &payload) // передайте task.Provider
-		case "payout":
-			var payload PayOutPayload
+			HandlePayIn(provider, payload)
+		case "PayOut":
+			var payload providers.PayOutRequester
 			json.Unmarshal(task.Payload, &payload)
-			HandlePayOut(task.Provider, &payload) // передайте task.Provider
+			HandlePayOut(provider, payload)
 		default:
 			// Неизвестный тип задачи, пропускаем
 			continue

@@ -21,7 +21,7 @@ type PaymentBank {
     "Получить страну"
     country: Country @belongsTo(relation: "country")
     "IDs currencies and regions"
-    currencies_and_regions: [CurrencyAndRegionResponse]! @field(resolver: "App\\GraphQL\\ArgumentFilters\\PaymentBankArgumentFilter@filter")
+    currencies_and_regions: [CurrencyAndRegionResponse]!
     "Получить банкы корреспондент"
     bank_correspondent: [BankCorrespondent] @hasMany(relation: "bankCorrespondents")
     "Платежная провидер"
@@ -61,8 +61,8 @@ input QueryPaymentBanksFilterStatic @spread{
     address: String @ilike
     bank_code: String @ilike
     payment_system_code: String @ilike
-    hasCurrenciesFilterById: ID @eq
-    hasRegionsFilterById: ID @eq
+    hasCurrenciesRegionsFilterByCurrencyId: ID @eq
+    hasCurrenciesRegionsFilterByRegionId: ID @eq
 }
 
 input InputPaymentBank {

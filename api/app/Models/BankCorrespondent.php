@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
+use App\GraphQL\Mutations\Traits\OptimizationCurrencyRegionTrait;
 use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class BankCorrespondent extends BaseModel
 {
     use BaseObServerTrait;
     use HasRelationships;
+    use OptimizationCurrencyRegionTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -40,45 +41,17 @@ class BankCorrespondent extends BaseModel
     ];
 
 
-    public function currencies(): HasManyDeep
+    public function getCurrenciesAndRegionsAttribute(): array
     {
-        return $this->hasManyDeep(
-            Currencies::class,
-            [PaymentSystem::class, 'payment_system_currencies'],
-            [
-                'id',
-                'payment_system_id',
-                'id',
-            ],
-            [
-                'payment_system_id',
-                'id',
-                'currency_id',
-            ],
-        );
-    }
+        $currenciesRegions = $this->currenciesRegions()->with('currency', 'region')->get()->groupBy('currency_id')->map(function ($records) {
+            return ['regions' => $records->pluck('region'), 'currency' => $records->pluck('currency')->first()];
+        });
 
-    public function regions(): HasManyDeep
-    {
-        return $this->hasManyDeep(
-            Region::class,
-            [PaymentSystem::class, 'payment_system_regions'],
-            [
-                'id',
-                'payment_system_id',
-                'id',
-            ],
-            [
-                'payment_system_id',
-                'id',
-                'region_id',
-            ],
-        );
+        return $this->optimizeCurrencyRegionResponse($currenciesRegions);
     }
 
 
-
-    public function currenciesRegions_currencies(): BelongsToMany
+    public function currencies(): BelongsToMany
     {
         return $this->belongsToMany(
             Currencies::class,
@@ -88,7 +61,7 @@ class BankCorrespondent extends BaseModel
         )->distinct('id');
     }
 
-    public function currenciesRegions_regions(): BelongsToMany
+    public function regions(): BelongsToMany
     {
         return $this->belongsToMany(
             Region::class,

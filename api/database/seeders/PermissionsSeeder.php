@@ -785,6 +785,42 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'applicantCompanies',
 
                                                 ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'referer' => 'management/applicants/corporate/list',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/list',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantPositionFilter',
+                                                    'referer' => 'management/applicants/corporate/list',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividualCompanyPositions',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualFilter',
+                                                    'referer' => 'management/applicants/corporate/list',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividuals',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantRelationFilter',
+                                                    'referer' => 'management/applicants/corporate/list',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividualCompanyRelations',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/corporate/list',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
                                             ],
                                         ],
                                         'Applicants:Corporate List.Add New Corporate' => [
@@ -893,7 +929,109 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
                                                     'type' => 'query',
                                                     'method' => 'getMatchedUsers',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'OwnersFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'owners',
+                                                ],
 
+
+                                                [
+                                                    'name' => 'ApplicantCorporateItem',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompanyBasicInfo',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompanyProfileData',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompanyCorporateInfo',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompanyContacts',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantBoardMembers',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'getMatchedUsers',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'OwnersFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'owners',
                                                 ],
                                             ],
                                         ],
@@ -950,7 +1088,13 @@ class PermissionsSeeder extends Seeder
                                                     'parents' => ['Corporate Full Profile:General.Enabled', 'Corporate Full Profile:General.Edit'],
                                                     'type' => 'mutation',
                                                     'method' => 'updateApplicantCompanyLabel',
-
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompanyLabelsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                    'parents' => ['Corporate Full Profile:General.Enabled', 'Corporate Full Profile:General.Edit'],
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanyLabels',
                                                 ],
                                             ],
                                         ],
@@ -1044,8 +1188,92 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
                                                     'type' => 'query',
                                                     'method' => 'applicantBankingAccesses',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'OwnersFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'owners',
+                                                ],
+
+
+                                                [
+                                                    'name' => 'GetApplicantModules',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'modules',
 
                                                 ],
+                                                [
+                                                    'name' => 'GetCorporateModules',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+
+                                                ],
+                                                [
+                                                    'name' => 'GetCorporateGroupInfo',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+
+                                                ],
+                                                [
+                                                    'name' => 'GetMatchedIndividuals',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'getMatchedUsers',
+
+                                                ],
+                                                [
+                                                    'name' => 'GetCorporateBankingAccessList',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantBankingAccesses',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'OwnersFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/modules/banking-module',
+                                                    'type' => 'query',
+                                                    'method' => 'owners',
+                                                ],
+
                                             ],
                                         ],
                                         'Corporate:Modules.Edit' => [
@@ -1242,6 +1470,81 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCorporateItem',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantNameFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'getMatchedUsers',
+                                                ],
+                                                [
+                                                    'name' => 'GetCorporateActiveSession',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'activeIndividualSession',
+                                                ],
+
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCorporateItem',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantNameFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'getMatchedUsers',
+                                                ],
+                                                [
+                                                    'name' => 'GetCorporateActiveSession',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'activeIndividualSession',
+                                                ],
+                                            ],
                                         ],
                                     ],
                                 ],
@@ -1260,6 +1563,68 @@ class PermissionsSeeder extends Seeder
                                                 'guard_name' => 'api',
                                                 'order' => 1,
                                                 'type' => 'read',
+                                            ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'ApplicantCorporateItem',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantNameFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'getMatchedUsers',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCorporateItem',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantNameFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'getMatchedUsers',
+                                                ],
                                             ],
                                         ],
                                     ],
@@ -1321,7 +1686,111 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'management/applicants/corporate/full-profile/$id/kyc/kyc-timeline',
                                                     'type' => 'query',
                                                     'method' => 'applicantCompanyNotes',
+                                                ],
 
+                                                [
+                                                    'name' => 'GetKycTimelines',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'kycTimelines',
+
+                                                ],
+                                                [
+                                                    'name' => 'GetApplicantCompanyContactVerification',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+
+                                                ],
+                                                [
+                                                    'name' => 'GetApplicantKycLatestDocuments',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantDocuments',
+
+                                                ],
+                                                [
+                                                    'name' => 'GetApplicantCompanyRiskLevelHistory',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanyRiskLevelHistory',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantRiskLevelFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantRiskLevels',
+
+                                                ],
+                                                [
+                                                    'name' => 'GetApplicantCompanyNotes',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanyNotes',
+                                                ],
+
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+
+
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/kyc-timeline',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
                                                 ],
                                             ],
                                         ],
@@ -1444,6 +1913,102 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'applicantDocuments',
 
                                                 ],
+                                                [
+                                                    'name' => 'ApplicantCorporateItem',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+                                                ],
+                                                [
+                                                    'name' => 'GetApplicantKycDocuments',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantDocuments',
+                                                ],
+
+                                                [
+                                                    'name' => 'GetApplicantKycDocuments',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantDocuments',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCorporateItem',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompany',
+                                                ],
+                                                [
+                                                    'name' => 'GetApplicantKycDocuments',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantDocuments',
+                                                ],
+
+
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/new/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantCompaniesFilter',
+                                                    'referer' => 'management/applicants/corporate/full-profile/$id/kyc/documents',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantCompanies',
+                                                ],
+
+
                                             ],
                                         ],
                                         'Corporate Full Profile:Documents.Add New Document' => [
@@ -1601,7 +2166,42 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'settings/manager-roles/settings',
                                                     'type' => 'query',
                                                     'method' => 'role',
-
+                                                ],
+                                                [
+                                                    'name' => 'GetAllPermissions',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'permissions',
+                                                ],
+                                                [
+                                                    'name' => 'GetRole',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'role',
+                                                ],
+                                                [
+                                                    'name' => 'GetRolePermissions',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'role',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GetGroupTypes',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'group_types',
+                                                ],
+                                                [
+                                                    'name' => 'GetRolesFilterNames',
+                                                    'referer' => 'settings/manager-roles/settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'roles',
                                                 ],
                                             ],
                                         ],
@@ -4513,7 +5113,7 @@ class PermissionsSeeder extends Seeder
                                 foreach ($permission['operations'] ?? [] as $o) {
                                     /** @var PermissionOperation $operation */
                                     $operation = PermissionOperation::query()->updateOrCreate(
-                                        ['name' => $o['name'], 'referer' => $o['referer'],],
+                                        ['name' => $o['name'], 'referer' => $o['referer'], 'method' => $o['method'], 'type' => $o['type']],
                                         ['name' => $o['name'], 'referer' => $o['referer'], 'method' => $o['method'], 'type' => $o['type']]
                                     );
                                     $ids = $operation->binds()->get()->pluck('id')->push($p->id)->unique()->toArray();
@@ -4556,7 +5156,7 @@ class PermissionsSeeder extends Seeder
             ];
 
 
-            foreach ($globalOperations as $globalOperation){
+            foreach ($globalOperations as $globalOperation) {
                 PermissionOperation::query()->firstOrCreate($globalOperation);
             }
 
@@ -4881,7 +5481,7 @@ class PermissionsSeeder extends Seeder
                 unset($filter['binds']);
                 $permissionFilter = PermissionFilter::firstOrCreate($filter);
 
-                if (is_array($binds)){
+                if (is_array($binds)) {
                     $ids = Permissions::query()->whereIn('name', $binds)->whereIn('permission_list_id', $lists)->get()->pluck('id');
                     $permissionFilter->binds()->sync($ids, true);
                 }

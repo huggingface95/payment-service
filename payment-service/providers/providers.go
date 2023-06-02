@@ -1,12 +1,9 @@
 package providers
 
-// PaymentProvider - интерфейс для платежных провайдеров
+// PaymentProvider - интерфейс для платежных провайдеров. И
 type PaymentProvider interface {
 	// Auth - авторизация у провайдера
 	Auth(request AuthRequester) (AuthResponder, error)
-
-	// SetAuthHeaders - устанавливает заголовки аутентификации для запросов
-	SetAuthHeaders(headers map[string]string)
 
 	// IBAN - отправка запроса на генерацию IBAN
 	IBAN(request IBANRequester) (IBANResponder, error)
@@ -17,7 +14,7 @@ type PaymentProvider interface {
 	// PayOut - отправка запроса на выплату
 	PayOut(request PayOutRequester) (PayOutResponder, error)
 
-	// Status - запрос состояния транзакции
+	// Status - запрос состояния аккаунта
 	Status(request StatusRequester) (StatusResponder, error)
 
 	// PostBack - прием постбеков от провайдера с информацией о транзакции или генерируемом IBAN
@@ -36,8 +33,9 @@ type IBANRequester interface {
 	// Методы для получения данных из запроса IBAN
 }
 
+// IBANResponder Содержит методы для получения данных из ответа IBAN
 type IBANResponder interface {
-	// Методы для получения данных из ответа IBAN
+	// Методы для получения данных из ответа Status
 }
 
 type PayInRequester interface {
@@ -61,7 +59,6 @@ type StatusRequester interface {
 }
 
 type StatusResponder interface {
-	// Методы для получения данных из ответа Status
 }
 
 type PostBackRequester interface {

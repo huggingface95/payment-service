@@ -6,13 +6,16 @@ use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\BaseMutator;
+use App\Models\TransferBetween;
 use App\Models\TransferIncoming;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
+use App\Repositories\TransferBetweenRepository;
 use App\Services\CommissionService;
 use App\Services\TransferBetweenUsersService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -21,29 +24,54 @@ class ApplicantTransferBetweenUsersMutator extends BaseMutator
     public function __construct(
         protected CommissionService $commissionService,
         protected TransferBetweenUsersService $transferService,
+        protected TransferBetweenRepository $transferRepository,
         protected TransferOutgoingRepositoryInterface $transferOutgoingRepository,
         protected TransferIncomingRepositoryInterface $transferIncomingRepository
     ) {
     }
 
-    public function create($root, array $args): array
+    /**
+     * @throws GraphqlException
+     */
+    public function cancel($_, array $args): TransferBetween
     {
-        $transfers = $this->transferService->createTransfer($args, OperationTypeEnum::BETWEEN_USERS->value);
+        $transfer = $this->transferRepository->findById($args['id']);
+        if (! $transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
 
-        $fees = $this->commissionService->getAllCommissions($transfers['outgoing']);
+        $this->transferService->updateTransferStatus([
+            'incoming' => $transfer->transferIncoming,
+            'outgoing' => $transfer->transferOutgoing,
+        ], [
+            'status_id' => PaymentStatusEnum::CANCELED->value,
+        ]);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function create($_, array $args): array
+    {
+        $transfer = $this->transferService->createTransfer($args, OperationTypeEnum::BETWEEN_USERS->value);
+
+        $fees = $this->commissionService->getAllCommissions($transfer->transferOutgoing);
 
         return [
-            'transfer_incoming' => $transfers['incoming'],
-            'transfer_outgoing' => $transfers['outgoing'],
-            'fee_amount' => Str::decimal($fees['fee_amount']),
-            'final_amount' => Str::decimal($fees['amount_debt']),
+            'id'                => $transfer->id,
+            'transfer_incoming' => $transfer->transferIncoming,
+            'transfer_outgoing' => $transfer->transferOutgoing,
+            'fee_amount'        => Str::decimal($fees['fee_amount']),
+            'final_amount'      => Str::decimal($fees['amount_debt']),
         ];
     }
 
     /**
      * @throws GraphqlException
      */
-    public function attachFile($root, array $args): TransferIncoming|Model|Builder|null
+    public function attachFile($_, array $args): TransferIncoming|Model|Builder|null
     {
         try {
             DB::beginTransaction();
@@ -67,32 +95,67 @@ class ApplicantTransferBetweenUsersMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
-    public function sign($_, array $args): TransferIncoming
+    public function sign($_, array $args): TransferBetween
     {
-        if (! isset($args['code']) || empty($args['code'])) {
-            throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
+        if (empty($args['code'])) {
+            throw new GraphqlException('The "code" field is required and must not be empty.', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $transfers = $this->transferService->getTransfersByIncomingId($args['transfer_incoming_id']);
+        /** @var TransferBetween $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+        if (! $transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
 
-        $this->transferService->updateTransferStatus($transfers, [
+        $this->transferService->updateTransferStatus([
+            'incoming' => $transfer->transferIncoming,
+            'outgoing' => $transfer->transferOutgoing,
+        ], [
             'status_id' => PaymentStatusEnum::PENDING->value,
         ]);
 
-        return $transfers['incoming'];
+        return $transfer;
     }
 
     /**
      * @throws GraphqlException
      */
-    public function execute($_, array $args): TransferIncoming
+    public function execute($_, array $args): TransferBetween
     {
-        $transfers = $this->transferService->getTransfersByIncomingId($args['transfer_incoming_id']);
+        /** @var TransferBetween $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+        if (! $transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
 
-        $this->transferService->updateTransferStatus($transfers, [
+        $this->transferService->updateTransferStatus([
+            'incoming' => $transfer->transferIncoming,
+            'outgoing' => $transfer->transferOutgoing,
+        ], [
             'status_id' => PaymentStatusEnum::EXECUTED->value,
         ]);
 
-        return $transfers['incoming'];
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function refund($_, array $args): TransferBetween
+    {
+        /** @var TransferBetween $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+        if (! $transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
+
+        $this->transferService->updateTransferStatus([
+            'incoming' => $transfer->transferIncoming,
+            'outgoing' => $transfer->transferOutgoing,
+        ], [
+            'status_id' => PaymentStatusEnum::REFUND->value,
+        ]);
+
+        return $transfer;
     }
 }
