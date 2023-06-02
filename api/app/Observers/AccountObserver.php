@@ -54,7 +54,7 @@ class AccountObserver extends BaseObserver
             throw new GraphqlException('Create or Enable Company Banking module in this account', 'use', 401);
         }
 
-        if (!parent::saving($model, $callHistory)) {
+        if (!parent::saving($model, $model->exists ? $callHistory : false)) {
             return false;
         }
 
