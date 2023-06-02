@@ -1,6 +1,7 @@
 package jobs
 
 import (
+	"fmt"
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/helpers"
@@ -10,14 +11,10 @@ import (
 )
 
 func ProcessSendChangedIpEmailQueue() {
-	for {
-		redisData := redisRepository.GetRedisDataByBlPop(constants.QueueSendChangedIpEmail, func() interface{} {
-			return new(cache.ConfirmationIpLinksCache)
-		})
-		if redisData == nil {
-			break
-		}
-		sendEmailByData(redisData.(*cache.ConfirmationIpLinksCache))
+	for _, data := range redisRepository.GetRedisListByKey(fmt.Sprintf(constants.CacheConfirmationIpLinks, "*"), func() interface{} {
+		return new(cache.ConfirmationIpLinksCache)
+	}) {
+		sendEmailByData(data.(*cache.ConfirmationIpLinksCache))
 	}
 }
 
