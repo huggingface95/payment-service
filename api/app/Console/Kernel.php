@@ -47,7 +47,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('applicant-bancking-access:reset-used-limit')->dailyAt('00:00');
 //        $schedule->command('notifications:send')->everyFiveMinutes();
-        $schedule->command('iban:individual:approval:email')->everyMinute();
+        //TODO temporarily
+//        $schedule->command('iban:individual:approval:email')->everyMinute();
         $schedule->command('transfer:execute-waiting')->daily();
     }
 }

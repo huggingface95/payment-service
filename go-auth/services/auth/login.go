@@ -97,9 +97,13 @@ func CreateConfirmationIpLink(provider string, id uint64, companyId uint64, emai
 	data := &cache.ConfirmationIpLinksCache{
 		CompanyId: companyId, Id: id, Email: email, Ip: clientIp, CreatedAt: timeNow.String(), ConfirmationLink: randomToken, Provider: provider,
 	}
+	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendChangedIpEmail, data)
+	if ok {
+		data.Set(randomToken)
+		return true
+	}
 
-	data.Set(randomToken)
-	return true
+	return false
 }
 
 func PasswordValidation(password string) (bool, string) {
