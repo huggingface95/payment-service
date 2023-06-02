@@ -78,20 +78,20 @@ class CompanyModuleMutator extends BaseMutator
         $companyModule->paymentProviders()->saveMany($company->paymentProviders->map(function (PaymentProvider $p) use ($companyModule) {
             return new CompanyModulePaymentProvider([
                 'payment_provider_id' => $p->id,
-                'is_active' => $companyModule->is_active,
+                'is_active' => $companyModule->is_active ?? false,
             ]);
         }));
         $companyModule->ibanProviders()->saveMany($company->paymentProvidersIban->map(function (PaymentProviderIban $p) use ($companyModule) {
             return new CompanyModuleIbanProvider([
                 'payment_provider_iban_id' => $p->id,
-                'is_active' => $companyModule->is_active,
+                'is_active' => $companyModule->is_active ?? false,
             ]);
         }));
 
         $companyModule->quoteProviders()->saveMany($company->quoteProviders->map(function (QuoteProvider $p) use ($companyModule) {
             return new CompanyModuleQuoteProvider([
                 'quote_provider_id' => $p->id,
-                'is_active' => $companyModule->is_active,
+                'is_active' => $companyModule->is_active ?? false,
             ]);
         }));
     }
