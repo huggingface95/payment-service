@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Queries;
 
+use App\Enums\ApplicantStateEnum;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use GraphQL\Type\Definition\ResolveInfo;
@@ -17,6 +18,6 @@ class ApplicantIndividualQuery
     {
         $ownerId = ApplicantCompany::pluck('owner_id')->toArray();
 
-        return ApplicantIndividual::whereIn('id', $ownerId)->get();
+        return ApplicantIndividual::whereIn('id', $ownerId)->where('applicant_state_id', ApplicantStateEnum::ACTIVE)->get();
     }
 }
