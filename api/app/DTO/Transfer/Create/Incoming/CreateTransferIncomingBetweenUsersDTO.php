@@ -4,6 +4,7 @@ namespace App\DTO\Transfer\Create\Incoming;
 
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
+use App\Exceptions\GraphqlException;
 use App\Models\Account;
 
 class CreateTransferIncomingBetweenUsersDTO extends CreateTransferIncomingDTO
@@ -24,7 +25,7 @@ class CreateTransferIncomingBetweenUsersDTO extends CreateTransferIncomingDTO
         $args['payment_system_id'] = $toAccount->company->paymentSystemInternal?->id;
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['sender_country_id'] = $fromAccount->owner?->country_id;
+        $args['sender_country_id'] = $fromAccount->owner?->country_id ?? throw new GraphqlException('Sender country not found');
         $args['respondent_fees_id'] = 2;
         $args['group_id'] = 1;
         $args['group_type_id'] = 1;

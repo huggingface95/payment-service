@@ -17,6 +17,25 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         @field(resolver: "TransferBetweenUsersMutator@create")
 
     """
+    Редактировать перевод между пользователями
+    """
+    updateApplicantTransferBetweenUsers(
+        "ID"
+        id: ID!
+        "Сумма"
+        amount: Decimal
+        "ID аккаунта отправителя"
+        from_account_id: ID
+        "ID аккаунта получателя"
+        to_account_id: ID
+        "ID коммиисии респондента"
+        respondent_fee_id: ID
+        "Причина перевода"
+        reason: String
+    ): TransferBetween
+        @field(resolver: "TransferBetweenUsersMutator@update")
+    
+    """
     Подписать перевод между пользователями
     """
     signApplicantTransferBetweenUsers(

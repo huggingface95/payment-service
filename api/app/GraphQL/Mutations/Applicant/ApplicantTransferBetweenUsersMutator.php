@@ -71,6 +71,22 @@ class ApplicantTransferBetweenUsersMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
+    public function update($_, array $args): TransferBetween|Model|Builder|null
+    {
+        /** @var TransferBetween $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+        if (! $transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
+
+        $this->transferService->updateTransfer($transfer, $args, OperationTypeEnum::BETWEEN_ACCOUNT->value);
+
+        return $transfer;
+    }
+    
+    /**
+     * @throws GraphqlException
+     */
     public function attachFile($_, array $args): TransferIncoming|Model|Builder|null
     {
         try {

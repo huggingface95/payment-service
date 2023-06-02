@@ -32,7 +32,7 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
         $args['payment_system_id'] = $fromAccount->company->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['recipient_country_id'] = $toAccount->owner?->country_id;
+        $args['recipient_country_id'] = $toAccount->owner?->country_id ?? throw new GraphqlException('Recipient country not found');
         $args['respondent_fees_id'] = 2;
         $args['group_id'] = 1;
         $args['group_type_id'] = 1;
