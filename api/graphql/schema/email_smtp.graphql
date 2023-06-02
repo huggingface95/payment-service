@@ -89,7 +89,7 @@ extend type Mutation @guard {
         "От кого"
         from_name: String
         "почта"
-        from_email: String!
+        from_email: String
         "логин"
         username: String
         "пароль"
