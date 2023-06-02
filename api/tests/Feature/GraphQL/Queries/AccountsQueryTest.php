@@ -499,10 +499,9 @@ class AccountsQueryTest extends TestCase
 
     public function testQueryAccountsFilterByIsPrimary(): void
     {
-        $this->markTestSkipped('Skipped');
         $accounts = DB::connection('pgsql_test')
             ->table('accounts')
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->get();
 
         $this->postGraphQL(
