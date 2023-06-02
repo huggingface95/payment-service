@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"errors"
 	"fmt"
 	mail "github.com/xhit/go-simple-mail/v2"
 	"jwt-authentication-golang/config"
@@ -37,6 +38,13 @@ func MailConnect(config *config.EmailConfig) {
 }
 
 func Mail(subject string, content string, email string) (err error) {
+	if config.Conf.App.SendEmail == false {
+		err = errors.New("Send email disable")
+		return
+	}
+
+	MailConnect(config.Conf.Email)
+
 	newEmail := mail.NewMSG()
 	newEmail.
 		SetFrom(fmt.Sprintf("%s <%s>", config.Conf.Email.From, config.Conf.Email.Mail)).
