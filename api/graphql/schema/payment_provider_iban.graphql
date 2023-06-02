@@ -45,6 +45,7 @@ input QueryPaymentProviderIbansFilterStatic @spread {
     name: String @eq @ilike
     company_id: ID @eq
     currency_id: ID @eq
+    is_active: Boolean @eq
 }
 
 input InputPaymentProviderIban {

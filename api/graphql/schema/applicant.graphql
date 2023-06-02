@@ -160,6 +160,7 @@ input QueryApplicantIndividualsFilterStatic @spread{
     company_id: ID @eq
     project_id: ID @eq
     kyc_level_id: ID @eq
+    applicant_state_id: ID @eq
     hasRiskLevelFilterById: ID @eq
     hasStateReasonFilterById: ID @eq
     hasStatusFilterById: ID @eq
