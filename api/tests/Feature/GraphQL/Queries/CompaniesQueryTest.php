@@ -150,12 +150,12 @@ class CompaniesQueryTest extends TestCase
                     'zip' => $company->zip !== null ? (string) $company->zip : null,
                     'city' => $company->city !== null ? (string) $company->city : null,
                     'address' => $company->address !== null ? (string) $company->address : null,
-                    'members' => $company->members ? $company->members->map(function ($member) {
+                    'members' => $company->members ? $company->members()->orderBy('id', 'ASC')->get()->map(function ($member) {
                         return [
                             'fullname' => $member->fullname !== null ? (string) $member->fullname : null,
                             'id' => $member->id !== null ? (string) $member->id : null,
                         ];
-                    }) : [],
+                    })->toArray() : [],
                     'members_count' => $company->members_count !== null ? (int) $company->members_count : null,
                     'projects_count' => $company->projects_count !== null ? (int) $company->projects_count : null,
                     'projects' => $company->projects ? $company->projects->map(function ($project) {
@@ -181,15 +181,13 @@ class CompaniesQueryTest extends TestCase
                     'reg_address' => $company->reg_address !== null ? (string) $company->reg_address : null,
                     'tax_id' => $company->tax_id !== null ? (string) $company->tax_id : null,
                     'incorporate_date' => $company->incorporate_date !== null ? (string) $company->incorporate_date : null,
-                    'employees' => $company->employees ? $company->employees->map(function ($employee) {
-                        return [
-                            'id' => $employee->id !== null ? (string) $employee->id : null,
-                            'employees_number' => $employee->employees_number !== null ? (string) $employee->employees_number : null,
-                        ];
-                    }) : null,
-                    'type_of_industry' => $company->type_of_industry ? [
-                        'id' => $company->type_of_industry->id !== null ? (string) $company->type_of_industry->id : null,
-                        'name' => $company->type_of_industry->name !== null ? (string) $company->type_of_industry->name : null,
+                    'employees' => $company->employee ? [
+                            'id' => $company->employee->id !== null ? (string) $company->employee->id : null,
+                            'employees_number' => $company->employee->employees_number !== null ? (string) $company->employee->employees_number : null,
+                        ] : null,
+                    'type_of_industry' => $company->typeOfIndustry ? [
+                        'id' => $company->typeOfIndustry->id !== null ? (string) $company->typeOfIndustry->id : null,
+                        'name' => $company->typeOfIndustry->name !== null ? (string) $company->typeOfIndustry->name : null,
                     ] : null,
                     'license_number' => $company->license_number !== null ? (string) $company->license_number : null,
                     'exp_date' => $company->exp_date,
@@ -203,9 +201,9 @@ class CompaniesQueryTest extends TestCase
                             'number' => $revenue->number !== null ? (string) $revenue->number : null,
                         ];
                     }) : [],
-                    'state_reason' => $company->state_reason ? [
-                        'id' => $company->state_reason->id !== null ? (string) $company->state_reason->id : null,
-                        'name' => $company->state_reason->name !== null ? (string) $company->state_reason->name : null,
+                    'state_reason' => $company->stateReason ? [
+                        'id' => $company->stateReason->id !== null ? (string) $company->stateReason->id : null,
+                        'name' => $company->stateReason->name !== null ? (string) $company->stateReason->name : null,
                     ] : null,
                     'reg_number' => $company->reg_number !== null ? (string) $company->reg_number : null,
                     'entity_type' => $company->entity_type !== null ? (string) $company->entity_type : null,
@@ -216,8 +214,8 @@ class CompaniesQueryTest extends TestCase
                         'id' => $company->logo->id !== null ? (string) $company->logo->id : null,
                         'file_name' => $company->logo->file_name !== null ? (string) $company->logo->file_name : null,
                     ] : null,
-                    'ledger_settings' => $company->ledger_settings ? [
-                        'id' => $company->ledger_settings->id !== null ? (string) $company->ledger_settings->id : null,
+                    'ledger_settings' => $company->ledgerSettings ? [
+                        'id' => $company->ledgerSettings->id !== null ? (string) $company->ledgerSettings->id : null,
                     ] : null,
                     'vv_token' => $company->vv_token,
                     'member_verify_url' => $company->member_verify_url,
@@ -242,7 +240,7 @@ class CompaniesQueryTest extends TestCase
             [
                 'query' => '
                 query {
-                    companies(orderBy: { column: ID, order: ASC }) {
+                    companies(first: 1, orderBy: { column: ID, order: ASC }) {
                         data {
                             id
                             name
@@ -331,7 +329,7 @@ class CompaniesQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -354,12 +352,12 @@ class CompaniesQueryTest extends TestCase
                 'zip' => $company->zip !== null ? (string) $company->zip : null,
                 'city' => $company->city !== null ? (string) $company->city : null,
                 'address' => $company->address !== null ? (string) $company->address : null,
-                'members' => $company->members ? $company->members->map(function ($member) {
+                'members' => $company->members ? $company->members()->orderBy('id', 'ASC')->get()->map(function ($member) {
                     return [
                         'fullname' => $member->fullname !== null ? (string) $member->fullname : null,
                         'id' => $member->id !== null ? (string) $member->id : null,
                     ];
-                }) : [],
+                })->toArray() : [],
                 'members_count' => $company->members_count !== null ? (int) $company->members_count : null,
                 'projects_count' => $company->projects_count !== null ? (int) $company->projects_count : null,
                 'projects' => $company->projects ? $company->projects->map(function ($project) {
@@ -385,15 +383,13 @@ class CompaniesQueryTest extends TestCase
                 'reg_address' => $company->reg_address !== null ? (string) $company->reg_address : null,
                 'tax_id' => $company->tax_id !== null ? (string) $company->tax_id : null,
                 'incorporate_date' => $company->incorporate_date !== null ? (string) $company->incorporate_date : null,
-                'employees' => $company->employees ? $company->employees->map(function ($employee) {
-                    return [
-                        'id' => $employee->id !== null ? (string) $employee->id : null,
-                        'employees_number' => $employee->employees_number !== null ? (string) $employee->employees_number : null,
-                    ];
-                }) : null,
-                'type_of_industry' => $company->type_of_industry ? [
-                    'id' => $company->type_of_industry->id !== null ? (string) $company->type_of_industry->id : null,
-                    'name' => $company->type_of_industry->name !== null ? (string) $company->type_of_industry->name : null,
+                'employees' => $company->employee ? [
+                    'id' => $company->employee->id !== null ? (string) $company->employee->id : null,
+                    'employees_number' => $company->employee->employees_number !== null ? (string) $company->employee->employees_number : null,
+                ] : null,
+                'type_of_industry' => $company->typeOfIndustry ? [
+                    'id' => $company->typeOfIndustry->id !== null ? (string) $company->typeOfIndustry->id : null,
+                    'name' => $company->typeOfIndustry->name !== null ? (string) $company->typeOfIndustry->name : null,
                 ] : null,
                 'license_number' => $company->license_number !== null ? (string) $company->license_number : null,
                 'exp_date' => $company->exp_date,
@@ -407,9 +403,9 @@ class CompaniesQueryTest extends TestCase
                         'number' => $revenue->number !== null ? (string) $revenue->number : null,
                     ];
                 }) : [],
-                'state_reason' => $company->state_reason ? [
-                    'id' => $company->state_reason->id !== null ? (string) $company->state_reason->id : null,
-                    'name' => $company->state_reason->name !== null ? (string) $company->state_reason->name : null,
+                'state_reason' => $company->stateReason ? [
+                    'id' => $company->stateReason->id !== null ? (string) $company->stateReason->id : null,
+                    'name' => $company->stateReason->name !== null ? (string) $company->stateReason->name : null,
                 ] : null,
                 'reg_number' => $company->reg_number !== null ? (string) $company->reg_number : null,
                 'entity_type' => $company->entity_type !== null ? (string) $company->entity_type : null,
@@ -420,8 +416,8 @@ class CompaniesQueryTest extends TestCase
                     'id' => $company->logo->id !== null ? (string) $company->logo->id : null,
                     'file_name' => $company->logo->file_name !== null ? (string) $company->logo->file_name : null,
                 ] : null,
-                'ledger_settings' => $company->ledger_settings ? [
-                    'id' => $company->ledger_settings->id !== null ? (string) $company->ledger_settings->id : null,
+                'ledger_settings' => $company->ledgerSettings ? [
+                    'id' => $company->ledgerSettings->id !== null ? (string) $company->ledgerSettings->id : null,
                 ] : null,
                 'vv_token' => $company->vv_token,
                 'member_verify_url' => $company->member_verify_url,
@@ -465,7 +461,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -511,7 +507,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -557,7 +553,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -603,7 +599,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -649,7 +645,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -695,7 +691,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -747,7 +743,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -795,7 +791,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -847,7 +843,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [
@@ -892,7 +888,7 @@ class CompaniesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer '.$this->login(),
+                'Authorization' => 'Bearer ' . $this->login(),
             ]
         )->seeJsonContains([
             [

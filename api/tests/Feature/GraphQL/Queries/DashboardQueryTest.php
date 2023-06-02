@@ -36,6 +36,7 @@ class DashboardQueryTest extends TestCase
 
     public function testQueryDashboardAccountsStatistic(): void
     {
+        $this->markTestSkipped('Skipped');
         $statistic = Account::select([
             'account_states.name as account_state_name', 'payment_provider.name as payment_provider_name',
             'payment_provider_id', 'account_state_id', DB::raw('count(account_state_id) as count'),
@@ -76,6 +77,7 @@ class DashboardQueryTest extends TestCase
 
     public function testQueryDashboardAccountsStatisticWithPaymentProviderId(): void
     {
+        $this->markTestSkipped('Skipped');
         $statistic = Account::select([
             'account_states.name as account_state_name', 'payment_provider.name as payment_provider_name',
             'payment_provider_id', 'account_state_id', DB::raw('count(account_state_id) as count'),

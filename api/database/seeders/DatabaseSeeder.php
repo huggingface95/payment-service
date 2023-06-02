@@ -18,6 +18,9 @@ class DatabaseSeeder extends Seeder
         $this->call(CurrencyTableSeeder::class);
         $this->call(ModulesTableSeeder::class);
         $this->call(StateTableSeeder::class);
+        $this->call(EmploeesTableSeeder::class);
+        $this->call(TypeOfIndustriesTableSeeder::class);
+        $this->call(StateReasonsTableSeeder::class);
         $this->call(CompanyTableSeeder::class);
         $this->call(ProjectTableSeeder::class);
         $this->call(GroupTableSeeder::class);
