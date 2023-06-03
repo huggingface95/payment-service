@@ -206,6 +206,18 @@ class TransferIncomingsMutationTest extends TestCase
 
         DB::select('ALTER SEQUENCE transfer_incomings_id_seq RESTART WITH '.$seq);
 
+        $transfer_swift = [
+            'swift' => '151561561561561',
+            'bank_name' => 'Bank Name 1',
+            'bank_type' => 'Correspondent',
+            'bank_address' => 'Bank address',
+            'bank_country_id' => 1,
+            'location' => 'Location 1',
+            'ncs_number' => 'NCS1564651',
+            'aba' => 'ABA5456456',
+            'account_number' => '456789789466'
+        ];
+
         $this->postGraphQL(
             [
                 'query' => '
@@ -236,6 +248,7 @@ class TransferIncomingsMutationTest extends TestCase
                 $bank_message: String
                 $urgency_id: ID
                 $respondent_fees_id: ID
+                $transfer_swift: TransferSwiftInput
             )
             {
                 createTransferIncoming (
@@ -266,6 +279,7 @@ class TransferIncomingsMutationTest extends TestCase
                     bank_message: $bank_message
                     urgency_id: $urgency_id
                     respondent_fees_id: $respondent_fees_id
+                    transfer_swift: $transfer_swift
                 )
                 {
                       id
@@ -324,6 +338,7 @@ class TransferIncomingsMutationTest extends TestCase
                     'bank_message' => 'bank_message',
                     'urgency_id' => 1,
                     'respondent_fees_id' => 1,
+                    'transfer_swift' => $transfer_swift,
                 ],
             ],
             [
@@ -447,6 +462,43 @@ class TransferIncomingsMutationTest extends TestCase
                     'respondent_fee' => $id['data']['updateTransferIncoming']['respondent_fee'],
                     'beneficiary_type_id' => $id['data']['updateTransferIncoming']['beneficiary_type_id'],
                     'beneficiary_name' => $id['data']['updateTransferIncoming']['beneficiary_name'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testAttachFilesToTransfesIncoming(): void
+    {
+        $transfer = TransferIncoming::orderBy('id', 'DESC')->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                    mutation AttachFilesToTransferIncoming($transfer: ID!, $file: [ID!]!) {
+                      attachFIleToTransferIncoming(
+                        id: $transfer
+                        file_id: $file
+                      ) {
+                        id
+                      }
+                    }
+                ',
+                'variables' => [
+                    'transfer' => $transfer->id,
+                    'file' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'attachFIleToTransferIncoming' => [
+                    'id' => $id['data']['attachFIleToTransferIncoming']['id'],
                 ],
             ],
         ]);
