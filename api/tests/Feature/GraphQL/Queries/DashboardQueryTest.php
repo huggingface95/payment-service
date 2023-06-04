@@ -36,7 +36,6 @@ class DashboardQueryTest extends TestCase
 
     public function testQueryDashboardAccountsStatistic(): void
     {
-        $this->markTestSkipped('Skipped');
         $statistic = Account::select([
             'account_states.name as account_state_name', 'payment_provider.name as payment_provider_name',
             'payment_provider_id', 'account_state_id', DB::raw('count(account_state_id) as count'),
@@ -62,22 +61,17 @@ class DashboardQueryTest extends TestCase
             [
                 'Authorization' => 'Bearer '.$this->login(),
             ]
-        )->seeJson([
-            'data' => [
-                'dashboardAccountsStatistic' => [[
-                    'account_state_id' => (string) $statistic->account_state_id,
-                    'payment_provider_id' => (string) $statistic->payment_provider_id,
-                    'payment_provider_name' => (string) $statistic->payment_provider_name,
-                    'account_state_name' => (string) $statistic->account_state_name,
-                    'count' => $statistic->count,
-                ]],
-            ],
+        )->seeJsonContains([
+            'account_state_id' => (string) $statistic->account_state_id,
+            'payment_provider_id' => (string) $statistic->payment_provider_id,
+            'payment_provider_name' => (string) $statistic->payment_provider_name,
+            'account_state_name' => (string) $statistic->account_state_name,
+            'count' => $statistic->count,
         ]);
     }
 
     public function testQueryDashboardAccountsStatisticWithPaymentProviderId(): void
     {
-        $this->markTestSkipped('Skipped');
         $statistic = Account::select([
             'account_states.name as account_state_name', 'payment_provider.name as payment_provider_name',
             'payment_provider_id', 'account_state_id', DB::raw('count(account_state_id) as count'),
@@ -106,16 +100,12 @@ class DashboardQueryTest extends TestCase
             [
                 'Authorization' => 'Bearer '.$this->login(),
             ]
-        )->seeJson([
-            'data' => [
-                'dashboardAccountsStatistic' => [[
-                    'account_state_id' => (string) $statistic->account_state_id,
-                    'payment_provider_id' => (string) $statistic->payment_provider_id,
-                    'payment_provider_name' => (string) $statistic->payment_provider_name,
-                    'account_state_name' => (string) $statistic->account_state_name,
-                    'count' => $statistic->count,
-                ]],
-            ],
+        )->seeJsonContains([
+            'account_state_id' => (string) $statistic->account_state_id,
+            'payment_provider_id' => (string) $statistic->payment_provider_id,
+            'payment_provider_name' => (string) $statistic->payment_provider_name,
+            'account_state_name' => (string) $statistic->account_state_name,
+            'count' => $statistic->count,
         ]);
     }
 

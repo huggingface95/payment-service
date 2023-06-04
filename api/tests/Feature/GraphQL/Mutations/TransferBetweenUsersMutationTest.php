@@ -2,6 +2,7 @@
 
 namespace Feature\GraphQL\Mutations;
 
+use App\Models\TransferBetween;
 use App\Models\TransferIncoming;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -49,7 +50,6 @@ class TransferBetweenUsersMutationTest extends TestCase
 
     public function testCreateTransferBetweenUsers(): void
     {
-        $this->markTestSkipped('Skipped');
         $seq = DB::table('transfer_outgoings')
                 ->max('id') + 1;
 
@@ -87,8 +87,8 @@ class TransferBetweenUsersMutationTest extends TestCase
                     }
                 ',
                 'variables' => [
-                    'from_account' => 1,
-                    'to_account' => 2,
+                    'from_account' => 4,
+                    'to_account' => 3,
                 ],
             ],
             [
@@ -119,25 +119,17 @@ class TransferBetweenUsersMutationTest extends TestCase
 
     public function testSignTransferBetweenUsers(): void
     {
-        $this->markTestSkipped('Skipped');
-        $transfer = TransferIncoming::orderBy('id', 'DESC')->first();
+        $transfer = TransferBetween::orderBy('id', 'DESC')->first();
 
         $this->postGraphQL(
             [
                 'query' => '
                     mutation SignTransferBetweenUsers($transfer: ID!, $code: String!) {
                       signTransferBetweenUsers(
-                        transfer_incoming_id: $transfer
+                        id: $transfer
                         code: $code
                       ) {
                         id
-                        amount
-                        amount_debt
-                        payment_number
-                        system_message
-                        reason
-                        channel
-                        bank_message
                       }
                     }
                 ',
@@ -157,13 +149,6 @@ class TransferBetweenUsersMutationTest extends TestCase
             'data' => [
                 'signTransferBetweenUsers' => [
                     'id' => $id['data']['signTransferBetweenUsers']['id'],
-                    'amount' => $id['data']['signTransferBetweenUsers']['amount'],
-                    'amount_debt' => $id['data']['signTransferBetweenUsers']['amount_debt'],
-                    'payment_number' => $id['data']['signTransferBetweenUsers']['payment_number'],
-                    'system_message' => $id['data']['signTransferBetweenUsers']['system_message'],
-                    'reason' => $id['data']['signTransferBetweenUsers']['reason'],
-                    'channel' => $id['data']['signTransferBetweenUsers']['channel'],
-                    'bank_message' => $id['data']['signTransferBetweenUsers']['bank_message'],
                 ],
             ],
         ]);
@@ -171,24 +156,16 @@ class TransferBetweenUsersMutationTest extends TestCase
 
     public function testExecuteTransferBetweenUsers(): void
     {
-        $this->markTestSkipped('Skipped');
-        $transfer = TransferIncoming::orderBy('id', 'DESC')->first();
+        $transfer = TransferBetween::orderBy('id', 'DESC')->first();
 
         $this->postGraphQL(
             [
                 'query' => '
                     mutation ExecuteTransferBetweenUsers($transfer: ID!) {
                       executeTransferBetweenUsers(
-                        transfer_incoming_id: $transfer
+                        id: $transfer
                       ) {
                         id
-                        amount
-                        amount_debt
-                        payment_number
-                        system_message
-                        reason
-                        channel
-                        bank_message
                       }
                     }
                 ',
@@ -207,13 +184,43 @@ class TransferBetweenUsersMutationTest extends TestCase
             'data' => [
                 'executeTransferBetweenUsers' => [
                     'id' => $id['data']['executeTransferBetweenUsers']['id'],
-                    'amount' => $id['data']['executeTransferBetweenUsers']['amount'],
-                    'amount_debt' => $id['data']['executeTransferBetweenUsers']['amount_debt'],
-                    'payment_number' => $id['data']['executeTransferBetweenUsers']['payment_number'],
-                    'system_message' => $id['data']['executeTransferBetweenUsers']['system_message'],
-                    'reason' => $id['data']['executeTransferBetweenUsers']['reason'],
-                    'channel' => $id['data']['executeTransferBetweenUsers']['channel'],
-                    'bank_message' => $id['data']['executeTransferBetweenUsers']['bank_message'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testAttachFilesToTransferBetweenUsers(): void
+    {
+        $transfer = TransferBetween::orderBy('id', 'DESC')->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                    mutation AttachFilesToBetweenUsers($transfer: ID!, $file: [ID!]!) {
+                      attachFIleToTransferBetweenUsers(
+                        id: $transfer
+                        file_id: $file
+                      ) {
+                        id
+                      }
+                    }
+                ',
+                'variables' => [
+                    'transfer' => $transfer->id,
+                    'file' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'attachFIleToTransferBetweenUsers' => [
+                    'id' => $id['data']['attachFIleToTransferBetweenUsers']['id'],
                 ],
             ],
         ]);

@@ -37,7 +37,6 @@ class TransferExchangeMutationTest extends TestCase
 
     public function testCreateTransferExchangeWithStatusUnsigned(): void
     {
-        $this->markTestSkipped('Skipped');
         $seq = DB::table('transfer_outgoings')
                 ->max('id') + 1;
 
@@ -66,8 +65,8 @@ class TransferExchangeMutationTest extends TestCase
                 }
                 ',
                 'variables' => [
-                    'from_account' => 1,
-                    'to_account' => 4,
+                    'from_account' => 5,
+                    'to_account' => 2,
                 ],
             ],
             [

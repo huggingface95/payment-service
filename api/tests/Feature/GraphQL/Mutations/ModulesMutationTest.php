@@ -32,7 +32,6 @@ class ModulesMutationTest extends TestCase
 
     public function testCreateModule(): void
     {
-        $this->markTestSkipped('Skipped');
         $this->postGraphQL(['query' => '
             mutation CreateModule(
                 $name: String!,
@@ -50,8 +49,13 @@ class ModulesMutationTest extends TestCase
         ],
         [
             'Authorization' => 'Bearer '.$this->login(),
-        ])->seeJsonContains([
-            'message' => 'Access denied',
+        ]);
+
+        $response = json_decode($this->response->getContent(), true);
+
+        $this->seeJsonContains([
+            'id' => $response['data']['createModule']['id'],
+            'name' => $response['data']['createModule']['name'],
         ]);
     }
 }

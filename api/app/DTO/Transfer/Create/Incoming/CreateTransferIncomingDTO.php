@@ -83,7 +83,7 @@ class CreateTransferIncomingDTO
 
     public array $file_id;
 
-    public string $transfer_swift;
+    public array $transfer_swift;
 
     public int $status_id;
 
