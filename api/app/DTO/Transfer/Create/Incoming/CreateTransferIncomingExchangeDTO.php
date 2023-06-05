@@ -2,13 +2,14 @@
 
 namespace App\DTO\Transfer\Create\Incoming;
 
+use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
 use App\Models\Account;
 
 class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
 {
-    public static function transform(Account $account, int $operationType, string $amount, string $paymentNumber, string $date, int $price_list_fee_id): CreateTransferIncomingDTO
+    public static function transform(Account $account, string $amount, string $paymentNumber, string $date, int $price_list_fee_id): CreateTransferIncomingDTO
     {
         $args['account_id'] = $account->id;
         $args['currency_id'] = $account->currencies?->id;
@@ -17,7 +18,7 @@ class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
         $args['amount_debt'] = $amount;
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['urgency_id'] = 1;
-        $args['operation_type_id'] = $operationType;
+        $args['operation_type_id'] = OperationTypeEnum::EXCHANGE->value;
         $args['payment_bank_id'] = 2;
         $args['payment_number'] = $paymentNumber;
         $args['payment_provider_id'] = 1;
