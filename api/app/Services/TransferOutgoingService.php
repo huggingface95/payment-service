@@ -352,7 +352,7 @@ class TransferOutgoingService extends AbstractService
 
             $this->createTransferHistory($transfer, TransferHistoryActionEnum::INIT->value)->createPPHistory($transfer);
 
-            return $transfer;
+            return $this->transferRepository->findById($transfer->id);
         });
     }
 
