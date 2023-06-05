@@ -45,7 +45,7 @@ class TransferExchangeMutator extends BaseMutator
 
     public function create($_, array $args): TransferExchange
     {
-        $transfer = $this->transferService->createTransfer($args, (int) OperationTypeEnum::EXCHANGE->value);
+        $transfer = $this->transferService->createTransfer($args);
 
         return $transfer;
     }

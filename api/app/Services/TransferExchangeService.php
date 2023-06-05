@@ -11,6 +11,7 @@ use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
+use App\Models\Members;
 use App\Models\PriceListFee;
 use App\Models\TransferExchange;
 use App\Models\TransferOutgoing;
@@ -22,6 +23,7 @@ use App\Traits\TransferHistoryTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -45,14 +47,14 @@ class TransferExchangeService extends AbstractService
     /**
      * @throws GraphqlException
      */
-    public function createTransfer(array $args, int $operationType): Builder|Model
+    public function createTransfer(array $args): Builder|Model
     {
         $fromAccount = Account::findOrFail($args['from_account_id']);
         $toAccount = Account::findOrFail($args['to_account_id']);
 
         $this->validateCreateTransfer($fromAccount, $toAccount);
 
-        $data = $this->populateTransferData($args, $fromAccount, $toAccount, $operationType);
+        $data = $this->populateTransferData($args, $fromAccount, $toAccount);
 
         $transfers = DB::transaction(function () use ($data, $fromAccount, $toAccount) {
             /** @var TransferOutgoing $outgoing */
@@ -144,12 +146,12 @@ class TransferExchangeService extends AbstractService
     /**
      * @throws GraphqlException
      */
-    private function populateTransferData(array $args, Account $fromAccount, Account $toAccount, int $operationType): array
+    private function populateTransferData(array $args, Account $fromAccount, Account $toAccount): array
     {
         $toAmount = (string) $this->getExchangeAmount($args, $fromAccount, $toAccount);
 
-        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingExchangeDTO::class, $fromAccount, $operationType, $args['amount'], $args['price_list_fee_id']);
-        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingExchangeDTO::class, $toAccount, $operationType, $toAmount, $outgoingDTO->payment_number, $outgoingDTO->created_at, $args['price_list_fee_id']);
+        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingExchangeDTO::class, $fromAccount, $args['amount'], $args['price_list_fee_id']);
+        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingExchangeDTO::class, $toAccount, $toAmount, $outgoingDTO->payment_number, $outgoingDTO->created_at, $args['price_list_fee_id']);
 
         return [
             'outgoing' => $outgoingDTO->toArray(),
@@ -170,9 +172,10 @@ class TransferExchangeService extends AbstractService
         $fromAccount = Account::findOrFail($args['from_account_id']);
         $toAccount = Account::findOrFail($args['to_account_id']);
 
+        $this->isAllowedOperation($transfer);
         $this->validateCreateTransfer($fromAccount, $toAccount);
 
-        $data = $this->populateTransferData($args, $fromAccount, $toAccount, OperationTypeEnum::EXCHANGE->value);
+        $data = $this->populateTransferData($args, $fromAccount, $toAccount);
 
         $transfers = DB::transaction(function () use ($data, $transfer, $fromAccount, $toAccount) {
             /** @var TransferOutgoing $outgoing */
@@ -267,6 +270,8 @@ class TransferExchangeService extends AbstractService
      */
     public function updateTransferStatusToExecuted(array $transfers): void
     {
+        $this->isAllowedOperation($transfers['exchange']);
+
         DB::beginTransaction();
 
         try {
@@ -351,6 +356,17 @@ class TransferExchangeService extends AbstractService
 
         if ($fromAccount->currencies->id == $toAccount->currencies->id) {
             throw new GraphqlException('Account currencies are the same', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    private function isAllowedOperation(TransferExchange $transfer): void
+    {
+        $clientType = Auth::guard('api') ? class_basename(Members::class) : class_basename(ApplicantIndividual::class);
+        if ($transfer->user_type != $clientType) {
+            throw new GraphqlException('This operation is not allowed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 
