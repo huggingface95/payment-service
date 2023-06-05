@@ -160,7 +160,7 @@ input QueryClientListFilterStatic @spread{
     company_id: ID @eq
     group_role_id: ID @eq
     account_number: String @ilike
-    hasClientableFilterById: ID @eq
+    hasClientableFilterById: Mixed @eq
     hasClientableFilterByEmail: String @ilike
     hasClientableFilterByPhone: String @ilike
     hasClientableMixedIdOrFullnameOrName: Mixed @eq
@@ -171,7 +171,7 @@ input QueryClientListActiveFilterStatic @spread{
     company_id: ID @eq
     group_role_id: ID @eq
     account_number: String @ilike
-    hasClientableFilterById: ID @eq
+    hasClientableFilterById: Mixed @eq
     hasClientableFilterByEmail: String @ilike
     hasClientableFilterByPhone: String @ilike
     hasClientableMixedIdOrFullnameOrName: Mixed @eq

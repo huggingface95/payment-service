@@ -2,6 +2,8 @@
 
 namespace App\GraphQL\Handlers;
 
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
 use GraphQL\Error\Error;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +11,6 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Nuwave\Lighthouse\WhereConditions\Operator;
 
@@ -99,10 +100,10 @@ class FilterConditionsHandler
                     $isMorph = true;
                     foreach (($pivotModel ?? $model)->newModelQuery()->distinct()->pluck($relationship->getMorphType())->filter()->all() as $morph) {
                         $morph = Relation::getMorphedModel($morph) ?? $morph;
-                        $condition[$morph] = $this->getMixedColumns($hasConditionArguments[2], $whereConditions, (new $morph())->getTable());
+                        $condition[$morph] = $this->getMixedColumns($hasConditionArguments[2], $whereConditions, (new $morph()));
                     }
                 } else {
-                    $relationshipTableName = $relationship->getRelated()->getTable();
+                    $relationshipTableName = $relationship->getRelated();
                     $condition = $this->getMixedColumns($hasConditionArguments[2], $whereConditions, $relationshipTableName);
                 }
             } else {
@@ -127,7 +128,7 @@ class FilterConditionsHandler
         }
 
         if (isset($whereConditions['column']) && preg_match('/^Mixed(.*)/', $whereConditions['column'], $mixedColumns)) {
-            $condition = $this->getMixedColumns($mixedColumns[1], $whereConditions, $model->getTable());
+            $condition = $this->getMixedColumns($mixedColumns[1], $whereConditions, $model);
             $this->__invoke($builder, $condition, $model);
         }
 
@@ -238,7 +239,7 @@ class FilterConditionsHandler
         return $condition;
     }
 
-    private function getMixedColumns(string $column, array $whereConditions, string $table): ?array
+    private function getMixedColumns(string $column, array $whereConditions, Model $model): ?array
     {
         $condition = null;
 
@@ -251,9 +252,16 @@ class FilterConditionsHandler
         }
 
         foreach ($columns as $column) {
+            if ($column == 'Id' && is_string($whereConditions['value'])){
+                if ($model instanceof ApplicantIndividual && !str_contains($whereConditions['value'], ApplicantIndividual::ID_PREFIX)){
+                    continue;
+                } elseif ($model instanceof ApplicantCompany && !str_contains($whereConditions['value'], ApplicantCompany::ID_PREFIX)){
+                    continue;
+                }
+            }
             $column = strtolower(Str::snake($column));
             try {
-                DB::table($table)->where($column, $whereConditions['operator'], $whereConditions['value'])->exists();
+                $model->newQuery()->where($column, $whereConditions['operator'], $whereConditions['value'])->exists();
             } catch (QueryException) {
                 continue;
             }
