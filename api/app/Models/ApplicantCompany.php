@@ -7,6 +7,7 @@ use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantCompanyUpdatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Scopes\ApplicantIndividualCompanyIdScope;
 use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -85,19 +86,22 @@ class ApplicantCompany extends BaseModel
     ];
 
     protected $casts = [
-        'company_info_additional_fields'=>'array',
-        'contacts_additional_fields'=>'array',
-        'profile_additional_fields'=>'array',
+        'company_info_additional_fields' => 'array',
+        'contacts_additional_fields' => 'array',
+        'profile_additional_fields' => 'array',
         'basic_info_additional_field' => 'array',
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'incorporate_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
+    public const ID_PREFIX = 'AC-';
+
     protected static function booted()
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope());
+        static::addGlobalScope(new ApplicantIndividualCompanyIdScope());
     }
 
     protected static function booting()
@@ -109,6 +113,16 @@ class ApplicantCompany extends BaseModel
     }
 
     protected $appends = ['fullname'];
+
+    public function getKey()
+    {
+        return $this->attributes['id'];
+    }
+
+    public function getIdAttribute(): string
+    {
+        return self::ID_PREFIX . $this->attributes['id'];
+    }
 
     public function getFullnameAttribute()
     {

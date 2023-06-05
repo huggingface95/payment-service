@@ -8,6 +8,7 @@ use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantIndividualUpdatedEvent;
 use App\Models\Clickhouse\ActiveSession;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Scopes\ApplicantIndividualCompanyIdScope;
 use App\Models\Traits\BaseObServerTrait;
 use App\Models\Traits\UserPermission;
 use Carbon\Carbon;
@@ -138,10 +139,13 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'company_name',
     ];
 
+    public const ID_PREFIX = 'AI-';
+
     protected static function booted()
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope());
+        static::addGlobalScope(new ApplicantIndividualCompanyIdScope());
     }
 
     protected static function booting()
@@ -150,6 +154,16 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
             $model->modules()->attach([ModuleEnum::KYC->value]);
         });
         parent::booting();
+    }
+
+    public function getKey()
+    {
+        return $this->attributes['id'];
+    }
+
+    public function getIdAttribute(): string
+    {
+        return self::ID_PREFIX. $this->attributes['id'];
     }
 
     public function getAuthPassword()

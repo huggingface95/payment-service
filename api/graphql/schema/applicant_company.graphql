@@ -3,7 +3,7 @@
 Management -> New Applicant -> Create Company
 """
 type ApplicantCompany {
-    id: ID!
+    id: String!
     "Название"
     name: String
     "email"
