@@ -63,6 +63,30 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'applicantIndividuals',
                                                     'referer' => 'management/applicants/individual/list',
                                                 ],
+                                                [
+                                                    'name' => 'ApplicantIndividualItem',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+                                                    'referer' => 'management/applicants/individual/list',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                    'referer' => 'management/applicants/individual/list',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                    'referer' => 'management/applicants/individual/list',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                    'referer' => 'management/applicants/individual/list',
+                                                ],
                                             ],
                                         ],
                                         'Applicants Individual.Add New Individual' => [
@@ -171,6 +195,61 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'applicantIndividual',
 
                                                 ],
+                                                [
+                                                    'name' => 'ApplicantIndividualLabelsFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividualLabels',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualItem',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantLinkedCompanies',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantLinkedCompanies',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualPersonalInfo',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualBasicInfo',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualProfileData',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualAddress',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualLabelsFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/news/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividualLabels',
+                                                ],
+
                                             ],
                                         ],
                                         'Individual Full Profile:General.Edit' => [
@@ -292,7 +371,116 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
                                                     'type' => 'query',
                                                     'method' => 'modules',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividuals',
+                                                ],
+                                                [
+                                                    'name' => 'GetApplicantModules',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'modules',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividuals',
+                                                ],
 
+
+                                                [
+                                                    'name' => 'GetApplicantModules',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'modules',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividuals',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualItem',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+                                                ],
+                                                [
+                                                    'name' => 'GetIndividualModules',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualItem',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+                                                ],
+                                                [
+                                                    'name' => 'GetIndividualModules',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/modules',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
                                                 ],
                                             ],
 
@@ -470,6 +658,93 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividuals',
+                                                ],
+
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantModulesWithKycFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'modulesWithKyc',
+                                                ],
+                                                [
+                                                    'name' => 'ProjectFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'projects',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividuals',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualItem',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualItem',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+                                                ],
+                                                [
+                                                    'name' => 'GetIndividualActiveSession',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'activeIndividualSession',
+                                                ],
+                                                [
+                                                    'name' => 'GetIndividualActiveSession',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/active-session',
+                                                    'type' => 'query',
+                                                    'method' => 'activeIndividualSession',
+                                                ],
+                                            ]
                                         ],
                                     ],
                                 ],
@@ -489,6 +764,70 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividuals',
+                                                ],
+
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GroupsFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'groupList',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualFilter',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividuals',
+                                                ],
+
+                                                [
+                                                    'name' => 'ApplicantIndividualItem',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+                                                ],
+                                                [
+                                                    'name' => 'GetApplicantIndividualAuthenticationLogs',
+                                                    'referer' => 'management/applicants/individual/full-profile/new/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'authenticationIndividualLogs',
+                                                ],
+                                                [
+                                                    'name' => 'ApplicantIndividualItem',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantIndividual',
+                                                ],
+                                                [
+                                                    'name' => 'GetApplicantIndividualAuthenticationLogs',
+                                                    'referer' => 'management/applicants/individual/full-profile/$id/profile/authentication-log',
+                                                    'type' => 'query',
+                                                    'method' => 'authenticationIndividualLogs',
+                                                ],
+                                            ]
                                         ],
                                     ],
                                 ],
@@ -2086,21 +2425,42 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'settings/manager-roles/list',
                                                     'type' => 'query',
                                                     'method' => 'roles',
-
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'settings/manager-roles/list',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GetGroupTypes',
+                                                    'referer' => 'settings/manager-roles/list',
+                                                    'type' => 'query',
+                                                    'method' => 'group_types',
+                                                ],
+                                                [
+                                                    'name' => 'GetGroupTypes',
+                                                    'referer' => 'settings/manager-roles/settings',
+                                                    'type' => 'query',
+                                                    'method' => 'group_types',
+                                                ],
+                                                [
+                                                    'name' => 'GetRolesFilterNames',
+                                                    'referer' => 'settings/manager-roles/settings',
+                                                    'type' => 'query',
+                                                    'method' => 'roles',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'settings/manager-roles/settings',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
                                                 ],
                                                 [
                                                     'name' => 'GetAllPermissions',
                                                     'referer' => 'settings/manager-roles/settings',
                                                     'type' => 'query',
                                                     'method' => 'permissions',
-
-                                                ],
-                                                [
-                                                    'name' => 'GetAllPermissions',
-                                                    'referer' => 'settings/manager-roles/new',
-                                                    'type' => 'query',
-                                                    'method' => 'permissions',
-
                                                 ],
                                             ],
                                         ],
@@ -2119,7 +2479,41 @@ class PermissionsSeeder extends Seeder
                                                     'parents' => ['Role List.Enabled'],
                                                     'type' => 'mutation',
                                                     'method' => 'createRole',
-
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'parents' => ['Role List.Enabled'],
+                                                    'referer' => 'settings/manager-roles/new',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GetAllPermissions',
+                                                    'parents' => ['Role List.Enabled'],
+                                                    'referer' => 'settings/manager-roles/new',
+                                                    'type' => 'query',
+                                                    'method' => 'permissions',
+                                                ],
+                                                [
+                                                    'name' => 'GetRolePermissions',
+                                                    'parents' => ['Role List.Enabled'],
+                                                    'referer' => 'settings/manager-roles/new',
+                                                    'type' => 'query',
+                                                    'method' => 'role',
+                                                ],
+                                                [
+                                                    'name' => 'GetRole',
+                                                    'parents' => ['Role List.Enabled'],
+                                                    'referer' => 'settings/manager-roles/new',
+                                                    'type' => 'query',
+                                                    'method' => 'role',
+                                                ],
+                                                [
+                                                    'name' => 'GetGroupTypes',
+                                                    'parents' => ['Role List.Enabled'],
+                                                    'referer' => 'settings/manager-roles/new',
+                                                    'type' => 'query',
+                                                    'method' => 'group_types',
                                                 ],
                                             ],
                                         ],
@@ -2341,7 +2735,6 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'settings/manager-groups/settings',
                                                     'type' => 'query',
                                                     'method' => 'groups',
-
                                                 ],
                                                 [
                                                     'name' => 'GetInternalProvideFilter',
