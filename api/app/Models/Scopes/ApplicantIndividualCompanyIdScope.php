@@ -16,8 +16,10 @@ class ApplicantIndividualCompanyIdScope implements Scope
         list($sql, $bindings) = $builder->toRawSql();
 
         $parser = new PHPSQLParser($sql);
-        $this->recursiveOverwriteBindings($parser->parsed['WHERE'], $bindings);
-        $builder->setBindings($bindings);
+        if (isset($parser->parsed['WHERE'])){
+            $this->recursiveOverwriteBindings($parser->parsed['WHERE'], $bindings);
+            $builder->setBindings($bindings);
+        }
 
     }
 
