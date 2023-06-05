@@ -16,6 +16,7 @@ class TransferBetweenObserver extends BaseObserver
         }
 
         $countryId = $model->transferIncoming->account->owner->country_id;
+        $model->transferOutgoing->company->paymentSystemInternal->regions->load('countries');
         $found = $model->transferOutgoing->company->paymentSystemInternal->regions->map(function ($region) use ($countryId) {
             return $region->countries->contains('id', $countryId);
         })->contains(true);
@@ -34,6 +35,7 @@ class TransferBetweenObserver extends BaseObserver
         }
 
         $countryId = $model->transferIncoming->account->owner->country_id;
+        $model->transferOutgoing->company->paymentSystemInternal->regions->load('countries');
         $found = $model->transferOutgoing->company->paymentSystemInternal->regions->map(function ($region) use ($countryId) {
             return $region->countries->contains('id', $countryId);
         })->contains(true);
