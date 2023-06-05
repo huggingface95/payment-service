@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
+use App\Observers\TransferBetweenObserver;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TransferBetween extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'transfer_between_relation';
 
     public $timestamps = false;
@@ -34,5 +38,10 @@ class TransferBetween extends BaseModel
     public function transferIncomingHistory(): HasMany
     {
         return $this->hasMany(TransferIncomingHistory::class, 'transfer_id', 'transfer_incoming_id');
+    }
+
+    public static function getObServer(): string
+    {
+        return TransferBetweenObserver::class;
     }
 }
