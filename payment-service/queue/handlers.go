@@ -5,9 +5,9 @@ import (
 	"payment-service/providers"
 )
 
-func HandleIBAN(paymentProvider providers.PaymentProvider, payload providers.IBANRequester) {
+func HandleIBAN(paymentProvider providers.PaymentProvider, request providers.IBANRequester) {
 	// Вызов метода API провайдера для отправки запроса на генерацию IBAN
-	response, err := paymentProvider.IBAN(payload) // Измените параметры в соответствии с интерфейсом PaymentProvider
+	response, err := paymentProvider.IBAN(request)
 	if err != nil {
 		// Обработка ошибки при вызове метода для генерации IBAN
 		fmt.Printf("Failed to generate IBAN: %v\n", err)
@@ -18,9 +18,9 @@ func HandleIBAN(paymentProvider providers.PaymentProvider, payload providers.IBA
 	fmt.Printf("Generated IBAN response: %v\n", response)
 }
 
-func HandlePayIn(paymentProvider providers.PaymentProvider, payload providers.PayInRequester) {
+func HandlePayIn(paymentProvider providers.PaymentProvider, request providers.PayInRequester) {
 	// Вызов метода API провайдера для отправки запроса на PayIn
-	response, err := paymentProvider.PayIn(payload)
+	response, err := paymentProvider.PayIn(request)
 	if err != nil {
 		fmt.Printf("Failed to PayIn: %v\n", err)
 		return
@@ -30,9 +30,9 @@ func HandlePayIn(paymentProvider providers.PaymentProvider, payload providers.Pa
 	fmt.Printf("PayIn response: %v\n", response)
 }
 
-func HandlePayOut(paymentProvider providers.PaymentProvider, payload providers.PayOutRequester) {
+func HandlePayOut(paymentProvider providers.PaymentProvider, request providers.PayOutRequester) {
 	// Вызов метода API провайдера для отправки запроса на PayOut
-	response, err := paymentProvider.PayOut(payload)
+	response, err := paymentProvider.PayOut(request)
 	if err != nil {
 		fmt.Printf("Failed to PayOut: %v\n", err)
 		return

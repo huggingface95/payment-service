@@ -56,6 +56,16 @@ type IbanPostbackResponse struct {
 	OrderReference string `json:"orderReference"`
 }
 
+// IBANResponse представляет ответ на запрос о выделении IBAN.
+type IBANResponse struct {
+	RequestReference string            `json:"requestReference"`
+	ClientOrder      string            `json:"clientOrder"`
+	OrderReference   string            `json:"orderReference"`
+	Status           string            `json:"status"`
+	ResponseMessages []ResponseMessage `json:"responseMessages"`
+	IBANs            []string          `json:"ibans"`
+}
+
 // PayPostbackRequest представляет общую модель данных для PayIn и PayOut postback.
 type PayPostbackRequest struct {
 	ClientOrder       string                 `json:"clientOrder"`
@@ -100,12 +110,38 @@ type PayoutApproveResponseWrapper struct {
 	ActionResult     []PayoutApproveResponse `json:"actionResult"`
 }
 
-// IBANResponse представляет ответ на запрос о выделении IBAN.
-type IBANResponse struct {
-	RequestReference string            `json:"requestReference"`
-	ClientOrder      string            `json:"clientOrder"`
-	OrderReference   string            `json:"orderReference"`
-	Status           string            `json:"status"`
-	ResponseMessages []ResponseMessage `json:"responseMessages"`
-	IBANs            []string          `json:"ibans"`
+type IBANRequest struct {
+	ClientOrder string     `json:"clientOrder"`
+	PostbackURL string     `json:"postbackUrl"`
+	WalletUUID  string     `json:"walletUuid"`
+	IbansGroup  string     `json:"ibansGroup"`
+	IbanCountry string     `json:"ibanCountry"`
+	Registrant  Registrant `json:"registrant"`
+	CustomInfo  CustomInfo `json:"customInfo"`
+}
+
+type PayInRequest struct {
+	PostbackURL string            `json:"postbackUrl"`
+	ClientOrder string            `json:"clientOrder"`
+	Currency    string            `json:"currency"`
+	Amount      float64           `json:"amount"`
+	Description string            `json:"description"`
+	ProductName string            `json:"productName"`
+	SiteAddress string            `json:"siteAddress"`
+	Label       string            `json:"label"`
+	SuccessURL  string            `json:"successUrl"`
+	FailURL     string            `json:"failUrl"`
+	CustomInfo  interface{}       `json:"customInfo"`
+	Payer       Payer             `json:"payer"`
+	Payee       IndividualRuPayee `json:"payee"`
+}
+
+type PayOutRequest struct {
+	PostbackURL string          `json:"postbackUrl"`
+	ClientOrder string          `json:"clientOrder"`
+	Currency    string          `json:"currency"`
+	Amount      float64         `json:"amount"`
+	Description string          `json:"description"`
+	Payee       IndividualPayee `json:"payee"`
+	CustomInfo  CustomInfo      `json:"customInfo"`
 }

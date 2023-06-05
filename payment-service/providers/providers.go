@@ -22,49 +22,37 @@ type PaymentProvider interface {
 }
 
 type AuthRequester interface {
-	// Методы для получения данных из запроса Auth
 }
 
 type AuthResponder interface {
-	// Методы для получения данных из ответа Auth
 }
 
 type IBANRequester interface {
-	// Методы для получения данных из запроса IBAN
 }
 
-// IBANResponder Содержит методы для получения данных из ответа IBAN
 type IBANResponder interface {
-	// Методы для получения данных из ответа Status
 }
 
 type PayInRequester interface {
-	// Методы для получения данных из запроса PayIn
 }
 
 type PayInResponder interface {
-	// Методы для получения данных из ответа PayIn
 }
 
 type PayOutRequester interface {
-	// Методы для получения данных из запроса PayOut
 }
 
 type PayOutResponder interface {
-	// Методы для получения данных из ответа PayOut
 }
 
 type StatusRequester interface {
-	// Методы для получения данных из запроса Status
 }
 
 type StatusResponder interface {
 }
 
 type PostBackRequester interface {
-	// Методы для получения данных из запроса PostBack
 }
 
 type PostBackResponder interface {
-	// Методы для получения данных из ответа PostBack
 }

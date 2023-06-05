@@ -60,15 +60,12 @@ func (cj *ClearJunction) Auth(request providers.AuthRequester) (providers.AuthRe
 }
 
 func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANResponder, error) {
-	ibanRequest, ok := request.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("invalid IBAN request")
-	}
+	req := request.(map[string]interface{})
 
 	url := fmt.Sprintf("%sv7/gate/allocate/v2/create/iban", cj.BaseURL)
 
 	// Выполнение POST запроса с помощью HTTP клиента из API сервиса
-	responseBody, err := cj.transport.Request(fasthttp.MethodPost, url, ibanRequest, cj.authMiddleware)
+	responseBody, err := cj.transport.Request(fasthttp.MethodPost, url, req, cj.authMiddleware)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send IBAN request: %w", err)
 	}
@@ -84,16 +81,13 @@ func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANRe
 }
 
 func (cj *ClearJunction) PayIn(request providers.PayInRequester) (providers.PayInResponder, error) {
-	payinRequest, ok := request.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("invalid PayIn request")
-	}
+	req := request.(map[string]interface{})
 
 	// Формирование URL для запроса
-	url := fmt.Sprintf("%s/v7/gate/invoice/creditCard", cj.BaseURL)
+	payinURL := fmt.Sprintf("%s/v7/gate/invoice/creditCard", cj.BaseURL)
 
 	// Выполнение запроса с помощью метода Request из пакета utils
-	responseBody, err := cj.transport.Request(fasthttp.MethodPost, url, payinRequest, cj.authMiddleware)
+	responseBody, err := cj.transport.Request(fasthttp.MethodPost, payinURL, req, cj.authMiddleware)
 	if err != nil {
 		return nil, fmt.Errorf("ошибка выполнения запроса: %w", err)
 	}
@@ -109,16 +103,13 @@ func (cj *ClearJunction) PayIn(request providers.PayInRequester) (providers.PayI
 }
 
 func (cj *ClearJunction) PayOut(request providers.PayOutRequester) (providers.PayOutResponder, error) {
-	payoutRequest, ok := request.(map[string]interface{})
-	if !ok {
-		return nil, fmt.Errorf("invalid PayIn request")
-	}
+	req := request.(map[string]interface{})
 
 	// Формирование URL для запроса
-	url := fmt.Sprintf("%s/v7/gate/payout/bankTransfer/swift", cj.BaseURL)
+	payoutURL := fmt.Sprintf("%s/v7/gate/payout/bankTransfer/swift", cj.BaseURL)
 
 	// Выполнение запроса с помощью метода Request из пакета utils
-	responseBody, err := cj.transport.Request(fasthttp.MethodPost, url, payoutRequest, cj.authMiddleware)
+	responseBody, err := cj.transport.Request(fasthttp.MethodPost, payoutURL, req, cj.authMiddleware)
 	if err != nil {
 		return nil, fmt.Errorf("ошибка выполнения запроса: %w", err)
 	}
@@ -134,12 +125,12 @@ func (cj *ClearJunction) PayOut(request providers.PayOutRequester) (providers.Pa
 }
 
 func (cj *ClearJunction) Status(request providers.StatusRequester) (providers.StatusResponder, error) {
-	statusRequest, ok := request.(StatusRequest)
+	req, ok := request.(StatusRequest)
 	if !ok {
 		return nil, fmt.Errorf("invalid request type")
 	}
 
-	url := fmt.Sprintf("%sv7/gate/allocate/v2/list/iban/%s", cj.BaseURL, statusRequest.ClientCustomerId)
+	url := fmt.Sprintf("%sv7/gate/allocate/v2/list/iban/%s", cj.BaseURL, req.ClientCustomerId)
 
 	// Выполнение GET запроса с помощью HTTP клиента из API сервиса
 	responseBody, err := cj.transport.Request(fasthttp.MethodGet, url, nil, cj.authMiddleware)
@@ -168,8 +159,9 @@ func (cj *ClearJunction) PostBack(request providers.PostBackRequester) (provider
 	}
 }
 
-func (cj *ClearJunction) authMiddleware(requestBody []byte) {
-	cj.Auth(AuthRequest{Body: requestBody})
+func (cj *ClearJunction) authMiddleware(requestBody []byte) (err error) {
+	_, err = cj.Auth(AuthRequest{Body: requestBody})
+	return
 }
 
 func (cj *ClearJunction) handleIbanPostback(request *IbanPostbackRequest) (providers.PostBackResponder, error) {

@@ -13,7 +13,7 @@ type FastHTTP struct {
 }
 
 // Request - выполняет HTTP запрос с заданным методом, endpoint-ом и параметрами
-func (c *FastHTTP) Request(method string, endpoint string, params map[string]interface{}, middleware func(requestBody []byte)) ([]byte, error) {
+func (c *FastHTTP) Request(method string, endpoint string, params interface{}, middleware func(requestBody []byte) error) ([]byte, error) {
 	// Создание объекта запроса fasthttp
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
@@ -41,16 +41,26 @@ func (c *FastHTTP) Request(method string, endpoint string, params map[string]int
 
 		req.SetBody(body)
 
-		middleware(body)
+		if middleware != nil {
+			if err := middleware(body); err != nil {
+				return nil, err
+			}
+		}
 	case fiber.MethodGet:
 		req.Header.SetMethod(fiber.MethodGet)
 
 		// Добавление параметров запроса в виде query параметров
-		for key, value := range params {
-			req.URI().QueryArgs().Add(key, fmt.Sprintf("%v", value))
+		if params != nil {
+			for key, value := range params.(map[string]interface{}) {
+				req.URI().QueryArgs().Add(key, fmt.Sprintf("%v", value))
+			}
 		}
 
-		middleware(nil)
+		if middleware != nil {
+			if err := middleware(nil); err != nil {
+				return nil, err
+			}
+		}
 	default:
 		return nil, fmt.Errorf("неподдерживаемый HTTP метод: %s", method)
 	}
