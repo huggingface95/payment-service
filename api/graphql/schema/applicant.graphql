@@ -3,7 +3,7 @@
 Management -> New Applicant -> Create Individual -> General
 """
 type ApplicantIndividual {
-    id: String!
+    id: String! @method(name: "getPrefixAttribute")
     "Имя"
     first_name: String
     "Фамилия"

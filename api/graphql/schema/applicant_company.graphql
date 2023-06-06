@@ -3,7 +3,7 @@
 Management -> New Applicant -> Create Company
 """
 type ApplicantCompany {
-    id: String!
+    id: String! @method(name: "getPrefixAttribute")
     "Название"
     name: String
     "email"

@@ -103,7 +103,7 @@ class CreateTransferIncomingDTO
     //TODO add other parameters too
     private function mergeGeneralData(Account $account): array
     {
-        $clientType = Auth::guard('api') ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString();
+        $clientType = Auth::guard('api')->check() ? ClientTypeEnum::MEMBER->toString() : ClientTypeEnum::APPLICANT->toString();
         $id = Auth::guard('api')->user()?->id ?? Auth::guard('api_client')->user()?->id;
 
         return [
