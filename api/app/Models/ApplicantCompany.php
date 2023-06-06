@@ -114,14 +114,9 @@ class ApplicantCompany extends BaseModel
 
     protected $appends = ['fullname'];
 
-    public function getKey()
+    public function getPrefixAttribute(): string
     {
-        return $this->attributes['id'];
-    }
-
-    public function getIdAttribute(): string
-    {
-        return self::ID_PREFIX . $this->attributes['id'];
+        return self::ID_PREFIX. $this->attributes['id'];
     }
 
     public function getFullnameAttribute()
