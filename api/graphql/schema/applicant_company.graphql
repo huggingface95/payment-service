@@ -115,7 +115,7 @@ extend type Query @guard{
     """
     Получить пользователя  по ID
     """
-    applicantCompany(id: ID @eq): ApplicantCompany   @find
+    applicantCompany(id: String @eq): ApplicantCompany   @find
     """
     Получить список applicant companies
     orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email

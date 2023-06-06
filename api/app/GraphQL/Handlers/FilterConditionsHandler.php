@@ -252,7 +252,7 @@ class FilterConditionsHandler
         }
 
         foreach ($columns as $column) {
-            if ($column == 'Id' && is_string($whereConditions['value'])){
+            if ($column == 'Id' && is_string($whereConditions['value']) && !is_numeric($whereConditions['value'])){
                 if ($model instanceof ApplicantIndividual && !str_contains($whereConditions['value'], ApplicantIndividual::ID_PREFIX)){
                     continue;
                 } elseif ($model instanceof ApplicantCompany && !str_contains($whereConditions['value'], ApplicantCompany::ID_PREFIX)){

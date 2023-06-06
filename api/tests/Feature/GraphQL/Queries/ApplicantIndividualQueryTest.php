@@ -33,18 +33,19 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
+            ->prefixes()
             ->orderBy('id', 'ASC')
             ->get();
 
         $this->postGraphQL(
             [
-                'query' => 'query ApplicantIndividual($id:ID!){
+                'query' => 'query ApplicantIndividual($id:String!){
                     applicantIndividual(id: $id) {
                         id
                     }
                 }',
                 'variables' => [
-                    'id' => (string) $applicant[0]->id,
+                    'id' => (string) $applicant[0]->prefix,
                 ],
             ],
             [
@@ -53,7 +54,7 @@ class ApplicantIndividualQueryTest extends TestCase
         )->seeJson([
             'data' => [
                 'applicantIndividual' => [
-                    'id' => (string) $applicant[0]->id,
+                    'id' => (string) $applicant[0]->prefix,
                 ],
             ],
         ]);
@@ -63,6 +64,7 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
+            ->prefixes()
             ->orderBy('id', 'DESC')
             ->get();
 
@@ -85,7 +87,7 @@ class ApplicantIndividualQueryTest extends TestCase
                     }
                 }',
                 'variables' => [
-                    'id' => (string) $applicant[0]->id,
+                    'id' => (string) $applicant[0]->prefix,
                     'password' => '1234567Za',
                     'password_confirmation' => '1234567Za',
                 ],
@@ -110,6 +112,7 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
+            ->prefixes()
             ->orderBy('id', 'DESC')
             ->get();
 
@@ -128,7 +131,7 @@ class ApplicantIndividualQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant[0]->id,
+                'id' => (string) $applicant[0]->prefix,
             ],
         ]);
     }
@@ -137,6 +140,7 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -162,7 +166,7 @@ class ApplicantIndividualQueryTest extends TestCase
             'data' => [
                 'applicantIndividuals' => [
                     'data' => [[
-                        'id' => (string) $applicant->id,
+                        'id' => (string) $applicant->prefix,
                         'first_name' => (string) $applicant->first_name,
                         'email' => (string) $applicant->email,
                         'url' => (string) $applicant->url,
@@ -176,6 +180,7 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -202,7 +207,7 @@ class ApplicantIndividualQueryTest extends TestCase
             'data' => [
                 'applicantIndividuals' => [
                     'data' => [[
-                        'id' => (string) $applicant->id,
+                        'id' => (string) $applicant->prefix,
                         'first_name' => (string) $applicant->first_name,
                         'email' => (string) $applicant->email,
                         'url' => (string) $applicant->url,
@@ -217,12 +222,13 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $applicants = DB::connection('pgsql_test')
             ->table('applicant_individual')
+            ->prefixes()
             ->where('applicant_risk_level_id', 1)
             ->get();
 
         foreach ($applicants as $applicant) {
             $data[] = [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'first_name' => (string) $applicant->first_name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -264,12 +270,13 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $applicants = DB::connection('pgsql_test')
             ->table('applicant_individual')
+            ->prefixes()
             ->where('applicant_state_reason_id', 1)
             ->get();
 
         foreach ($applicants as $applicant) {
             $data[] = [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'first_name' => (string) $applicant->first_name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -311,12 +318,13 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $applicants = DB::connection('pgsql_test')
             ->table('applicant_individual')
+            ->prefixes()
             ->where('applicant_status_id', 1)
             ->get();
 
         foreach ($applicants as $applicant) {
             $data[] = [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'first_name' => (string) $applicant->first_name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -362,11 +370,12 @@ class ApplicantIndividualQueryTest extends TestCase
 
         $applicants = DB::connection('pgsql_test')
             ->table('applicant_individual')
+            ->prefixes()
             ->where('id', $module->applicant_individual_id)
             ->get();
 
         $data = [
-            'id' => (string) $applicants[0]->id,
+            'id' => (string) $applicants[0]->prefix,
             'first_name' => (string) $applicants[0]->first_name,
             'email' => (string) $applicants[0]->email,
             'url' => (string) $applicants[0]->url,
@@ -403,6 +412,7 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -420,7 +430,7 @@ class ApplicantIndividualQueryTest extends TestCase
                 'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
-            'id' => (string) $applicant->id,
+            'id' => (string) $applicant->prefix,
             'first_name' => (string) $applicant->first_name,
             'email' => (string) $applicant->email,
             'url' => (string) $applicant->url,
@@ -434,6 +444,7 @@ class ApplicantIndividualQueryTest extends TestCase
     {
         $applicants = DB::connection('pgsql_test')
             ->table('applicant_individual')
+            ->prefixes()
             ->where($cond, $value)
             ->orderBy('id', 'ASC')
             ->get();
@@ -442,7 +453,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
         foreach ($applicants as $applicant) {
             $expect['data']['applicantIndividuals']['data'][] = [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'first_name' => (string) $applicant->first_name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,

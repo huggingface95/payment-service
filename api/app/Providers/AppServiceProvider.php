@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
@@ -15,10 +18,10 @@ class AppServiceProvider extends ServiceProvider
         /**
          * Paginate a standard Laravel Collection.
          *
-         * @param  int  $perPage
-         * @param  int  $total
-         * @param  int  $page
-         * @param  string  $pageName
+         * @param int $perPage
+         * @param int $total
+         * @param int $page
+         * @param string $pageName
          * @return array
          */
         Collection::macro('paginate', function ($perPage, $total = null, $page = null, $pageName = 'page') {
@@ -38,6 +41,18 @@ class AppServiceProvider extends ServiceProvider
 
         Str::macro('decimal', function ($amount) {
             return number_format($amount, 5, '.', '');
+        });
+
+        \Illuminate\Database\Query\Builder::macro('prefixes', function () {
+            /** @var Builder $this */
+            if (ApplicantIndividual::query()->getModel()->getTable() == $this->from) {
+                $prefix = ApplicantIndividual::ID_PREFIX;
+            } else {
+                $prefix = ApplicantCompany::ID_PREFIX;
+            }
+            $this->addSelect('*')->selectRaw("concat('{$prefix}', id::text) as prefix");
+
+            return $this;
         });
 
         \Illuminate\Database\Query\Builder::macro('toRawSql', function () {
