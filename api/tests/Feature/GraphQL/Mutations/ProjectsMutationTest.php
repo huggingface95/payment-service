@@ -132,7 +132,6 @@ class ProjectsMutationTest extends TestCase
 
     public function testUpdateProject(): void
     {
-        $this->markTestSkipped('Skipped');
         $project = Project::latest()->first();
 
         $this->postGraphQL(

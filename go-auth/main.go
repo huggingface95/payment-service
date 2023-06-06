@@ -27,10 +27,6 @@ func main() {
 
 	database.RedisConnect(config.Conf.Redis)
 
-	if config.Conf.App.SendEmail {
-		pkg.MailConnect(config.Conf.Email)
-	}
-
 	dto.DTO.Init()
 
 	go jobs.Init()

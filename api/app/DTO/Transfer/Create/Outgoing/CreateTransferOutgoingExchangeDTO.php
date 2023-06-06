@@ -2,6 +2,7 @@
 
 namespace App\DTO\Transfer\Create\Outgoing;
 
+use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
@@ -10,7 +11,7 @@ use Carbon\Carbon;
 
 class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
 {
-    public static function transform(Account $account, int $operationType, string $amount, int $price_list_fee_id): CreateTransferOutgoingDTO
+    public static function transform(Account $account, string $amount, int $price_list_fee_id): CreateTransferOutgoingDTO
     {
         $date = Carbon::now();
 
@@ -21,7 +22,7 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['amount_debt'] = $amount;
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['urgency_id'] = $args['urgency_id'] ?? PaymentUrgencyEnum::STANDART->value;
-        $args['operation_type_id'] = $operationType;
+        $args['operation_type_id'] = OperationTypeEnum::EXCHANGE->value;
         $args['payment_bank_id'] = 2;
         $args['payment_number'] = 'EXCH'.rand();
         $args['payment_provider_id'] = 1;

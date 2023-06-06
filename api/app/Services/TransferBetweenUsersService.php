@@ -88,7 +88,7 @@ class TransferBetweenUsersService extends AbstractService
 
         $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingBetweenUsersDTO::class, $fromAccount, $toAccount, $operationType, $args);
         $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $fromAccount, $operationType, $args, $outgoingDTO->payment_number, $outgoingDTO->created_at);
-        
+
         $transfers = DB::transaction(function () use ($transfer, $outgoingDTO, $incomingDTO) {
             /** @var TransferOutgoing $outgoing */
             $outgoing = $this->transferOutgoingRepository->update($transfer->transferOutgoing, $outgoingDTO->toArray());
@@ -127,7 +127,7 @@ class TransferBetweenUsersService extends AbstractService
                 break;
             case PaymentStatusEnum::REFUND->value:
                 $this->updateTransferStatusToCancelAndRefund($transfers);
-    
+
                 break;
         }
     }
@@ -173,8 +173,6 @@ class TransferBetweenUsersService extends AbstractService
     {
         DB::transaction(function () use ($transfers) {
             $this->transferOutgoingService->updateTransferStatusToPending($transfers['outgoing']);
-            $this->transferOutgoingService->updateTransferStatusToSent($transfers['outgoing']);
-
             $this->transferIncomingService->updateTransferStatusToPending($transfers['incoming']);
         });
     }
@@ -263,7 +261,7 @@ class TransferBetweenUsersService extends AbstractService
                     break;
                 case PaymentStatusEnum::REFUND->value:
                     $errorMessage = 'Transfer has final status which is Refund';
-        
+
                     break;
                 case PaymentStatusEnum::EXECUTED->value:
                     $allowedStatuses = [
@@ -333,7 +331,7 @@ class TransferBetweenUsersService extends AbstractService
     {
         try {
             DB::beginTransaction();
-            
+
             $this->transferOutgoingRepository->detachFileById($transfer->transferOutgoing, $fileIds);
             $this->transferIncomingRepository->detachFileById($transfer->transferIncoming, $fileIds);
 

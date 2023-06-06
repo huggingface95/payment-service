@@ -499,10 +499,9 @@ class AccountsQueryTest extends TestCase
 
     public function testQueryAccountsFilterByIsPrimary(): void
     {
-        $this->markTestSkipped('Skipped');
         $accounts = DB::connection('pgsql_test')
             ->table('accounts')
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->get();
 
         $this->postGraphQL(
@@ -538,7 +537,7 @@ class AccountsQueryTest extends TestCase
     {
         $accounts = DB::connection('pgsql_test')
             ->table('accounts')
-            ->where('current_balance', 100000)
+            ->where('current_balance', 100010)
             ->get();
 
         $response = $this->postGraphQL(
@@ -548,7 +547,7 @@ class AccountsQueryTest extends TestCase
                     accountList(
                         filter: {
                             column: CURRENT_BALANCE
-                            value: 100000
+                            value: 100010
                         }
                     ) {
                         data {

@@ -2,6 +2,7 @@
 
 namespace Feature\GraphQL\Mutations;
 
+use App\Models\TransferBetween;
 use App\Models\TransferIncoming;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -41,7 +42,6 @@ class TransferBetweenAccountsMutationTest extends TestCase
 
     public function testCreateTransferBetweenAccounts(): void
     {
-        $this->markTestSkipped('Skipped');
         $seq = DB::table('transfer_outgoings')
                 ->max('id') + 1;
 
@@ -110,30 +110,22 @@ class TransferBetweenAccountsMutationTest extends TestCase
 
     public function testSignTransferBetweenAccounts(): void
     {
-        $this->markTestSkipped('Skipped');
-        $transfer = TransferIncoming::orderBy('id', 'DESC')->first();
+        $transfer = TransferBetween::orderBy('id', 'DESC')->first();
 
         $this->postGraphQL(
             [
                 'query' => '
-                    mutation SignTransferBetweenAccounts($transfer: ID!, $code: String!) {
+                    mutation SignTransferBetweenAccounts($id: ID!, $code: String!) {
                       signTransferBetweenAccounts(
-                        transfer_incoming_id: $transfer
+                        id: $id
                         code: $code
                       ) {
                         id
-                        amount
-                        amount_debt
-                        payment_number
-                        system_message
-                        reason
-                        channel
-                        bank_message
                       }
                     }
                 ',
                 'variables' => [
-                    'transfer' => $transfer->id,
+                    'id' => $transfer->id,
                     'code' => '658999',
                 ],
             ],
@@ -148,13 +140,6 @@ class TransferBetweenAccountsMutationTest extends TestCase
             'data' => [
                 'signTransferBetweenAccounts' => [
                     'id' => $id['data']['signTransferBetweenAccounts']['id'],
-                    'amount' => $id['data']['signTransferBetweenAccounts']['amount'],
-                    'amount_debt' => $id['data']['signTransferBetweenAccounts']['amount_debt'],
-                    'payment_number' => $id['data']['signTransferBetweenAccounts']['payment_number'],
-                    'system_message' => $id['data']['signTransferBetweenAccounts']['system_message'],
-                    'reason' => $id['data']['signTransferBetweenAccounts']['reason'],
-                    'channel' => $id['data']['signTransferBetweenAccounts']['channel'],
-                    'bank_message' => $id['data']['signTransferBetweenAccounts']['bank_message'],
                 ],
             ],
         ]);
@@ -162,24 +147,16 @@ class TransferBetweenAccountsMutationTest extends TestCase
 
     public function testExecuteTransferBetweenAccounts(): void
     {
-        $this->markTestSkipped('Skipped');
-        $transfer = TransferIncoming::orderBy('id', 'DESC')->first();
+        $transfer = TransferBetween::orderBy('id', 'DESC')->first();
 
         $this->postGraphQL(
             [
                 'query' => '
                     mutation ExecuteTransferBetweenAccounts($transfer: ID!) {
                       executeTransferBetweenAccounts(
-                        transfer_incoming_id: $transfer
+                        id: $transfer
                       ) {
                         id
-                        amount
-                        amount_debt
-                        payment_number
-                        system_message
-                        reason
-                        channel
-                        bank_message
                       }
                     }
                 ',
@@ -198,13 +175,6 @@ class TransferBetweenAccountsMutationTest extends TestCase
             'data' => [
                 'executeTransferBetweenAccounts' => [
                     'id' => $id['data']['executeTransferBetweenAccounts']['id'],
-                    'amount' => $id['data']['executeTransferBetweenAccounts']['amount'],
-                    'amount_debt' => $id['data']['executeTransferBetweenAccounts']['amount_debt'],
-                    'payment_number' => $id['data']['executeTransferBetweenAccounts']['payment_number'],
-                    'system_message' => $id['data']['executeTransferBetweenAccounts']['system_message'],
-                    'reason' => $id['data']['executeTransferBetweenAccounts']['reason'],
-                    'channel' => $id['data']['executeTransferBetweenAccounts']['channel'],
-                    'bank_message' => $id['data']['executeTransferBetweenAccounts']['bank_message'],
                 ],
             ],
         ]);

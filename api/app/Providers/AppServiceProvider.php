@@ -39,6 +39,21 @@ class AppServiceProvider extends ServiceProvider
         Str::macro('decimal', function ($amount) {
             return number_format($amount, 5, '.', '');
         });
+
+        \Illuminate\Database\Query\Builder::macro('toRawSql', function () {
+            $bindings = $this->getBindings();
+            return [array_reduce($bindings, function ($sql, $binding) {
+                return preg_replace('/\?/', is_numeric($binding) ? $binding : sprintf('"%s"', $binding), $sql, 1);
+            }, $this->toSql()),
+                $bindings
+            ];
+        });
+
+        \Illuminate\Database\Eloquent\Builder::macro('toRawSql', function () {
+            return ($this->getQuery()->toRawSql());
+        });
+
+
     }
 
     /**
