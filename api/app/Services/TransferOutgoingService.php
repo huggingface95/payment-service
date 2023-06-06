@@ -100,10 +100,8 @@ class TransferOutgoingService extends AbstractService
                 $executionAt = Carbon::parse($transfer->execution_at)->format('Y-m-d');
                 if ($date->lt($executionAt)) {
                     if ($args['status_id'] == PaymentStatusEnum::SENT->value) {
-                        throw new GraphqlException('The execution date has not yet arrived, please change the execution date', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                        throw new GraphqlException('The execution date has not yet arrived, please wait for the execution date', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
-    
-                    throw new GraphqlException('Waiting execution date', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
 
                 break;
@@ -170,6 +168,10 @@ class TransferOutgoingService extends AbstractService
                 $this->updateTransferStatusToCancelOrError($transfer, $args['status_id']);
 
                 break;
+            case PaymentStatusEnum::WAITING_EXECUTION_DATE->value:
+                $this->updateTransferStatusToWaitingExecutionDate($transfer);
+
+                break;
             case PaymentStatusEnum::SENT->value:
                 $this->updateTransferStatusToSent($transfer);
 
@@ -203,6 +205,17 @@ class TransferOutgoingService extends AbstractService
             }
 
             $this->transferRepository->update($transfer, $args);
+
+            $this->createTransferHistory($transfer);
+        });
+    }
+
+    private function updateTransferStatusToWaitingExecutionDate(TransferOutgoing $transfer): void
+    {
+        DB::transaction(function () use ($transfer) {
+            $this->transferRepository->update($transfer, [
+                'status_id' => PaymentStatusEnum::WAITING_EXECUTION_DATE->value,
+            ]);
 
             $this->createTransferHistory($transfer);
         });
