@@ -34,18 +34,19 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->orderBy('id', 'ASC')
             ->get();
 
         $this->postGraphQL(
             [
-                'query' => 'query ApplicantCompany($id:ID!){
+                'query' => 'query ApplicantCompany($id:String!){
                     applicantCompany(id: $id) {
                         id
                     }
                 }',
                 'variables' => [
-                    'id' => (string) $applicant[0]->id,
+                    'id' => (string) $applicant[0]->prefix,
                 ],
             ],
             [
@@ -54,7 +55,7 @@ class ApplicantCompanyQueryTest extends TestCase
         )->seeJson([
             'data' => [
                 'applicantCompany' => [
-                    'id' => (string) $applicant[0]->id,
+                    'id' => (string) $applicant[0]->prefix,
                 ],
             ],
         ]);
@@ -66,6 +67,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->orderBy('id', 'ASC')
             ->get();
 
@@ -85,7 +87,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant[0]->id,
+                'id' => (string) $applicant[0]->prefix,
             ],
         ]);
     }
@@ -94,6 +96,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -106,7 +109,7 @@ class ApplicantCompanyQueryTest extends TestCase
                         }
                 }',
                 'variables' => [
-                    'id' => (string) $applicant->id,
+                    'id' => (string) $applicant->prefix,
                 ],
             ],
             [
@@ -114,7 +117,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
             ],
         ]);
     }
@@ -227,6 +230,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -242,7 +246,7 @@ class ApplicantCompanyQueryTest extends TestCase
                     }
                 }',
                 'variables' => [
-                    'id' => (string) $applicant->id,
+                    'id' => (string) $applicant->prefix,
                 ],
             ],
             [
@@ -250,7 +254,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -262,6 +266,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -285,7 +290,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -297,6 +302,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -320,7 +326,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -332,6 +338,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->orderBy('id', 'DESC')
             ->whereNotNull('project_id')
             ->first();
@@ -357,7 +364,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -369,6 +376,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->whereNotNull('applicant_risk_level_id')
             ->first();
 
@@ -393,7 +401,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -405,6 +413,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->orderBy('id', 'DESC')
             ->first();
 
@@ -429,7 +438,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -441,6 +450,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->orderBy('id', 'DESC')
             ->first();
 
@@ -465,7 +475,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -477,6 +487,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->orderBy('id', 'DESC')
             ->first();
 
@@ -501,7 +512,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -518,6 +529,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->where('id', $modules->applicant_company_id)
             ->orderBy('id', 'DESC')
             ->first();
@@ -543,7 +555,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -555,6 +567,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -578,7 +591,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -590,6 +603,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -613,7 +627,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -625,6 +639,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -648,7 +663,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -660,6 +675,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -683,7 +699,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,
@@ -695,6 +711,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
+            ->prefixes()
             ->first();
 
         $this->postGraphQL(
@@ -718,7 +735,7 @@ class ApplicantCompanyQueryTest extends TestCase
             ]
         )->seeJsonContains([
             [
-                'id' => (string) $applicant->id,
+                'id' => (string) $applicant->prefix,
                 'name' => (string) $applicant->name,
                 'email' => (string) $applicant->email,
                 'url' => (string) $applicant->url,

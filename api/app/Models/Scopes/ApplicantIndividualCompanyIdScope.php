@@ -41,7 +41,7 @@ class ApplicantIndividualCompanyIdScope implements Scope
                 if (in_array($where[0]['base_expr'], ['"applicant_individual"."id"', '"applicant_companies"."id"', '"id"'])) {
                     if (is_string($where[$value]['base_expr']) && preg_match(sprintf("/(%s)|(%s)/", ApplicantIndividual::ID_PREFIX, ApplicantCompany::ID_PREFIX), $where[$value]['base_expr'])) {
                         preg_replace_callback(sprintf('/(%s[0-9]+)|(%s[0-9]+)/', ApplicantIndividual::ID_PREFIX, ApplicantCompany::ID_PREFIX), function ($m) use (&$bindings, &$i) {
-                            $bindings[$i] = (int)preg_replace(sprintf('/(%s)|(%s)/', ApplicantIndividual::ID_PREFIX, ApplicantCompany::ID_PREFIX), '', $m[1]);
+                            $bindings[$i] = (int)preg_replace(sprintf('/(%s)|(%s)/', ApplicantIndividual::ID_PREFIX, ApplicantCompany::ID_PREFIX), '', $m[0]);
                             $i++;
                         }, $where[$value]['base_expr']);
                     }

@@ -1476,7 +1476,7 @@ class AccountsQueryTest extends TestCase
             ->unique()
             ->map(function ($client) {
                 return [
-                    'id' => (string) $client->id,
+                    'id' => (string) $client->prefix,
                 ];
             })
             ->values()
@@ -1517,7 +1517,7 @@ class AccountsQueryTest extends TestCase
             ->unique()
             ->map(function ($client) {
                 return [
-                    'id' => (string) $client->id,
+                    'id' => (string) $client->prefix,
                 ];
             })
             ->values()
@@ -1559,7 +1559,7 @@ class AccountsQueryTest extends TestCase
             ->unique()
             ->map(function ($client) {
                 return [
-                    'id' => (string) $client->id,
+                    'id' => (string) $client->prefix,
                 ];
             })
             ->values()
