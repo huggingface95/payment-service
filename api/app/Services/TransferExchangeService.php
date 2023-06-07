@@ -364,7 +364,7 @@ class TransferExchangeService extends AbstractService
      */
     private function isAllowedOperation(TransferExchange $transfer): void
     {
-        $clientType = Auth::guard('api') ? class_basename(Members::class) : class_basename(ApplicantIndividual::class);
+        $clientType = Auth::guard('api')->check() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class);
         if ($transfer->user_type != $clientType) {
             throw new GraphqlException('This operation is not allowed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
