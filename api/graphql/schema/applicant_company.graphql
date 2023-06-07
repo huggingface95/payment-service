@@ -328,7 +328,7 @@ extend type Mutation @guard {
     ): ApplicantCompany   @delete
 
     "Изменить статус applicant company"
-    updateApplicantCompanyVerificationStatus(
+    updateApplicantCompanyStatus(
         id: ID!
         "ID статуса"
         applicant_status_id: ID!

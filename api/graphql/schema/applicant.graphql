@@ -297,7 +297,7 @@ extend type Mutation @guard {
     """
     Изменить статус аппликанта
     """
-    updateApplicantIndividualVerificationStatus(
+    updateApplicantIndividualStatus(
         id: ID!
         "ID статуса"
         applicant_status_id: ID!
