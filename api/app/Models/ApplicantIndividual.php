@@ -156,6 +156,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         parent::booting();
     }
 
+    public function getPrefixName(): string
+    {
+        return self::ID_PREFIX;
+    }
+
     public function getPrefixAttribute(): string
     {
         return self::ID_PREFIX. $this->attributes['id'];
