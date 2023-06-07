@@ -7,8 +7,12 @@ use App\Models\TransferIncoming;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+/**
+ * @group payments
+ */
 class TransferBetweenAccountsMutationTest extends TestCase
 {
+
     /**
      * Transfer Between Accounts Mutation Testing
      *

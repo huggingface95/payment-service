@@ -6,6 +6,9 @@ use App\Enums\PaymentStatusEnum;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+/**
+ * @group payments
+ */
 class TransferExchangeMutationTest extends TestCase
 {
     /**

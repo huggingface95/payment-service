@@ -5,6 +5,9 @@ namespace Tests;
 use App\Models\Account;
 use App\Models\Payments;
 
+/**
+ * @group payments
+ */
 class PaymentsQueryTest extends TestCase
 {
     public function testQueryPaymentsNoAuth(): void
