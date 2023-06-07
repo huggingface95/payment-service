@@ -7,11 +7,14 @@ use App\Exceptions\GraphqlException;
 use App\Models\AccountState;
 use App\Models\ApplicantIndividual;
 use App\Models\TransferIncoming;
+use App\Observers\Traits\AmountValidationTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class TransferIncomingObserver extends BaseObserver
 {
+    use AmountValidationTrait;
+
     public function creating(TransferIncoming|Model $model, bool $callHistory = false): bool
     {
         if (!parent::creating($model, $callHistory)) {
@@ -28,6 +31,7 @@ class TransferIncomingObserver extends BaseObserver
             throw new GraphqlException('Account must be active', 'use');
         }
 
+        $this->checkAmountPositive($model);
         $this->checkAndCreateHistory($model, 'creating');
 
         return true;
@@ -49,6 +53,7 @@ class TransferIncomingObserver extends BaseObserver
             throw new GraphqlException('Account must be active', 'use');
         }
 
+        $this->checkAmountPositive($model);
         $this->checkAndCreateHistory($model, 'updating');
 
         return true;
