@@ -3,7 +3,7 @@
 Management -> New Applicant -> Create Individual -> General
 """
 type ApplicantIndividual {
-    id: String!
+    id: String! @method(name: "getPrefixAttribute")
     "Имя"
     first_name: String
     "Фамилия"
@@ -120,7 +120,7 @@ extend type Query @guard {
     """
     Получить пользователя  по ID
     """
-    applicantIndividual(id: ID @eq): ApplicantIndividual @find
+    applicantIndividual(id: String @eq): ApplicantIndividual @find
 
     """
     Получить список частных пользователей
@@ -297,7 +297,7 @@ extend type Mutation @guard {
     """
     Изменить статус аппликанта
     """
-    updateApplicantIndividualVerificationStatus(
+    updateApplicantIndividualStatus(
         id: ID!
         "ID статуса"
         applicant_status_id: ID!

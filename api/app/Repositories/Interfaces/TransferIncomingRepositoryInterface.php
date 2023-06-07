@@ -17,5 +17,7 @@ interface TransferIncomingRepositoryInterface
 
     public function update(Model|Builder $model, array $data): Model|Builder;
 
-    public function getPriceListIdByArgs(array $args, string $clientType): int|null;
+    public function getCommissionPriceListIdByArgs(array $args, string $clientType): int|null;
+
+    public function getRegionIdByArgs(array $args): int|null;
 }

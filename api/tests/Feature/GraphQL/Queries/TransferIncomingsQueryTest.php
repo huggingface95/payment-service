@@ -7,6 +7,9 @@ use App\Models\TransferIncoming;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+/**
+ * @group payments
+ */
 class TransferIncomingsQueryTest extends TestCase
 {
     public function testQueryTransferIncomingsNoAuth(): void

@@ -156,12 +156,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         parent::booting();
     }
 
-    public function getKey()
-    {
-        return $this->attributes['id'];
-    }
-
-    public function getIdAttribute(): string
+    public function getPrefixAttribute(): string
     {
         return self::ID_PREFIX. $this->attributes['id'];
     }

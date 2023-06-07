@@ -24,5 +24,7 @@ interface TransferOutgoingRepositoryInterface
 
     public function getSumOfMonthlySentTransfersByApplicantIndividualId(int $applicantId): float;
 
-    public function getPriceListIdByArgs(array $args, string $clientType): int|null;
+    public function getCommissionPriceListIdByArgs(array $args, string $clientType): int|null;
+
+    public function getRegionIdByArgs(array $args): int|null;
 }

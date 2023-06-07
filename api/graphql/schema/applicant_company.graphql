@@ -3,7 +3,7 @@
 Management -> New Applicant -> Create Company
 """
 type ApplicantCompany {
-    id: String!
+    id: String! @method(name: "getPrefixAttribute")
     "Название"
     name: String
     "email"
@@ -115,7 +115,7 @@ extend type Query @guard{
     """
     Получить пользователя  по ID
     """
-    applicantCompany(id: ID @eq): ApplicantCompany   @find
+    applicantCompany(id: String @eq): ApplicantCompany   @find
     """
     Получить список applicant companies
     orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email
@@ -328,7 +328,7 @@ extend type Mutation @guard {
     ): ApplicantCompany   @delete
 
     "Изменить статус applicant company"
-    updateApplicantCompanyVerificationStatus(
+    updateApplicantCompanyStatus(
         id: ID!
         "ID статуса"
         applicant_status_id: ID!

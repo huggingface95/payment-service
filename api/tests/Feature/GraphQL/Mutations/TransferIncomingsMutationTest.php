@@ -6,6 +6,9 @@ use App\Models\TransferIncoming;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+/**
+ * @group payments
+ */
 class TransferIncomingsMutationTest extends TestCase
 {
     /**

@@ -32,16 +32,12 @@ class ApplicantTransferOutgoingMutator extends BaseMutator
      * @throws EmailException
      * @throws GraphqlException
      */
-    public function create($root, array $args): TransferOutgoing
+    public function create($_, array $args): TransferOutgoing
     {
         $this->checkLimitService->checkLimits(TransformerDTO::transform(CheckLimitDTO::class, new TransferOutgoing($args), $args['amount']));
 
         /** @var TransferOutgoing $transfer */
         $transfer = $this->transferService->createTransfer($args, OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value);
-
-        if ($transfer) {
-            $this->transferService->attachFileById($transfer, $args['file_id'] ?? []);
-        }
 
         return $transfer;
     }

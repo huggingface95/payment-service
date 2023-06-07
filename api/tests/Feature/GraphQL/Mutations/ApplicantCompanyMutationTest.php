@@ -151,7 +151,7 @@ class ApplicantCompanyMutationTest extends TestCase
         ]);
     }
 
-    public function testUpdateApplicantCompanyVerificationStatus(): void
+    public function testUpdateApplicantCompanyStatus(): void
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
@@ -161,12 +161,12 @@ class ApplicantCompanyMutationTest extends TestCase
         $this->postGraphQL(
             [
                 'query' => '
-                mutation UpdateApplicantCompanyVerificationStatus(
+                mutation UpdateApplicantCompanyStatus(
                     $id: ID!
                     $applicant_status_id: ID!
                 )
                 {
-                    updateApplicantCompanyVerificationStatus (
+                    updateApplicantCompanyStatus (
                         id: $id
                         applicant_status_id: $applicant_status_id
                     )
@@ -189,9 +189,9 @@ class ApplicantCompanyMutationTest extends TestCase
 
         $this->seeJson([
             'data' => [
-                'updateApplicantCompanyVerificationStatus' => [
-                    'id' => $id['data']['updateApplicantCompanyVerificationStatus']['id'],
-                    'email' => $id['data']['updateApplicantCompanyVerificationStatus']['email'],
+                'updateApplicantCompanyStatus' => [
+                    'id' => $id['data']['updateApplicantCompanyStatus']['id'],
+                    'email' => $id['data']['updateApplicantCompanyStatus']['email'],
                 ],
             ],
         ]);
