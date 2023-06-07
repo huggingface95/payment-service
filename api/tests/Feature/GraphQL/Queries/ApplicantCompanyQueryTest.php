@@ -40,7 +40,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
         $this->postGraphQL(
             [
-                'query' => 'query ApplicantCompany($id:String!){
+                'query' => 'query ApplicantCompany($id:ID!){
                     applicantCompany(id: $id) {
                         id
                     }

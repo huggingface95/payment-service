@@ -97,6 +97,8 @@ class ApplicantCompany extends BaseModel
 
     public const ID_PREFIX = 'AC-';
 
+    protected $appends = ['fullname'];
+
     protected static function booted()
     {
         parent::booted();
@@ -112,7 +114,10 @@ class ApplicantCompany extends BaseModel
         parent::booting();
     }
 
-    protected $appends = ['fullname'];
+    public function getPrefixName(): string
+    {
+        return self::ID_PREFIX;
+    }
 
     public function getPrefixAttribute(): string
     {

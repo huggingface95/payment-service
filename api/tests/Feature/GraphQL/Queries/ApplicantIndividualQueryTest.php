@@ -39,7 +39,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
         $this->postGraphQL(
             [
-                'query' => 'query ApplicantIndividual($id:String!){
+                'query' => 'query ApplicantIndividual($id:ID!){
                     applicantIndividual(id: $id) {
                         id
                     }
