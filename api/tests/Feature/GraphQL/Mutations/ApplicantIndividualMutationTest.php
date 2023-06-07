@@ -160,7 +160,7 @@ class ApplicantIndividualMutationTest extends TestCase
         ]);
     }
 
-    public function testUpdateApplicantIndividualVerificationStatus(): void
+    public function testUpdateApplicantIndividualStatus(): void
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
@@ -170,12 +170,12 @@ class ApplicantIndividualMutationTest extends TestCase
         $this->postGraphQL(
             [
                 'query' => '
-                mutation UpdateApplicantIndividualVerificationStatus(
+                mutation UpdateApplicantIndividualStatus(
                     $id: ID!
                     $status_id: ID!
                 )
                 {
-                    updateApplicantIndividualVerificationStatus (
+                    updateApplicantIndividualStatus (
                         id: $id
                         applicant_status_id: $status_id
                     )
@@ -198,9 +198,9 @@ class ApplicantIndividualMutationTest extends TestCase
 
         $this->seeJson([
             'data' => [
-                'updateApplicantIndividualVerificationStatus' => [
-                    'id' => $id['data']['updateApplicantIndividualVerificationStatus']['id'],
-                    'email' => $id['data']['updateApplicantIndividualVerificationStatus']['email'],
+                'updateApplicantIndividualStatus' => [
+                    'id' => $id['data']['updateApplicantIndividualStatus']['id'],
+                    'email' => $id['data']['updateApplicantIndividualStatus']['email'],
                 ],
             ],
         ]);
