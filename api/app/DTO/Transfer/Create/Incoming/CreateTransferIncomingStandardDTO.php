@@ -4,6 +4,7 @@ namespace App\DTO\Transfer\Create\Incoming;
 
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
+use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\PriceListFee;
 use App\Repositories\TransferIncomingRepository;
@@ -16,12 +17,13 @@ class CreateTransferIncomingStandardDTO extends CreateTransferIncomingDTO
         $account = Account::findOrFail($args['account_id']);
         $args['company_id'] = $account->company_id;
 
-        $args['price_list_id'] ??= $repository->getPriceListIdByArgs($args, $account->client_type);
+        $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('Region not found', 'use');
+        $args['price_list_id'] = $repository->getCommissionPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found', 'use');
 
-        $args['price_list_fee_id'] ??= PriceListFee::query()
+        $args['price_list_fee_id'] = PriceListFee::query()
             ->where('price_list_id', '=', $args['price_list_id'])
             ->where('operation_type_id', '=', $operationType)
-            ->first()?->id;
+            ->first()?->id ?? throw new GraphqlException('Price list fee not found', 'use');
 
         $date = Carbon::now();
 

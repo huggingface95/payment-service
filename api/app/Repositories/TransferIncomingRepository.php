@@ -71,15 +71,9 @@ class TransferIncomingRepository extends Repository implements TransferIncomingR
         return $model;
     }
 
-    public function getPriceListIdByArgs(array $args, string $clientType): int|null
+    public function getCommissionPriceListIdByArgs(array $args, string $clientType): int|null
     {
-        $regionId = Region::query()
-            ->join('region_countries', 'regions.id', '=', 'region_countries.region_id')
-            ->where('region_countries.country_id', '=', $args['sender_country_id'])
-            ->where('regions.company_id', '=', $args['company_id'])
-            ->first()?->id;
-
-        $priceListId = CommissionPriceList::query()
+        return CommissionPriceList::query()
             ->where('company_id', '=', $args['company_id'])
             ->where('commission_template_id', '=', function ($query) use ($args, $clientType) {
                 $query->select('project_settings.commission_template_id')
@@ -90,9 +84,16 @@ class TransferIncomingRepository extends Repository implements TransferIncomingR
             })
             ->where('provider_id', '=', $args['payment_provider_id'])
             ->where('payment_system_id', '=', $args['payment_system_id'])
-            ->where('region_id', '=', $regionId)
+            ->where('region_id', '=', $args['region_id'])
             ->first()?->id;
+    }
 
-        return $priceListId;
+    public function getRegionIdByArgs(array $args): int|null
+    {
+        return Region::query()
+            ->join('region_countries', 'regions.id', '=', 'region_countries.region_id')
+            ->where('region_countries.country_id', '=', $args['sender_country_id'])
+            ->where('regions.company_id', '=', $args['company_id'])
+            ->first()?->id;
     }
 }
