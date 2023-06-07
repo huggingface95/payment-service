@@ -5133,6 +5133,43 @@ class PermissionsSeeder extends Seeder
                                                     'type' => 'query',
                                                     'method' => 'accountStates',
                                                 ],
+                                                [
+                                                    'name' => 'DownloadPDFStatement',
+                                                    'referer' => 'banking/accounts/details/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'downloadAccountStatementPdf',
+                                                ],
+                                                [
+                                                    'name' => 'DownloadCSVStatement',
+                                                    'referer' => 'banking/accounts/details/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'downloadAccountStatementCsv',
+                                                ],
+                                                [
+                                                    'name' => 'DownloadExcelStatement',
+                                                    'referer' => 'banking/accounts/details/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'downloadAccountStatementXls',
+                                                ],
+                                                [
+                                                    'name' => 'DownloadPDFStatement',
+                                                    'referer' => 'banking/accounts/details',
+                                                    'type' => 'query',
+                                                    'method' => 'downloadAccountStatementPdf',
+                                                ],
+                                                [
+                                                    'name' => 'DownloadCSVStatement',
+                                                    'referer' => 'banking/accounts/details',
+                                                    'type' => 'query',
+                                                    'method' => 'downloadAccountStatementCsv',
+                                                ],
+                                                [
+                                                    'name' => 'DownloadExcelStatement',
+                                                    'referer' => 'banking/accounts/details',
+                                                    'type' => 'query',
+                                                    'method' => 'downloadAccountStatementXls',
+                                                ],
+
                                             ],
                                         ],
                                         'Account Details.Edit' => [
@@ -5251,8 +5288,26 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'banking/accounts/requisites',
                                                     'type' => 'query',
                                                     'method' => 'requisite',
-
                                                 ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/accounts/requisites',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'GetAccountFilterSelects',
+                                                    'referer' => 'banking/accounts/requisites',
+                                                    'type' => 'query',
+                                                    'method' => 'accountList',
+                                                ],
+                                                [
+                                                    'name' => 'GetAccountFilterBar',
+                                                    'referer' => 'banking/accounts/requisites',
+                                                    'type' => 'query',
+                                                    'method' => 'accountList',
+                                                ],
+
                                             ],
                                         ],
                                         'Requisites.Export' => [
@@ -5871,7 +5926,7 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'CommissionTemplatesList',
-                                                    'referer' => 'banking/payment-provider/full-profile/commission-templates',
+                                                    'referer' => 'banking/commission-templates/commission-template',
                                                     'type' => 'query',
                                                     'method' => 'commissionTemplates',
                                                 ],
@@ -5886,6 +5941,12 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'banking/commission-templates/commission-template',
                                                     'type' => 'query',
                                                     'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderFilter',
+                                                    'referer' => 'banking/commission-templates/commission-template',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
                                                 ],
                                             ],
                                         ],
@@ -5929,10 +5990,74 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'CommissionTemplatesFilterList',
-                                                    'referer' => 'banking/payment-provider/full-profile/settings/create',
+                                                    'referer' => 'banking/commission-templates/settings/edit/$id',
                                                     'type' => 'query',
                                                     'method' => 'commissionTemplates',
+                                                ],
+                                                [
+                                                    'name' => 'CommissionTemplateItem',
+                                                    'referer' => 'banking/commission-templates/settings/edit/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'commissionTemplate',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentSystemFilter',
+                                                    'referer' => 'banking/commission-templates/settings/edit/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
+                                                [
+                                                    'name' => 'BusinessActivityFilter',
+                                                    'referer' => 'banking/commission-templates/settings/edit/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'businessActivities',
+                                                ],
 
+                                                [
+                                                    'name' => 'CommissionTemplatesFilterList',
+                                                    'referer' => 'banking/commission-templates/settings/create',
+                                                    'type' => 'query',
+                                                    'method' => 'commissionTemplates',
+                                                ],
+                                                [
+                                                    'name' => 'CommissionTemplateItem',
+                                                    'referer' => 'banking/commission-templates/settings/create',
+                                                    'type' => 'query',
+                                                    'method' => 'commissionTemplate',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentSystemFilter',
+                                                    'referer' => 'banking/commission-templates/settings/create',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
+                                                [
+                                                    'name' => 'BusinessActivityFilter',
+                                                    'referer' => 'banking/commission-templates/settings/create',
+                                                    'type' => 'query',
+                                                    'method' => 'businessActivities',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/commission-templates/settings/create',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],[
+                                                    'name' => 'PaymentProviderFilter',
+                                                    'referer' => 'banking/commission-templates/settings/create',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/commission-templates/settings/edit/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],[
+                                                    'name' => 'PaymentProviderFilter',
+                                                    'referer' => 'banking/commission-templates/settings/edit/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
                                                 ],
                                             ],
                                         ],
@@ -6014,10 +6139,21 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'CommissionPriceLists',
-                                                    'referer' => 'banking/payment-provider/full-profile/price-lists',
+                                                    'referer' => 'banking/commission-templates/price-lists',
                                                     'type' => 'query',
                                                     'method' => 'commissionPriceLists',
-
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/commission-templates/price-lists',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderFilter',
+                                                    'referer' => 'banking/commission-templates/price-lists',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
                                                 ],
                                             ],
                                         ],
@@ -6032,7 +6168,7 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'CreateCommissionPriceList',
-                                                    'referer' => 'banking/payment-provider/full-profile/price-lists',
+                                                    'referer' => 'banking/commission-templates/full-profile/price-lists',
                                                     'parents' => ['Commission Template:Price Lists.Enabled'],
                                                     'type' => 'mutation',
                                                     'method' => 'createCommissionPriceList',
@@ -6061,7 +6197,7 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'GetPriceListFees',
-                                                    'referer' => 'banking/payment-provider/full-profile/fees',
+                                                    'referer' => 'banking/commission-templates/full-profile/fees',
                                                     'type' => 'query',
                                                     'method' => 'priceListFees',
 
@@ -6079,7 +6215,7 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'UpdatePriceListFee',
-                                                    'referer' => 'banking/payment-provider/full-profile/fees',
+                                                    'referer' => 'banking/commission-templates/full-profile/fees',
                                                     'parents' => ['Commission Template:Price Lists:Fees List.Enabled'],
                                                     'type' => 'mutation',
                                                     'method' => 'updatePriceListFees',
@@ -6098,7 +6234,7 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'DeletePriceListFee',
-                                                    'referer' => 'banking/payment-provider/full-profile/fees',
+                                                    'referer' => 'banking/commission-templates/full-profile/fees',
                                                     'parents' => ['Commission Template:Price Lists:Fees List.Enabled'],
                                                     'type' => 'mutation',
                                                     'method' => 'deletePriceListFees',
@@ -6127,14 +6263,14 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'FeesPaymentSystems',
-                                                    'referer' => 'banking/payment-provider/full-profile/fees',
+                                                    'referer' => 'banking/commission-templates/full-profile/fees',
                                                     'type' => 'query',
                                                     'method' => 'paymentSystems',
 
                                                 ],
                                                 [
                                                     'name' => 'GetFeeTypes',
-                                                    'referer' => 'banking/payment-provider/full-profile/fees',
+                                                    'referer' => 'banking/commission-templates/full-profile/fees',
                                                     'type' => 'query',
                                                     'method' => 'feeTypes',
 
