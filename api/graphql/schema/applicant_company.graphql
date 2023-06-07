@@ -3,7 +3,7 @@
 Management -> New Applicant -> Create Company
 """
 type ApplicantCompany {
-    id: String! @method(name: "getPrefixAttribute")
+    id: ID! @method(name: "getPrefixAttribute")
     "Название"
     name: String
     "email"
@@ -115,7 +115,7 @@ extend type Query @guard{
     """
     Получить пользователя  по ID
     """
-    applicantCompany(id: String @eq): ApplicantCompany   @find
+    applicantCompany(id: ID @eq): ApplicantCompany   @find
     """
     Получить список applicant companies
     orderBy: [{ column: FIRST_NAME, order: DESC }] сортировка по ID, по имени, фамилии, email
