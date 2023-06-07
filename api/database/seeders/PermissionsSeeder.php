@@ -3071,6 +3071,14 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'company',
 
                                                 ],
+
+                                                [
+                                                    'name' => 'GetMemberCompanyById',
+                                                    'referer' => 'administration/member-info/full-profile/$id/profile/general',
+                                                    'type' => 'mutation',
+                                                    'method' => 'company',
+
+                                                ],
                                                 [
                                                     'name' => 'GetSettingsCompanyById',
                                                     'referer' => 'administration/member-info/full-profile/$id/profile/general',
@@ -3078,6 +3086,75 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'company',
 
                                                 ],
+                                                [
+                                                    'name' => 'GetProfileDataCompanyById',
+                                                    'referer' => 'administration/member-info/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'company',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'administration/member-info/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+
+                                                [
+                                                    'name' => 'TypeOfIndustriesFilter',
+                                                    'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'typeOfIndustries',
+                                                ],
+                                                [
+                                                    'name' => 'StatesFilter',
+                                                    'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'states',
+                                                ],
+                                                [
+                                                    'name' => 'StateReasonsFilter',
+                                                    'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'stateReasons',
+                                                ],
+                                                [
+                                                    'name' => 'GetEmployees',
+                                                    'referer' => 'administration/member-info/full-profile/new/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'employees',
+                                                ],
+
+                                                [
+                                                    'name' => 'TypeOfIndustriesFilter',
+                                                    'referer' => 'administration/member-info/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'typeOfIndustries',
+                                                ],
+                                                [
+                                                    'name' => 'StatesFilter',
+                                                    'referer' => 'administration/member-info/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'states',
+                                                ],
+                                                [
+                                                    'name' => 'StateReasonsFilter',
+                                                    'referer' => 'administration/member-info/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'stateReasons',
+                                                ],
+                                                [
+                                                    'name' => 'GetEmployees',
+                                                    'referer' => 'administration/member-info/full-profile/$id/profile/general',
+                                                    'type' => 'query',
+                                                    'method' => 'employees',
+                                                ],
+
                                             ],
                                         ],
                                         'Member Company Profile:General.Edit' => [
@@ -5407,6 +5484,20 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetTransferIncomingStatistic',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomingsStatistic',
+                                                    'referer' => 'banking/payments/incoming/transfer-list',
+                                                ],
+                                                [
+                                                    'name' => 'GetTransferIncomings',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-list',
+                                                ],
+                                            ]
                                         ],
                                         'Payments:IWT:List.Transfers Stats' => [
                                             'data' => [
@@ -5434,6 +5525,16 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 4,
                                                 'type' => 'export',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'DownloadTransferIncomings',
+                                                    'type' => 'query',
+                                                    'method' => 'downloadTransferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-list',
+                                                ],
+                                            ]
+
+
                                         ],
                                     ],
                                 ],
@@ -5453,6 +5554,38 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetIncomingTransfer',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncoming',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/details',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersCompaniesSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/details',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersProvidersSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/details',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersAccountSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/details',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersIdSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/details',
+                                                ],
+                                            ]
                                         ],
                                         'Payments:IWT:Details.Edit' => [
                                             'data' => [
@@ -5489,6 +5622,38 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 5,
                                                 'type' => 'info',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetIncomingTransferPaymentProvider',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncoming',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/payment-provider-information',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersCompaniesSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/payment-provider-information',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersProvidersSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/payment-provider-information',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersAccountSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/payment-provider-information',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersIdSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/payment-provider-information',
+                                                ],
+                                            ]
                                         ],
                                         'Payments:IWT:Details.History' => [
                                             'data' => [
@@ -5498,6 +5663,38 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 6,
                                                 'type' => 'info',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetIncomingTransferHistory',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomingHistory',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/transfer-history',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersCompaniesSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/transfer-history',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersProvidersSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/transfer-history',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersAccountSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/transfer-history',
+                                                ],
+                                                [
+                                                    'name' => 'GetIncomingTransfersIdSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferIncomings',
+                                                    'referer' => 'banking/payments/incoming/transfer-details/transfer-history',
+                                                ],
+                                            ]
                                         ],
                                     ],
                                 ],
@@ -5517,6 +5714,38 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetOutgoingTransfersCompaniesSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-list',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersProvidersSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-list',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersAccountSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-list',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersIdSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-list',
+                                                ],
+                                                [
+                                                    'name' => 'GetTransferOutgoingStatistic',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoingsStatistic',
+                                                    'referer' => 'banking/payments/outgoing/transfer-list',
+                                                ],
+                                            ]
                                         ],
                                         'Payments:OWT:List.Transfers Stats' => [
                                             'data' => [
@@ -5563,6 +5792,37 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetOutgoingTransfer',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoing',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/details',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersCompaniesSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/details',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersProvidersSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/details',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersAccountSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/details',
+                                                ],[
+                                                    'name' => 'GetOutgoingTransfersIdSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/details',
+                                                ],
+                                            ]
                                         ],
                                         'Payments:OWT:Details.Edit' => [
                                             'data' => [
@@ -5599,6 +5859,37 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 5,
                                                 'type' => 'info',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetOutgoingTransferPaymentProvider',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoing',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/payment-provider-information',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersCompaniesSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/payment-provider-information',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersProvidersSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/payment-provider-information',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersAccountSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/payment-provider-information',
+                                                ],[
+                                                    'name' => 'GetOutgoingTransfersIdSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/payment-provider-information',
+                                                ],
+                                            ]
                                         ],
                                         'Payments:OWT:Details.History' => [
                                             'data' => [
@@ -5608,6 +5899,37 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 6,
                                                 'type' => 'info',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetOutgoingTransferHistory',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoingHistory',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/transfer-history',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersCompaniesSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/transfer-history',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersProvidersSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/transfer-history',
+                                                ],
+                                                [
+                                                    'name' => 'GetOutgoingTransfersAccountSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/transfer-history',
+                                                ],[
+                                                    'name' => 'GetOutgoingTransfersIdSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferOutgoings',
+                                                    'referer' => 'banking/payments/outgoing/transfer-details/transfer-history',
+                                                ],
+                                            ]
                                         ],
                                     ],
                                 ],
@@ -5627,6 +5949,20 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetTransferExchangeStatistic',
+                                                    'type' => 'query',
+                                                    'method' => 'transferExchangeStatistic',
+                                                    'referer' => 'banking/payments/exchange/transfer-list',
+                                                ],
+                                                [
+                                                    'name' => 'GetTransferExchanges',
+                                                    'type' => 'query',
+                                                    'method' => 'transferExchanges',
+                                                    'referer' => 'banking/payments/exchange/transfer-list',
+                                                ],
+                                            ]
                                         ],
                                         'Payments:Exchange:List.Transfers Stats' => [
                                             'data' => [
@@ -5674,6 +6010,26 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetExchangeTransfer',
+                                                    'type' => 'query',
+                                                    'method' => 'transferExchange',
+                                                    'referer' => 'banking/payments/exchange/transfer-details/details',
+                                                ],
+                                                [
+                                                    'name' => 'GetExchangeTransfersCompaniesSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferExchanges',
+                                                    'referer' => 'banking/payments/exchange/transfer-details/details',
+                                                ],
+                                                [
+                                                    'name' => 'GetExchangeTransfersClientsSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferExchanges',
+                                                    'referer' => 'banking/payments/exchange/transfer-details/details',
+                                                ],
+                                            ]
                                         ],
                                         'Payments:Exchange:Details.Edit' => [
                                             'data' => [
@@ -5710,6 +6066,20 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 5,
                                                 'type' => 'info',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetExchangeTransfersCompaniesSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferExchanges',
+                                                    'referer' => 'banking/payments/exchange/transfer-details/payment-provider-information',
+                                                ],
+                                                [
+                                                    'name' => 'GetExchangeTransfersClientsSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferExchanges',
+                                                    'referer' => 'banking/payments/exchange/transfer-details/payment-provider-information',
+                                                ],
+                                            ]
                                         ],
                                         'Payments:Exchange:Details.History' => [
                                             'data' => [
@@ -5719,6 +6089,20 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 6,
                                                 'type' => 'info',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetExchangeTransfersCompaniesSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferExchanges',
+                                                    'referer' => 'banking/payments/exchange/transfer-details/transfer-history',
+                                                ],
+                                                [
+                                                    'name' => 'GetExchangeTransfersClientsSelect',
+                                                    'type' => 'query',
+                                                    'method' => 'transferExchanges',
+                                                    'referer' => 'banking/payments/exchange/transfer-details/transfer-history',
+                                                ],
+                                            ]
                                         ],
                                     ],
                                 ],
@@ -5763,6 +6147,60 @@ class PermissionsSeeder extends Seeder
                                                     'type' => 'query',
                                                     'method' => 'accountList',
                                                 ],
+                                                [
+                                                    'name' => 'GetClientOrIdSelect',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'clientList',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentSystemFilter',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
+                                                [
+                                                    'name' => 'GetPriceListFee',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'priceListFees',
+                                                ],
+                                                [
+                                                    'name' => 'CountriesFilter',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'countries',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderFilter',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ],
+                                                [
+                                                    'name' => 'CommissionPricelistsFilter',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'commissionPriceLists',
+                                                ],
+                                                [
+                                                    'name' => 'GetPriceListFeeNames',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'priceListFees',
+                                                ],
+                                                [
+                                                    'name' => 'GetUrgencys',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'getPaymentUrgencys',
+                                                ],
+                                                [
+                                                    'name' => 'GetRespondedFees',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'respondentFees',
+                                                ],
                                             ],
                                         ],
                                         'Make Transfer.IWT' => [
@@ -5773,6 +6211,14 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 2,
                                                 'type' => 'info',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CreateTransferIncoming',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'mutation',
+                                                    'method' => 'createTransferIncoming',
+                                                ],
+                                            ],
                                         ],
                                         'Make Transfer.OWT' => [
                                             'data' => [
@@ -5781,6 +6227,14 @@ class PermissionsSeeder extends Seeder
                                                 'guard_name' => 'api',
                                                 'order' => 3,
                                                 'type' => 'info',
+                                            ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CreateTransferOutgoing',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'mutation',
+                                                    'method' => 'createTransferOutgoing',
+                                                ],
                                             ],
                                         ],
                                         'Make Transfer.TBA' => [
@@ -5791,6 +6245,14 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 4,
                                                 'type' => 'info',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CreateTransferBetweenAccounts',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'mutation',
+                                                    'method' => 'createTransferBetweenAccounts',
+                                                ],
+                                            ],
                                         ],
                                         'Make Transfer.TBU' => [
                                             'data' => [
@@ -5800,6 +6262,14 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 5,
                                                 'type' => 'info',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CreateTransferBetweenUsers',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'mutation',
+                                                    'method' => 'createTransferBetweenUsers',
+                                                ],
+                                            ],
                                         ],
                                         'Make Transfer.Exchange' => [
                                             'data' => [
@@ -5808,6 +6278,14 @@ class PermissionsSeeder extends Seeder
                                                 'guard_name' => 'api',
                                                 'order' => 6,
                                                 'type' => 'info',
+                                            ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CreateTransferExchange',
+                                                    'referer' => 'banking/payments/make-payment',
+                                                    'type' => 'mutation',
+                                                    'method' => 'createTransferExchange',
+                                                ],
                                             ],
                                         ],
                                         'Make Transfer.Fee' => [
@@ -5961,7 +6439,7 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'CreateCommissionTemplate',
-                                                    'referer' => 'banking/payment-provider/full-profile/settings/create',
+                                                    'referer' => 'banking/commission-templates/commission-template',
                                                     'parents' => ['Commission Template:List.Enabled'],
                                                     'type' => 'mutation',
                                                     'method' => 'createCommissionTemplate',
@@ -6042,7 +6520,7 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'banking/commission-templates/settings/create',
                                                     'type' => 'query',
                                                     'method' => 'companies',
-                                                ],[
+                                                ], [
                                                     'name' => 'PaymentProviderFilter',
                                                     'referer' => 'banking/commission-templates/settings/create',
                                                     'type' => 'query',
@@ -6053,7 +6531,7 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'banking/commission-templates/settings/edit/$id',
                                                     'type' => 'query',
                                                     'method' => 'companies',
-                                                ],[
+                                                ], [
                                                     'name' => 'PaymentProviderFilter',
                                                     'referer' => 'banking/commission-templates/settings/edit/$id',
                                                     'type' => 'query',
@@ -6072,11 +6550,17 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'UpdateCommissionTemplate',
-                                                    'referer' => 'banking/payment-provider/full-profile/settings/create',
+                                                    'referer' => 'banking/commission-templates/settings/edit/$id',
                                                     'parents' => ['Commission Template:Settings.Enabled'],
                                                     'type' => 'mutation',
                                                     'method' => 'updateCommissionTemplate',
-
+                                                ],
+                                                [
+                                                    'name' => 'UpdateCommissionTemplate',
+                                                    'referer' => 'banking/commission-templates/settings/create',
+                                                    'parents' => ['Commission Template:Settings.Enabled'],
+                                                    'type' => 'mutation',
+                                                    'method' => 'updateCommissionTemplate',
                                                 ],
                                             ],
                                         ],
@@ -6091,11 +6575,17 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'CreateCommissionTemplateLimit',
-                                                    'referer' => 'banking/payment-provider/full-profile/settings/create',
+                                                    'referer' => 'banking/commission-templates/settings/create',
                                                     'parents' => ['Commission Template:Settings.Enabled', 'Commission Template:Settings.Edit'],
                                                     'type' => 'mutation',
                                                     'method' => 'createCommissionTemplateLimit',
-
+                                                ],
+                                                [
+                                                    'name' => 'CreateCommissionTemplateLimit',
+                                                    'referer' => 'banking/commission-templates/settings/edit/$id',
+                                                    'parents' => ['Commission Template:Settings.Enabled', 'Commission Template:Settings.Edit'],
+                                                    'type' => 'mutation',
+                                                    'method' => 'createCommissionTemplateLimit',
                                                 ],
                                             ],
                                         ],
@@ -6110,7 +6600,7 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'DeleteCommissionTemplate',
-                                                    'referer' => 'banking/payment-provider/full-profile/commission-templates',
+                                                    'referer' => 'banking/commission-templates/commission-template',
                                                     'parents' => ['Commission Template:Settings.Enabled'],
                                                     'type' => 'mutation',
                                                     'method' => 'deleteCommissionTemplate',
@@ -6155,6 +6645,24 @@ class PermissionsSeeder extends Seeder
                                                     'type' => 'query',
                                                     'method' => 'paymentProviders',
                                                 ],
+                                                [
+                                                    'name' => 'CommissionTemplateFilter',
+                                                    'referer' => 'banking/commission-templates/price-lists',
+                                                    'type' => 'query',
+                                                    'method' => 'commissionTemplates',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentSystemFilter',
+                                                    'referer' => 'banking/commission-templates/price-lists',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
+                                                [
+                                                    'name' => 'RegionFilter',
+                                                    'referer' => 'banking/commission-templates/price-lists',
+                                                    'type' => 'query',
+                                                    'method' => 'regions',
+                                                ],
                                             ],
                                         ],
                                         'Commission Template:Price Lists.Add New Price List' => [
@@ -6197,10 +6705,75 @@ class PermissionsSeeder extends Seeder
                                             'operations' => [
                                                 [
                                                     'name' => 'GetPriceListFees',
-                                                    'referer' => 'banking/commission-templates/full-profile/fees',
+                                                    'referer' => 'banking/commission-templates/fees',
                                                     'type' => 'query',
                                                     'method' => 'priceListFees',
-
+                                                ],
+                                                [
+                                                    'name' => 'FeesAllCurrencies',
+                                                    'referer' => 'banking/commission-templates/fees',
+                                                    'type' => 'query',
+                                                    'method' => 'currencies',
+                                                ],
+                                                [
+                                                    'name' => 'GetFeeTypes',
+                                                    'referer' => 'banking/commission-templates/fees',
+                                                    'type' => 'query',
+                                                    'method' => 'feeTypes',
+                                                ],
+                                                [
+                                                    'name' => 'GetFeeOperationTypes',
+                                                    'referer' => 'banking/commission-templates/fees',
+                                                    'type' => 'query',
+                                                    'method' => 'operationTypes',
+                                                ],
+                                                [
+                                                    'name' => 'GetFeePeriod',
+                                                    'referer' => 'banking/commission-templates/fees',
+                                                    'type' => 'query',
+                                                    'method' => 'feePeriods',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/commission-templates/fees',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderFilter',
+                                                    'referer' => 'banking/commission-templates/fees',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ],
+                                                [
+                                                    'name' => 'CommissionTemplateFilter',
+                                                    'referer' => 'banking/commission-templates/fees',
+                                                    'type' => 'query',
+                                                    'method' => 'commissionTemplates',
+                                                ],
+                                                [
+                                                    'name' => 'GetPriceListNames',
+                                                    'referer' => 'banking/commission-templates/fees',
+                                                    'type' => 'query',
+                                                    'method' => 'commissionPriceLists',
+                                                ],
+                                                [
+                                                    'name' => 'FeesPaymentSystems',
+                                                    'referer' => 'banking/commission-templates/fees',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
+                                                [
+                                                    'name' => 'FeesPaymentSystems',
+                                                    'referer' => 'banking/commission-templates/fees',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
+                                                [
+                                                    'name' => 'GetCommissionsPriceListById',
+                                                    'referer' => 'banking/commission-templates/fees',
+                                                    'type' => 'query',
+                                                    'method' => 'commissionPriceList',
                                                 ],
                                             ],
                                         ],
@@ -6360,6 +6933,14 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'PaymentProviderIbansList',
+                                                    'referer' => 'banking/iban-provider/list',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviderIbans',
+                                                ],
+                                            ]
                                         ],
                                     ],
                                 ],
@@ -6379,6 +6960,32 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'PaymentProviderIbanFullProfile',
+                                                    'referer' => 'banking/iban-provider/full-profile/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviderIban',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderIbansCompanies',
+                                                    'referer' => 'banking/iban-provider/full-profile/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviderIbans',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderIbanFullProfile',
+                                                    'referer' => 'banking/iban-provider/full-profile',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviderIban',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderIbansCompanies',
+                                                    'referer' => 'banking/iban-provider/full-profile',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviderIbans',
+                                                ],
+                                            ]
                                         ],
                                         'IBAN Provider:Full Profile.Edit' => [
                                             'data' => [
@@ -6416,6 +7023,32 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/global-settings/transaction-region',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'RegionsList',
+                                                    'referer' => 'banking/global-settings/transaction-region',
+                                                    'type' => 'query',
+                                                    'method' => 'regions',
+                                                ],
+                                                [
+                                                    'name' => 'CountriesFilter',
+                                                    'referer' => 'banking/global-settings/transaction-region',
+                                                    'type' => 'query',
+                                                    'method' => 'countries',
+                                                ],
+                                                [
+                                                    'name' => 'GetRegionData',
+                                                    'referer' => 'banking/global-settings/transaction-region',
+                                                    'type' => 'query',
+                                                    'method' => 'region',
+                                                ],
+                                            ]
                                         ],
                                         'Global Settings:Transaction Region.Edit' => [
                                             'data' => [
@@ -6425,6 +7058,14 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 2,
                                                 'type' => 'edit',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'UpdateRegion',
+                                                    'referer' => 'banking/global-settings/transaction-region',
+                                                    'type' => 'mutation',
+                                                    'method' => 'updateRegion',
+                                                ],
+                                            ]
                                         ],
                                         'Global Settings:Transaction Region.Add New Region' => [
                                             'data' => [
@@ -6434,6 +7075,14 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 3,
                                                 'type' => 'add',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CreateRegion',
+                                                    'referer' => 'banking/global-settings/transaction-region',
+                                                    'type' => 'mutation',
+                                                    'method' => 'createRegion',
+                                                ],
+                                            ]
                                         ],
                                     ],
                                 ],
@@ -6459,7 +7108,25 @@ class PermissionsSeeder extends Seeder
                                                     'referer' => 'banking/payment-provider/list',
                                                     'type' => 'query',
                                                     'method' => 'paymentProviders',
-                                                ]
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/payment-provider/list',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderFilter',
+                                                    'referer' => 'banking/payment-provider/list',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentSystemFilter',
+                                                    'referer' => 'banking/payment-provider/list',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
                                             ],
                                         ],
                                     ],
@@ -6480,6 +7147,44 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'PaymentProviderItem',
+                                                    'referer' => 'banking/payment-provider/full-profile/payment-provider-settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProvider',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/payment-provider/full-profile/payment-provider-settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderFilter',
+                                                    'referer' => 'banking/payment-provider/full-profile/payment-provider-settings/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderItem',
+                                                    'referer' => 'banking/payment-provider/full-profile/payment-provider-settings',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProvider',
+                                                ],
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/payment-provider/full-profile/payment-provider-settings',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderFilter',
+                                                    'referer' => 'banking/payment-provider/full-profile/payment-provider-settings',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ],
+                                            ],
                                         ],
                                         'Payment Provider:Settings.Edit' => [
                                             'data' => [
@@ -6489,6 +7194,14 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 2,
                                                 'type' => 'edit',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'UpdatePaymentProvider',
+                                                    'referer' => 'banking/payment-provider/full-profile/payment-provider-settings/$id',
+                                                    'type' => 'mutation',
+                                                    'method' => 'updatePaymentProvider',
+                                                ],
+                                            ]
                                         ],
                                         'Payment Provider:Settings.Payment System Details' => [
                                             'data' => [
@@ -6517,6 +7230,32 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'PaymentSystemList',
+                                                    'referer' => 'banking/payment-system/list',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentSystemCompanyFilter',
+                                                    'referer' => 'banking/payment-system/list',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentSystemProviderFilter',
+                                                    'referer' => 'banking/payment-system/list',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentSystemFilter',
+                                                    'referer' => 'banking/payment-system/list',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
+                                            ]
                                         ],
                                     ],
                                 ],
@@ -6536,6 +7275,26 @@ class PermissionsSeeder extends Seeder
                                                 'order' => 1,
                                                 'type' => 'read',
                                             ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'CompanyFilter',
+                                                    'referer' => 'banking/payment-system/detail/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'companies',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentProviderFilter',
+                                                    'referer' => 'banking/payment-system/detail/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentProviders',
+                                                ],
+                                                [
+                                                    'name' => 'PaymentSystemFilter',
+                                                    'referer' => 'banking/payment-system/detail/$id',
+                                                    'type' => 'query',
+                                                    'method' => 'paymentSystems',
+                                                ],
+                                            ]
                                         ],
                                         'Payment System:Full Profile.Edit' => [
                                             'data' => [
