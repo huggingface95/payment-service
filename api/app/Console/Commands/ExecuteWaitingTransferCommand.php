@@ -6,6 +6,7 @@ use App\Enums\PaymentStatusEnum;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Services\TransferOutgoingService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 class ExecuteWaitingTransferCommand extends Command
 {
@@ -40,9 +41,13 @@ class ExecuteWaitingTransferCommand extends Command
     {
         $waitingTransfers = $this->transferRepository->getWaitingExecutionDateTransfers();
 
-        if ($waitingTransfers) {
+        if (!$waitingTransfers->isEmpty()) {
             foreach ($waitingTransfers as $transfer) {
                 try {
+                    DB::beginTransaction();
+
+                    $this->info('Transfer id: ' . $transfer->id . ' is processing...');
+
                     $this->transferService->updateTransferStatus($transfer, [
                         'status_id' => PaymentStatusEnum::PENDING->value,
                     ]);
@@ -50,7 +55,11 @@ class ExecuteWaitingTransferCommand extends Command
                     $this->transferService->updateTransferStatus($transfer, [
                         'status_id' => PaymentStatusEnum::SENT->value,
                     ]);
-                } catch (\Exception $e) {
+
+                    DB::commit();
+                } catch (\Throwable $e) {
+                    DB::rollBack();
+
                     $this->transferRepository->update($transfer, [
                         'status_id' => PaymentStatusEnum::ERROR->value,
                         'system_message' => $e->getMessage(),

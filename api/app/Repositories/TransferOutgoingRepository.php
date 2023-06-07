@@ -82,7 +82,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
     {
         return $this->query()
             ->where('status_id', PaymentStatusEnum::WAITING_EXECUTION_DATE->value)
-            ->whereDate('execution_at', Carbon::today())
+            ->whereDate('execution_at', '<=', Carbon::today())
             ->get();
     }
 

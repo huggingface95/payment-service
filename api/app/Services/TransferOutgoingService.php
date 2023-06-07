@@ -93,6 +93,7 @@ class TransferOutgoingService extends AbstractService
                 break;
             case PaymentStatusEnum::WAITING_EXECUTION_DATE->value:
                 $allowedStatuses = [
+                    PaymentStatusEnum::PENDING->value,
                     PaymentStatusEnum::SENT->value,
                     PaymentStatusEnum::CANCELED->value,
                 ];
