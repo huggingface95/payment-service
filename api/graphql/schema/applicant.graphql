@@ -3,7 +3,7 @@
 Management -> New Applicant -> Create Individual -> General
 """
 type ApplicantIndividual {
-    id: String! @method(name: "getPrefixAttribute")
+    id: ID! @method(name: "getPrefixAttribute")
     "Имя"
     first_name: String
     "Фамилия"
@@ -120,7 +120,7 @@ extend type Query @guard {
     """
     Получить пользователя  по ID
     """
-    applicantIndividual(id: String @eq): ApplicantIndividual @find
+    applicantIndividual(id: ID @eq): ApplicantIndividual @find
 
     """
     Получить список частных пользователей
