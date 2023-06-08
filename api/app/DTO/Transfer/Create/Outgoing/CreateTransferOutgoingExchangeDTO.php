@@ -8,6 +8,7 @@ use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
 use App\Models\Account;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
 {
@@ -21,10 +22,10 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['amount'] = $amount;
         $args['amount_debt'] = $amount;
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
-        $args['urgency_id'] = $args['urgency_id'] ?? PaymentUrgencyEnum::STANDART->value;
+        $args['urgency_id'] = PaymentUrgencyEnum::STANDART->value;
         $args['operation_type_id'] = OperationTypeEnum::EXCHANGE->value;
         $args['payment_bank_id'] = 2;
-        $args['payment_number'] = 'EXCH'.rand();
+        $args['payment_number'] = Str::uuid();
         $args['payment_provider_id'] = 1;
         $args['payment_system_id'] = 1;
         $args['system_message'] = 'test';
