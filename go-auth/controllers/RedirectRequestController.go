@@ -23,9 +23,10 @@ func RedirectRequest(context *gin.Context) {
 	if context.Request.Body != nil {
 		jsonData, _ = ioutil.ReadAll(context.Request.Body)
 	}
-	context.Request.Body = ioutil.NopCloser(bytes.NewBuffer(jsonData))
 
-	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetHeader("Authorization"))
+	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetHeader("Authorization"), context.Request.Host)
+
+	context.Request.Body = ioutil.NopCloser(bytes.NewBuffer(jsonData))
 
 	if false {
 		if err := context.ShouldBindHeader(&header); err != nil {

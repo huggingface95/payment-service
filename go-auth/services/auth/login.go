@@ -38,7 +38,7 @@ func GetLoginResponse(user postgres.User, jwtType string, accessType string, dev
 		}
 	}
 
-	tokenJWT, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), user.ClientType(), jwtType, accessType)
+	tokenJWT, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), user.ClientType(), jwtType, accessType, deviceInfo.Host)
 	if err != nil {
 		oauthRepository.InsertAuthLog(user.ClientType(), user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, nil, deviceInfo)
 		return http.StatusInternalServerError, gin.H{"error": err.Error()}
