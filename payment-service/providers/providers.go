@@ -19,6 +19,9 @@ type PaymentProvider interface {
 
 	// PostBack - прием постбеков от провайдера с информацией о транзакции или генерируемом IBAN
 	PostBack(request PostBackRequester) (PostBackResponder, error)
+
+	// Custom - дополнительные специфические запросы провайдера
+	Custom(request CustomRequester) (CustomResponder, error)
 }
 
 type AuthRequester interface {
@@ -55,4 +58,10 @@ type PostBackRequester interface {
 }
 
 type PostBackResponder interface {
+}
+
+type CustomRequester interface {
+}
+
+type CustomResponder interface {
 }

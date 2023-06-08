@@ -137,6 +137,13 @@ type PayOutRequest struct {
 	UniqueRequestID string `json:"unique_request_id"`
 }
 
+type PostbackRequest map[string]interface{}
+
+// PostbackResponse представляет ответ на запрос postback.
+type PostbackResponse struct {
+	Status string `json:"status"`
+}
+
 // AccountRequest представляет модель данных для запроса на создание Account.
 type AccountRequest struct {
 	AccountName     string `json:"account_name"`
@@ -176,9 +183,80 @@ type AccountResponse struct {
 	BankAccountVerified        string    `json:"bank_account_verified"`
 }
 
-type PostbackRequest map[string]interface{}
+// RatesRequest представляет модель данных для запроса на получение rate-ов.
+type RatesRequest struct {
+	BuyCurrency              string `json:"buy_currency"`
+	SellCurrency             string `json:"sell_currency"`
+	FixedSide                string `json:"fixed_side"`
+	Amount                   int    `json:"amount"`
+	OnBehalfOf               string `json:"on_behalf_of,omitempty"`
+	ConversionDate           string `json:"conversion_date,omitempty"`
+	ConversionDatePreference string `json:"conversion_date_preference,omitempty"`
+}
 
-// PostbackResponse представляет ответ на запрос postback.
-type PostbackResponse struct {
-	Status string `json:"status"`
+// RatesResponse представляет ответ на запрос на получение rate-ов.
+type RatesResponse struct {
+	SettlementCutOffTime time.Time `json:"settlement_cut_off_time"`
+	CurrencyPair         string    `json:"currency_pair"`
+	ClientBuyCurrency    string    `json:"client_buy_currency"`
+	ClientSellCurrency   string    `json:"client_sell_currency"`
+	ClientBuyAmount      string    `json:"client_buy_amount"`
+	ClientSellAmount     string    `json:"client_sell_amount"`
+	FixedSide            string    `json:"fixed_side"`
+	ClientRate           string    `json:"client_rate"`
+	PartnerRate          any       `json:"partner_rate"`
+	CoreRate             string    `json:"core_rate"`
+	DepositRequired      bool      `json:"deposit_required"`
+	DepositAmount        string    `json:"deposit_amount"`
+	DepositCurrency      string    `json:"deposit_currency"`
+	MidMarketRate        string    `json:"mid_market_rate"`
+}
+
+// ConvertRequest представляет модель данных для запроса на конвертацию валют.
+type ConvertRequest struct {
+	BuyCurrency              string `json:"buy_currency"`
+	SellCurrency             string `json:"sell_currency"`
+	FixedSide                string `json:"fixed_side"`
+	Amount                   string `json:"amount"`
+	TermAgreement            bool   `json:"term_agreement"`
+	ConversionDate           string `json:"conversion_date,omitempty"`
+	ClientBuyAmount          string `json:"client_buy_amount,omitempty"`
+	ClientSellAmount         string `json:"client_sell_amount,omitempty"`
+	Reason                   string `json:"reason,omitempty"`
+	UniqueRequestId          string `json:"unique_request_id,omitempty"`
+	OnBehalfOf               string `json:"on_behalf_of,omitempty"`
+	ConversionDatePreference string `json:"conversion_date_preference,omitempty"`
+}
+
+// ConvertResponse представляет ответ на запрос конвертации валют.
+type ConvertResponse struct {
+	Id                string        `json:"id"`
+	SettlementDate    time.Time     `json:"settlement_date"`
+	ConversionDate    time.Time     `json:"conversion_date"`
+	ShortReference    string        `json:"short_reference"`
+	CreatorContactId  string        `json:"creator_contact_id"`
+	AccountId         string        `json:"account_id"`
+	CurrencyPair      string        `json:"currency_pair"`
+	Status            string        `json:"status"`
+	BuyCurrency       string        `json:"buy_currency"`
+	SellCurrency      string        `json:"sell_currency"`
+	ClientBuyAmount   string        `json:"client_buy_amount"`
+	ClientSellAmount  string        `json:"client_sell_amount"`
+	FixedSide         string        `json:"fixed_side"`
+	CoreRate          string        `json:"core_rate"`
+	PartnerRate       string        `json:"partner_rate"`
+	PartnerBuyAmount  string        `json:"partner_buy_amount"`
+	PartnerSellAmount string        `json:"partner_sell_amount"`
+	ClientRate        string        `json:"client_rate"`
+	DepositRequired   bool          `json:"deposit_required"`
+	DepositAmount     string        `json:"deposit_amount"`
+	DepositCurrency   string        `json:"deposit_currency"`
+	DepositStatus     string        `json:"deposit_status"`
+	DepositRequiredAt string        `json:"deposit_required_at"`
+	PaymentIds        []interface{} `json:"payment_ids"`
+	UnallocatedFunds  string        `json:"unallocated_funds"`
+	UniqueRequestId   interface{}   `json:"unique_request_id"`
+	CreatedAt         time.Time     `json:"created_at"`
+	UpdatedAt         time.Time     `json:"updated_at"`
+	MidMarketRate     string        `json:"mid_market_rate"`
 }

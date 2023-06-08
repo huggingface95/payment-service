@@ -160,12 +160,61 @@ func (cc *CurrencyCloud) PostBack(request providers.PostBackRequester) (provider
 	return &PostbackResponse{Status: "success"}, nil
 }
 
+func (cc *CurrencyCloud) Custom(request providers.CustomRequester) (providers.CustomResponder, error) {
+	switch req := request.(type) {
+	case *RatesRequest:
+		return cc.rates(req)
+	case *ConvertRequest:
+		return cc.convert(req)
+	default:
+		return nil, fmt.Errorf("unsupported custom request type: %v", req)
+	}
+}
+
+func (cc *CurrencyCloud) rates(request *RatesRequest) (providers.CustomResponder, error) {
+	reqURL := fmt.Sprintf("%sv2/rates/detailed", cc.BaseURL)
+
+	// Выполнение GET запроса с помощью HTTP клиента из API сервиса
+	responseBody, err := cc.transport.Request(fasthttp.MethodGet, reqURL, request, cc.authMiddleware)
+	if err != nil {
+		return nil, fmt.Errorf("failed to send Rates request: %w", err)
+	}
+
+	// Преобразование тела ответа в структуру RatesResponse
+	var res RatesResponse
+	err = json.Unmarshal(responseBody, &res)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal Rates response: %w", err)
+	}
+
+	return &res, nil
+}
+
+func (cc *CurrencyCloud) convert(request *ConvertRequest) (providers.CustomResponder, error) {
+	reqURL := fmt.Sprintf("%sv2/conversions/create", cc.BaseURL)
+
+	// Выполнение GET запроса с помощью HTTP клиента из API сервиса
+	responseBody, err := cc.transport.Request(fasthttp.MethodPost, reqURL, request, cc.authMiddleware)
+	if err != nil {
+		return nil, fmt.Errorf("failed to send Convert request: %w", err)
+	}
+
+	// Преобразование тела ответа в структуру ConvertResponse
+	var res ConvertResponse
+	err = json.Unmarshal(responseBody, &res)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal Convert response: %w", err)
+	}
+
+	return &res, nil
+}
+
 func (cc *CurrencyCloud) authMiddleware(requestBody []byte) (err error) {
 	_, err = cc.Auth(AuthRequest{cc.LoginID, cc.APIKey})
 	return
 }
 
-func (cc *CurrencyCloud) account(req *AccountRequest) (providers.IBANResponder, error) {
+func (cc *CurrencyCloud) account(req *AccountRequest) (*AccountResponse, error) {
 	reqURL := fmt.Sprintf("%sv2/accounts/create", cc.BaseURL)
 
 	// Выполнение POST запроса с помощью HTTP клиента из API сервиса

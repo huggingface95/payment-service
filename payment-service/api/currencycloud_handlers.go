@@ -93,8 +93,8 @@ func CurrencyCloudPayOut(c *fiber.Ctx, provider providers.PaymentProvider) error
 	return c.JSON(res)
 }
 
-// CurrencyCloudPayPostback Реализация обработчика postback-ов
-func CurrencyCloudPayPostback(c *fiber.Ctx, provider providers.PaymentProvider) error {
+// CurrencyCloudPostback Реализация обработчика postback-ов
+func CurrencyCloudPostback(c *fiber.Ctx, provider providers.PaymentProvider) error {
 	request := &currencycloud.PostbackRequest{}
 	err := c.BodyParser(request)
 	if err != nil {
@@ -105,6 +105,38 @@ func CurrencyCloudPayPostback(c *fiber.Ctx, provider providers.PaymentProvider) 
 	responder, err := provider.PostBack(providers.PostBackRequester(request))
 	if err != nil {
 		fmt.Printf("error: %v\n", err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.JSON(responder)
+}
+
+// CurrencyCloudRates реализует обработчик получения rate-ов.
+func CurrencyCloudRates(c *fiber.Ctx, provider providers.PaymentProvider) error {
+	req := &currencycloud.RatesRequest{}
+	err := c.BodyParser(req)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	responder, err := provider.Custom(providers.CustomRequester(req))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.JSON(responder)
+}
+
+// CurrencyCloudConvert реализует обработчик конвертации валют.
+func CurrencyCloudConvert(c *fiber.Ctx, provider providers.PaymentProvider) error {
+	req := &currencycloud.ConvertRequest{}
+	err := c.BodyParser(req)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	responder, err := provider.Custom(providers.CustomRequester(req))
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 

@@ -159,6 +159,13 @@ func (cj *ClearJunction) PostBack(request providers.PostBackRequester) (provider
 	}
 }
 
+func (cj *ClearJunction) Custom(request providers.CustomRequester) (providers.CustomResponder, error) {
+	switch req := request.(type) {
+	default:
+		return nil, fmt.Errorf("unsupported custom request type: %v", req)
+	}
+}
+
 func (cj *ClearJunction) authMiddleware(requestBody []byte) (err error) {
 	_, err = cj.Auth(AuthRequest{Body: requestBody})
 	return

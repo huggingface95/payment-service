@@ -29,20 +29,20 @@ func (c *FastHTTP) Request(method string, endpoint string, params interface{}, m
 	res := fasthttp.AcquireResponse()
 	defer fasthttp.ReleaseResponse(res)
 
+	// Преобразование параметров запроса в JSON
+	paramsBytes, err := json.Marshal(params)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка преобразования параметров запроса в JSON: %w", err)
+	}
+
 	switch method {
 	case fiber.MethodPost:
 		req.Header.SetMethod(fiber.MethodPost)
 
-		// Преобразование параметров запроса в JSON
-		body, err := json.Marshal(params)
-		if err != nil {
-			return nil, fmt.Errorf("ошибка преобразования параметров запроса в JSON: %w", err)
-		}
-
-		req.SetBody(body)
+		req.SetBody(paramsBytes)
 
 		if middleware != nil {
-			if err := middleware(body); err != nil {
+			if err := middleware(paramsBytes); err != nil {
 				return nil, err
 			}
 		}
@@ -50,10 +50,12 @@ func (c *FastHTTP) Request(method string, endpoint string, params interface{}, m
 		req.Header.SetMethod(fiber.MethodGet)
 
 		// Добавление параметров запроса в виде query параметров
-		if params != nil {
-			for key, value := range params.(map[string]interface{}) {
-				req.URI().QueryArgs().Add(key, fmt.Sprintf("%v", value))
-			}
+		paramsMap := map[string]interface{}{}
+		if err := json.Unmarshal(paramsBytes, &paramsMap); err != nil {
+			return nil, err
+		}
+		for key, value := range paramsMap {
+			req.URI().QueryArgs().Add(key, fmt.Sprintf("%v", value))
 		}
 
 		if middleware != nil {

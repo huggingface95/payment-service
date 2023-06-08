@@ -92,14 +92,14 @@ func SetupRoutes(services Services) {
 		//group.Post("/transfer", func(c *fiber.Ctx) error {
 		//	return CurrencyCloudTransferBalance(c, provider)
 		//})
-		//group.Get("/rates", func(c *fiber.Ctx) error {
-		//	return CurrencyCloudGetCurrencyRates(c, provider)
-		//})
-		//group.Post("/convert", func(c *fiber.Ctx) error {
-		//	return CurrencyCloudConvertCurrency(c, provider)
-		//})
+		group.Post("/rates", func(c *fiber.Ctx) error {
+			return CurrencyCloudRates(c, provider)
+		})
+		group.Post("/convert", func(c *fiber.Ctx) error {
+			return CurrencyCloudConvert(c, provider)
+		})
 		group.Post("/postback", func(c *fiber.Ctx) error {
-			return CurrencyCloudPayPostback(c, provider)
+			return CurrencyCloudPostback(c, provider)
 		})
 	}
 }
