@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v4"
 	"jwt-authentication-golang/cache"
-	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/times"
@@ -29,14 +28,14 @@ func (j *JWTClaim) GetId() uint64 {
 	return id
 }
 
-func getJWTClaims(id uint64, name string, provider string, accessType string) *JWTClaim {
+func getJWTClaims(id uint64, name string, provider string, accessType string, host string) *JWTClaim {
 	IssuedTime, _, _, _, expirationJWTTime := times.GetTokenTimes()
 
 	return &JWTClaim{
 		Prv:  fmt.Sprint(provider),
 		Type: accessType,
 		RegisteredClaims: jwt.RegisteredClaims{
-			Issuer:    config.Conf.Jwt.PayloadUrl,
+			Issuer:    host,
 			IssuedAt:  jwt.NewNumericDate(IssuedTime),
 			ExpiresAt: jwt.NewNumericDate(expirationJWTTime),
 			NotBefore: jwt.NewNumericDate(IssuedTime),
@@ -46,10 +45,10 @@ func getJWTClaims(id uint64, name string, provider string, accessType string) *J
 	}
 }
 
-func GenerateJWT(id uint64, name string, provider string, jwtType string, accessType string) (token string, expirationTime time.Time, err error) {
-	jwtObject := cache.Caching.Jwt.Get(fmt.Sprintf(constants.CacheJwt, jwtType, accessType, provider, id))
+func GenerateJWT(id uint64, name string, provider string, jwtType string, accessType string, host string) (token string, expirationTime time.Time, err error) {
+	jwtObject := cache.Caching.Jwt.Get(fmt.Sprintf(constants.CacheJwt, host, accessType, provider, id))
 	if jwtObject != nil {
-		_, err = parseJWT(jwtObject.Token, jwtType)
+		_, err = parseJWT(jwtObject.Token, jwtType, host)
 		if err == nil {
 			expirationTime = jwtObject.ExpiredAt
 			token = jwtObject.Token
@@ -57,7 +56,7 @@ func GenerateJWT(id uint64, name string, provider string, jwtType string, access
 		}
 	}
 
-	claims := getJWTClaims(id, name, provider, accessType)
+	claims := getJWTClaims(id, name, provider, accessType, host)
 	oauthClient := oauthRepository.GetOauthClientByType(provider, jwtType)
 	if oauthClient == nil {
 		err = errors.New("oauth client not found")
@@ -72,7 +71,7 @@ func GenerateJWT(id uint64, name string, provider string, jwtType string, access
 		Token:     token,
 		ExpiredAt: expirationTime,
 	}
-	data.Set(fmt.Sprintf(constants.CacheJwt, jwtType, accessType, provider, id))
+	data.Set(fmt.Sprintf(constants.CacheJwt, host, jwtType, accessType, provider, id))
 
 	return
 }
@@ -85,7 +84,7 @@ func GetToken(claims jwt.Claims, secret string) (tokenString string, err error) 
 	return
 }
 
-func parseJWT(signedToken string, jwtType string) (claims *JWTClaim, err error) {
+func parseJWT(signedToken string, jwtType string, host string) (claims *JWTClaim, err error) {
 	signedToken = strings.Replace(signedToken, "Bearer ", "", -1)
 
 	oauthClients := oauthRepository.GetOauthClients(jwtType)
@@ -97,7 +96,9 @@ func parseJWT(signedToken string, jwtType string) (claims *JWTClaim, err error) 
 		if err == nil && token.Valid {
 			claims, ok := token.Claims.(*JWTClaim)
 			if ok {
-				if claims.ExpiresAt.Unix() < time.Now().UTC().Unix() {
+				if claims.Issuer != host {
+					err = errors.New("Another Issuer")
+				} else if claims.ExpiresAt.Unix() < time.Now().UTC().Unix() {
 					err = errors.New("token expired")
 				}
 				return claims, err
@@ -108,8 +109,8 @@ func parseJWT(signedToken string, jwtType string) (claims *JWTClaim, err error) 
 	return claims, err
 }
 
-func ValidateAccessToken(token string, jwtType string) (err error) {
-	claims, err := parseJWT(token, jwtType)
+func ValidateAccessToken(token string, jwtType string, host string) (err error) {
+	claims, err := parseJWT(token, jwtType, host)
 	if err == nil {
 		if claims.Type != constants.AccessToken {
 			err = errors.New("bad access token")
@@ -119,8 +120,8 @@ func ValidateAccessToken(token string, jwtType string) (err error) {
 	return
 }
 
-func ValidateForTwoFactorToken(token string, jwtType string) (err error) {
-	claims, err := parseJWT(token, jwtType)
+func ValidateForTwoFactorToken(token string, jwtType string, host string) (err error) {
+	claims, err := parseJWT(token, jwtType, host)
 	if err == nil {
 		if claims.Type != constants.ForTwoFactor {
 			err = errors.New("bad two factor token")
@@ -130,6 +131,6 @@ func ValidateForTwoFactorToken(token string, jwtType string) (err error) {
 	return
 }
 
-func GetClaims(token string, jwtType string, replaceBearer bool) (claims *JWTClaim, err error) {
-	return parseJWT(token, jwtType)
+func GetClaims(token string, jwtType string, replaceBearer bool, host string) (claims *JWTClaim, err error) {
+	return parseJWT(token, jwtType, host)
 }
