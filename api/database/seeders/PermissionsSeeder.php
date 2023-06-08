@@ -7334,6 +7334,189 @@ class PermissionsSeeder extends Seeder
                                         ],
                                     ],
                                 ],
+                                'Quotes Provider:List' => [
+                                    'data' => [
+                                        'name' => 'Quotes Provider:List',
+                                        'type' => 'member',
+                                        'separator' => null,
+                                        'order' => 8,
+                                    ],
+                                    'list' => [
+                                        'Quotes Provider:List.Enabled' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:List.Enabled',
+                                                'display_name' => 'Enabled',
+                                                'guard_name' => 'api',
+                                                'order' => 1,
+                                                'type' => 'read',
+                                            ],
+                                        ],
+                                        'Quotes Provider:List.Add New Quotes Provider (Manual)' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:List.Add New Quotes Provider (Manual)',
+                                                'display_name' => 'Add New Quotes Provider (Manual)',
+                                                'guard_name' => 'api',
+                                                'order' => 2,
+                                                'type' => 'add',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                'Quotes Provider:Manual Quotes:Settings' => [
+                                    'data' => [
+                                        'name' => 'Quotes Provider:Manual Quotes:Settings',
+                                        'type' => 'member',
+                                        'separator' => null,
+                                        'order' => 9,
+                                    ],
+                                    'list' => [
+                                        'Quotes Provider:Manual Quotes:Settings.Enabled' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Manual Quotes:Settings.Enabled',
+                                                'display_name' => 'Enabled',
+                                                'guard_name' => 'api',
+                                                'order' => 1,
+                                                'type' => 'read',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Manual Quotes:Settings.Edit' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Manual Quotes:Settings.Edit',
+                                                'display_name' => 'Edit',
+                                                'guard_name' => 'api',
+                                                'order' => 2,
+                                                'type' => 'edit',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Manual Quotes:Settings.Delete' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Manual Quotes:Settings.Delete',
+                                                'display_name' => 'Delete',
+                                                'guard_name' => 'api',
+                                                'order' => 3,
+                                                'type' => 'important',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Manual Quotes:Settings.Status' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Manual Quotes:Settings.Status',
+                                                'display_name' => 'Status',
+                                                'guard_name' => 'api',
+                                                'order' => 4,
+                                                'type' => 'info',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Manual Quotes:Settings.Upload Quotes' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Manual Quotes:Settings.Upload Quotes',
+                                                'display_name' => 'Upload Quotes',
+                                                'guard_name' => 'api',
+                                                'order' => 5,
+                                                'type' => 'info',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Manual Quotes:Settings.Rates' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Manual Quotes:Settings.Rates',
+                                                'display_name' => 'Rates',
+                                                'guard_name' => 'api',
+                                                'order' => 6,
+                                                'type' => 'info',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Manual Quotes:Settings.Add New Curr Pair' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Manual Quotes:Settings.Add New Curr Pair',
+                                                'display_name' => 'Add New Curr Pair',
+                                                'guard_name' => 'api',
+                                                'order' => 7,
+                                                'type' => 'add',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Manual Quotes:Settings.History Rates' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Manual Quotes:Settings.History Rates',
+                                                'display_name' => 'History Rates',
+                                                'guard_name' => 'api',
+                                                'order' => 8,
+                                                'type' => 'info',
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                                'Quotes Provider:Api Quotes:Settings' => [
+                                    'data' => [
+                                        'name' => 'Quotes Provider:Api Quotes:Settings',
+                                        'type' => 'member',
+                                        'separator' => null,
+                                        'order' => 10,
+                                    ],
+                                    'list' => [
+                                        'Quotes Provider:Api Quotes:Settings.Enabled' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Api Quotes:Settings.Enabled',
+                                                'display_name' => 'Enabled',
+                                                'guard_name' => 'api',
+                                                'order' => 1,
+                                                'type' => 'read',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Api Quotes:Settings.Edit' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Api Quotes:Settings.Edit',
+                                                'display_name' => 'Edit',
+                                                'guard_name' => 'api',
+                                                'order' => 2,
+                                                'type' => 'edit',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Api Quotes:Settings.Default Settings for Quotes' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Api Quotes:Settings.Default Settings for Quotes',
+                                                'display_name' => 'Default Settings for Quotes',
+                                                'guard_name' => 'api',
+                                                'order' => 3,
+                                                'type' => 'info',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Api Quotes:Settings.Status' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Api Quotes:Settings.Status',
+                                                'display_name' => 'Status',
+                                                'guard_name' => 'api',
+                                                'order' => 4,
+                                                'type' => 'info',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Api Quotes:Settings.Rates' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Api Quotes:Settings.Rates',
+                                                'display_name' => 'Rates',
+                                                'guard_name' => 'api',
+                                                'order' => 5,
+                                                'type' => 'info',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Api Quotes:Settings.Realtime Rates' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Api Quotes:Settings.Realtime Rates',
+                                                'display_name' => 'Realtime Rates',
+                                                'guard_name' => 'api',
+                                                'order' => 6,
+                                                'type' => 'info',
+                                            ],
+                                        ],
+                                        'Quotes Provider:Api Quotes:Settings.Quotes Provider Fee Settings' => [
+                                            'data' => [
+                                                'name' => 'Quotes Provider:Api Quotes:Settings.Quotes Provider Fee Settings',
+                                                'display_name' => 'Quotes Provider Fee Settings',
+                                                'guard_name' => 'api',
+                                                'order' => 7,
+                                                'type' => 'info',
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ],
                         ],
                     ],
