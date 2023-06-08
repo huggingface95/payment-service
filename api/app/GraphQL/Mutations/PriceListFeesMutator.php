@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\Traits\PriceListFeeTrait;
+use App\Models\CommissionPriceList;
 use App\Models\PriceListFee;
 use App\Services\PriceListFeeService;
 use Illuminate\Http\Response;
@@ -24,6 +25,19 @@ class PriceListFeesMutator
      */
     public function create($_, array $args): PriceListFee
     {
+        $internalPriceListExists = CommissionPriceList::where('id', $args['price_list_id'])
+            ->whereHas('paymentProvider', function ($query) {
+                $query->where('name', 'Internal');
+            })
+            ->exists();
+
+        if ($internalPriceListExists && $args['price_list_id']) {
+            $priceListFeeExists = PriceListFee::where('price_list_id', $args['price_list_id'])->exists();
+            if ($priceListFeeExists) {
+                throw new GraphqlException('Only one PriceListFee is allowed for the PriceList with Internal provider', 'use');
+            }
+        }
+
         if (isset($args['fee_ranges'])) {
             $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args);
         }
@@ -58,6 +72,19 @@ class PriceListFeesMutator
      */
     public function update($_, array $args): PriceListFee
     {
+        $internalPriceListExists = CommissionPriceList::where('id', $args['price_list_id'])
+            ->whereHas('paymentProvider', function ($query) {
+                $query->where('name', 'Internal');
+            })
+            ->exists();
+
+        if ($internalPriceListExists && $args['price_list_id']) {
+            $priceListFeeExists = PriceListFee::where('price_list_id', $args['price_list_id'])->exists();
+            if ($priceListFeeExists) {
+                throw new GraphqlException('Only one PriceListFee is allowed for the PriceList with Internal provider', 'use');
+            }
+        }
+
         if (isset($args['fee_ranges'])) {
             $args['fees'] = $this->priceListFeeService->convertFeeRangesToFees($args);
         }

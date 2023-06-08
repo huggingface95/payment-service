@@ -62,7 +62,7 @@ extend type Mutation @guard {
         region_id: ID
         "ID Компании"
         company_id: ID!
-    ):CommissionPriceList   @create @validator
+    ):CommissionPriceList   @field(resolver:"CommissionPriceListMutator@create") @validator
 
     "Редактирование частного пользователя"
     updateCommissionPriceList(
@@ -79,7 +79,7 @@ extend type Mutation @guard {
         region_id: ID
         "ID Компании"
         company_id: ID
-    ): CommissionPriceList   @update
+    ): CommissionPriceList   @field(resolver:"CommissionPriceListMutator@update")
 
 
     "Удалить прайс лист"
