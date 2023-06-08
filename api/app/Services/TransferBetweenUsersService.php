@@ -202,19 +202,6 @@ class TransferBetweenUsersService extends AbstractService
         }
     }
 
-    public function attachFile(array $args): TransferOutgoing|TransferIncoming|Model|null
-    {
-        if ($args['type'] == FeeTransferTypeEnum::INCOMING->toString()) {
-            $transfer = TransferIncoming::query()->findOrFail($args['transfer_id']);
-
-            return $this->transferIncomingRepository->attachFileById($transfer, $args['file_id']);
-        } else {
-            $transfer = TransferOutgoing::query()->findOrFail($args['transfer_id']);
-
-            return $this->transferOutgoingRepository->attachFileById($transfer, $args['file_id']);
-        }
-    }
-
     /**
      * @throws GraphqlException
      */
