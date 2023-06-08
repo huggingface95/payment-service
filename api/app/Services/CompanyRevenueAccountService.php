@@ -93,6 +93,7 @@ class CompanyRevenueAccountService
     public function getRevenueAccountsByCompanyId(int $companyId): Collection
     {
         return CompanyRevenueAccount::query()
+            ->withoutGlobalScopes()
             ->where('company_id', $companyId)
             ->get();
     }
