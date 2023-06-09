@@ -6,6 +6,7 @@ use App\Rules\CurrenciesDestination;
 use App\Rules\CurrencyMode;
 use App\Rules\CurrencyRangeMatches;
 use App\Rules\FeeRanges;
+use App\Rules\FeeValueAsObject;
 use App\Rules\RequiredCurrenciesDestination;
 use Nuwave\Lighthouse\Validation\Validator;
 
@@ -25,6 +26,7 @@ final class CreatePriceListFeesValidator extends Validator
             'input.fees.*' => [new CurrencyRangeMatches()],
             'input.fee_ranges' => [
                 new FeeRanges(),
+                new FeeValueAsObject(),
                 new CurrenciesDestination($this->arg('input')['operation_type_id']),
                 new RequiredCurrenciesDestination($this->arg('input')['operation_type_id']),
             ],
