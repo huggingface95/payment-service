@@ -28,7 +28,7 @@ func RedirectRequest(context *gin.Context) {
 
 	context.Request.Body = ioutil.NopCloser(bytes.NewBuffer(jsonData))
 
-	if false {
+	if config.Conf.App.AppEnv != "testing" {
 		if err := context.ShouldBindHeader(&header); err != nil {
 			context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
