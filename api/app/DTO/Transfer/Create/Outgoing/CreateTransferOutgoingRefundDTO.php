@@ -8,6 +8,7 @@ use App\Enums\TransferChannelEnum;
 use App\Models\Account;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class CreateTransferOutgoingRefundDTO extends CreateTransferOutgoingDTO
 {
@@ -24,8 +25,8 @@ class CreateTransferOutgoingRefundDTO extends CreateTransferOutgoingDTO
         $args['urgency_id'] = 1;
         $args['operation_type_id'] = $operationType;
         $args['payment_bank_id'] = 2;
-        $args['payment_number'] = rand();
-        $args['system_message'] = 'test';
+        $args['payment_number'] = Str::uuid();
+        $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['recipient_country_id'] = $args['sender_country_id'];
         $args['respondent_fees_id'] = 2;

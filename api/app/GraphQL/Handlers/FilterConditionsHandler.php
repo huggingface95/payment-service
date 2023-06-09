@@ -29,17 +29,18 @@ class FilterConditionsHandler
     }
 
     /**
-     * @param  \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder  $builder
-     * @param  array<string, mixed>  $whereConditions
+     * @param \Illuminate\Database\Query\Builder|\Illuminate\Database\Eloquent\Builder $builder
+     * @param array<string, mixed> $whereConditions
      *
      * @throws Error
      */
     public function __invoke(
         object $builder,
-        array $whereConditions,
-        Model $model = null,
+        array  $whereConditions,
+        Model  $model = null,
         string $boolean = 'and'
-    ): void {
+    ): void
+    {
         if ($builder instanceof EloquentBuilder) {
             $model = $builder->getModel();
         } else {
@@ -77,6 +78,7 @@ class FilterConditionsHandler
         if (isset($whereConditions['column']) && preg_match('/^has(.*)/', $whereConditions['column'], $hasCondition)) {
             $condition = null;
             $isMorph = false;
+            $morphSingle = false;
             $joinRelationship = null;
             $pivotModel = null;
 
@@ -88,11 +90,24 @@ class FilterConditionsHandler
 
             if (preg_match('/^(.*?)FilterBy(.*)/', $hasCondition[1], $hasConditionArguments)) {
                 $relation = $hasConditionArguments[1];
+                $relationship = $joinRelationship ?? $model->$relation();
                 $condition = [
                     'column' => strtolower(Str::snake($hasConditionArguments[2])),
-                    'value' => $whereConditions['value'],
                     'operator' => $whereConditions['operator'],
+                    'value' => $whereConditions['value'],
                 ];
+                if ($relationship instanceof MorphTo) {
+                    $isMorph = true;
+                    $morphSingle = true;
+                    $filterByMorphTo = [];
+                    foreach (($pivotModel ?? $model)->newModelQuery()->distinct()->pluck($relationship->getMorphType())->filter()->all() as $morph) {
+                        $morph = Relation::getMorphedModel($morph) ?? $morph;
+                        if ($c = $this->overwritePrefixIdColumns($condition, (new $morph()))) {
+                            $filterByMorphTo[$morph] = $c;
+                        }
+                    }
+                    $condition = $filterByMorphTo;
+                }
             } elseif (preg_match('/^(.*?)Mixed(.*)/', $hasCondition[1], $hasConditionArguments)) {
                 $relation = $hasConditionArguments[1];
                 $relationship = $joinRelationship ?? $model->$relation();
@@ -111,12 +126,13 @@ class FilterConditionsHandler
             }
 
             $nestedBuilder = $this->handleHasCondition(
-                $joinModel ?? $model,
+                $model,
                 $relation,
                 '>=',
                 $whereConditions['amount'] ?? 1,
                 $condition,
-                $isMorph
+                $isMorph,
+                $morphSingle
             );
             $builder->addNestedWhereQuery($nestedBuilder, $boolean);
         }
@@ -132,7 +148,7 @@ class FilterConditionsHandler
             $this->__invoke($builder, $condition, $model);
         }
 
-        if (! preg_match('/^(has)|(Mixed)|(doesntHave)/', $whereConditions['column'] ?? 'null')) {
+        if (!preg_match('/^(has)|(Mixed)|(doesntHave)/', $whereConditions['column'] ?? 'null')) {
             if ($column = $whereConditions['column'] ?? null) {
                 $this->assertValidColumnReference($column);
                 $whereConditions = $this->prefixConditionWithTableName($whereConditions, $model);
@@ -142,23 +158,29 @@ class FilterConditionsHandler
     }
 
     /**
-     * @param  array<string, mixed>|null  $condition
+     * @param array<string, mixed>|null $condition
      */
     public function handleHasCondition(
-        Model $model,
+        Model  $model,
         string $relation,
         string $operator,
-        int $amount,
+        int    $amount,
         ?array $condition = null,
-        bool $isMorph = false
-    ): QueryBuilder {
-        return $model
-            ->newQuery()
-            ->whereHas(
+        bool   $isMorph = false,
+        bool   $morphSingle = false
+    ): QueryBuilder
+    {
+        $model = $model->newQuery();
+        if ($isMorph && $morphSingle) {
+            $model->whereHasMorph($relation, array_keys($condition), function ($builder) use ($condition) {
+                $builder->where(...array_values($condition[get_class($builder->getModel())]));
+            });
+        } else {
+            $model->whereHas(
                 $relation,
                 $condition
                     ? function ($builder) use ($condition, $isMorph): void {
-                        $this->__invoke(
+                    $this->__invoke(
                         $builder,
                         $this->prefixConditionWithTableName(
                             $isMorph ? $condition[get_class($builder->getModel())] : $condition,
@@ -166,18 +188,21 @@ class FilterConditionsHandler
                         ),
                         $builder->getModel()
                     );
-                    }
+                }
                     : null,
                 $operator,
                 $amount
-            )
-            ->getQuery();
+            );
+        }
+
+        return $model->getQuery();
     }
 
     public function handleDoesntHaveCondition(
-        Model $model,
+        Model  $model,
         string $relation,
-    ): QueryBuilder {
+    ): QueryBuilder
+    {
         return $model
             ->newQuery()
             ->whereDoesntHave($relation)
@@ -213,26 +238,39 @@ class FilterConditionsHandler
      * This is important for queries which can otherwise be ambiguous, for
      * example when multiple tables with a column "id" are involved.
      *
-     * @param  array<string, mixed>  $condition
+     * @param array<string, mixed> $condition
      * @return array<string, mixed>
      */
     protected function prefixConditionWithTableName(array $condition, Model $model): array
     {
         if (isset($condition['column'])) {
-            if (! str_contains($condition['column'], '.')) {
-                $condition['column'] = $model->getTable().'.'.$condition['column'];
+            if (!str_contains($condition['column'], '.')) {
+                $condition['column'] = $model->getTable() . '.' . $condition['column'];
             }
         } elseif (isset($condition[0]['column'])) {
             foreach ($condition as &$item) {
-                if (! str_contains($item['column'], '.')) {
-                    $item['column'] = $model->getTable().'.'.$item['column'];
+                if (!str_contains($item['column'], '.')) {
+                    $item['column'] = $model->getTable() . '.' . $item['column'];
                 }
             }
         } elseif ((isset($condition['OR']) && is_array($condition['OR'])) || (isset($condition['AND']) && is_array($condition['AND']))) {
             foreach ($condition['OR'] ?? $condition['AND'] as &$item) {
-                if (! str_contains($item['column'], '.')) {
-                    $item['column'] = $model->getTable().'.'.$item['column'];
+                if (!str_contains($item['column'], '.')) {
+                    $item['column'] = $model->getTable() . '.' . $item['column'];
                 }
+            }
+        }
+
+        return $condition;
+    }
+
+    private function overwritePrefixIdColumns(array $condition, Model $model): ?array
+    {
+        if ($condition['column'] == 'id' && is_string($condition['value']) && !is_numeric($condition['value'])) {
+            if ($model instanceof ApplicantIndividual && !str_contains($condition['value'], ApplicantIndividual::ID_PREFIX)) {
+                return null;
+            } elseif ($model instanceof ApplicantCompany && !str_contains($condition['value'], ApplicantCompany::ID_PREFIX)) {
+                return null;
             }
         }
 
@@ -252,10 +290,10 @@ class FilterConditionsHandler
         }
 
         foreach ($columns as $column) {
-            if ($column == 'Id' && is_string($whereConditions['value']) && !is_numeric($whereConditions['value'])){
-                if ($model instanceof ApplicantIndividual && !str_contains($whereConditions['value'], ApplicantIndividual::ID_PREFIX)){
+            if ($column == 'Id' && is_string($whereConditions['value']) && !is_numeric($whereConditions['value'])) {
+                if ($model instanceof ApplicantIndividual && !str_contains($whereConditions['value'], ApplicantIndividual::ID_PREFIX)) {
                     continue;
-                } elseif ($model instanceof ApplicantCompany && !str_contains($whereConditions['value'], ApplicantCompany::ID_PREFIX)){
+                } elseif ($model instanceof ApplicantCompany && !str_contains($whereConditions['value'], ApplicantCompany::ID_PREFIX)) {
                     continue;
                 }
             }

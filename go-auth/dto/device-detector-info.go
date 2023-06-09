@@ -31,6 +31,7 @@ type DeviceDetectorInfo struct {
 	City                string
 	Domain              string
 	Lang                string
+	Host                string
 }
 
 func (d *DeviceDetectorInfo) Parse(context *gin.Context) *DeviceDetectorInfo {
@@ -53,7 +54,7 @@ func (d *DeviceDetectorInfo) Parse(context *gin.Context) *DeviceDetectorInfo {
 		d.Country = ipInfo.Country
 		d.City = ipInfo.City
 	}
-
+	d.Host = context.Request.Host
 	d.Lang = lang
 	d.Ip = ip
 	d.Model = info.Model

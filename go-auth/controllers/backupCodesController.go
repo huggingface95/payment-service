@@ -28,7 +28,7 @@ func GenerateBackupCodes(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user, message := auth.CheckUserByToken("", request.AccessToken, request.MemberId, clientType)
+	user, message := auth.CheckUserByToken("", request.AccessToken, request.MemberId, clientType, context.Request.Host)
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
@@ -60,7 +60,7 @@ func StoreBackupCodes(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user, message := auth.CheckUserByToken("", request.AccessToken, request.MemberId, clientType)
+	user, message := auth.CheckUserByToken("", request.AccessToken, request.MemberId, clientType, context.Request.Host)
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
@@ -68,7 +68,7 @@ func StoreBackupCodes(context *gin.Context) {
 	user.SetBackupCodeData(request.BackupCodes)
 	userRepository.SaveUser(user)
 
-	token, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
+	token, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken, context.Request.Host)
 	if err != nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Token don't generate"})
 		context.Abort()

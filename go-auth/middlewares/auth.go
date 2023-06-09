@@ -16,7 +16,7 @@ func AccessAuth() gin.HandlerFunc {
 			context.Abort()
 			return
 		}
-		errAccessToken := services.ValidateAccessToken(tokenString, constants.Personal)
+		errAccessToken := services.ValidateAccessToken(tokenString, constants.Personal, context.Request.Host)
 
 		if errAccessToken == nil {
 			context.Set("bearer", strings.Replace(tokenString, "Bearer ", "", -1))
