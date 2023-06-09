@@ -5,14 +5,12 @@ namespace App\Services;
 use App\Enums\RespondentFeesEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
-use App\Models\Payments;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\AccountRepositoryInterface;
 
 class AccountService extends AbstractService
 {
     public function __construct(
-        protected PaymentsService $paymentsService,
         protected AccountRepositoryInterface $accountRepository
     ) {
     }
@@ -39,7 +37,7 @@ class AccountService extends AbstractService
         if ($account->available_balance < $amount) {
             throw new GraphqlException('Available balance less than payment amount', 'use');
         }
-        
+
         try {
             /** @var Account $account */
             $account = $this->accountRepository->update($account, [
@@ -84,33 +82,6 @@ class AccountService extends AbstractService
         };
     }
 
-    public function setAmmountReserveOnBalance(Payments $payment)
-    {
-        $account = $payment->account;
-        $amount = $this->paymentsService->getAccountAmountRealWithCommission($payment, $payment->fee);
-
-        if ($account->available_balance < $amount) {
-            throw new GraphqlException('Available balance less than payment amount', 'use');
-        }
-
-        $account->reserved_balance = $account->reserved_balance + $amount;
-        $account->available_balance = $account->current_balance - $account->reserved_balance;
-        $account->save();
-    }
-
-    public function unsetAmmountReserveOnBalance(Payments $payment)
-    {
-        $account = $payment->account;
-        $amount = $this->paymentsService->getAccountAmountRealWithCommission($payment, $payment->fee);
-
-        if ($account->reserved_balance < $amount) {
-            throw new GraphqlException('Reserved balance less than payment amount', 'use');
-        }
-
-        $account->reserved_balance = $account->reserved_balance - $amount;
-        $account->available_balance = $account->current_balance - $account->reserved_balance;
-        $account->save();
-    }
 
     public function setAmmountReserveOnAccountBalance(TransferOutgoing $transfer): Account
     {

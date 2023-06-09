@@ -1,12 +1,19 @@
 <?php
 
-namespace Tests\Unit;
+namespace Unit;
 
-use App\Services\PaymentsService;
+use App\Enums\PaymentUrgencyEnum;
+use App\Services\CommissionService;
 use Tests\TestCase;
 
 class PaymentsTest extends TestCase
 {
+
+    public function __construct(protected CommissionService $commissionService)
+    {
+
+    }
+
     /**
      * @dataProvider provideTestGetFee
      *
@@ -81,7 +88,7 @@ class PaymentsTest extends TestCase
             ],
         ]);
 
-        $fee = (new PaymentsService())->getFee($collection, $amount, 1);
+        $fee = $this->commissionService->getFee($collection, $amount, PaymentUrgencyEnum::STANDART->value);
 
         $this->assertEqualsWithDelta($excepted, $fee, 0.00001);
     }
