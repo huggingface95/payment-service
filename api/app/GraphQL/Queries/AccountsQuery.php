@@ -47,8 +47,8 @@ class AccountsQuery
     {
         $list = Account::query()->whereHas('clientable', function ($q) {
             $q->whereHas('modules', function ($q) {
-                return $q->where('is_active', '=', true);
-            })->where('id', '=', ModuleEnum::BANKING->value);
+                return $q->where('id', '=', ModuleEnum::BANKING->value)->where('is_active', '=', true);
+            });
         })->with('clientable');
 
         if (isset($args['filter'])) {
