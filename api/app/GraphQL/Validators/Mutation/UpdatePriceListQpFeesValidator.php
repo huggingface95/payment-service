@@ -2,13 +2,16 @@
 
 namespace App\GraphQL\Validators\Mutation;
 
+use App\Enums\OperationTypeEnum;
+use App\Rules\CurrenciesDestination;
 use App\Rules\CurrencyMode;
 use App\Rules\CurrencyRangeMatches;
 use App\Rules\FeeRanges;
 use App\Rules\FeeValueAsObject;
+use App\Rules\RequiredCurrenciesDestination;
 use Nuwave\Lighthouse\Validation\Validator;
 
-final class CreatePriceListPPFeesValidator extends Validator
+final class UpdatePriceListQpFeesValidator extends Validator
 {
     /**
      * Return the validation rules.
@@ -18,10 +21,14 @@ final class CreatePriceListPPFeesValidator extends Validator
     public function rules(): array
     {
         return [
-            'input.operation_type_id' => ['required', 'int'],
             'input.fees.*.fee' => [new CurrencyMode()],
             'input.fees.*' => [new CurrencyRangeMatches()],
-            'input.fee_ranges' => [new FeeRanges(), new FeeValueAsObject()],
+            'input.fee_ranges' => [
+                new FeeRanges(),
+                new FeeValueAsObject(),
+                new CurrenciesDestination(OperationTypeEnum::EXCHANGE->value),
+                new RequiredCurrenciesDestination(OperationTypeEnum::EXCHANGE->value),
+            ],
         ];
     }
 }

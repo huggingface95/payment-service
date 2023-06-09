@@ -58,8 +58,7 @@ extend type Mutation @guard {
     createPriceListPPFees(
         input: PriceListPPFeeInput @spread
     ): PriceListPPFee
-    @field(resolver: "PriceListPPFeesMutator@create")
-    @validator
+        @field(resolver: "PriceListPPFeesMutator@create") @validator
 
     """
     Обновить прайс лист для PP
@@ -68,7 +67,7 @@ extend type Mutation @guard {
         id: ID!
         input: PriceListPPFeeInput @spread
     ): PriceListPPFee
-    @field(resolver: "PriceListPPFeesMutator@update")
+        @field(resolver: "PriceListPPFeesMutator@update") @validator
 
     """
     Удалить прайс лист PP
