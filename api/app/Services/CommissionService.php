@@ -270,8 +270,8 @@ class CommissionService extends AbstractService
         }
 
         return match ((int) $transfer->respondent_fees_id) {
-            RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount,
-            RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount + $paymentFee,
+            RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount + $paymentFee,
+            RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount,
             RespondentFeesEnum::SHARED_FEES->value => $transfer->amount + $paymentFee / 2,
 
             default => throw new GraphqlException('Unknown respondent fee', 'use'),
