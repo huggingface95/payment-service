@@ -97,6 +97,7 @@ class TransferExchangeService extends AbstractService
         $fees = $this->commissionService->getAllCommissions($transfer, $transaction);
         $rate = $this->getExchangeRate($args, $fromAccount, $toAccount);
 
+        $totalConvertedAmount = $args['amount'] - $fees['fee_amount'] - $fees['fee_qp'];
         $args['amount'] = $args['amount'] - $fees['fee_total'];
         $amount = $this->getExchangeAmount($args, $fromAccount, $toAccount);
 
@@ -106,6 +107,7 @@ class TransferExchangeService extends AbstractService
             'fee_total' => $fees['fee_total'],
             'rate' => $rate,
             'converted_amount' => $amount,
+            'total_converted_amount' => $totalConvertedAmount,
         ];
     }
 
