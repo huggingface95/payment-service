@@ -15,6 +15,7 @@ type JwtConfig struct {
 	Ttl                  int
 	BlockAccountTtl      int
 	MfaAttempts          int
+	CheckIssuer          bool
 }
 
 func (j *JwtConfig) Load() *JwtConfig {
@@ -30,6 +31,10 @@ func (j *JwtConfig) Load() *JwtConfig {
 	if err != nil {
 		panic(err)
 	}
+	checkIssuer, err := strconv.ParseBool(os.Getenv("JWT_CHECK_ISSUER"))
+	if err != nil {
+		panic(err)
+	}
 
 	j.Ttl = ttl
 	j.BlockAccountTtl = blockAccountTtl
@@ -38,6 +43,7 @@ func (j *JwtConfig) Load() *JwtConfig {
 	j.PayloadMemberPrv = os.Getenv("JWT_PAYLOAD_MEMBER_PRV")
 	j.PayloadIndividualPrv = os.Getenv("JWT_PAYLOAD_INDIVIDUAL_PRV")
 	j.PayloadUrl = os.Getenv("JWT_PAYLOAD_URL")
+	j.CheckIssuer = checkIssuer
 
 	return j
 }
