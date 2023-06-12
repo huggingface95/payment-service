@@ -421,11 +421,6 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         return $this->belongsTo(ApplicantKycLevel::class, 'kyc_level_id');
     }
 
-    public function payment(): HasOne
-    {
-        return $this->hasOne(Payments::class, 'owner_id');
-    }
-
     public function scopeGroupSort($query, $sort)
     {
         return $query
