@@ -45,6 +45,17 @@ class AccountsQuery
 
     public function clientListActive($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection
     {
+        $list = Account::query()->whereHas('clientable')->with('clientable');
+
+        if (isset($args['filter'])) {
+            $this->handler->__invoke($list, $args['filter']);
+        }
+
+        return $list->get()->pluck('clientable')->unique();
+    }
+
+    public function clientListBankingActive($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection
+    {
         $list = Account::query()->whereHas('clientable', function ($q) {
             $q->whereHas('modules', function ($q) {
                 return $q->where('id', '=', ModuleEnum::BANKING->value)->where('is_active', '=', true);
@@ -52,7 +63,14 @@ class AccountsQuery
         })->with('clientable');
 
         if (isset($args['filter'])) {
-            $this->handler->__invoke($list, $args['filter']);
+            $filter = $args['filter'];
+            array_walk_recursive($filter, function (&$v, $k){
+                if ($k == 'column' && $v == 'account_id'){
+                    $v = 'id';
+                }
+            });
+
+            $this->handler->__invoke($list, $filter);
         }
 
         return $list->get()->pluck('clientable')->unique();
