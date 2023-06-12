@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v4"
 	"jwt-authentication-golang/cache"
+	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/times"
@@ -96,7 +97,7 @@ func parseJWT(signedToken string, jwtType string, host string) (claims *JWTClaim
 		if err == nil && token.Valid {
 			claims, ok := token.Claims.(*JWTClaim)
 			if ok {
-				if claims.Issuer != host {
+				if config.Conf.Jwt.CheckIssuer == true && claims.Issuer != host {
 					err = errors.New("Another Issuer")
 				} else if claims.ExpiresAt.Unix() < time.Now().UTC().Unix() {
 					err = errors.New("token expired")
