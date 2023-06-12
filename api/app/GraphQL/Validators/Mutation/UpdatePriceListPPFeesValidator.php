@@ -8,7 +8,7 @@ use App\Rules\FeeRanges;
 use App\Rules\FeeValueAsObject;
 use Nuwave\Lighthouse\Validation\Validator;
 
-final class CreatePriceListPPFeesValidator extends Validator
+final class UpdatePriceListPPFeesValidator extends Validator
 {
     /**
      * Return the validation rules.

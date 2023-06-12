@@ -29,19 +29,25 @@ class PriceListFeeService extends AbstractService
                             if ($feeValue->mode == '%') {
                                 $fees[$currency]['fee'][$r][] = [
                                     'mode' => FeeModeEnum::PERCENT->toString(),
-                                    'percent' => $feeValue->value,
+                                    'percent' => [
+                                        'standart' => $feeValue->value->standart,
+                                        'express' => $feeValue->value->express ?? 0,
+                                    ],
                                 ];
                             } elseif ($feeValue->mode == 'fix') {
                                 $fees[$currency]['fee'][$r][] = [
                                     'mode' => FeeModeEnum::FIX->toString(),
-                                    'fee' => $feeValue->value,
+                                    'fee' => [
+                                        'standart' => $feeValue->value->standart,
+                                        'express' => $feeValue->value->express ?? 0,
+                                    ],
                                 ];
                             } elseif ($feeValue->mode == 'base') {
                                 $fees[$currency]['fee'][$r][] = [
                                     'mode' => FeeModeEnum::BASE->toString(),
                                     'fee' => [
                                         'standart' => $feeValue->value->standart,
-                                        'express' => $feeValue->value->express,
+                                        'express' => $feeValue->value->express ?? 0,
                                     ],
                                 ];
                             }
@@ -65,12 +71,18 @@ class PriceListFeeService extends AbstractService
                             if ($feeValue->mode == '%') {
                                 $fees[$currency]['fee'][$r][] = [
                                     'mode' => FeeModeEnum::PERCENT->toString(),
-                                    'percent' => $feeValue->value,
+                                    'percent' => [
+                                        'standart' => $feeValue->value->standart,
+                                        'express' => $feeValue->value->express ?? 0,
+                                    ],
                                 ];
                             } elseif ($feeValue->mode == 'fix') {
                                 $fees[$currency]['fee'][$r][] = [
                                     'mode' => FeeModeEnum::FIX->toString(),
-                                    'fee' => $feeValue->value,
+                                    'fee' => [
+                                        'standart' => $feeValue->value->standart,
+                                        'express' => $feeValue->value->express ?? 0,
+                                    ],
                                 ];
                             }
                         }

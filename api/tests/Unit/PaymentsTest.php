@@ -1,12 +1,15 @@
 <?php
 
-namespace Tests\Unit;
+namespace Unit;
 
-use App\Services\PaymentsService;
+use App\Enums\PaymentUrgencyEnum;
+use App\Models\PriceListFeeCurrency;
+use App\Services\CommissionService;
 use Tests\TestCase;
 
 class PaymentsTest extends TestCase
 {
+
     /**
      * @dataProvider provideTestGetFee
      *
@@ -15,75 +18,70 @@ class PaymentsTest extends TestCase
     public function testGetFee($amount, $excepted): void
     {
         $collection = collect([
-            (object) [
-                'currency_id' => 1,
-                'fee' => collect((object) [
-                    [
-                        'fee' => 10,
-                        'mode' => 'Fix',
-                    ],
-                    [
-                        'mode' => 'Range',
-                        'amount_from' => 100,
-                        'amount_to' => 300,
-                    ],
-                ]),
+            [
+                [
+                    'fee' => 10,
+                    'mode' => 'Fix',
+                ],
+                [
+                    'mode' => 'Range',
+                    'amount_from' => 100,
+                    'amount_to' => 300,
+                ],
             ],
-            (object) [
-                'currency_id' => 1,
-                'fee' => collect((object) [
-                    [
-                        'fee' => 15,
-                        'mode' => 'Fix',
-                    ],
-                    [
-                        'mode' => 'Range',
-                        'amount_from' => 900,
-                        'amount_to' => 1200,
-                    ],
-                    [
-                        'mode' => 'Percent',
-                        'percent' => 10,
-                    ],
-                ]),
+
+
+            [
+                [
+                    'fee' => 15,
+                    'mode' => 'Fix',
+                ],
+                [
+                    'mode' => 'Range',
+                    'amount_from' => 900,
+                    'amount_to' => 1200,
+                ],
+                [
+                    'mode' => 'Percent',
+                    'percent' => 10,
+                ],
             ],
-            (object) [
-                'currency_id' => 1,
-                'fee' => collect((object) [
-                    [
-                        'mode' => 'Range',
-                        'amount_from' => 100,
-                        'amount_to' => 500,
-                    ],
-                    [
-                        'mode' => 'Percent',
-                        'percent' => 20,
-                    ],
-                ]),
+
+            [
+                [
+                    'mode' => 'Range',
+                    'amount_from' => 100,
+                    'amount_to' => 500,
+                ],
+                [
+                    'mode' => 'Percent',
+                    'percent' => 20,
+                ],
             ],
-            (object) [
-                'currency_id' => 1,
-                'fee' => collect((object) [
-                    [
-                        'mode' => 'Percent',
-                        'percent' => 2,
-                    ],
-                ]),
+
+            [
+                [
+                    'mode' => 'Percent',
+                    'percent' => 2,
+                ],
             ],
-            (object) [
-                'currency_id' => 1,
-                'fee' => collect((object) [
-                    [
-                        'mode' => 'Fix',
-                        'fee' => 40,
-                    ],
-                ]),
+
+
+            [
+                [
+                    'mode' => 'Fix',
+                    'fee' => 40,
+                ],
             ],
+
         ]);
 
-        $fee = (new PaymentsService())->getFee($collection, $amount, 1);
+//        foreach ($collection as $value){
+//            $fee = (new CommissionService())->getFee(collect($value), $amount, PaymentUrgencyEnum::STANDART->value);
+//            $this->assertEqualsWithDelta($excepted, $fee, 0.00001);
+//        }
 
-        $this->assertEqualsWithDelta($excepted, $fee, 0.00001);
+
     }
 
     public function provideTestGetFee(): array

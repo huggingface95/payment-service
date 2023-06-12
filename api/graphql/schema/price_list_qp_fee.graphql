@@ -62,7 +62,7 @@ extend type Mutation @guard {
         id: ID!
         input: PriceListQpFeeInput @spread
     ): PriceListQpFee   
-        @field(resolver: "PriceListQpFeesMutator@update")
+        @field(resolver: "PriceListQpFeesMutator@update") @validator
 
     """
     Удалить прайс лист QP

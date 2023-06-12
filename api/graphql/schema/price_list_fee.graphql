@@ -126,7 +126,7 @@ extend type Mutation @guard {
         id: ID!
         commission_price_list: [priceList]
         input: PriceListFeeInput @spread
-    ): PriceListFee   @field(resolver:"PriceListFeesMutator@update")
+    ): PriceListFee   @field(resolver:"PriceListFeesMutator@update") @validator
 
     """
     Удалить Цен
