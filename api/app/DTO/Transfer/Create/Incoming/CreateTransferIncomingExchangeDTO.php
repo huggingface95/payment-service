@@ -5,6 +5,7 @@ namespace App\DTO\Transfer\Create\Incoming;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
+use App\Enums\RespondentFeesEnum;
 use App\Enums\TransferChannelEnum;
 use App\Models\Account;
 
@@ -27,7 +28,7 @@ class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
         $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['sender_country_id'] = 1;
-        $args['respondent_fees_id'] = 1;
+        $args['respondent_fees_id'] = RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
         $args['group_id'] = 1;
         $args['group_type_id'] = 1;
         $args['project_id'] = 1;

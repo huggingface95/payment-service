@@ -5,6 +5,7 @@ namespace App\DTO\Transfer\Create\Outgoing;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
+use App\Enums\RespondentFeesEnum;
 use App\Enums\TransferChannelEnum;
 use App\Models\Account;
 use Carbon\Carbon;
@@ -31,7 +32,7 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['system_message'] = 'test';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['sender_country_id'] = 1;
-        $args['respondent_fees_id'] = 2;
+        $args['respondent_fees_id'] = RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
         $args['group_id'] = 1;
         $args['group_type_id'] = 1;
         $args['project_id'] = 1;
