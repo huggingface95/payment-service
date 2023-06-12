@@ -60,6 +60,7 @@ final class TransferFeeQuery
             'currency_id' => $args['currency_src_id'],
             'urgency_id' => ! empty($args['urgency_id']) ? $args['urgency_id'] : PaymentUrgencyEnum::STANDART->value,
             'amount' => $args['amount'],
+            'amount_debt' => $args['amount'],
         ]);
         $transfer->id = 1;
 

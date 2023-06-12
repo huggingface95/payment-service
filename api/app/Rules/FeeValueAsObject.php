@@ -32,7 +32,11 @@ class FeeValueAsObject implements ImplicitRule
                                 return false;
                             }
 
-                            if (empty($feeValue->value->standart)) {
+                            if (!is_object($feeValue->value)) {
+                                return true;
+                            }
+
+                            if (is_object($feeValue->value) && empty($feeValue->value->standart)) {
                                 return false;
                             }
                         }
