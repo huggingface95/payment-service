@@ -6,6 +6,7 @@ use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividual;
 use App\Models\History;
 use App\Models\Members;
+use App\Models\Traits\ApplicantIdPrefix;
 use App\Models\Traits\CheckForEvents;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class BaseObserver
 {
     use CheckForEvents;
+    use ApplicantIdPrefix;
 
 
     public function created(Model $model, bool $callHistory = true): bool
@@ -48,6 +50,9 @@ class BaseObserver
      */
     public function creating(Model $model, bool $callHistory = true): bool
     {
+
+        self::checkAndOverwriteIdPrefix($model);
+
         /** @var Members|ApplicantIndividual $user */
         $user = Auth::user();
 
@@ -68,6 +73,8 @@ class BaseObserver
      */
     public function saving(Model $model, bool $callHistory = true): bool
     {
+        self::checkAndOverwriteIdPrefix($model);
+
         /** @var Members|ApplicantIndividual $user */
         $user = Auth::user();
 
@@ -88,6 +95,8 @@ class BaseObserver
      */
     public function updating(Model $model, bool $callHistory = true): bool
     {
+        self::checkAndOverwriteIdPrefix($model);
+
         /** @var Members|ApplicantIndividual $user */
         $user = Auth::user();
 
