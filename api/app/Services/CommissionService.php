@@ -108,7 +108,7 @@ class CommissionService extends AbstractService
             return throw new GraphqlException('Quote provider not found. Please setup quote provider');
         }
 
-        $priceListFees = PriceListQpFeeCurrency::where('currency_id', $transactionDTO->currency_dst_id)
+        $priceListFees = PriceListQpFeeCurrency::where('currency_id', $transactionDTO->currency_src_id)
             ->whereHas('PriceListQpFee', function ($query) use ($quoteProviderId) {
                 $query->where('quote_provider_id', $quoteProviderId);
             })
@@ -235,18 +235,26 @@ class CommissionService extends AbstractService
 
     private static function getConstantFee(array $data, float $amount, int $urgency): float
     {
-        if ($data['mode'] == FeeModeEnum::FIX->toString()) {
-            return $data['fee'];
-        } elseif ($data['mode'] == FeeModeEnum::PERCENT->toString()) {
-            return ($data['percent'] / 100) * $amount;
-        } elseif ($data['mode'] == FeeModeEnum::BASE->toString()) {
-            if ($urgency == PaymentUrgencyEnum::STANDART->value) {
-                return $data['fee']['standart'];
-            } elseif ($urgency == PaymentUrgencyEnum::EXPRESS->value) {
-                return $data['fee']['express'];
+        if ($data['mode'] == FeeModeEnum::FIX->toString() || $data['mode'] == FeeModeEnum::BASE->toString()) {
+            if (is_array($data['fee'])) {
+                if ($urgency == PaymentUrgencyEnum::STANDART->value) {
+                    return $data['fee']['standart'];
+                } elseif ($urgency == PaymentUrgencyEnum::EXPRESS->value) {
+                    return $data['fee']['express'];
+                }
             }
 
-            return 0;
+            return $data['fee'];
+        } elseif ($data['mode'] == FeeModeEnum::PERCENT->toString()) {
+            if (is_array($data['percent'])) {
+                if ($urgency == PaymentUrgencyEnum::STANDART->value) {
+                    return ($data['percent']['standart'] / 100) * $amount;
+                } elseif ($urgency == PaymentUrgencyEnum::EXPRESS->value) {
+                    return ($data['percent']['express'] / 100) * $amount;
+                }
+            }
+
+            return ($data['percent'] / 100) * $amount;
         }
 
         return 0;

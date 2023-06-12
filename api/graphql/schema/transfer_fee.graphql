@@ -11,6 +11,7 @@ type TransferFeeExchange {
     fee_total: Decimal!
     rate: Decimal!
     converted_amount: Decimal!
+    total_converted_amount: Decimal!
 }
 
 extend type Query @guard {
