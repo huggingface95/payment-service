@@ -181,12 +181,12 @@ input QueryClientListActiveFilterStatic @spread{
 }
 
 input QueryApplicantsBankingActiveFilterStatic @spread{
-    group_type_id: ID @eq
-    company_id: ID @eq
     group_role_id: ID @eq
     account_id: ID @eq
     account_number: String @ilike
     hasClientableFilterById: Mixed @eq
+    hasClientableFilterByGroupTypeId: Mixed @eq
+    hasClientableFilterByCompanyId: Mixed @eq
     hasClientableFilterByEmail: String @ilike
     hasClientableFilterByPhone: String @ilike
     hasClientableMixedIdOrFullnameOrName: Mixed @eq
