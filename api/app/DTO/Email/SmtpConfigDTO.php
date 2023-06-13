@@ -14,9 +14,9 @@ class SmtpConfigDTO
 
     public string $host;
 
-    public string $security;
+    public ?string $security;
 
-    public string|array $from;
+    public null|string|array $from;
 
     public static function transform(EmailSmtp $smtp): self
     {
