@@ -28,6 +28,10 @@ use Illuminate\Database\Eloquent\Model;
 trait ApplicantIdPrefix
 {
     private const COLUMNS = [
+        ApplicantCompany::class => [
+            'column' => 'owner_id',
+            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
+        ],
         ApplicantDocument::class => [
             'column' => 'applicant_id',
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
