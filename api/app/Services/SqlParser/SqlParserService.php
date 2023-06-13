@@ -15,11 +15,11 @@ class SqlParserService
     }
 
 
-    public function parseAndOverwriteBindings(array $bindings, string $sql, string $table, string $prefix): array
+    public function parseAndOverwriteBindings(array $bindings, string $sql): array
     {
         $parser = new PHPSQLParser($sql);
         if (isset($parser->parsed['WHERE'])) {
-            $this->whereBuilder->overwriteBindings($bindings, $parser->parsed['WHERE'], $table, $prefix);
+            $this->whereBuilder->overwriteBindings($bindings, $parser->parsed['WHERE']);
         }
 
         return $bindings;
