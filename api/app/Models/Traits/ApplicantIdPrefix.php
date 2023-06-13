@@ -29,11 +29,11 @@ trait ApplicantIdPrefix
 {
     private const COLUMNS = [
         ApplicantCompany::class => [
-            'column' => 'owner_id',
+            'columns' => ['owner_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
         ],
         ApplicantDocument::class => [
-            'column' => 'applicant_id',
+            'columns' => ['applicant_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -47,7 +47,7 @@ trait ApplicantIdPrefix
             ]
         ],
         ApplicantIndividualCompany::class => [
-            'column' => 'applicant_id',
+            'columns' => ['applicant_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -61,15 +61,15 @@ trait ApplicantIdPrefix
             ]
         ],
         ApplicantModuleActivity::class => [
-            'column' => 'applicant_id',
+            'columns' => ['applicant_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
         ],
         ApplicantRiskLevelHistory::class => [
-            'column' => 'applicant_id',
+            'columns' => ['applicant_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
         ],
         KycTimeline::class => [
-            'column' => 'applicant_id',
+            'columns' => ['applicant_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -83,7 +83,7 @@ trait ApplicantIdPrefix
             ]
         ],
         TransferExchange::class => [
-            'column' => 'client_id',
+            'columns' => ['client_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -97,19 +97,19 @@ trait ApplicantIdPrefix
             ]
         ],
         TicketComments::class => [
-            'column' => 'client_id',
+            'columns' => ['client_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
         ],
         Ticket::class => [
-            'column' => 'client_id',
+            'columns' => ['client_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
         ],
         EmailVerification::class => [
-            'column' => 'client_id',
+            'columns' => ['client_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
         ],
         EmailNotificationClient::class => [
-            'column' => 'client_id',
+            'columns' => ['client_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -123,7 +123,7 @@ trait ApplicantIdPrefix
             ]
         ],
         ClientIpAddress::class => [
-            'column' => 'client_id',
+            'columns' => ['client_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -136,7 +136,7 @@ trait ApplicantIdPrefix
             ]
         ],
         AccountClient::class => [
-            'column' => 'client_id',
+            'columns' => ['client_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -150,7 +150,7 @@ trait ApplicantIdPrefix
             ]
         ],
         Account::class => [
-            'column' => 'client_id',
+            'columns' => ['client_id', 'owner_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -164,7 +164,7 @@ trait ApplicantIdPrefix
             ]
         ],
         TransferIncoming::class => [
-            'column' => 'recipient_id',
+            'columns' => ['recipient_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -178,7 +178,7 @@ trait ApplicantIdPrefix
             ]
         ],
         TransferOutgoing::class => [
-            'column' => 'sender_id',
+            'columns' => ['sender_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -192,7 +192,7 @@ trait ApplicantIdPrefix
             ]
         ],
         ProjectSettings::class => [
-            'column' => 'sender_id',
+            'columns' => ['sender_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -206,7 +206,7 @@ trait ApplicantIdPrefix
             ]
         ],
         GroupRoleUser::class => [
-            'column' => 'user_id',
+            'columns' => ['user_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -220,7 +220,7 @@ trait ApplicantIdPrefix
             ]
         ],
         Fee::class => [
-            'column' => 'client_id',
+            'columns' => ['client_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -238,30 +238,32 @@ trait ApplicantIdPrefix
 
     protected static function checkAndOverwriteIdPrefix(Model $model): void
     {
-        if (isset(self::COLUMNS[get_class($model)]) && isset($model->{self::COLUMNS[get_class($model)]['column']})) {
+        if (isset(self::COLUMNS[get_class($model)])) {
             $object = self::COLUMNS[get_class($model)];
-
-            $regexp = sprintf("/^(?:%s)([0-9]+)$/", implode('|', $object['checks']));
-
-            if (preg_match($regexp, $model->{$object['column']}, $matches)) {
-                $model->{$object['column']} = (int)last($matches);
-                if (isset($object['binds'])) {
-                    $prefix = null;
-                    for ($i = 1; $i < count($object['checks'])+1; $i++){
-                        if (strlen($matches[$i])){
-                            $prefix = $matches[$i];
-                            break;
+            foreach ($object['columns'] as $column){
+                if (isset($model->{$column})){
+                    $regexp = sprintf("/^(?:%s)([0-9]+)$/", implode('|', $object['checks']));
+                    if (preg_match($regexp, $model->{$column}, $matches)) {
+                        $model->{$column} = (int)last($matches);
+                        if (isset($object['binds'])) {
+                            $prefix = null;
+                            for ($i = 1; $i < count($object['checks'])+1; $i++){
+                                if (strlen($matches[$i])){
+                                    $prefix = $matches[$i];
+                                    break;
+                                }
+                            }
+                            foreach ($object['binds'] as $bind) {
+                                if ($bind['type'] == 'call_user_func')
+                                    $model->{$bind['column']} = call_user_func($bind['enum'][$prefix]);
+                                else
+                                    $model->{$bind['column']} = $bind['enum'][$prefix];
+                            }
                         }
-                    }
-
-                    foreach ($object['binds'] as $bind) {
-                        if ($bind['type'] == 'call_user_func')
-                            $model->{$bind['column']} = call_user_func($bind['enum'][$prefix]);
-                        else
-                            $model->{$bind['column']} = $bind['enum'][$prefix];
                     }
                 }
             }
+            dd($model);
         }
     }
 
