@@ -5,6 +5,7 @@ namespace App\GraphQL\Queries;
 use App\Enums\ModuleEnum;
 use App\GraphQL\Handlers\FilterConditionsHandler;
 use App\Models\Account;
+use App\Models\ApplicantModule;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Collection;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
@@ -45,7 +46,11 @@ class AccountsQuery
 
     public function clientListActive($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection
     {
-        $list = Account::query()->whereHas('clientable')->with('clientable');
+        $list = Account::query()->whereHas('clientable', function ($q) {
+            $q->whereHas('modules', function ($q) {
+                return $q->where('id', '=', ModuleEnum::BANKING->value)->where('is_active', '=', true);
+            });
+        })->with('clientable');
 
         if (isset($args['filter'])) {
             $this->handler->__invoke($list, $args['filter']);
@@ -56,20 +61,10 @@ class AccountsQuery
 
     public function clientListBankingActive($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection
     {
-        $list = Account::query()->whereHas('clientable', function ($q) {
-            $q->whereHas('modules', function ($q) {
-                return $q->where('id', '=', ModuleEnum::BANKING->value)->where('is_active', '=', true);
-            });
-        })->with('clientable');
+        $list = ApplicantModule::query()->whereHas('clientable')->with('clientable');
 
         if (isset($args['filter'])) {
             $filter = $args['filter'];
-            array_walk_recursive($filter, function (&$v, $k){
-                if ($k == 'column' && $v == 'account_id'){
-                    $v = 'id';
-                }
-            });
-
             $this->handler->__invoke($list, $filter);
         }
 
