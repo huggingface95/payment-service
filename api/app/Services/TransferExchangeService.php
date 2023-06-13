@@ -332,7 +332,16 @@ class TransferExchangeService extends AbstractService
                 case PaymentStatusEnum::CANCELED->value:
                     throw new GraphqlException('Transfer has final status which is Canceled', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
                 case PaymentStatusEnum::ERROR->value:
-                    throw new GraphqlException('Transfer has final status which is Error', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    $allowedStatuses = [
+                        PaymentStatusEnum::CANCELED->value,
+                        PaymentStatusEnum::EXECUTED->value,
+                    ];
+
+                    if (! in_array($args['status_id'], $allowedStatuses)) {
+                        throw new GraphqlException('This status is not allowed for transfer which has Error status', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+
+                    break;
                 case PaymentStatusEnum::EXECUTED->value:
                     throw new GraphqlException('Transfer has final status which is Executed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
