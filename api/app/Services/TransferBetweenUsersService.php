@@ -250,6 +250,13 @@ class TransferBetweenUsersService extends AbstractService
                     $errorMessage = 'Transfer has final status which is Refund';
 
                     break;
+                case PaymentStatusEnum::ERROR->value:
+                    $allowedStatuses = [
+                        PaymentStatusEnum::CANCELED->value,
+                        PaymentStatusEnum::PENDING->value,
+                    ];
+
+                    break;
                 case PaymentStatusEnum::EXECUTED->value:
                     $allowedStatuses = [
                         PaymentStatusEnum::REFUND->value,
