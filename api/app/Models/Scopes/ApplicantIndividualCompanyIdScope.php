@@ -21,7 +21,7 @@ class ApplicantIndividualCompanyIdScope implements Scope
     public function apply(Builder $builder, ApplicantIndividual|ApplicantCompany|Model $model): void
     {
         list($sql, $bindings) = $builder->toRawSql();
-        $bindings = $this->service->parseAndOverwriteBindings($bindings, $sql, $model->getTable(), $model->getPrefixName());
+        $bindings = $this->service->parseAndOverwriteBindings($bindings, $sql);
         $builder->setBindings($bindings);
     }
 

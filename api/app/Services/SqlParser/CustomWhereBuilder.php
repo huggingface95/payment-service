@@ -6,22 +6,22 @@ use PHPSQLParser\builders\WhereBuilder;
 
 class CustomWhereBuilder extends WhereBuilder
 {
-    public function overwriteBindings(array &$bindings, array $parsed, string $table, string $prefix): void
+    public function overwriteBindings(array &$bindings, array $parsed): void
     {
         foreach ($bindings as &$binding) {
             if (
-                preg_match("/^{$prefix}[0-9]+/", (string)$binding)
+                preg_match("/^(AI-)|(AC-)[0-9]+/", (string)$binding)
             ) {
                 $sql = "";
                 foreach ($parsed as $j => $v) {
 
                     $this->customBuild($v, $sql);
-                    if (preg_match("/(\"{$table}\".\"id\")|(\"id\")/", $sql)) {
+                    if (preg_match("/(\"id\")|(\"applicant_id\")|(\"owner_id\")/", $sql)) {
                         $sql = "";
                         foreach (is_array($v['sub_tree']) ? $v['sub_tree'] : array_slice($parsed, $j + 1) as $sV) {
                             $this->customBuild($sV, $sql);
                             if (str_contains($sql, $binding)) {
-                                $binding = (int)str_replace("{$prefix}", "", $binding);
+                                $binding = (int)preg_replace("/^.*?([0-9]+)$/", "$1", $binding);
                                 break;
                             }
                         }
