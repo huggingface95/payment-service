@@ -27,7 +27,7 @@ class CreateTransferIncomingBetweenUsersDTO extends CreateTransferIncomingDTO
         $args['payment_system_id'] = $toAccount->company->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');
         $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['sender_country_id'] = $fromAccount->owner?->country_id ?? throw new GraphqlException('Sender country not found');
+        $args['sender_country_id'] = $fromAccount->clientable?->country_id ?? throw new GraphqlException('Sender country not found');
         $args['respondent_fees_id'] = $args['respondent_fee_id'] ?? RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
         $args['group_id'] = 1;
         $args['group_type_id'] = 1;
