@@ -289,8 +289,8 @@ class TransferBetweenUsersService extends AbstractService
         }
 
         if ($operationType == OperationTypeEnum::BETWEEN_USERS->value) {
-            if ($fromAccount->owner_id == $toAccount->owner_id) {
-                throw new GraphqlException('This operation is not allowed for the same accounts owner', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+            if ($fromAccount->client_type == $toAccount->client_type && $fromAccount->client_id == $toAccount->client_id) {
+                throw new GraphqlException('This operation is not allowed for the same accounts client', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
 
