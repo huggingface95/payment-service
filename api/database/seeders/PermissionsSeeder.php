@@ -2392,6 +2392,73 @@ class PermissionsSeeder extends Seeder
                                 ],
                             ],
                         ],
+                        'applicant' => [
+                            '' => [
+                                'Individual Permissions' => [
+                                    'data' => [
+                                        'name' => 'Individual Permissions',
+                                        'type' => 'applicant',
+                                        'separator' => null,
+                                        'order' => 1,
+                                    ],
+                                    'list' => [
+                                        'Individual Permissions.Enabled' => [
+                                            'data' => [
+                                                'name' => 'Individual Permissions',
+                                                'display_name' => 'Enabled',
+                                                'guard_name' => 'api',
+                                                'order' => 1,
+                                                'type' => 'read',
+                                            ],
+                                            'operations' => [
+                                                [
+                                                    'name' => 'GetApplicantAccountsFilter',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantAccounts',
+                                                    'referer' => 'requisites',
+                                                ],
+                                                [
+                                                    'name' => 'GetApplicantDetailsRequisite',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantRequisite',
+                                                    'referer' => 'requisites',
+                                                ],
+                                                [
+                                                    'name' => 'DownloadApplicantRequisiteDetails',
+                                                    'type' => 'query',
+                                                    'method' => 'downloadApplicantRequisiteDetails',
+                                                    'referer' => 'requisites',
+                                                ],
+                                                [
+                                                    'name' => 'SendApplicantRequisiteDetails',
+                                                    'type' => 'query',
+                                                    'method' => 'sendApplicantRequisiteDetails',
+                                                    'referer' => 'requisites',
+                                                ],
+                                                [
+                                                    'name' => 'CreateNewPassword',
+                                                    'type' => 'query',
+                                                    'method' => 'setApplicantSettingsPassword',
+                                                    'referer' => 'settings/login-details/create-new-password',
+                                                ],
+                                                [
+                                                    'name' => 'GetNotifyDeviceStatus',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantProfile',
+                                                    'referer' => 'settings/login-details/my-devices',
+                                                ],
+                                                [
+                                                    'name' => 'GetApplicantDevices',
+                                                    'type' => 'query',
+                                                    'method' => 'applicantDevices',
+                                                    'referer' => 'settings/login-details/my-devices',
+                                                ],
+                                            ],
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
                     ],
                 ],
                 'Settings Module' => [
@@ -7596,6 +7663,11 @@ class PermissionsSeeder extends Seeder
                 [
                     'name' => 'MemberProfile',
                     'method' => 'memberProfile',
+                    'type' => 'query',
+                ],
+                [
+                    'name' => 'ApplicantProfile',
+                    'method' => 'applicantProfile',
                     'type' => 'query',
                 ],
             ];
