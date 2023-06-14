@@ -97,8 +97,7 @@ class TransferExchangeService extends AbstractService
         $fees = $this->commissionService->getAllCommissions($transfer, $transaction);
         $rate = $this->getExchangeRate($args, $fromAccount, $toAccount);
 
-        $totalConvertedAmount = $args['amount'] - $fees['fee_amount'] - $fees['fee_qp'];
-        $args['amount'] = $args['amount'] - $fees['fee_total'];
+        $totalDebitedAmount = $args['amount'] + $fees['fee_amount'] + $fees['fee_qp'];
         $amount = $this->getExchangeAmount($args, $fromAccount, $toAccount);
 
         return [
@@ -107,19 +106,18 @@ class TransferExchangeService extends AbstractService
             'fee_total' => $fees['fee_total'],
             'rate' => $rate,
             'converted_amount' => $amount,
-            'total_converted_amount' => $totalConvertedAmount,
+            'total_debited_amount' => $totalDebitedAmount,
         ];
     }
 
     public function getAllExchangeCommissionsByAmountDst(array $args, TransferOutgoing $transfer, TransactionDTO $transaction, Account $fromAccount, Account $toAccount): array
     {
-        $fees = $this->commissionService->getAllCommissions($transfer, $transaction);
         $rate = $this->getExchangeRate($args, $fromAccount, $toAccount);
 
-        $args['amount'] = $args['amount_dst'];
-        $totalConvertedAmount = $args['amount_dst'] - $fees['fee_amount'] - $fees['fee_qp'];
-        $args['amount'] = $args['amount'] - $fees['fee_total'];
-        $amount = $args['amount'] / $rate;
+        $amount = $args['amount_dst'] / $rate;
+        $transfer->amount = $amount;
+        $fees = $this->commissionService->getAllCommissions($transfer, $transaction);
+        $totalDebitedAmount = $amount + $fees['fee_amount'] + $fees['fee_qp'];
 
         return [
             'fee_amount' => $fees['fee_amount'],
@@ -127,7 +125,7 @@ class TransferExchangeService extends AbstractService
             'fee_total' => $fees['fee_total'],
             'rate' => $rate,
             'converted_amount' => $amount,
-            'total_converted_amount' => $totalConvertedAmount,
+            'total_debited_amount' => $totalDebitedAmount,
         ];
     }
 
