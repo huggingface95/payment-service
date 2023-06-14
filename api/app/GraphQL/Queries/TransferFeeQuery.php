@@ -28,7 +28,7 @@ final class TransferFeeQuery
         $transfer->period_id = $args['period_id'];
         $transfer->currency_id = $args['currency_id'];
         $transfer->respondent_fees_id = $args['respondent_fees_id'];
-        $transfer->urgency_id = ! empty($args['urgency_id']) ? $args['urgency_id'] : PaymentUrgencyEnum::STANDART->value;
+        $transfer->urgency_id = !empty($args['urgency_id']) ? $args['urgency_id'] : PaymentUrgencyEnum::STANDART->value;
         $transfer->payment_system_id = $args['payment_system_id'];
         $transfer->payment_provider_id = $args['payment_provider_id'];
         $transfer->amount = $args['amount'];
@@ -44,29 +44,39 @@ final class TransferFeeQuery
 
     public function getExchange($_, array $args): array
     {
+        if (!empty($args['amount_dst'])) {
+            $amount = $args['amount_dst'];
+        } else {
+            $amount = $args['amount'];
+        }
+
         $fromAccount = new Account([
             'currency_id' => $args['currency_src_id'],
-            'current_balance' => $args['amount'],
+            'current_balance' => $amount,
         ]);
 
         $toAccount = new Account([
             'currency_id' => $args['currency_id_dst'],
-            'current_balance' => $args['amount'],
+            'current_balance' => $amount,
         ]);
 
         $transfer = new TransferOutgoing([
             'price_list_fee_id' => $args['price_list_fee_id'],
             'operation_type_id' => OperationTypeEnum::EXCHANGE->value,
             'currency_id' => $args['currency_src_id'],
-            'urgency_id' => ! empty($args['urgency_id']) ? $args['urgency_id'] : PaymentUrgencyEnum::STANDART->value,
-            'amount' => $args['amount'],
-            'amount_debt' => $args['amount'],
+            'urgency_id' => !empty($args['urgency_id']) ? $args['urgency_id'] : PaymentUrgencyEnum::STANDART->value,
+            'amount' => $amount,
+            'amount_debt' => $amount,
         ]);
         $transfer->id = 1;
 
         $transaction = TransformerDTO::transform(TransactionDTO::class, $transfer, $fromAccount, $toAccount);
 
-        $fees = $this->transferExchangeService->getAllExchangeCommissions($args, $transfer, $transaction, $fromAccount, $toAccount);
+        if (!empty($args['amount_dst'])) {
+            $fees = $this->transferExchangeService->getAllExchangeCommissionsByAmountDst($args, $transfer, $transaction, $fromAccount, $toAccount);
+        } else {
+            $fees = $this->transferExchangeService->getAllExchangeCommissions($args, $transfer, $transaction, $fromAccount, $toAccount);
+        }
 
         foreach ($fees as $key => $value) {
             $fees[$key] = Str::decimal($value);

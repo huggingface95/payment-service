@@ -39,7 +39,8 @@ extend type Query @guard {
         operation_type_id: ID! @eq
         currency_src_id: ID! @eq
         currency_id_dst: ID! @eq
-        amount: Decimal! @eq
+        amount: Decimal @eq @rules(apply: ["required_without:amount_dst"])
+        amount_dst: Decimal @eq @rules(apply: ["required_without:amount"])
         price_list_fee_id: ID! @eq
         urgency_id: ID @eq
     ): TransferFeeExchange!
