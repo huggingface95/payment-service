@@ -17,6 +17,7 @@ use App\Models\EmailNotification;
 use App\Models\GroupRole;
 use App\Models\Groups;
 use App\Models\Members;
+use App\Models\PaymentProvider;
 use App\Services\EmailService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -59,6 +60,11 @@ class AccountMutator
 
             if (isset($args['client_id'])) {
                 $args['client_type'] = $args['group_type_id'] == GroupTypeEnum::COMPANY->value ? ApplicantTypeEnum::COMPANY->toString() : ApplicantTypeEnum::INDIVIDUAL->toString();
+            }
+
+            $paymentProvider = PaymentProvider::find($args['payment_provider_id']);
+            if ($paymentProvider && $paymentProvider->name == 'Internal') {
+                throw new GraphqlException('Creating an account with the Internal payment provider is not allowed.');
             }
 
             /** @var Account $account */
