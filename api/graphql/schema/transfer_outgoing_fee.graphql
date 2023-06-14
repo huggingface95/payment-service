@@ -146,6 +146,15 @@ extend type Mutation @guard {
         @field(resolver: "TransferOutgoingFeeMutator@send")
 
     """
+    Исполнить исходящий FEE перевод
+    """
+    executeTransferOutgoingFee(
+        "ID"
+        id: ID!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingFeeMutator@execute")
+    
+    """
     Привязать файлы
     """
     attachFIleToTransferOutgoingFee(

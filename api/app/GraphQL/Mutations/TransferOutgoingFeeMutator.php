@@ -25,7 +25,7 @@ class TransferOutgoingFeeMutator extends BaseMutator
     ) {
     }
 
-    public function cancel($root, array $args): TransferOutgoing
+    public function cancel($_, array $args): TransferOutgoing
     {
         $transfer = $this->transferRepository->findById($args['id']);
 
@@ -39,7 +39,7 @@ class TransferOutgoingFeeMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
-    public function create($root, array $args): TransferOutgoing
+    public function create($_, array $args): TransferOutgoing
     {
         if (OperationType::find($args['operation_type_id'])->transfer_type_id !== TransferTypeEnum::FEE->value) {
             throw new GraphqlException('Operation type is not Fee');
@@ -74,7 +74,7 @@ class TransferOutgoingFeeMutator extends BaseMutator
      */
     public function sign($_, array $args): TransferOutgoing
     {
-        if (! isset($args['code']) || empty($args['code'])) {
+        if (empty($args['code'])) {
             throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
         }
 
@@ -101,6 +101,21 @@ class TransferOutgoingFeeMutator extends BaseMutator
 
         $this->transferService->updateTransferStatus($transfer, [
             'status_id' => PaymentStatusEnum::SENT->value,
+        ]);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function execute($_, array $args): TransferOutgoing
+    {
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => PaymentStatusEnum::EXECUTED->value,
         ]);
 
         return $transfer;
