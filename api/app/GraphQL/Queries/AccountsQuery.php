@@ -61,7 +61,7 @@ class AccountsQuery
 
     public function clientListBankingActive($_, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): Collection
     {
-        $list = ApplicantModule::query()->whereHas('clientable')->with('clientable');
+        $list = ApplicantModule::query()->where('module_id', '=', ModuleEnum::BANKING->value)->where('is_active', '=', true)->whereHas('clientable')->with('clientable');
 
         if (isset($args['filter'])) {
             $filter = $args['filter'];
