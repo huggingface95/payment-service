@@ -216,10 +216,7 @@ class ApplicantCompany extends BaseModel
 
     public function project(): BelongsTo
     {
-        return $this->belongsTo(Project::class, 'project_id', 'id')
-            ->whereHas('applicantCompanies', function ($query) {
-                $query->whereColumn('applicant_companies.company_id', '=', 'projects.company_id');
-            });
+        return $this->belongsTo(Project::class, 'project_id', 'id');
     }
 
     public function modules(): BelongsToMany
