@@ -6,9 +6,11 @@ use App\Enums\ApplicantTypeEnum;
 use App\Models\Account;
 use App\Models\AccountClient;
 use App\Models\ApplicantCompany;
+use App\Models\ApplicantCompanyModules;
 use App\Models\ApplicantDocument;
 use App\Models\ApplicantIndividual;
 use App\Models\ApplicantIndividualCompany;
+use App\Models\ApplicantIndividualModules;
 use App\Models\ApplicantModuleActivity;
 use App\Models\ApplicantRiskLevelHistory;
 use App\Models\ClientIpAddress;
@@ -30,6 +32,14 @@ trait ApplicantIdPrefix
     private const COLUMNS = [
         ApplicantCompany::class => [
             'columns' => ['owner_id'],
+            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
+        ],
+        ApplicantCompanyModules::class => [
+            'columns' => ['applicant_company_id'],
+            'checks' => ['(' . ApplicantCompany::ID_PREFIX . ')'],
+        ],
+        ApplicantIndividualModules::class => [
+            'columns' => ['applicant_individual_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
         ],
         ApplicantDocument::class => [

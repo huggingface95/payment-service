@@ -16,7 +16,7 @@ class CustomWhereBuilder extends WhereBuilder
                 foreach ($parsed as $j => $v) {
 
                     $this->customBuild($v, $sql);
-                    if (preg_match("/(\"id\")|(\"applicant_id\")|(\"owner_id\")/", $sql)) {
+                    if (preg_match("/(\"id\")|(\"applicant_id\")|(\"owner_id\")|(\"applicant_company_id\")|(\"applicant_individual_id\")/", $sql)) {
                         $sql = "";
                         foreach (is_array($v['sub_tree']) ? $v['sub_tree'] : array_slice($parsed, $j + 1) as $sV) {
                             $this->customBuild($sV, $sql);
