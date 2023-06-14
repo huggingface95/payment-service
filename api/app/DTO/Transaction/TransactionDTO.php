@@ -84,6 +84,12 @@ class TransactionDTO
                 $dto->account_dst_id = null;
                 $dto->balance_next = $account->current_balance - $transfer->amount;
                 break;
+            case OperationTypeEnum::CREDIT->value:
+                $dto->txtype = 'fee';
+                $dto->account_src_id = $account->id;
+                $dto->account_dst_id = null;
+                $dto->balance_next = $account->current_balance - $transfer->amount;
+                break;
         }
 
         $dto->company_id = 1;
