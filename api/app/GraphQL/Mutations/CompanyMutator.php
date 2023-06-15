@@ -10,6 +10,8 @@ use App\Models\ApplicantIndividualCompanyRelation;
 use App\Models\Company;
 use App\Models\EmailTemplate;
 use App\Models\Members;
+use App\Models\PaymentProvider;
+use App\Models\PaymentSystem;
 use App\Models\State;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -59,9 +61,9 @@ class CompanyMutator extends BaseMutator
                 ]);
             }
 
-            $company->paymentProviders()->create(['name' => 'Internal']);
+            $company->paymentProviders()->create(['name' => PaymentProvider::NAME_INTERNAL]);
             $company->paymentSystem()->create([
-                'name' => 'Internal',
+                'name' => PaymentSystem::NAME_INTERNAL,
                 'payment_provider_id' => $company->paymentProviders()->first()->id,
             ]);
 
