@@ -16,8 +16,6 @@ type Account {
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Получить связанного платежного провайдера iban"
     iban_provider: PaymentProviderIban @belongsTo(relation:"paymentProviderIban")
-    "Получить связанного Пеймент систем"
-    payment_system: PaymentSystem @belongsTo(relation:"paymentSystem")
     "Получить банк"
     payment_bank: PaymentBank @belongsTo(relation:"paymentBank")
     "Получить связанный шаблон комиссии"
@@ -196,7 +194,6 @@ input QueryAccountListFilterStatic @spread{
     id: ID @eq
     project_id: ID @eq
     hasCompanyMixedIdOrName: Mixed @eq
-    hasPaymentSystemMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
     MixedAccountNumberOrAccountName: String @ilike
     currency_id: ID @eq @neq
@@ -218,7 +215,6 @@ input QueryAccountActiveListFilterStatic @spread{
     id: ID @eq
     project_id: ID @eq
     hasCompanyMixedIdOrName: Mixed @eq
-    hasPaymentSystemMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
     MixedAccountNumberOrAccountName: String @ilike
     currency_id: ID @eq @neq
@@ -240,7 +236,6 @@ input QueryAccountActiveListFilterStatic @spread{
 input QueryDownloadAccountListFilterStatic @spread {
     id: ID @eq
     hasCompanyMixedIdOrName: Mixed @eq
-    hasPaymentSystemMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
     MixedAccountNumberOrAccountName: String @ilike
     currency_id: ID @eq
@@ -295,8 +290,6 @@ input InputAccount{
     group_role_id: ID
     "ID группы"
     group_type_id: ID!
-    "ID платежной системы"
-    payment_system_id: ID
     "ID банка"
     payment_bank_id: ID
     "ID Проекта"
