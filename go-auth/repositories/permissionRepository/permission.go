@@ -7,25 +7,26 @@ import (
 )
 
 func GetUserPermissions(user postgres.User) []postgres.Permission {
-	var m string
+	var err error
 	var permissions []postgres.Permission
 
 	query := database.PostgresInstance
 
 	if user.StructName() == constants.StructMember {
-		m = constants.ModelMember
+		err = query.Preload("PermissionList.PermissionCategory").
+			Joins("JOIN role_has_permissions on role_has_permissions.permission_id=permissions.id").
+			Joins("JOIN roles on roles.id=role_has_permissions.role_id").
+			Joins("JOIN group_role on group_role.role_id=roles.id").
+			Joins("JOIN group_role_members_individuals on group_role_members_individuals.group_role_id=group_role.id").
+			Where("group_role_members_individuals.user_id = ?", user.GetId()).
+			Where("group_role_members_individuals.user_type = ?", constants.ModelMember).
+			Find(&permissions).Error
 	} else {
-		m = constants.ModelIndividual
+		err = query.Preload("PermissionList.PermissionCategory").
+			Where("permissions.name = ?", "Individual Permissions").
+			Find(&permissions).Error
 	}
 
-	err := query.Preload("PermissionList.PermissionCategory").
-		Joins("JOIN role_has_permissions on role_has_permissions.permission_id=permissions.id").
-		Joins("JOIN roles on roles.id=role_has_permissions.role_id").
-		Joins("JOIN group_role on group_role.role_id=roles.id").
-		Joins("JOIN group_role_members_individuals on group_role_members_individuals.group_role_id=group_role.id").
-		Where("group_role_members_individuals.user_id = ?", user.GetId()).
-		Where("group_role_members_individuals.user_type = ?", m).
-		Find(&permissions).Error
 	if err != nil {
 		return nil
 	}
