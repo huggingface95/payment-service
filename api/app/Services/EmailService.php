@@ -38,7 +38,6 @@ class EmailService
             'owner',
             'accountState',
             'paymentBank.country',
-            'paymentSystem',
             'currencies',
             'groupRole',
         );

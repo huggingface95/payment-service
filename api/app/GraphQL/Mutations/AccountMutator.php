@@ -63,7 +63,7 @@ class AccountMutator
             }
 
             $paymentProvider = PaymentProvider::find($args['payment_provider_id']);
-            if ($paymentProvider && $paymentProvider->name == 'Internal') {
+            if ($paymentProvider && $paymentProvider->name == PaymentProvider::NAME_INTERNAL) {
                 throw new GraphqlException('Creating an account with the Internal payment provider is not allowed.');
             }
 
