@@ -10,6 +10,7 @@ import (
 	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/repositories/permissionRepository"
 	"jwt-authentication-golang/requests"
+	"net/url"
 	"regexp"
 )
 
@@ -118,14 +119,18 @@ func CheckAccess(jsonData []byte, user postgres.User, referer string) (bool, str
 	return true, message
 }
 
-func optimizeReferer(url string) string {
+func optimizeReferer(link string) string {
+	u, err := url.Parse(link)
+	if err != nil {
+		return ""
+	}
+	link = u.Path
 
-	m1 := regexp.MustCompile(`.*?dashboard/(.*)`)
-	m2 := regexp.MustCompile(`\?.*`)
-	m3 := regexp.MustCompile(`([a-zA-Z]+-)?[0-9]+`)
+	m1 := regexp.MustCompile(`/(dashboard)?/?(.*)`)
+	m2 := regexp.MustCompile(`([a-zA-Z]+-)?[0-9]+`)
 
-	url = m1.ReplaceAllString(url, "$1")
-	url = m2.ReplaceAllLiteralString(url, "")
-	url = m3.ReplaceAllLiteralString(url, "$id")
-	return url
+	link = m1.ReplaceAllString(link, "$2")
+	link = m2.ReplaceAllLiteralString(link, "$id")
+
+	return link
 }

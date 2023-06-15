@@ -22,6 +22,7 @@ trait CheckForEvents
         'accounts' => 'company_id',
         'group_role' => 'company_id',
         'companies' => 'id',
+        'projects' => 'company_id',
     ];
 
     private static array $FILTER_BY_COMPANY_SKIP_ACTIONS = [
@@ -32,6 +33,7 @@ trait CheckForEvents
         'accounts' => [],
         'group_role' => [],
         'companies' => [],
+        'projects' => [],
     ];
 
     // 'company_id' => 'companies:id,test:test_id',
