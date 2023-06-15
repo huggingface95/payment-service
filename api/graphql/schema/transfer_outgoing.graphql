@@ -51,9 +51,9 @@ type TransferOutgoing {
     channel: String
     bank_message: String
     "Номер счета или IBAN получателя"
-    recipient_account: String!
+    recipient_account: String
     "Название банка получателя"
-    recipient_bank_name: String!
+    recipient_bank_name: String
     "Адрес банка получателя"
     recipient_bank_address: String!
     "SWIFT код банка получателя"
