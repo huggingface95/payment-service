@@ -80,8 +80,8 @@ trait ApplicantIdPrefix
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
         ],
         ApplicantBankingAccess::class => [
-            'columns' => ['applicant_company_id'],
-            'checks' => ['(' . ApplicantCompany::ID_PREFIX . ')'],
+            'columns' => ['applicant_individual_id', 'applicant_company_id'],
+            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
         ],
         KycTimeline::class => [
             'columns' => ['applicant_id'],
