@@ -29,7 +29,7 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['payment_number'] = Str::uuid();
         $args['payment_provider_id'] = 1;
         $args['payment_system_id'] = 1;
-        $args['system_message'] = 'test';
+        $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['sender_country_id'] = 1;
         $args['respondent_fees_id'] = RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
