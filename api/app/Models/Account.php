@@ -80,7 +80,6 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
         'member_id',
         'group_type_id',
         'group_role_id',
-        'payment_system_id',
         'payment_bank_id',
         'client_id',
         'client_type',
@@ -263,11 +262,6 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
     public function paymentProviderIban(): BelongsTo
     {
         return $this->belongsTo(PaymentProviderIban::class, 'iban_provider_id');
-    }
-
-    public function paymentSystem(): BelongsTo
-    {
-        return $this->belongsTo(PaymentSystem::class, 'payment_system_id');
     }
 
     public function paymentBank(): BelongsTo

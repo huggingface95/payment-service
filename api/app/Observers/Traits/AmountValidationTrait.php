@@ -9,7 +9,7 @@ trait AmountValidationTrait
 {
     public function checkAmountPositive(Model $model): bool
     {
-        if ($model->amount < 0) {
+        if ($model->amount <= 0) {
             throw new GraphqlException('Amount must be greater than 0', 'use');
         }
 

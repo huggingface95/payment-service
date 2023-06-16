@@ -86,6 +86,7 @@ class TransactionDTO
                 break;
             case OperationTypeEnum::CREDIT->value:
             case OperationTypeEnum::DEBIT->value:
+            case OperationTypeEnum::SCHEDULED_FEE->value:
                 $dto->txtype = 'fee';
                 $dto->account_src_id = $account->id;
                 $dto->account_dst_id = null;

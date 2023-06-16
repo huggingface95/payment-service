@@ -458,45 +458,6 @@ class AccountsQueryTest extends TestCase
         ]);
     }
 
-    public function testQueryAccountsFilterByPaymentSystemId(): void
-    {
-        $accounts = DB::connection('pgsql_test')
-            ->table('accounts')
-            ->first();
-
-        $this->postGraphQL(
-            [
-                'query' => '
-                query TestAccountListFilters($payment_system_id: Mixed) {
-                    accountList(
-                        filter: {
-                            column: HAS_PAYMENT_SYSTEM_MIXED_ID_OR_NAME
-                            value: $payment_system_id
-                        }
-                    ) {
-                        data {
-                            id
-                            account_number
-                            account_type
-                            account_name
-                        }
-                    }
-                }',
-                'variables' => [
-                    'payment_system_id' => (string) $accounts->payment_system_id,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer '.$this->login(),
-            ]
-        )->seeJsonContains([
-            'id' => (string) $accounts->id,
-            'account_number' => (string) $accounts->account_number,
-            'account_type' => (string) $accounts->account_type,
-            'account_name' => (string) $accounts->account_name,
-        ]);
-    }
-
     public function testQueryAccountsFilterByIsPrimary(): void
     {
         $accounts = DB::connection('pgsql_test')
@@ -840,44 +801,6 @@ class AccountsQueryTest extends TestCase
                     }',
                 'variables' => [
                     'id' => (string) $accounts->company_id,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer '.$this->login(),
-            ]
-        )->seeJsonStructure([
-            'data' => [
-                'downloadAccountList' => [
-                    'base64',
-                ],
-            ],
-        ]);
-    }
-
-    public function testDownloadAccountListFilterByPaymentSystemMixedIdOrName(): void
-    {
-        $accounts = DB::connection('pgsql_test')
-            ->table('accounts')
-            ->first();
-
-        $this->postGraphQL(
-            [
-                'query' => '
-                    query TestDownloadAccountListFilters($id: Mixed) {
-                        downloadAccountList(
-                            type: Pdf
-                            filter: {
-                                column: HAS_PAYMENT_SYSTEM_MIXED_ID_OR_NAME
-                                value: $id
-                            }
-                        ) {
-                            ... on RawFile {
-                                base64
-                            }
-                        }
-                    }',
-                'variables' => [
-                    'id' => (string) $accounts->payment_system_id,
                 ],
             ],
             [
