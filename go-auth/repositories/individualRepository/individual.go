@@ -11,7 +11,7 @@ import (
 	"jwt-authentication-golang/requests/individual"
 )
 
-func fillIndividual(request individual.RegisterRequest) (user postgres.Individual, err error) {
+func fillIndividual(request individual.RegisterApplicantInterface) (user postgres.Individual, err error) {
 	err = merp.MergeOverwrite(user, request, &user)
 	user.TwoFactorAuthSettingId = 2
 	user.IsVerificationPhone = postgres.ApplicantVerificationNotVerifyed
@@ -20,10 +20,10 @@ func fillIndividual(request individual.RegisterRequest) (user postgres.Individua
 	return
 }
 
-func fillCompany(request individual.RegisterRequest, company *postgres.Company) (applicantCompany postgres.ApplicantCompany, err error) {
-	applicantCompany.Email = request.Email
-	applicantCompany.Name = request.CompanyName
-	applicantCompany.Url = request.Url
+func fillCompany(request individual.RegisterApplicantInterface, company *postgres.Company) (applicantCompany postgres.ApplicantCompany, err error) {
+	applicantCompany.Email = request.GetEmail()
+	applicantCompany.Name = request.GetCompanyName()
+	applicantCompany.Url = request.GetUrl()
 	applicantCompany.CompanyId = company.Id
 	applicantCompany.IsVerificationEmail = postgres.ApplicantVerificationNotVerifyed
 	applicantCompany.IsActive = postgres.ApplicantStateSuspended
@@ -39,19 +39,19 @@ func fillApplicantCompanyForeign(user postgres.Individual, applicantCompany post
 	return
 }
 
-func createWithTransaction(instance *gorm.DB, request individual.RegisterRequest) (err error, user postgres.Individual, company *postgres.Company) {
+func createWithTransaction(instance *gorm.DB, request individual.RegisterApplicantInterface) (err error, user postgres.Individual, company *postgres.Company) {
 	user, err = fillIndividual(request)
 	if err != nil {
 		return
 	}
 
-	err = user.HashPassword(request.Password)
+	err = user.HashPassword(request.GetPassword())
 
 	if err != nil {
 		return
 	}
 
-	err = instance.Where("id = ?", 1).
+	err = instance.Where("id = ?", request.GetCompanyId()).
 		Limit(1).
 		Preload("CompanyModules.Module").
 		Preload("Project.Settings", "applicant_type = ?", constants.ModelIndividual, func(db *gorm.DB) *gorm.DB {
@@ -61,7 +61,9 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterRequest
 
 	if err != nil {
 		return
-	} else if company.Project == nil {
+	}
+
+	if company.Project == nil {
 		err = errors.New("in Company empty project")
 		return
 	} else if len(company.Project.Settings) == 0 {
@@ -72,6 +74,11 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterRequest
 		return
 	} else if len(company.CompanyModules) == 0 {
 		err = errors.New("add modules in company")
+		return
+	}
+
+	if request.GetType() != individual.RegisterStandard && company.Project.Id != request.GetProjectId() {
+		err = errors.New("wrong project")
 		return
 	}
 
@@ -90,7 +97,8 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterRequest
 
 	isIndividual := true
 	isCorporate := false
-	if request.ClientType == constants.RegisterClientTypeCorporate {
+	if request.GetType() == individual.RegisterCorporate ||
+		(request.GetType() == individual.RegisterStandard && request.(*individual.RegisterRequest).ClientType == constants.RegisterClientTypeCorporate) {
 		isIndividual = false
 		isCorporate = true
 
@@ -126,7 +134,7 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterRequest
 	return
 }
 
-func CreateIndividual(request individual.RegisterRequest) (err error, individual postgres.Individual, company *postgres.Company) {
+func CreateIndividual(request individual.RegisterApplicantInterface) (err error, individual postgres.Individual, company *postgres.Company) {
 	instance := database.PostgresInstance.Begin()
 
 	err, individual, company = createWithTransaction(instance, request)
