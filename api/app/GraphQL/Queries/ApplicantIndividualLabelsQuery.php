@@ -2,7 +2,7 @@
 
 namespace App\GraphQL\Queries;
 
-use Illuminate\Support\Facades\DB;
+use App\Models\ApplicantIndividualLabel;
 
 class ApplicantIndividualLabelsQuery
 {
@@ -10,13 +10,13 @@ class ApplicantIndividualLabelsQuery
 
     public function enabled($_, array $args)
     {
-        $first = DB::table('applicant_individual_labels as ail')
+        $first = ApplicantIndividualLabel::query()
             ->select('*')
             ->get();
-        $second = DB::table('applicant_individual_labels as ail')
+        $second = ApplicantIndividualLabel::query()
             ->select('*')
             ->where('ailr.applicant_individual_id', $args['applicant_id'])
-            ->leftJoin('applicant_individual_label_relation as ailr', 'ail.id', '=', 'ailr.applicant_individual_label_id')
+            ->leftJoin('applicant_individual_label_relation as ailr', 'applicant_individual_labels.id', '=', 'ailr.applicant_individual_label_id')
             ->get();
         $merge = $first->merge($second);
         $unique = $merge->unique('name');
