@@ -57,7 +57,7 @@ trait ApplicantIdPrefix
             ]
         ],
         ApplicantIndividualCompany::class => [
-            'columns' => ['applicant_id'],
+            'columns' => ['applicant_id', 'applicant_company_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
