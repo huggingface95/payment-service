@@ -41,9 +41,9 @@ class AccountObserver extends BaseObserver
     {
         parent::created($model);
 
-        if (isset($model->parent_id)) {
-            $this->accountService->cloneParentAccountMorphRecords($model, $model->parent_id);
-        }
+//        if (isset($model->parent_id)) {
+//            $this->accountService->cloneParentAccountMorphRecords($model, $model->parent_id);
+//        }
 
         return true;
     }
