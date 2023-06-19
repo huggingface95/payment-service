@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Ankurk91\Eloquent\MorphToOne;
+use App\Enums\FileEntityTypeEnum;
 use App\Enums\MemberStatusEnum;
 use App\Models\Clickhouse\ActiveSession;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
@@ -310,7 +311,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function photo(): BelongsTo
     {
-        return $this->belongsTo(Files::class, 'photo_id');
+        return $this->belongsTo(Files::class, 'photo_id')->where('entity_type', FileEntityTypeEnum::MEMBER->toString());
     }
 
     public function scopeCompanySort($query, $sort)
