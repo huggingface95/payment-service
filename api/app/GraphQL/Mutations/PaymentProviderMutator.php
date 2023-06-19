@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class PaymentProviderMutator
 {
-
     /**
      * @throws GraphqlException
      */
@@ -21,25 +20,21 @@ class PaymentProviderMutator
             /** @var Company $company */
             $company = Company::query()->with('paymentSystemInternal')->findOrFail($args['company_id']);
 
-            if (!$company->paymentSystemInternal) {
+            if (! $company->paymentSystemInternal) {
                 throw new GraphqlException('Payment System Internal not found in company', 'use');
             }
-            $paymentProvider = new PaymentProvider($args);
-            $paymentProvider->save();
+            $paymentProvider = PaymentProvider::query()->create($args);
 
-            $paymentSystems = collect([$company->paymentSystemInternal]);
-
-            if (isset($args['payment_systems'])) {
-                $getSystem = PaymentSystem::query()->whereIn('id', $args['payment_systems'])->get();
-                if ($getSystem->isEmpty()) {
-                    throw new GraphqlException('Payment System does not exist', 'use');
-                } else {
-                    $paymentSystems = $paymentSystems->merge($getSystem);
-                }
-            }
-            $paymentProvider->paymentSystems()->saveMany($paymentSystems);
+            PaymentSystem::query()->create(
+                [
+                    'name' => PaymentSystem::NAME_INTERNAL,
+                    'payment_provider_id' => $paymentProvider->id,
+                    'is_active' => true,
+                ]
+            );
 
             DB::commit();
+
             return $paymentProvider;
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -48,8 +43,8 @@ class PaymentProviderMutator
     }
 
     /**
-     * @param null $_
-     * @param array<string, mixed> $args
+     * @param  null  $_
+     * @param  array<string, mixed>  $args
      */
     public function update($_, array $args)
     {

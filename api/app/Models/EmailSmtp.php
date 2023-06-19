@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
@@ -25,6 +26,7 @@ use Illuminate\Support\Carbon;
  */
 class EmailSmtp extends BaseModel
 {
+    use BaseObServerTrait;
     public const SECURITY_AUTO = 'auto';
 
     public const SECURITY_SSL = 'ssl';

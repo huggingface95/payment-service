@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Exceptions\GraphqlException;
 use GraphQL\Exception\InvalidArgument;
 
 class BaseMutator
@@ -32,5 +33,20 @@ class BaseMutator
     protected function validEmail($email)
     {
         return filter_var($email, FILTER_VALIDATE_EMAIL);
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    protected function validIp(string $ipAddress): array
+    {
+        $ip_address = str_replace(' ', '', explode(',', $ipAddress));
+        for ($i = 0; $i < count($ip_address); $i++) {
+            if (!filter_var($ip_address[$i], FILTER_VALIDATE_IP)) {
+                throw new GraphqlException('Not a valid ip address. Address format xxx.xxx.xxx.xxx and must be comma separated', 'internal', 403);
+            }
+        }
+
+        return $ip_address;
     }
 }

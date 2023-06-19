@@ -13,6 +13,7 @@ type Cache struct {
 	ConfirmationNewDevice  ConfirmationNewDeviceCache
 	ResetPassword          ResetPasswordCache
 	Jwt                    JwtCache
+	CorporateLogin         CorporateLoginCache
 }
 
 func (c *Cache) Init() *Cache {
@@ -26,6 +27,7 @@ func (c *Cache) Init() *Cache {
 	c.ConfirmationNewDevice = ConfirmationNewDeviceCache{}
 	c.ResetPassword = ResetPasswordCache{}
 	c.Jwt = JwtCache{}
+	c.CorporateLogin = CorporateLoginCache{}
 
 	return c
 }

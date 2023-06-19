@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Ankurk91\Eloquent\MorphToOne;
+use App\Enums\FileEntityTypeEnum;
 use App\Enums\MemberStatusEnum;
 use App\Models\Clickhouse\ActiveSession;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use App\Models\Traits\UserPermission;
 use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
@@ -16,7 +18,6 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -69,6 +70,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
     use MorphToOne;
     use HasRelationships;
     use UserPermission;
+    use BaseObServerTrait;
 
     public $password_confirmation;
 
@@ -108,6 +110,8 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $casts = [
         'backup_codes' => 'array',
+        'additional_fields' => 'array',
+        'additional_info_fields' => 'array',
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'last_login_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
@@ -116,7 +120,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['two_factor', 'permissions', 'is_super_admin', 'is_active', 'active_session', 'company_name',];
+    protected $appends = ['two_factor', 'permissions', 'is_super_admin', 'is_active', 'active_session', 'company_name'];
 
     protected static function booted()
     {
@@ -131,7 +135,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function getFullnameAttribute()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name.' '.$this->last_name;
     }
 
     public function getTwoFactorAttribute()
@@ -195,9 +199,10 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
             ->limit(1)
             ->first();
 
-        if (!is_null($activeSession) && Carbon::parse($activeSession['expired_at'] ?? 0)->timestamp >= Carbon::parse()->timestamp) {
+        if (! is_null($activeSession) && Carbon::parse($activeSession['expired_at'] ?? 0)->timestamp >= Carbon::parse()->timestamp) {
             $activeSession['current_session'] = true;
         }
+
         return $activeSession;
     }
 
@@ -306,7 +311,7 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
 
     public function photo(): BelongsTo
     {
-        return $this->belongsTo(Files::class, 'photo_id');
+        return $this->belongsTo(Files::class, 'photo_id')->where('entity_type', FileEntityTypeEnum::MEMBER->toString());
     }
 
     public function scopeCompanySort($query, $sort)

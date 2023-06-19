@@ -13,8 +13,6 @@ use App\Events\Applicant\ApplicantIndividualSentEmailTrustedDeviceAddedEvent;
 use App\Events\Applicant\ApplicantIndividualSentEmailTrustedDeviceRemovedEvent;
 use App\Events\Applicant\ApplicantIndividualSentEmailVerificationEvent;
 use App\Events\Applicant\ApplicantIndividualUpdatedEvent;
-use App\Events\PaymentCreatedEvent;
-use App\Events\PaymentUpdatedEvent;
 use App\Listeners\Log\LogApplicantCompanyChangesListener;
 use App\Listeners\Log\LogApplicantCompanyNoteChangesListener;
 use App\Listeners\Log\LogApplicantDocumentCreatedListener;
@@ -26,17 +24,6 @@ use App\Listeners\Log\LogApplicantIndividualSentEmailRegistrationDetailsListener
 use App\Listeners\Log\LogApplicantIndividualSentEmailTrustedDeviceAddedListener;
 use App\Listeners\Log\LogApplicantIndividualSentEmailTrustedDeviceRemovedListener;
 use App\Listeners\Log\LogApplicantIndividualSentEmailVerificationListener;
-use App\Listeners\PaymentCreatedListener;
-use App\Listeners\PaymentUpdatedListener;
-use App\Models\Account;
-use App\Models\PaymentSystem;
-use App\Models\TransferIncoming;
-use App\Models\TransferOutgoing;
-use App\Observers\AccountObserver;
-use App\Observers\BaseObserver;
-use App\Observers\PaymentSystemObserver;
-use App\Observers\TransferIncomingObserver;
-use App\Observers\TransferOutgoingObserver;
 use Laravel\Lumen\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -80,25 +67,10 @@ class EventServiceProvider extends ServiceProvider
         ApplicantIndividualSentEmailVerificationEvent::class => [
             LogApplicantIndividualSentEmailVerificationListener::class,
         ],
-        PaymentCreatedEvent::class => [
-            PaymentCreatedListener::class,
-        ],
-        PaymentUpdatedEvent::class => [
-            PaymentUpdatedListener::class,
-        ],
     ];
 
     public function boot(): void
     {
         parent::boot();
-
-        Account::observe(AccountObserver::class);
-        TransferOutgoing::observe(TransferOutgoingObserver::class);
-        TransferIncoming::observe(TransferIncomingObserver::class);
-        PaymentSystem::observe(PaymentSystemObserver::class);
-
-        foreach (getAllModels() as $model) {
-            $model::observe(BaseObserver::class);
-        }
     }
 }

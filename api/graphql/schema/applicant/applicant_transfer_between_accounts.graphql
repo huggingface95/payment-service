@@ -9,26 +9,69 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         from_account_id: ID!
         "ID аккаунта получателя"
         to_account_id: ID!
-    ): TransferIncoming
+    ): TransferBetweenWithFees
         @field(resolver: "ApplicantTransferBetweenAccountsMutator@create")
-
+    
+    """
+    Изменить перевод между аккаунтами
+    """
+    updateApplicantTransferBetweenAccounts(
+        "ID"
+        id: ID!
+        "Сумма"
+        amount: Decimal
+        "ID аккаунта отправителя"
+        from_account_id: ID
+        "ID аккаунта получателя"
+        to_account_id: ID
+    ): TransferBetween
+        @field(resolver: "ApplicantTransferBetweenAccountsMutator@update")
+    
     """
     Подписать перевод между аккаунтами
     """
     signApplicantTransferBetweenAccounts(
-        "ID исходящего перевода"
-        transfer_incoming_id: ID!
+        "ID"
+        id: ID!
         "Code"
         code: String!
-    ): TransferIncoming
+    ): TransferBetween
         @field(resolver: "ApplicantTransferBetweenAccountsMutator@sign")
 
     """
     Исполнить перевод между аккаунтами
     """
     executeApplicantTransferBetweenAccounts(
-        "ID исходящего перевода"
-        transfer_incoming_id: ID!
-    ): TransferIncoming
+        "ID"
+        id: ID!
+    ): TransferBetween
         @field(resolver: "ApplicantTransferBetweenAccountsMutator@execute")
+
+    """
+    Отменить перевод между аккаунтами
+    """
+    cancelApplicantTransferBetweenAccounts(
+        "ID"
+        id: ID!
+    ): TransferBetween
+        @field(resolver: "ApplicantTransferBetweenAccountsMutator@cancel")
+
+    """
+    Сделать возврат перевода между аккаунтами
+    """
+    refundApplicantTransferBetweenAccounts(
+        "ID"
+        id: ID!
+    ): TransferBetween
+        @field(resolver: "ApplicantTransferBetweenAccountsMutator@refund")
+    
+    """
+    Привязать файлы
+    """
+    attachFIleToApplicantTransferBetweenAccounts(
+        "ID"
+        id: ID!
+        file_id: [ID!]!
+    ): TransferBetween
+        @field(resolver: "ApplicantTransferBetweenAccountsMutator@attachFile")
 }

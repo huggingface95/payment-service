@@ -38,7 +38,7 @@ abstract class Repository
     {
         $model = app($this->model());
 
-        if (!$model instanceof Model) {
+        if (! $model instanceof Model) {
             throw new RepositoryException(
                 "Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model",
             );

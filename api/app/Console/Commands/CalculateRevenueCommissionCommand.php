@@ -44,14 +44,14 @@ class CalculateRevenueCommissionCommand extends Command
         $chunkSize = 100;
         $timeNow = Carbon::now()->format('H:i:s');
 
-        $this->info('Chunk size: ' . $chunkSize);
-        $this->info('Time now: ' . $timeNow);
+        $this->info('Chunk size: '.$chunkSize);
+        $this->info('Time now: '.$timeNow);
 
         $query = CompanyLedgerSettings::query()->where('end_of_day_time', '<=', $timeNow);
 
         $query->chunkById($chunkSize, function (Collection $settings) {
             foreach ($settings as $setting) {
-                $this->info('Processing for company: ' . $setting->company_id);
+                $this->info('Processing for company: '.$setting->company_id);
 
                 dispatch(new ProcessLedgerDayHistoryJob($setting));
             }

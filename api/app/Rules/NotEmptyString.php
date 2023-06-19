@@ -25,6 +25,6 @@ class NotEmptyString implements Rule
      */
     public function message()
     {
-        return "The :attribute field must not be an empty string.";
+        return 'The :attribute field must not be an empty string.';
     }
 }

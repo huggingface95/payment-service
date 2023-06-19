@@ -2,53 +2,86 @@ package controllers
 
 import (
 	"bytes"
-	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
-	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/requests"
 	"jwt-authentication-golang/services/access"
 	"jwt-authentication-golang/services/auth"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 )
 
 func RedirectRequest(context *gin.Context) {
-	var input requests.OperationInputs
-	var header requests.OperationHeaders
 	var user postgres.User
+	var header requests.OperationHeaders
+	var jsonData []byte
 
-	jsonData, errJson := context.GetRawData()
-	errHeader := context.ShouldBindHeader(&header)
-	errInput := json.Unmarshal(jsonData, &input)
-
-	if errHeader != nil || errInput != nil || errJson != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"message": "Bad Request"})
-		return
+	if context.Request.Body != nil {
+		jsonData, _ = ioutil.ReadAll(context.Request.Body)
 	}
 
-	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetString("bearer"))
+	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetHeader("Authorization"), context.Request.Host)
+
+	context.Request.Body = ioutil.NopCloser(bytes.NewBuffer(jsonData))
 
 	if config.Conf.App.AppEnv != "testing" {
-		if access.CheckOperation(user, input.OperationName, header.Referer) == false {
-			context.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("You are not authorized to access %s", input.OperationName)})
+		if err := context.ShouldBindHeader(&header); err != nil {
+			context.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 			return
+		}
+
+		if header.TestMode == false {
+			if header.Referer != "" {
+				ok, message := access.CheckAccess(jsonData, user, header.Referer)
+				if ok == false {
+					context.JSON(http.StatusBadRequest, gin.H{"message": message})
+					return
+				}
+			} else {
+				context.JSON(http.StatusBadRequest, gin.H{"message": "header pagereferer parameter required"})
+				return
+			}
 		}
 	}
 
-	req, err := http.NewRequest("POST", config.Conf.App.RedirectUrl+"/api", bytes.NewBuffer(jsonData))
-	req.Header.Set("Content-Type", gin.MIMEJSON)
-	req.Header.Set("Authorization", context.GetHeader("Authorization"))
+	sendProxy(context, "/api")
+}
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
+func RedirectGetRequest(c *gin.Context) {
+	sendProxy(c, "/api")
+}
+
+func RedirectFilesRequest(c *gin.Context) {
+	sendProxy(c, "/api/files")
+}
+func RedirectEmailRequest(c *gin.Context) {
+	sendProxy(c, "/api/email")
+}
+func RedirectSmsRequest(c *gin.Context) {
+	sendProxy(c, "/api/sms")
+}
+func RedirectPdfRequest(c *gin.Context) {
+	sendProxy(c, "/api/pdf")
+}
+
+func sendProxy(c *gin.Context, path string) {
+	remote, err := url.Parse(config.Conf.App.RedirectUrl + path)
 	if err != nil {
 		panic(err)
 	}
 
-	defer resp.Body.Close()
+	proxy := httputil.NewSingleHostReverseProxy(remote)
+	proxy.Director = func(req *http.Request) {
+		req.Header = c.Request.Header
+		req.Host = remote.Host
+		req.URL.Scheme = remote.Scheme
+		req.URL.Host = remote.Host
+		req.URL.Path = config.Conf.App.RedirectUrl + path
+	}
 
-	context.Data(resp.StatusCode, resp.Header.Get("Content-Type"), helpers.StreamToByte(resp.Body))
+	proxy.ServeHTTP(c.Writer, c.Request)
 }

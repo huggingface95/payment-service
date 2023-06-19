@@ -18,7 +18,7 @@ class BankCorrespondentsMutationTest extends TestCase
         $seq = DB::table('bank_correspondents')
                 ->max('id') + 1;
 
-        DB::select('ALTER SEQUENCE bank_correspondents_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE bank_correspondents_id_seq RESTART WITH '.$seq);
 
         $this->graphQL('
             mutation CreateBankCorrespondent(
@@ -64,7 +64,7 @@ class BankCorrespondentsMutationTest extends TestCase
             'ncs_number' => '899989d89',
             'payment_system_id' => 1,
             'country_id' => 1,
-            'swift' => "IBXXAEWDZ1E",
+            'swift' => 'IBXXAEWDZ1E',
         ])->seeJsonContains([
             'message' => 'Unauthenticated.',
         ]);
@@ -75,7 +75,7 @@ class BankCorrespondentsMutationTest extends TestCase
         $seq = DB::table('bank_correspondents')
                 ->max('id') + 1;
 
-        DB::select('ALTER SEQUENCE bank_correspondents_id_seq RESTART WITH ' . $seq);
+        DB::select('ALTER SEQUENCE bank_correspondents_id_seq RESTART WITH '.$seq);
 
         $this->postGraphQL(['query' => 'mutation CreateBankCorrespondent(
                 $name: String!,
@@ -120,11 +120,11 @@ class BankCorrespondentsMutationTest extends TestCase
                 'ncs_number' => '899989d89',
                 'payment_system_id' => 1,
                 'country_id' => 1,
-                'swift' => "IBXXAEWDZ1E",
+                'swift' => 'IBXXAEWDZ1E',
             ],
         ],
         [
-            'Authorization' => 'Bearer ' . $this->login(),
+            'Authorization' => 'Bearer '.$this->login(),
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -190,11 +190,11 @@ class BankCorrespondentsMutationTest extends TestCase
                 'ncs_number' => '899989d89',
                 'payment_system_id' => 1,
                 'country_id' => 1,
-                'swift' => "IBXXAEWDZ1E",
+                'swift' => 'IBXXAEWDZ1E',
             ],
         ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -238,7 +238,7 @@ class BankCorrespondentsMutationTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 

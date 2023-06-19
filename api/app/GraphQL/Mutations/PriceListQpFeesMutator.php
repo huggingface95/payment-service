@@ -3,11 +3,11 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
+use App\GraphQL\Mutations\Traits\PriceListFeeTrait;
 use App\Models\PriceListQpFee;
 use App\Services\PriceListFeeService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
-use App\GraphQL\Mutations\Traits\PriceListFeeTrait;
 
 class PriceListQpFeesMutator
 {
@@ -52,7 +52,7 @@ class PriceListQpFeesMutator
         }
 
         $PriceListQpFee = PriceListQpFee::find($args['id']);
-        if (!$PriceListQpFee) {
+        if (! $PriceListQpFee) {
             throw new GraphqlException('PriceListQpFee not found', 'use', Response::HTTP_NOT_FOUND);
         }
 

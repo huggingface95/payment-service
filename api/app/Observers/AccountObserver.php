@@ -3,11 +3,12 @@
 namespace App\Observers;
 
 use App\Exceptions\EmailException;
+use App\Exceptions\GraphqlException;
 use App\Models\Account;
-use App\Models\BaseModel;
 use App\Models\Currencies;
-use App\Services\AccountService;
 use App\Services\EmailService;
+use App\Services\AccountService;
+use Illuminate\Database\Eloquent\Model;
 
 class AccountObserver extends BaseObserver
 {
@@ -15,7 +16,7 @@ class AccountObserver extends BaseObserver
     {
     }
 
-    public function creating(Account|BaseModel $model): bool
+    public function creating(Account|Model $model, bool $callHistory = false): bool
     {
         if (!parent::creating($model)) {
             return false;
@@ -27,8 +28,8 @@ class AccountObserver extends BaseObserver
             $parent = $model->parent;
 
             $model->account_number = isset($model->account_number)
-                ? sprintf("%s-%s", $model->account_number, $currency->code)
-                : sprintf("%s-%s", $parent->account_number, $currency->code);
+                ? sprintf('%s-%s', $model->account_number, $currency->code)
+                : sprintf('%s-%s', $parent->account_number, $currency->code);
 
             $this->accountService->cloneParentAccountColumns($model, $parent->id);
         }
@@ -36,18 +37,33 @@ class AccountObserver extends BaseObserver
         return true;
     }
 
-
-    public function created(Account|BaseModel $model): bool
+    public function created(Account|Model $model, bool $callHistory = false): bool
     {
-        if (isset($model->parent_id)) {
-            $this->accountService->cloneParentAccountMorphRecords($model, $model->parent_id);
-        }
+        parent::created($model);
+
+//        if (isset($model->parent_id)) {
+//            $this->accountService->cloneParentAccountMorphRecords($model, $model->parent_id);
+//        }
+
         return true;
     }
 
-    public function updating(Account|BaseModel $model): bool
+    public function saving(Account|Model $model, bool $callHistory = true): bool
     {
-        if (!parent::updating($model)) {
+        if (!$this->hasCalledClass(CompanyModuleObserver::class, 'updated') && !$model->isActiveBankingModule()) {
+            throw new GraphqlException('Create or Enable Company Banking module in this account', 'use', 401);
+        }
+
+        if (!parent::saving($model, $model->exists ? $callHistory : false)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function updating(Account|Model $model, bool $callHistory = true): bool
+    {
+        if (!parent::updating($model, $callHistory)) {
             return false;
         }
 
@@ -61,13 +77,29 @@ class AccountObserver extends BaseObserver
         return true;
     }
 
+
     /**
      * @throws EmailException
      */
-    public function updated(Account|BaseModel $model): void
+    public function updated(Account|Model $model, bool $callHistory = true): bool
     {
+        parent::updated($model, $callHistory);
+
         if (array_key_exists('account_state_id', $model->getChanges())) {
             $this->emailService->sendAccountStatusEmail($model);
         }
+
+        return true;
+    }
+
+    protected function hasCalledClass(string $class, string $method): bool
+    {
+        foreach (debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS) as $call) {
+            if (isset($call['function']) && isset($call['class']) && $call['class'] == $class && $call['function'] == $method) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

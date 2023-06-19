@@ -2,7 +2,6 @@
 
 namespace Feature\GraphQL\Mutations;
 
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class MemberProfileMutationTest extends TestCase
@@ -75,7 +74,7 @@ class MemberProfileMutationTest extends TestCase
             'last_name' => 'Member 2 last',
             'country_id' => 1,
             'language_id' => 1,
-        ]
+        ],
         ],
         [
             'Authorization' => 'Bearer '.$this->login(),
@@ -115,7 +114,7 @@ class MemberProfileMutationTest extends TestCase
             }
         ', 'variables' => [
             'email' => 'test_mail@test.com',
-        ]
+        ],
         ],
             [
                 'Authorization' => 'Bearer '.$this->login(),

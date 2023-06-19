@@ -1,3 +1,25 @@
+type TransferBetween {
+    "ID"
+    id: ID!
+    "Исходящий трансфер"
+    transfer_incoming: TransferIncoming @belongsTo (relation: "transferIncoming")
+    "Входящий трансфер"
+    transfer_outgoing: TransferOutgoing @belongsTo (relation: "transferOutgoing")
+}
+
+type TransferBetweenWithFees {
+    "ID"
+    id: ID!
+    "Исходящий трансфер"
+    transfer_incoming: TransferIncoming
+    "Входящий трансфер"
+    transfer_outgoing: TransferOutgoing
+    "Сумма комиссии"
+    fee_amount: Decimal
+    "Общаяя сумма"
+    final_amount: Decimal
+}
+
 extend type Mutation @guard {
     """
     Создать перевод между аккаунтами
@@ -9,35 +31,87 @@ extend type Mutation @guard {
         from_account_id: ID!
         "ID аккаунта получателя"
         to_account_id: ID!
-    ): TransferIncoming
+        "ID прайс-листа"
+        price_list_id: ID!
+        "ID прайс-листа фии"
+        price_list_fee_id: ID!
+    ): TransferBetweenWithFees
         @field(resolver: "TransferBetweenAccountsMutator@create")
+
+    """
+    Изменить перевод между аккаунтами
+    """
+    updateTransferBetweenAccounts(
+        "ID"
+        id: ID!
+        "Сумма"
+        amount: Decimal
+        "ID аккаунта отправителя"
+        from_account_id: ID
+        "ID аккаунта получателя"
+        to_account_id: ID
+        "ID прайс-листа"
+        price_list_id: ID
+        "ID прайс-листа фии"
+        price_list_fee_id: ID
+    ): TransferBetween
+        @field(resolver: "TransferBetweenAccountsMutator@update")
 
     """
     Подписать перевод между аккаунтами
     """
     signTransferBetweenAccounts(
-        "ID исходящего перевода"
-        transfer_incoming_id: ID!
+        "ID"
+        id: ID!
         "Code"
         code: String!
-    ): TransferIncoming
+    ): TransferBetween
         @field(resolver: "TransferBetweenAccountsMutator@sign")
 
     """
     Исполнить перевод между аккаунтами
     """
     executeTransferBetweenAccounts(
-        "ID исходящего перевода"
-        transfer_incoming_id: ID!
-    ): TransferIncoming
+        "ID"
+        id: ID!
+    ): TransferBetween
         @field(resolver: "TransferBetweenAccountsMutator@execute")
 
+    """
+    Отменить перевод между аккаунтами
+    """
+    cancelTransferBetweenAccounts(
+        "ID"
+        id: ID!
+    ): TransferBetween
+        @field(resolver: "TransferBetweenAccountsMutator@cancel")
+
+    """
+    Сделать возврат перевода между аккаунтами
+    """
+    refundTransferBetweenAccounts(
+        "ID"
+        id: ID!
+    ): TransferBetween
+        @field(resolver: "TransferBetweenAccountsMutator@refund")
+    
     """
     Привязать файлы
     """
     attachFIleToTransferBetweenAccounts(
-        transfer_incoming_id: ID!
+        "ID"
+        id: ID!
         file_id: [ID!]!
-    ): TransferIncoming
+    ): TransferBetween
     @field(resolver: "TransferBetweenAccountsMutator@attachFile")
+
+    """
+    Отвязать файлы
+    """
+    detachFIleFromTransferBetweenAccounts(
+        "ID"
+        id: ID!
+        file_id: [ID!]!
+    ): TransferBetween
+    @field(resolver: "TransferBetweenAccountsMutator@detachFile")
 }

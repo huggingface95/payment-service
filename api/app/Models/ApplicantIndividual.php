@@ -8,6 +8,8 @@ use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantIndividualUpdatedEvent;
 use App\Models\Clickhouse\ActiveSession;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Scopes\ApplicantIndividualCompanyIdScope;
+use App\Models\Traits\BaseObServerTrait;
 use App\Models\Traits\UserPermission;
 use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
@@ -19,8 +21,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
 use Laravel\Lumen\Auth\Authorizable;
@@ -38,6 +40,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property int company_id
  * @property ApplicantBankingAccess $applicantBankingAccess
  * @property Company company
+ * @property Account $account
  * @property ?array $active_session
  */
 class ApplicantIndividual extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
@@ -50,6 +53,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     use BelongsToOne;
     use UserPermission;
     use HasRelationships;
+    use BaseObServerTrait;
 
     protected $table = 'applicant_individual';
 
@@ -122,6 +126,7 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'profile_additional_fields' => 'array',
         'address_additional_fields' => 'array',
         'backup_codes' => 'array',
+        'birth_at' => 'date:Y-m-d',
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'last_screened_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
@@ -134,10 +139,13 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         'company_name',
     ];
 
+    public const ID_PREFIX = 'AI-';
+
     protected static function booted()
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope());
+        static::addGlobalScope(new ApplicantIndividualCompanyIdScope());
     }
 
     protected static function booting()
@@ -146,6 +154,16 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
             $model->modules()->attach([ModuleEnum::KYC->value]);
         });
         parent::booting();
+    }
+
+    public function getPrefixName(): string
+    {
+        return self::ID_PREFIX;
+    }
+
+    public function getPrefixAttribute(): string
+    {
+        return self::ID_PREFIX. $this->attributes['id'];
     }
 
     public function getAuthPassword()
@@ -191,9 +209,10 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
             ->limit(1)
             ->first();
 
-        if (!is_null($activeSession) && Carbon::parse($activeSession['expired_at'] ?? 0)->timestamp >= Carbon::parse()->timestamp) {
+        if (! is_null($activeSession) && Carbon::parse($activeSession['expired_at'] ?? 0)->timestamp >= Carbon::parse()->timestamp) {
             $activeSession['current_session'] = true;
         }
+
         return $activeSession;
     }
 
@@ -303,6 +322,11 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         return $this->belongsToMany(Module::class, 'applicant_individual_modules', 'applicant_individual_id', 'module_id')->withPivot('is_active as is_active');
     }
 
+    public function moduleActivity(): HasMany
+    {
+        return $this->hasMany(ApplicantModuleActivity::class, 'applicant_id');
+    }
+
     public function ApplicantIndividual()
     {
         return $this->belongsTo(self::class, 'applicant_individual_id', 'id');
@@ -313,9 +337,10 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
         return $this->belongsToMany(ApplicantCompany::class, 'applicant_individual_company', 'applicant_id', 'applicant_company_id');
     }
 
+    //TODO change morphOne to MorphMany
     public function account(): MorphOne
     {
-        return $this->morphOne(Account::class, 'clientable');
+        return $this->morphOne(Account::class, 'clientable', 'client_type', 'client_id');
     }
 
     public function groupRole(): \Ankurk91\Eloquent\Relations\MorphToOne
@@ -394,11 +419,6 @@ class ApplicantIndividual extends BaseModel implements AuthenticatableContract, 
     public function kycLevel(): BelongsTo
     {
         return $this->belongsTo(ApplicantKycLevel::class, 'kyc_level_id');
-    }
-
-    public function payment(): HasOne
-    {
-        return $this->hasOne(Payments::class, 'owner_id');
     }
 
     public function scopeGroupSort($query, $sort)

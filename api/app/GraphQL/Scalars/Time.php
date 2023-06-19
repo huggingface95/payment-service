@@ -20,7 +20,7 @@ final class Time extends ScalarType
      */
     public function serialize($value)
     {
-        return Carbon::parse($value)->format("H:i:s");
+        return Carbon::parse($value)->format('H:i:s');
     }
 
     /**

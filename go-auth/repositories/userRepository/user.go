@@ -33,9 +33,28 @@ func HasUserByEmail(email string, provider string) bool {
 	return false
 }
 
+func GetCorporateById(id uint64, individualId uint64) postgres.User {
+	var model *postgres.ApplicantCompany
+
+	query := database.PostgresInstance.Limit(1)
+	query.
+		Preload("Company").
+		Preload("Individual", "id = ?", individualId).
+		Where("id = ?", id).
+		First(&model)
+
+	if query.Error != nil {
+		return nil
+	}
+
+	return reflect.ValueOf(model).Interface().(postgres.User)
+}
+
 func GetUserById(id uint64, provider string) (user postgres.User) {
 	if provider == constants.Individual {
 		user = GetWithConditions(map[string]interface{}{"id": id}, func() interface{} { return new(postgres.Individual) })
+	} else if provider == constants.Corporate {
+		user = GetWithConditions(map[string]interface{}{"id": id}, func() interface{} { return new(postgres.ApplicantCompany) })
 	} else {
 		user = GetWithConditions(map[string]interface{}{"id": id}, func() interface{} { return new(postgres.Member) })
 	}
@@ -43,7 +62,6 @@ func GetUserById(id uint64, provider string) (user postgres.User) {
 }
 
 func GetWithConditions(columns map[string]interface{}, mc func() interface{}) postgres.User {
-	var m string
 	model := mc()
 
 	query := database.PostgresInstance.Limit(1)
@@ -54,15 +72,17 @@ func GetWithConditions(columns map[string]interface{}, mc func() interface{}) po
 
 	rModel := reflect.TypeOf(model)
 
+	rec := query.Preload("Company")
 	if rModel.Elem().Name() == constants.StructMember {
-		m = constants.ModelMember
-	} else {
-		m = constants.ModelIndividual
+		rec.Preload("ClientIpAddresses", "client_type = ?", constants.ModelMember)
+	} else if rModel.Elem().Name() == constants.StructIndividual {
+		rec.
+			Preload("ClientIpAddresses", "client_type = ?", constants.ModelIndividual).
+			Preload("ApplicantCompany").
+			Preload("ApplicantModuleActivity.Module")
 	}
+	rec.First(model)
 
-	rec := query.Preload("ClientIpAddresses", "client_type = ?", m).
-		Preload("Company").
-		First(model)
 	if rec.Error != nil {
 		return nil
 	}
@@ -113,7 +133,7 @@ func UpdatePassword(user postgres.User) *gorm.DB {
 		"ProfileAdditionalFields", "PersonalAdditionalFields", "ContactsAdditionalFields", "ApplicantStatusId",
 		"IsVerificationPhone", "FullName", "CompanyId", "MemberGroupRoleId", "ApplicantStateReasonId", "ApplicantRiskLevelId",
 		"AccountManagerMemberId", "LanguageId", "IsVerificationEmail", "Google2FaSecret", "IsActive", "TwoFactorAuthSettingId",
-		"CreatedAt", "UpdatedAt", "BackupCodes", "ClientIpAddresses", "Company",
+		"CreatedAt", "UpdatedAt", "BackupCodes", "ClientIpAddresses", "Company", "ApplicantCompany",
 	})...).Save(model)
 
 }

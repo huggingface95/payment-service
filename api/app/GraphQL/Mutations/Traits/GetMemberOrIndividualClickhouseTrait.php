@@ -9,7 +9,6 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 trait GetMemberOrIndividualClickhouseTrait
 {
-
     public function addClient(LengthAwarePaginator $result): void
     {
         $result->getCollection()->transform(function ($value) {
@@ -21,8 +20,8 @@ trait GetMemberOrIndividualClickhouseTrait
                 $value['client'] = null;
             }
             $value['client_type'] = $value['provider'];
+
             return $value;
         });
     }
-
 }

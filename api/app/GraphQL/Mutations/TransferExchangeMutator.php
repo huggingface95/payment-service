@@ -5,12 +5,17 @@ namespace App\GraphQL\Mutations;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
+use App\GraphQL\Mutations\Traits\AttachFileTrait;
+use App\GraphQL\Mutations\Traits\DetachFileTrait;
 use App\Models\TransferExchange;
 use App\Repositories\Interfaces\TransferExchangeRepositoryInterface;
 use App\Services\TransferExchangeService;
 
 class TransferExchangeMutator extends BaseMutator
 {
+    use AttachFileTrait;
+    use DetachFileTrait;
+
     public function __construct(
         protected TransferExchangeService $transferService,
         protected TransferExchangeRepositoryInterface $transferRepository
@@ -20,10 +25,10 @@ class TransferExchangeMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
-    public function cancel($root, array $args): TransferExchange
+    public function cancel($_, array $args): TransferExchange
     {
         $transfer = $this->transferRepository->findById($args['id']);
-        if (!$transfer) {
+        if (! $transfer) {
             throw new GraphqlException('Transfer not found', 'not found', 404);
         }
 
@@ -40,7 +45,19 @@ class TransferExchangeMutator extends BaseMutator
 
     public function create($_, array $args): TransferExchange
     {
-        $transfer = $this->transferService->createTransfer($args, (int) OperationTypeEnum::EXCHANGE->value);
+        $transfer = $this->transferService->createTransfer($args);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function update($_, array $args): TransferExchange
+    {
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransfer($transfer, $args);
 
         return $transfer;
     }
@@ -50,33 +67,12 @@ class TransferExchangeMutator extends BaseMutator
      */
     public function sign($_, array $args): TransferExchange
     {
-        if (!isset($args['code']) || empty($args['code'])) {
+        if (empty($args['code'])) {
             throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
         }
 
         $transfer = $this->transferRepository->findById($args['id']);
-        if (!$transfer) {
-            throw new GraphqlException('Transfer not found', 'not found', 404);
-        }
-
-        $this->transferService->updateTransferStatus([
-            'exchange' => $transfer,
-            'incoming' => $transfer->transferIncoming,
-            'outgoing' => $transfer->transferOutgoing,
-        ], [
-            'status_id' => PaymentStatusEnum::PENDING->value,
-        ]);
-
-        return $transfer;
-    }
-
-    /**
-     * @throws GraphqlException
-     */
-    public function execute($_, array $args): TransferExchange
-    {
-        $transfer = $this->transferRepository->findById($args['id']);
-        if (!$transfer) {
+        if (! $transfer) {
             throw new GraphqlException('Transfer not found', 'not found', 404);
         }
 

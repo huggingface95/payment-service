@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,7 +23,7 @@ class CreateTransferOutgoingTable extends Migration
             $table->decimal('amount_debt', 15, 5);
             $table->unsignedBigInteger('currency_id');
             $table->unsignedInteger('status_id');
-            $table->unsignedBigInteger('urgency_id');
+            $table->unsignedBigInteger('urgency_id')->default(PaymentUrgencyEnum::STANDART->value);
             $table->unsignedInteger('operation_type_id');
             $table->unsignedBigInteger('payment_provider_id');
             $table->unsignedBigInteger('payment_system_id');

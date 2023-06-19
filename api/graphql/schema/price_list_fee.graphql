@@ -21,6 +21,8 @@ type PriceListFee {
     id: ID!
     "Название"
     name: String!
+    "Company"
+    company: Company @belongsTo(relation: "company")
     "Тип"
     fee_type: FeeType @belongsTo(relation: "feeType")
     "Тип операции"
@@ -61,6 +63,7 @@ extend type Query @guard {
 
 input QueryPriceListFeesFilterStatic @spread{
     id: ID @eq
+    company_id: ID @eq
     price_list_id: ID @eq
     type_id: ID @eq
     operation_type_id: ID @eq
@@ -93,6 +96,7 @@ input priceList {
 
 input PriceListFeeInput {
     name: String!
+    company_id: ID!
     type_id: ID!
     operation_type_id: ID!
     period_id: ID
@@ -122,7 +126,7 @@ extend type Mutation @guard {
         id: ID!
         commission_price_list: [priceList]
         input: PriceListFeeInput @spread
-    ): PriceListFee   @field(resolver:"PriceListFeesMutator@update")
+    ): PriceListFee   @field(resolver:"PriceListFeesMutator@update") @validator
 
     """
     Удалить Цен

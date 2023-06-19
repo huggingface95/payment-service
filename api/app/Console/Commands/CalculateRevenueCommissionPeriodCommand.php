@@ -47,18 +47,18 @@ class CalculateRevenueCommissionPeriodCommand extends Command
         $timeNow = Carbon::now()->format('H:i:s');
         $dayOfWeek = Carbon::now()->dayOfWeekIso;
 
-        $this->info('Chunk size: ' . $chunkSize);
-        $this->info('Period: ' . $this->argument('period'));
-        $this->info('Time now: ' . $timeNow);
+        $this->info('Chunk size: '.$chunkSize);
+        $this->info('Period: '.$this->argument('period'));
+        $this->info('Time now: '.$timeNow);
 
         $query = CompanyLedgerSettings::query();
         if ($this->argument('period') == PeriodEnum::WEEK->value) {
-            $this->info('Day of week: ' . $dayOfWeek);
+            $this->info('Day of week: '.$dayOfWeek);
 
             $query->where('end_of_week_day', $dayOfWeek)
                 ->where('end_of_week_time', '<=', $timeNow);
         } elseif ($this->argument('period') == PeriodEnum::MONTH->value) {
-            $this->info('Day of month: ' . Carbon::now()->day);
+            $this->info('Day of month: '.Carbon::now()->day);
 
             $query->where('end_of_month_day', Carbon::now()->day)
                 ->where('end_of_month_time', '<=', $timeNow);
@@ -69,7 +69,7 @@ class CalculateRevenueCommissionPeriodCommand extends Command
 
         $query->chunkById($chunkSize, function (Collection $settings) {
             foreach ($settings as $setting) {
-                $this->info('Processing for company: ' . $setting->company_id);
+                $this->info('Processing for company: '.$setting->company_id);
 
                 dispatch(new ProcessLedgerPeriodHistoryJob($setting, $this->argument('period')));
             }

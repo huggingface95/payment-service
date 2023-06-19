@@ -7,6 +7,8 @@ use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantCompanyUpdatedEvent;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Scopes\ApplicantIndividualCompanyIdScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,11 +20,13 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property ApplicantIndividual $applicantIndividuals
  * @property ApplicantIndividual $applicantsWithBankingAccess
  * @property Company company
+ * @property Account $account
  */
 class ApplicantCompany extends BaseModel
 {
     use MorphToOne;
     use BelongsToOne;
+    use BaseObServerTrait;
 
     protected $table = 'applicant_companies';
 
@@ -82,19 +86,24 @@ class ApplicantCompany extends BaseModel
     ];
 
     protected $casts = [
-        'company_info_additional_fields'=>'array',
-        'contacts_additional_fields'=>'array',
-        'profile_additional_field'=>'array',
+        'company_info_additional_fields' => 'array',
+        'contacts_additional_fields' => 'array',
+        'profile_additional_fields' => 'array',
         'basic_info_additional_field' => 'array',
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'incorporate_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
+    public const ID_PREFIX = 'AC-';
+
+    protected $appends = ['fullname'];
+
     protected static function booted()
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope());
+        static::addGlobalScope(new ApplicantIndividualCompanyIdScope());
     }
 
     protected static function booting()
@@ -105,7 +114,15 @@ class ApplicantCompany extends BaseModel
         parent::booting();
     }
 
-    protected $appends = ['fullname'];
+    public function getPrefixName(): string
+    {
+        return self::ID_PREFIX;
+    }
+
+    public function getPrefixAttribute(): string
+    {
+        return self::ID_PREFIX. $this->attributes['id'];
+    }
 
     public function getFullnameAttribute()
     {
@@ -199,10 +216,7 @@ class ApplicantCompany extends BaseModel
 
     public function project(): BelongsTo
     {
-        return $this->belongsTo(Project::class, 'project_id', 'id')
-            ->whereHas('applicantCompanies', function ($query) {
-                $query->whereColumn('applicant_companies.company_id', '=', 'projects.company_id');
-            });
+        return $this->belongsTo(Project::class, 'project_id', 'id');
     }
 
     public function modules(): BelongsToMany
@@ -258,9 +272,10 @@ class ApplicantCompany extends BaseModel
         return $this->morphToOne(GroupRole::class, 'user', GroupRoleUser::class, 'user_id', 'group_role_id');
     }
 
+    //TODO change morphOne to MorphMany
     public function account(): MorphOne
     {
-        return $this->morphOne(Account::class, 'clientable');
+        return $this->morphOne(Account::class, 'clientable', 'client_type', 'client_id');
     }
 
     public function verificationEmailStatus(): BelongsTo

@@ -4,9 +4,11 @@ namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\RoleFilterSuperAdminScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
@@ -20,6 +22,7 @@ use Illuminate\Support\Collection;
 class GroupRole extends BaseModel
 {
     use SoftDeletes;
+    use BaseObServerTrait;
 
     public const INDIVIDUAL = '3';
 
@@ -117,5 +120,17 @@ class GroupRole extends BaseModel
         } else {
             return $this->members();
         }
+    }
+
+    public function projects(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Project::class,
+            ProjectSettings::class,
+            'group_role_id',
+            'id',
+            'id',
+            'project_id'
+        );
     }
 }

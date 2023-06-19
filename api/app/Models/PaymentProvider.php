@@ -2,27 +2,34 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * @PaymentProvider
+ *
  * @property int id
+ *
  * @method static findOrFail(int $providerId)
  */
 class PaymentProvider extends BaseModel
 {
     use SoftDeletes;
+    use HasRelationships;
+    use BaseObServerTrait;
 
     public $timestamps = false;
 
     protected $table = 'payment_provider';
 
     public const NAME_INTERNAL = 'Internal';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -72,6 +79,42 @@ class PaymentProvider extends BaseModel
     public function projectApiSettings(): MorphMany
     {
         return $this->morphMany(ProjectApiSetting::class, 'provider');
+    }
+
+    public function countries(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    {
+        return $this->hasManyDeep(
+            Country::class,
+            [Region::class, RegionCountry::class],
+            [
+                'company_id',
+                'region_id',
+                'id',
+            ],
+            [
+                'company_id',
+                'id',
+                'country_id',
+            ],
+        );
+    }
+
+    public function currencies(): \Staudenmeir\EloquentHasManyDeep\HasManyDeep
+    {
+        return $this->hasManyDeep(
+            Currencies::class,
+            [PaymentSystem::class, 'payment_system_currencies'],
+            [
+                'payment_provider_id',
+                'payment_system_id',
+                'id',
+            ],
+            [
+                'id',
+                'id',
+                'currency_id',
+            ],
+        );
     }
 
     public function scopePaymentProviderCurrency($query, $currencyId)

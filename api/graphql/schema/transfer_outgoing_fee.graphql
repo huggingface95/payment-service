@@ -23,8 +23,10 @@ extend type Mutation @guard {
         payment_provider_id: ID!
         "ID платежной системы"
         payment_system_id: ID!
-        "ID срочности операции"
-        urgency_id: ID!
+        "ID прайс листа"
+        price_list_id: ID
+        "ID комисии"
+        price_list_fee_id: ID
         "Исполнить в"
         execution_at: DateTimeUtc
         "Номер счета или IBAN получателя"
@@ -37,6 +39,8 @@ extend type Mutation @guard {
         recipient_bank_swift: String
         "Имя получателя"
         recipient_name: String
+        "Страна получателя"
+        recipient_country_id: ID!
         "Город получателя"
         recipient_city: String
         "Адрес получателя"
@@ -45,10 +49,12 @@ extend type Mutation @guard {
         recipient_state: String
         "Индекс получателя"
         recipient_zip: String
+        "Причина перевода"
+        reason: String
+        "ID коммиисии респондента"
+        respondent_fees_id: ID!
         "Сообщение банка"
         bank_message: String
-        "ID файлов"
-        file_id: [ID]
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingFeeMutator@create")
 
@@ -58,12 +64,58 @@ extend type Mutation @guard {
     updateTransferOutgoingFee(
         "ID"
         id: ID!
+        "ID компании"
+        company_id: ID
+        "ID группы"
+        group_id: ID
+        "ID типа группы"
+        group_type_id: ID
+        "ID проекта"
+        project_id: ID
         "Сумма"
-        amount: Decimal!
-        "Причина"
+        amount: Decimal
+        "ID валюты"
+        currency_id: ID
+        "ID аккаунта"
+        account_id: ID
+        "ID типа операции"
+        operation_type_id: ID
+        "ID платежного провайдера"
+        payment_provider_id: ID
+        "ID платежной системы"
+        payment_system_id: ID
+        "ID прайс листа"
+        price_list_id: ID
+        "ID комисии"
+        price_list_fee_id: ID
+        "Исполнить в"
+        execution_at: DateTimeUtc
+        "Номер счета или IBAN получателя"
+        recipient_account: String
+        "Имя банка получателя"
+        recipient_bank_name: String
+        "Адрес банка получателя"
+        recipient_bank_address: String
+        "SWIFT банка получателя"
+        recipient_bank_swift: String
+        "Имя получателя"
+        recipient_name: String
+        "Страна получателя"
+        recipient_country_id: ID
+        "Город получателя"
+        recipient_city: String
+        "Адрес получателя"
+        recipient_address: String
+        "Штат получателя"
+        recipient_state: String
+        "Индекс получателя"
+        recipient_zip: String
+        "Причина перевода"
         reason: String
-        "ID файлов"
-        file_id: [ID]
+        "ID коммиисии респондента"
+        respondent_fees_id: ID
+        "Сообщение банка"
+        bank_message: String
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingFeeMutator@update")
 
@@ -92,4 +144,22 @@ extend type Mutation @guard {
         id: ID!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingFeeMutator@send")
+
+    """
+    Исполнить исходящий FEE перевод
+    """
+    executeTransferOutgoingFee(
+        "ID"
+        id: ID!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingFeeMutator@execute")
+    
+    """
+    Привязать файлы
+    """
+    attachFIleToTransferOutgoingFee(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingFeeMutator@attachFile")
 }

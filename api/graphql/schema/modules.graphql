@@ -20,7 +20,7 @@ extend type Query @guard {
         where: _ @whereConditions(columns: ["name"]),
         orderBy: _ @orderBy(columns: ["id"])
     ): [Module!]!
-    @field(resolver:"ModuleQuery@nokyc")
+    @all(scopes: ["withoutKYC"])
     """
     Получить список модулей вместе с модулем KYC
     orderBy: [{ column: ID, order: DESC }] сортировка по ID

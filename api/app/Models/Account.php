@@ -4,12 +4,19 @@ namespace App\Models;
 
 use Ankurk91\Eloquent\BelongsToOne;
 use Ankurk91\Eloquent\MorphToOne;
+use App\Enums\ModuleEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Models\Builders\AccountBuilder;
 use App\Models\Interfaces\BaseModelInterface;
+use App\Models\Interfaces\CustomObServerInterface;
+use App\Models\Interfaces\HistoryInterface;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
+use App\Observers\AccountObserver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
@@ -41,10 +48,11 @@ use Illuminate\Support\Collection;
  * @method static find(int $id)
  * @method static findOrFail(int $id)
  */
-class Account extends BaseModel implements BaseModelInterface
+class Account extends BaseModel implements BaseModelInterface, CustomObServerInterface, HistoryInterface
 {
     use MorphToOne;
     use BelongsToOne;
+    use BaseObServerTrait;
 
     protected $table = 'accounts';
 
@@ -72,7 +80,6 @@ class Account extends BaseModel implements BaseModelInterface
         'member_id',
         'group_type_id',
         'group_role_id',
-        'payment_system_id',
         'payment_bank_id',
         'client_id',
         'client_type',
@@ -111,6 +118,10 @@ class Account extends BaseModel implements BaseModelInterface
         static::addGlobalScope(new ApplicantFilterByMemberScope());
     }
 
+    public function newEloquentBuilder($builder): AccountBuilder
+    {
+        return new AccountBuilder($builder);
+    }
 
     public function getAliasAttribute(): bool
     {
@@ -173,12 +184,12 @@ class Account extends BaseModel implements BaseModelInterface
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Account::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(Account::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function member(): BelongsTo
@@ -216,6 +227,23 @@ class Account extends BaseModel implements BaseModelInterface
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 
+    public function companyModules(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            CompanyModule::class, Company::class,
+            'id',
+            'company_id',
+            'company_id',
+            'id',
+        );
+    }
+
+    public function isActiveBankingModule(): bool
+    {
+        return $this->companyModules()->where('module_id', ModuleEnum::BANKING->value)->where('is_active', true)->exists();
+    }
+
+
     /**
      * Get relation Payment Provider
      *
@@ -234,11 +262,6 @@ class Account extends BaseModel implements BaseModelInterface
     public function paymentProviderIban(): BelongsTo
     {
         return $this->belongsTo(PaymentProviderIban::class, 'iban_provider_id');
-    }
-
-    public function paymentSystem(): BelongsTo
-    {
-        return $this->belongsTo(PaymentSystem::class, 'payment_system_id');
     }
 
     public function paymentBank(): BelongsTo
@@ -391,4 +414,25 @@ class Account extends BaseModel implements BaseModelInterface
 
         return $sql;
     }
+
+    public function getHistoryColumns(): array
+    {
+        return ['account_state_id'];
+    }
+
+    public function getHistoryActions(): array
+    {
+        return ['saving'];
+    }
+
+    public function enableHistory(): bool
+    {
+        return true;
+    }
+
+    public static function getObServer(): string
+    {
+        return AccountObserver::class;
+    }
+
 }

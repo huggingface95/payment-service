@@ -30,18 +30,22 @@ extend type Query @guard {
     hasPaymentSystems: {column:NAME,operator:GTE,value:PaymentSystemName} фильтр по платежным системам
     """
     paymentProviders(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryPaymentProvidersFilterStatic),
         orderBy: _ @orderBy(columns: ["id","name","is_active"])
-    ): [PaymentProvider!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
+    ): [PaymentProvider!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC) @softDeletes
 }
 
 input QueryPaymentProvidersFilterStatic @spread{
-    name: String @eq @ilike
+    name: String @eq @ilike @neq
     hasPaymentSystemsFilterById: ID @eq
     hasAccountFilterById: ID @eq
     hasCommissionTemplateFilterById: ID @eq
     company_id: ID @eq
     id: ID @eq
+    hasCountriesFilterById: ID @eq
+    hasCurrenciesFilterById: ID @eq
+    is_active: Boolean @eq
 }
 
 input InputPaymentProvider {

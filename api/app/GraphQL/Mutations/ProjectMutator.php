@@ -24,7 +24,7 @@ class ProjectMutator extends BaseMutator
             $project = Project::create($args);
 
             $this->createApplicantTypes($project, $args['project_settings'] ?? []);
-            $this->createPaymentProviders($project);
+            $this->createProviders($project);
 
             DB::commit();
 
@@ -73,9 +73,10 @@ class ProjectMutator extends BaseMutator
         });
     }
 
-    private function createPaymentProviders(Project $project): void
+    private function createProviders(Project $project): void
     {
         $project->paymentProviders()->saveMany($project->company->paymentProviders);
         $project->paymentProvidersIban()->saveMany($project->company->paymentProvidersIban);
+        $project->quoteProviders()->saveMany($project->company->quoteProviders);
     }
 }

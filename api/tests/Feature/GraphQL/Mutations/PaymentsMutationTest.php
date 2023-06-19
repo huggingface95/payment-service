@@ -11,6 +11,9 @@ use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+/**
+ * @group payments
+ */
 class PaymentsMutationTest extends TestCase
 {
     private $data = [

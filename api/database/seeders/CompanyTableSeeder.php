@@ -33,6 +33,8 @@ class CompanyTableSeeder extends Seeder
                     'url' => 'https://'.$faker->domainName(),
                     'entity_type' => 'Test',
                     'reg_number' => $faker->randomNumber('9'),
+                    'employees_id' => $i,
+                    'type_of_industry_id' => $i,
                 ]
             );
         }

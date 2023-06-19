@@ -114,7 +114,7 @@ class PaymentProviderIbanMutationTest extends TestCase
             ],
         ],
         [
-            'Authorization' => 'Bearer ' . $this->login(),
+            'Authorization' => 'Bearer '.$this->login(),
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -180,7 +180,7 @@ class PaymentProviderIbanMutationTest extends TestCase
             ],
         ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -227,7 +227,7 @@ class PaymentProviderIbanMutationTest extends TestCase
             ],
         ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]);
 
         $id = json_decode($this->response->getContent(), true);

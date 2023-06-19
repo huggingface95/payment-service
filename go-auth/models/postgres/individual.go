@@ -10,49 +10,52 @@ import (
 )
 
 type Individual struct {
-	ID                       uint64             `gorm:"primarykey,column:id"`
-	FirstName                string             `gorm:"column:first_name"`
-	LastName                 string             `gorm:"column:last_name"`
-	MiddleName               string             `gorm:"column:middle_name"`
-	Email                    string             `gorm:"column:email"`
-	Url                      string             `gorm:"column:url"`
-	Phone                    string             `gorm:"column:phone"`
-	CountryId                uint64             `gorm:"column:country_id"`
-	CitizenshipCountryId     uint64             `gorm:"column:citizenship_country_id"`
-	State                    string             `gorm:"column:state"`
-	City                     string             `gorm:"column:city"`
-	Address                  string             `gorm:"column:address"`
-	Zip                      string             `gorm:"column:zip"`
-	Nationality              string             `gorm:"column:nationality"`
-	BirthCountryId           uint64             `gorm:"column:birth_country_id"`
-	BirthState               string             `gorm:"column:birth_state"`
-	BirthCity                string             `gorm:"column:birth_city"`
-	BirthAt                  time.Time          `gorm:"column:birth_at"`
-	Sex                      int8               `gorm:"column:sex"`
-	PasswordHash             string             `gorm:"column:password_hash"`
-	PasswordSalt             string             `gorm:"column:password_salt"`
-	ProfileAdditionalFields  datatypes.JSON     `gorm:"column:profile_additional_fields"`
-	PersonalAdditionalFields datatypes.JSON     `gorm:"column:personal_additional_fields"`
-	ContactsAdditionalFields datatypes.JSON     `gorm:"column:contacts_additional_fields"`
-	ApplicantStatusId        uint64             `gorm:"column:applicant_status_id"`
-	IsVerificationPhone      uint64             `gorm:"column:phone_verification_status_id"`
-	FullName                 string             `gorm:"column:fullname"`
-	CompanyId                uint64             `gorm:"column:company_id"`
-	MemberGroupRoleId        uint64             `gorm:"column:member_group_role_id"`
-	ApplicantStateReasonId   uint64             `gorm:"column:applicant_state_reason_id"`
-	ApplicantRiskLevelId     uint64             `gorm:"column:applicant_risk_level_id"`
-	AccountManagerMemberId   uint64             `gorm:"column:account_manager_member_id"`
-	LanguageId               uint64             `gorm:"column:language_id"`
-	IsVerificationEmail      uint64             `gorm:"column:email_verification_status_id"`
-	Google2FaSecret          string             `gorm:"column:google2fa_secret"`
-	IsActive                 uint64             `gorm:"column:applicant_state_id"`
-	TwoFactorAuthSettingId   uint64             `gorm:"column:two_factor_auth_setting_id"`
-	IsNeedChangePassword     bool               `gorm:"column:is_need_change_password"`
-	CreatedAt                time.Time          `gorm:"column:created_at"`
-	UpdatedAt                time.Time          `gorm:"column:updated_at"`
-	BackupCodes              datatypes.JSON     `gorm:"column:backup_codes"`
-	ClientIpAddresses        []*ClientIpAddress `gorm:"foreignKey:ClientId;references:ID"`
-	Company                  *Company           `gorm:"foreignKey:CompanyId"`
+	Id                        uint64                       `gorm:"primarykey,column:id"`
+	FirstName                 string                       `gorm:"column:first_name"`
+	LastName                  string                       `gorm:"column:last_name"`
+	MiddleName                string                       `gorm:"column:middle_name"`
+	Email                     string                       `gorm:"column:email"`
+	Url                       string                       `gorm:"column:url"`
+	Phone                     string                       `gorm:"column:phone"`
+	CountryId                 uint64                       `gorm:"column:country_id"`
+	CitizenshipCountryId      uint64                       `gorm:"column:citizenship_country_id"`
+	State                     string                       `gorm:"column:state"`
+	City                      string                       `gorm:"column:city"`
+	Address                   string                       `gorm:"column:address"`
+	Zip                       string                       `gorm:"column:zip"`
+	Nationality               string                       `gorm:"column:nationality"`
+	BirthCountryId            uint64                       `gorm:"column:birth_country_id"`
+	BirthState                string                       `gorm:"column:birth_state"`
+	BirthCity                 string                       `gorm:"column:birth_city"`
+	BirthAt                   time.Time                    `gorm:"column:birth_at"`
+	Sex                       int8                         `gorm:"column:sex"`
+	PasswordHash              string                       `gorm:"column:password_hash"`
+	PasswordSalt              string                       `gorm:"column:password_salt"`
+	ProfileAdditionalFields   datatypes.JSON               `gorm:"column:profile_additional_fields"`
+	PersonalAdditionalFields  datatypes.JSON               `gorm:"column:personal_additional_fields"`
+	ContactsAdditionalFields  datatypes.JSON               `gorm:"column:contacts_additional_fields"`
+	ApplicantStatusId         uint64                       `gorm:"column:applicant_status_id"`
+	IsVerificationPhone       uint64                       `gorm:"column:phone_verification_status_id"`
+	FullName                  string                       `gorm:"column:fullname"`
+	CompanyId                 uint64                       `gorm:"column:company_id"`
+	MemberGroupRoleId         uint64                       `gorm:"column:member_group_role_id"`
+	ApplicantStateReasonId    uint64                       `gorm:"column:applicant_state_reason_id"`
+	ApplicantRiskLevelId      uint64                       `gorm:"column:applicant_risk_level_id"`
+	AccountManagerMemberId    uint64                       `gorm:"column:account_manager_member_id"`
+	LanguageId                uint64                       `gorm:"column:language_id"`
+	IsVerificationEmail       uint64                       `gorm:"column:email_verification_status_id"`
+	Google2FaSecret           string                       `gorm:"column:google2fa_secret"`
+	IsActive                  uint64                       `gorm:"column:applicant_state_id"`
+	TwoFactorAuthSettingId    uint64                       `gorm:"column:two_factor_auth_setting_id"`
+	IsNeedChangePassword      bool                         `gorm:"column:is_need_change_password"`
+	CreatedAt                 time.Time                    `gorm:"column:created_at"`
+	UpdatedAt                 time.Time                    `gorm:"column:updated_at"`
+	BackupCodes               datatypes.JSON               `gorm:"column:backup_codes"`
+	ClientIpAddresses         []*ClientIpAddress           `gorm:"foreignKey:ClientId;references:Id"`
+	Company                   *Company                     `gorm:"foreignKey:CompanyId"`
+	ApplicantIndividualModule []*ApplicantIndividualModule `gorm:"foreignKey:ApplicantIndividualId"`
+	ApplicantModuleActivity   []*ApplicantModuleActivity   `gorm:"foreignKey:ApplicantId"`
+	ApplicantCompany          []ApplicantCompany           `gorm:"many2many:applicant_individual_company;foreignKey:Id;joinForeignKey:ApplicantId;References:Id;joinReferences:ApplicantCompanyId"`
 }
 
 func (user *Individual) StructName() string {
@@ -130,7 +133,7 @@ func (user *Individual) GetBackupCodeDataAttribute() []BackupCodes {
 }
 
 func (user *Individual) GetId() uint64 {
-	return user.ID
+	return user.Id
 }
 
 func (user *Individual) GetFullName() string {
@@ -210,4 +213,14 @@ func (user *Individual) SetGoogle2FaSecret(v string) {
 
 func (user *Individual) SetTwoFactorAuthSettingId(v uint64) {
 	user.TwoFactorAuthSettingId = v
+}
+
+func (user *Individual) IsCorporate() bool {
+	for _, entry := range user.ApplicantModuleActivity {
+		if entry.Corporate {
+			return true
+		}
+	}
+
+	return false
 }

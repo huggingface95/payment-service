@@ -152,7 +152,7 @@ class RegionsQueryTest extends TestCase
                     }
                 }',
                 'variables' => [
-                    'name' => 'Afghanistan',
+                    'name' => 'Cuba',
                 ], ],
             [
                 'Authorization' => 'Bearer '.$this->login(),

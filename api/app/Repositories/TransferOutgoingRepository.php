@@ -28,12 +28,21 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
 
     public function attachFileById(Model|Builder $model, array $data): Model|Builder|null
     {
-        if (!empty($data)) {
+        if (! empty($data)) {
             $model->files()->detach();
             $model->files()->attach(
                 $data,
                 ['transfer_type' => class_basename(TransferOutgoing::class)]
             );
+        }
+
+        return $model;
+    }
+
+    public function detachFileById(Model|Builder $model, array $data): Model|Builder|null
+    {
+        if (! empty($data)) {
+            $model->files()->detach($data);
         }
 
         return $model;
@@ -49,12 +58,14 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
         $transfer = $this->query()->create($data);
 
         if (isset($data['transfer_swift'])) {
-            $transfer->transferSwift()->create(
-                array_merge(
-                    $data['transfer_swift'],
-                    ['transfer_type' => class_basename(TransferOutgoing::class)]
-                )
-            );
+            foreach ($data['transfer_swift'] as $tSwift) {
+                $transfer->transferSwift()->create(
+                    array_merge(
+                        $tSwift,
+                        ['transfer_type' => class_basename(TransferOutgoing::class)]
+                    )
+                );
+            }
         }
 
         return $transfer;
@@ -71,7 +82,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
     {
         return $this->query()
             ->where('status_id', PaymentStatusEnum::WAITING_EXECUTION_DATE->value)
-            ->whereDate('execution_at', Carbon::today())
+            ->whereDate('execution_at', '<=', Carbon::today())
             ->get();
     }
 
@@ -103,32 +114,29 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
             ->sum('amount_debt');
     }
 
-    public function getPriceListIdByArgs(array $args): int|null
+    public function getCommissionPriceListIdByArgs(array $args, string $clientType): int|null
     {
-        $regionId = Region::query()
-            ->join('region_countries', 'regions.id', '=', 'region_countries.region_id')
-            ->where('region_countries.country_id', '=', function($query) use ($args) {
-                $query->select('applicant_individual.country_id')
-                    ->from('accounts')
-                    ->join('applicant_individual', 'accounts.owner_id', '=', 'applicant_individual.id')
-                    ->where('accounts.id', '=', $args['account_id']);
-            })
-            ->where('regions.company_id', '=', $args['company_id'])
-            ->first()?->id;
-
-        $priceListId = CommissionPriceList::query()
+        return CommissionPriceList::query()
             ->where('company_id', '=', $args['company_id'])
-            ->where('commission_template_id', '=', function($query) use ($args) {
+            ->where('commission_template_id', '=', function ($query) use ($args, $clientType) {
                 $query->select('project_settings.commission_template_id')
                     ->from('projects')
                     ->join('project_settings', 'projects.id', '=', 'project_settings.project_id')
-                    ->where('projects.id', '=', $args['project_id']);
+                    ->where('projects.id', '=', $args['project_id'])
+                    ->where('applicant_type', '=', $clientType);
             })
             ->where('provider_id', '=', $args['payment_provider_id'])
             ->where('payment_system_id', '=', $args['payment_system_id'])
-            ->where('region_id', '=', $regionId)
+            ->where('region_id', '=', $args['region_id'])
             ->first()?->id;
+    }
 
-        return $priceListId;
+    public function getRegionIdByArgs(array $args): int|null
+    {
+        return Region::query()
+            ->join('region_countries', 'regions.id', '=', 'region_countries.region_id')
+            ->where('region_countries.country_id', '=', $args['recipient_country_id'])
+            ->where('regions.company_id', '=', $args['company_id'])
+            ->first()?->id;
     }
 }

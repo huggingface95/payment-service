@@ -3,7 +3,6 @@
 namespace Feature\GraphQL\Mutations;
 
 use App\Models\BusinessActivity;
-use App\Models\PaymentBank;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -61,7 +60,7 @@ class BusinessActivityMutationTest extends TestCase
             ],
         ],
         [
-            'Authorization' => 'Bearer ' . $this->login(),
+            'Authorization' => 'Bearer '.$this->login(),
         ]);
 
         $id = json_decode($this->response->getContent(), true);
@@ -97,7 +96,7 @@ class BusinessActivityMutationTest extends TestCase
             ],
         ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]);
 
         $id = json_decode($this->response->getContent(), true);

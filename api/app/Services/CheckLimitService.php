@@ -17,17 +17,16 @@ use App\Models\CommissionTemplateLimitTransferDirection;
 use App\Models\CommissionTemplateLimitType;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\CheckLimitRepositoryInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\Response;
 
 class CheckLimitService
 {
     public function __construct(
         protected CheckLimitRepositoryInterface $repository,
-        protected EmailService                  $emailService
-    )
-    {
+        protected EmailService $emailService
+    ) {
     }
 
     /**
@@ -47,7 +46,6 @@ class CheckLimitService
             throw new GraphqlException('limit is exceeded', 'use');
         }
     }
-
 
     public function checkLimit(Account $account, Collection $allLimits, Collection $allProcessedAmount, $paymentAmount): bool
     {
@@ -150,7 +148,6 @@ class CheckLimitService
         return true;
     }
 
-
     /**
      * @throws EmailException
      */
@@ -175,7 +172,6 @@ class CheckLimitService
 
         return true;
     }
-
 
     /**
      * @throws GraphqlException

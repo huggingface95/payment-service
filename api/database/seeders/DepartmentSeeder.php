@@ -16,10 +16,8 @@ class DepartmentSeeder extends Seeder
     {
         Department::withoutEvents(function () {
             for ($i = 1; $i <= 5; $i++) {
-                Department::firstOrCreate([
-                    'id' => $i,
-                ], [
-                    'name' => 'Department #' . $i,
+                Department::query()->firstOrCreate([
+                    'name' => 'Department #'.$i,
                     'company_id' => $i,
                 ]);
             }

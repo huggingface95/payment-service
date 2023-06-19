@@ -1,21 +1,21 @@
 <?php
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
     dirname(__DIR__)
 ))->bootstrap();
 
-if (!function_exists('config_path')) {
+if (! function_exists('config_path')) {
     /**
      * Get the configuration path.
      *
-     * @param string $path
+     * @param  string  $path
      * @return string
      */
     function config_path($path = '')
     {
-        return app()->basePath() . DIRECTORY_SEPARATOR . 'config' . ($path ? DIRECTORY_SEPARATOR . $path : $path);
+        return app()->basePath().DIRECTORY_SEPARATOR.'config'.($path ? DIRECTORY_SEPARATOR.$path : $path);
     }
 }
 
@@ -36,8 +36,8 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-$app->instance('path.config', app()->basePath() . DIRECTORY_SEPARATOR . 'config');
-$app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storage');
+$app->instance('path.config', app()->basePath().DIRECTORY_SEPARATOR.'config');
+$app->instance('path.storage', app()->basePath().DIRECTORY_SEPARATOR.'storage');
 
 // $app->withFacades();
 
@@ -149,6 +149,7 @@ $app->register(\Tinderbox\ClickhouseBuilder\Integrations\Laravel\ClickhouseServi
 $app->register(App\Providers\RepositoryServiceProvider::class);
 $app->register(Maatwebsite\Excel\ExcelServiceProvider::class);
 $app->register(\App\Providers\AddGraphqlTypesServiceProvider::class);
+$app->register(\Nuwave\Lighthouse\SoftDeletes\SoftDeletesServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -172,7 +173,7 @@ $app->alias('Agent', Jenssegers\Agent\Facades\Agent::class);
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__ . '/../routes/web.php';
+    require __DIR__.'/../routes/web.php';
 });
 
 return $app;

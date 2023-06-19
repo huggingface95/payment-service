@@ -14,14 +14,14 @@ class MemberAccessLimitationsTableSeeder extends Seeder
      */
     public function run()
     {
-            MemberAccessLimitation::firstOrCreate([
-                'member_id' => 4,
-                'company_id' => 2,
-                'module_id' => 1,
-                'project_id' => 1,
-                'payment_provider_id' => 1,
-                'group_type_id' => 1,
-                'see_own_applicants' => true,
-            ]);
+        MemberAccessLimitation::firstOrCreate([
+            'member_id' => 4,
+            'company_id' => 1,
+            'module_id' => 1,
+            'project_id' => 1,
+            'payment_provider_id' => 1,
+            'group_type_id' => 1,
+            'see_own_applicants' => true,
+        ]);
     }
 }

@@ -15,8 +15,8 @@ final class ActiveSessionsQuery
     /**
      * Get data with pagination and filteration
      *
-     * @param null $_
-     * @param array<string, mixed> $args
+     * @param  null  $_
+     * @param  array<string, mixed>  $args
      */
     public function get($_, array $args): array
     {
@@ -56,14 +56,12 @@ final class ActiveSessionsQuery
             ->from((new ActiveSession())->getTable())
             ->orderBy('created_at', 'DESC')->limit(1);
 
-
         /** @var ApplicantCompany $applicantCompany */
         $applicantCompany = ApplicantCompany::query()->with('applicantIndividuals')->findOrFail($args['applicant_company_id']);
         $query->whereIn('email', $applicantCompany->applicantIndividuals->pluck('email')->toArray());
 
         return $query->first();
     }
-
 
     public function getMemberActiveSession($_, array $args): ?array
     {
@@ -88,7 +86,7 @@ final class ActiveSessionsQuery
 
             if (isset($fields['created_at'])) {
                 $value = $fields['created_at'];
-                $query->whereBetween('created_at', [substr($value['from'], 0, 10) . ' 00:00:00', substr($value['to'], 0, 10) . ' 23:59:59']);
+                $query->whereBetween('created_at', [substr($value['from'], 0, 10).' 00:00:00', substr($value['to'], 0, 10).' 23:59:59']);
 
                 unset($fields['created_at']);
             }

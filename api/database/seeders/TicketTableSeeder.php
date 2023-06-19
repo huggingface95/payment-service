@@ -18,10 +18,7 @@ class TicketTableSeeder extends Seeder
         $faker = Factory::create();
 
         for ($i = 1; $i <= 10; $i++) {
-            Ticket::firstOrCreate(
-                [
-                    'id' => $i,
-                ],
+            Ticket::query()->firstOrCreate(
                 [
                     'member_id' => 1,
                     'client_id' => 1,

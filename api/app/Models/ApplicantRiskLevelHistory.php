@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\MemberScope;
+use App\Models\Traits\BaseObServerTrait;
 
 class ApplicantRiskLevelHistory extends BaseModel
 {
+
+    use BaseObServerTrait;
     protected $table = 'applicant_individual_risk_level_history';
 
     /**

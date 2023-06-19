@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-
 use App\Services\GraphqlManipulateSchemaService;
 use Illuminate\Support\ServiceProvider;
 use Nuwave\Lighthouse\Exceptions\DefinitionException;
@@ -10,7 +9,6 @@ use Nuwave\Lighthouse\Schema\TypeRegistry;
 
 class AddGraphqlTypesServiceProvider extends ServiceProvider
 {
-
     /**
      * @throws DefinitionException
      */

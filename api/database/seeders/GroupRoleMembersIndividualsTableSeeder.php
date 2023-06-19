@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
+use App\Models\GroupRoleUser;
+use App\Models\Members;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class GroupRoleMembersIndividualsTableSeeder extends Seeder
 {
@@ -14,34 +17,35 @@ class GroupRoleMembersIndividualsTableSeeder extends Seeder
      */
     public function run()
     {
-        $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 3, 'user_id' => 2])->first();
-        if (! $row) {
-            DB::table('group_role_members_individuals')->insert(['group_role_id' => 3, 'user_id' => 2]);
-        }
-
-        $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 2, 'user_id' => 3])->first();
-        if (! $row) {
-            DB::table('group_role_members_individuals')->insert(['group_role_id' => 2, 'user_id' => 3]);
-        }
-
-        $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 1, 'user_id' => 4])->first();
-        if (! $row) {
-            DB::table('group_role_members_individuals')->insert(['group_role_id' => 1, 'user_id' => 4]);
-        }
-
-        $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 2, 'user_id' => 1])->first();
-        if (! $row) {
-            DB::table('group_role_members_individuals')->insert(['group_role_id' => 2, 'user_id' => 1]);
-        }
-
-        $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 1, 'user_id' => 5])->first();
-        if (! $row) {
-            DB::table('group_role_members_individuals')->insert(['group_role_id' => 1, 'user_id' => 5, 'user_type' => 'ApplicantCompany']);
-        }
-
-        $row = DB::table('group_role_members_individuals')->where(['group_role_id' => 1, 'user_id' => 1])->first();
-        if (! $row) {
-            DB::table('group_role_members_individuals')->insert(['group_role_id' => 1, 'user_id' => 2, 'user_type' => 'ApplicantIndividual']);
-        }
+        GroupRoleUser::query()->firstOrCreate([
+            'group_role_id' => 1,
+            'user_id' => 2,
+            'user_type' => class_basename(Members::class),
+        ]);
+        GroupRoleUser::query()->firstOrCreate([
+            'group_role_id' => 2,
+            'user_id' => 1,
+            'user_type' => class_basename(Members::class),
+        ]);
+        GroupRoleUser::query()->firstOrCreate([
+            'group_role_id' => 3,
+            'user_id' => 3,
+            'user_type' => class_basename(Members::class),
+        ]);
+        GroupRoleUser::query()->firstOrCreate([
+            'group_role_id' => 4,
+            'user_id' => 4,
+            'user_type' => class_basename(Members::class),
+        ]);
+        GroupRoleUser::query()->firstOrCreate([
+            'group_role_id' => 5,
+            'user_id' => 1,
+            'user_type' => class_basename(ApplicantCompany::class),
+        ]);
+        GroupRoleUser::query()->firstOrCreate([
+            'group_role_id' => 6,
+            'user_id' => 1,
+            'user_type' => class_basename(ApplicantIndividual::class),
+        ]);
     }
 }

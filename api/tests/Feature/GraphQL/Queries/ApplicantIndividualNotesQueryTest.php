@@ -43,7 +43,7 @@ class ApplicantIndividualNotesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -79,7 +79,7 @@ class ApplicantIndividualNotesQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -92,7 +92,6 @@ class ApplicantIndividualNotesQueryTest extends TestCase
 
     public function testQueryApplicantIndividualNotesWithApplicantId(): void
     {
-
         $applicant = ApplicantIndividual::find(ApplicantIndividualNotes::select('applicant_individual_id')->first());
 
         $applicantNotes = ApplicantIndividualNotes::where('applicant_individual_id', $applicant[0]->id)->get();
@@ -118,10 +117,10 @@ class ApplicantIndividualNotesQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => (string) $applicant[0]->id,
-                ]
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [

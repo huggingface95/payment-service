@@ -8,6 +8,8 @@ use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
+use App\GraphQL\Mutations\Traits\AttachFileTrait;
+use App\GraphQL\Mutations\Traits\DetachFileTrait;
 use App\Models\TransferOutgoing;
 use App\Repositories\AccountRepository;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
@@ -16,6 +18,9 @@ use App\Services\TransferOutgoingService;
 
 class TransferOutgoingMutator extends BaseMutator
 {
+    use AttachFileTrait;
+    use DetachFileTrait;
+
     public function __construct(
         protected TransferOutgoingService $transferService,
         protected AccountRepository $accountRepository,
@@ -35,10 +40,6 @@ class TransferOutgoingMutator extends BaseMutator
         /** @var TransferOutgoing $transfer */
         $transfer = $this->transferService->createTransfer($args, OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value);
 
-        if ($transfer) {
-            $this->transferService->attachFileById($transfer, $args['file_id'] ?? []);
-        }
-
         return $transfer;
     }
 
@@ -50,7 +51,7 @@ class TransferOutgoingMutator extends BaseMutator
         /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
 
-        $this->transferService->updateTransferStatus($transfer, $args);
+        $this->transferService->updateTransfer($transfer, $args);
 
         return $transfer;
     }
@@ -61,7 +62,7 @@ class TransferOutgoingMutator extends BaseMutator
     public function sign($_, array $args): TransferOutgoing
     {
         /** @var TransferOutgoing $transfer */
-        if (!isset($args['code']) || empty($args['code'])) {
+        if (! isset($args['code']) || empty($args['code'])) {
             throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
         }
 
@@ -89,6 +90,51 @@ class TransferOutgoingMutator extends BaseMutator
 
         $this->transferService->updateTransferStatus($transfer, [
             'status_id' => PaymentStatusEnum::SENT->value,
+        ]);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function execute($_, array $args): TransferOutgoing
+    {
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => PaymentStatusEnum::EXECUTED->value,
+        ]);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function refund($_, array $args): TransferOutgoing
+    {
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => PaymentStatusEnum::REFUND->value,
+        ]);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function cancel($_, array $args): TransferOutgoing
+    {
+        /** @var TransferOutgoing $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+
+        $this->transferService->updateTransferStatus($transfer, [
+            'status_id' => PaymentStatusEnum::CANCELED->value,
         ]);
 
         return $transfer;

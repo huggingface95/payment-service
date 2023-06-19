@@ -1,5 +1,5 @@
 
-FROM php:8.1-fpm-alpine3.14
+FROM php:8.2-fpm-alpine
 
 
 RUN apk --update add wget \
@@ -21,7 +21,6 @@ RUN apk --update add wget \
   gmp \
   gmp-dev \
   libzip-dev \
-  libressl-dev \
   libxslt-dev \
   libzip-dev \
   ldb-dev libldap openldap-dev \

@@ -3,7 +3,7 @@
 Management -> New Applicant -> Create Individual -> General
 """
 type ApplicantIndividual {
-    id: ID!
+    id: ID! @method(name: "getPrefixAttribute")
     "Имя"
     first_name: String
     "Фамилия"
@@ -80,6 +80,8 @@ type ApplicantIndividual {
     notes: [ApplicantIndividualNotes] @hasMany(relation: "notes")
     "Получить модули"
     modules: [ApplicantIndividualModules] @belongsToMany (relation: "modules")
+    "Получить активность аппликанта в модуле"
+    module_activity: [ApplicantModuleActivity] @hasMany(relation: "moduleActivity")
     "Получить компании к которым принадлежит апликант"
     applicant_companies: [ApplicantCompany] @belongsToMany (relation: "companies")
     "Получить группу"
@@ -128,8 +130,8 @@ extend type Query @guard {
     applicantIndividuals(
         filter: _ @filterConditions(static: QueryApplicantIndividualsFilterStatic),
         group: Int @scope(name:"GetGroup"),
-        created_at: DateTimeRange @whereBetween, 
-        group: Sort @scope(name:"GroupSort"), 
+        created_at: DateTimeRange @whereBetween,
+        group: Sort @scope(name:"GroupSort"),
         company: Sort @scope(name:"CompanySort"),
         orderBy: _ @orderBy(columns: ["id","first_name","last_name", "email","created_at","fullname","company_id"])
     ): [ApplicantIndividual!]!    @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)
@@ -151,19 +153,21 @@ extend type Query @guard {
 }
 
 input QueryApplicantIndividualsFilterStatic @spread{
-    id: ID @eq
+    id: String @eq
     fullname: String @ilike
     email: String @ilike
     phone: String @eq
     company_id: ID @eq
     project_id: ID @eq
     kyc_level_id: ID @eq
+    applicant_state_id: ID @eq
     hasRiskLevelFilterById: ID @eq
     hasStateReasonFilterById: ID @eq
     hasStatusFilterById: ID @eq
     hasGroupRoleMixedIdOrName: Mixed @eq
     hasModulesFilterById: ID @eq
-    hasAccountFilterByAccountNumber: String @ilike
+    hasAccountFilterByAccountNumber: String @eq
+    hasAccountFilterById: ID @eq
     hasAccountFilterByPaymentBankId: ID @eq
 }
 
@@ -266,8 +270,6 @@ extend type Mutation @guard {
         applicant_risk_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID
-        "ID компании"
-        company_id: ID
         "Массив ID меток"
         labels: [ID]
         "ID группы"
@@ -295,7 +297,7 @@ extend type Mutation @guard {
     """
     Изменить статус аппликанта
     """
-    updateApplicantIndividualVerificationStatus(
+    updateApplicantIndividualStatus(
         id: ID!
         "ID статуса"
         applicant_status_id: ID!

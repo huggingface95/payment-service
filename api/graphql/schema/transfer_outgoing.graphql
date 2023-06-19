@@ -35,6 +35,8 @@ type TransferOutgoing {
     payment_bank: PaymentBank @belongsTo(relation: "paymentBank")
     "Номер платежа"
     payment_number: String!
+    "Прайс-лист фии"
+    price_list_fee: PriceListFee @belongsTo(relation: "priceListFee")
     "Получить связанный тип трансфера"
     transfer_type: TypeOfTransfer @belongsTo(relation: "transferType")
     "Получить связанный аккаунт"
@@ -44,17 +46,20 @@ type TransferOutgoing {
     "Получить связанную компанию"
     company: Company @belongsTo(relation: "company")
     system_message: String
+    "Основание перевода"
     reason: String
     channel: String
     bank_message: String
     "Номер счета или IBAN получателя"
-    recipient_account: String!
+    recipient_account: String
     "Название банка получателя"
-    recipient_bank_name: String!
+    recipient_bank_name: String
     "Адрес банка получателя"
     recipient_bank_address: String!
     "SWIFT код банка получателя"
     recipient_bank_swift: String
+    "RTN банка получателя"
+    recipient_bank_rtn: String
     "Страна банка получателя"
     recipient_bank_country: Country @belongsTo(relation: "recipientBankCountry")
     "Имя получателя"
@@ -70,8 +75,10 @@ type TransferOutgoing {
     "Индекс получателя"
     recipient_zip: String!
     respondent_fee: RespondentFee @belongsTo(relation: "respondentFee")
+    "История трансфера"
+    transfer_history: [TransferOutgoingHistory] @hasMany(relation: "transferHistory")
     "SWIFT field 56A (Intermediary Bank)"
-    transfer_swift: TransferSwift @hasOne(relation: "transferSwift")
+    transfer_swift: [TransferSwift] @hasMany(relation: "transferSwift")
     "Дата и время выполнения транзакции"
     execution_at: DateTimeUtc
     "Дата и время создания"
@@ -117,7 +124,7 @@ extend type Query @guard {
         created_at: DateTimeRange @whereBetween
     ): [TransferOutgoing!]!
         @paginate(defaultCount: 10)
-        @orderBy(column: "id", direction: ASC)
+        @orderBy(column: "created_at", direction: DESC)
 
     """
     Получить статистику по исходящим платежам
@@ -202,8 +209,77 @@ extend type Mutation @guard {
         payment_provider_id: ID!
         "ID платежной системы"
         payment_system_id: ID!
+        "ID прайс листа"
+        price_list_id: ID
+        "ID комисии"
+        price_list_fee_id: ID
         "ID срочности операции"
         urgency_id: ID!
+        "Исполнить в"
+        execution_at: DateTimeUtc
+        "Тип бенефициара"
+        beneficiary_type_id: BeneficiaryTypeEnum
+        "Номер счета или IBAN получателя"
+        recipient_account: String
+        "Имя банка получателя"
+        recipient_bank_name: String
+        "Адрес банка получателя"
+        recipient_bank_address: String
+        "SWIFT банка получателя"
+        recipient_bank_swift: String
+        "RTN банка получателя"
+        recipient_bank_rtn: String
+        "Имя получателя"
+        recipient_name: String
+        "Страна получателя"
+        recipient_country_id: ID!
+        "Город получателя"
+        recipient_city: String
+        "Адрес получателя"
+        recipient_address: String
+        "Штат получателя"
+        recipient_state: String
+        "Индекс получателя"
+        recipient_zip: String
+        "ID страны банка получателя"
+        recipient_bank_country_id: ID
+        "ncs number"
+        recipient_bank_ncs_number: String
+        "location"
+        recipient_bank_location: String
+        "Кто платит коммиссию"
+        respondent_fees_id: ID!
+        "Основание перевода"
+        reason: String
+        "Сообщение банка"
+        bank_message: String
+        "SWIFT field 56A (Intermediary Bank)"
+        transfer_swift: [TransferSwiftInput]
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@create")
+
+    """
+    Редактировать исходящий перевод
+    """
+    updateTransferOutgoing(
+        "ID"
+        id: ID!
+        "ID группы"
+        group_id: ID
+        "ID типа группы"
+        group_type_id: ID
+        "ID проекта"
+        project_id: ID
+        "Сумма"
+        amount: Decimal
+        "ID аккаунта"
+        account_id: ID
+        "ID платежного провайдера"
+        payment_provider_id: ID
+        "ID платежной системы"
+        payment_system_id: ID
+        "ID срочности операции"
+        urgency_id: ID
         "Исполнить в"
         execution_at: DateTimeUtc
         "Номер счета или IBAN получателя"
@@ -216,6 +292,8 @@ extend type Mutation @guard {
         recipient_bank_swift: String
         "Имя получателя"
         recipient_name: String
+        "Страна получателя"
+        recipient_country_id: ID
         "Город получателя"
         recipient_city: String
         "Адрес получателя"
@@ -225,26 +303,13 @@ extend type Mutation @guard {
         "Индекс получателя"
         recipient_zip: String
         "Кто платит коммиссию"
-        respondent_fees_id: ID!
+        respondent_fees_id: ID
         "Основание перевода"
-        reason: String!
+        reason: String
         "Сообщение банка"
         bank_message: String
-        "ID файлов"
-        file_id: [ID]
         "SWIFT field 56A (Intermediary Bank)"
-        transfer_swift: TransferSwiftInput
-    ): TransferOutgoing
-        @field(resolver: "TransferOutgoingMutator@create")
-
-    """
-    Редактировать исходящий перевод
-    """
-    updateTransferOutgoing(
-        "ID"
-        id: ID!
-        "Статус"
-        status_id: Int!
+        transfer_swift: [TransferSwiftInput]
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@update")
 
@@ -267,4 +332,49 @@ extend type Mutation @guard {
         id: ID!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@send")
+
+    """
+    Исполнить исходящий перевод
+    """
+    executeTransferOutgoing(
+        "ID"
+        id: ID!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@execute")
+
+    """
+    Отменить исходящий перевод
+    """
+    cancelTransferOutgoing(
+        "ID"
+        id: ID!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@cancel")
+    
+    """
+    Отменить (Refund) исходящий перевод
+    """
+    refundTransferOutgoing(
+        "ID"
+        id: ID!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@refund")
+
+    """
+    Привязать файлы
+    """
+    attachFIleToTransferOutgoing(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingMutator@attachFile")
+
+    """
+    Отвязать файлы
+    """
+    detachFIleFromTransferOutgoing(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferOutgoing
+    @field(resolver: "TransferOutgoingMutator@detachFile")
 }

@@ -6,6 +6,9 @@ use App\Models\TransferIncoming;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+/**
+ * @group payments
+ */
 class TransferIncomingsMutationTest extends TestCase
 {
     /**
@@ -17,7 +20,6 @@ class TransferIncomingsMutationTest extends TestCase
     {
         $this->graphQL('
             mutation CreateTransferIncoming(
-                $company_id: ID!
                 $group_id: ID!
                 $group_type_id: ID!
                 $project_id: ID!
@@ -36,7 +38,7 @@ class TransferIncomingsMutationTest extends TestCase
                 $sender_bank_swift: String
                 $sender_bank_country_id: ID
                 $sender_name: String
-                $sender_country_id: ID
+                $sender_country_id: ID!
                 $sender_city: String
                 $sender_address: String
                 $sender_state: String
@@ -45,7 +47,6 @@ class TransferIncomingsMutationTest extends TestCase
             )
             {
                 createTransferIncoming (
-                    company_id: $company_id
                     group_id: $group_id
                     group_type_id: $group_type_id
                     project_id: $project_id
@@ -71,7 +72,6 @@ class TransferIncomingsMutationTest extends TestCase
                     sender_state: $sender_state
                     sender_zip: $sender_zip
                     bank_message: $bank_message
-                    file_id: [1]
                 )
                 {
                     id
@@ -173,7 +173,6 @@ class TransferIncomingsMutationTest extends TestCase
                 }
             }
         ', [
-            'company_id' => 1,
             'group_id' => 1,
             'group_type_id' => 1,
             'project_id' => 1,
@@ -210,11 +209,22 @@ class TransferIncomingsMutationTest extends TestCase
 
         DB::select('ALTER SEQUENCE transfer_incomings_id_seq RESTART WITH '.$seq);
 
+        $transfer_swift = [
+            'swift' => '151561561561561',
+            'bank_name' => 'Bank Name 1',
+            'bank_type' => 'Correspondent',
+            'bank_address' => 'Bank address',
+            'bank_country_id' => 1,
+            'location' => 'Location 1',
+            'ncs_number' => 'NCS1564651',
+            'aba' => 'ABA5456456',
+            'account_number' => '456789789466'
+        ];
+
         $this->postGraphQL(
             [
                 'query' => '
                 mutation CreateTransferIncoming(
-                $company_id: ID!
                 $group_id: ID!
                 $group_type_id: ID!
                 $project_id: ID!
@@ -233,7 +243,7 @@ class TransferIncomingsMutationTest extends TestCase
                 $sender_bank_swift: String
                 $sender_bank_country_id: ID
                 $sender_name: String
-                $sender_country_id: ID
+                $sender_country_id: ID!
                 $sender_city: String
                 $sender_address: String
                 $sender_state: String
@@ -241,10 +251,10 @@ class TransferIncomingsMutationTest extends TestCase
                 $bank_message: String
                 $urgency_id: ID
                 $respondent_fees_id: ID
+                $transfer_swift: TransferSwiftInput
             )
             {
                 createTransferIncoming (
-                    company_id: $company_id
                     group_id: $group_id
                     group_type_id: $group_type_id
                     project_id: $project_id
@@ -270,10 +280,9 @@ class TransferIncomingsMutationTest extends TestCase
                     sender_state: $sender_state
                     sender_zip: $sender_zip
                     bank_message: $bank_message
-                    file_id: [1]
-                    status_id: 7
                     urgency_id: $urgency_id
                     respondent_fees_id: $respondent_fees_id
+                    transfer_swift: $transfer_swift
                 )
                 {
                       id
@@ -306,7 +315,6 @@ class TransferIncomingsMutationTest extends TestCase
                 }
                 }',
                 'variables' => [
-                    'company_id' => 1,
                     'group_id' => 1,
                     'group_type_id' => 1,
                     'project_id' => 1,
@@ -333,10 +341,11 @@ class TransferIncomingsMutationTest extends TestCase
                     'bank_message' => 'bank_message',
                     'urgency_id' => 1,
                     'respondent_fees_id' => 1,
+                    'transfer_swift' => $transfer_swift,
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -380,11 +389,14 @@ class TransferIncomingsMutationTest extends TestCase
                 'query' => '
                 mutation UpdateTransferIncoming(
                 $id: ID!
+                $group_id: ID!
+                $group_type_id: ID!
             )
             {
                 updateTransferIncoming (
                     id: $id
-                    status_id: 7
+                    group_id: $group_id
+                    group_type_id: $group_type_id
                 )
                 {
                       id
@@ -418,10 +430,12 @@ class TransferIncomingsMutationTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $transferIncoming->id,
+                    'group_id' => 1,
+                    'group_type_id' => 1,
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -451,6 +465,43 @@ class TransferIncomingsMutationTest extends TestCase
                     'respondent_fee' => $id['data']['updateTransferIncoming']['respondent_fee'],
                     'beneficiary_type_id' => $id['data']['updateTransferIncoming']['beneficiary_type_id'],
                     'beneficiary_name' => $id['data']['updateTransferIncoming']['beneficiary_name'],
+                ],
+            ],
+        ]);
+    }
+
+    public function testAttachFilesToTransfesIncoming(): void
+    {
+        $transfer = TransferIncoming::orderBy('id', 'DESC')->first();
+
+        $this->postGraphQL(
+            [
+                'query' => '
+                    mutation AttachFilesToTransferIncoming($transfer: ID!, $file: [ID!]!) {
+                      attachFIleToTransferIncoming(
+                        id: $transfer
+                        file_id: $file
+                      ) {
+                        id
+                      }
+                    }
+                ',
+                'variables' => [
+                    'transfer' => $transfer->id,
+                    'file' => 1,
+                ],
+            ],
+            [
+                'Authorization' => 'Bearer '.$this->login(),
+            ]
+        );
+
+        $id = json_decode($this->response->getContent(), true);
+
+        $this->seeJson([
+            'data' => [
+                'attachFIleToTransferIncoming' => [
+                    'id' => $id['data']['attachFIleToTransferIncoming']['id'],
                 ],
             ],
         ]);

@@ -6,6 +6,7 @@ use App\Models\CurrencyExchangeRate;
 use App\Models\CurrencyRateHistory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ImportCurrenciesCommand extends Command
 {
@@ -64,11 +65,14 @@ class ImportCurrenciesCommand extends Command
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     private function logAndUpdateCurrency($arr): void
     {
         try {
             DB::beginTransaction();
-            
+
             $currency = CurrencyRateHistory::factory()->create($arr);
 
             CurrencyExchangeRate::updateOrCreate([
@@ -82,8 +86,7 @@ class ImportCurrenciesCommand extends Command
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-
-            throw $e->getMessage();
+            Log::error($e->getMessage());
         }
     }
 }

@@ -22,4 +22,12 @@ enum TransferTypeEnum: int
             self::FEE => 'Fee',
         };
     }
+
+    public function toAltString(): string
+    {
+        return match ($this) {
+            self::INCOMING_WIRE_TRANSFER => 'Incoming',
+            self::OUTGOING_WIRE_TRANSFER => 'Outgoing',
+        };
+    }
 }

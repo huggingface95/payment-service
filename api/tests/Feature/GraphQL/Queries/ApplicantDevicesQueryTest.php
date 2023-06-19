@@ -29,7 +29,7 @@ class ApplicantDevicesQueryTest extends TestCase
 
     public function testApplicantDevicesList(): void
     {
-        $this->markTestSkipped('Skipped');
+        $this->markTestSkipped("Test temporary skipped");
         $active_sessions = DB::connection('clickhouse_test')
             ->table((new ActiveSession())->getTable())
             ->select(['id', 'device_type'])
@@ -47,7 +47,7 @@ class ApplicantDevicesQueryTest extends TestCase
                     }
         ', ],
             [
-                'Authorization' => 'Bearer ' . $this->login(['email' => 'applicant1@test.com', 'password' => '1234567Qa', 'client_type' => 'applicant']),
+                'Authorization' => 'Bearer '.$this->login(['email' => 'applicant1@test.com', 'password' => '1234567Qa', 'client_type' => 'applicant']),
             ]
         );
 

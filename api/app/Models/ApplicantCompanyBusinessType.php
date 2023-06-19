@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Traits\BaseObServerTrait;
 
 class ApplicantCompanyBusinessType extends BaseModel
 {
+    use BaseObServerTrait;
+
+
     protected $table = 'applicant_company_business_type';
 
     /**

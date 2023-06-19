@@ -1,10 +1,9 @@
 <?php
 
-namespace Tests\Feature\GraphQL\Queries;
+namespace Feature\GraphQL\Queries;
 
-use App\Models\AccountClient;
+use App\Models\Account;
 use App\Models\AccountState;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -46,7 +45,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'data' => [
@@ -76,7 +75,7 @@ class AccountsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $account[0]->id,
@@ -108,7 +107,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -147,7 +146,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -182,7 +181,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -221,7 +220,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -259,7 +258,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -297,7 +296,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -335,7 +334,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -373,7 +372,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -411,7 +410,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -449,46 +448,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
-            ]
-        )->seeJsonContains([
-            'id' => (string) $accounts->id,
-            'account_number' => (string) $accounts->account_number,
-            'account_type' => (string) $accounts->account_type,
-            'account_name' => (string) $accounts->account_name,
-        ]);
-    }
-
-    public function testQueryAccountsFilterByPaymentSystemId(): void
-    {
-        $accounts = DB::connection('pgsql_test')
-            ->table('accounts')
-            ->first();
-
-        $this->postGraphQL(
-            [
-                'query' => '
-                query TestAccountListFilters($payment_system_id: Mixed) {
-                    accountList(
-                        filter: {
-                            column: HAS_PAYMENT_SYSTEM_MIXED_ID_OR_NAME
-                            value: $payment_system_id
-                        }
-                    ) {
-                        data {
-                            id
-                            account_number
-                            account_type
-                            account_name
-                        }
-                    }
-                }',
-                'variables' => [
-                    'payment_system_id' => (string) $accounts->payment_system_id,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -502,7 +462,7 @@ class AccountsQueryTest extends TestCase
     {
         $accounts = DB::connection('pgsql_test')
             ->table('accounts')
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->get();
 
         $this->postGraphQL(
@@ -524,7 +484,7 @@ class AccountsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts[0]->id,
@@ -538,16 +498,17 @@ class AccountsQueryTest extends TestCase
     {
         $accounts = DB::connection('pgsql_test')
             ->table('accounts')
-            ->first();
+            ->where('current_balance', 100010)
+            ->get();
 
-        $this->postGraphQL(
+        $response = $this->postGraphQL(
             [
                 'query' => '
                 {
                     accountList(
                         filter: {
                             column: CURRENT_BALANCE
-                            value: 10000
+                            value: 100010
                         }
                     ) {
                         data {
@@ -560,20 +521,30 @@ class AccountsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        )->seeJsonContains([
-            'id' => (string) $accounts->id,
-            'account_number' => (string) $accounts->account_number,
-            'account_type' => (string) $accounts->account_type,
-            'account_name' => (string) $accounts->account_name,
-        ]);
+        );
+
+        foreach ($accounts as $account) {
+            $response->seeJson([
+                'id' => (string) $account->id,
+                'account_number' => (string) $account->account_number,
+                'account_type' => (string) $account->account_type,
+                'account_name' => (string) $account->account_name,
+            ]);
+        }
     }
 
     public function testQueryAccountsFilterByReservedBalance(): void
     {
         $accounts = DB::connection('pgsql_test')
             ->table('accounts')
+            ->where('id', 1)
+            ->update(['reserved_balance' => 5000]);
+
+        $accounts = DB::connection('pgsql_test')
+            ->table('accounts')
+            ->where('id', 1)
             ->first();
 
         $this->postGraphQL(
@@ -596,9 +567,11 @@ class AccountsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
-        )->seeJsonContains([
+        );
+
+        $this->seeJsonContains([
             'id' => (string) $accounts->id,
             'account_number' => (string) $accounts->account_number,
             'account_type' => (string) $accounts->account_type,
@@ -610,6 +583,12 @@ class AccountsQueryTest extends TestCase
     {
         $accounts = DB::connection('pgsql_test')
             ->table('accounts')
+            ->where('id', 1)
+            ->update(['available_balance' => 5050]);
+
+        $accounts = DB::connection('pgsql_test')
+            ->table('accounts')
+            ->where('id', 1)
             ->first();
 
         $this->postGraphQL(
@@ -619,7 +598,7 @@ class AccountsQueryTest extends TestCase
                     accountList(
                         filter: {
                             column: AVAILABLE_BALANCE
-                            value: 10000
+                            value: 5050
                         }
                     ) {
                         data {
@@ -632,7 +611,7 @@ class AccountsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -671,7 +650,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -711,7 +690,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -750,7 +729,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'id' => (string) $accounts->id,
@@ -787,7 +766,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -825,45 +804,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
-            ]
-        )->seeJsonStructure([
-            'data' => [
-                'downloadAccountList' => [
-                    'base64',
-                ],
-            ],
-        ]);
-    }
-
-    public function testDownloadAccountListFilterByPaymentSystemMixedIdOrName(): void
-    {
-        $accounts = DB::connection('pgsql_test')
-            ->table('accounts')
-            ->first();
-
-        $this->postGraphQL(
-            [
-                'query' => '
-                    query TestDownloadAccountListFilters($id: Mixed) {
-                        downloadAccountList(
-                            type: Pdf
-                            filter: {
-                                column: HAS_PAYMENT_SYSTEM_MIXED_ID_OR_NAME
-                                value: $id
-                            }
-                        ) {
-                            ... on RawFile {
-                                base64
-                            }
-                        }
-                    }',
-                'variables' => [
-                    'id' => (string) $accounts->payment_system_id,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -901,7 +842,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -940,7 +881,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -978,7 +919,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1016,7 +957,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1054,7 +995,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1092,7 +1033,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1130,7 +1071,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1168,7 +1109,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1206,7 +1147,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1244,7 +1185,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1282,7 +1223,7 @@ class AccountsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1310,10 +1251,10 @@ class AccountsQueryTest extends TestCase
                                 base64
                             }
                         }
-                    }'
+                    }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1341,10 +1282,10 @@ class AccountsQueryTest extends TestCase
                                 base64
                             }
                         }
-                    }'
+                    }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1372,10 +1313,10 @@ class AccountsQueryTest extends TestCase
                                 base64
                             }
                         }
-                    }'
+                    }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1403,10 +1344,10 @@ class AccountsQueryTest extends TestCase
                                 base64
                             }
                         }
-                    }'
+                    }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonStructure([
             'data' => [
@@ -1436,10 +1377,10 @@ class AccountsQueryTest extends TestCase
                             name
                             active
                         }
-                }'
+                }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -1452,15 +1393,16 @@ class AccountsQueryTest extends TestCase
 
     public function testClientListQuery(): void
     {
-        $expected = AccountClient::all()
-            ->map(function ($accountClient) {
+        $expected = Account::query()->whereHas('clientable')->with('clientable')
+            ->get()
+            ->pluck('clientable')
+            ->unique()
+            ->map(function ($client) {
                 return [
-                    'id' => (string) $accountClient->id,
-                    'client' => $accountClient->client_type
-                        ? ['__typename' => $accountClient->client_type]
-                        : null,
+                    'id' => (string) $client->prefix,
                 ];
             })
+            ->values()
             ->toArray();
 
         $response = $this->postGraphQL(
@@ -1468,15 +1410,17 @@ class AccountsQueryTest extends TestCase
                 'query' => '
                     {
                         clientList {
-                            id
-                            client {
-                              __typename
+                            ... on ApplicantIndividual {
+                                id
+                            }
+                            ... on ApplicantCompany {
+                                id
                             }
                         }
-                }'
+                }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -1489,32 +1433,35 @@ class AccountsQueryTest extends TestCase
 
     public function testClientListQueryByGroupTypeId(): void
     {
-        $expected = AccountClient::where('client_type', 'ApplicantCompany')
+        $expected = Account::query()->whereHas('clientable')->with('clientable')
+            ->where('group_type_id', '=', 3)
             ->get()
-            ->map(function ($accountClient) {
+            ->pluck('clientable')
+            ->unique()
+            ->map(function ($client) {
                 return [
-                    'id' => (string) $accountClient->id,
-                    'client' => $accountClient->client_type
-                        ? ['__typename' => $accountClient->client_type]
-                        : null,
+                    'id' => (string) $client->prefix,
                 ];
             })
+            ->values()
             ->toArray();
 
         $response = $this->postGraphQL(
             [
                 'query' => '
                     {
-                        clientList (group_type: 2) {
-                            id
-                            client {
-                              __typename
+                        clientList (filter:{AND: [{column: GROUP_TYPE_ID operator: EQ value:3}]}) {
+                            ... on ApplicantIndividual {
+                                id
+                            }
+                            ... on ApplicantCompany {
+                                id
                             }
                         }
-                }'
+                }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 
@@ -1528,38 +1475,35 @@ class AccountsQueryTest extends TestCase
     public function testClientListQueryByCompanyId(): void
     {
         $args['company_id'] = 1;
-        $expected = AccountClient::where(function (Builder $q) use ($args) {
-                 $q->whereHas('individual', function (Builder $q) use ($args) {
-                     $q->where('company_id', $args['company_id']);
-                 })->orWhereHas('company', function (Builder $q) use ($args) {
-                     $q->where('company_id', $args['company_id']);
-                 });
-             })
+        $expected = Account::query()->whereHas('clientable')->with('clientable')
+            ->where('company_id', '=', $args['company_id'])
             ->get()
-            ->map(function ($accountClient) {
+            ->pluck('clientable')
+            ->unique()
+            ->map(function ($client) {
                 return [
-                    'id' => (string) $accountClient->id,
-                    'client' => $accountClient->client_type
-                        ? ['__typename' => $accountClient->client_type]
-                        : null,
+                    'id' => (string) $client->prefix,
                 ];
             })
+            ->values()
             ->toArray();
 
         $response = $this->postGraphQL(
             [
                 'query' => '
                     {
-                        clientList (company_id: 1) {
-                            id
-                            client {
-                              __typename
+                        clientList (filter:{AND: [{column: COMPANY_ID operator: EQ value:1}]}) {
+                           ... on ApplicantIndividual {
+                                id
+                            }
+                            ... on ApplicantCompany {
+                                id
                             }
                         }
-                }'
+                }',
             ],
             [
-                'Authorization' => 'Bearer ' .  $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         );
 

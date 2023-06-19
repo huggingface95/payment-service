@@ -12,6 +12,7 @@ use Nuwave\Lighthouse\Schema\TypeRegistry;
 class GraphqlManipulateSchemaService
 {
     protected bool $testMode;
+
     protected array $permissionsList;
 
     public function __construct(protected GraphqlManipulateSchemaRepositoryInterface $repository)
@@ -38,7 +39,7 @@ class GraphqlManipulateSchemaService
      */
     public function registerDocumentStateEnums(TypeRegistry $typeRegistry): TypeRegistry
     {
-        if ($this->testMode) {
+        if ($this->testMode || ! $this->repository->hasDocumentStateTable()) {
             return $this->registerTestDocumentStateEnums($typeRegistry);
         } else {
             $enums = $this->repository->getDocumentStates();
@@ -66,16 +67,16 @@ class GraphqlManipulateSchemaService
 
         $testPermissionType = new ObjectType([
             'name' => 'PermissionType',
-            'fields' => function () use ($typeRegistry, $testEnum): array {
+            'fields' => function () use ($testEnum): array {
                 return ['PERMISSION_EMPTY' => ['type' => $testEnum]];
-            }
+            },
         ]);
 
         $testPermissionAuth = new ObjectType([
             'name' => 'PermissionAuth',
-            'fields' => function () use ($typeRegistry, $testEnum): array {
+            'fields' => function () use ($testEnum): array {
                 return ['PERMISSION_EMPTY' => ['type' => new ListOfType($testEnum)]];
-            }
+            },
         ]);
 
         $typeRegistry->register($testEnum);
@@ -90,8 +91,7 @@ class GraphqlManipulateSchemaService
      */
     public function registerPermissionEnums(TypeRegistry $typeRegistry): TypeRegistry
     {
-
-        if ($this->testMode) {
+        if ($this->testMode || ! $this->repository->hasPermissionsTable()) {
             return $this->registerTestPermissionEnums($typeRegistry);
         }
 
@@ -117,22 +117,21 @@ class GraphqlManipulateSchemaService
         $typeRegistry->register(
             new ObjectType([
                 'name' => 'PermissionType',
-                'fields' => function () use ($typeRegistry, $permissionsType): array {
+                'fields' => function () use ($permissionsType): array {
                     return $permissionsType;
-                }
+                },
             ])
         );
 
         $typeRegistry->register(
             new ObjectType([
                 'name' => 'PermissionAuth',
-                'fields' => function () use ($typeRegistry, $permissionsAuth): array {
+                'fields' => function () use ($permissionsAuth): array {
                     return $permissionsAuth;
-                }
+                },
             ])
         );
 
         return $typeRegistry;
     }
-
 }

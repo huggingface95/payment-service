@@ -13,7 +13,7 @@ class CompanyLedgerSettingsMutator extends BaseMutator
     public function update($_, array $args): CompanyLedgerSettings
     {
         $companyLedgerSettings = CompanyLedgerSettings::find($args['company_id']);
-        if (!$companyLedgerSettings) {
+        if (! $companyLedgerSettings) {
             throw new GraphqlException('Company ledger settings not found', 'not found', 404);
         }
 
@@ -28,7 +28,7 @@ class CompanyLedgerSettingsMutator extends BaseMutator
     public function delete($_, array $args): bool
     {
         $companyLedgerSettings = CompanyLedgerSettings::find($args['company_id']);
-        if (!$companyLedgerSettings) {
+        if (! $companyLedgerSettings) {
             throw new GraphqlException('Company ledger settings not found', 'not found', 404);
         }
 

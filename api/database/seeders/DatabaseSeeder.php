@@ -17,6 +17,10 @@ class DatabaseSeeder extends Seeder
         $this->call(LanguagesTableSeeder::class);
         $this->call(CurrencyTableSeeder::class);
         $this->call(ModulesTableSeeder::class);
+        $this->call(StateTableSeeder::class);
+        $this->call(EmploeesTableSeeder::class);
+        $this->call(TypeOfIndustriesTableSeeder::class);
+        $this->call(StateReasonsTableSeeder::class);
         $this->call(CompanyTableSeeder::class);
         $this->call(ProjectTableSeeder::class);
         $this->call(GroupTableSeeder::class);
@@ -43,6 +47,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CommissionTemplateLimitTypeTableSeeder::class);
         $this->call(CommissionTemplateTableSeeder::class);
         $this->call(RolesTableSeeder::class);
+        $this->call(PermissionsSeeder::class);
         $this->call(SuperAdminSeeder::class);
         $this->call(GroupRoleTableSeeder::class);
         $this->call(GroupRoleMembersIndividualsTableSeeder::class);
@@ -58,7 +63,6 @@ class DatabaseSeeder extends Seeder
         $this->call(EmailNotificationTemplatesTableSeeder::class);
         $this->call(RegionsTableSeeder::class);
         $this->call(RegionCountriesTableSeeder::class);
-        $this->call(PermissionsSeeder::class);
         $this->call(ActiveSessionTableSeeder::class);
         $this->call(ActiveSessionTestDbTableSeeder::class);
         $this->call(AuthenticationLogTableSeeder::class);
@@ -81,8 +85,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RespondentFeesTableSeeder::class);
         $this->call(CommissionTemplateBusinessActivityTableSeeder::class);
         $this->call(RoleActionsSeeder::class);
-        $this->call(OuthClientsTableSeeder::class);
-        $this->call(PaymentsTableSeeder::class);
+        $this->call(OauthClientsTableSeeder::class);
         $this->call(DocumentStateTableSeeder::class);
         $this->call(DocumentTypeTableSeeder::class);
         $this->call(ApplicantDocumentTableSeeder::class);
@@ -101,12 +104,14 @@ class DatabaseSeeder extends Seeder
         $this->call(TransferOutgoingTableSeeder::class);
         $this->call(AccountReachedLimitsTableSeeder::class);
         $this->call(FeeTableSeeder::class);
-        $this->call(TransferFileRelationsTableSeeder::class);
-        $this->call(PaymentProviderHistoriesTableSeeder::class);
         $this->call(TransferSwiftsTableSeeder::class);
         $this->call(KycTimelineTableSeeder::class);
         $this->call(CurrencyExchangeRateTableSeeder::class);
         $this->call(ProjectSettingsTableSeeder::class);
         $this->call(AccountClientsTableSeeder::class);
+        $this->call(TransferExchangeTableSeeder::class);
+        $this->call(TransferFileRelationsTableSeeder::class);
+        $this->call(PaymentSystemCurrenciesTableSeeder::class);
+        $this->call(CompanyRevenueAccountTableSeeder::class);
     }
 }

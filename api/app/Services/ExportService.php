@@ -6,6 +6,7 @@ use App\Exports\Account\AccountsExport;
 use App\Exports\Applicant\ApplicantCompaniesExport;
 use App\Exports\Applicant\ApplicantIndividualsExport;
 use App\Exports\Transfer\TransferDetailsExport;
+use App\Exports\Transfer\TransferExchangesExport;
 use App\Exports\Transfer\TransferIncomingsExport;
 use App\Exports\Transfer\TransferOutgoingsExport;
 use App\Http\Resources\Account\AccountsListResource;
@@ -13,6 +14,7 @@ use App\Http\Resources\Applicant\ApplicantCompaniesListResource;
 use App\Http\Resources\Applicant\ApplicantIndividualsListResource;
 use App\Http\Resources\Transfer\TransferOutgoingDetailsResource;
 use App\Http\Resources\Transfer\TransfersListResource;
+use App\Models\TransferExchange;
 use App\Models\TransferIncoming;
 use App\Models\TransferOutgoing;
 use Illuminate\Support\Collection;
@@ -39,7 +41,7 @@ class ExportService extends AbstractService
     {
         $type = $this->getTypeOfFile($type);
 
-        $method = 'export' . $model;
+        $method = 'export'.$model;
         if (method_exists($this, $method)) {
             $exportData = $this->{$method}($data);
         } else {
@@ -70,7 +72,7 @@ class ExportService extends AbstractService
         return new ApplicantCompaniesExport(['companies' => $companies]);
     }
 
-    private function exportTransferIncoming( $data): TransferIncomingsExport
+    private function exportTransferIncoming($data): TransferIncomingsExport
     {
         $transfersList = $this->collectTransfers($data);
         $transfersList = TransfersListResource::collection($transfersList ?? [])->sortByDesc('created_at')->jsonSerialize();
@@ -78,12 +80,20 @@ class ExportService extends AbstractService
         return new TransferIncomingsExport(['transfers' => $transfersList]);
     }
 
-    private function exportTransferOutgoing( $data): TransferOutgoingsExport
+    private function exportTransferOutgoing($data): TransferOutgoingsExport
     {
         $transfersList = $this->collectTransfers($data);
         $transfersList = TransfersListResource::collection($transfersList ?? [])->sortByDesc('created_at')->jsonSerialize();
 
         return new TransferOutgoingsExport(['transfers' => $transfersList]);
+    }
+
+    private function exportTransferExchange($data): TransferExchangesExport
+    {
+        $transfersList = $this->collectTransfers($data);
+        $transfersList = TransfersListResource::collection($transfersList ?? [])->sortByDesc('created_at')->jsonSerialize();
+
+        return new TransferExchangesExport(['transfers' => $transfersList]);
     }
 
     private function collectTransfers(Collection $transfers): Collection
@@ -92,8 +102,14 @@ class ExportService extends AbstractService
         foreach ($transfers as $transfer) {
             $transfersList[] = $transfer;
 
-            foreach ($transfer->fees()->get() as $fee) {
-                $transfersList[] = $fee;
+            if ($transfer instanceof TransferExchange) {
+                foreach ($transfer->TransferOutgoing->fees()->get() as $fee) {
+                    $transfersList[] = $fee;
+                }
+            } else {
+                foreach ($transfer->fees()->get() as $fee) {
+                    $transfersList[] = $fee;
+                }
             }
         }
 

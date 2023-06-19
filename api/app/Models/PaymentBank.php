@@ -2,12 +2,19 @@
 
 namespace App\Models;
 
+use App\GraphQL\Mutations\Traits\OptimizationCurrencyRegionTrait;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class PaymentBank extends BaseModel
 {
+    use BaseObServerTrait;
+    use HasRelationships;
+    use OptimizationCurrencyRegionTrait;
 
     public $timestamps = false;
 
@@ -32,9 +39,13 @@ class PaymentBank extends BaseModel
         'is_active',
     ];
 
-    public function bankCorrespondents(): HasMany
+    public function getCurrenciesAndRegionsAttribute(): array
     {
-        return $this->hasMany(BankCorrespondent::class, 'payment_bank_id');
+        $currenciesRegions = $this->currenciesRegions()->with('currency', 'region')->get()->groupBy('currency_id')->map(function ($records) {
+            return ['regions' => $records->pluck('region'), 'currency' => $records->pluck('currency')->first()];
+        });
+
+        return $this->optimizeCurrencyRegionResponse($currenciesRegions);
     }
 
     public function currencies(): BelongsToMany
@@ -55,6 +66,11 @@ class PaymentBank extends BaseModel
             'payment_bank_id',
             'region_id'
         )->distinct('id');
+    }
+
+    public function bankCorrespondents(): HasMany
+    {
+        return $this->hasMany(BankCorrespondent::class, 'payment_bank_id');
     }
 
     public function currenciesRegions(): HasMany

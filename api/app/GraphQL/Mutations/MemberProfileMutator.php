@@ -6,8 +6,10 @@ use App\DTO\Email\Request\EmailMembersRequestDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\EmailVerificationStatusEnum;
 use App\Exceptions\GraphqlException;
+use App\Models\Members;
 use App\Services\EmailService;
 use App\Services\VerifyService;
+use Illuminate\Support\Facades\Hash;
 
 class MemberProfileMutator extends BaseMutator
 {
@@ -62,6 +64,24 @@ class MemberProfileMutator extends BaseMutator
             ];
         } catch (\Throwable $e) {
             throw new GraphqlException($e->getMessage(), 'Internal', $e->getCode());
+        }
+    }
+
+    public function changeMemberPassword($_, array $args)
+    {
+        $member = auth()->user();
+
+        $this->checkCurrentPassword($args, $member);
+
+        $member->update(['password_hash'=>Hash::make($args['password']), 'password_salt'=>Hash::make($args['password_confirmation'])]);
+
+        return $member;
+    }
+
+    private function checkCurrentPassword(array $args, Members $member)
+    {
+        if (! Hash::check($args['old_password'], $member->password_hash)) {
+            throw new GraphqlException('The current password is wrong', 'use');
         }
     }
 }

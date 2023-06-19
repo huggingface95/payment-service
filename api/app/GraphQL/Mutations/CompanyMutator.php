@@ -2,13 +2,20 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\EmailTemplatesTypeEnum;
+use App\Enums\ModuleTagEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividualCompanyPosition;
 use App\Models\ApplicantIndividualCompanyRelation;
 use App\Models\Company;
+use App\Models\EmailTemplate;
+use App\Models\Members;
+use App\Models\PaymentProvider;
 use App\Models\PaymentSystem;
 use App\Models\State;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
 
 class CompanyMutator extends BaseMutator
@@ -20,47 +27,83 @@ class CompanyMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
-        $company = Company::create($args);
+        try {
+            DB::beginTransaction();
 
-        $company->state_id = State::INACTIVE;
-        $company->save();
+            $company = Company::create($args);
 
-        $relationsData = [
-          'Director',
-          'Shareholder',
-          'Beneficiary',
-        ];
+            $relationsData = [
+                'Director',
+                'Shareholder',
+                'Beneficiary',
+            ];
 
-        foreach ($relationsData as $relationData) {
-            ApplicantIndividualCompanyRelation::firstOrCreate([
-                'name' => $relationData,
-                'company_id' => $company->id,
+            foreach ($relationsData as $relationData) {
+                ApplicantIndividualCompanyRelation::firstOrCreate([
+                    'name' => $relationData,
+                    'company_id' => $company->id,
+                ]);
+            }
+
+            $positionsData = [
+                'Director',
+                'CEO',
+                'CFO',
+                'CAO',
+                'CIO',
+                'COO',
+            ];
+
+            foreach ($positionsData as $positionData) {
+                ApplicantIndividualCompanyPosition::firstOrCreate([
+                    'name' => $positionData,
+                    'company_id' => $company->id,
+                ]);
+            }
+
+            $company->paymentProviders()->create(['name' => PaymentProvider::NAME_INTERNAL]);
+            $company->paymentSystem()->create([
+                'name' => PaymentSystem::NAME_INTERNAL,
+                'payment_provider_id' => $company->paymentProviders()->first()->id,
             ]);
+
+            $templateSubjects = [
+                'Sign Up: Email Confirmation',
+                'Waiting for approval',
+                'Reset Password',
+                'KYC: Common Sign Up: Email Confirmation',
+                'Account Requisites',
+                'Confirm change email',
+                'Account suspended',
+                'Minimum balance limit has been reached for client',
+                'Maximum balance limit has been reached for client',
+                'Forgot Password',
+                'Waiting for IBAN Generation'
+            ];
+
+            foreach ($templateSubjects as $name) {
+
+                $newTemplateData = [
+                    'type' => EmailTemplatesTypeEnum::ADMINISTRATION,
+                    'service_type' => ModuleTagEnum::BANKING_ADMIN_NOTIFY,
+                    'use_layout' => false,
+                    'subject' => $name,
+                    'content' => "",
+                    'member_id' => Auth::user()->id,
+                    'company_id' => $company->id,
+                    'name' => $name,
+                ];
+
+                EmailTemplate::query()->firstOrCreate($newTemplateData);
+            }
+
+            DB::commit();
+
+            return $company;
+        } catch (\Throwable $exception) {
+            DB::rollback();
+            throw new GraphqlException($exception->getMessage(), $exception->getCode());
         }
-
-        $positionsData = [
-            'Director',
-            'CEO',
-            'CFO',
-            'CAO',
-            'CIO',
-            'COO',
-        ];
-
-        foreach ($positionsData as $positionData) {
-            ApplicantIndividualCompanyPosition::firstOrCreate([
-                'name' => $positionData,
-                'company_id' => $company->id,
-            ]);
-        }
-
-        $company->paymentProviders()->create(['name' => 'Internal']);
-        $company->paymentSystem()->create([
-            'name' => 'Internal',
-            'payment_provider_id' => $company->paymentProviders()->first()->id,
-        ]);
-
-        return $company;
     }
 
     /**

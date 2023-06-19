@@ -9,6 +9,10 @@ type OperationType {
 enum TransferType {
     INCOMING @enum(value: "Incoming")
     OUTGOING @enum(value: "Outgoing")
+    BTA @enum(value: "Bta")
+    BTU @enum(value: "Btu")
+    EXCHANGE @enum(value: "Exchange")
+    FEE @enum(value: "Fee")
 }
 
 extend type Query  @guard{
@@ -17,11 +21,11 @@ extend type Query  @guard{
     """
    operationTypes(
         filter: _ @filterConditions(static: QueryOperationTypesFilterStatic)
-    ): [OperationType!]!   @field(resolver:"OperationTypeQuery@get")
+    ): [OperationType!]!   @all
 }
 
 input QueryOperationTypesFilterStatic @spread{
     fee_type_id: ID @eq
-    transfer_type: TransferType @eq
-    payment_system_id: ID @eq
+    transfer_type_id: ID @eq
+    hasPaymentSystemsFilterById: ID @eq
 }

@@ -29,7 +29,7 @@ class AddQuoteProviderIdToPriceListFeesTable extends Migration
     {
         Schema::table('price_list_fees', function (Blueprint $table) {
             $table->dropForeign(['quote_provider_id']);
-            
+
             $table->dropColumn('quote_provider_id');
         });
     }

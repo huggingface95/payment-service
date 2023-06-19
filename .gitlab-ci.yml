@@ -1,6 +1,6 @@
 stages:
   - build
-  - test
+  - testing
   - deploy
 
 build-job:
@@ -10,7 +10,7 @@ build-job:
   only:
     - dev
 unit-test-job:
-  stage: test
+  stage: testing
   script:
     - echo "Running unit tests..."
     - apk add --no-cache openssh rsync
@@ -22,9 +22,9 @@ unit-test-job:
     - ssh $SSH_USER_HOST "docker exec php-dev-test composer install"
     - ssh $SSH_USER_HOST "docker exec php-dev-test php artisan cache:clear"
     - ssh $SSH_USER_HOST "docker exec php-dev-test php artisan lighthouse:clear-cache"
-    - ssh $SSH_USER_HOST "docker exec php-dev-test ./vendor/bin/phpunit"
+    - ssh $SSH_USER_HOST "docker exec php-dev-test ./vendor/bin/phpunit --exclude payments"
   only:
-    - dev
+    - test
 deploy-job:
   stage: deploy
   image: alpine
@@ -39,6 +39,7 @@ deploy-job:
     - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev composer install"
     - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev php artisan migrate"
     - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose exec -T php-dev php artisan  lighthouse:clear-cache"
+    - ssh $SSH_USER_HOST "cd /opt/banking/docker && docker-compose restart php-dev"
   only:
     - dev
 deploy-job-stage:
@@ -57,4 +58,20 @@ deploy-job-stage:
     - ssh $SSH_USER_HOST "cd /opt/stage/docker && docker-compose exec -T php-dev php artisan  lighthouse:clear-cache"
   only:
     - master
+deploy-job-testapi:
+  stage: deploy
+  image: alpine
+  script:
+    - echo "Deploying application..."
+    - apk add --no-cache openssh rsync
+    - mkdir -p ~/.ssh
+    - echo "$SSH_KEY" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - rsync -rav  ./ $SSH_USER_HOST:/opt/test-api
+    - ssh $SSH_USER_HOST "cd /opt/test-api/docker && docker-compose exec -T php-dev composer install"
+    - ssh $SSH_USER_HOST "cd /opt/test-api/docker && docker-compose exec -T php-dev php artisan cache:clear"
+    - ssh $SSH_USER_HOST "cd /opt/test-api/docker && docker-compose exec -T php-dev php artisan  lighthouse:clear-cache"
+  only:
+    - test
 

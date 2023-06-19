@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\PaymentProviderTypeEnum;
+use App\Enums\ProviderTypeEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +17,7 @@ class AddIsActivePaymentProviderIdPaymentProviderTypeColumnsToProjectApiSettings
         Schema::table('project_api_settings', function (Blueprint $table) {
             $table->boolean('is_active')->default(false);
             $table->unsignedBigInteger('provider_id')->nullable();
-            $table->enum('provider_type', [PaymentProviderTypeEnum::PAYMENT->toString(), PaymentProviderTypeEnum::IBAN->toString()])->nullable();
+            $table->enum('provider_type', [ProviderTypeEnum::PAYMENT->toString(), ProviderTypeEnum::IBAN->toString()])->nullable();
         });
     }
 

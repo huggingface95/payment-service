@@ -9,39 +9,95 @@ extend type Mutation @guard {
         from_account_id: ID!
         "ID аккаунта получателя"
         to_account_id: ID!
+        "ID прайс-листа"
+        price_list_id: ID!
+        "ID прайс-листа фии"
+        price_list_fee_id: ID!
         "ID коммиисии респондента"
         respondent_fee_id: ID!
         "Причина перевода"
         reason: String
-    ): TransferIncoming
+    ): TransferBetweenWithFees
         @field(resolver: "TransferBetweenUsersMutator@create")
 
+    """
+    Изменить перевод между пользователями
+    """
+    updateTransferBetweenUsers(
+        "ID"
+        id: ID!
+        "Сумма"
+        amount: Decimal
+        "ID аккаунта отправителя"
+        from_account_id: ID
+        "ID аккаунта получателя"
+        to_account_id: ID
+        "ID прайс-листа"
+        price_list_id: ID
+        "ID прайс-листа фии"
+        price_list_fee_id: ID
+        "ID коммиисии респондента"
+        respondent_fee_id: ID
+        "Причина перевода"
+        reason: String
+    ): TransferBetween
+        @field(resolver: "TransferBetweenUsersMutator@update")
+    
     """
     Подписать перевод между пользователями
     """
     signTransferBetweenUsers(
-        "ID исходящего перевода"
-        transfer_incoming_id: ID!
+        "ID"
+        id: ID!
         "Code"
         code: String!
-    ): TransferIncoming
+    ): TransferBetween
         @field(resolver: "TransferBetweenUsersMutator@sign")
 
     """
     Исполнить перевод между пользователями
     """
     executeTransferBetweenUsers(
-        "ID исходящего перевода"
-        transfer_incoming_id: ID!
-    ): TransferIncoming
+        "ID"
+        id: ID!
+    ): TransferBetween
         @field(resolver: "TransferBetweenUsersMutator@execute")
 
+    """
+    Отменить перевод между пользователями
+    """
+    cancelTransferBetweenUsers(
+        "ID"
+        id: ID!
+    ): TransferBetween
+        @field(resolver: "TransferBetweenUsersMutator@cancel")
+
+    """
+    Сделать возврат перевода между пользователями
+    """
+    refundTransferBetweenUsers(
+        "ID"
+        id: ID!
+    ): TransferBetween
+        @field(resolver: "TransferBetweenUsersMutator@refund")
+    
     """
     Привязать файлы
     """
     attachFIleToTransferBetweenUsers(
-        transfer_incoming_id: ID!
+        "ID"
+        id: ID!
         file_id: [ID!]!
-    ): TransferIncoming
+    ): TransferBetween
     @field(resolver: "TransferBetweenUsersMutator@attachFile")
+
+    """
+    Отвязать файлы
+    """
+    detachFIleFromTransferBetweenUsers(
+        "ID"
+        id: ID!
+        file_id: [ID!]!
+    ): TransferBetween
+    @field(resolver: "TransferBetweenUsersMutator@detachFile")
 }

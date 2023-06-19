@@ -7,7 +7,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="4" valign="top"><strong>Transafer details</strong></th>
+                <th colspan="4" valign="top"><strong>Transfer details</strong></th>
             </tr>
         </thead>
         <tbody>

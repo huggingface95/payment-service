@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use App\Services\PriceListFeeService;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -11,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class PriceListPPFee extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'price_list_pp_fees';
 
     /**
@@ -25,6 +29,7 @@ class PriceListPPFee extends BaseModel
         'period_id',
         'payment_system_id',
         'payment_provider_id',
+        'company_id',
     ];
 
     protected $appends = [
@@ -61,5 +66,10 @@ class PriceListPPFee extends BaseModel
     public function fees(): HasMany
     {
         return $this->hasMany(PriceListPPFeeCurrency::class, 'price_list_pp_fee_id');
+    }
+
+    public function currencies(): BelongsToMany
+    {
+        return $this->belongsToMany(Currencies::class, PriceListPPFeeCurrency::class, 'price_list_pp_fee_id', 'currency_id');
     }
 }

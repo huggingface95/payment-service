@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Enums\ApplicantRiskLevelEnum;
+use App\Enums\ApplicantStateEnum;
+use App\Enums\ApplicantStateReasonEnum;
 use App\Enums\ApplicantStatusEnum;
 use App\Enums\DocumentStateEnum;
 use App\Enums\KycTimelineActionTypeEnum;
@@ -243,7 +245,7 @@ class KycTimelineService extends AbstractService
             'creator_id' => $member->id ?? null,
             'action' => 'Comment added',
             'action_type' => KycTimelineActionTypeEnum::PROFILE->value,
-            'company_id' => $applicantCompanyNote->applicant_company_id,
+            'company_id' => $applicantCompanyNote->applicantCompany->company_id,
             'applicant_id' => $applicant->applicant_id,
             'applicant_type' => $applicant->applicant_type,
         ]);
@@ -251,7 +253,43 @@ class KycTimelineService extends AbstractService
 
     public function getChanges(ApplicantIndividual|ApplicantCompany $applicant): array
     {
-        $allowedFields = ['phone', 'email', 'first_name', 'last_name', 'middle_name', 'applicant_risk_level_id', 'applicant_status_id', 'name', 'info', 'document_state_id'];
+        $allowedFields = [
+            'first_name',
+            'last_name',
+            'middle_name',
+            'email',
+            'url',
+            'phone',
+            'is_verification_phone',
+            'country_id',
+            'language_id',
+            'citizenship_country_id',
+            'state',
+            'city',
+            'address',
+            'zip',
+            'nationality',
+            'birth_country_id',
+            'birth_state',
+            'birth_city',
+            'birth_at',
+            'sex',
+            'applicant_state_id',
+            'applicant_state_reason_id',
+            'applicant_risk_level_id',
+            'account_manager_member_id',
+            'company_id',
+            'labels',
+            'group_id',
+            'module_ids',
+            'project_id',
+            'two_factor_auth_setting_id',
+            'password_hash',
+            'ip_address',
+            'photo_id',
+            'kyc_level_id',
+        ];
+
         $newValues = $applicant->getChanges();
 
         return array_filter($newValues, function ($key) use ($allowedFields) {
@@ -290,9 +328,26 @@ class KycTimelineService extends AbstractService
                 case 'applicant_risk_level_id':
                     $result['applicant_risk_level'] = ApplicantRiskLevelEnum::tryFrom($value)->toString();
                     break;
+                case 'applicant_state_id':
+                    $result['applicant_state'] = ApplicantStateEnum::tryFrom($value)->toString();
+                    break;
+                case 'applicant_state_reason_id':
+                    $result['applicant_state_reason'] = ApplicantStateReasonEnum::tryFrom($value)->toString();
+                    break;
                 case 'document_state_id':
                     $result['document_state'] = DocumentStateEnum::tryFrom($value)->toString();
                     break;
+                case 'birth_at':
+                    $result['birth_at'] = Carbon::parse($value)->format('Y-m-d');
+                    break;
+                case 'password_hash':
+                    $result['password'] = 'Changed';
+                    unset($result['password_hash']);
+                    break;
+                case 'account_manager_member_id':
+                    $result['account_manager'] = Members::find($value)->fullname ?? 'Unknown';
+                    break;
+
                 default:
                     $result[$key] = $value;
             }

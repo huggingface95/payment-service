@@ -68,8 +68,8 @@ class RolesQueryTest extends TestCase
         $roles = DB::connection('pgsql_test')
             ->table('roles')
             ->where('group_type_id', 1)
-            ->where('id', '!=', Role::SUPER_ADMIN_ID)
             ->get();
+        $data = [];
 
         foreach ($roles as $role) {
             $data[] = [

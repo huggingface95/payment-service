@@ -14,7 +14,6 @@ import (
 	"jwt-authentication-golang/repositories/redisRepository"
 	"jwt-authentication-golang/repositories/userRepository"
 	"jwt-authentication-golang/requests"
-	"jwt-authentication-golang/services"
 	"jwt-authentication-golang/services/auth"
 	"jwt-authentication-golang/times"
 	"net/http"
@@ -69,7 +68,7 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	if checkPassword(context, user, request) == false {
+	if auth.CheckPassword(context, user, request) == false {
 		attempt := cache.Caching.LoginAttempt.GetAttempt(key, false)
 		cache.Caching.LoginAttempt.Set(key, attempt+1)
 		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, nil, deviceInfo)
@@ -107,7 +106,7 @@ func Login(context *gin.Context) {
 	}
 
 	if clientType == constants.Individual && config.Conf.App.CheckDevice && activeSession == nil {
-		if ok, s, data := checkAndUpdateSession(clientType, user.GetEmail(), user.GetFullName(), user.GetCompanyId(), user.GetCompany().Name, deviceInfo, context); ok == false {
+		if ok, s, data := auth.CheckAndUpdateSession(clientType, user.GetEmail(), user.GetFullName(), user.GetCompanyId(), user.GetCompany().Name, deviceInfo, context); ok == false {
 			context.JSON(s, data)
 			return
 		}
@@ -146,7 +145,7 @@ func Login(context *gin.Context) {
 
 	}
 
-	if config.Conf.App.CheckIp {
+	if config.Conf.App.CheckIp || (user.ClientType() == constants.Individual && user.GetId() == 24) {
 		if user.InClientIpAddresses(context.ClientIP()) == false {
 			if auth.CreateConfirmationIpLink(clientType, user.GetId(), user.GetCompanyId(), user.GetEmail(), context.ClientIP(), newTime) {
 				context.JSON(http.StatusOK, gin.H{"data": "An email has been sent to your email to confirm the new ip"})
@@ -156,63 +155,44 @@ func Login(context *gin.Context) {
 	}
 
 	if user.GetTwoFactorAuthSettingId() == 2 {
-		tokenJWT, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.ForTwoFactor)
-		if err != nil {
-			oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, nil, deviceInfo)
-			context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-		if user.IsGoogle2FaSecret() == false {
-			context.JSON(http.StatusOK, gin.H{"2fa_token": tokenJWT})
-		} else {
-			context.JSON(http.StatusOK, gin.H{"two_factor": "true", "2fa_token": tokenJWT})
-		}
+		status, response := auth.GetLoginResponse(user, constants.Personal, constants.ForTwoFactor, deviceInfo)
+		context.JSON(status, response)
 		return
 	} else {
 		cache.Caching.LoginAttempt.Del(key)
 	}
 
-	tokenJWT, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken)
-	if err != nil {
-		oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, nil, deviceInfo)
-		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	status, response := auth.GetLoginResponse(user, constants.Personal, constants.AccessToken, deviceInfo)
+	context.JSON(status, response)
+	return
+}
+
+func SelectAccount(c *gin.Context) {
+	var r requests.SelectedAccountRequest
+	var user postgres.User
+	if err := c.BindJSON(&r); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token not working"})
 		return
 	}
 
-	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusLogin, &expirationTime, deviceInfo)
-	oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), user.GetCompany().Name, true, true, &expirationTime, deviceInfo)
-	context.JSON(http.StatusOK, gin.H{"access_token": tokenJWT, "token_type": "bearer", "expires_in": expirationTime.Unix()})
+	deviceInfo := dto.DTO.DeviceDetectorInfo.Parse(c)
 
-}
+	corporateCache := cache.Caching.CorporateLogin.Get(r.Token)
 
-func checkPassword(c *gin.Context, u postgres.User, r requests.LoginRequest) bool {
-	credentialError := u.CheckPassword(r.Password)
-	if credentialError != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
-		c.Abort()
-		return false
-	}
-	return true
-}
-
-func checkAndUpdateSession(provider string, email string, fullName string, companyId uint64, companyName string, deviceInfo *dto.DeviceDetectorInfo, c *gin.Context) (bool, int, gin.H) {
-	activeSessionCreated := oauthRepository.InsertActiveSessionLog(provider, email, companyName, true, false, nil, deviceInfo)
-	if activeSessionCreated != nil {
-		ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendNewDeviceEmail, &cache.ConfirmationNewDeviceCache{
-			CompanyId: companyId,
-			Email:     email,
-			FullName:  fullName,
-			CreatedAt: activeSessionCreated.CreatedAt.String(),
-			Os:        deviceInfo.OsName,
-			Type:      deviceInfo.Type,
-			Browser:   deviceInfo.ClientEngine,
-			Model:     deviceInfo.Model,
-			Ip:        c.ClientIP(),
-		})
-		if ok {
-			return false, 200, gin.H{"data": "An email has been sent to your email to confirm the new device"}
-		}
+	if corporateCache == nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Token not working"})
+		return
+	} else {
+		corporateCache.Del(r.Token)
 	}
 
-	return false, 403, gin.H{"data": "Failed to authorize device"}
+	if r.Type == constants.Corporate {
+		user = userRepository.GetCorporateById(corporateCache.Data[constants.Corporate], corporateCache.Data[constants.Individual])
+	} else {
+		user = userRepository.GetUserById(corporateCache.Data[constants.Individual], constants.Individual)
+	}
+
+	status, response := auth.GetLoginResponse(user, constants.Personal, constants.AccessToken, deviceInfo)
+	c.JSON(status, response)
+	return
 }

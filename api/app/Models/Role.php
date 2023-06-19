@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\GuardEnum;
 use App\Models\Scopes\OrderByLowerScope;
 use App\Models\Scopes\RoleFilterSuperAdminScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Role as SpatieRole;
@@ -18,7 +19,9 @@ use Spatie\Permission\PermissionRegistrar;
  */
 class Role extends SpatieRole
 {
-    public const SUPER_ADMIN_ID = 35;
+    use BaseObServerTrait;
+
+    public const SUPER_ADMIN_ID = 2;
 
     protected $fillable = [
         'name', 'guard_name', 'description', 'company_id', 'group_type_id',

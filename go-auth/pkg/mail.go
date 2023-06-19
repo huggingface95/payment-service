@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"errors"
 	"fmt"
 	mail "github.com/xhit/go-simple-mail/v2"
 	"jwt-authentication-golang/config"
@@ -14,11 +15,11 @@ var MailError error
 func MailConnect(config *config.EmailConfig) {
 	server := mail.NewSMTPClient()
 
-	server.Host = config.Server
-	server.Port = config.Port
-	server.Username = config.Username
-	server.Password = config.Password
-	server.Encryption = mail.EncryptionTLS
+	server.Host = "mailhog"
+	server.Port = 1025
+	//server.Username = ""
+	//server.Password = ""
+	//server.Encryption = mail.EncryptionNone
 	// Variable to keep alive connection
 	server.KeepAlive = false
 	// Timeout for connect to SMTP Server
@@ -37,6 +38,13 @@ func MailConnect(config *config.EmailConfig) {
 }
 
 func Mail(subject string, content string, email string) (err error) {
+	if config.Conf.App.SendEmail == false {
+		err = errors.New("Send email disable")
+		return
+	}
+
+	MailConnect(config.Conf.Email)
+
 	newEmail := mail.NewMSG()
 	newEmail.
 		SetFrom(fmt.Sprintf("%s <%s>", config.Conf.Email.From, config.Conf.Email.Mail)).

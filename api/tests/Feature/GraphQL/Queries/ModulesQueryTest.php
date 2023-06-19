@@ -40,7 +40,7 @@ class ModulesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -55,9 +55,10 @@ class ModulesQueryTest extends TestCase
     public function testQueryModulesNoKyc(): void
     {
         $modules = Module::where('name', '<>', 'KYC')->get();
+        $data = [];
 
         foreach ($modules as $module) {
-            $data = [
+            $data[] = [
                 'id' => (string) $module->id,
                 'name' => (string) $module->name,
             ];
@@ -74,13 +75,11 @@ class ModulesQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'data' => [
-                'modules' => [
-                    $data,
-                ],
+                'modules' => $data,
             ],
         ]);
     }
@@ -88,13 +87,6 @@ class ModulesQueryTest extends TestCase
     public function testQueryModulesNoKycFilterByName(): void
     {
         $modules = Module::where('name', '<>', 'KYC')->get();
-
-        foreach ($modules as $module) {
-            $data = [
-                'id' => (string) $module->id,
-                'name' => (string) $module->name,
-            ];
-        }
 
         $this->postGraphQL(
             [
@@ -113,13 +105,14 @@ class ModulesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             'data' => [
-                'modules' => [
-                    $data,
-                ],
+                'modules' => [[
+                    'id' => (string) $modules[0]->id,
+                    'name' => (string) $modules[0]->name,
+                ]],
             ],
         ]);
     }
@@ -128,10 +121,10 @@ class ModulesQueryTest extends TestCase
     {
         $modules = Module::where('name', '<>', 'KYC')->get();
 
-            $data = [
-                'id' => (string) $modules[0]->id,
-                'name' => (string) $modules[0]->name,
-            ];
+        $data = [
+            'id' => (string) $modules[0]->id,
+            'name' => (string) $modules[0]->name,
+        ];
 
         $this->postGraphQL(
             [
@@ -150,7 +143,7 @@ class ModulesQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             $data,
@@ -177,7 +170,7 @@ class ModulesQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
             $data,

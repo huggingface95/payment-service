@@ -18,7 +18,7 @@ class CompanyRevenueAccountTableSeeder extends Seeder
         $accounts = Account::where('company_id', 1)->limit(5)->get();
 
         foreach ($accounts as $account) {
-            $number = sprintf("%s%s%s", strtoupper($account->currencies?->code), substr('0000000000', 0, -strlen($account->company_id)), $account->company_id);
+            $number = sprintf('%s%s%s', strtoupper($account->currencies?->code), substr('0000000000', 0, -strlen($account->company_id)), $account->company_id);
             CompanyRevenueAccount::updateOrCreate([
                 'number' => $number,
                 'company_id' => 1,

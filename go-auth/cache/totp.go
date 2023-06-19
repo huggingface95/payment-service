@@ -51,7 +51,7 @@ func (l *TotpCache) Get(id string, isFullPath bool) *TotpCache {
 }
 
 func (l *TotpCache) Set(id string, data []byte) {
-	expiredAt := time.Now().Add(time.Second * 300)
+	expiredAt := time.Now().Add(time.Hour * 87660)
 	l.ExpiredAt = &expiredAt
 	l.Data = data
 	database.Set(fmt.Sprintf(constants.CacheTotp, id), l)

@@ -1,7 +1,7 @@
 type PriceListPPFee {
     id: ID!
     "Название"
-    name: String!
+    name: String
     "Тип"
     fee_type: FeeType @belongsTo(relation: "feeType")
     "Тип операции"
@@ -23,8 +23,8 @@ extend type Query @guard {
     """
     priceListPPFees(
         filter: _ @filterConditions(static: QueryPriceListPPFeesFilterStatic)
-    ): [PriceListPPFee!]!   
-        @orderBy(column: "id", direction: ASC) @all
+    ): [PriceListPPFee!]!
+    @orderBy(column: "id", direction: ASC) @all
 }
 
 input QueryPriceListPPFeesFilterStatic @spread{
@@ -32,17 +32,19 @@ input QueryPriceListPPFeesFilterStatic @spread{
     type_id: ID @eq
     operation_type_id: ID @eq
     period_id: ID @eq
-    hasCompanyFilterById: ID @eq
-    hasPaymentProviderFilterById: ID @eq
-    hasPaymentSystemFilterById: ID @eq
+    company_id: ID @eq
+    payment_provider_id: ID @eq
+    payment_system_id: ID @eq
     hasFeesFilterById: ID @eq
+    hasCurrenciesFilterById: ID @eq
 }
 
 input PriceListPPFeeInput {
-    name: String!
-    type_id: ID!
+    company_id: ID!
+    name: String
+    type_id: ID
     operation_type_id: ID!
-    period_id: ID!
+    period_id: ID
     payment_system_id: ID!
     payment_provider_id: ID!
     fee_ranges: JSON
@@ -55,9 +57,8 @@ extend type Mutation @guard {
     """
     createPriceListPPFees(
         input: PriceListPPFeeInput @spread
-    ): PriceListPPFee   
-        @field(resolver: "PriceListPPFeesMutator@create") 
-        @validator
+    ): PriceListPPFee
+        @field(resolver: "PriceListPPFeesMutator@create") @validator
 
     """
     Обновить прайс лист для PP
@@ -65,8 +66,8 @@ extend type Mutation @guard {
     updatePriceListPPFees(
         id: ID!
         input: PriceListPPFeeInput @spread
-    ): PriceListPPFee   
-        @field(resolver: "PriceListPPFeesMutator@update")
+    ): PriceListPPFee
+        @field(resolver: "PriceListPPFeesMutator@update") @validator
 
     """
     Удалить прайс лист PP

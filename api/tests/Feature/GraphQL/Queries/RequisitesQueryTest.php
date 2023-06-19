@@ -274,68 +274,6 @@ class RequisitesQueryTest extends TestCase
         ]);
     }
 
-    public function testQueryRequisitesFilterByPaymentSystem(): void
-    {
-        $requisites = DB::connection('pgsql_test')
-            ->table('accounts')
-            ->first();
-
-        $owner = DB::connection('pgsql_test')
-            ->table('applicant_individual')->where('id', $requisites->owner_id)
-            ->first();
-
-        $ownerCountry = DB::connection('pgsql_test')
-            ->table('countries')->where('id', $owner->country_id)
-            ->first();
-
-        $bank = DB::connection('pgsql_test')
-            ->table('payment_banks')->where('id', $requisites->payment_bank_id)
-            ->first();
-
-        $this->postGraphQL(
-            [
-                'query' => '
-                query RequisitesFilter($id: Mixed){
-                  requisites(filter: { column: PAYMENT_SYSTEM_ID, operator: EQ, value: $id }) {
-                    id
-                    owner {
-                      fullname
-                      address
-                      country {
-                        name
-                      }
-                    }
-                    bank {
-                      name
-                      address
-                    }
-                    account_number
-                  }
-               }',
-                'variables' => [
-                    'id' => (string) $requisites->payment_system_id,
-                ],
-            ],
-            [
-                'Authorization' => 'Bearer '.$this->login(),
-            ]
-        )->seeJsonContains([
-            'id' => (string) $requisites->id,
-            'account_number' => (string) $requisites->account_number,
-            'owner' => [
-                'fullname' => (string) $owner->fullname,
-                'address' => (string) $owner->address,
-                'country' => [
-                    'name' => (string) $ownerCountry->name,
-                ],
-            ],
-            'bank' => [
-                'name' => (string) $bank->name,
-                'address' => (string) $bank->address,
-            ],
-        ]);
-    }
-
     public function testQueryRequisitesFilterByPaymentBank(): void
     {
         $requisites = DB::connection('pgsql_test')

@@ -18,24 +18,20 @@ class PaymentBankTableSeeder extends Seeder
         $faker = Factory::create();
 
         for ($i = 1; $i <= 10; $i++) {
-            PaymentBank::firstOrCreate(
-                [
-                    'id' => $i,
-                ],
-                [
-                    'name' => 'Bank '.$i,
-                    'address' => $faker->address(),
-                    'bank_code' => $faker->numberBetween(1000000, 2000000),
-                    'payment_system_code' => $faker->numberBetween(300000000, 400000000),
-                    'is_active' => true,
-                    'payment_provider_id' => $i,
-                    'payment_system_id' => $i,
-                    'bank_correspondent_id' => $i,
-                    'country_id' => $i,
-                    'swift' => $faker->swiftBicNumber(),
-                    'account_number' => $faker->numberBetween(1000000, 2000000),
-                    'ncs_number' => $faker->numberBetween(1000000, 2000000),
-                ]
+            PaymentBank::query()->firstOrCreate([
+                'name' => 'Bank '.$i,
+                'address' => $faker->address(),
+                'bank_code' => $faker->numberBetween(1000000, 2000000),
+                'payment_system_code' => $faker->numberBetween(300000000, 400000000),
+                'is_active' => true,
+                'payment_provider_id' => $i,
+                'payment_system_id' => $i,
+                'bank_correspondent_id' => $i,
+                'country_id' => $i,
+                'swift' => $faker->swiftBicNumber(),
+                'account_number' => $faker->numberBetween(1000000, 2000000),
+                'ncs_number' => $faker->numberBetween(1000000, 2000000),
+            ]
             );
         }
     }

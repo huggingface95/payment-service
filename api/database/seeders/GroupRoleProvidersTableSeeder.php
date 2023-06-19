@@ -22,25 +22,20 @@ class GroupRoleProvidersTableSeeder extends Seeder
                 'is_default' => true,
             ],
             [
-                'group_role_id' => 2,
+                'group_role_id' => 5,
                 'payment_provider_id' => 1,
                 'commission_template_id' => 1,
                 'is_default' => true,
             ], [
-                'group_role_id' => 3,
+                'group_role_id' => 6,
                 'payment_provider_id' => 1,
                 'commission_template_id' => 1,
                 'is_default' => true,
             ],
         ];
 
-        $i = 1;
         foreach ($groupRoles as $group) {
-            GroupRoleProvider::firstOrCreate([
-                'id' => $i,
-            ], $group);
-
-            $i++;
+            GroupRoleProvider::query()->firstOrCreate($group);
         }
     }
 }

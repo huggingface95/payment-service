@@ -38,17 +38,17 @@ extend type Query @guard {
     """
     Получить трансфер
     """
-    transferExchnage(id: ID! @eq): TransferExchange!    @find
+    transferExchange(id: ID! @eq): TransferExchange!    @find
 
     """
     Получить список трансферов
     """
-    transferExchnages(
-        filter: _ @filterConditions(static: QueryTransferExchnagesFilterStatic)
+    transferExchanges(
+        filter: _ @filterConditions(static: QueryTransferExchangesFilterStatic)
         created_at: DateTimeRange @whereBetween
     ): [TransferExchange!]!
         @paginate(defaultCount: 10)
-        @orderBy(column: "id", direction: ASC)
+        @orderBy(column: "created_at", direction: DESC)
 
     """
     Получить статистику по входящим платежам
@@ -59,6 +59,16 @@ extend type Query @guard {
     ): [TransferExchangeStatistic]
     @field(resolver: "TransferExchangeQuery@statistic")
 
+    """
+    Получить выписку по обменным трансферам
+    """
+    downloadTransferExchanges(
+        type: ExportFileType!
+        filter: _ @filterConditions(static: QueryDownloadTransferExchangesFilterStatic)
+        created_at: DateTimeRange @whereBetween
+    ): RawFile
+    @downloadFileWithConditions(model: "TransferExchange")
+
 }
 
 input QueryTransferExchangeStatisticFilterStatic @spread {
@@ -66,7 +76,18 @@ input QueryTransferExchangeStatisticFilterStatic @spread {
     hasTransferOutgoingPivotSenderMixedIdOrFullnameOrName: Mixed @eq
 }
 
-input QueryTransferExchnagesFilterStatic @spread {
+input QueryTransferExchangesFilterStatic @spread {
+    id: ID @eq
+    company_id: ID @eq
+    client_id: ID @eq
+    requested_by_id: ID @eq
+    debited_account_id: ID @eq
+    credited_account_id: ID @eq
+    status_id: ID @eq
+    user_type: UserType @eq
+}
+
+input QueryDownloadTransferExchangesFilterStatic @spread {
     id: ID @eq
     company_id: ID @eq
     client_id: ID @eq
@@ -89,10 +110,25 @@ extend type Mutation @guard {
         to_account_id: ID!
         "ID прайс-лист фии"
         price_list_fee_id: ID!
-        "ID файлов"
-        file_id: [ID]
     ): TransferExchange
         @field(resolver: "TransferExchangeMutator@create")
+
+    """
+    Редактировать exchange перевод
+    """
+    updateTransferExchange(
+        "ID"
+        id: ID!
+        "Сумма"
+        amount: Decimal!
+        "ID аккаунта отправителя"
+        from_account_id: ID!
+        "ID аккаунта получателя"
+        to_account_id: ID!
+        "ID прайс-лист фии"
+        price_list_fee_id: ID!
+    ): TransferExchange
+        @field(resolver: "TransferExchangeMutator@update")
 
     """
     Подписать exchange перевод
@@ -106,17 +142,26 @@ extend type Mutation @guard {
         @field(resolver: "TransferExchangeMutator@sign")
 
     """
-    Исполнить exchange перевод
-    """
-    executeTransferExchange(
-        "ID"
-        id: ID!
-    ): TransferExchange
-        @field(resolver: "TransferExchangeMutator@execute")
-
-    """
     Отменить exchange перевод
     """
     cancelTransferExchange(id: ID!): TransferExchange
         @field(resolver: "TransferExchangeMutator@cancel")
+
+    """
+    Привязать файлы
+    """
+    attachFIleToTransferExchange(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferExchange
+        @field(resolver: "TransferExchangeMutator@attachFile")
+
+    """
+    Отвязать файлы
+    """
+    detachFIleFromTransferExchange(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferExchange
+    @field(resolver: "TransferExchangeMutator@detachFile")
 }

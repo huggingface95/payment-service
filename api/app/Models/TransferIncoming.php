@@ -6,7 +6,10 @@ use Ankurk91\Eloquent\BelongsToOne;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
+use App\Models\Interfaces\CustomObServerInterface;
 use App\Models\Scopes\TransferFeeAmountScope;
+use App\Models\Traits\BaseObServerTrait;
+use App\Observers\TransferIncomingObserver;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -20,13 +23,15 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  *
  * @property TransferOutgoing $transferBetweenOutgoing
  * @property ApplicantIndividual|ApplicantCompany $recipient
+ * @property Account $account
  * @property string recipient_type
  * @property int recipient_id
  */
-class TransferIncoming extends BaseModel
+class TransferIncoming extends BaseModel implements CustomObServerInterface
 {
     use HasFactory;
     use BelongsToOne;
+    use BaseObServerTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -195,6 +200,11 @@ class TransferIncoming extends BaseModel
         return $this->hasOneThrough(TransferType::class, OperationType::class, 'id', 'id', 'operation_type_id', 'transfer_type_id');
     }
 
+    public function transferHistory(): HasMany
+    {
+        return $this->hasMany(TransferIncomingHistory::class, 'transfer_id');
+    }
+
     public function transferSwift(): HasOne
     {
         return $this->hasOne(TransferSwift::class, 'transfer_id')
@@ -209,6 +219,11 @@ class TransferIncoming extends BaseModel
 
     public function transferBetweenOutgoing(): \Ankurk91\Eloquent\Relations\BelongsToOne
     {
-        return $this->belongsToOne(TransferOutgoing::class, TransferBetweenRelation::class, 'transfer_incoming_id', 'transfer_outgoing_id');
+        return $this->belongsToOne(TransferOutgoing::class, TransferBetween::class, 'transfer_incoming_id', 'transfer_outgoing_id');
+    }
+
+    public static function getObServer(): string
+    {
+        return TransferIncomingObserver::class;
     }
 }

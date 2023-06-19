@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Relationships\CustomHasMany;
 use App\Models\Relationships\CustomHasOne;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -22,6 +23,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CommissionTemplateLimit extends BaseModel
 {
+    use BaseObServerTrait;
+
     public $timestamps = false;
 
     protected $table = 'commission_template_limit';

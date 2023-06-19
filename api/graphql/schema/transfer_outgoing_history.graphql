@@ -11,13 +11,15 @@ type TransferOutgoingHistory {
     comment: String
     "Дата"
     created_at: DateTimeUtc
+    "Кем изменено"
+    managed: Clientable @morphTo(relation: "managed")
 }
 
 extend type Query @guard {
     """
     Получить историю исходящего платежа
     """
-    transferOutgoingHistory(transfer_id: ID!): [TransferOutgoingHistory!]!
+    transferOutgoingHistory(transfer_id: ID! @eq): [TransferOutgoingHistory!]!
         @paginate(defaultCount: 10)
-        @orderBy(column: "id", direction: ASC)
+        @orderBy(column: "id", direction: DESC)
 }

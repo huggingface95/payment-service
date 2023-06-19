@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
+
 class ApplicantModuleActivity extends BaseModel
 {
+    use BaseObServerTrait;
+
     public $timestamps = false;
 
     protected $table = 'applicant_module_activity';
@@ -15,8 +19,8 @@ class ApplicantModuleActivity extends BaseModel
      */
     protected $fillable = [
         'module_id',
-        'is_active',
+        'individual',
+        'corporate',
         'applicant_id',
-        'applicant_type',
     ];
 }

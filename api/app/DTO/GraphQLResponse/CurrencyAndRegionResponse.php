@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 class CurrencyAndRegionResponse
 {
     public array $currencies;
+
     public Collection $regions;
 
     public static function transform(array $currencies, Collection $regions): self

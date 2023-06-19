@@ -3,6 +3,7 @@ package helpers
 import (
 	"crypto/rand"
 	"encoding/hex"
+	rand2 "math/rand"
 )
 
 func GenerateRandomString(length int) string {
@@ -11,4 +12,8 @@ func GenerateRandomString(length int) string {
 		return ""
 	}
 	return hex.EncodeToString(b)
+}
+
+func GenerateRandomInteger(low, hi int) int {
+	return low + rand2.Intn(hi-low)
 }

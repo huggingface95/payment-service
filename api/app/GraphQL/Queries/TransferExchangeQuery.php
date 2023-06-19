@@ -12,14 +12,20 @@ class TransferExchangeQuery
 {
     public function __construct(
         protected FilterConditionsHandler $handler
-    )
+    ) {
+    }
+
+    public function get($root, array $args): TransferExchange
     {
+        $transfers = TransferExchange::findOrFail($args['id']);
+
+        return $transfers;
     }
 
     /**
      * @throws Error
      */
-    public function statistic($_, array $args): Collection|array
+    public function statistic($_, array $args): Collection | array
     {
         $statistic = TransferExchange::query();
         if (isset($args['filter'])) {
@@ -38,5 +44,4 @@ class TransferExchangeQuery
 
         return $statistic->get();
     }
-
 }

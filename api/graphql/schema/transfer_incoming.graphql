@@ -70,6 +70,8 @@ type TransferIncoming {
     "Почтовый индекс отправителя"
     sender_zip: String
     respondent_fee: RespondentFee @belongsTo(relation: "respondentFee")
+    "История трансфера"
+    transfer_history: [TransferIncomingHistory] @hasMany(relation: "transferHistory")
     "SWIFT field 56A (Intermediary Bank)"
     transfer_swift: TransferSwift @hasOne(relation: "transferSwift")
     "Дата и время выполнения транзакции"
@@ -100,7 +102,7 @@ extend type Query @guard {
         created_at: DateTimeRange @whereBetween
     ): [TransferIncoming!]!
         @paginate(defaultCount: 10)
-        @orderBy(column: "id", direction: ASC)
+        @orderBy(column: "created_at", direction: DESC)
 
     """
     Получить статистику по входящим платежам
@@ -170,8 +172,6 @@ extend type Mutation @guard {
     Создать входящий перевод
     """
     createTransferIncoming(
-        "ID компании"
-        company_id: ID!
         "ID группы"
         group_id: ID!
         "ID типа группы"
@@ -191,12 +191,75 @@ extend type Mutation @guard {
         "ID платежного банка"
         payment_bank_id: ID!
     " requested_by_id: ID! ?? "
-        price_list_id: ID!
-        price_list_fee_id: ID!
+        price_list_id: ID
+        price_list_fee_id: ID
         "Тип бенефициара"
         beneficiary_type: BeneficiaryTypeEnum!
         "Имя бенефициара"
         beneficiary_name: String!
+        "Номер счета или IBAN отправителя"
+        sender_account: String
+        "Название банка отправителя"
+        sender_bank_name: String
+        "Адрес банка отправителя"
+        sender_bank_address: String
+        "SWIFT банка отправителя"
+        sender_bank_swift: String
+        "ID страны банка отправителя"
+        sender_bank_country_id: ID
+        "Имя отправителя"
+        sender_name: String
+        "ID страна отправителя"
+        sender_country_id: ID!
+        "Город отправителя"
+        sender_city: String
+        "Адрес отправителя"
+        sender_address: String
+        "Штат отправителя"
+        sender_state: String
+        "Почтовый индекс отправителя"
+        sender_zip: String
+        "Сообщение банка"
+        bank_message: String
+        "SWIFT field 56A (Intermediary Bank)"
+        transfer_swift: TransferSwiftInput
+        "Важность платежа Normal/Express"
+        urgency_id: ID
+        "Кто платит комиссию"
+        respondent_fees_id: ID
+    ): TransferIncoming
+        @field(resolver: "TransferIncomingMutator@create")
+
+    """
+    Редактировать входящий перевод
+    """
+    updateTransferIncoming(
+        "ID"
+        id: ID!
+        "ID группы"
+        group_id: ID
+        "ID типа группы"
+        group_type_id: ID
+        "ID проекта"
+        project_id: ID
+        "Сумма"
+        amount: Decimal
+        "ID валюты"
+        currency_id: ID
+        "ID аккаунта"
+        account_id: ID
+        "ID платежного провайдера"
+        payment_provider_id: ID
+        "ID платежной системы"
+        payment_system_id: ID
+        "ID платежного банка"
+        payment_bank_id: ID
+        price_list_id: ID
+        price_list_fee_id: ID
+        "Тип бенефициара"
+        beneficiary_type: BeneficiaryTypeEnum
+        "Имя бенефициара"
+        beneficiary_name: String
         "Номер счета или IBAN отправителя"
         sender_account: String
         "Название банка отправителя"
@@ -221,27 +284,12 @@ extend type Mutation @guard {
         sender_zip: String
         "Сообщение банка"
         bank_message: String
-        "ID файлов"
-        file_id: [ID]
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: TransferSwiftInput
-        "Статус"
-        status_id: Int
         "Важность платежа Normal/Express"
         urgency_id: ID
         "Кто платит комиссию"
         respondent_fees_id: ID
-    ): TransferIncoming
-        @field(resolver: "TransferIncomingMutator@create")
-
-    """
-    Редактировать входящий перевод
-    """
-    updateTransferIncoming(
-        "ID"
-        id: ID!
-        "Статус"
-        status_id: Int!
     ): TransferIncoming
         @field(resolver: "TransferIncomingMutator@update")
 
@@ -255,4 +303,40 @@ extend type Mutation @guard {
         code: String!
     ): TransferIncoming
         @field(resolver: "TransferIncomingMutator@sign")
+    
+    """
+    Исполнить входящий перевод
+    """
+    executeTransferIncoming(
+        "ID"
+        id: ID!
+    ): TransferIncoming
+        @field(resolver: "TransferIncomingMutator@execute")
+
+    """
+    Отменить входящий перевод
+    """
+    cancelTransferIncoming(
+        "ID"
+        id: ID!
+    ): TransferIncoming
+        @field(resolver: "TransferIncomingMutator@cancel")
+    
+    """
+    Привязать файлы
+    """
+    attachFIleToTransferIncoming(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferIncoming
+        @field(resolver: "TransferIncomingMutator@attachFile")
+
+    """
+    Отвязать файлы
+    """
+    detachFIleFromTransferIncoming(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferIncoming
+    @field(resolver: "TransferIncomingMutator@detachFile")
 }

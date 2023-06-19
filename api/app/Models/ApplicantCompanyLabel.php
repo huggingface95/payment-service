@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Scopes\ApplicantIndividualCompanyIdScope;
 use App\Models\Scopes\MemberScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class ApplicantCompanyLabel extends BaseModel
 {
+    use BaseObServerTrait;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,6 +29,7 @@ class ApplicantCompanyLabel extends BaseModel
         parent::booted();
         static::addGlobalScope(new MemberScope());
         static::addGlobalScope(new ApplicantFilterByMemberScope());
+        static::addGlobalScope(new ApplicantIndividualCompanyIdScope());
     }
 
     public function applicants()

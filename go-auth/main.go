@@ -27,10 +27,6 @@ func main() {
 
 	database.RedisConnect(config.Conf.Redis)
 
-	if config.Conf.App.SendEmail {
-		pkg.MailConnect(config.Conf.Email)
-	}
-
 	dto.DTO.Init()
 
 	go jobs.Init()
@@ -47,6 +43,17 @@ func main() {
 
 func initRouter() *gin.Engine {
 	router := gin.Default()
+
+	registration := router.Group("/registration")
+	{
+		registration.POST("private", individual.RegisterPrivate)
+		registration.POST("corporate", individual.RegisterCorporate)
+	}
+
+	authorization := router.Group("/authorization")
+	{
+		authorization.POST("test", individual.Authorize)
+	}
 
 	confirmation := router.Group("/confirmation")
 	{
@@ -73,6 +80,7 @@ func initRouter() *gin.Engine {
 		}
 		auth.POST("reset-password", controllers.ResetPassword)
 		auth.POST("login", controllers.Login)
+		auth.POST("change", controllers.SelectAccount)
 		auth.POST("login-two-factor", controllers.GenerateTwoFactorQr)
 		auth.POST("verify-two-factor", controllers.VerifyTwoFactorQr)
 		auth.POST("activate-two-factor", controllers.ActivateTwoFactorQr)
@@ -87,9 +95,17 @@ func initRouter() *gin.Engine {
 		}
 	}
 
-	redirect := router.Group("/api").Use(middlewares.AccessAuth())
+	redirect := router.Group("/api")
 	{
-		redirect.POST("", controllers.RedirectRequest)
+		redirect.GET("", controllers.RedirectGetRequest)
+		redirectPost := redirect.Group("").Use(middlewares.AccessAuth())
+		{
+			redirectPost.POST("", controllers.RedirectRequest)
+			redirectPost.POST("/files", controllers.RedirectFilesRequest)
+			redirectPost.POST("/email", controllers.RedirectEmailRequest)
+			redirectPost.POST("/sms", controllers.RedirectSmsRequest)
+			redirectPost.GET("/pdf", controllers.RedirectPdfRequest)
+		}
 	}
 	return router
 }

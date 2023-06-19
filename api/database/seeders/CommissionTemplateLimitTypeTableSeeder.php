@@ -29,8 +29,7 @@ class CommissionTemplateLimitTypeTableSeeder extends Seeder
                     $limit->save();
                 }
             } else {
-                CommissionTemplateLimitType::firstOrCreate([
-                    'id' => $id,
+                CommissionTemplateLimitType::query()->firstOrCreate([
                     'name' => $name,
                 ]);
             }

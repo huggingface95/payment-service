@@ -23,7 +23,6 @@ class AccountsMutationTest extends TestCase
                     $account_number: String
                     $account_name: String!
                     $payment_provider_id: ID!
-                    $payment_system_id: ID!
                     $group_type_id: ID!
                     $group_role_id: ID!
                 ) {
@@ -37,7 +36,6 @@ class AccountsMutationTest extends TestCase
                     account_name: $account_name
                     group_type_id: $group_type_id
                     group_role_id: $group_role_id
-                    payment_system_id: $payment_system_id
                     payment_provider_id: $payment_provider_id
                     is_primary: true
                   }
@@ -55,7 +53,6 @@ class AccountsMutationTest extends TestCase
             'account_name' => 'Test_account_'.\Illuminate\Support\Str::random(6),
             'group_type_id' => 2,
             'group_role_id' => 1,
-            'payment_system_id' => 1,
             'payment_provider_id' => 1,
         ])->seeJson([
             'message' => 'Unauthenticated.',
@@ -75,7 +72,6 @@ class AccountsMutationTest extends TestCase
                         $account_number: String
                         $account_name: String!
                         $payment_provider_id: ID!
-                        $payment_system_id: ID!
                         $group_type_id: ID!
                         $group_role_id: ID!
                     ) {
@@ -89,7 +85,6 @@ class AccountsMutationTest extends TestCase
                         account_name: $account_name
                         group_type_id: $group_type_id
                         group_role_id: $group_role_id
-                        payment_system_id: $payment_system_id
                         payment_provider_id: $payment_provider_id
                         is_primary: true
                       }
@@ -107,7 +102,6 @@ class AccountsMutationTest extends TestCase
                     'account_name' => 'Test_account_'.\Illuminate\Support\Str::random(6),
                     'group_type_id' => 2,
                     'group_role_id' => 1,
-                    'payment_system_id' => 1,
                     'payment_provider_id' => 1,
                 ],
             ],

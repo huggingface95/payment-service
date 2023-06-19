@@ -2,16 +2,15 @@
 
 namespace App\GraphQL\Handlers;
 
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
 use GraphQL\Error\Error;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Nuwave\Lighthouse\WhereConditions\Operator;
 
@@ -79,22 +78,36 @@ class FilterConditionsHandler
         if (isset($whereConditions['column']) && preg_match('/^has(.*)/', $whereConditions['column'], $hasCondition)) {
             $condition = null;
             $isMorph = false;
+            $morphSingle = false;
             $joinRelationship = null;
             $pivotModel = null;
 
             if (preg_match('/^(.*?)Pivot(.*?)(Mixed|FilterBy|$)/', $hasCondition[1], $hasJoinConditionArguments)) {
                 $pivotModel = $model->{$hasJoinConditionArguments[1]}()->getModel();
                 $joinRelationship = $pivotModel->{$hasJoinConditionArguments[2]}();
-                $hasCondition[1] = preg_replace('/(.*?)(Pivot)(.*)/', "$1.$3", $hasCondition[1]);
+                $hasCondition[1] = preg_replace('/(.*?)(Pivot)(.*)/', '$1.$3', $hasCondition[1]);
             }
 
             if (preg_match('/^(.*?)FilterBy(.*)/', $hasCondition[1], $hasConditionArguments)) {
                 $relation = $hasConditionArguments[1];
+                $relationship = $joinRelationship ?? $model->$relation();
                 $condition = [
                     'column' => strtolower(Str::snake($hasConditionArguments[2])),
-                    'value' => $whereConditions['value'],
                     'operator' => $whereConditions['operator'],
+                    'value' => $whereConditions['value'],
                 ];
+                if ($relationship instanceof MorphTo) {
+                    $isMorph = true;
+                    $morphSingle = true;
+                    $filterByMorphTo = [];
+                    foreach (($pivotModel ?? $model)->newModelQuery()->distinct()->pluck($relationship->getMorphType())->filter()->all() as $morph) {
+                        $morph = Relation::getMorphedModel($morph) ?? $morph;
+                        if ($c = $this->overwritePrefixIdColumns($condition, (new $morph()))) {
+                            $filterByMorphTo[$morph] = $c;
+                        }
+                    }
+                    $condition = $filterByMorphTo;
+                }
             } elseif (preg_match('/^(.*?)Mixed(.*)/', $hasCondition[1], $hasConditionArguments)) {
                 $relation = $hasConditionArguments[1];
                 $relationship = $joinRelationship ?? $model->$relation();
@@ -102,10 +115,10 @@ class FilterConditionsHandler
                     $isMorph = true;
                     foreach (($pivotModel ?? $model)->newModelQuery()->distinct()->pluck($relationship->getMorphType())->filter()->all() as $morph) {
                         $morph = Relation::getMorphedModel($morph) ?? $morph;
-                        $condition[$morph] = $this->getMixedColumns($hasConditionArguments[2], $whereConditions, (new $morph())->getTable());
+                        $condition[$morph] = $this->getMixedColumns($hasConditionArguments[2], $whereConditions, (new $morph()));
                     }
                 } else {
-                    $relationshipTableName = $relationship->getRelated()->getTable();
+                    $relationshipTableName = $relationship->getRelated();
                     $condition = $this->getMixedColumns($hasConditionArguments[2], $whereConditions, $relationshipTableName);
                 }
             } else {
@@ -113,12 +126,13 @@ class FilterConditionsHandler
             }
 
             $nestedBuilder = $this->handleHasCondition(
-                $joinModel ?? $model,
+                $model,
                 $relation,
                 '>=',
                 $whereConditions['amount'] ?? 1,
                 $condition,
-                $isMorph
+                $isMorph,
+                $morphSingle
             );
             $builder->addNestedWhereQuery($nestedBuilder, $boolean);
         }
@@ -130,7 +144,7 @@ class FilterConditionsHandler
         }
 
         if (isset($whereConditions['column']) && preg_match('/^Mixed(.*)/', $whereConditions['column'], $mixedColumns)) {
-            $condition = $this->getMixedColumns($mixedColumns[1], $whereConditions, $model->getTable());
+            $condition = $this->getMixedColumns($mixedColumns[1], $whereConditions, $model);
             $this->__invoke($builder, $condition, $model);
         }
 
@@ -152,12 +166,17 @@ class FilterConditionsHandler
         string $operator,
         int    $amount,
         ?array $condition = null,
-        bool   $isMorph = false
+        bool   $isMorph = false,
+        bool   $morphSingle = false
     ): QueryBuilder
     {
-        return $model
-            ->newQuery()
-            ->whereHas(
+        $model = $model->newQuery();
+        if ($isMorph && $morphSingle) {
+            $model->whereHasMorph($relation, array_keys($condition), function ($builder) use ($condition) {
+                $builder->where(...array_values($condition[get_class($builder->getModel())]));
+            });
+        } else {
+            $model->whereHas(
                 $relation,
                 $condition
                     ? function ($builder) use ($condition, $isMorph): void {
@@ -173,8 +192,10 @@ class FilterConditionsHandler
                     : null,
                 $operator,
                 $amount
-            )
-            ->getQuery();
+            );
+        }
+
+        return $model->getQuery();
     }
 
     public function handleDoesntHaveCondition(
@@ -226,7 +247,6 @@ class FilterConditionsHandler
             if (!str_contains($condition['column'], '.')) {
                 $condition['column'] = $model->getTable() . '.' . $condition['column'];
             }
-
         } elseif (isset($condition[0]['column'])) {
             foreach ($condition as &$item) {
                 if (!str_contains($item['column'], '.')) {
@@ -244,7 +264,20 @@ class FilterConditionsHandler
         return $condition;
     }
 
-    private function getMixedColumns(string $column, array $whereConditions, string $table): ?array
+    private function overwritePrefixIdColumns(array $condition, Model $model): ?array
+    {
+        if ($condition['column'] == 'id' && is_string($condition['value']) && !is_numeric($condition['value'])) {
+            if ($model instanceof ApplicantIndividual && !str_contains($condition['value'], ApplicantIndividual::ID_PREFIX)) {
+                return null;
+            } elseif ($model instanceof ApplicantCompany && !str_contains($condition['value'], ApplicantCompany::ID_PREFIX)) {
+                return null;
+            }
+        }
+
+        return $condition;
+    }
+
+    private function getMixedColumns(string $column, array $whereConditions, Model $model): ?array
     {
         $condition = null;
 
@@ -257,9 +290,16 @@ class FilterConditionsHandler
         }
 
         foreach ($columns as $column) {
+            if ($column == 'Id' && is_string($whereConditions['value']) && !is_numeric($whereConditions['value'])) {
+                if ($model instanceof ApplicantIndividual && !str_contains($whereConditions['value'], ApplicantIndividual::ID_PREFIX)) {
+                    continue;
+                } elseif ($model instanceof ApplicantCompany && !str_contains($whereConditions['value'], ApplicantCompany::ID_PREFIX)) {
+                    continue;
+                }
+            }
             $column = strtolower(Str::snake($column));
             try {
-                DB::table($table)->where($column, $whereConditions['operator'], $whereConditions['value'])->exists();
+                $model->newQuery()->where($column, $whereConditions['operator'], $whereConditions['value'])->exists();
             } catch (QueryException) {
                 continue;
             }

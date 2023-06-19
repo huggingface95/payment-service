@@ -14,6 +14,7 @@ use App\Models\ApplicantIndividualCompany;
 use App\Models\GroupRole;
 use App\Services\EmailService;
 use App\Services\VerifyService;
+use Illuminate\Support\Facades\DB;
 
 class ApplicantCompanyMutator extends BaseMutator
 {
@@ -27,28 +28,40 @@ class ApplicantCompanyMutator extends BaseMutator
      * Return a value for the field.
      *
      * @param  @param  null  $root Always null, since this field has no parent.
-     * @param  array<string, mixed>  $args The field arguments passed by the client.
+     * @param array<string, mixed> $args The field arguments passed by the client.
      * @return mixed
+     * @throws GraphqlException
      */
     public function create($root, array $args)
     {
-        $args['group_type_id'] = GroupRole::COMPANY;
-        $applicantCompany = ApplicantCompany::create($args);
+        try {
+            DB::beginTransaction();
 
-        if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {
-            $this->setOwner($applicantCompany, $args);
-        }
+            $args['group_type_id'] = GroupRole::COMPANY;
+            $applicantCompany = ApplicantCompany::create($args);
 
-        if (isset($args['module_ids'])) {
-            $applicantCompany->modules()->attach(array_filter($args['module_ids'], function ($m) {
-                return $m != ModuleEnum::KYC->value;
-            }));
-        }
-        if (isset($args['group_id'])) {
-            $applicantCompany->groupRole()->sync([$args['group_id']], true);
-        }
+            if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {
+                $this->setOwner($applicantCompany, $args);
+            }
 
-        return $applicantCompany;
+            if (isset($args['module_ids'])) {
+                $applicantCompany->modules()->attach(array_filter($args['module_ids'], function ($m) {
+                    return $m != ModuleEnum::KYC->value;
+                }));
+            }
+
+            if (isset($args['group_id'])) {
+                $applicantCompany->groupRole()->sync([$args['group_id']], true);
+            }
+
+            DB::commit();
+
+            return $applicantCompany;
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            throw new GraphqlException($e->getMessage(), $e->getCode());
+        }
     }
 
     /**
@@ -108,7 +121,7 @@ class ApplicantCompanyMutator extends BaseMutator
         try {
             return ApplicantIndividualCompany::firstOrCreate([
                 'applicant_id' => $args['owner_id'],
-                'applicant_type' => class_basename(ApplicantCompany::class),
+                'applicant_type' => class_basename(ApplicantIndividual::class),
                 'applicant_company_id' => $applicant->id,
                 'applicant_individual_company_relation_id' => ($args['owner_relation_id']) ?? $args['owner_relation_id'],
                 'applicant_individual_company_position_id' => ($args['owner_position_id']) ?? $args['owner_position_id'],
@@ -126,7 +139,7 @@ class ApplicantCompanyMutator extends BaseMutator
 
         $verifyToken = $this->verifyService->createVerifyToken($applicant);
 
-        $emailTemplateName = 'Welcome! Confirm your email address';
+        $emailTemplateName = 'Sign Up: Email Confirmation';
         $emailData = [
             'client_name' => $applicantCompany->name,
             'email_confirm_url' => $company->member_verify_url.'/email/verify/'.$verifyToken->token.'/'.$applicantCompany->id,

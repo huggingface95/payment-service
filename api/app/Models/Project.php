@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\DTO\GraphQLResponse\ProjectApiSettingsResponse;
 use App\DTO\TransformerDTO;
+use App\Models\Builders\ProjectBuilder;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
@@ -16,6 +18,8 @@ use Illuminate\Support\Facades\Schema;
  */
 class Project extends BaseModel
 {
+
+    use BaseObServerTrait;
     /**
      * The attributes that are mass assignable.
      *
@@ -45,9 +49,15 @@ class Project extends BaseModel
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
+
+    public function newEloquentBuilder($builder): ProjectBuilder
+    {
+        return new ProjectBuilder($builder);
+    }
+
     public function getProjectApiSettingsAttribute()
     {
-        return TransformerDTO::transform(ProjectApiSettingsResponse::class, $this->paymentProviders()->get(), $this->paymentProvidersIban()->get());
+        return TransformerDTO::transform(ProjectApiSettingsResponse::class, $this->paymentProviders()->get(), $this->paymentProvidersIban()->get(), $this->quoteProviders()->get());
     }
 
     public function avatar(): BelongsTo
@@ -58,6 +68,11 @@ class Project extends BaseModel
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');
+    }
+
+    public function accounts(): HasMany
+    {
+        return $this->hasMany(Account::class, 'project_id');
     }
 
     public function module(): BelongsTo
@@ -85,9 +100,19 @@ class Project extends BaseModel
         return $this->morphedByMany(PaymentProviderIban::class, 'provider', ProjectApiSetting::class)->withPivot(Schema::getColumnListing('project_api_settings'));
     }
 
+    public function quoteProviders(): MorphToMany
+    {
+        return $this->morphedByMany(QuoteProvider::class, 'provider', ProjectApiSetting::class)->withPivot(Schema::getColumnListing('project_api_settings'));
+    }
+
     public function applicantCompanies(): HasMany
     {
-        return $this->hasMany(ApplicantCompany::class);
+        return $this->hasMany(ApplicantCompany::class, 'project_id');
+    }
+
+    public function applicantIndividuals(): HasMany
+    {
+        return $this->hasMany(ApplicantIndividual::class, 'project_id');
     }
 
     public function state(): BelongsTo

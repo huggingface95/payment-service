@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Country;
+use App\Models\Region;
+use App\Models\RegionCountry;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class RegionCountriesTableSeeder extends Seeder
 {
@@ -14,11 +16,27 @@ class RegionCountriesTableSeeder extends Seeder
      */
     public function run()
     {
-        $row = DB::table('region_countries')->where(['region_id' => 1, 'country_id' => 1])->first();
+        RegionCountry::unsetEventDispatcher();
 
-        if (! $row) {
-            DB::table('region_countries')
-                ->insert(['region_id' => 1, 'country_id' => 1]);
+        $regions = Region::all();
+
+        $regionCountries = [
+            1 => [57, 144, 236],  // North America
+            2 => [11, 32, 49],   // South America
+            3 => [76, 83, 110],  // Europe
+        ];
+
+
+        foreach ($regions as $region) {
+            $countryIds = $regionCountries[$region->id] ?? [];
+            $countries = Country::whereIn('id', $countryIds)->get();
+
+            foreach ($countries as $country) {
+                RegionCountry::create([
+                    'region_id' => $region->id,
+                    'country_id' => $country->id,
+                ]);
+            }
         }
     }
 }

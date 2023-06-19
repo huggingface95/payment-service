@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Queries;
 
+use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\Traits\GetMemberOrIndividualClickhouseTrait;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
@@ -12,13 +13,13 @@ use Illuminate\Support\Str;
 
 final class AuthenticationLogsQuery
 {
-
     use GetMemberOrIndividualClickhouseTrait;
+
     /**
      * Get data with pagination and filteration
      *
-     * @param null $_
-     * @param array<string, mixed> $args
+     * @param  null  $_
+     * @param  array<string, mixed>  $args
      */
     public function get($_, array $args)
     {
@@ -47,6 +48,9 @@ final class AuthenticationLogsQuery
         ];
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function getMember($_, array $args): array
     {
         $query = DB::connection('clickhouse')
@@ -56,6 +60,9 @@ final class AuthenticationLogsQuery
 
         if (isset($args['member_id'])) {
             $member = Members::find($args['member_id']);
+            if (! $member) {
+                throw new GraphqlException('Not found Member', 'not found', 404);
+            }
             $query->where('email', $member->email);
         }
 
@@ -80,6 +87,9 @@ final class AuthenticationLogsQuery
         ];
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function getIndividual($_, array $args): array
     {
         $query = DB::connection('clickhouse')
@@ -89,7 +99,10 @@ final class AuthenticationLogsQuery
 
         if (isset($args['individual_id'])) {
             /** @var ApplicantIndividual $individual */
-            $individual = ApplicantIndividual::query()->findOrFail($args['individual_id']);
+            $individual = ApplicantIndividual::query()->find($args['individual_id']);
+            if (! $individual) {
+                throw new GraphqlException('Not found ApplicantIndividual', 'not found', 404);
+            }
             $query->where('email', $individual->email);
         }
 
@@ -114,6 +127,9 @@ final class AuthenticationLogsQuery
         ];
     }
 
+    /**
+     * @throws GraphqlException
+     */
     public function getCompany($_, array $args): array
     {
         $query = DB::connection('clickhouse')
@@ -123,13 +139,19 @@ final class AuthenticationLogsQuery
 
         if (isset($args['applicant_company_id'])) {
             /** @var ApplicantCompany $applicantCompany */
-            $applicantCompany = ApplicantCompany::query()->with('applicantIndividuals')->findOrFail($args['applicant_company_id']);
+            $applicantCompany = ApplicantCompany::query()->with('applicantIndividuals')->find($args['applicant_company_id']);
+            if (! $applicantCompany) {
+                throw new GraphqlException('Not found ApplicantCompany', 'not found', 404);
+            }
             $query->whereIn('email', $applicantCompany->applicantIndividuals->pluck('email')->toArray());
         }
 
         if (isset($args['applicant_individual_id'])) {
             /** @var ApplicantIndividual $individual */
-            $individual = ApplicantIndividual::query()->findOrFail($args['applicant_individual_id']);
+            $individual = ApplicantIndividual::query()->find($args['applicant_individual_id']);
+            if (! $individual) {
+                throw new GraphqlException('Not found ApplicantIndividual', 'not found', 404);
+            }
             $query->where('email', $individual->email);
         }
 
@@ -159,7 +181,6 @@ final class AuthenticationLogsQuery
         ];
     }
 
-
     protected function filterByQueryAndSort(object $query, array $args): void
     {
         if (isset($args['query']) && count($args['query']) > 0) {
@@ -167,15 +188,14 @@ final class AuthenticationLogsQuery
 
             if (isset($fields['expired_at'])) {
                 $value = $fields['expired_at'];
-                $query->whereBetween('expired_at', [substr($value['from'], 0, 10) . ' 00:00:00', substr($value['to'], 0, 10) . ' 23:59:59']);
+                $query->whereBetween('expired_at', [substr($value['from'], 0, 10).' 00:00:00', substr($value['to'], 0, 10).' 23:59:59']);
 
                 unset($fields['expired_at']);
             }
 
-
             if (isset($fields['created_at'])) {
                 $value = $fields['created_at'];
-                $query->whereBetween('created_at', [substr($value['from'], 0, 10) . ' 00:00:00', substr($value['to'], 0, 10) . ' 23:59:59']);
+                $query->whereBetween('created_at', [substr($value['from'], 0, 10).' 00:00:00', substr($value['to'], 0, 10).' 23:59:59']);
 
                 unset($fields['created_at']);
             }
@@ -198,6 +218,5 @@ final class AuthenticationLogsQuery
         } else {
             $query->orderBy('id', 'DESC');
         }
-
     }
 }

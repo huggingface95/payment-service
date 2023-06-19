@@ -3,7 +3,6 @@
 namespace Feature\GraphQL\Queries;
 
 use App\Models\BankCorrespondent;
-use App\Models\PaymentBank;
 use Tests\TestCase;
 
 class BankCorrespondentsQueryTest extends TestCase
@@ -55,7 +54,7 @@ class BankCorrespondentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -109,7 +108,7 @@ class BankCorrespondentsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
@@ -159,14 +158,20 @@ class BankCorrespondentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
 
     public function testQueryBankCorrespondentsWithFilterByCurrencyId(): void
     {
-        $bankCorrespondent = BankCorrespondent::orderBy('id', 'ASC')
+        $bankCorrespondent = BankCorrespondent::whereHas('currencies', function ($query) {
+            $query->where('currency_id', 1);
+        })
+            ->with(['currencies' => function ($query) {
+                $query->where('currency_id', 1);
+            }])
+            ->orderBy('id', 'ASC')
             ->first();
 
         $data = [
@@ -203,7 +208,7 @@ class BankCorrespondentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -247,7 +252,7 @@ class BankCorrespondentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -291,7 +296,7 @@ class BankCorrespondentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }
@@ -335,7 +340,7 @@ class BankCorrespondentsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains($data);
     }

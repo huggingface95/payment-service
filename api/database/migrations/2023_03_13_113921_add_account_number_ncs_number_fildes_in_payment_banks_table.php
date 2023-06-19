@@ -29,7 +29,7 @@ class AddAccountNumberNcsNumberFildesInPaymentBanksTable extends Migration
         Schema::table('payment_banks', function (Blueprint $table) {
             $table->dropColumn([
                 'account_number',
-                'ncs_number'
+                'ncs_number',
             ]);
         });
     }

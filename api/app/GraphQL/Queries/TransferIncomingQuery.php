@@ -51,7 +51,7 @@ class TransferIncomingQuery
     public function downloadDetails($_, array $args): array
     {
         $transfer = $this->transferRepository->findById($args['id']);
-        if (!$transfer) {
+        if (! $transfer) {
             throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
         }
 

@@ -39,10 +39,7 @@ class PriceListFeeService extends AbstractService
                             } elseif ($feeValue->mode == 'base') {
                                 $fees[$currency]['fee'][$r][] = [
                                     'mode' => FeeModeEnum::BASE->toString(),
-                                    'fee' => [
-                                        'standart' => $feeValue->value->standart,
-                                        'express' => $feeValue->value->express,
-                                    ],
+                                    'fee' => $feeValue->value,
                                 ];
                             }
                         }
@@ -153,11 +150,12 @@ class PriceListFeeService extends AbstractService
             $currenciesDestination = $feeItems->feeDestinationCurrency?->pluck('currency_id')->toArray() ?? [];
             $feeItems = $feeItems->toArray();
 
-            if (array_search(FeeModeEnum::RANGE->toString(), array_column($feeItems['fee'], 'mode')) !== false) {
+            if (array_search(FeeModeEnum::RANGE->toString(), $arr = array_column($feeItems['fee'], 'mode')) !== false) {
+                $index = array_search(FeeModeEnum::RANGE->toString(), $arr);
                 $feeRanges[$key]['feeState'] = 'Range';
                 $feeRanges[$key]['range'] = [
-                    'from' => $feeItems['fee'][0]['amount_from'],
-                    'to' => $feeItems['fee'][0]['amount_to'],
+                    'from' => $feeItems['fee'][$index]['amount_from'],
+                    'to' => $feeItems['fee'][$index]['amount_to'],
                 ];
                 $feeRanges[$key]['fees']['currencies'][] = $feeItems['currency_id'];
                 if (count($currenciesDestination)) {

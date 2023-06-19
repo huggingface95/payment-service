@@ -1,4 +1,5 @@
 type Fee {
+    id: ID!
     "Дата"
     created_at: DateTimeUtc!
     fee: Decimal!
@@ -17,6 +18,10 @@ type Fee {
     account: Account @belongsTo(relation: "account")
     "Статус"
     status: PaymentStatus @belongsTo(relation: "paymentStatus")
+    "Fee mode"
+    mode: FeeMode @belongsTo(relation: "mode")
+    "Файлы"
+    files: [Files] @belongsToMany(realtion: "files")
 }
 
 extend type Query @guard {
@@ -24,4 +29,24 @@ extend type Query @guard {
     Получить деталии фи
     """
     feeDetails(id: ID! @eq): Fee!    @find
+}
+
+extend type Mutation @guard {
+    """
+    Привязать файлы
+    """
+    attachFileToFee(
+        fee_id: ID!
+        file_id: [ID!]!
+    ): Fee
+    @field(resolver: "FeeMutator@attachFile")
+
+    """
+    Отвязать файлы
+    """
+    detachFileFromFee(
+        fee_id: ID!
+        file_id: [ID!]!
+    ): Fee
+    @field(resolver: "FeeMutator@detachFile")
 }

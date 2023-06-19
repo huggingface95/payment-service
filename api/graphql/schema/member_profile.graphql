@@ -50,6 +50,8 @@ type MemberProfile {
     ip_addresses: [ClientIpAddress] @hasMany(relation: "ipAddress")
     "is_super_admin"
     is_super_admin: Boolean
+    "Фото"
+    photo: Files @belongsTo(relation: "photo")
 }
 
 extend type Query @guard(with: "api") {
@@ -75,6 +77,8 @@ extend type Mutation @guard(with: "api") {
         language_id: ID
         "Email"
         email: EMAIL @rules(apply: ["email", "unique:members"])
+        "ID фото"
+        photo_id: ID
     ): MemberProfile
         @field(resolver: "MemberProfileMutator@update")
 
@@ -86,6 +90,16 @@ extend type Mutation @guard(with: "api") {
         email: String! @rules(apply: ["email"])
     ): StatusType
         @field(resolver: "MemberProfileMutator@sendConfirmChangeEmail")
+
+    """
+    Изменить пароль member
+    """
+    changeMemberPassword (
+        password: String! @rules(apply: ["confirmed","min:8", "regex:/[a-z]/","regex:/[A-Z]/","regex:/[0-9]/"])
+        password_confirmation: String!
+        old_password: String!
+    ): MemberProfile
+    @field(resolver: "MemberProfileMutator@changeMemberPassword")
 }
 
 

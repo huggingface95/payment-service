@@ -6,6 +6,9 @@ use App\Models\TransferOutgoing;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+/**
+ * @group payments
+ */
 class TransferOutgoingsQueryTest extends TestCase
 {
     public function testQueryTransferOutgoingsNoAuth(): void
@@ -254,74 +257,74 @@ class TransferOutgoingsQueryTest extends TestCase
                 ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoing' => [
-                    'id' => (string)$transferOutgoing->id,
-                    'amount' => (string)$transferOutgoing->amount,
-                    'amount_debt' => (string)$transferOutgoing->amount_debt,
-                    'fee_amount' => (string)$transferOutgoing->fee_amount,
+                    'id' => (string) $transferOutgoing->id,
+                    'amount' => (string) $transferOutgoing->amount,
+                    'amount_debt' => (string) $transferOutgoing->amount_debt,
+                    'fee_amount' => (string) $transferOutgoing->fee_amount,
                     'fee' => [
-                        'fee' => (string)$fee->fee,
+                        'fee' => (string) $fee->fee,
                     ],
                     'fees' => [[
-                        'fee' => (string)$fees->fee,
+                        'fee' => (string) $fees->fee,
                     ]],
                     'files' => [[
-                        'id' => (string)$files->id,
-                        'file_name' => (string)$files->file_name,
-                        'mime_type' => (string)$files->mime_type,
+                        'id' => (string) $files->id,
+                        'file_name' => (string) $files->file_name,
+                        'mime_type' => (string) $files->mime_type,
                     ]],
                     'currency' => [
-                        'id' => (string)$currency->id,
-                        'name' => (string)$currency->name,
+                        'id' => (string) $currency->id,
+                        'name' => (string) $currency->name,
                     ],
                     'status' => [
-                        'id' => (string)$status->id,
-                        'name' => (string)$status->name,
+                        'id' => (string) $status->id,
+                        'name' => (string) $status->name,
                     ],
                     'payment_urgency' => [
-                        'id' => (string)$paymentUrgency->id,
-                        'name' => (string)$paymentUrgency->name,
+                        'id' => (string) $paymentUrgency->id,
+                        'name' => (string) $paymentUrgency->name,
                     ],
                     'payment_operation_type' => [
-                        'id' => (string)$paymentOperationType->id,
-                        'name' => (string)$paymentOperationType->name,
+                        'id' => (string) $paymentOperationType->id,
+                        'name' => (string) $paymentOperationType->name,
                     ],
                     'payment_provider' => [
-                        'id' => (string)$paymentProvider->id,
-                        'name' => (string)$paymentProvider->name,
-                        'description' => (string)$paymentProvider->description,
+                        'id' => (string) $paymentProvider->id,
+                        'name' => (string) $paymentProvider->name,
+                        'description' => (string) $paymentProvider->description,
                     ],
                     'payment_provider_history' => [
-                        'id' => (string)$paymentProviderHistory->id,
-                        'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                        'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                        'id' => (string) $paymentProviderHistory->id,
+                        'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                        'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                     ],
                     'payment_system' => [
-                        'id' => (string)$paymentSystem->id,
-                        'name' => (string)$paymentSystem->name,
+                        'id' => (string) $paymentSystem->id,
+                        'name' => (string) $paymentSystem->name,
                     ],
                     'payment_bank' => [
-                        'id' => (string)$paymentBank->id,
-                        'name' => (string)$paymentBank->name,
-                        'address' => (string)$paymentBank->address,
+                        'id' => (string) $paymentBank->id,
+                        'name' => (string) $paymentBank->name,
+                        'address' => (string) $paymentBank->address,
                     ],
                     'payment_number' => $transferOutgoing->payment_number,
                     'transfer_type' => [
-                        'id' => (string)$transferType->id,
-                        'name' => (string)$transferType->name,
+                        'id' => (string) $transferType->id,
+                        'name' => (string) $transferType->name,
                     ],
                     'account' => [
-                        'id' => (string)$account->id,
-                        'account_type' => (string)$account->account_type,
+                        'id' => (string) $account->id,
+                        'account_type' => (string) $account->account_type,
                     ],
                     'company' => [
-                        'id' => (string)$company->id,
-                        'name' => (string)$company->name,
-                        'email' => (string)$company->email,
+                        'id' => (string) $company->id,
+                        'name' => (string) $company->name,
+                        'email' => (string) $company->email,
                     ],
                     'system_message' => $transferOutgoing->system_message,
                     'reason' => $transferOutgoing->reason,
@@ -332,27 +335,27 @@ class TransferOutgoingsQueryTest extends TestCase
                     'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                     'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                     'recipient_bank_country' => [
-                        'id' => (string)$recipientBankCountry->id,
-                        'name' => (string)$recipientBankCountry->name,
+                        'id' => (string) $recipientBankCountry->id,
+                        'name' => (string) $recipientBankCountry->name,
                     ],
                     'recipient_name' => $transferOutgoing->recipient_name,
                     'recipient_country' => [
-                        'id' => (string)$recipientCountry->id,
-                        'name' => (string)$recipientCountry->name,
+                        'id' => (string) $recipientCountry->id,
+                        'name' => (string) $recipientCountry->name,
                     ],
                     'recipient_city' => $transferOutgoing->recipient_city,
                     'recipient_address' => $transferOutgoing->recipient_address,
                     'recipient_state' => $transferOutgoing->recipient_state,
                     'recipient_zip' => $transferOutgoing->recipient_zip,
                     'respondent_fee' => [
-                        'id' => (string)$respondentFee->id,
-                        'name' => (string)$respondentFee->name,
+                        'id' => (string) $respondentFee->id,
+                        'name' => (string) $respondentFee->name,
                     ],
-                    'transfer_swift' => [
-                        'swift' => (string)$transferSwift->swift,
-                        'bank_name' => (string)$transferSwift->bank_name,
-                        'bank_address' => (string)$transferSwift->bank_address,
-                    ],
+                    'transfer_swift' => [[
+                        'swift' => (string) $transferSwift->swift,
+                        'bank_name' => (string) $transferSwift->bank_name,
+                        'bank_address' => (string) $transferSwift->bank_address,
+                    ]],
                 ],
             ],
         ]);
@@ -487,79 +490,79 @@ class TransferOutgoingsQueryTest extends TestCase
                           }
                       }
                    }
-                }'
+                }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoings' => [
                     'data' => [
                         [
-                            'id' => (string)$transferOutgoing->id,
-                            'amount' => (string)$transferOutgoing->amount,
-                            'amount_debt' => (string)$transferOutgoing->amount_debt,
-                            'fee_amount' => (string)$transferOutgoing->fee_amount,
+                            'id' => (string) $transferOutgoing->id,
+                            'amount' => (string) $transferOutgoing->amount,
+                            'amount_debt' => (string) $transferOutgoing->amount_debt,
+                            'fee_amount' => (string) $transferOutgoing->fee_amount,
                             'fee' => [
-                                'fee' => (string)$fee->fee,
+                                'fee' => (string) $fee->fee,
                             ],
                             'fees' => [[
-                                'fee' => (string)$fees->fee,
+                                'fee' => (string) $fees->fee,
                             ]],
                             'files' => [[
-                                'id' => (string)$files->id,
-                                'file_name' => (string)$files->file_name,
-                                'mime_type' => (string)$files->mime_type,
+                                'id' => (string) $files->id,
+                                'file_name' => (string) $files->file_name,
+                                'mime_type' => (string) $files->mime_type,
                             ]],
                             'currency' => [
-                                'id' => (string)$currency->id,
-                                'name' => (string)$currency->name,
+                                'id' => (string) $currency->id,
+                                'name' => (string) $currency->name,
                             ],
                             'status' => [
-                                'id' => (string)$status->id,
-                                'name' => (string)$status->name,
+                                'id' => (string) $status->id,
+                                'name' => (string) $status->name,
                             ],
                             'payment_urgency' => [
-                                'id' => (string)$paymentUrgency->id,
-                                'name' => (string)$paymentUrgency->name,
+                                'id' => (string) $paymentUrgency->id,
+                                'name' => (string) $paymentUrgency->name,
                             ],
                             'payment_operation_type' => [
-                                'id' => (string)$paymentOperationType->id,
-                                'name' => (string)$paymentOperationType->name,
+                                'id' => (string) $paymentOperationType->id,
+                                'name' => (string) $paymentOperationType->name,
                             ],
                             'payment_provider' => [
-                                'id' => (string)$paymentProvider->id,
-                                'name' => (string)$paymentProvider->name,
-                                'description' => (string)$paymentProvider->description,
+                                'id' => (string) $paymentProvider->id,
+                                'name' => (string) $paymentProvider->name,
+                                'description' => (string) $paymentProvider->description,
                             ],
                             'payment_provider_history' => [
-                                'id' => (string)$paymentProviderHistory->id,
-                                'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                                'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                                'id' => (string) $paymentProviderHistory->id,
+                                'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                                'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                             ],
                             'payment_system' => [
-                                'id' => (string)$paymentSystem->id,
-                                'name' => (string)$paymentSystem->name,
+                                'id' => (string) $paymentSystem->id,
+                                'name' => (string) $paymentSystem->name,
                             ],
                             'payment_bank' => [
-                                'id' => (string)$paymentBank->id,
-                                'name' => (string)$paymentBank->name,
-                                'address' => (string)$paymentBank->address,
+                                'id' => (string) $paymentBank->id,
+                                'name' => (string) $paymentBank->name,
+                                'address' => (string) $paymentBank->address,
                             ],
                             'payment_number' => $transferOutgoing->payment_number,
                             'transfer_type' => [
-                                'id' => (string)$transferType->id,
-                                'name' => (string)$transferType->name,
+                                'id' => (string) $transferType->id,
+                                'name' => (string) $transferType->name,
                             ],
                             'account' => [
-                                'id' => (string)$account->id,
-                                'account_type' => (string)$account->account_type,
+                                'id' => (string) $account->id,
+                                'account_type' => (string) $account->account_type,
                             ],
                             'company' => [
-                                'id' => (string)$company->id,
-                                'name' => (string)$company->name,
-                                'email' => (string)$company->email,
+                                'id' => (string) $company->id,
+                                'name' => (string) $company->name,
+                                'email' => (string) $company->email,
                             ],
                             'system_message' => $transferOutgoing->system_message,
                             'reason' => $transferOutgoing->reason,
@@ -570,27 +573,27 @@ class TransferOutgoingsQueryTest extends TestCase
                             'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                             'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                             'recipient_bank_country' => [
-                                'id' => (string)$recipientBankCountry->id,
-                                'name' => (string)$recipientBankCountry->name,
+                                'id' => (string) $recipientBankCountry->id,
+                                'name' => (string) $recipientBankCountry->name,
                             ],
                             'recipient_name' => $transferOutgoing->recipient_name,
                             'recipient_country' => [
-                                'id' => (string)$recipientCountry->id,
-                                'name' => (string)$recipientCountry->name,
+                                'id' => (string) $recipientCountry->id,
+                                'name' => (string) $recipientCountry->name,
                             ],
                             'recipient_city' => $transferOutgoing->recipient_city,
                             'recipient_address' => $transferOutgoing->recipient_address,
                             'recipient_state' => $transferOutgoing->recipient_state,
                             'recipient_zip' => $transferOutgoing->recipient_zip,
                             'respondent_fee' => [
-                                'id' => (string)$respondentFee->id,
-                                'name' => (string)$respondentFee->name,
+                                'id' => (string) $respondentFee->id,
+                                'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
-                                'swift' => (string)$transferSwift->swift,
-                                'bank_name' => (string)$transferSwift->bank_name,
-                                'bank_address' => (string)$transferSwift->bank_address,
-                            ],
+                            'transfer_swift' => [[
+                                'swift' => (string) $transferSwift->swift,
+                                'bank_name' => (string) $transferSwift->bank_name,
+                                'bank_address' => (string) $transferSwift->bank_address,
+                            ]],
                         ],
                     ],
                 ],
@@ -735,79 +738,79 @@ class TransferOutgoingsQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $transferOutgoing->id,
-                ]
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoings' => [
                     'data' => [
                         [
-                            'id' => (string)$transferOutgoing->id,
-                            'amount' => (string)$transferOutgoing->amount,
-                            'amount_debt' => (string)$transferOutgoing->amount_debt,
-                            'fee_amount' => (string)$transferOutgoing->fee_amount,
+                            'id' => (string) $transferOutgoing->id,
+                            'amount' => (string) $transferOutgoing->amount,
+                            'amount_debt' => (string) $transferOutgoing->amount_debt,
+                            'fee_amount' => (string) $transferOutgoing->fee_amount,
                             'fee' => [
-                                'fee' => (string)$fee->fee,
+                                'fee' => (string) $fee->fee,
                             ],
                             'fees' => [[
-                                'fee' => (string)$fees->fee,
+                                'fee' => (string) $fees->fee,
                             ]],
                             'files' => [[
-                                'id' => (string)$files->id,
-                                'file_name' => (string)$files->file_name,
-                                'mime_type' => (string)$files->mime_type,
+                                'id' => (string) $files->id,
+                                'file_name' => (string) $files->file_name,
+                                'mime_type' => (string) $files->mime_type,
                             ]],
                             'currency' => [
-                                'id' => (string)$currency->id,
-                                'name' => (string)$currency->name,
+                                'id' => (string) $currency->id,
+                                'name' => (string) $currency->name,
                             ],
                             'status' => [
-                                'id' => (string)$status->id,
-                                'name' => (string)$status->name,
+                                'id' => (string) $status->id,
+                                'name' => (string) $status->name,
                             ],
                             'payment_urgency' => [
-                                'id' => (string)$paymentUrgency->id,
-                                'name' => (string)$paymentUrgency->name,
+                                'id' => (string) $paymentUrgency->id,
+                                'name' => (string) $paymentUrgency->name,
                             ],
                             'payment_operation_type' => [
-                                'id' => (string)$paymentOperationType->id,
-                                'name' => (string)$paymentOperationType->name,
+                                'id' => (string) $paymentOperationType->id,
+                                'name' => (string) $paymentOperationType->name,
                             ],
                             'payment_provider' => [
-                                'id' => (string)$paymentProvider->id,
-                                'name' => (string)$paymentProvider->name,
-                                'description' => (string)$paymentProvider->description,
+                                'id' => (string) $paymentProvider->id,
+                                'name' => (string) $paymentProvider->name,
+                                'description' => (string) $paymentProvider->description,
                             ],
                             'payment_provider_history' => [
-                                'id' => (string)$paymentProviderHistory->id,
-                                'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                                'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                                'id' => (string) $paymentProviderHistory->id,
+                                'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                                'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                             ],
                             'payment_system' => [
-                                'id' => (string)$paymentSystem->id,
-                                'name' => (string)$paymentSystem->name,
+                                'id' => (string) $paymentSystem->id,
+                                'name' => (string) $paymentSystem->name,
                             ],
                             'payment_bank' => [
-                                'id' => (string)$paymentBank->id,
-                                'name' => (string)$paymentBank->name,
-                                'address' => (string)$paymentBank->address,
+                                'id' => (string) $paymentBank->id,
+                                'name' => (string) $paymentBank->name,
+                                'address' => (string) $paymentBank->address,
                             ],
                             'payment_number' => $transferOutgoing->payment_number,
                             'transfer_type' => [
-                                'id' => (string)$transferType->id,
-                                'name' => (string)$transferType->name,
+                                'id' => (string) $transferType->id,
+                                'name' => (string) $transferType->name,
                             ],
                             'account' => [
-                                'id' => (string)$account->id,
-                                'account_type' => (string)$account->account_type,
+                                'id' => (string) $account->id,
+                                'account_type' => (string) $account->account_type,
                             ],
                             'company' => [
-                                'id' => (string)$company->id,
-                                'name' => (string)$company->name,
-                                'email' => (string)$company->email,
+                                'id' => (string) $company->id,
+                                'name' => (string) $company->name,
+                                'email' => (string) $company->email,
                             ],
                             'system_message' => $transferOutgoing->system_message,
                             'reason' => $transferOutgoing->reason,
@@ -818,27 +821,27 @@ class TransferOutgoingsQueryTest extends TestCase
                             'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                             'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                             'recipient_bank_country' => [
-                                'id' => (string)$recipientBankCountry->id,
-                                'name' => (string)$recipientBankCountry->name,
+                                'id' => (string) $recipientBankCountry->id,
+                                'name' => (string) $recipientBankCountry->name,
                             ],
                             'recipient_name' => $transferOutgoing->recipient_name,
                             'recipient_country' => [
-                                'id' => (string)$recipientCountry->id,
-                                'name' => (string)$recipientCountry->name,
+                                'id' => (string) $recipientCountry->id,
+                                'name' => (string) $recipientCountry->name,
                             ],
                             'recipient_city' => $transferOutgoing->recipient_city,
                             'recipient_address' => $transferOutgoing->recipient_address,
                             'recipient_state' => $transferOutgoing->recipient_state,
                             'recipient_zip' => $transferOutgoing->recipient_zip,
                             'respondent_fee' => [
-                                'id' => (string)$respondentFee->id,
-                                'name' => (string)$respondentFee->name,
+                                'id' => (string) $respondentFee->id,
+                                'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
-                                'swift' => (string)$transferSwift->swift,
-                                'bank_name' => (string)$transferSwift->bank_name,
-                                'bank_address' => (string)$transferSwift->bank_address,
-                            ],
+                            'transfer_swift' => [[
+                                'swift' => (string) $transferSwift->swift,
+                                'bank_name' => (string) $transferSwift->bank_name,
+                                'bank_address' => (string) $transferSwift->bank_address,
+                            ]],
                         ],
                     ],
                 ],
@@ -983,79 +986,79 @@ class TransferOutgoingsQueryTest extends TestCase
                 'variables' => [
                     'id' => $transferOutgoing->id,
                     'urgency_id' => $transferOutgoing->urgency_id,
-                ]
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoings' => [
                     'data' => [
                         [
-                            'id' => (string)$transferOutgoing->id,
-                            'amount' => (string)$transferOutgoing->amount,
-                            'amount_debt' => (string)$transferOutgoing->amount_debt,
-                            'fee_amount' => (string)$transferOutgoing->fee_amount,
+                            'id' => (string) $transferOutgoing->id,
+                            'amount' => (string) $transferOutgoing->amount,
+                            'amount_debt' => (string) $transferOutgoing->amount_debt,
+                            'fee_amount' => (string) $transferOutgoing->fee_amount,
                             'fee' => [
-                                'fee' => (string)$fee->fee,
+                                'fee' => (string) $fee->fee,
                             ],
                             'fees' => [[
-                                'fee' => (string)$fees->fee,
+                                'fee' => (string) $fees->fee,
                             ]],
                             'files' => [[
-                                'id' => (string)$files->id,
-                                'file_name' => (string)$files->file_name,
-                                'mime_type' => (string)$files->mime_type,
+                                'id' => (string) $files->id,
+                                'file_name' => (string) $files->file_name,
+                                'mime_type' => (string) $files->mime_type,
                             ]],
                             'currency' => [
-                                'id' => (string)$currency->id,
-                                'name' => (string)$currency->name,
+                                'id' => (string) $currency->id,
+                                'name' => (string) $currency->name,
                             ],
                             'status' => [
-                                'id' => (string)$status->id,
-                                'name' => (string)$status->name,
+                                'id' => (string) $status->id,
+                                'name' => (string) $status->name,
                             ],
                             'payment_urgency' => [
-                                'id' => (string)$paymentUrgency->id,
-                                'name' => (string)$paymentUrgency->name,
+                                'id' => (string) $paymentUrgency->id,
+                                'name' => (string) $paymentUrgency->name,
                             ],
                             'payment_operation_type' => [
-                                'id' => (string)$paymentOperationType->id,
-                                'name' => (string)$paymentOperationType->name,
+                                'id' => (string) $paymentOperationType->id,
+                                'name' => (string) $paymentOperationType->name,
                             ],
                             'payment_provider' => [
-                                'id' => (string)$paymentProvider->id,
-                                'name' => (string)$paymentProvider->name,
-                                'description' => (string)$paymentProvider->description,
+                                'id' => (string) $paymentProvider->id,
+                                'name' => (string) $paymentProvider->name,
+                                'description' => (string) $paymentProvider->description,
                             ],
                             'payment_provider_history' => [
-                                'id' => (string)$paymentProviderHistory->id,
-                                'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                                'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                                'id' => (string) $paymentProviderHistory->id,
+                                'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                                'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                             ],
                             'payment_system' => [
-                                'id' => (string)$paymentSystem->id,
-                                'name' => (string)$paymentSystem->name,
+                                'id' => (string) $paymentSystem->id,
+                                'name' => (string) $paymentSystem->name,
                             ],
                             'payment_bank' => [
-                                'id' => (string)$paymentBank->id,
-                                'name' => (string)$paymentBank->name,
-                                'address' => (string)$paymentBank->address,
+                                'id' => (string) $paymentBank->id,
+                                'name' => (string) $paymentBank->name,
+                                'address' => (string) $paymentBank->address,
                             ],
                             'payment_number' => $transferOutgoing->payment_number,
                             'transfer_type' => [
-                                'id' => (string)$transferType->id,
-                                'name' => (string)$transferType->name,
+                                'id' => (string) $transferType->id,
+                                'name' => (string) $transferType->name,
                             ],
                             'account' => [
-                                'id' => (string)$account->id,
-                                'account_type' => (string)$account->account_type,
+                                'id' => (string) $account->id,
+                                'account_type' => (string) $account->account_type,
                             ],
                             'company' => [
-                                'id' => (string)$company->id,
-                                'name' => (string)$company->name,
-                                'email' => (string)$company->email,
+                                'id' => (string) $company->id,
+                                'name' => (string) $company->name,
+                                'email' => (string) $company->email,
                             ],
                             'system_message' => $transferOutgoing->system_message,
                             'reason' => $transferOutgoing->reason,
@@ -1066,27 +1069,27 @@ class TransferOutgoingsQueryTest extends TestCase
                             'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                             'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                             'recipient_bank_country' => [
-                                'id' => (string)$recipientBankCountry->id,
-                                'name' => (string)$recipientBankCountry->name,
+                                'id' => (string) $recipientBankCountry->id,
+                                'name' => (string) $recipientBankCountry->name,
                             ],
                             'recipient_name' => $transferOutgoing->recipient_name,
                             'recipient_country' => [
-                                'id' => (string)$recipientCountry->id,
-                                'name' => (string)$recipientCountry->name,
+                                'id' => (string) $recipientCountry->id,
+                                'name' => (string) $recipientCountry->name,
                             ],
                             'recipient_city' => $transferOutgoing->recipient_city,
                             'recipient_address' => $transferOutgoing->recipient_address,
                             'recipient_state' => $transferOutgoing->recipient_state,
                             'recipient_zip' => $transferOutgoing->recipient_zip,
                             'respondent_fee' => [
-                                'id' => (string)$respondentFee->id,
-                                'name' => (string)$respondentFee->name,
+                                'id' => (string) $respondentFee->id,
+                                'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
-                                'swift' => (string)$transferSwift->swift,
-                                'bank_name' => (string)$transferSwift->bank_name,
-                                'bank_address' => (string)$transferSwift->bank_address,
-                            ],
+                            'transfer_swift' => [[
+                                'swift' => (string) $transferSwift->swift,
+                                'bank_name' => (string) $transferSwift->bank_name,
+                                'bank_address' => (string) $transferSwift->bank_address,
+                            ]],
                         ],
                     ],
                 ],
@@ -1231,79 +1234,79 @@ class TransferOutgoingsQueryTest extends TestCase
                 'variables' => [
                     'id' => $transferOutgoing->id,
                     'operation_type_id' => $transferOutgoing->operation_type_id,
-                ]
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoings' => [
                     'data' => [
                         [
-                            'id' => (string)$transferOutgoing->id,
-                            'amount' => (string)$transferOutgoing->amount,
-                            'amount_debt' => (string)$transferOutgoing->amount_debt,
-                            'fee_amount' => (string)$transferOutgoing->fee_amount,
+                            'id' => (string) $transferOutgoing->id,
+                            'amount' => (string) $transferOutgoing->amount,
+                            'amount_debt' => (string) $transferOutgoing->amount_debt,
+                            'fee_amount' => (string) $transferOutgoing->fee_amount,
                             'fee' => [
-                                'fee' => (string)$fee->fee,
+                                'fee' => (string) $fee->fee,
                             ],
                             'fees' => [[
-                                'fee' => (string)$fees->fee,
+                                'fee' => (string) $fees->fee,
                             ]],
                             'files' => [[
-                                'id' => (string)$files->id,
-                                'file_name' => (string)$files->file_name,
-                                'mime_type' => (string)$files->mime_type,
+                                'id' => (string) $files->id,
+                                'file_name' => (string) $files->file_name,
+                                'mime_type' => (string) $files->mime_type,
                             ]],
                             'currency' => [
-                                'id' => (string)$currency->id,
-                                'name' => (string)$currency->name,
+                                'id' => (string) $currency->id,
+                                'name' => (string) $currency->name,
                             ],
                             'status' => [
-                                'id' => (string)$status->id,
-                                'name' => (string)$status->name,
+                                'id' => (string) $status->id,
+                                'name' => (string) $status->name,
                             ],
                             'payment_urgency' => [
-                                'id' => (string)$paymentUrgency->id,
-                                'name' => (string)$paymentUrgency->name,
+                                'id' => (string) $paymentUrgency->id,
+                                'name' => (string) $paymentUrgency->name,
                             ],
                             'payment_operation_type' => [
-                                'id' => (string)$paymentOperationType->id,
-                                'name' => (string)$paymentOperationType->name,
+                                'id' => (string) $paymentOperationType->id,
+                                'name' => (string) $paymentOperationType->name,
                             ],
                             'payment_provider' => [
-                                'id' => (string)$paymentProvider->id,
-                                'name' => (string)$paymentProvider->name,
-                                'description' => (string)$paymentProvider->description,
+                                'id' => (string) $paymentProvider->id,
+                                'name' => (string) $paymentProvider->name,
+                                'description' => (string) $paymentProvider->description,
                             ],
                             'payment_provider_history' => [
-                                'id' => (string)$paymentProviderHistory->id,
-                                'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                                'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                                'id' => (string) $paymentProviderHistory->id,
+                                'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                                'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                             ],
                             'payment_system' => [
-                                'id' => (string)$paymentSystem->id,
-                                'name' => (string)$paymentSystem->name,
+                                'id' => (string) $paymentSystem->id,
+                                'name' => (string) $paymentSystem->name,
                             ],
                             'payment_bank' => [
-                                'id' => (string)$paymentBank->id,
-                                'name' => (string)$paymentBank->name,
-                                'address' => (string)$paymentBank->address,
+                                'id' => (string) $paymentBank->id,
+                                'name' => (string) $paymentBank->name,
+                                'address' => (string) $paymentBank->address,
                             ],
                             'payment_number' => $transferOutgoing->payment_number,
                             'transfer_type' => [
-                                'id' => (string)$transferType->id,
-                                'name' => (string)$transferType->name,
+                                'id' => (string) $transferType->id,
+                                'name' => (string) $transferType->name,
                             ],
                             'account' => [
-                                'id' => (string)$account->id,
-                                'account_type' => (string)$account->account_type,
+                                'id' => (string) $account->id,
+                                'account_type' => (string) $account->account_type,
                             ],
                             'company' => [
-                                'id' => (string)$company->id,
-                                'name' => (string)$company->name,
-                                'email' => (string)$company->email,
+                                'id' => (string) $company->id,
+                                'name' => (string) $company->name,
+                                'email' => (string) $company->email,
                             ],
                             'system_message' => $transferOutgoing->system_message,
                             'reason' => $transferOutgoing->reason,
@@ -1314,27 +1317,27 @@ class TransferOutgoingsQueryTest extends TestCase
                             'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                             'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                             'recipient_bank_country' => [
-                                'id' => (string)$recipientBankCountry->id,
-                                'name' => (string)$recipientBankCountry->name,
+                                'id' => (string) $recipientBankCountry->id,
+                                'name' => (string) $recipientBankCountry->name,
                             ],
                             'recipient_name' => $transferOutgoing->recipient_name,
                             'recipient_country' => [
-                                'id' => (string)$recipientCountry->id,
-                                'name' => (string)$recipientCountry->name,
+                                'id' => (string) $recipientCountry->id,
+                                'name' => (string) $recipientCountry->name,
                             ],
                             'recipient_city' => $transferOutgoing->recipient_city,
                             'recipient_address' => $transferOutgoing->recipient_address,
                             'recipient_state' => $transferOutgoing->recipient_state,
                             'recipient_zip' => $transferOutgoing->recipient_zip,
                             'respondent_fee' => [
-                                'id' => (string)$respondentFee->id,
-                                'name' => (string)$respondentFee->name,
+                                'id' => (string) $respondentFee->id,
+                                'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
-                                'swift' => (string)$transferSwift->swift,
-                                'bank_name' => (string)$transferSwift->bank_name,
-                                'bank_address' => (string)$transferSwift->bank_address,
-                            ],
+                            'transfer_swift' => [[
+                                'swift' => (string) $transferSwift->swift,
+                                'bank_name' => (string) $transferSwift->bank_name,
+                                'bank_address' => (string) $transferSwift->bank_address,
+                            ]],
                         ],
                     ],
                 ],
@@ -1479,79 +1482,79 @@ class TransferOutgoingsQueryTest extends TestCase
                 'variables' => [
                     'id' => $transferOutgoing->id,
                     'status_id' => $transferOutgoing->status_id,
-                ]
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoings' => [
                     'data' => [
                         [
-                            'id' => (string)$transferOutgoing->id,
-                            'amount' => (string)$transferOutgoing->amount,
-                            'amount_debt' => (string)$transferOutgoing->amount_debt,
-                            'fee_amount' => (string)$transferOutgoing->fee_amount,
+                            'id' => (string) $transferOutgoing->id,
+                            'amount' => (string) $transferOutgoing->amount,
+                            'amount_debt' => (string) $transferOutgoing->amount_debt,
+                            'fee_amount' => (string) $transferOutgoing->fee_amount,
                             'fee' => [
-                                'fee' => (string)$fee->fee,
+                                'fee' => (string) $fee->fee,
                             ],
                             'fees' => [[
-                                'fee' => (string)$fees->fee,
+                                'fee' => (string) $fees->fee,
                             ]],
                             'files' => [[
-                                'id' => (string)$files->id,
-                                'file_name' => (string)$files->file_name,
-                                'mime_type' => (string)$files->mime_type,
+                                'id' => (string) $files->id,
+                                'file_name' => (string) $files->file_name,
+                                'mime_type' => (string) $files->mime_type,
                             ]],
                             'currency' => [
-                                'id' => (string)$currency->id,
-                                'name' => (string)$currency->name,
+                                'id' => (string) $currency->id,
+                                'name' => (string) $currency->name,
                             ],
                             'status' => [
-                                'id' => (string)$status->id,
-                                'name' => (string)$status->name,
+                                'id' => (string) $status->id,
+                                'name' => (string) $status->name,
                             ],
                             'payment_urgency' => [
-                                'id' => (string)$paymentUrgency->id,
-                                'name' => (string)$paymentUrgency->name,
+                                'id' => (string) $paymentUrgency->id,
+                                'name' => (string) $paymentUrgency->name,
                             ],
                             'payment_operation_type' => [
-                                'id' => (string)$paymentOperationType->id,
-                                'name' => (string)$paymentOperationType->name,
+                                'id' => (string) $paymentOperationType->id,
+                                'name' => (string) $paymentOperationType->name,
                             ],
                             'payment_provider' => [
-                                'id' => (string)$paymentProvider->id,
-                                'name' => (string)$paymentProvider->name,
-                                'description' => (string)$paymentProvider->description,
+                                'id' => (string) $paymentProvider->id,
+                                'name' => (string) $paymentProvider->name,
+                                'description' => (string) $paymentProvider->description,
                             ],
                             'payment_provider_history' => [
-                                'id' => (string)$paymentProviderHistory->id,
-                                'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                                'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                                'id' => (string) $paymentProviderHistory->id,
+                                'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                                'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                             ],
                             'payment_system' => [
-                                'id' => (string)$paymentSystem->id,
-                                'name' => (string)$paymentSystem->name,
+                                'id' => (string) $paymentSystem->id,
+                                'name' => (string) $paymentSystem->name,
                             ],
                             'payment_bank' => [
-                                'id' => (string)$paymentBank->id,
-                                'name' => (string)$paymentBank->name,
-                                'address' => (string)$paymentBank->address,
+                                'id' => (string) $paymentBank->id,
+                                'name' => (string) $paymentBank->name,
+                                'address' => (string) $paymentBank->address,
                             ],
                             'payment_number' => $transferOutgoing->payment_number,
                             'transfer_type' => [
-                                'id' => (string)$transferType->id,
-                                'name' => (string)$transferType->name,
+                                'id' => (string) $transferType->id,
+                                'name' => (string) $transferType->name,
                             ],
                             'account' => [
-                                'id' => (string)$account->id,
-                                'account_type' => (string)$account->account_type,
+                                'id' => (string) $account->id,
+                                'account_type' => (string) $account->account_type,
                             ],
                             'company' => [
-                                'id' => (string)$company->id,
-                                'name' => (string)$company->name,
-                                'email' => (string)$company->email,
+                                'id' => (string) $company->id,
+                                'name' => (string) $company->name,
+                                'email' => (string) $company->email,
                             ],
                             'system_message' => $transferOutgoing->system_message,
                             'reason' => $transferOutgoing->reason,
@@ -1562,27 +1565,27 @@ class TransferOutgoingsQueryTest extends TestCase
                             'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                             'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                             'recipient_bank_country' => [
-                                'id' => (string)$recipientBankCountry->id,
-                                'name' => (string)$recipientBankCountry->name,
+                                'id' => (string) $recipientBankCountry->id,
+                                'name' => (string) $recipientBankCountry->name,
                             ],
                             'recipient_name' => $transferOutgoing->recipient_name,
                             'recipient_country' => [
-                                'id' => (string)$recipientCountry->id,
-                                'name' => (string)$recipientCountry->name,
+                                'id' => (string) $recipientCountry->id,
+                                'name' => (string) $recipientCountry->name,
                             ],
                             'recipient_city' => $transferOutgoing->recipient_city,
                             'recipient_address' => $transferOutgoing->recipient_address,
                             'recipient_state' => $transferOutgoing->recipient_state,
                             'recipient_zip' => $transferOutgoing->recipient_zip,
                             'respondent_fee' => [
-                                'id' => (string)$respondentFee->id,
-                                'name' => (string)$respondentFee->name,
+                                'id' => (string) $respondentFee->id,
+                                'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
-                                'swift' => (string)$transferSwift->swift,
-                                'bank_name' => (string)$transferSwift->bank_name,
-                                'bank_address' => (string)$transferSwift->bank_address,
-                            ],
+                            'transfer_swift' => [[
+                                'swift' => (string) $transferSwift->swift,
+                                'bank_name' => (string) $transferSwift->bank_name,
+                                'bank_address' => (string) $transferSwift->bank_address,
+                            ]],
                         ],
                     ],
                 ],
@@ -1726,80 +1729,80 @@ class TransferOutgoingsQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $transferOutgoing->id,
-                    'recipient_name' => (string)$transferOutgoing->recipient_name,
-                ]
+                    'recipient_name' => (string) $transferOutgoing->recipient_name,
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoings' => [
                     'data' => [
                         [
-                            'id' => (string)$transferOutgoing->id,
-                            'amount' => (string)$transferOutgoing->amount,
-                            'amount_debt' => (string)$transferOutgoing->amount_debt,
-                            'fee_amount' => (string)$transferOutgoing->fee_amount,
+                            'id' => (string) $transferOutgoing->id,
+                            'amount' => (string) $transferOutgoing->amount,
+                            'amount_debt' => (string) $transferOutgoing->amount_debt,
+                            'fee_amount' => (string) $transferOutgoing->fee_amount,
                             'fee' => [
-                                'fee' => (string)$fee->fee,
+                                'fee' => (string) $fee->fee,
                             ],
                             'fees' => [[
-                                'fee' => (string)$fees->fee,
+                                'fee' => (string) $fees->fee,
                             ]],
                             'files' => [[
-                                'id' => (string)$files->id,
-                                'file_name' => (string)$files->file_name,
-                                'mime_type' => (string)$files->mime_type,
+                                'id' => (string) $files->id,
+                                'file_name' => (string) $files->file_name,
+                                'mime_type' => (string) $files->mime_type,
                             ]],
                             'currency' => [
-                                'id' => (string)$currency->id,
-                                'name' => (string)$currency->name,
+                                'id' => (string) $currency->id,
+                                'name' => (string) $currency->name,
                             ],
                             'status' => [
-                                'id' => (string)$status->id,
-                                'name' => (string)$status->name,
+                                'id' => (string) $status->id,
+                                'name' => (string) $status->name,
                             ],
                             'payment_urgency' => [
-                                'id' => (string)$paymentUrgency->id,
-                                'name' => (string)$paymentUrgency->name,
+                                'id' => (string) $paymentUrgency->id,
+                                'name' => (string) $paymentUrgency->name,
                             ],
                             'payment_operation_type' => [
-                                'id' => (string)$paymentOperationType->id,
-                                'name' => (string)$paymentOperationType->name,
+                                'id' => (string) $paymentOperationType->id,
+                                'name' => (string) $paymentOperationType->name,
                             ],
                             'payment_provider' => [
-                                'id' => (string)$paymentProvider->id,
-                                'name' => (string)$paymentProvider->name,
-                                'description' => (string)$paymentProvider->description,
+                                'id' => (string) $paymentProvider->id,
+                                'name' => (string) $paymentProvider->name,
+                                'description' => (string) $paymentProvider->description,
                             ],
                             'payment_provider_history' => [
-                                'id' => (string)$paymentProviderHistory->id,
-                                'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                                'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                                'id' => (string) $paymentProviderHistory->id,
+                                'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                                'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                             ],
                             'payment_system' => [
-                                'id' => (string)$paymentSystem->id,
-                                'name' => (string)$paymentSystem->name,
+                                'id' => (string) $paymentSystem->id,
+                                'name' => (string) $paymentSystem->name,
                             ],
                             'payment_bank' => [
-                                'id' => (string)$paymentBank->id,
-                                'name' => (string)$paymentBank->name,
-                                'address' => (string)$paymentBank->address,
+                                'id' => (string) $paymentBank->id,
+                                'name' => (string) $paymentBank->name,
+                                'address' => (string) $paymentBank->address,
                             ],
                             'payment_number' => $transferOutgoing->payment_number,
                             'transfer_type' => [
-                                'id' => (string)$transferType->id,
-                                'name' => (string)$transferType->name,
+                                'id' => (string) $transferType->id,
+                                'name' => (string) $transferType->name,
                             ],
                             'account' => [
-                                'id' => (string)$account->id,
-                                'account_type' => (string)$account->account_type,
+                                'id' => (string) $account->id,
+                                'account_type' => (string) $account->account_type,
                             ],
                             'company' => [
-                                'id' => (string)$company->id,
-                                'name' => (string)$company->name,
-                                'email' => (string)$company->email,
+                                'id' => (string) $company->id,
+                                'name' => (string) $company->name,
+                                'email' => (string) $company->email,
                             ],
                             'system_message' => $transferOutgoing->system_message,
                             'reason' => $transferOutgoing->reason,
@@ -1810,27 +1813,27 @@ class TransferOutgoingsQueryTest extends TestCase
                             'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                             'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                             'recipient_bank_country' => [
-                                'id' => (string)$recipientBankCountry->id,
-                                'name' => (string)$recipientBankCountry->name,
+                                'id' => (string) $recipientBankCountry->id,
+                                'name' => (string) $recipientBankCountry->name,
                             ],
                             'recipient_name' => $transferOutgoing->recipient_name,
                             'recipient_country' => [
-                                'id' => (string)$recipientCountry->id,
-                                'name' => (string)$recipientCountry->name,
+                                'id' => (string) $recipientCountry->id,
+                                'name' => (string) $recipientCountry->name,
                             ],
                             'recipient_city' => $transferOutgoing->recipient_city,
                             'recipient_address' => $transferOutgoing->recipient_address,
                             'recipient_state' => $transferOutgoing->recipient_state,
                             'recipient_zip' => $transferOutgoing->recipient_zip,
                             'respondent_fee' => [
-                                'id' => (string)$respondentFee->id,
-                                'name' => (string)$respondentFee->name,
+                                'id' => (string) $respondentFee->id,
+                                'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
-                                'swift' => (string)$transferSwift->swift,
-                                'bank_name' => (string)$transferSwift->bank_name,
-                                'bank_address' => (string)$transferSwift->bank_address,
-                            ],
+                            'transfer_swift' => [[
+                                'swift' => (string) $transferSwift->swift,
+                                'bank_name' => (string) $transferSwift->bank_name,
+                                'bank_address' => (string) $transferSwift->bank_address,
+                            ]],
                         ],
                     ],
                 ],
@@ -1974,80 +1977,80 @@ class TransferOutgoingsQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $transferOutgoing->id,
-                    'user_type' => (string)$transferOutgoing->user_type,
-                ]
+                    'user_type' => (string) $transferOutgoing->user_type,
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoings' => [
                     'data' => [
                         [
-                            'id' => (string)$transferOutgoing->id,
-                            'amount' => (string)$transferOutgoing->amount,
-                            'amount_debt' => (string)$transferOutgoing->amount_debt,
-                            'fee_amount' => (string)$transferOutgoing->fee_amount,
+                            'id' => (string) $transferOutgoing->id,
+                            'amount' => (string) $transferOutgoing->amount,
+                            'amount_debt' => (string) $transferOutgoing->amount_debt,
+                            'fee_amount' => (string) $transferOutgoing->fee_amount,
                             'fee' => [
-                                'fee' => (string)$fee->fee,
+                                'fee' => (string) $fee->fee,
                             ],
                             'fees' => [[
-                                'fee' => (string)$fees->fee,
+                                'fee' => (string) $fees->fee,
                             ]],
                             'files' => [[
-                                'id' => (string)$files->id,
-                                'file_name' => (string)$files->file_name,
-                                'mime_type' => (string)$files->mime_type,
+                                'id' => (string) $files->id,
+                                'file_name' => (string) $files->file_name,
+                                'mime_type' => (string) $files->mime_type,
                             ]],
                             'currency' => [
-                                'id' => (string)$currency->id,
-                                'name' => (string)$currency->name,
+                                'id' => (string) $currency->id,
+                                'name' => (string) $currency->name,
                             ],
                             'status' => [
-                                'id' => (string)$status->id,
-                                'name' => (string)$status->name,
+                                'id' => (string) $status->id,
+                                'name' => (string) $status->name,
                             ],
                             'payment_urgency' => [
-                                'id' => (string)$paymentUrgency->id,
-                                'name' => (string)$paymentUrgency->name,
+                                'id' => (string) $paymentUrgency->id,
+                                'name' => (string) $paymentUrgency->name,
                             ],
                             'payment_operation_type' => [
-                                'id' => (string)$paymentOperationType->id,
-                                'name' => (string)$paymentOperationType->name,
+                                'id' => (string) $paymentOperationType->id,
+                                'name' => (string) $paymentOperationType->name,
                             ],
                             'payment_provider' => [
-                                'id' => (string)$paymentProvider->id,
-                                'name' => (string)$paymentProvider->name,
-                                'description' => (string)$paymentProvider->description,
+                                'id' => (string) $paymentProvider->id,
+                                'name' => (string) $paymentProvider->name,
+                                'description' => (string) $paymentProvider->description,
                             ],
                             'payment_provider_history' => [
-                                'id' => (string)$paymentProviderHistory->id,
-                                'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                                'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                                'id' => (string) $paymentProviderHistory->id,
+                                'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                                'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                             ],
                             'payment_system' => [
-                                'id' => (string)$paymentSystem->id,
-                                'name' => (string)$paymentSystem->name,
+                                'id' => (string) $paymentSystem->id,
+                                'name' => (string) $paymentSystem->name,
                             ],
                             'payment_bank' => [
-                                'id' => (string)$paymentBank->id,
-                                'name' => (string)$paymentBank->name,
-                                'address' => (string)$paymentBank->address,
+                                'id' => (string) $paymentBank->id,
+                                'name' => (string) $paymentBank->name,
+                                'address' => (string) $paymentBank->address,
                             ],
                             'payment_number' => $transferOutgoing->payment_number,
                             'transfer_type' => [
-                                'id' => (string)$transferType->id,
-                                'name' => (string)$transferType->name,
+                                'id' => (string) $transferType->id,
+                                'name' => (string) $transferType->name,
                             ],
                             'account' => [
-                                'id' => (string)$account->id,
-                                'account_type' => (string)$account->account_type,
+                                'id' => (string) $account->id,
+                                'account_type' => (string) $account->account_type,
                             ],
                             'company' => [
-                                'id' => (string)$company->id,
-                                'name' => (string)$company->name,
-                                'email' => (string)$company->email,
+                                'id' => (string) $company->id,
+                                'name' => (string) $company->name,
+                                'email' => (string) $company->email,
                             ],
                             'system_message' => $transferOutgoing->system_message,
                             'reason' => $transferOutgoing->reason,
@@ -2058,27 +2061,27 @@ class TransferOutgoingsQueryTest extends TestCase
                             'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                             'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                             'recipient_bank_country' => [
-                                'id' => (string)$recipientBankCountry->id,
-                                'name' => (string)$recipientBankCountry->name,
+                                'id' => (string) $recipientBankCountry->id,
+                                'name' => (string) $recipientBankCountry->name,
                             ],
                             'recipient_name' => $transferOutgoing->recipient_name,
                             'recipient_country' => [
-                                'id' => (string)$recipientCountry->id,
-                                'name' => (string)$recipientCountry->name,
+                                'id' => (string) $recipientCountry->id,
+                                'name' => (string) $recipientCountry->name,
                             ],
                             'recipient_city' => $transferOutgoing->recipient_city,
                             'recipient_address' => $transferOutgoing->recipient_address,
                             'recipient_state' => $transferOutgoing->recipient_state,
                             'recipient_zip' => $transferOutgoing->recipient_zip,
                             'respondent_fee' => [
-                                'id' => (string)$respondentFee->id,
-                                'name' => (string)$respondentFee->name,
+                                'id' => (string) $respondentFee->id,
+                                'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
-                                'swift' => (string)$transferSwift->swift,
-                                'bank_name' => (string)$transferSwift->bank_name,
-                                'bank_address' => (string)$transferSwift->bank_address,
-                            ],
+                            'transfer_swift' => [[
+                                'swift' => (string) $transferSwift->swift,
+                                'bank_name' => (string) $transferSwift->bank_name,
+                                'bank_address' => (string) $transferSwift->bank_address,
+                            ]],
                         ],
                     ],
                 ],
@@ -2222,80 +2225,80 @@ class TransferOutgoingsQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $transferOutgoing->id,
-                    'account_number' => (string)$account->account_number,
-                ]
+                    'account_number' => (string) $account->account_number,
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoings' => [
                     'data' => [
                         [
-                            'id' => (string)$transferOutgoing->id,
-                            'amount' => (string)$transferOutgoing->amount,
-                            'amount_debt' => (string)$transferOutgoing->amount_debt,
-                            'fee_amount' => (string)$transferOutgoing->fee_amount,
+                            'id' => (string) $transferOutgoing->id,
+                            'amount' => (string) $transferOutgoing->amount,
+                            'amount_debt' => (string) $transferOutgoing->amount_debt,
+                            'fee_amount' => (string) $transferOutgoing->fee_amount,
                             'fee' => [
-                                'fee' => (string)$fee->fee,
+                                'fee' => (string) $fee->fee,
                             ],
                             'fees' => [[
-                                'fee' => (string)$fees->fee,
+                                'fee' => (string) $fees->fee,
                             ]],
                             'files' => [[
-                                'id' => (string)$files->id,
-                                'file_name' => (string)$files->file_name,
-                                'mime_type' => (string)$files->mime_type,
+                                'id' => (string) $files->id,
+                                'file_name' => (string) $files->file_name,
+                                'mime_type' => (string) $files->mime_type,
                             ]],
                             'currency' => [
-                                'id' => (string)$currency->id,
-                                'name' => (string)$currency->name,
+                                'id' => (string) $currency->id,
+                                'name' => (string) $currency->name,
                             ],
                             'status' => [
-                                'id' => (string)$status->id,
-                                'name' => (string)$status->name,
+                                'id' => (string) $status->id,
+                                'name' => (string) $status->name,
                             ],
                             'payment_urgency' => [
-                                'id' => (string)$paymentUrgency->id,
-                                'name' => (string)$paymentUrgency->name,
+                                'id' => (string) $paymentUrgency->id,
+                                'name' => (string) $paymentUrgency->name,
                             ],
                             'payment_operation_type' => [
-                                'id' => (string)$paymentOperationType->id,
-                                'name' => (string)$paymentOperationType->name,
+                                'id' => (string) $paymentOperationType->id,
+                                'name' => (string) $paymentOperationType->name,
                             ],
                             'payment_provider' => [
-                                'id' => (string)$paymentProvider->id,
-                                'name' => (string)$paymentProvider->name,
-                                'description' => (string)$paymentProvider->description,
+                                'id' => (string) $paymentProvider->id,
+                                'name' => (string) $paymentProvider->name,
+                                'description' => (string) $paymentProvider->description,
                             ],
                             'payment_provider_history' => [
-                                'id' => (string)$paymentProviderHistory->id,
-                                'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                                'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                                'id' => (string) $paymentProviderHistory->id,
+                                'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                                'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                             ],
                             'payment_system' => [
-                                'id' => (string)$paymentSystem->id,
-                                'name' => (string)$paymentSystem->name,
+                                'id' => (string) $paymentSystem->id,
+                                'name' => (string) $paymentSystem->name,
                             ],
                             'payment_bank' => [
-                                'id' => (string)$paymentBank->id,
-                                'name' => (string)$paymentBank->name,
-                                'address' => (string)$paymentBank->address,
+                                'id' => (string) $paymentBank->id,
+                                'name' => (string) $paymentBank->name,
+                                'address' => (string) $paymentBank->address,
                             ],
                             'payment_number' => $transferOutgoing->payment_number,
                             'transfer_type' => [
-                                'id' => (string)$transferType->id,
-                                'name' => (string)$transferType->name,
+                                'id' => (string) $transferType->id,
+                                'name' => (string) $transferType->name,
                             ],
                             'account' => [
-                                'id' => (string)$account->id,
-                                'account_type' => (string)$account->account_type,
+                                'id' => (string) $account->id,
+                                'account_type' => (string) $account->account_type,
                             ],
                             'company' => [
-                                'id' => (string)$company->id,
-                                'name' => (string)$company->name,
-                                'email' => (string)$company->email,
+                                'id' => (string) $company->id,
+                                'name' => (string) $company->name,
+                                'email' => (string) $company->email,
                             ],
                             'system_message' => $transferOutgoing->system_message,
                             'reason' => $transferOutgoing->reason,
@@ -2306,27 +2309,27 @@ class TransferOutgoingsQueryTest extends TestCase
                             'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                             'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                             'recipient_bank_country' => [
-                                'id' => (string)$recipientBankCountry->id,
-                                'name' => (string)$recipientBankCountry->name,
+                                'id' => (string) $recipientBankCountry->id,
+                                'name' => (string) $recipientBankCountry->name,
                             ],
                             'recipient_name' => $transferOutgoing->recipient_name,
                             'recipient_country' => [
-                                'id' => (string)$recipientCountry->id,
-                                'name' => (string)$recipientCountry->name,
+                                'id' => (string) $recipientCountry->id,
+                                'name' => (string) $recipientCountry->name,
                             ],
                             'recipient_city' => $transferOutgoing->recipient_city,
                             'recipient_address' => $transferOutgoing->recipient_address,
                             'recipient_state' => $transferOutgoing->recipient_state,
                             'recipient_zip' => $transferOutgoing->recipient_zip,
                             'respondent_fee' => [
-                                'id' => (string)$respondentFee->id,
-                                'name' => (string)$respondentFee->name,
+                                'id' => (string) $respondentFee->id,
+                                'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
-                                'swift' => (string)$transferSwift->swift,
-                                'bank_name' => (string)$transferSwift->bank_name,
-                                'bank_address' => (string)$transferSwift->bank_address,
-                            ],
+                            'transfer_swift' => [[
+                                'swift' => (string) $transferSwift->swift,
+                                'bank_name' => (string) $transferSwift->bank_name,
+                                'bank_address' => (string) $transferSwift->bank_address,
+                            ]],
                         ],
                     ],
                 ],
@@ -2470,80 +2473,80 @@ class TransferOutgoingsQueryTest extends TestCase
                 }',
                 'variables' => [
                     'id' => $transferOutgoing->id,
-                    'sender' => (string)$transferOutgoing->sender->fullname ?? $transferOutgoing->sender->name,
-                ]
+                    'sender' => (string) $transferOutgoing->sender->fullname ?? $transferOutgoing->sender->name,
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoings' => [
                     'data' => [
                         [
-                            'id' => (string)$transferOutgoing->id,
-                            'amount' => (string)$transferOutgoing->amount,
-                            'amount_debt' => (string)$transferOutgoing->amount_debt,
-                            'fee_amount' => (string)$transferOutgoing->fee_amount,
+                            'id' => (string) $transferOutgoing->id,
+                            'amount' => (string) $transferOutgoing->amount,
+                            'amount_debt' => (string) $transferOutgoing->amount_debt,
+                            'fee_amount' => (string) $transferOutgoing->fee_amount,
                             'fee' => [
-                                'fee' => (string)$fee->fee,
+                                'fee' => (string) $fee->fee,
                             ],
                             'fees' => [[
-                                'fee' => (string)$fees->fee,
+                                'fee' => (string) $fees->fee,
                             ]],
                             'files' => [[
-                                'id' => (string)$files->id,
-                                'file_name' => (string)$files->file_name,
-                                'mime_type' => (string)$files->mime_type,
+                                'id' => (string) $files->id,
+                                'file_name' => (string) $files->file_name,
+                                'mime_type' => (string) $files->mime_type,
                             ]],
                             'currency' => [
-                                'id' => (string)$currency->id,
-                                'name' => (string)$currency->name,
+                                'id' => (string) $currency->id,
+                                'name' => (string) $currency->name,
                             ],
                             'status' => [
-                                'id' => (string)$status->id,
-                                'name' => (string)$status->name,
+                                'id' => (string) $status->id,
+                                'name' => (string) $status->name,
                             ],
                             'payment_urgency' => [
-                                'id' => (string)$paymentUrgency->id,
-                                'name' => (string)$paymentUrgency->name,
+                                'id' => (string) $paymentUrgency->id,
+                                'name' => (string) $paymentUrgency->name,
                             ],
                             'payment_operation_type' => [
-                                'id' => (string)$paymentOperationType->id,
-                                'name' => (string)$paymentOperationType->name,
+                                'id' => (string) $paymentOperationType->id,
+                                'name' => (string) $paymentOperationType->name,
                             ],
                             'payment_provider' => [
-                                'id' => (string)$paymentProvider->id,
-                                'name' => (string)$paymentProvider->name,
-                                'description' => (string)$paymentProvider->description,
+                                'id' => (string) $paymentProvider->id,
+                                'name' => (string) $paymentProvider->name,
+                                'description' => (string) $paymentProvider->description,
                             ],
                             'payment_provider_history' => [
-                                'id' => (string)$paymentProviderHistory->id,
-                                'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                                'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                                'id' => (string) $paymentProviderHistory->id,
+                                'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                                'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                             ],
                             'payment_system' => [
-                                'id' => (string)$paymentSystem->id,
-                                'name' => (string)$paymentSystem->name,
+                                'id' => (string) $paymentSystem->id,
+                                'name' => (string) $paymentSystem->name,
                             ],
                             'payment_bank' => [
-                                'id' => (string)$paymentBank->id,
-                                'name' => (string)$paymentBank->name,
-                                'address' => (string)$paymentBank->address,
+                                'id' => (string) $paymentBank->id,
+                                'name' => (string) $paymentBank->name,
+                                'address' => (string) $paymentBank->address,
                             ],
                             'payment_number' => $transferOutgoing->payment_number,
                             'transfer_type' => [
-                                'id' => (string)$transferType->id,
-                                'name' => (string)$transferType->name,
+                                'id' => (string) $transferType->id,
+                                'name' => (string) $transferType->name,
                             ],
                             'account' => [
-                                'id' => (string)$account->id,
-                                'account_type' => (string)$account->account_type,
+                                'id' => (string) $account->id,
+                                'account_type' => (string) $account->account_type,
                             ],
                             'company' => [
-                                'id' => (string)$company->id,
-                                'name' => (string)$company->name,
-                                'email' => (string)$company->email,
+                                'id' => (string) $company->id,
+                                'name' => (string) $company->name,
+                                'email' => (string) $company->email,
                             ],
                             'system_message' => $transferOutgoing->system_message,
                             'reason' => $transferOutgoing->reason,
@@ -2554,27 +2557,27 @@ class TransferOutgoingsQueryTest extends TestCase
                             'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                             'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                             'recipient_bank_country' => [
-                                'id' => (string)$recipientBankCountry->id,
-                                'name' => (string)$recipientBankCountry->name,
+                                'id' => (string) $recipientBankCountry->id,
+                                'name' => (string) $recipientBankCountry->name,
                             ],
                             'recipient_name' => $transferOutgoing->recipient_name,
                             'recipient_country' => [
-                                'id' => (string)$recipientCountry->id,
-                                'name' => (string)$recipientCountry->name,
+                                'id' => (string) $recipientCountry->id,
+                                'name' => (string) $recipientCountry->name,
                             ],
                             'recipient_city' => $transferOutgoing->recipient_city,
                             'recipient_address' => $transferOutgoing->recipient_address,
                             'recipient_state' => $transferOutgoing->recipient_state,
                             'recipient_zip' => $transferOutgoing->recipient_zip,
                             'respondent_fee' => [
-                                'id' => (string)$respondentFee->id,
-                                'name' => (string)$respondentFee->name,
+                                'id' => (string) $respondentFee->id,
+                                'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
-                                'swift' => (string)$transferSwift->swift,
-                                'bank_name' => (string)$transferSwift->bank_name,
-                                'bank_address' => (string)$transferSwift->bank_address,
-                            ],
+                            'transfer_swift' => [[
+                                'swift' => (string) $transferSwift->swift,
+                                'bank_name' => (string) $transferSwift->bank_name,
+                                'bank_address' => (string) $transferSwift->bank_address,
+                            ]],
                         ],
                     ],
                 ],
@@ -2719,79 +2722,79 @@ class TransferOutgoingsQueryTest extends TestCase
                 'variables' => [
                     'id' => $transferOutgoing->id,
                     'fee' => $fee->fee,
-                ]
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoings' => [
                     'data' => [
                         [
-                            'id' => (string)$transferOutgoing->id,
-                            'amount' => (string)$transferOutgoing->amount,
-                            'amount_debt' => (string)$transferOutgoing->amount_debt,
-                            'fee_amount' => (string)$transferOutgoing->fee_amount,
+                            'id' => (string) $transferOutgoing->id,
+                            'amount' => (string) $transferOutgoing->amount,
+                            'amount_debt' => (string) $transferOutgoing->amount_debt,
+                            'fee_amount' => (string) $transferOutgoing->fee_amount,
                             'fee' => [
-                                'fee' => (string)$fee->fee,
+                                'fee' => (string) $fee->fee,
                             ],
                             'fees' => [[
-                                'fee' => (string)$fees->fee,
+                                'fee' => (string) $fees->fee,
                             ]],
                             'files' => [[
-                                'id' => (string)$files->id,
-                                'file_name' => (string)$files->file_name,
-                                'mime_type' => (string)$files->mime_type,
+                                'id' => (string) $files->id,
+                                'file_name' => (string) $files->file_name,
+                                'mime_type' => (string) $files->mime_type,
                             ]],
                             'currency' => [
-                                'id' => (string)$currency->id,
-                                'name' => (string)$currency->name,
+                                'id' => (string) $currency->id,
+                                'name' => (string) $currency->name,
                             ],
                             'status' => [
-                                'id' => (string)$status->id,
-                                'name' => (string)$status->name,
+                                'id' => (string) $status->id,
+                                'name' => (string) $status->name,
                             ],
                             'payment_urgency' => [
-                                'id' => (string)$paymentUrgency->id,
-                                'name' => (string)$paymentUrgency->name,
+                                'id' => (string) $paymentUrgency->id,
+                                'name' => (string) $paymentUrgency->name,
                             ],
                             'payment_operation_type' => [
-                                'id' => (string)$paymentOperationType->id,
-                                'name' => (string)$paymentOperationType->name,
+                                'id' => (string) $paymentOperationType->id,
+                                'name' => (string) $paymentOperationType->name,
                             ],
                             'payment_provider' => [
-                                'id' => (string)$paymentProvider->id,
-                                'name' => (string)$paymentProvider->name,
-                                'description' => (string)$paymentProvider->description,
+                                'id' => (string) $paymentProvider->id,
+                                'name' => (string) $paymentProvider->name,
+                                'description' => (string) $paymentProvider->description,
                             ],
                             'payment_provider_history' => [
-                                'id' => (string)$paymentProviderHistory->id,
-                                'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                                'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                                'id' => (string) $paymentProviderHistory->id,
+                                'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                                'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                             ],
                             'payment_system' => [
-                                'id' => (string)$paymentSystem->id,
-                                'name' => (string)$paymentSystem->name,
+                                'id' => (string) $paymentSystem->id,
+                                'name' => (string) $paymentSystem->name,
                             ],
                             'payment_bank' => [
-                                'id' => (string)$paymentBank->id,
-                                'name' => (string)$paymentBank->name,
-                                'address' => (string)$paymentBank->address,
+                                'id' => (string) $paymentBank->id,
+                                'name' => (string) $paymentBank->name,
+                                'address' => (string) $paymentBank->address,
                             ],
                             'payment_number' => $transferOutgoing->payment_number,
                             'transfer_type' => [
-                                'id' => (string)$transferType->id,
-                                'name' => (string)$transferType->name,
+                                'id' => (string) $transferType->id,
+                                'name' => (string) $transferType->name,
                             ],
                             'account' => [
-                                'id' => (string)$account->id,
-                                'account_type' => (string)$account->account_type,
+                                'id' => (string) $account->id,
+                                'account_type' => (string) $account->account_type,
                             ],
                             'company' => [
-                                'id' => (string)$company->id,
-                                'name' => (string)$company->name,
-                                'email' => (string)$company->email,
+                                'id' => (string) $company->id,
+                                'name' => (string) $company->name,
+                                'email' => (string) $company->email,
                             ],
                             'system_message' => $transferOutgoing->system_message,
                             'reason' => $transferOutgoing->reason,
@@ -2802,27 +2805,27 @@ class TransferOutgoingsQueryTest extends TestCase
                             'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                             'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                             'recipient_bank_country' => [
-                                'id' => (string)$recipientBankCountry->id,
-                                'name' => (string)$recipientBankCountry->name,
+                                'id' => (string) $recipientBankCountry->id,
+                                'name' => (string) $recipientBankCountry->name,
                             ],
                             'recipient_name' => $transferOutgoing->recipient_name,
                             'recipient_country' => [
-                                'id' => (string)$recipientCountry->id,
-                                'name' => (string)$recipientCountry->name,
+                                'id' => (string) $recipientCountry->id,
+                                'name' => (string) $recipientCountry->name,
                             ],
                             'recipient_city' => $transferOutgoing->recipient_city,
                             'recipient_address' => $transferOutgoing->recipient_address,
                             'recipient_state' => $transferOutgoing->recipient_state,
                             'recipient_zip' => $transferOutgoing->recipient_zip,
                             'respondent_fee' => [
-                                'id' => (string)$respondentFee->id,
-                                'name' => (string)$respondentFee->name,
+                                'id' => (string) $respondentFee->id,
+                                'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
-                                'swift' => (string)$transferSwift->swift,
-                                'bank_name' => (string)$transferSwift->bank_name,
-                                'bank_address' => (string)$transferSwift->bank_address,
-                            ],
+                            'transfer_swift' => [[
+                                'swift' => (string) $transferSwift->swift,
+                                'bank_name' => (string) $transferSwift->bank_name,
+                                'bank_address' => (string) $transferSwift->bank_address,
+                            ]],
                         ],
                     ],
                 ],
@@ -2967,79 +2970,79 @@ class TransferOutgoingsQueryTest extends TestCase
                 'variables' => [
                     'id' => $transferOutgoing->id,
                     'fee' => $transferOutgoing->fee_amount,
-                ]
+                ],
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJson([
             'data' => [
                 'transferOutgoings' => [
                     'data' => [
                         [
-                            'id' => (string)$transferOutgoing->id,
-                            'amount' => (string)$transferOutgoing->amount,
-                            'amount_debt' => (string)$transferOutgoing->amount_debt,
-                            'fee_amount' => (string)$transferOutgoing->fee_amount,
+                            'id' => (string) $transferOutgoing->id,
+                            'amount' => (string) $transferOutgoing->amount,
+                            'amount_debt' => (string) $transferOutgoing->amount_debt,
+                            'fee_amount' => (string) $transferOutgoing->fee_amount,
                             'fee' => [
-                                'fee' => (string)$fee->fee,
+                                'fee' => (string) $fee->fee,
                             ],
                             'fees' => [[
-                                'fee' => (string)$fees->fee,
+                                'fee' => (string) $fees->fee,
                             ]],
                             'files' => [[
-                                'id' => (string)$files->id,
-                                'file_name' => (string)$files->file_name,
-                                'mime_type' => (string)$files->mime_type,
+                                'id' => (string) $files->id,
+                                'file_name' => (string) $files->file_name,
+                                'mime_type' => (string) $files->mime_type,
                             ]],
                             'currency' => [
-                                'id' => (string)$currency->id,
-                                'name' => (string)$currency->name,
+                                'id' => (string) $currency->id,
+                                'name' => (string) $currency->name,
                             ],
                             'status' => [
-                                'id' => (string)$status->id,
-                                'name' => (string)$status->name,
+                                'id' => (string) $status->id,
+                                'name' => (string) $status->name,
                             ],
                             'payment_urgency' => [
-                                'id' => (string)$paymentUrgency->id,
-                                'name' => (string)$paymentUrgency->name,
+                                'id' => (string) $paymentUrgency->id,
+                                'name' => (string) $paymentUrgency->name,
                             ],
                             'payment_operation_type' => [
-                                'id' => (string)$paymentOperationType->id,
-                                'name' => (string)$paymentOperationType->name,
+                                'id' => (string) $paymentOperationType->id,
+                                'name' => (string) $paymentOperationType->name,
                             ],
                             'payment_provider' => [
-                                'id' => (string)$paymentProvider->id,
-                                'name' => (string)$paymentProvider->name,
-                                'description' => (string)$paymentProvider->description,
+                                'id' => (string) $paymentProvider->id,
+                                'name' => (string) $paymentProvider->name,
+                                'description' => (string) $paymentProvider->description,
                             ],
                             'payment_provider_history' => [
-                                'id' => (string)$paymentProviderHistory->id,
-                                'payment_provider_id' => (string)$paymentProviderHistory->payment_provider_id,
-                                'transfer_id' => (string)$paymentProviderHistory->transfer_id,
+                                'id' => (string) $paymentProviderHistory->id,
+                                'payment_provider_id' => (string) $paymentProviderHistory->payment_provider_id,
+                                'transfer_id' => (string) $paymentProviderHistory->transfer_id,
                             ],
                             'payment_system' => [
-                                'id' => (string)$paymentSystem->id,
-                                'name' => (string)$paymentSystem->name,
+                                'id' => (string) $paymentSystem->id,
+                                'name' => (string) $paymentSystem->name,
                             ],
                             'payment_bank' => [
-                                'id' => (string)$paymentBank->id,
-                                'name' => (string)$paymentBank->name,
-                                'address' => (string)$paymentBank->address,
+                                'id' => (string) $paymentBank->id,
+                                'name' => (string) $paymentBank->name,
+                                'address' => (string) $paymentBank->address,
                             ],
                             'payment_number' => $transferOutgoing->payment_number,
                             'transfer_type' => [
-                                'id' => (string)$transferType->id,
-                                'name' => (string)$transferType->name,
+                                'id' => (string) $transferType->id,
+                                'name' => (string) $transferType->name,
                             ],
                             'account' => [
-                                'id' => (string)$account->id,
-                                'account_type' => (string)$account->account_type,
+                                'id' => (string) $account->id,
+                                'account_type' => (string) $account->account_type,
                             ],
                             'company' => [
-                                'id' => (string)$company->id,
-                                'name' => (string)$company->name,
-                                'email' => (string)$company->email,
+                                'id' => (string) $company->id,
+                                'name' => (string) $company->name,
+                                'email' => (string) $company->email,
                             ],
                             'system_message' => $transferOutgoing->system_message,
                             'reason' => $transferOutgoing->reason,
@@ -3050,27 +3053,27 @@ class TransferOutgoingsQueryTest extends TestCase
                             'recipient_bank_address' => $transferOutgoing->recipient_bank_address,
                             'recipient_bank_swift' => $transferOutgoing->recipient_bank_swift,
                             'recipient_bank_country' => [
-                                'id' => (string)$recipientBankCountry->id,
-                                'name' => (string)$recipientBankCountry->name,
+                                'id' => (string) $recipientBankCountry->id,
+                                'name' => (string) $recipientBankCountry->name,
                             ],
                             'recipient_name' => $transferOutgoing->recipient_name,
                             'recipient_country' => [
-                                'id' => (string)$recipientCountry->id,
-                                'name' => (string)$recipientCountry->name,
+                                'id' => (string) $recipientCountry->id,
+                                'name' => (string) $recipientCountry->name,
                             ],
                             'recipient_city' => $transferOutgoing->recipient_city,
                             'recipient_address' => $transferOutgoing->recipient_address,
                             'recipient_state' => $transferOutgoing->recipient_state,
                             'recipient_zip' => $transferOutgoing->recipient_zip,
                             'respondent_fee' => [
-                                'id' => (string)$respondentFee->id,
-                                'name' => (string)$respondentFee->name,
+                                'id' => (string) $respondentFee->id,
+                                'name' => (string) $respondentFee->name,
                             ],
-                            'transfer_swift' => [
-                                'swift' => (string)$transferSwift->swift,
-                                'bank_name' => (string)$transferSwift->bank_name,
-                                'bank_address' => (string)$transferSwift->bank_address,
-                            ],
+                            'transfer_swift' => [[
+                                'swift' => (string) $transferSwift->swift,
+                                'bank_name' => (string) $transferSwift->bank_name,
+                                'bank_address' => (string) $transferSwift->bank_address,
+                            ]],
                         ],
                     ],
                 ],
@@ -3099,11 +3102,11 @@ class TransferOutgoingsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
-            'status_id' => (string)$statistics->status_id,
-            'name' => (string)$statistics->name,
+            'status_id' => (string) $statistics->status_id,
+            'name' => (string) $statistics->name,
             'count' => $statistics->count,
         ]);
     }
@@ -3129,11 +3132,11 @@ class TransferOutgoingsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
-            'status_id' => (string)$statistics->status_id,
-            'name' => (string)$statistics->name,
+            'status_id' => (string) $statistics->status_id,
+            'name' => (string) $statistics->name,
             'count' => $statistics->count,
         ]);
     }
@@ -3159,11 +3162,11 @@ class TransferOutgoingsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
-            'status_id' => (string)$statistics->status_id,
-            'name' => (string)$statistics->name,
+            'status_id' => (string) $statistics->status_id,
+            'name' => (string) $statistics->name,
             'count' => $statistics->count,
         ]);
     }
@@ -3189,11 +3192,11 @@ class TransferOutgoingsQueryTest extends TestCase
                 }',
             ],
             [
-                'Authorization' => 'Bearer ' . $this->login(),
+                'Authorization' => 'Bearer '.$this->login(),
             ]
         )->seeJsonContains([
-            'status_id' => (string)$statistics->status_id,
-            'name' => (string)$statistics->name,
+            'status_id' => (string) $statistics->status_id,
+            'name' => (string) $statistics->name,
             'count' => $statistics->count,
         ]);
     }

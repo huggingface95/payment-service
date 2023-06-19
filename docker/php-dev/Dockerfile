@@ -1,4 +1,4 @@
-ARG PHP_BASEIMAGE_VERSION=8.1
+ARG PHP_BASEIMAGE_VERSION=8.2
 FROM php:${PHP_BASEIMAGE_VERSION}-fpm-alpine
 
 ARG PHP_EXTENSIONS="dom exif gd intl opcache pdo pdo_pgsql soap xsl zip ldap"
@@ -27,7 +27,6 @@ RUN apk add --no-cache --update \
 		libmcrypt-dev \
 		libpng-dev \
 		libpq \
-		libressl-dev \
 		libxslt-dev \
 		libzip-dev \
 		imap-dev \
@@ -69,7 +68,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
-RUN install-php-extensions gd ldap soap intl zip pdo_pgsql xsl
+RUN install-php-extensions gd ldap soap intl zip pdo_pgsql xsl opcache
 
 #RUN pecl install xdebug \
 #    && docker-php-ext-enable xdebug

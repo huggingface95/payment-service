@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ApplicantDocumentInternalNote extends BaseModel
 {
+
+    use BaseObServerTrait;
+
     protected $fillable = [
         'applicant_document_id',
         'member_id',

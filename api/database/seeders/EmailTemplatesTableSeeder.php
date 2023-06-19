@@ -15,20 +15,17 @@ class EmailTemplatesTableSeeder extends Seeder
      */
     public function run()
     {
-        EmailTemplate::firstOrCreate([
-            'id' => 1,
+        EmailTemplate::query()->firstOrCreate([
             'subject' => 'Welcome! Confirm your email address',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
             'member_id' => 2,
             'company_id' => 1,
-            'service_type' => 'KYCCommon',
             'created_at' => Carbon::now(),
             'name' => 'Sign Up: Email Confirmation',
         ]);
 
-        EmailTemplate::firstOrCreate([
-            'id' => 2,
+        EmailTemplate::query()->firstOrCreate([
             'subject' => 'Waiting for approval',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -38,8 +35,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Waiting for approval',
         ]);
 
-        EmailTemplate::firstOrCreate([
-            'id' => 3,
+        EmailTemplate::query()->firstOrCreate([
             'subject' => 'Reset Password',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -49,8 +45,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Reset Password',
         ]);
 
-        EmailTemplate::firstOrCreate([
-            'id' => 4,
+        EmailTemplate::query()->firstOrCreate([
             'subject' => 'Welcome! Confirm your email address',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -60,52 +55,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Sign Up: Email Confirmation',
         ]);
 
-        EmailTemplate::firstOrCreate([
-            'id' => 5,
-            'subject' => 'Waiting for approval',
-        ], [
-            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-            'member_id' => 3,
-            'company_id' => 2,
-            'created_at' => Carbon::now(),
-            'name' => 'Waiting for approval',
-        ]);
-
-        EmailTemplate::firstOrCreate([
-            'id' => 6,
-            'subject' => 'Reset Password',
-        ], [
-            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-            'member_id' => 3,
-            'company_id' => 2,
-            'created_at' => Carbon::now(),
-            'name' => 'Reset Password',
-        ]);
-
-        EmailTemplate::firstOrCreate([
-            'id' => 7,
-            'subject' => '{company_name} has invited you to join team',
-        ], [
-            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-            'member_id' => 3,
-            'company_id' => 2,
-            'created_at' => Carbon::now(),
-            'name' => 'Sign Up: Email Confirmation',
-        ]);
-
-        EmailTemplate::firstOrCreate([
-            'id' => 8,
-            'subject' => '{company_name} has invited you to join team',
-        ], [
-            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
-            'member_id' => 3,
-            'company_id' => 3,
-            'created_at' => Carbon::now(),
-            'name' => 'Sign Up: Email Confirmation',
-        ]);
-
-        EmailTemplate::firstOrCreate([
-            'id' => 9,
+        EmailTemplate::query()->firstOrCreate([
             'subject' => 'Account Requisites',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -115,8 +65,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Account Requisites',
         ]);
 
-        EmailTemplate::firstOrCreate([
-            'id' => 10,
+        EmailTemplate::query()->firstOrCreate([
             'subject' => 'Confirm change email',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -126,8 +75,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Confirm change email',
         ]);
 
-        EmailTemplate::firstOrCreate([
-            'id' => 11,
+        EmailTemplate::query()->firstOrCreate([
             'subject' => 'Welcome! Confirm your email address',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -137,8 +85,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Welcome! Confirm your email address',
         ]);
 
-        EmailTemplate::firstOrCreate([
-            'id' => 12,
+        EmailTemplate::query()->firstOrCreate([
             'subject' => 'Account suspended',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -148,8 +95,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Account suspended',
         ]);
 
-        EmailTemplate::firstOrCreate([
-            'id' => 13,
+        EmailTemplate::query()->firstOrCreate([
             'subject' => 'Minimum balance limit has been reached for client',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -159,8 +105,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Minimum balance limit has been reached for client',
         ]);
 
-        EmailTemplate::firstOrCreate([
-            'id' => 14,
+        EmailTemplate::query()->firstOrCreate([
             'subject' => 'Maximum balance limit has been reached for client',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -170,8 +115,7 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Maximum balance limit has been reached for client',
         ]);
 
-        EmailTemplate::firstOrCreate([
-            'id' => 15,
+        EmailTemplate::query()->firstOrCreate([
             'subject' => 'Account Requisites',
         ], [
             'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
@@ -181,5 +125,14 @@ class EmailTemplatesTableSeeder extends Seeder
             'name' => 'Account Requisites2',
         ]);
 
+        EmailTemplate::query()->firstOrCreate([
+            'subject' => 'Waiting for IBAN Generation',
+        ], [
+            'content' => '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">',
+            'member_id' => 2,
+            'company_id' => 1,
+            'created_at' => Carbon::now(),
+            'name' => 'Waiting for IBAN Generation',
+        ]);
     }
 }

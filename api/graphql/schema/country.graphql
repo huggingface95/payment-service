@@ -12,5 +12,9 @@ extend type Query @guard {
     """
     Получить список стран
     """
-    countries: [Country!]!   @paginate(defaultCount: 10)
+    countries(filter: _ @filterConditions(static: QueryCountriesFilterStatic)): [Country!]!   @paginate(defaultCount: 10)
+}
+
+input QueryCountriesFilterStatic @spread{
+    hasPaymentSystemsFilterById: ID @eq
 }

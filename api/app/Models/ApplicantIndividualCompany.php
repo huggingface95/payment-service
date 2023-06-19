@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use App\Models\Scopes\ApplicantFilterByMemberScope;
+use App\Models\Scopes\ApplicantIndividualCompanyIdScope;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class ApplicantIndividualCompany extends BaseModel
 {
+    use BaseObServerTrait;
+
     protected $table = 'applicant_individual_company';
 
     /**
@@ -30,6 +34,7 @@ class ApplicantIndividualCompany extends BaseModel
     {
         parent::booted();
         static::addGlobalScope(new ApplicantFilterByMemberScope());
+        static::addGlobalScope(new ApplicantIndividualCompanyIdScope());
     }
 
     public function ApplicantIndividual(): BelongsTo

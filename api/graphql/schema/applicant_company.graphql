@@ -3,7 +3,7 @@
 Management -> New Applicant -> Create Company
 """
 type ApplicantCompany {
-    id: ID!
+    id: ID! @method(name: "getPrefixAttribute")
     "Название"
     name: String
     "email"
@@ -171,6 +171,7 @@ input QueryApplicantCompaniesFilterStatic @spread{
     id: ID @eq
     company_id: ID @eq
     project_id: ID @eq
+    owner_id: ID @eq
     account_manager_member_id: ID @eq
     hasStateReasonMixedIdOrName: Mixed @eq
     hasGroupRoleMixedIdOrName: Mixed @eq
@@ -295,8 +296,6 @@ extend type Mutation @guard {
         applicant_kyc_level_id: ID
         "ID менеджера"
         account_manager_member_id: ID
-        "ID компании"
-        company_id: ID
         "ID owner"
         owner_id: ID
         "ID relation владельца"
@@ -329,7 +328,7 @@ extend type Mutation @guard {
     ): ApplicantCompany   @delete
 
     "Изменить статус applicant company"
-    updateApplicantCompanyVerificationStatus(
+    updateApplicantCompanyStatus(
         id: ID!
         "ID статуса"
         applicant_status_id: ID!

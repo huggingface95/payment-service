@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CurrencyRateHistory extends BaseModel
 {
+    use BaseObServerTrait;
+
     use HasFactory;
-    
+
     public $timestamps = false;
 
     protected $fillable = [

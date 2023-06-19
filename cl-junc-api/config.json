@@ -2,7 +2,7 @@
   "app": {
     "title": "Tranzbase",
     "url": "http://cl-junc-apicore:2490",
-    "public_url": "https://dev.api.docudots.com",
+    "public_url": "https://testapi.docudots.com",
     "is_production": false,
     "tech_email" : "test@test.com",
     "mail": {
@@ -24,11 +24,11 @@
 
   "db": {
     "sql": {
-      "database": "default",
+      "database": "docudev",
       "server": "postgres",
-      "port": 5432,
-      "username": "default",
-      "password": "secret"
+      "port": 6432,
+      "username": "docuadmin",
+      "password": "Passw0rd"
     },
     "redis": {
       "server": "redis",

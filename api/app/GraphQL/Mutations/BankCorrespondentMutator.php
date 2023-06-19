@@ -18,7 +18,8 @@ class BankCorrespondentMutator extends BaseMutator
      */
     public function create($_, array $args)
     {
-        $bank = BankCorrespondent::create($args);
+        /** @var BankCorrespondent $bank */
+        $bank = BankCorrespondent::query()->create($args);
 
         if (isset($args['currencies_and_regions'])) {
             $requestCurrenciesRegions = $this->optimizeCurrencyRegionInput($args['currencies_and_regions']);
@@ -35,10 +36,12 @@ class BankCorrespondentMutator extends BaseMutator
      * @param    $_
      * @param array $args
      * @return mixed
+     *
      * @throws GraphqlException
      */
     public function update($_, array $args)
     {
+        /** @var BankCorrespondent $bank */
         $bank = BankCorrespondent::find($args['id']);
         if (!$bank) {
             throw new GraphqlException('Not found', 'not found', 404);
@@ -48,7 +51,7 @@ class BankCorrespondentMutator extends BaseMutator
         if (isset($args['currencies_and_regions'])) {
             $requestCurrenciesRegions = $this->optimizeCurrencyRegionInput($args['currencies_and_regions']);
 
-            $bank->currencies()->detach($requestCurrenciesRegions->pluck('currency_id')->unique());
+            $bank->currencies()->detach();
             foreach ($requestCurrenciesRegions->where('region_id', '>', 0) as $currenciesRegion) {
                 $bank->currencies()->attach($currenciesRegion['currency_id'], ['region_id' => $currenciesRegion['region_id']]);
             }

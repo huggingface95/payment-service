@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
+use App\Models\Interfaces\CustomObServerInterface;
 use App\Models\Scopes\TransferFeeAmountScope;
+use App\Models\Traits\BaseObServerTrait;
+use App\Observers\TransferOutgoingObserver;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -29,9 +31,10 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property float amount_debt
  * @property Carbon execution_at
  */
-class TransferOutgoing extends BaseModel
+class TransferOutgoing extends BaseModel implements CustomObServerInterface
 {
     use HasFactory;
+    use BaseObServerTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -190,6 +193,11 @@ class TransferOutgoing extends BaseModel
         return $this->belongsTo(PaymentUrgency::class, 'urgency_id', 'id');
     }
 
+    public function priceListFee(): BelongsTo
+    {
+        return $this->belongsTo(PriceListFee::class, 'price_list_fee_id', 'id');
+    }
+
     public function recipientBankCountry(): BelongsTo
     {
         return $this->belongsTo(Country::class, 'recipient_bank_country_id', 'id');
@@ -210,9 +218,14 @@ class TransferOutgoing extends BaseModel
         return $this->hasOneThrough(TransferType::class, OperationType::class, 'id', 'id', 'operation_type_id', 'transfer_type_id');
     }
 
-    public function transferSwift(): HasOne
+    public function transferHistory(): HasMany
     {
-        return $this->hasOne(TransferSwift::class, 'transfer_id', 'id')
+        return $this->hasMany(TransferOutgoingHistory::class, 'transfer_id');
+    }
+
+    public function transferSwift(): HasMany
+    {
+        return $this->hasMany(TransferSwift::class, 'transfer_id', 'id')
             ->where('transfer_type', class_basename(self::class));
     }
 
@@ -220,5 +233,10 @@ class TransferOutgoing extends BaseModel
     {
         return $this->hasOne(Transactions::class, 'transfer_id')
             ->where('transfer_type', class_basename(self::class));
+    }
+
+    public static function getObServer(): string
+    {
+        return TransferOutgoingObserver::class;
     }
 }

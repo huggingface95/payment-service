@@ -48,18 +48,33 @@ class FeeTableSeeder extends Seeder
         ]);
 
         Fee::withoutEvents(function () {
-            for ($i = 3; $i <= 8; $i++) {
+            for ($i = 3; $i <= 10; $i++) {
                 $fee = Fee::factory()->definition();
 
                 Fee::query()->firstOrCreate(
                     [
                         'transfer_id' => $i,
-                        'operation_type_id' => $i,
+                        'operation_type_id' => 1,
                         'fee_type_mode_id' => FeeModeEnum::BASE->value,
                     ],
                     $fee
                 );
             }
         });
+
+        Fee::query()->firstOrCreate([
+            'transfer_id' => 14,
+            'fee' => 560,
+            'fee_type_id' => 1,
+            'transfer_type' => FeeTransferTypeEnum::INCOMING->toString(),
+            'operation_type_id' => 1,
+            'member_id' => null,
+            'status_id' => 1,
+            'client_id' => 1,
+            'client_type' => class_basename(ApplicantIndividual::class),
+            'account_id' => 1,
+            'price_list_fee_id' => 2,
+            'fee_type_mode_id' => FeeModeEnum::BASE->value,
+        ]);
     }
 }

@@ -45,12 +45,17 @@ class ModulesMutationTest extends TestCase
             }
         ', 'variables' => [
             'name' => 'Test module',
-        ]
+        ],
         ],
         [
-            'Authorization' => 'Bearer ' . $this->login(),
-        ])->seeJsonContains([
-            'message' => 'Access denied',
+            'Authorization' => 'Bearer '.$this->login(),
+        ]);
+
+        $response = json_decode($this->response->getContent(), true);
+
+        $this->seeJsonContains([
+            'id' => $response['data']['createModule']['id'],
+            'name' => $response['data']['createModule']['name'],
         ]);
     }
 }

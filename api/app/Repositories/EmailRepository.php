@@ -12,6 +12,7 @@ use App\DTO\TransformerDTO;
 use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
+use App\Models\ApplicantIndividual;
 use App\Models\EmailNotification;
 use App\Models\EmailSmtp;
 use App\Models\EmailTemplate;
@@ -97,9 +98,9 @@ class EmailRepository implements EmailRepositoryInterface
             throw new EmailException('Email Notification not found', '404');
         }
 
-        $emails = $notification->groupRole->users->pluck('email')->toArray();
+        $emails = ApplicantIndividual::find($account->owner_id)->first()->email;
 
-        if (! count($emails)) {
+        if (! $emails) {
             throw new EmailException('Email not found', '404');
         }
 

@@ -23,6 +23,7 @@ type AccountStatementTransaction {
     account_client: String
     status: String
     account_balance: Float
+    transfer_type: String
 }
 
 extend type Query @guard {
@@ -43,7 +44,7 @@ extend type Query @guard {
         created_at: DateTimeRange @whereBetween,
     ): RawFile
         @field(resolver: "AccountStatementQuery@downloadPdf")
-    
+
     """
     Получить выписку по счету в формате XLS
     """
@@ -52,7 +53,7 @@ extend type Query @guard {
         created_at: DateTimeRange @whereBetween,
     ): RawFile
         @field(resolver: "AccountStatementQuery@downloadXls")
-    
+
     """
     Получить выписку по счету в формате CSV
     """

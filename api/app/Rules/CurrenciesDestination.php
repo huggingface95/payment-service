@@ -27,7 +27,7 @@ class CurrenciesDestination implements ImplicitRule
         foreach ($value as $feeRange) {
             if (isset($feeRange->fees)) {
                 foreach ($feeRange->fees as $item) {
-                    if (!empty($item->currencies_destination) && $this->operation_type_id != OperationTypeEnum::EXCHANGE->value) {
+                    if (! empty($item->currencies_destination) && $this->operation_type_id != OperationTypeEnum::EXCHANGE->value) {
                         return false;
                     }
                 }

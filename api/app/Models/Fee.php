@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
@@ -13,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class Fee extends BaseModel
 {
     use HasFactory;
+    use BaseObServerTrait;
 
     protected $fillable = [
         'fee',
@@ -27,6 +30,7 @@ class Fee extends BaseModel
         'price_list_fee_id',
         'transfer_type',
         'fee_type_mode_id',
+        'reason',
     ];
 
     protected $casts = [
@@ -82,5 +86,10 @@ class Fee extends BaseModel
     public function mode(): BelongsTo
     {
         return $this->belongsTo(FeeMode::class, 'fee_type_mode_id');
+    }
+
+    public function files(): BelongsToMany
+    {
+        return $this->belongsToMany(Files::class, 'fee_file_relation', 'fee_id', 'file_id');
     }
 }

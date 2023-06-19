@@ -120,7 +120,6 @@ class ApplicantIndividualMutationTest extends TestCase
                     $last_name: String!
                     $email: EMAIL!
                     $phone: String!
-                    $company_id: ID!
                 )
                 {
                     updateApplicantIndividual (
@@ -129,7 +128,6 @@ class ApplicantIndividualMutationTest extends TestCase
                         last_name: $last_name
                         email: $email
                         phone: $phone
-                        company_id: $company_id
                         module_ids: []
                     )
                     {
@@ -143,7 +141,6 @@ class ApplicantIndividualMutationTest extends TestCase
                     'last_name' => 'Last_name test',
                     'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
                     'phone' => '+938276532222',
-                    'company_id' => 1,
                 ],
             ],
             [
@@ -163,7 +160,7 @@ class ApplicantIndividualMutationTest extends TestCase
         ]);
     }
 
-    public function testUpdateApplicantIndividualVerificationStatus(): void
+    public function testUpdateApplicantIndividualStatus(): void
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_individual')
@@ -173,12 +170,12 @@ class ApplicantIndividualMutationTest extends TestCase
         $this->postGraphQL(
             [
                 'query' => '
-                mutation UpdateApplicantIndividualVerificationStatus(
+                mutation UpdateApplicantIndividualStatus(
                     $id: ID!
                     $status_id: ID!
                 )
                 {
-                    updateApplicantIndividualVerificationStatus (
+                    updateApplicantIndividualStatus (
                         id: $id
                         applicant_status_id: $status_id
                     )
@@ -201,9 +198,9 @@ class ApplicantIndividualMutationTest extends TestCase
 
         $this->seeJson([
             'data' => [
-                'updateApplicantIndividualVerificationStatus' => [
-                    'id' => $id['data']['updateApplicantIndividualVerificationStatus']['id'],
-                    'email' => $id['data']['updateApplicantIndividualVerificationStatus']['email'],
+                'updateApplicantIndividualStatus' => [
+                    'id' => $id['data']['updateApplicantIndividualStatus']['id'],
+                    'email' => $id['data']['updateApplicantIndividualStatus']['email'],
                 ],
             ],
         ]);

@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class AccountRepository extends Repository implements AccountRepositoryInterface
 {
-
     public const PARENT_CLONE_COLUMNS = [
         'owner_id',
         'payment_provider_id',
@@ -33,13 +32,15 @@ class AccountRepository extends Repository implements AccountRepositoryInterface
         'company_id',
         'member_id',
         'project_id',
+        'client_id',
+        'client_type',
     ];
 
     public const PARENT_CLONE_MORPH_RECORDS = [
         'clientable' => [
             ApplicantIndividual::class => 'applicantIndividual',
             ApplicantCompany::class => 'applicantCompany',
-        ]
+        ],
     ];
 
     protected function model(): string
@@ -90,14 +91,16 @@ class AccountRepository extends Repository implements AccountRepositoryInterface
 
     public function getTransfersForPeriodByAccountId(int $accountId, string $dateFrom, string $dateTo): Collection
     {
-        $otgoings = TransferOutgoing::whereDate('created_at', '>=', $dateFrom)
+        $otgoings = TransferOutgoing::query()->whereDate('created_at', '>=', $dateFrom)
+            ->whereHas('transaction')
             ->whereDate('created_at', '<=', $dateTo)
             ->where('account_id', $accountId)
             ->with('sender')
             ->with('transaction')
             ->get();
 
-        $incomings = TransferIncoming::whereDate('created_at', '>=', $dateFrom)
+        $incomings = TransferIncoming::query()->whereDate('created_at', '>=', $dateFrom)
+            ->whereHas('transaction')
             ->whereDate('created_at', '<=', $dateTo)
             ->where('account_id', $accountId)
             ->with('recipient')

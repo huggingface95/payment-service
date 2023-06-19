@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\TransferIncoming;
-use Aws\S3\Transfer;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

@@ -113,7 +113,6 @@ class ApplicantCompanyMutationTest extends TestCase
                     $id: ID!
                     $name: String!
                     $email: EMAIL!
-                    $company_id: ID!
                     $project_id: ID!
                 )
                 {
@@ -121,7 +120,6 @@ class ApplicantCompanyMutationTest extends TestCase
                         id: $id
                         name: $name
                         email: $email
-                        company_id: $company_id
                         project_id: $project_id
                     )
                     {
@@ -133,7 +131,6 @@ class ApplicantCompanyMutationTest extends TestCase
                     'id' => (string) $applicant[0]->id,
                     'name' => 'Updated name',
                     'email' => 'applicant'.\Illuminate\Support\Str::random(3).'@gmail.com',
-                    'company_id' => 2,
                     'project_id' => 2,
                 ],
             ],
@@ -154,7 +151,7 @@ class ApplicantCompanyMutationTest extends TestCase
         ]);
     }
 
-    public function testUpdateApplicantCompanyVerificationStatus(): void
+    public function testUpdateApplicantCompanyStatus(): void
     {
         $applicant = DB::connection('pgsql_test')
             ->table('applicant_companies')
@@ -164,12 +161,12 @@ class ApplicantCompanyMutationTest extends TestCase
         $this->postGraphQL(
             [
                 'query' => '
-                mutation UpdateApplicantCompanyVerificationStatus(
+                mutation UpdateApplicantCompanyStatus(
                     $id: ID!
                     $applicant_status_id: ID!
                 )
                 {
-                    updateApplicantCompanyVerificationStatus (
+                    updateApplicantCompanyStatus (
                         id: $id
                         applicant_status_id: $applicant_status_id
                     )
@@ -192,9 +189,9 @@ class ApplicantCompanyMutationTest extends TestCase
 
         $this->seeJson([
             'data' => [
-                'updateApplicantCompanyVerificationStatus' => [
-                    'id' => $id['data']['updateApplicantCompanyVerificationStatus']['id'],
-                    'email' => $id['data']['updateApplicantCompanyVerificationStatus']['email'],
+                'updateApplicantCompanyStatus' => [
+                    'id' => $id['data']['updateApplicantCompanyStatus']['id'],
+                    'email' => $id['data']['updateApplicantCompanyStatus']['email'],
                 ],
             ],
         ]);

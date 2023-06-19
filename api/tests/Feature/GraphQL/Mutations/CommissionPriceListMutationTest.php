@@ -76,7 +76,7 @@ class CommissionPriceListMutationTest extends TestCase
                     'payment_system_id' => 1,
                     'commission_template_id' => 1,
                     'company_id' => 1,
-                    'region_id' => 1,
+                    'region_id' => 2,
                 ],
             ],
             [

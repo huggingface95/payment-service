@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
+
 class PriceListFeeScheduledTask extends BaseModel
 {
+    use BaseObServerTrait;
+
     public $timestamps = false;
 
     protected $fillable = [

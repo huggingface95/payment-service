@@ -4,7 +4,6 @@ namespace App\Repositories\Interfaces;
 
 use App\DTO\Service\CheckLimitDTO;
 use App\Models\Account;
-use App\Models\Payments;
 use App\Models\TransferOutgoing;
 use Illuminate\Support\Collection;
 

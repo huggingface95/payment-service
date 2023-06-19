@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ModuleEnum;
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -17,11 +18,13 @@ use Illuminate\Support\Collection;
  * @property string backoffice_support_url
  * @property Collection $paymentProviders
  * @property Collection $paymentProvidersIban
+ * @property Collection $quoteProviders
  * @property PaymentSystem $paymentSystemInternal
  */
 class Company extends BaseModel
 {
     use SoftDeletes;
+    use BaseObServerTrait;
 
     /**
      * The attributes that are mass assignable.
@@ -64,6 +67,10 @@ class Company extends BaseModel
     ];
 
     protected $casts = [
+        'additional_fields_info' =>'array',
+        'additional_fields_basic' =>'array',
+        'additional_fields_settings' =>'array',
+        'additional_fields_data' =>'array',
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
@@ -91,7 +98,7 @@ class Company extends BaseModel
 
     public function getLogoLinkAttribute(): string
     {
-        $defaultLogoPath = storage_path('app') . self::DEFAULT_LOGO_PATH;
+        $defaultLogoPath = storage_path('app').self::DEFAULT_LOGO_PATH;
 
         return $this->logo->link ?? $defaultLogoPath;
     }
@@ -113,7 +120,7 @@ class Company extends BaseModel
 
     public function members(): HasMany
     {
-        return $this->hasMany(Members::class, 'company_id');
+        return $this->hasMany(Members::class, 'company_id')->orderBy('id', 'ASC');
     }
 
     public function modules(): HasMany
@@ -159,6 +166,11 @@ class Company extends BaseModel
     public function paymentProvidersIban(): HasMany
     {
         return $this->hasMany(PaymentProviderIban::class, 'company_id');
+    }
+
+    public function quoteProviders(): HasMany
+    {
+        return $this->hasMany(QuoteProvider::class, 'company_id');
     }
 
     public function paymentSystem(): HasOneThrough
@@ -226,5 +238,15 @@ class Company extends BaseModel
     public function revenues(): HasMany
     {
         return $this->hasMany(CompanyRevenueAccount::class, 'company_id');
+    }
+
+    public function applicantIndividuals(): HasMany
+    {
+        return $this->hasMany(ApplicantIndividual::class, 'company_id');
+    }
+
+    public function applicantCompanies(): HasMany
+    {
+        return $this->hasMany(ApplicantCompany::class, 'company_id');
     }
 }

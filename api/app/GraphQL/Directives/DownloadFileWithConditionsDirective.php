@@ -35,11 +35,11 @@ GRAPHQL;
     public function resolveField(FieldValue $fieldValue): FieldValue
     {
         $fieldValue->setResolver(function ($root, array $args, GraphQLContext $context, ResolveInfo $resolveInfo): array {
-            if (!$this->directiveHasArgument('model')) {
+            if (! $this->directiveHasArgument('model')) {
                 throw new Error('You must provide a model argument to the @downloadFileWithConditions directive.');
             }
 
-            $model = 'App\\Models\\' . $this->directiveArgValue('model');
+            $model = 'App\\Models\\'.$this->directiveArgValue('model');
 
             $results = $resolveInfo->enhanceBuilder(
                 $model::query(),

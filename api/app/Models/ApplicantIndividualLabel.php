@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantIndividualCompanyIdScope;
 use App\Models\Scopes\MemberScope;
+use App\Models\Traits\BaseObServerTrait;
 
 class ApplicantIndividualLabel extends BaseModel
 {
+    use BaseObServerTrait;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,8 +25,9 @@ class ApplicantIndividualLabel extends BaseModel
 
     protected static function booted()
     {
-        static::addGlobalScope(new MemberScope());
         parent::booted();
+        static::addGlobalScope(new MemberScope());
+        static::addGlobalScope(new ApplicantIndividualCompanyIdScope());
     }
 
     public function applicants()

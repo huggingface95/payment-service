@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use App\Models\CommissionPriceList;
+use App\Models\Region;
 use App\Models\TransferIncoming;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,6 +34,15 @@ class TransferIncomingRepository extends Repository implements TransferIncomingR
         return $model;
     }
 
+    public function detachFileById(Model|Builder $model, array $data): Model|Builder|null
+    {
+        if (isset($data)) {
+            $model->files()->detach($data);
+        }
+
+        return $model;
+    }
+
     public function create(array $data): Model|Builder
     {
         return $this->query()->create($data);
@@ -49,7 +60,7 @@ class TransferIncomingRepository extends Repository implements TransferIncomingR
                 )
             );
         }
-        
+
         return $transfer;
     }
 
@@ -58,5 +69,31 @@ class TransferIncomingRepository extends Repository implements TransferIncomingR
         $model->update($data);
 
         return $model;
+    }
+
+    public function getCommissionPriceListIdByArgs(array $args, string $clientType): int|null
+    {
+        return CommissionPriceList::query()
+            ->where('company_id', '=', $args['company_id'])
+            ->where('commission_template_id', '=', function ($query) use ($args, $clientType) {
+                $query->select('project_settings.commission_template_id')
+                    ->from('projects')
+                    ->join('project_settings', 'projects.id', '=', 'project_settings.project_id')
+                    ->where('projects.id', '=', $args['project_id'])
+                    ->where('applicant_type', '=', $clientType);
+            })
+            ->where('provider_id', '=', $args['payment_provider_id'])
+            ->where('payment_system_id', '=', $args['payment_system_id'])
+            ->where('region_id', '=', $args['region_id'])
+            ->first()?->id;
+    }
+
+    public function getRegionIdByArgs(array $args): int|null
+    {
+        return Region::query()
+            ->join('region_countries', 'regions.id', '=', 'region_countries.region_id')
+            ->where('region_countries.country_id', '=', $args['sender_country_id'])
+            ->where('regions.company_id', '=', $args['company_id'])
+            ->first()?->id;
     }
 }

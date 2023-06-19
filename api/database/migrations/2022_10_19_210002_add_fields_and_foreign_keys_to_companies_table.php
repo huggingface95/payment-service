@@ -22,7 +22,7 @@ class AddFieldsAndForeignKeysToCompaniesTable extends Migration
             $table->unsignedBigInteger('type_of_industry_id')->nullable();
             $table->string('license_number')->nullable();
             $table->timestamp('exp_date')->nullable();
-            $table->unsignedBigInteger('state_id')->nullable();
+            $table->unsignedBigInteger('state_id')->default(1);
             $table->unsignedBigInteger('state_reason_id')->nullable();
 
             $table->foreign('employees_id')->references('id')->on('employees');

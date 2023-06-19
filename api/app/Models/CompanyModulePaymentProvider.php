@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class CompanyModulePaymentProvider extends BaseModel
 {
+    use BaseObServerTrait;
+
     public $timestamps = false;
 
     protected $fillable = [
