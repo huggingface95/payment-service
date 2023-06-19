@@ -44,6 +44,17 @@ func main() {
 func initRouter() *gin.Engine {
 	router := gin.Default()
 
+	registration := router.Group("/registration")
+	{
+		registration.POST("private", individual.RegisterPrivate)
+		registration.POST("corporate", individual.RegisterCorporate)
+	}
+
+	authorization := router.Group("/authorization")
+	{
+		authorization.POST("test", individual.Authorize)
+	}
+
 	confirmation := router.Group("/confirmation")
 	{
 		ip := confirmation.Group("/ip").Use(middlewares.CheckIpConfirmation())

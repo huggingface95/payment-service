@@ -5,6 +5,7 @@ namespace App\Models\Traits;
 use App\Enums\ApplicantTypeEnum;
 use App\Models\Account;
 use App\Models\AccountClient;
+use App\Models\ApplicantBankingAccess;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantCompanyModules;
 use App\Models\ApplicantDocument;
@@ -57,7 +58,7 @@ trait ApplicantIdPrefix
             ]
         ],
         ApplicantIndividualCompany::class => [
-            'columns' => ['applicant_id'],
+            'columns' => ['applicant_id', 'applicant_company_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
             'binds' => [
                 [
@@ -76,6 +77,10 @@ trait ApplicantIdPrefix
         ],
         ApplicantRiskLevelHistory::class => [
             'columns' => ['applicant_id'],
+            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
+        ],
+        ApplicantBankingAccess::class => [
+            'columns' => ['applicant_individual_id', 'applicant_company_id'],
             'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
         ],
         KycTimeline::class => [

@@ -2,9 +2,11 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\OperationTypeEnum;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\Traits\PriceListFeeTrait;
 use App\Models\CommissionPriceList;
+use App\Models\PaymentSystem;
 use App\Models\PriceListFee;
 use App\Services\PriceListFeeService;
 use Illuminate\Http\Response;
@@ -26,15 +28,17 @@ class PriceListFeesMutator
     public function create($_, array $args): PriceListFee
     {
         $internalPriceListExists = CommissionPriceList::where('id', $args['price_list_id'])
-            ->whereHas('paymentProvider', function ($query) {
-                $query->where('name', 'Internal');
+            ->whereHas('paymentSystem', function ($query) {
+                $query->where('name', PaymentSystem::NAME_INTERNAL);
             })
             ->exists();
 
-        if ($internalPriceListExists && $args['price_list_id']) {
-            $priceListFeeExists = PriceListFee::where('price_list_id', $args['price_list_id'])->exists();
+        if ($internalPriceListExists && $args['price_list_id'] && $args['operation_type_id']) {
+            $priceListFeeExists = PriceListFee::where('price_list_id', $args['price_list_id'])
+                ->where('operation_type_id', $args['operation_type_id'])
+                ->exists();
             if ($priceListFeeExists) {
-                throw new GraphqlException('Only one PriceListFee is allowed for the PriceList with Internal provider', 'use');
+                throw new GraphqlException('Only one PriceListFee is allowed for the PriceList with Internal provider and operation type ' . OperationTypeEnum::tryFrom($args['operation_type_id'])->toString(), 'use');
             }
         }
 
