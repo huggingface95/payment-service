@@ -6,12 +6,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
-	"path/filepath"
 	"payment-service/db"
 	"payment-service/providers"
 	"payment-service/queue"
 	"payment-service/utils"
-	"runtime"
 	"strings"
 	"time"
 )
@@ -292,9 +290,4 @@ func (cj *ClearJunction) payoutApprove(request *PayoutApproveRequest) (res Payou
 	}
 
 	return res, err
-}
-
-func GetName() string {
-	_, fullPath, _, _ := runtime.Caller(0)
-	return filepath.Base(filepath.Dir(fullPath))
 }
