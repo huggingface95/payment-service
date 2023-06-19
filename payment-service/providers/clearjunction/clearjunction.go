@@ -6,10 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"path/filepath"
 	"payment-service/db"
 	"payment-service/providers"
 	"payment-service/queue"
 	"payment-service/utils"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -31,8 +33,11 @@ func New(services Services, apiKey, password, baseURL, publicURL string) *ClearJ
 	return provider
 }
 
-func (cj *ClearJunction) Auth(request providers.AuthRequester) (providers.AuthResponder, error) {
-	authRequest, _ := request.(AuthRequest)
+func (cj *ClearJunction) Auth(req providers.AuthRequester) (providers.AuthResponder, error) {
+	assertedReq, ok := req.(AuthRequest)
+	if !ok {
+		return nil, fmt.Errorf("invalid request type")
+	}
 
 	// Получаем текущее время и форматируем его в соответствии с требуемым форматом
 	date := time.Now().UTC().Format("2006-01-02T15:04:05.000Z")
@@ -44,7 +49,7 @@ func (cj *ClearJunction) Auth(request providers.AuthRequester) (providers.AuthRe
 	// Создаем новую подпись, используя API-ключ, дату и подпись, полученную на предыдущем шаге
 	// К тому же добавляем тело запроса, преобразуя его в верхний регистр
 	signatureData = []byte(fmt.Sprint(strings.ToUpper(cj.APIKey), date, signature))
-	signatureData = append(signatureData, bytes.ToUpper(authRequest.Body)...)
+	signatureData = append(signatureData, bytes.ToUpper(assertedReq.Body)...)
 	signature = fmt.Sprintf("%x", sha512.Sum512(signatureData))
 
 	// Создаем значение заголовка авторизации, используя полученную подпись
@@ -59,93 +64,98 @@ func (cj *ClearJunction) Auth(request providers.AuthRequester) (providers.AuthRe
 	return nil, nil
 }
 
-func (cj *ClearJunction) IBAN(request providers.IBANRequester) (providers.IBANResponder, error) {
-	req := request.(map[string]interface{})
+func (cj *ClearJunction) IBAN(req providers.IBANRequester) (providers.IBANResponder, error) {
+	assertedReq, ok := req.(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("invalid request type")
+	}
 
-	url := fmt.Sprintf("%sv7/gate/allocate/v2/create/iban", cj.BaseURL)
+	reqURL := fmt.Sprintf("%sv7/gate/allocate/v2/create/iban", cj.BaseURL)
 
 	// Выполнение POST запроса с помощью HTTP клиента из API сервиса
-	responseBody, err := cj.transport.Request(fasthttp.MethodPost, url, req, cj.authMiddleware)
+	responseBody, err := cj.transport.Request(fasthttp.MethodPost, reqURL, assertedReq, cj.authMiddleware)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send IBAN request: %w", err)
 	}
 
 	// Преобразование тела ответа в структуру IBANResponse
-	var ibanResponse IBANResponse
-	err = json.Unmarshal(responseBody, &ibanResponse)
-	if err != nil {
+	var res IBANResponse
+	if err := json.Unmarshal(responseBody, &res); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal IBAN response: %w", err)
 	}
 
-	return &ibanResponse, nil
+	return &res, nil
 }
 
-func (cj *ClearJunction) PayIn(request providers.PayInRequester) (providers.PayInResponder, error) {
-	req := request.(map[string]interface{})
-
-	// Формирование URL для запроса
-	payinURL := fmt.Sprintf("%s/v7/gate/invoice/creditCard", cj.BaseURL)
-
-	// Выполнение запроса с помощью метода Request из пакета utils
-	responseBody, err := cj.transport.Request(fasthttp.MethodPost, payinURL, req, cj.authMiddleware)
-	if err != nil {
-		return nil, fmt.Errorf("ошибка выполнения запроса: %w", err)
-	}
-
-	// Разбор ответа
-	var response providers.PayInResponder
-	err = json.Unmarshal(responseBody, &response)
-	if err != nil {
-		return nil, fmt.Errorf("ошибка разбора ответа: %w", err)
-	}
-
-	return response, nil
-}
-
-func (cj *ClearJunction) PayOut(request providers.PayOutRequester) (providers.PayOutResponder, error) {
-	req := request.(map[string]interface{})
-
-	// Формирование URL для запроса
-	payoutURL := fmt.Sprintf("%s/v7/gate/payout/bankTransfer/swift", cj.BaseURL)
-
-	// Выполнение запроса с помощью метода Request из пакета utils
-	responseBody, err := cj.transport.Request(fasthttp.MethodPost, payoutURL, req, cj.authMiddleware)
-	if err != nil {
-		return nil, fmt.Errorf("ошибка выполнения запроса: %w", err)
-	}
-
-	// Разбор ответа
-	var response providers.PayOutResponder
-	err = json.Unmarshal(responseBody, &response)
-	if err != nil {
-		return nil, fmt.Errorf("ошибка разбора ответа: %w", err)
-	}
-
-	return response, nil
-}
-
-func (cj *ClearJunction) Status(request providers.StatusRequester) (providers.StatusResponder, error) {
-	req, ok := request.(StatusRequest)
+func (cj *ClearJunction) PayIn(req providers.PayInRequester) (providers.PayInResponder, error) {
+	assertedReq, ok := req.(map[string]interface{})
 	if !ok {
 		return nil, fmt.Errorf("invalid request type")
 	}
 
-	url := fmt.Sprintf("%sv7/gate/allocate/v2/list/iban/%s", cj.BaseURL, req.ClientCustomerId)
+	// Формирование URL для запроса
+	reqURL := fmt.Sprintf("%s/v7/gate/invoice/creditCard", cj.BaseURL)
+
+	// Выполнение запроса с помощью метода Request из пакета utils
+	responseBody, err := cj.transport.Request(fasthttp.MethodPost, reqURL, assertedReq, cj.authMiddleware)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка выполнения запроса: %w", err)
+	}
+
+	// Разбор ответа
+	var res providers.PayInResponder
+	if err := json.Unmarshal(responseBody, &res); err != nil {
+		return nil, fmt.Errorf("ошибка разбора ответа: %w", err)
+	}
+
+	return res, nil
+}
+
+func (cj *ClearJunction) PayOut(req providers.PayOutRequester) (providers.PayOutResponder, error) {
+	assertedReq, ok := req.(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("invalid request type")
+	}
+
+	// Формирование URL для запроса
+	reqURL := fmt.Sprintf("%sv7/gate/payout/bankTransfer/swift", cj.BaseURL)
+
+	// Выполнение запроса с помощью метода Request из пакета utils
+	responseBody, err := cj.transport.Request(fasthttp.MethodPost, reqURL, assertedReq, cj.authMiddleware)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка выполнения запроса: %w", err)
+	}
+
+	// Разбор ответа
+	var res providers.PayOutResponder
+	if err := json.Unmarshal(responseBody, &res); err != nil {
+		return nil, fmt.Errorf("ошибка разбора ответа: %w", err)
+	}
+
+	return res, nil
+}
+
+func (cj *ClearJunction) Status(req providers.StatusRequester) (providers.StatusResponder, error) {
+	assertedReq, ok := req.(StatusRequest)
+	if !ok {
+		return nil, fmt.Errorf("invalid request type")
+	}
+
+	reqURL := fmt.Sprintf("%sv7/gate/allocate/v2/list/iban/%s", cj.BaseURL, assertedReq.ClientCustomerId)
 
 	// Выполнение GET запроса с помощью HTTP клиента из API сервиса
-	responseBody, err := cj.transport.Request(fasthttp.MethodGet, url, nil, cj.authMiddleware)
+	responseBody, err := cj.transport.Request(fasthttp.MethodGet, reqURL, nil, cj.authMiddleware)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send Status request: %w", err)
 	}
 
 	// Преобразование тела ответа в структуру StatusResponse
-	var statusResponse StatusResponse
-	err = json.Unmarshal(responseBody, &statusResponse)
-	if err != nil {
+	var res StatusResponse
+	if err := json.Unmarshal(responseBody, &res); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal Status response: %w", err)
 	}
 
-	return statusResponse, nil
+	return res, nil
 }
 
 func (cj *ClearJunction) PostBack(request providers.PostBackRequester) (providers.PostBackResponder, error) {
@@ -206,7 +216,7 @@ func (cj *ClearJunction) handlePayPostback(request *PayPostbackRequest) (provide
 		}
 
 		if request.Status == "completed" {
-			result, err := cj.payoutApprove(request.OrderReference)
+			result, err := cj.payoutApprove(&PayoutApproveRequest{OrderReferenceArray: []string{request.OrderReference}})
 			if err != nil {
 				return nil, err
 			}
@@ -262,29 +272,29 @@ func (cj *ClearJunction) handlePayPostback(request *PayPostbackRequest) (provide
 	return nil, fmt.Errorf("wrong request")
 }
 
-func (cj *ClearJunction) payoutApprove(orderReference string) (result PayoutApproveResponse, err error) {
-	params := map[string]interface{}{
-		"orderReferenceArray": []string{orderReference},
-	}
+func (cj *ClearJunction) payoutApprove(request *PayoutApproveRequest) (res PayoutApproveResponse, err error) {
+	reqURL := fmt.Sprintf("%s/v7/gate/transactionAction/approve", cj.BaseURL)
 
-	url := fmt.Sprintf("%s/v7/gate/transactionAction/approve", cj.BaseURL)
-
-	responseData, err := cj.transport.Request("POST", url, params, cj.authMiddleware)
+	responseBody, err := cj.transport.Request("POST", reqURL, request, cj.authMiddleware)
 	if err != nil {
-		return result, err
+		return res, err
 	}
 
-	response := &PayoutApproveResponseWrapper{}
-	err = json.Unmarshal(responseData, response)
-	if err != nil {
-		return result, err
+	resWrapped := &PayoutApproveResponseWrapped{}
+	if err := json.Unmarshal(responseBody, resWrapped); err != nil {
+		return res, err
 	}
 
-	if len(response.ActionResult) > 0 {
-		result = response.ActionResult[0]
+	if len(resWrapped.ActionResult) > 0 {
+		res = resWrapped.ActionResult[0]
 	} else {
 		err = fmt.Errorf("empty action result")
 	}
 
-	return result, err
+	return res, err
+}
+
+func GetName() string {
+	_, fullPath, _, _ := runtime.Caller(0)
+	return filepath.Base(filepath.Dir(fullPath))
 }

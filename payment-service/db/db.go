@@ -26,6 +26,40 @@ func (pg *Pg) Close() {
 
 // Универсальные функции для работы с таблицами
 
+// Select заполняет переданный объект данными из таблицы table, которые соответствуют условиям wheres.
+func (pg *Pg) Select(table string, columns []string, wheres map[string]interface{}, result interface{}) error {
+	ctx := context.Background()
+
+	columnList := "*"
+	if len(columns) > 0 {
+		columnList = strings.Join(columns, ", ")
+	}
+
+	// Формируем SQL-запрос для выбора записей
+	sql := fmt.Sprintf("SELECT %s FROM %s WHERE ", columnList, table)
+	var values []interface{}
+	i := 1
+	for where, value := range wheres {
+		sql += where + "=$" + fmt.Sprint(i) + " AND "
+		values = append(values, value)
+		i++
+	}
+	sql = sql[:len(sql)-5] // Удаляем последний " AND "
+
+	// Выполняем SQL-запрос
+	row := pg.pool.QueryRow(ctx, sql, values...)
+
+	// Заполняем переданный объект
+	if err := row.Scan(result); err != nil {
+		if err == pgx.ErrNoRows {
+			return fmt.Errorf("no rows were returned")
+		}
+		return fmt.Errorf("unable to select records: %v", err)
+	}
+
+	return nil
+}
+
 // Insert создает новую запись в таблице table с параметрами params и возвращает ее ID.
 func (pg *Pg) Insert(table string, params map[string]interface{}) (int, error) {
 	ctx := context.Background()

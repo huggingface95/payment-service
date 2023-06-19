@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
+	"payment-service/providers"
 	"payment-service/providers/clearjunction"
 	"payment-service/providers/currencycloud"
 )
@@ -10,28 +12,16 @@ func SetupRoutes(services Services) {
 	// Эндпоинт для проверки здоровья сервиса
 	services.API.FiberClient.Get("/health", HealthCheck)
 
-	serverConfig := services.API.Config
-
 	// Группа handler-ов провайдера ClearJunction
 	{
-		group := services.API.FiberClient.Group("/clearjunction")
-		providerConfig := services.Providers.Config["clearjunction"].(map[string]interface{})
-
-		// Создаем экземпляр структуры Services провайдера, передавая необходимые сервисы
-		providerServices := clearjunction.Services{
-			Providers: services.Providers,
-			Queue:     services.Queue,
-			DB:        services.DB,
-		}
-
+		providerName := currencycloud.GetName()
+		// Создание новой группы с именем, сформированным на основе переменной providerName
+		group := services.API.FiberClient.Group("/" + providerName)
 		// Создаем экземпляр провайдера ClearJunction
-		provider := clearjunction.New(
-			providerServices,
-			providerConfig["key"].(string),
-			providerConfig["password"].(string),
-			providerConfig["base_url"].(string),
-			serverConfig["public_url"].(string),
-		)
+		provider, err := getProvider(services, providerName)
+		if err != nil {
+			panic(err)
+		}
 		group.Get("/iban-company/check", func(c *fiber.Ctx) error {
 			return ClearJunctionCheckStatus(c, provider)
 		})
@@ -54,25 +44,14 @@ func SetupRoutes(services Services) {
 
 	// Группа handler-ов провайдера CurrencyCloud
 	{
-		group := services.API.FiberClient.Group("/currencycloud")
-		providerConfig := services.Providers.Config["currencycloud"].(map[string]interface{})
-
-		// Создаем экземпляр структуры Services провайдера, передавая необходимые сервисы
-		providerServices := currencycloud.Services{
-			Providers: services.Providers,
-			Queue:     services.Queue,
-			DB:        services.DB,
+		providerName := currencycloud.GetName()
+		// Создание новой группы с именем, сформированным на основе переменной providerName
+		group := services.API.FiberClient.Group("/" + providerName)
+		// Создаем экземпляр провайдера ClearJunction
+		provider, err := getProvider(services, providerName)
+		if err != nil {
+			panic(err)
 		}
-
-		// Создаем экземпляр провайдера CurrencyCloud
-		provider := currencycloud.New(
-			providerServices,
-			providerConfig["login_id"].(string),
-			providerConfig["api_key"].(string),
-			providerConfig["base_url"].(string),
-			serverConfig["public_url"].(string),
-		)
-
 		// Группа handler-ов провайдера CurrencyCloud
 		group.Post("/auth", func(c *fiber.Ctx) error {
 			return CurrencyCloudAuth(c, provider)
@@ -101,5 +80,43 @@ func SetupRoutes(services Services) {
 		group.Post("/postback", func(c *fiber.Ctx) error {
 			return CurrencyCloudPostback(c, provider)
 		})
+	}
+}
+
+func getProvider(services Services, providerName string) (providers.PaymentProvider, error) {
+	serverConfig := services.API.Config
+	providerConfig := services.Providers.Config[providerName].(map[string]interface{})
+
+	switch providerName {
+	case "clearjunction":
+		providerServices := clearjunction.Services{
+			Providers: services.Providers,
+			Queue:     services.Queue,
+			DB:        services.DB,
+		}
+		provider := clearjunction.New(
+			providerServices,
+			providerConfig["key"].(string),
+			providerConfig["password"].(string),
+			providerConfig["base_url"].(string),
+			serverConfig["public_url"].(string),
+		)
+		return provider, nil
+	case "currencycloud":
+		providerServices := currencycloud.Services{
+			Providers: services.Providers,
+			Queue:     services.Queue,
+			DB:        services.DB,
+		}
+		provider := currencycloud.New(
+			providerServices,
+			providerConfig["login_id"].(string),
+			providerConfig["api_key"].(string),
+			providerConfig["base_url"].(string),
+			serverConfig["public_url"].(string),
+		)
+		return provider, nil
+	default:
+		return nil, fmt.Errorf("unknown provider")
 	}
 }

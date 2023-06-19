@@ -30,6 +30,8 @@
 payment-service/
 ├── api/
 │ ├── api_service.go    # Логика API-сервиса
+│ ├── clearjunction_handlers.go
+│ ├── currencycloud_handlers.go
 │ ├── handlers.go       # Обработчики запросов API
 │ ├── router.go         # Конфигурация роутера
 │ └── types.go          # Типы данных API
@@ -51,6 +53,7 @@ payment-service/
 │ │ ├── ${provider_name}.go     # Логика провайдера платежей
 │ │ ├── models.go               # Модели провайдера платежей
 │ │ └── submodels.go            # Подмодели провайдера платежей
+│ │ └── types.go                # Типы данных провайдера платежей
 │ ├── provider_service.go       # Логика сервиса для работы с провайдерами платежей
 │ └── providers.go              # Общая логика провайдеров платежей
 ├── queue/

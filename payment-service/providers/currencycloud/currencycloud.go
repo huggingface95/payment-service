@@ -6,8 +6,10 @@ import (
 	"github.com/fatih/structs"
 	"github.com/gofiber/fiber/v2"
 	"github.com/valyala/fasthttp"
+	"path/filepath"
 	"payment-service/providers"
 	"payment-service/utils"
+	"runtime"
 )
 
 var _ providers.PaymentProvider = (*CurrencyCloud)(nil)
@@ -30,24 +32,16 @@ func New(services Services, loginID, apiKey, baseURL, publicURL string) *Currenc
 }
 
 func (cc *CurrencyCloud) Auth(request providers.AuthRequester) (providers.AuthResponder, error) {
-	reqURL := fmt.Sprintf("%sv2/authenticate/api", cc.BaseURL)
-
 	// Создание запроса на авторизацию
 	assertedReq, ok := request.(AuthRequest)
 	if !ok {
 		return nil, fmt.Errorf("invalid request type")
 	}
 
+	reqURL := fmt.Sprintf("%sv2/authenticate/api", cc.BaseURL)
+
 	// Отправка запроса на авторизацию
-	var params map[string]interface{}
-	paramsData, err := json.Marshal(assertedReq)
-	if err != nil {
-		return "", fmt.Errorf("ошибка парсинга параметров запроса на авторизацию: %w", err)
-	}
-	if err := json.Unmarshal(paramsData, &params); err != nil {
-		return "", fmt.Errorf("ошибка парсинга параметров запроса на авторизацию: %w", err)
-	}
-	responseBody, err := cc.transport.Request(fiber.MethodPost, reqURL, params, nil)
+	responseBody, err := cc.transport.Request(fiber.MethodPost, reqURL, assertedReq, nil)
 	if err != nil {
 		return "", fmt.Errorf("ошибка выполнения запроса на авторизацию: %w", err)
 	}
@@ -209,11 +203,6 @@ func (cc *CurrencyCloud) convert(request *ConvertRequest) (providers.CustomRespo
 	return &res, nil
 }
 
-func (cc *CurrencyCloud) authMiddleware(requestBody []byte) (err error) {
-	_, err = cc.Auth(AuthRequest{cc.LoginID, cc.APIKey})
-	return
-}
-
 func (cc *CurrencyCloud) account(req *AccountRequest) (*AccountResponse, error) {
 	reqURL := fmt.Sprintf("%sv2/accounts/create", cc.BaseURL)
 
@@ -231,4 +220,14 @@ func (cc *CurrencyCloud) account(req *AccountRequest) (*AccountResponse, error) 
 	}
 
 	return &res, nil
+}
+
+func (cc *CurrencyCloud) authMiddleware(requestBody []byte) (err error) {
+	_, err = cc.Auth(AuthRequest{cc.LoginID, cc.APIKey})
+	return
+}
+
+func GetName() string {
+	_, fullPath, _, _ := runtime.Caller(0)
+	return filepath.Base(filepath.Dir(fullPath))
 }

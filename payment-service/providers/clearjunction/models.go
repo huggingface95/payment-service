@@ -97,6 +97,11 @@ type PayPostbackResponse struct {
 	OrderReference string `json:"orderReference"`
 }
 
+// PayoutApproveRequest представляет запрос на утверждение PayOut.
+type PayoutApproveRequest struct {
+	OrderReferenceArray []string `json:"orderReferenceArray"`
+}
+
 // PayoutApproveResponse представляет ответ на утверждение PayOut.
 type PayoutApproveResponse struct {
 	OrderReference         string    `json:"orderReference"`
@@ -104,20 +109,31 @@ type PayoutApproveResponse struct {
 	Messages               []Message `json:"messages"`
 }
 
-// PayoutApproveResponseWrapper представляет обёртку на ответ на утверждение PayOut.
-type PayoutApproveResponseWrapper struct {
+// PayoutApproveResponseWrapped представляет обёртку на ответ на утверждение PayOut.
+type PayoutApproveResponseWrapped struct {
 	RequestReference string                  `json:"requestReference"`
 	ActionResult     []PayoutApproveResponse `json:"actionResult"`
 }
 
 type IBANRequest struct {
-	ClientOrder string     `json:"clientOrder"`
-	PostbackURL string     `json:"postbackUrl"`
-	WalletUUID  string     `json:"walletUuid"`
-	IbansGroup  string     `json:"ibansGroup"`
-	IbanCountry string     `json:"ibanCountry"`
-	Registrant  Registrant `json:"registrant"`
-	CustomInfo  CustomInfo `json:"customInfo"`
+	CompanyID            string  `json:"company_id"`
+	CurrencyID           string  `json:"currency_id"`
+	OwnerID              string  `json:"owner_id"`
+	AccountNumber        string  `json:"account_number"`
+	PaymentProviderID    string  `json:"payment_provider_id"`
+	IbanProviderID       string  `json:"iban_provider_id"`
+	CommissionTemplateID string  `json:"commission_template_id"`
+	AccountName          string  `json:"account_name"`
+	IsPrimary            bool    `json:"is_primary"`
+	GroupRoleID          string  `json:"group_role_id"`
+	GroupTypeID          string  `json:"group_type_id"`
+	PaymentBankID        string  `json:"payment_bank_id"`
+	ProjectID            string  `json:"project_id"`
+	ParentID             string  `json:"parent_id"`
+	ClientID             string  `json:"client_id"`
+	MinLimitBalance      float64 `json:"min_limit_balance"`
+	MaxLimitBalance      float64 `json:"max_limit_balance"`
+	CurrentBalance       float64 `json:"current_balance"`
 }
 
 type PayInRequest struct {
