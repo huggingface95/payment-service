@@ -32,6 +32,8 @@ class AccountRepository extends Repository implements AccountRepositoryInterface
         'company_id',
         'member_id',
         'project_id',
+        'client_id',
+        'client_type',
     ];
 
     public const PARENT_CLONE_MORPH_RECORDS = [
