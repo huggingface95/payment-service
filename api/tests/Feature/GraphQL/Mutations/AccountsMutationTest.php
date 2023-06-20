@@ -30,7 +30,7 @@ class AccountsMutationTest extends TestCase
                   input:{
                     company_id: $company_id
                     currency_id: $currency_id
-                    owner_id: $owner_id
+                    client_id: $owner_id
                     account_number: $account_number
                     commission_template_id: $commission_template_id
                     account_name: $account_name
@@ -79,7 +79,7 @@ class AccountsMutationTest extends TestCase
                       input:{
                         company_id: $company_id
                         currency_id: $currency_id
-                        owner_id: $owner_id
+                        client_id: $owner_id
                         account_number: $account_number
                         commission_template_id: $commission_template_id
                         account_name: $account_name

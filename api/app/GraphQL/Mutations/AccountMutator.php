@@ -12,6 +12,8 @@ use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Account;
 use App\Models\AccountState;
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
 use App\Models\Company;
 use App\Models\EmailNotification;
 use App\Models\GroupRole;
@@ -60,6 +62,28 @@ class AccountMutator
 
             if (isset($args['client_id'])) {
                 $args['client_type'] = $args['group_type_id'] == GroupTypeEnum::COMPANY->value ? ApplicantTypeEnum::COMPANY->toString() : ApplicantTypeEnum::INDIVIDUAL->toString();
+                if ($args['group_type_id'] == GroupTypeEnum::INDIVIDUAL->value) {
+                    $applicantIndividual = ApplicantIndividual::query()
+                        ->find($args['client_id']);
+                    if ($applicantIndividual) {
+                        $args['owner_id'] = $args['client_id'];
+                    } else {
+                        throw new GraphqlException('Applicant not found.', 'Internal', 403);
+                    }
+                } elseif ($args['group_type_id'] == GroupTypeEnum::COMPANY->value) {
+                    $applicantCompany = ApplicantCompany::query()
+                        ->find($args['client_id']);
+                    if ($applicantCompany) {
+                        $applicantIndividual = $applicantCompany->owner;
+                        if ($applicantIndividual) {
+                            $args['owner_id'] = $applicantIndividual->id;
+                        } else {
+                            throw new GraphqlException('Applicant not found for this corporate.', 'Internal', 403);
+                        }
+                    } else {
+                        throw new GraphqlException('Applicant Company not found.', 'Internal', 403);
+                    }
+                }
             }
 
             $paymentProvider = PaymentProvider::find($args['payment_provider_id']);

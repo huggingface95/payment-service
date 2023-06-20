@@ -273,7 +273,7 @@ input InputAccount{
     "ID валюты"
     currency_id: ID!
     "ID владельца"
-    owner_id: ID!
+    owner_id: ID
     "Номер аккаунта"
     account_number: String
     "ID провайдера"
@@ -297,7 +297,7 @@ input InputAccount{
     "ID родительского аккаунта"
     parent_id: ID
     "ID Individual or Company"
-    client_id: ID
+    client_id: ID!
     "лимит максимального баланса"
     min_limit_balance: Decimal
     "лимит минимального баланса"
