@@ -183,15 +183,17 @@ class CheckLimitService
             ->where('applicant_company_id', $transfer->sender_id)
             ->first();
 
-        $dailyLimit = $applicantBankingAccess->daily_limit - $applicantBankingAccess->used_daily_limit;
-        $monthlyLimit = $applicantBankingAccess->monthly_limit - $applicantBankingAccess->used_monthly_limit;
+        if ($applicantBankingAccess){
+            $dailyLimit = $applicantBankingAccess->daily_limit - $applicantBankingAccess->used_daily_limit;
+            $monthlyLimit = $applicantBankingAccess->monthly_limit - $applicantBankingAccess->used_monthly_limit;
 
-        if ($dailyLimit < $transfer->amount_debt) {
-            throw new GraphqlException('Daily limit reached', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+            if ($dailyLimit < $transfer->amount_debt) {
+                throw new GraphqlException('Daily limit reached', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
-        if ($monthlyLimit < $transfer->amount_debt) {
-            throw new GraphqlException('Monthly limit reached', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+            if ($monthlyLimit < $transfer->amount_debt) {
+                throw new GraphqlException('Monthly limit reached', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
         }
     }
 }
