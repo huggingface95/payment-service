@@ -153,7 +153,7 @@ class TransferOutgoing extends BaseModel implements CustomObServerInterface
 
     public function files(): BelongsToMany
     {
-        return $this->belongsToMany(Files::class, 'transfer_file_relation', 'transfer_id', 'file_id')
+        return $this->belongsToMany(Files::class, TransferFIleRelation::class, 'transfer_id', 'file_id')
             ->where('transfer_type', class_basename(self::class));
     }
 
