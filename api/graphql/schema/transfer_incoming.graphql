@@ -112,6 +112,7 @@ extend type Query @guard {
         company_id: ID
         payment_provider_id: ID
         account_id: ID
+        id: ID
     ): [TransferIncomingStatistic]
         @field(resolver: "TransferIncomingQuery@statistic")
 
@@ -303,7 +304,7 @@ extend type Mutation @guard {
         code: String!
     ): TransferIncoming
         @field(resolver: "TransferIncomingMutator@sign")
-    
+
     """
     Исполнить входящий перевод
     """
@@ -321,7 +322,7 @@ extend type Mutation @guard {
         id: ID!
     ): TransferIncoming
         @field(resolver: "TransferIncomingMutator@cancel")
-    
+
     """
     Привязать файлы
     """

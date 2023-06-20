@@ -134,6 +134,7 @@ extend type Query @guard {
         company_id: ID
         payment_provider_id: ID
         account_id: ID
+        id: ID
     ): [TransferOutgoingStatistic]
         @field(resolver: "TransferOutgoingQuery@statistic")
 
@@ -350,7 +351,7 @@ extend type Mutation @guard {
         id: ID!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@cancel")
-    
+
     """
     Отменить (Refund) исходящий перевод
     """

@@ -42,6 +42,10 @@ class TransferIncomingQuery
             $statistic->where('account_id', $args['account_id']);
         }
 
+        if (isset($args['id'])) {
+            $statistic->where('id', $args['id']);
+        }
+
         return $statistic->get();
     }
 
