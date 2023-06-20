@@ -18,27 +18,27 @@ class RolesTableSeeder extends Seeder
         $roles = [
             [
                 'name' => 'Test Role 1',
-                'guard_name' => GuardEnum::GUARD_NAME,
+                'guard_name' => GuardEnum::GUARD_MEMBER->value,
                 'description' => 'api role',
                 'company_id' => 1,
                 'group_type_id' => 1,
             ],
             [
                 'name' => 'Super Role',
-                'guard_name' => GuardEnum::GUARD_NAME,
+                'guard_name' => GuardEnum::GUARD_MEMBER->value,
                 'description' => 'Super admin role',
                 'company_id' => 1,
                 'group_type_id' => 1,
             ], [
                 'name' => 'Company Role',
-                'guard_name' => GuardEnum::GUARD_NAME,
+                'guard_name' => GuardEnum::GUARD_MEMBER->value,
                 'description' => 'api role',
                 'company_id' => 1,
                 'group_type_id' => 2,
             ],
             [
                 'name' => 'Individual Role',
-                'guard_name' => GuardEnum::GUARD_NAME,
+                'guard_name' => GuardEnum::GUARD_MEMBER->value,
                 'description' => 'api role',
                 'company_id' => 1,
                 'group_type_id' => 3,

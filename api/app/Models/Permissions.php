@@ -45,7 +45,7 @@ class Permissions extends SpatiePermission
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
-    protected $guard_name = GuardEnum::GUARD_NAME;
+    protected $guard_name = GuardEnum::GUARD_MEMBER->value;
 
     protected static function booted()
     {
