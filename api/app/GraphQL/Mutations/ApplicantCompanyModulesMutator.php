@@ -21,7 +21,7 @@ class ApplicantCompanyModulesMutator extends BaseMutator
         if (isset($args['module_id'])) {
             $applicant->modules()->detach();
             foreach ($args['module_id'] as $module) {
-                ApplicantCompanyModules::insert(['module_id'=> $module, 'applicant_company_id' => $args['applicant_company_id']]);
+                ApplicantCompanyModules::query()->create(['module_id'=> $module, 'applicant_company_id' => $args['applicant_company_id']]);
             }
         }
 
