@@ -7,7 +7,7 @@ use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class PaymentBank extends BaseModel
@@ -95,4 +95,10 @@ class PaymentBank extends BaseModel
     {
         return $this->belongsTo(Country::class, 'country_id');
     }
+
+    public function company(): HasOneDeep
+    {
+        return $this->hasOneDeepFromRelations($this->paymentProvider(), (new PaymentProvider())->company());
+    }
+
 }

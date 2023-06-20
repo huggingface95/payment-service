@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 class BankCorrespondent extends BaseModel
@@ -99,6 +100,11 @@ class BankCorrespondent extends BaseModel
             'payment_system_id',
             'payment_provider_id',
         );
+    }
+
+    public function company(): HasOneDeep
+    {
+        return $this->hasOneDeepFromRelations($this->paymentProvider(), (new PaymentProvider())->company());
     }
 
 }

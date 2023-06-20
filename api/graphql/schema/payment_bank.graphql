@@ -63,6 +63,7 @@ input QueryPaymentBanksFilterStatic @spread{
     payment_system_code: String @ilike
     hasCurrenciesRegionsFilterByCurrencyId: ID @eq
     hasCurrenciesRegionsFilterByRegionId: ID @eq
+    hasCompanyFilterById: ID @eq
 }
 
 input InputPaymentBank {
