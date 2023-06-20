@@ -18,7 +18,7 @@ class TransferFileRelationObserver extends BaseObserver
         }
 
 
-        if ($model->file->user->getAttributes() != Auth::user()->getAttributes()) {
+        if ($model->file->user?->getAttributes() != Auth::user()->getAttributes()) {
             throw new GraphqlException('Access denied this file', 'use');
         }
 
@@ -36,7 +36,7 @@ class TransferFileRelationObserver extends BaseObserver
         }
 
 
-        if ($model->file->user->getAttributes() != Auth::user()->getAttributes()) {
+        if ($model->file->user?->getAttributes() != Auth::user()->getAttributes()) {
             throw new GraphqlException('Access denied this file', 'use');
         }
 
@@ -52,7 +52,7 @@ class TransferFileRelationObserver extends BaseObserver
             return false;
         }
 
-        if ($model->file->user->getAttributes() != Auth::user()->getAttributes()) {
+        if ($model->file->user?->getAttributes() != Auth::user()->getAttributes()) {
             throw new GraphqlException('Access denied this file', 'use');
         }
 
