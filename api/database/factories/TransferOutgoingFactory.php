@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\TransferChannelEnum;
+use App\Enums\TransferTypeEnum;
 use App\Models\TransferOutgoing;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -32,7 +33,7 @@ class TransferOutgoingFactory extends Factory
             'currency_id' => 1,
             'status_id' => $this->faker->numberBetween(1, 7),
             'urgency_id' => $this->faker->numberBetween(1, 2),
-            'operation_type_id' => $this->faker->numberBetween(1, 6),
+            'operation_type_id' => TransferTypeEnum::OUTGOING_WIRE_TRANSFER->value,
             'payment_provider_id' => 1,
             'payment_system_id' => 1,
             'payment_bank_id' => 1,
