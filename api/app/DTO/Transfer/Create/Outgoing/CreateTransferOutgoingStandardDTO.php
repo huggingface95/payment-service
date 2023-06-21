@@ -7,6 +7,7 @@ use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
+use App\Models\CommissionPriceList;
 use App\Models\Company;
 use App\Models\PaymentBank;
 use App\Models\PriceListFee;
@@ -27,6 +28,11 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
         if (empty($args['price_list_id'])) {
             $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('out Region not found', 'use');
             $args['price_list_id'] = $repository->getCommissionPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found', 'use');
+        } else {
+            CommissionPriceList::query()
+                ->where('id', $args['price_list_id'])
+                ->where('company_id', $args['company_id'])
+                ->first() ?? throw new GraphqlException('Commission price list not found', 'use');
         }
 
         if (empty($args['price_list_fee_id'])) {
@@ -34,6 +40,12 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
                 ->where('price_list_id', $args['price_list_id'])
                 ->where('operation_type_id', $operationType)
                 ->first()?->id ?? throw new GraphqlException('Price list fee not found', 'use');
+        } else {
+            PriceListFee::query()
+                ->where('id', $args['price_list_fee_id'])
+                ->where('operation_type_id', $operationType)
+                ->where('company_id', $args['company_id'])
+                ->first() ?? throw new GraphqlException('Price list fee not found', 'use');
         }
 
         $date = Carbon::now()->format('Y-m-d H:i:s');

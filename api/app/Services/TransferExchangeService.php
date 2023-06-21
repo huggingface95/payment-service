@@ -168,10 +168,9 @@ class TransferExchangeService extends AbstractService
      */
     private function populateTransferData(array $args, Account $fromAccount, Account $toAccount): array
     {
+        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingExchangeDTO::class, $fromAccount, $args['amount'], $args);
         $toAmount = (string) $this->getExchangeAmount($args, $fromAccount, $toAccount);
-
-        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingExchangeDTO::class, $fromAccount, $args['amount'], $args['price_list_fee_id']);
-        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingExchangeDTO::class, $toAccount, $toAmount, $outgoingDTO->payment_number, $outgoingDTO->created_at, $args['price_list_fee_id']);
+        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingExchangeDTO::class, $toAccount, $toAmount, $outgoingDTO, $args);
 
         return [
             'outgoing' => $outgoingDTO->toArray(),
