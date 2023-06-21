@@ -21,7 +21,7 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
      */
     public static function transform(array $args, int $operationType, TransferOutgoingRepository $repository): CreateTransferOutgoingDTO
     {
-        $account = Account::where('id', $args['account_id'])->first();
+        $account = Account::where('id', $args['account_id'])->first() ?? throw new GraphqlException('Account not found', 'use');
         $args['company_id'] = $account->company_id;
 
         if (empty($args['price_list_id'])) {
