@@ -8,6 +8,8 @@ use App\Enums\RespondentFeesEnum;
 use App\Enums\TransferChannelEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
+use App\Models\CommissionPriceList;
+use App\Models\PriceListFee;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -20,6 +22,17 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
     {
         $date = Carbon::now();
 
+        CommissionPriceList::query()
+            ->where('id', $args['price_list_id'])
+            ->where('company_id', $fromAccount->company_id)
+            ->first() ?? throw new GraphqlException('Commission price list not found', 'use');
+        
+        PriceListFee::query()
+            ->where('id', $args['price_list_fee_id'])
+            ->where('operation_type_id', $operationType)
+            ->where('company_id', $fromAccount->company_id)
+            ->first() ?? throw new GraphqlException('Price list fee not found', 'use');
+        
         $args['account_id'] = $fromAccount->id;
         $args['currency_id'] = $fromAccount->currencies?->id;
         $args['company_id'] = $fromAccount->company_id;
@@ -42,7 +55,6 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $args['created_at'];
         $args['recipient_bank_country_id'] = 1;
-        $args['recipient_country_id'] = 1;
 
         return new parent($args, $fromAccount);
     }

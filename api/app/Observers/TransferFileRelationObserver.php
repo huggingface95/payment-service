@@ -61,4 +61,20 @@ class TransferFileRelationObserver extends BaseObserver
 
         return true;
     }
+
+    public function deleting(TransferFIleRelation|Model $model, bool $callHistory = false): bool
+    {
+        if (!parent::deleting($model, $callHistory)) {
+            return false;
+        }
+
+        if ($model->file->user?->getAttributes() != Auth::user()->getAttributes()) {
+            throw new GraphqlException('Access denied this file', 'use');
+        }
+
+
+        $this->checkAndCreateHistory($model, 'deleting');
+
+        return true;
+    }
 }
