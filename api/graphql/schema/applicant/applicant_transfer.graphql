@@ -1,0 +1,42 @@
+"""
+переводы
+"""
+type Transfer {
+    "Сумма"
+    amount: Decimal!
+    amount_debt: Decimal!
+    fee_amount: Decimal!
+    "Статус"
+    status: PaymentStatus @belongsTo(relation: "paymentStatus")
+    "Получить связанный тип"
+    payment_operation_type: OperationType @belongsTo(relation: "paymentOperation")
+    "Получить связанный тип трансфера"
+    transfer_type: TypeOfTransfer @belongsTo(relation: "transferType")
+    "Получить связанную компанию"
+    company: Company @belongsTo(relation: "company")
+    reason: String
+    from_account: String
+    to_account: String
+    "Дата и время создания"
+    created_at: DateTimeUtc
+}
+
+
+extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Queries\\Applicant") {
+    """
+    Получить список аккаунтов
+    """
+    transfers(
+        filter: _ @filterConditions(static: QueryTransfersFilterStatic)
+        created_at: DateTimeRange @whereBetween,
+    ): [Transfer!]
+    @paginate(defaultCount: 10, scopes: ["filterByAuthUser"])
+    @orderBy(column: "created_at", direction: DESC)
+}
+
+input QueryTransfersFilterStatic @spread {
+    to_account: String @eq
+    from_account: String @eq
+    payment_status_id: ID @eq
+    operation_type_id: ID @eq
+}
