@@ -4,6 +4,7 @@ namespace App\DTO\Transfer\Create\Outgoing;
 
 use App\Enums\BeneficiaryTypeEnum;
 use App\Enums\PaymentStatusEnum;
+use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
 use App\Models\Account;
 use Carbon\Carbon;
@@ -22,7 +23,7 @@ class CreateTransferOutgoingRefundDTO extends CreateTransferOutgoingDTO
         $args['requested_by_id'] = Auth::guard('api')->check() ? 1 : Auth::guard('api_client')->user()?->id;
         $args['reason'] = 'Refund #'.$args['id'];
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
-        $args['urgency_id'] = 1;
+        $args['urgency_id'] = PaymentUrgencyEnum::STANDART->value;
         $args['operation_type_id'] = $operationType;
         $args['payment_bank_id'] = 2;
         $args['payment_number'] = Str::uuid();
