@@ -62,15 +62,15 @@ class AccountMutator
 
             if (isset($args['client_id'])) {
                 $args['client_type'] = $args['group_type_id'] == GroupTypeEnum::COMPANY->value ? ApplicantTypeEnum::COMPANY->toString() : ApplicantTypeEnum::INDIVIDUAL->toString();
-                if ($args['group_type_id'] == GroupTypeEnum::INDIVIDUAL->value) {
+                if ($args['group_type_id'] === GroupTypeEnum::INDIVIDUAL->value) {
                     $applicantIndividual = ApplicantIndividual::query()
                         ->find($args['client_id']);
                     if ($applicantIndividual) {
                         $args['owner_id'] = $args['client_id'];
                     } else {
-                        throw new GraphqlException('Applicant not found.', 'Internal', 403);
+                        throw new GraphqlException('Applicant not found.', 'Internal', 404);
                     }
-                } elseif ($args['group_type_id'] == GroupTypeEnum::COMPANY->value) {
+                } elseif ($args['group_type_id'] === GroupTypeEnum::COMPANY->value) {
                     $applicantCompany = ApplicantCompany::query()
                         ->find($args['client_id']);
                     if ($applicantCompany) {
@@ -78,10 +78,10 @@ class AccountMutator
                         if ($applicantIndividual) {
                             $args['owner_id'] = $applicantIndividual->id;
                         } else {
-                            throw new GraphqlException('Applicant not found for this corporate.', 'Internal', 403);
+                            throw new GraphqlException('Applicant not found for this corporate.', 'Internal', 404);
                         }
                     } else {
-                        throw new GraphqlException('Applicant Company not found.', 'Internal', 403);
+                        throw new GraphqlException('Applicant Company not found.', 'Internal', 404);
                     }
                 }
             }
