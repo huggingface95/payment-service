@@ -2,7 +2,22 @@
 
 namespace App\Enums;
 
-class GuardEnum
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
+use App\Models\Members;
+
+enum GuardEnum: string
 {
-    public const GUARD_NAME = 'api';
+    case GUARD_MEMBER = 'api';
+    case GUARD_INDIVIDUAL = 'api_client';
+    case GUARD_CORPORATE = 'api_corporate';
+
+    public function toString(): string
+    {
+        return match ($this) {
+            self::GUARD_MEMBER => class_basename(Members::class),
+            self::GUARD_INDIVIDUAL => class_basename(ApplicantIndividual::class),
+            self::GUARD_CORPORATE => class_basename(ApplicantCompany::class),
+        };
+    }
 }
