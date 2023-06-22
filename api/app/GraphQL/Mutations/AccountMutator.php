@@ -12,6 +12,8 @@ use App\Exceptions\GraphqlException;
 use App\Jobs\Redis\IbanIndividualActivationJob;
 use App\Models\Account;
 use App\Models\AccountState;
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantIndividual;
 use App\Models\Company;
 use App\Models\EmailNotification;
 use App\Models\GroupRole;
@@ -60,10 +62,24 @@ class AccountMutator
 
             if (isset($args['client_id'])) {
                 $args['client_type'] = $args['group_type_id'] == GroupTypeEnum::COMPANY->value ? ApplicantTypeEnum::COMPANY->toString() : ApplicantTypeEnum::INDIVIDUAL->toString();
+                if ($args['group_type_id'] == GroupTypeEnum::INDIVIDUAL->value) {
+                    ApplicantIndividual::findOrFail($args['client_id']);
+                    $args['owner_id'] = $args['client_id'];
+                } elseif ($args['group_type_id'] == GroupTypeEnum::COMPANY->value) {
+                    $applicantCompany = ApplicantCompany::query()->findOrFail($args['client_id']);
+                    $applicantIndividual = $applicantCompany->owner;
+                    if ($applicantIndividual) {
+                        $args['owner_id'] = $applicantIndividual->id;
+                    } else {
+                        throw new GraphqlException('Applicant not found for this corporate.', 'Internal', 404);
+                    }
+                }
+            } else {
+                throw new GraphqlException('client_id parameter not found.', 'Internal', 400);
             }
 
-            $paymentProvider = PaymentProvider::find($args['payment_provider_id']);
-            if ($paymentProvider && $paymentProvider->name == PaymentProvider::NAME_INTERNAL) {
+            $paymentProvider = PaymentProvider::findOrFail($args['payment_provider_id']);
+            if ($paymentProvider->name == PaymentProvider::NAME_INTERNAL) {
                 throw new GraphqlException('Creating an account with the Internal payment provider is not allowed.');
             }
 
