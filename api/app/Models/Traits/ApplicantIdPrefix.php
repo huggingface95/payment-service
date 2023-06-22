@@ -32,221 +32,320 @@ trait ApplicantIdPrefix
 {
     private const COLUMNS = [
         ApplicantCompany::class => [
-            'columns' => ['owner_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'owner_id' => true,
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'id' => true,
+            ],
+        ],
+        ApplicantIndividual::class => [
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'id' => true,
+            ],
         ],
         ApplicantCompanyModules::class => [
-            'columns' => ['applicant_company_id'],
-            'checks' => ['(' . ApplicantCompany::ID_PREFIX . ')'],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'applicant_company_id' => true,
+            ],
         ],
         ApplicantIndividualModules::class => [
-            'columns' => ['applicant_individual_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'applicant_individual_id' => true,
+            ],
         ],
         ApplicantDocument::class => [
-            'columns' => ['applicant_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'applicant_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'applicant_id' => [
+                    [
+                        'column' => 'applicant_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'applicant_id' => [
+                    [
+                        'column' => 'applicant_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+            ],
         ],
         ApplicantIndividualCompany::class => [
-            'columns' => ['applicant_id', 'applicant_company_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'applicant_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'applicant_id' => [
+                    [
+                        'column' => 'applicant_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'applicant_id' => [
+                    [
+                        'column' => 'applicant_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+                'applicant_company_id' => true,
+            ],
         ],
         ApplicantModuleActivity::class => [
-            'columns' => ['applicant_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'applicant_id' => true,
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'applicant_id' => true,
+            ],
         ],
         ApplicantRiskLevelHistory::class => [
-            'columns' => ['applicant_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'applicant_id' => true,
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'applicant_id' => true,
+            ],
         ],
         ApplicantBankingAccess::class => [
-            'columns' => ['applicant_individual_id', 'applicant_company_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'applicant_id' => true,
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'applicant_id' => true,
+                'applicant_company_id' => true,
+            ],
         ],
         KycTimeline::class => [
-            'columns' => ['applicant_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'applicant_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'applicant_id' => [
+                    [
+                        'column' => 'applicant_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'applicant_id' => [
+                    [
+                        'column' => 'applicant_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+            ],
         ],
         TransferExchange::class => [
-            'columns' => ['client_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'client_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'client_id' => [
+                    [
+                        'column' => 'client_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'client_id' => [
+                    [
+                        'column' => 'client_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+            ],
         ],
         TicketComments::class => [
-            'columns' => ['client_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'client_id' => true,
+            ],
         ],
         Ticket::class => [
-            'columns' => ['client_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'client_id' => true,
+            ],
         ],
         EmailVerification::class => [
-            'columns' => ['client_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'client_id' => true,
+            ],
         ],
         EmailNotificationClient::class => [
-            'columns' => ['client_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'client_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'client_id' => [
+                    [
+                        'column' => 'client_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'client_id' => [
+                    [
+                        'column' => 'client_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+            ],
         ],
         ClientIpAddress::class => [
-            'columns' => ['client_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'client_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'client_id' => [
+                    [
+                        'column' => 'client_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
         ],
         AccountClient::class => [
-            'columns' => ['client_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'client_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'client_id' => [
+                    [
+                        'column' => 'client_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'client_id' => [
+                    [
+                        'column' => 'client_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+            ],
         ],
         Account::class => [
-            'columns' => ['client_id', 'owner_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'client_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'client_id' => [
+                    [
+                        'column' => 'client_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+                'owner_id' => true
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'client_id' => [
+                    [
+                        'column' => 'client_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+            ],
         ],
         TransferIncoming::class => [
-            'columns' => ['recipient_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'recipient_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'recipient_id' => [
+                    [
+                        'column' => 'recipient_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'recipient_id' => [
+                    [
+                        'column' => 'recipient_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+            ],
         ],
         TransferOutgoing::class => [
-            'columns' => ['sender_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'sender_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'sender_id' => [
+                    [
+                        'column' => 'sender_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'sender_id' => [
+                    [
+                        'column' => 'sender_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+            ],
         ],
         ProjectSettings::class => [
-            'columns' => ['sender_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'sender_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'sender_id' => [
+                    [
+                        'column' => 'sender_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'sender_id' => [
+                    [
+                        'column' => 'sender_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+            ],
         ],
         GroupRoleUser::class => [
-            'columns' => ['user_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'user_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'user_id' => [
+                    [
+                        'column' => 'user_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'user_id' => [
+                    [
+                        'column' => 'user_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+            ],
         ],
         Fee::class => [
-            'columns' => ['client_id'],
-            'checks' => ['(' . ApplicantIndividual::ID_PREFIX . ')', '(' . ApplicantCompany::ID_PREFIX . ')'],
-            'binds' => [
-                [
-                    'column' => 'client_type',
-                    'type' => 'call_user_func',
-                    'enum' => [
-                        ApplicantIndividual::ID_PREFIX => self::class . '::getApplicantIndividual',
-                        ApplicantCompany::ID_PREFIX => self::class . '::getApplicantCompany',
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'client_id' => [
+                    [
+                        'column' => 'client_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantIndividual'
                     ]
-                ]
-            ]
+                ],
+            ],
+            '(' . ApplicantCompany::ID_PREFIX . ')' => [
+                'client_id' => [
+                    [
+                        'column' => 'client_type',
+                        'type' => 'call_user_func',
+                        'value' => self::class . '::getApplicantCompany'
+                    ]
+                ],
+            ],
         ],
     ];
 
@@ -255,24 +354,18 @@ trait ApplicantIdPrefix
     {
         if (isset(self::COLUMNS[get_class($model)])) {
             $object = self::COLUMNS[get_class($model)];
-            foreach ($object['columns'] as $column){
-                if (isset($model->{$column})){
-                    $regexp = sprintf("/^(?:%s)([0-9]+)$/", implode('|', $object['checks']));
-                    if (preg_match($regexp, $model->{$column}, $matches)) {
-                        $model->{$column} = (int)last($matches);
-                        if (isset($object['binds'])) {
-                            $prefix = null;
-                            for ($i = 1; $i < count($object['checks'])+1; $i++){
-                                if (strlen($matches[$i])){
-                                    $prefix = $matches[$i];
-                                    break;
+            foreach ($object as $check => $data) {
+                foreach ($data as $column => $v) {
+                    if (isset($model->{$column})) {
+                        if (preg_match("/^({$check})([0-9]+)$/", $model->{$column}, $matches)) {
+                            $model->{$column} = (int)last($matches);
+                            if (is_array($v)) {
+                                foreach ($v as $bind) {
+                                    if ($bind['type'] == 'call_user_func')
+                                        $model->{$bind['column']} = call_user_func($bind['value']);
+                                    else
+                                        $model->{$bind['column']} = $bind['value'];
                                 }
-                            }
-                            foreach ($object['binds'] as $bind) {
-                                if ($bind['type'] == 'call_user_func')
-                                    $model->{$bind['column']} = call_user_func($bind['enum'][$prefix]);
-                                else
-                                    $model->{$bind['column']} = $bind['enum'][$prefix];
                             }
                         }
                     }
