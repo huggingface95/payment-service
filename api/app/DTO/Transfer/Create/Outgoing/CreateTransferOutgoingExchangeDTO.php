@@ -22,7 +22,6 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
     public static function transform(Account $account, string $amount, array $args): CreateTransferOutgoingDTO
     {
         $date = Carbon::now();
-        $projectSettings = ProjectSettings::query()->where('project_id', $args['project_id'])->first() ?? throw new GraphqlException('Project settings not found', 'use');
 
         $args['account_id'] = $account->id;
         $args['currency_id'] = $account->currencies?->id;
@@ -33,7 +32,7 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['urgency_id'] = PaymentUrgencyEnum::STANDART->value;
         $args['operation_type_id'] = OperationTypeEnum::EXCHANGE->value;
         $args['payment_provider_id'] = $account->company->paymentProviderInternal?->id ?? throw new GraphqlException('Internal Payment provider not found');
-        $args['payment_system_id'] = $account->company->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');
+        $args['payment_system_id'] = $account->company->paymentProviderInternal->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');
         $args['payment_bank_id'] = PaymentBank::query()->where('payment_provider_id', $args['payment_provider_id'])->where('payment_system_id', $args['payment_system_id'])->first()?->id ?? throw new GraphqlException('Payment bank not found', 'use');
         $args['payment_number'] = Str::uuid();
         $args['system_message'] = '';
@@ -41,8 +40,9 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['recipient_country_id'] = $account->clientable?->country_id ?? throw new GraphqlException('Recipient country not found');
         $args['recipient_bank_country_id'] ??= Company::findOrFail($args['company_id'])->country_id;
         $args['respondent_fees_id'] = RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
-        $args['group_id'] = $projectSettings->group_role_id;
-        $args['group_type_id'] = $projectSettings->group_type_id;
+        $args['group_id'] = $account->group_role_id;
+        $args['group_type_id'] = $account->group_type_id;
+        $args['project_id'] = $account->project_id;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $date->format('Y-m-d H:i:s');
 
