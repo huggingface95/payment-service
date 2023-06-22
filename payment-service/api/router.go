@@ -14,7 +14,7 @@ func SetupRoutes(services Services) {
 
 	// Группа handler-ов провайдера ClearJunction
 	{
-		providerName := currencycloud.GetName()
+		providerName := clearjunction.GetName()
 		// Создание новой группы с именем, сформированным на основе переменной providerName
 		group := services.API.FiberClient.Group("/" + providerName)
 		// Создаем экземпляр провайдера ClearJunction

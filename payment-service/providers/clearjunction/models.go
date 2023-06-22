@@ -47,7 +47,7 @@ type StatusResponse struct {
 
 // IbanPostbackRequest представляет модель данных для IBAN postback.
 type IbanPostbackRequest struct {
-	PayPostbackRequest
+	PostbackRequest
 	Iban string `json:"iban"`
 }
 
@@ -66,8 +66,8 @@ type IBANResponse struct {
 	IBANs            []string          `json:"ibans"`
 }
 
-// PayPostbackRequest представляет общую модель данных для PayIn и PayOut postback.
-type PayPostbackRequest struct {
+// PostbackRequest представляет общую модель данных для PayIn и PayOut postback.
+type PostbackRequest struct {
 	ClientOrder       string                 `json:"clientOrder"`
 	OrderReference    string                 `json:"orderReference"`
 	OperTimestamp     time.Time              `json:"operTimestamp"`
@@ -116,24 +116,13 @@ type PayoutApproveResponseWrapped struct {
 }
 
 type IBANRequest struct {
-	CompanyID            string  `json:"company_id"`
-	CurrencyID           string  `json:"currency_id"`
-	OwnerID              string  `json:"owner_id"`
-	AccountNumber        string  `json:"account_number"`
-	PaymentProviderID    string  `json:"payment_provider_id"`
-	IbanProviderID       string  `json:"iban_provider_id"`
-	CommissionTemplateID string  `json:"commission_template_id"`
-	AccountName          string  `json:"account_name"`
-	IsPrimary            bool    `json:"is_primary"`
-	GroupRoleID          string  `json:"group_role_id"`
-	GroupTypeID          string  `json:"group_type_id"`
-	PaymentBankID        string  `json:"payment_bank_id"`
-	ProjectID            string  `json:"project_id"`
-	ParentID             string  `json:"parent_id"`
-	ClientID             string  `json:"client_id"`
-	MinLimitBalance      float64 `json:"min_limit_balance"`
-	MaxLimitBalance      float64 `json:"max_limit_balance"`
-	CurrentBalance       float64 `json:"current_balance"`
+	ClientOrder string      `json:"clientOrder"`
+	PostbackURL *string     `json:"postbackUrl,omitempty"`
+	WalletUUID  *string     `json:"walletUuid,omitempty"`
+	IbansGroup  *string     `json:"ibansGroup,omitempty"`
+	IbanCountry *string     `json:"ibanCountry,omitempty"`
+	Registrant  Registrant  `json:"registrant"`
+	CustomInfo  *CustomInfo `json:"customInfo,omitempty"`
 }
 
 type PayInRequest struct {

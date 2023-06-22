@@ -53,39 +53,40 @@ type Payment struct {
 
 // Account представляет аккаунт в системе.
 type Account struct {
-	ID                   int
-	CurrencyID           int
-	OwnerID              int
-	AccountNumber        string
-	AccountType          string
-	PaymentProviderID    int
-	CommissionTemplateID int
-	AccountStateID       AccountStateEnum
-	AccountName          string
-	IsPrimary            bool
-	CurrentBalance       float64
-	ReservedBalance      float64
-	AvailableBalance     float64
-	CreatedAt            time.Time
-	UpdatedAt            time.Time
-	ActivatedAt          time.Time
-	OrderReference       string
-	CompanyID            int
-	MemberID             int
-	GroupTypeID          int
-	GroupRoleID          int
-	PaymentSystemID      int
-	PaymentBankID        int
-	IsShow               bool
-	EntityID             int
-	MinLimitBalance      float64
-	MaxLimitBalance      float64
-	LastChargeAt         time.Time
-	IBANProviderID       int
-	ProjectID            int
-	ParentID             int
-	ClientType           string
-	ClientID             int
+	ID                   int              `json:"id"`
+	CurrencyID           int              `json:"currency_id"`
+	OwnerID              int              `json:"owner_id"`
+	AccountNumber        *string          `json:"account_number,omitempty"`
+	AccountType          string           `json:"account_type"`
+	PaymentProviderID    int              `json:"payment_provider_id"`
+	CommissionTemplateID int              `json:"commission_template_id"`
+	AccountStateID       AccountStateEnum `json:"account_state_id"`
+	AccountName          *string          `json:"account_name,omitempty"`
+	IsPrimary            bool             `json:"is_primary"`
+	CurrentBalance       float64          `json:"current_balance"`
+	ReservedBalance      float64          `json:"reserved_balance"`
+	AvailableBalance     float64          `json:"available_balance"`
+	CreatedAt            time.Time        `json:"created_at"`
+	UpdatedAt            time.Time        `json:"updated_at"`
+	ActivatedAt          *time.Time       `json:"activated_at,omitempty"`
+	OrderReference       *string          `json:"order_reference,omitempty"`
+	CompanyID            *int             `json:"company_id,omitempty"`
+	MemberID             int              `json:"member_id"`
+	GroupTypeID          int              `json:"group_type_id"`
+	GroupRoleID          int              `json:"group_role_id"`
+	PaymentSystemID      *int             `json:"payment_system_id,omitempty"`
+	PaymentBankID        *int             `json:"payment_bank_id,omitempty"`
+	IsShow               bool             `json:"is_show"`
+	EntityID             *int             `json:"entity_id,omitempty"`
+	MinLimitBalance      float64          `json:"min_limit_balance"`
+	MaxLimitBalance      float64          `json:"max_limit_balance"`
+	LastChargeAt         *time.Time       `json:"last_charge_at,omitempty"`
+	IBANProviderID       *int             `json:"iban_provider_id,omitempty"`
+	ProjectID            *int             `json:"project_id,omitempty"`
+	ParentID             *int             `json:"parent_id,omitempty"`
+	ClientType           *string          `json:"client_type,omitempty"`
+	ClientID             *int             `json:"client_id,omitempty"`
+	IBAN                 *string          `json:"iban,omitempty"`
 }
 
 type PaymentStatus struct {

@@ -6,10 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/valyala/fasthttp"
+	"path/filepath"
 	"payment-service/db"
 	"payment-service/providers"
 	"payment-service/queue"
 	"payment-service/utils"
+	"runtime"
 	"strings"
 	"time"
 )
@@ -63,15 +65,69 @@ func (cj *ClearJunction) Auth(req providers.AuthRequester) (providers.AuthRespon
 }
 
 func (cj *ClearJunction) IBAN(req providers.IBANRequester) (providers.IBANResponder, error) {
-	assertedReq, ok := req.(map[string]interface{})
+	payload, ok := req.(queue.IBANPayload)
 	if !ok {
 		return nil, fmt.Errorf("invalid request type")
+	}
+
+	postbackURL := cj.PublicURL + "clearjunction/iban/postback"
+
+	request := IBANRequest{
+		ClientOrder: GenerateClientOrder(),
+		PostbackURL: &postbackURL,
+		Registrant: Registrant{
+			ClientCustomerID: fmt.Sprintf("%d", payload.AccountID),
+		},
+	}
+
+	switch payload.AccountType {
+	case queue.AccountTypePrivate:
+		applicant := payload.ApplicantIndividual
+		request.Registrant.Individual = &IndividualData{
+			Phone:      applicant.Phone,
+			Email:      applicant.Email,
+			BirthDate:  applicant.BirthAt,
+			BirthPlace: applicant.BirthPlace,
+			Address:    AddressData(applicant.Address),
+			Document: DocumentData{
+				Type:              DocumentTypeEnum(applicant.Document.Type),
+				Number:            applicant.Document.Number,
+				IssuedCountryCode: applicant.Document.IssuedCountryCode,
+				IssuedBy:          applicant.Document.IssuedBy,
+				IssuedDate:        applicant.Document.IssuedDate,
+				ExpirationDate:    applicant.Document.ExpirationDate,
+			},
+			LastName:   applicant.LastName,
+			FirstName:  applicant.FirstName,
+			MiddleName: applicant.MiddleName,
+		}
+	case queue.AccountTypeBusiness:
+		applicant := payload.ApplicantCompany
+		request.Registrant.Corporate = &CorporateData{
+			Email:                   applicant.Email,
+			Name:                    "",
+			RegistrationNumber:      "",
+			IncorporationCountry:    "",
+			Address:                 Address{},
+			IncorporationDate:       utils.ISOExtendedDate{},
+			UltimateBeneficialOwner: nil,
+			TradingWebsite:          nil,
+			ExpectedTurnover:        0,
+			BeneficialLegalEntity:   nil,
+			OtherDetails:            OtherDetails{},
+			BusinessPartners:        nil,
+			FundFlows:               FundFlows{},
+			ComplianceEvaluation:    ComplianceEvaluation{},
+			CustomOptions:           nil,
+		}
+	default:
+		return nil, fmt.Errorf("unknown account type")
 	}
 
 	reqURL := fmt.Sprintf("%sv7/gate/allocate/v2/create/iban", cj.BaseURL)
 
 	// Выполнение POST запроса с помощью HTTP клиента из API сервиса
-	responseBody, err := cj.transport.Request(fasthttp.MethodPost, reqURL, assertedReq, cj.authMiddleware)
+	responseBody, err := cj.transport.Request(fasthttp.MethodPost, reqURL, request, cj.authMiddleware)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send IBAN request: %w", err)
 	}
@@ -80,6 +136,15 @@ func (cj *ClearJunction) IBAN(req providers.IBANRequester) (providers.IBANRespon
 	var res IBANResponse
 	if err := json.Unmarshal(responseBody, &res); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal IBAN response: %w", err)
+	}
+
+	if res.Status != "accepted" {
+		return nil, fmt.Errorf("wrong status for IBAN response: %s", res.Status)
+	}
+
+	err = cj.Services.DB.Pg.SetAccountOrderReferenceAndStateToWaitingForApproval(payload.AccountID, res.OrderReference)
+	if err != nil {
+		return nil, err
 	}
 
 	return &res, nil
@@ -160,7 +225,7 @@ func (cj *ClearJunction) PostBack(request providers.PostBackRequester) (provider
 	switch req := request.(type) {
 	case *IbanPostbackRequest:
 		return cj.handleIbanPostback(req)
-	case *PayPostbackRequest:
+	case *PostbackRequest:
 		return cj.handlePayPostback(req)
 	default:
 		return nil, fmt.Errorf("unsupported postback request type")
@@ -181,22 +246,26 @@ func (cj *ClearJunction) authMiddleware(requestBody []byte) (err error) {
 
 func (cj *ClearJunction) handleIbanPostback(request *IbanPostbackRequest) (providers.PostBackResponder, error) {
 	switch request.Status {
-	case StatusAccepted:
-		// Формируем map с полями для обновления и условиями where и передаём в функцию обновления таблицы
-		if err := cj.Services.DB.Pg.Update("accounts",
-			map[string]interface{}{"account_state_id": db.AccountStateWaitingForApproval, "account_number": request.Iban},
-			map[string]interface{}{"order_reference": request.OrderReference},
-		); err != nil {
+	case StatusAllocated:
+		err := cj.Services.DB.Pg.SetAccountIBANAndStateToActiveByOrderReference(request.OrderReference, request.Iban)
+		if err != nil {
+			return nil, fmt.Errorf("failed to update account: %w", err)
+		}
+
+		return &IbanPostbackResponse{OrderReference: request.OrderReference}, nil
+	case StatusDeclined:
+		err := cj.Services.DB.Pg.SetAccountStateToRejectedByOrderReference(request.OrderReference)
+		if err != nil {
 			return nil, fmt.Errorf("failed to update account: %w", err)
 		}
 
 		return &IbanPostbackResponse{OrderReference: request.OrderReference}, nil
 	default:
-		return nil, fmt.Errorf("wrong IBAN postback status. Messages: %v", request.Messages)
+		return nil, fmt.Errorf("wrong IBAN postback status: %s. Messages: %v", request.Status, request.Messages)
 	}
 }
 
-func (cj *ClearJunction) handlePayPostback(request *PayPostbackRequest) (providers.PostBackResponder, error) {
+func (cj *ClearJunction) handlePayPostback(request *PostbackRequest) (providers.PostBackResponder, error) {
 	payment, err := cj.Services.DB.Pg.GetPaymentWithRelations(
 		[]string{"Status", "Provider", "OperationType"},
 		map[string]interface{}{"payment_number": request.OrderReference},
@@ -290,4 +359,9 @@ func (cj *ClearJunction) payoutApprove(request *PayoutApproveRequest) (res Payou
 	}
 
 	return res, err
+}
+
+func GetName() string {
+	_, fullPath, _, _ := runtime.Caller(0)
+	return filepath.Base(filepath.Dir(fullPath))
 }

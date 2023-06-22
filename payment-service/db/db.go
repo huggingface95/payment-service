@@ -6,6 +6,7 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"strings"
+	"time"
 )
 
 type Pg struct {
@@ -123,6 +124,66 @@ func (pg *Pg) Update(table string, updates map[string]interface{}, wheres map[st
 	}
 
 	return nil
+}
+
+// Функции для работы с аккаунтами
+
+// SetAccountStateToWaitingForAccountIbanGeneration устанавливает поле AccountStateID для заданного аккаунта.
+func (pg *Pg) SetAccountStateToWaitingForAccountIbanGeneration(accountID int) error {
+	updates := map[string]interface{}{
+		"account_state_id": AccountStateWaitingForAccountIbanGeneration, // устанавливаем статус аккаунта
+		"updated_at":       time.Now(),                                  // обновляем поле updated_at
+	}
+
+	wheres := map[string]interface{}{
+		"id": accountID,
+	}
+
+	return pg.Update("accounts", updates, wheres)
+}
+
+// SetAccountOrderReferenceAndStateToWaitingForApproval обновляет OrderReference и State для заданного аккаунта.
+func (pg *Pg) SetAccountOrderReferenceAndStateToWaitingForApproval(accountID int, orderReference string) error {
+	updates := map[string]interface{}{
+		"order_reference":  orderReference,
+		"account_state_id": AccountStateWaitingForApproval, // устанавливаем статус аккаунта
+		"updated_at":       time.Now(),                     // обновляем поле updated_at
+	}
+
+	wheres := map[string]interface{}{
+		"id": accountID,
+	}
+
+	return pg.Update("accounts", updates, wheres)
+}
+
+// SetAccountIBANAndStateToActiveByOrderReference обновляет IBAN и State для заданного аккаунта на основе OrderReference.
+func (pg *Pg) SetAccountIBANAndStateToActiveByOrderReference(orderReference string, iban string) error {
+	updates := map[string]interface{}{
+		"iban":             iban,
+		"account_state_id": AccountStateActive,
+		"updated_at":       time.Now(), // обновляем поле updated_at
+	}
+
+	wheres := map[string]interface{}{
+		"order_reference": orderReference,
+	}
+
+	return pg.Update("accounts", updates, wheres)
+}
+
+// SetAccountStateToRejectedByOrderReference обновляет поле State для заданного аккаунта на основе OrderReference.
+func (pg *Pg) SetAccountStateToRejectedByOrderReference(orderReference string) error {
+	updates := map[string]interface{}{
+		"account_state_id": AccountStateRejected,
+		"updated_at":       time.Now(), // обновляем поле updated_at
+	}
+
+	wheres := map[string]interface{}{
+		"order_reference": orderReference,
+	}
+
+	return pg.Update("accounts", updates, wheres)
 }
 
 // Функции для работы с транзакциями

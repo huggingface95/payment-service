@@ -1,5 +1,7 @@
 package clearjunction
 
+import "payment-service/utils"
+
 // ResponseMessage представляет сообщение ответа с кодом, сообщением и деталями.
 type ResponseMessage struct {
 	Code    string `json:"code"`
@@ -57,49 +59,102 @@ type PayPostbackPayeePayer struct {
 
 // Registrant представляет информацию о заявителе IBAN.
 type Registrant struct {
-	ClientCustomerID string         `json:"clientCustomerId"`
-	Individual       IndividualData `json:"individual,omitempty"`
-	Corporate        CorporateData  `json:"corporate,omitempty"`
+	ClientCustomerID string          `json:"clientCustomerId"`
+	Individual       *IndividualData `json:"individual,omitempty"`
+	Corporate        *CorporateData  `json:"corporate,omitempty"`
 }
 
 // IndividualData представляет данные об индивидуальном клиенте.
 type IndividualData struct {
-	Phone      string       `json:"phone"`
-	Email      string       `json:"email"`
-	BirthDate  string       `json:"birthDate"`
-	BirthPlace string       `json:"birthPlace"`
-	Address    AddressData  `json:"address"`
-	Document   DocumentData `json:"document"`
-	LastName   string       `json:"lastName"`
-	FirstName  string       `json:"firstName"`
-	MiddleName string       `json:"middleName"`
+	Phone      *string               `json:"phone,omitempty"`
+	Email      *string               `json:"email,omitempty"`
+	BirthDate  utils.ISOExtendedDate `json:"birthDate,omitempty"`
+	BirthPlace *string               `json:"birthPlace,omitempty"`
+	Address    AddressData           `json:"address"`
+	Document   DocumentData          `json:"document"`
+	LastName   string                `json:"lastName"`
+	FirstName  string                `json:"firstName"`
+	MiddleName *string               `json:"middleName,omitempty"`
 }
 
 // CorporateData представляет данные о корпоративном клиенте.
 type CorporateData struct {
-	ClientCustomerID string        `json:"clientCustomerId"`
-	CompanyName      string        `json:"companyName"`
-	Address          AddressData   `json:"address"`
-	Document         DocumentData  `json:"document"`
-	ContactPerson    ContactPerson `json:"contactPerson"`
+	Email                   *string                   `json:"email,omitempty"`
+	Name                    string                    `json:"name"`
+	RegistrationNumber      string                    `json:"registrationNumber"`
+	IncorporationCountry    string                    `json:"incorporationCountry"`
+	Address                 Address                   `json:"address"`
+	IncorporationDate       utils.ISOExtendedDate     `json:"incorporationDate"`
+	UltimateBeneficialOwner []UltimateBeneficialOwner `json:"ultimateBeneficialOwner"`
+	TradingWebsite          *string                   `json:"tradingWebsite,omitempty"`
+	ExpectedTurnover        int                       `json:"expectedTurnover"`
+	BeneficialLegalEntity   *string                   `json:"beneficialLegalEntity,omitempty"`
+	OtherDetails            OtherDetails              `json:"otherDetails"`
+	BusinessPartners        []BusinessPartner         `json:"businessPartners"`
+	FundFlows               FundFlows                 `json:"fundFlows"`
+	ComplianceEvaluation    ComplianceEvaluation      `json:"complianceEvaluation"`
+	CustomOptions           *CustomInfo               `json:"customOptions,omitempty"`
+}
+
+type UltimateBeneficialOwner struct {
+	LastName                  string                `json:"lastName"`
+	FirstName                 string                `json:"firstName"`
+	BirthDate                 utils.ISOExtendedDate `json:"birthDate"`
+	Ownership                 int                   `json:"ownership"`
+	Document                  Document              `json:"document"`
+	BeneficialOwnerPep        bool                  `json:"beneficialOwnerPep"`
+	BeneficialOwnerPepDetails string                `json:"beneficialOwnerPepDetails"`
+	UsaTaxResidency           bool                  `json:"usaTaxResidency"`
+	GiinNumber                string                `json:"giinNumber"`
+}
+
+type OtherDetails struct {
+	BusinessActivity    string  `json:"businessActivity"`
+	RelevantInformation *string `json:"relevantInformation,omitempty"`
+	NegativeInformation *string `json:"negativeInformation,omitempty"`
+}
+
+type BusinessPartner struct {
+	Name                           string  `json:"name"`
+	IncorporationCountryCode       string  `json:"incorporationCountryCode"`
+	PlannedTransfersQuantityMonth  int     `json:"plannedTransfersQuantityMonth"`
+	PlannedTransfersEurVolumeMonth float32 `json:"plannedTransfersEurVolumeMonth"`
+	AdditionalInfo                 *string `json:"additionalInfo,omitempty"`
+	BasisPartnership               string  `json:"basisPartnership"`
+	Website                        *string `json:"website,omitempty"`
+}
+
+type FundFlows struct {
+	PlannedIncTransfersQuantity  int     `json:"plannedIncTransfersQuantity"`
+	PlannedIncTransfersEurVolume float32 `json:"plannedIncTransfersEurVolume"`
+	PlannedOutTransfersQuantity  int     `json:"plannedOutTransfersQuantity"`
+	PlannedOutTransfersEurVolume float32 `json:"plannedOutTransfersEurVolume"`
+}
+
+type ComplianceEvaluation struct {
+	AmlRiskLevel      AmlRiskLevelEnum `json:"amlRiskLevel"`
+	ReviewPeriodicity string           `json:"reviewPeriodicity"`
+	AppliedLimits     string           `json:"appliedLimits"`
+	AdditionalInfo    *string          `json:"additionalInfo,omitempty"`
 }
 
 // AddressData представляет информацию об адресе.
 type AddressData struct {
-	Country string `json:"country"`
-	Zip     string `json:"zip"`
-	City    string `json:"city"`
-	Street  string `json:"street"`
+	Country string  `json:"country"`
+	State   *string `json:"state,omitempty"`
+	Zip     string  `json:"zip"`
+	City    string  `json:"city"`
+	Street  string  `json:"street"`
 }
 
 // DocumentData представляет информацию о документе.
 type DocumentData struct {
-	Type              string `json:"type"`
-	Number            string `json:"number"`
-	IssuedCountryCode string `json:"issuedCountryCode"`
-	IssuedBy          string `json:"issuedBy"`
-	IssuedDate        string `json:"issuedDate"`
-	ExpirationDate    string `json:"expirationDate"`
+	Type              DocumentTypeEnum       `json:"type"`
+	Number            string                 `json:"number"`
+	IssuedCountryCode string                 `json:"issuedCountryCode"`
+	IssuedBy          string                 `json:"issuedBy"`
+	IssuedDate        utils.ISOExtendedDate  `json:"issuedDate"`
+	ExpirationDate    *utils.ISOExtendedDate `json:"expirationDate,omitempty"`
 }
 
 // ContactPerson представляет информацию о контактном лице для корпоративного клиента.
@@ -129,14 +184,11 @@ type IndividualPayee struct {
 	Individual       IndividualEntry `json:"individual"`
 }
 
-type CustomInfo struct {
-	MyExampleParam1  string          `json:"MyExampleParam1"`
-	MyExampleObject1 MyExampleObject `json:"MyExampleObject1"`
-}
+type CustomInfo map[string]interface{}
 
 type MyExampleObject struct {
-	MyExampleParam2 string `json:"MyExampleParam2"`
-	MyExampleParam3 string `json:"MyExampleParam3"`
+	MyExampleParam2 *string `json:"MyExampleParam2,omitempty"`
+	MyExampleParam3 *string `json:"MyExampleParam3,omitempty"`
 }
 
 type IndividualRuEntity struct {
@@ -171,10 +223,10 @@ type Address struct {
 }
 
 type Document struct {
-	Type              string `json:"type"`
-	Number            string `json:"number"`
-	IssuedCountryCode string `json:"issuedCountryCode"`
-	IssuedBy          string `json:"issuedBy"`
-	IssuedDate        string `json:"issuedDate"`
-	ExpirationDate    string `json:"expirationDate"`
+	Type              string                `json:"type"`
+	Number            string                `json:"number"`
+	IssuedCountryCode string                `json:"issuedCountryCode"`
+	IssuedBy          string                `json:"issuedBy"`
+	IssuedDate        utils.ISOExtendedDate `json:"issuedDate"`
+	ExpirationDate    utils.ISOExtendedDate `json:"expirationDate"`
 }
