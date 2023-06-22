@@ -4,7 +4,9 @@ namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
 use App\Models\CommissionPriceList;
+use App\Models\CommissionTemplate;
 use App\Models\PaymentProvider;
+use App\Models\PaymentSystem;
 
 class CommissionPriceListMutator
 {
@@ -14,13 +16,18 @@ class CommissionPriceListMutator
      */
     public function create($root, array $args)
     {
-        if ($args['provider_id']) {
-            $paymentProvider = PaymentProvider::find($args['provider_id']);
-            if ($paymentProvider && $paymentProvider->name === 'Internal') {
-                $existingInternalProvider = CommissionPriceList::where('provider_id', $args['provider_id'])->exists();
-                if ($existingInternalProvider) {
+        if ($args['payment_system_id']) {
+            $paymentSystem = PaymentSystem::find($args['payment_system_id']);
+            $existingInternalProvider = CommissionPriceList::where('payment_system_id', $args['payment_system_id'])->exists();
+            $commissionTemplate = CommissionTemplate::find($args['commission_template_id']);
+
+            if ($paymentSystem && $paymentSystem->name == PaymentSystem::NAME_INTERNAL) {
+                if ($existingInternalProvider && $commissionTemplate->paymentProvider->name == PaymentProvider::NAME_INTERNAL) {
                     throw new GraphqlException('Only one Commission Price List with Internal Payment Provider is allowed', 'use');
                 }
+            }
+            if ($paymentSystem->name == PaymentSystem::NAME_INTERNAL && $commissionTemplate->paymentProvider->name != PaymentProvider::NAME_INTERNAL) {
+                throw new GraphqlException('Only one Commission Price List with Internal Payment Provider is allowed for External Commission Template', 'use');
             }
         }
 
@@ -37,13 +44,18 @@ class CommissionPriceListMutator
     {
         $commissionPriceList = CommissionPriceList::findOrFail($args['id']);
 
-        if ($args['provider_id']) {
-            $paymentProvider = PaymentProvider::find($args['provider_id']);
-            if ($paymentProvider && $paymentProvider->name === 'Internal') {
-                $existingInternalProvider = CommissionPriceList::where('provider_id', $args['provider_id'])->exists();
-                if ($existingInternalProvider) {
+        if (isset($args['payment_system_id']) && isset($args['commission_template_id'])) {
+            $paymentSystem = PaymentSystem::find($args['payment_system_id']);
+            $existingInternalProvider = CommissionPriceList::where('payment_system_id', $args['payment_system_id'])->exists();
+            $commissionTemplate = CommissionTemplate::find($args['commission_template_id']);
+
+            if ($paymentSystem && $paymentSystem->name == PaymentSystem::NAME_INTERNAL) {
+                if ($existingInternalProvider && $commissionTemplate->paymentProvider->name == PaymentProvider::NAME_INTERNAL) {
                     throw new GraphqlException('Only one Commission Price List with Internal Payment Provider is allowed', 'use');
                 }
+            }
+            if ($paymentSystem->name == PaymentSystem::NAME_INTERNAL && $commissionTemplate->paymentProvider->name != PaymentProvider::NAME_INTERNAL) {
+                throw new GraphqlException('Only one Commission Price List with Internal Payment Provider is allowed for External Commission Template', 'use');
             }
         }
 
