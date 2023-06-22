@@ -2453,6 +2453,18 @@ class PermissionsSeeder extends Seeder
                                                     'method' => 'applicantDevices',
                                                     'referer' => 'settings/login-details/my-devices',
                                                 ],
+                                                [
+                                                    'name' => 'Countries',
+                                                    'type' => 'query',
+                                                    'method' => 'countries',
+                                                    'referer' => 'new-payment',
+                                                ],
+                                                [
+                                                    'name' => 'AccountsList',
+                                                    'referer' => 'new-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'accountList',
+                                                ],
                                             ],
                                         ],
                                     ],

@@ -99,10 +99,7 @@ enum AccountClientsType {
     COMPANY @enum(value: "ApplicantCompany")
 }
 
-extend type Query @guard {
-    "Получить аккаунт по ID"
-    account(id: ID! @eq): Account @find
-
+extend type Query @guard(with: ["api", "api_client"]) {
     """
     Получить список аккаунтов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
@@ -112,6 +109,11 @@ extend type Query @guard {
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id", "created_at"])
     ): [Account!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
+}
+
+extend type Query @guard {
+    "Получить аккаунт по ID"
+    account(id: ID! @eq): Account @find
 
     """
     Получить список активных аккаунтов
