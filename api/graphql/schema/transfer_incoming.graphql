@@ -74,6 +74,8 @@ type TransferIncoming {
     transfer_history: [TransferIncomingHistory] @hasMany(relation: "transferHistory")
     "SWIFT field 56A (Intermediary Bank)"
     transfer_swift: TransferSwift @hasOne(relation: "transferSwift")
+    "exchange"
+    exchange: TransferExchange @hasOne(relation: "exchange")
     "Дата и время выполнения транзакции"
     execution_at: DateTimeUtc
     "Дата и время создания"
