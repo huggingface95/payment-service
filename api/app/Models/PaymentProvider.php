@@ -44,6 +44,11 @@ class PaymentProvider extends BaseModel
         return $this->hasMany(PaymentSystem::class, 'payment_provider_id');
     }
 
+    public function paymentSystemInternal(): HasOne
+    {
+        return $this->hasOne(PaymentSystem::class, 'payment_provider_id')->where('name', self::NAME_INTERNAL);
+    }
+
     public function commissionPriceList(): HasOne
     {
         return $this->hasOne(CommissionPriceList::class, 'provider_id', 'id');

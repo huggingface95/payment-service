@@ -45,7 +45,7 @@ class TransferBetweenUsersService extends AbstractService
         $this->validateCreateTransfer($fromAccount, $toAccount, $operationType);
 
         $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingBetweenUsersDTO::class, $fromAccount, $toAccount, $operationType, $args);
-        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $fromAccount, $operationType, $args, $outgoingDTO->payment_number, $outgoingDTO->created_at);
+        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $fromAccount, $operationType, $args, $outgoingDTO);
 
         $transfers = DB::transaction(function () use ($outgoingDTO, $incomingDTO) {
             /** @var TransferOutgoing $outgoing */
@@ -87,7 +87,7 @@ class TransferBetweenUsersService extends AbstractService
         $this->validateCreateTransfer($fromAccount, $toAccount, $operationType);
 
         $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingBetweenUsersDTO::class, $fromAccount, $toAccount, $operationType, $args);
-        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $fromAccount, $operationType, $args, $outgoingDTO->payment_number, $outgoingDTO->created_at);
+        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $fromAccount, $operationType, $args, $outgoingDTO);
 
         $transfers = DB::transaction(function () use ($transfer, $outgoingDTO, $incomingDTO) {
             /** @var TransferOutgoing $outgoing */
