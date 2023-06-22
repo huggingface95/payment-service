@@ -235,6 +235,11 @@ class TransferOutgoing extends BaseModel implements CustomObServerInterface
             ->where('transfer_type', class_basename(self::class));
     }
 
+    public function exchange(): HasOne
+    {
+        return $this->hasOne(TransferExchange::class, 'transfer_outgoing_id');
+    }
+
     public static function getObServer(): string
     {
         return TransferOutgoingObserver::class;
