@@ -7,6 +7,7 @@ scalar JSON @scalar(class: "MLL\\GraphQLScalars\\JSON")
 scalar EMAIL @scalar(class: "MLL\\GraphQLScalars\\Email")
 scalar StringInteger @scalar(class: "App\\GraphQL\\Types\\StringIntegerType")
 scalar Decimal @scalar(class: "App\\GraphQL\\Types\\DecimalType")
+scalar Upload @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
 
 enum Sort {
     ASC
