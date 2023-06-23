@@ -15,12 +15,19 @@ class EmploeesTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Factory::create();
+        $employeesNumbers = [
+            1 => '1-5',
+            2 => '11-50',
+            3 => '51-100',
+            4 => '101-1000',
+            5 => '>1000',
+        ];
 
-        for ($i = 1; $i <= 10; $i++) {
-            Employee::query()->firstOrCreate([
-                'employees_number' => $faker->randomNumber(),
-            ]);
+        foreach ($employeesNumbers as $id => $employeesNumber) {
+            Employee::query()->firstOrCreate(
+                ['id' => $id],
+                ['employees_number' => $employeesNumber]
+            );
         }
     }
 }
