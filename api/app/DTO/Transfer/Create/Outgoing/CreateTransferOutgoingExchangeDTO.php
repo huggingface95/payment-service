@@ -10,9 +10,7 @@ use App\Enums\TransferChannelEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\Company;
-use App\Models\PaymentBank;
 use App\Models\PriceListFee;
-use App\Models\ProjectSettings;
 use App\Repositories\TransferOutgoingRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -33,7 +31,7 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['operation_type_id'] = OperationTypeEnum::EXCHANGE->value;
         $args['payment_provider_id'] = $account->company->paymentProviderInternal?->id ?? throw new GraphqlException('Internal Payment provider not found');
         $args['payment_system_id'] = $account->company->paymentProviderInternal->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');
-        $args['payment_bank_id'] = PaymentBank::query()->where('payment_provider_id', $args['payment_provider_id'])->where('payment_system_id', $args['payment_system_id'])->first()?->id ?? throw new GraphqlException('Payment bank not found', 'use');
+        $args['payment_bank_id'] = null;
         $args['payment_number'] = Str::uuid();
         $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();

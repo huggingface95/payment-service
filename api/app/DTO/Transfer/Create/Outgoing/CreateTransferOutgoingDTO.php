@@ -19,7 +19,7 @@ class CreateTransferOutgoingDTO
 
     public int $operation_type_id;
 
-    public int $payment_bank_id;
+    public ?int $payment_bank_id;
 
     public string $payment_number;
 

@@ -10,6 +10,7 @@ use App\Models\Account;
 use App\Models\PaymentProvider;
 use App\Models\PaymentSystem;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class CreateTransferOutgoingScheduledFeeDTO extends CreateTransferOutgoingDTO
 {
@@ -34,9 +35,9 @@ class CreateTransferOutgoingScheduledFeeDTO extends CreateTransferOutgoingDTO
         $args['operation_type_id'] = OperationTypeEnum::SCHEDULED_FEE->value;
         $args['payment_provider_id'] = $ppInternal->id;
         $args['payment_system_id'] = $psInternal->id;
-        $args['payment_bank_id'] = 2;
-        $args['payment_number'] = rand();
-        $args['system_message'] = 'test';
+        $args['payment_bank_id'] = null;
+        $args['payment_number'] = Str::uuid();
+        $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['recipient_country_id'] = 1;
         $args['respondent_fees_id'] = 1;
