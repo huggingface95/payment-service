@@ -109,6 +109,13 @@ extend type Query @guard(with: ["api", "api_client"]) {
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id", "created_at"])
     ): [Account!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
+
+    """
+    Получить список клиентов
+    """
+    clientList(
+        filter: _ @filterConditions(static: QueryClientListFilterStatic)
+    ): [Client!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
 }
 
 extend type Query @guard {
@@ -131,12 +138,7 @@ extend type Query @guard {
         orderBy: _ @orderBy(columns: ["id", "name"])
     ): [AccountState!]!   @all @orderBy(column: "id", direction: ASC)
 
-    """
-    Получить список клиентов
-    """
-    clientList(
-        filter: _ @filterConditions(static: QueryClientListFilterStatic)
-    ): [Client!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
+
 
 
     clientListActive(

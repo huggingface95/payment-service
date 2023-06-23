@@ -2465,6 +2465,12 @@ class PermissionsSeeder extends Seeder
                                                     'type' => 'query',
                                                     'method' => 'accountList',
                                                 ],
+                                                [
+                                                    'name' => 'GetClientOrIdSelect',
+                                                    'referer' => 'new-payment',
+                                                    'type' => 'query',
+                                                    'method' => 'clientList',
+                                                ],
                                             ],
                                         ],
                                     ],
