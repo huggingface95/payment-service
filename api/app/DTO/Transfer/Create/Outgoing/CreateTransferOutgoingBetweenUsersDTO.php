@@ -11,6 +11,7 @@ use App\Models\Account;
 use App\Models\CommissionPriceList;
 use App\Models\PriceListFee;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 /**
@@ -49,12 +50,15 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
         $args['recipient_country_id'] = $toAccount->clientable?->country_id ?? throw new GraphqlException('Recipient country not found');
         $args['respondent_fees_id'] = $args['respondent_fee_id'] ?? RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
-        $args['project_id'] = $fromAccount->project_id;
         $args['group_id'] = $fromAccount->group_role_id;
         $args['group_type_id'] = $fromAccount->group_type_id;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $args['created_at'];
         $args['recipient_bank_country_id'] = 1;
+        
+        if (Auth::guard('api_client')->check()) {
+            $args['project_id'] = $fromAccount->project_id;
+        }
 
         return new parent($args, $fromAccount);
     }

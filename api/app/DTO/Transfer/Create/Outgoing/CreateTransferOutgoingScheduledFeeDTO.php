@@ -27,7 +27,6 @@ class CreateTransferOutgoingScheduledFeeDTO extends CreateTransferOutgoingDTO
         $args['recipient_bank_country_id'] = 1;
         $args['group_id'] = 1;
         $args['group_type_id'] = 1;
-        $args['project_id'] = 1;
         $args['price_list_id'] = 1;
         $args['price_list_fee_id'] = 1;
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;

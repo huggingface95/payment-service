@@ -32,9 +32,9 @@ class CreateTransferIncomingBetweenUsersDTO extends CreateTransferIncomingDTO
         $args['respondent_fees_id'] = $args['respondent_fee_id'] ?? RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
         $args['group_id'] = $toAccount->group_role_id;
         $args['group_type_id'] = $toAccount->group_type_id;
-        $args['project_id'] = $toAccount->project_id;
         $args['created_at'] = $outgoingDTO->created_at;
         $args['execution_at'] = $outgoingDTO->created_at;
+        $args['project_id'] = $outgoingDTO->project_id;
 
         return new parent($args, $toAccount);
     }
