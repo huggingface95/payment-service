@@ -37,7 +37,7 @@ class CreateTransferIncomingDTO
 
     public int $payment_system_id;
 
-    public int $payment_bank_id;
+    public ?int $payment_bank_id;
 
     public ?int $price_list_id;
 
