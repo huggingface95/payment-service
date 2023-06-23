@@ -32,12 +32,12 @@ class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
         $args['respondent_fees_id'] = RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
         $args['group_id'] = $outgoingDTO->group_id;
         $args['group_type_id'] = $outgoingDTO->group_type_id;
-        $args['project_id'] = $outgoingDTO->project_id;
         $args['price_list_id'] = $outgoingDTO->price_list_id;
         $args['requested_by_id'] = $outgoingDTO->requested_by_id;
         $args['created_at'] = $outgoingDTO->created_at;
         $args['execution_at'] = $outgoingDTO->created_at;
         $args['reason'] = 'Exchange: Sell';
+        $args['project_id'] = $outgoingDTO->project_id;
 
         return new parent($args, $account);
     }

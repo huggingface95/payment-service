@@ -110,6 +110,8 @@ extend type Mutation @guard {
         to_account_id: ID!
         "ID прайс-лист фии"
         price_list_fee_id: ID!
+        "ID проекта"
+        project_id: ID!
     ): TransferExchange
         @field(resolver: "TransferExchangeMutator@create")
 

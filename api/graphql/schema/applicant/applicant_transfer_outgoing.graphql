@@ -7,8 +7,6 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         group_id: ID!
         "ID типа группы"
         group_type_id: ID!
-        "ID проекта"
-        project_id: ID!
         "Сумма"
         amount: Decimal!
         "ID аккаунта"
@@ -19,8 +17,9 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         payment_system_id: ID!
         "ID страны банка получателя"
         recipient_bank_country_id: ID!
+        "ID шаблона комиссии"
         price_list_id: ID!
-        "ID коммиссии"
+        "ID комиссии"
         price_list_fee_id: ID!
         "ID срочности операции"
         urgency_id: ID!
@@ -65,8 +64,6 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         group_id: ID
         "ID типа группы"
         group_type_id: ID
-        "ID проекта"
-        project_id: ID
         "Сумма"
         amount: Decimal
         "ID аккаунта"

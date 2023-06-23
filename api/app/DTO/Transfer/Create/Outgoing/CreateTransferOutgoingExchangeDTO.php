@@ -13,6 +13,7 @@ use App\Models\Company;
 use App\Models\PriceListFee;
 use App\Repositories\TransferOutgoingRepository;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
@@ -40,9 +41,12 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['respondent_fees_id'] = RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
         $args['group_id'] = $account->group_role_id;
         $args['group_type_id'] = $account->group_type_id;
-        $args['project_id'] = $account->project_id;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $date->format('Y-m-d H:i:s');
+
+        if (Auth::guard('api_client')->check()) {
+            $args['project_id'] = $account->project_id;
+        }
 
         $repository = new TransferOutgoingRepository();
         $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('Region not found', 'use');
