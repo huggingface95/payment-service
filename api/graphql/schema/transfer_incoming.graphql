@@ -193,8 +193,8 @@ extend type Mutation @guard {
         payment_system_id: ID!
         "ID платежного банка"
         payment_bank_id: ID!
-        "ID шаблона комиссий"
-        price_list_id: ID
+        "ID шаблона комиссии"
+        price_list_id: ID!
         "ID прайс листа"
         price_list_fee_id: ID
         "Тип бенефициара"

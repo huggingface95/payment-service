@@ -212,8 +212,8 @@ extend type Mutation @guard {
         payment_provider_id: ID!
         "ID платежной системы"
         payment_system_id: ID!
-        "ID прайс листа"
-        price_list_id: ID
+        "ID шаблона комиссии"
+        price_list_id: ID!
         "ID комисии"
         price_list_fee_id: ID
         "ID срочности операции"
