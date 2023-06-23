@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d0274434f9613285face089e1bf5faca",
+    "content-hash": "f422d0e0c123e909bb21d13e6e8a0d39",
     "packages": [
         {
             "name": "ankurk91/laravel-eloquent-relationships",
@@ -6643,6 +6643,55 @@
             "time": "2021-12-11T13:40:54+00:00"
         },
         {
+            "name": "shuchkin/simplexls",
+            "version": "0.10.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shuchkin/simplexls.git",
+                "reference": "1f41c2b71c17d06f239d803af9070c80d54a41a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shuchkin/simplexls/zipball/1f41c2b71c17d06f239d803af9070c80d54a41a7",
+                "reference": "1f41c2b71c17d06f239d803af9070c80d54a41a7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/SimpleXLS.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sergey Shuchkin (SMSPILOT)",
+                    "email": "sergey.shuchkin@gmail.com",
+                    "homepage": "http://www.shuchkin.ru/"
+                }
+            ],
+            "description": "Parse and retrieve data from old format Excel XLS files. MS Excel 97 workbooks PHP reader.",
+            "homepage": "https://github.com/shuchkin/simplexls",
+            "keywords": [
+                "backend",
+                "excel",
+                "parser",
+                "php",
+                "xls"
+            ],
+            "support": {
+                "issues": "https://github.com/shuchkin/simplexls/issues",
+                "source": "https://github.com/shuchkin/simplexls/tree/0.10.3"
+            },
+            "time": "2022-10-04T16:53:17+00:00"
+        },
+        {
             "name": "smi2/phpclickhouse",
             "version": "1.5.1",
             "source": {
@@ -12283,7 +12332,8 @@
         "php": "^8.0",
         "ext-curl": "*",
         "ext-intl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-simplexml": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

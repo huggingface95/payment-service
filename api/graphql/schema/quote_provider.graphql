@@ -82,4 +82,14 @@ extend type Mutation @guard {
     Удалить
     """
     deleteQuoteProvider(id: ID!): QuoteProvider @delete
+
+    """
+    Загрузить данные с файлов
+    """
+    attachFIleDataToQuoteProvider(
+        id: ID!
+        company_id: ID!
+        file: Upload!
+    ): QuoteProvider
+    @field(resolver: "QuoteProviderMutator@attachFIleData")
 }
