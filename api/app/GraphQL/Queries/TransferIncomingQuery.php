@@ -43,7 +43,7 @@ class TransferIncomingQuery
         }
 
         if (isset($args['id'])) {
-            $statistic->where('id', $args['id']);
+            $statistic->where('transfer_incomings.id',$args['id']);
         }
 
         return $statistic->get();
