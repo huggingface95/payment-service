@@ -2,7 +2,7 @@
 
 namespace App\DTO\Transfer\Create\Incoming;
 
-use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingExchangeDTO;
+use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingDTO;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
@@ -12,7 +12,7 @@ use App\Models\Account;
 
 class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
 {
-    public static function transform(Account $account, string $amount, CreateTransferOutgoingExchangeDTO $outgoingDTO, array $args): CreateTransferIncomingDTO
+    public static function transform(Account $account, string $amount, CreateTransferOutgoingDTO $outgoingDTO, array $args): CreateTransferIncomingDTO
     {
         $args['account_id'] = $account->id;
         $args['currency_id'] = $account->currencies?->id;
