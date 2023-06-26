@@ -196,7 +196,7 @@ extend type Mutation @guard {
         "ID шаблона комиссии"
         price_list_id: ID!
         "ID прайс листа"
-        price_list_fee_id: ID
+        price_list_fee_id: ID!
         "Тип бенефициара"
         beneficiary_type: BeneficiaryTypeEnum!
         "Имя бенефициара"

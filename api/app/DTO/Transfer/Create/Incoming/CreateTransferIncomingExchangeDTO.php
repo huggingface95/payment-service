@@ -33,6 +33,7 @@ class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
         $args['group_id'] = $outgoingDTO->group_id;
         $args['group_type_id'] = $outgoingDTO->group_type_id;
         $args['price_list_id'] = $outgoingDTO->price_list_id;
+        $args['price_list_fee_id'] = $outgoingDTO->price_list_fee_id;
         $args['requested_by_id'] = $outgoingDTO->requested_by_id;
         $args['created_at'] = $outgoingDTO->created_at;
         $args['execution_at'] = $outgoingDTO->created_at;
