@@ -35,6 +35,7 @@ class CreateTransferOutgoingRefundDTO extends CreateTransferOutgoingDTO
         $args['respondent_fees_id'] = 2;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $args['created_at'];
+        $args['project_id'] = $account->project_id;
 
         return new parent($args, $account);
     }

@@ -112,8 +112,6 @@ extend type Mutation @guard {
         price_list_id: ID!
         "ID прайс-листа фии"
         price_list_fee_id: ID!
-        "ID проекта"
-        project_id: ID!
     ): TransferExchange
         @field(resolver: "TransferExchangeMutator@create")
 

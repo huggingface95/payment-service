@@ -11,7 +11,6 @@ use App\Models\Account;
 use App\Models\CommissionPriceList;
 use App\Models\PriceListFee;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 /**
@@ -55,10 +54,7 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $args['created_at'];
         $args['recipient_bank_country_id'] = 1;
-        
-        if (Auth::guard('api_client')->check()) {
-            $args['project_id'] = $fromAccount->project_id;
-        }
+        $args['project_id'] = $fromAccount->project_id;
 
         return new parent($args, $fromAccount);
     }

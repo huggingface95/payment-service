@@ -14,7 +14,6 @@ use App\Models\Company;
 use App\Models\PriceListFee;
 use App\Repositories\TransferOutgoingRepository;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
@@ -44,10 +43,7 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['group_type_id'] = $account->group_type_id;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $date->format('Y-m-d H:i:s');
-
-        if (Auth::guard('api_client')->check()) {
-            $args['project_id'] = $account->project_id;
-        }
+        $args['project_id'] = $account->project_id;
 
         if (empty($args['price_list_id'])) {
             $repository = new TransferOutgoingRepository();
