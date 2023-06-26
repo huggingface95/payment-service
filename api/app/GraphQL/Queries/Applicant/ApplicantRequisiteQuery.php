@@ -20,8 +20,9 @@ class ApplicantRequisiteQuery
     }
 
     /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
+     * @param null $_
+     * @param array<string, mixed> $args
+     * @throws GraphqlException
      */
     public function get($_, array $args)
     {
@@ -30,6 +31,10 @@ class ApplicantRequisiteQuery
         $account = Account::where('account_number', $args['account_number'])
             ->where('owner_id', $applicant->id)
             ->first();
+
+        if (! $account) {
+            throw new GraphqlException('Not found Account', 'not found', 404);
+        }
 
         $requsites = $this->applicantService->getApplicantRequisites($applicant, $account);
 
