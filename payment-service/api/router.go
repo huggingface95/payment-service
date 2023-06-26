@@ -99,6 +99,8 @@ func getProvider(services Services, providerName string) (providers.PaymentProvi
 			providerConfig["key"].(string),
 			providerConfig["password"].(string),
 			providerConfig["base_url"].(string),
+			providerConfig["request_rate"].(string),
+			providerConfig["iban_timeout"].(string),
 			serverConfig["public_url"].(string),
 		)
 		return provider, nil

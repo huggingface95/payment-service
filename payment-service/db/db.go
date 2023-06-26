@@ -128,6 +128,19 @@ func (pg *Pg) Update(table string, updates map[string]interface{}, wheres map[st
 
 // Функции для работы с аккаунтами
 
+// GetAccountOrderReference получает OrderReference аккаунта по ID
+func (pg *Pg) GetAccountOrderReference(accountID int) (string, error) {
+	var orderReference string
+
+	err := pg.Select("accounts", []string{"order_reference"}, map[string]interface{}{"id": accountID}, &orderReference)
+
+	if err != nil {
+		return "", fmt.Errorf("unable to get OrderReference: %v", err)
+	}
+
+	return orderReference, nil
+}
+
 // SetAccountStateToWaitingForAccountIbanGeneration устанавливает поле AccountStateID для заданного аккаунта.
 func (pg *Pg) SetAccountStateToWaitingForAccountIbanGeneration(accountID int) error {
 	updates := map[string]interface{}{
@@ -160,6 +173,7 @@ func (pg *Pg) SetAccountOrderReferenceAndStateToWaitingForApproval(accountID int
 // SetAccountIBANAndStateToActiveByOrderReference обновляет IBAN и State для заданного аккаунта на основе OrderReference.
 func (pg *Pg) SetAccountIBANAndStateToActiveByOrderReference(orderReference string, iban string) error {
 	updates := map[string]interface{}{
+		"account_number":   iban, // записываем IBAN в качестве account_number
 		"iban":             iban,
 		"account_state_id": AccountStateActive,
 		"updated_at":       time.Now(), // обновляем поле updated_at

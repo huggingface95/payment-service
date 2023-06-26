@@ -72,10 +72,6 @@ func ClearJunctionIBANQueue(c *fiber.Ctx, provider providers.PaymentProvider) (e
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	if err := currentProvider.Services.Providers.Validator.Struct(req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-	}
-
 	task := queue.Task{
 		Type:     "IBAN",
 		Provider: "clearjunction", // Идентификатор провайдера

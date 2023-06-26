@@ -6,23 +6,17 @@ import (
 	"time"
 )
 
-const (
-	StatusAccepted  = "accepted"
-	StatusPending   = "pending"
-	StatusAllocated = "allocated"
-	StatusDeclined  = "declined"
-	StatusCreated   = "created"
-)
-
 type PaymentProvider interface {
 	providers.PaymentProvider
 }
 
 type ClearJunction struct {
-	APIKey    string
-	Password  string
-	BaseURL   string
-	PublicURL string
+	APIKey      string
+	Password    string
+	BaseURL     string
+	PublicURL   string
+	RequestRate time.Duration
+	IBANTimeout time.Duration
 
 	Services  Services
 	transport utils.FastHTTP
@@ -35,14 +29,17 @@ type AuthRequest struct {
 
 // StatusRequest представляет запрос на получение статуса.
 type StatusRequest struct {
-	ClientCustomerId string `json:"clientCustomerId"`
+	OrderReference string `json:"order_reference"`
 }
 
 // StatusResponse представляет ответ на запрос статуса.
 type StatusResponse struct {
-	RequestReference string   `json:"requestReference"`
-	ClientCustomerId string   `json:"clientCustomerId"`
-	Ibans            []string `json:"ibans"`
+	ClientOrder      string     `json:"clientOrder"`
+	OrderReference   string     `json:"orderReference"`
+	Status           StatusEnum `json:"status"`
+	Messages         []Message  `json:"messages"`
+	RequestReference string     `json:"requestReference"`
+	Iban             string     `json:"iban,omitempty"`
 }
 
 // IbanPostbackRequest представляет модель данных для IBAN postback.
@@ -61,7 +58,7 @@ type IBANResponse struct {
 	RequestReference string            `json:"requestReference"`
 	ClientOrder      string            `json:"clientOrder"`
 	OrderReference   string            `json:"orderReference"`
-	Status           string            `json:"status"`
+	Status           StatusEnum        `json:"status"`
 	ResponseMessages []ResponseMessage `json:"responseMessages"`
 	IBANs            []string          `json:"ibans"`
 }
@@ -82,7 +79,7 @@ type PostbackRequest struct {
 	CustomInfo        PayRequestCustomInfo   `json:"customInfo"`
 	CustomFormat      PayRequestCustomInfo   `json:"customFormat"`
 	ValuedAt          interface{}            `json:"valuedAt"`
-	Status            string                 `json:"status"`
+	Status            StatusEnum             `json:"status"`
 	TransactionType   string                 `json:"transactionType"`
 	SubStatuses       PayPostbackSubStatuses `json:"subStatuses"`
 	PaymentDetails    struct{}               `json:"paymentDetails"`
