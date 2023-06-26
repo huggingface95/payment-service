@@ -117,11 +117,6 @@ extend type Query @guard(with: ["api", "api_client"]) {
     clientList(
         filter: _ @filterConditions(static: QueryClientListFilterStatic)
     ): [Client!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
-}
-
-extend type Query @guard {
-    "Получить аккаунт по ID"
-    account(id: ID! @eq): Account @find
 
     """
     Получить список активных аккаунтов
@@ -132,6 +127,11 @@ extend type Query @guard {
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id", "created_at"])
     ): [Account] @all(scopes: ["active"]) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Query @guard {
+    "Получить аккаунт по ID"
+    account(id: ID! @eq): Account @find
 
     """
     Получить список account states
