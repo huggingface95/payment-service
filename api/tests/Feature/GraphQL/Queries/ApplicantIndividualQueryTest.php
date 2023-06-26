@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use App\Models\ApplicantIndividual;
+use App\Models\ApplicantIndividualModules;
 use Illuminate\Support\Facades\DB;
 
 class ApplicantIndividualQueryTest extends TestCase
@@ -31,8 +33,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividual(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_individual')
+        $applicant = ApplicantIndividual::query()
             ->prefixes()
             ->orderBy('id', 'ASC')
             ->get();
@@ -62,8 +63,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testSetApplicantIndividualPassword(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_individual')
+        $applicant = ApplicantIndividual::query()
             ->prefixes()
             ->orderBy('id', 'DESC')
             ->get();
@@ -110,8 +110,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualOrderBy(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_individual')
+        $applicant = ApplicantIndividual::query()
             ->prefixes()
             ->orderBy('id', 'DESC')
             ->get();
@@ -138,8 +137,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualFilterByEmail(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_individual')
+        $applicant = ApplicantIndividual::query()
             ->prefixes()
             ->first();
 
@@ -178,8 +176,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualFilterByFullName(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_individual')
+        $applicant = ApplicantIndividual::query()
             ->prefixes()
             ->first();
 
@@ -220,8 +217,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualFilterByHasRiskLevel(): void
     {
-        $applicants = DB::connection('pgsql_test')
-            ->table('applicant_individual')
+        $applicants = ApplicantIndividual::query()
             ->prefixes()
             ->where('applicant_risk_level_id', 1)
             ->get();
@@ -268,8 +264,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualFilterByHasStateReason(): void
     {
-        $applicants = DB::connection('pgsql_test')
-            ->table('applicant_individual')
+        $applicants = ApplicantIndividual::query()
             ->prefixes()
             ->where('applicant_state_reason_id', 1)
             ->get();
@@ -316,8 +311,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualFilterByHasStatus(): void
     {
-        $applicants = DB::connection('pgsql_test')
-            ->table('applicant_individual')
+        $applicants = ApplicantIndividual::query()
             ->prefixes()
             ->where('applicant_status_id', 1)
             ->get();
@@ -364,8 +358,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualFilterByModule(): void
     {
-        $module = DB::connection('pgsql_test')
-            ->table('applicant_individual_modules')
+        $module = ApplicantIndividualModules::query()
             ->first();
 
         $applicants = DB::connection('pgsql_test')
@@ -410,8 +403,7 @@ class ApplicantIndividualQueryTest extends TestCase
 
     public function testQueryApplicantIndividualFilterByOwners(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_individual')
+        $applicant = ApplicantIndividual::query()
             ->prefixes()
             ->first();
 
@@ -442,8 +434,7 @@ class ApplicantIndividualQueryTest extends TestCase
      */
     public function testQueryApplicantIndividualsWithFilterByCondition($cond, $value): void
     {
-        $applicants = DB::connection('pgsql_test')
-            ->table('applicant_individual')
+        $applicants = ApplicantIndividual::query()
             ->prefixes()
             ->where($cond, $value)
             ->orderBy('id', 'ASC')
