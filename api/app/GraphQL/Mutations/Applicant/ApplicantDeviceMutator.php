@@ -25,8 +25,9 @@ class ApplicantDeviceMutator extends BaseMutator
 
     /**
      * @param    $_
-     * @param  array  $args
+     * @param array $args
      * @return array
+     * @throws GraphqlException
      */
     public function update($_, array $args)
     {
@@ -35,7 +36,8 @@ class ApplicantDeviceMutator extends BaseMutator
         $device = DB::connection('clickhouse')
             ->table((new ActiveSession())->getTable())
             ->where('id', $args['id'])
-            ->where('member', $applicant->email)
+            ->where('email', $applicant->email)
+            ->where('provider', ClientTypeEnum::APPLICANT->toString())
             ->get();
 
         if (! $device) {
@@ -70,14 +72,15 @@ class ApplicantDeviceMutator extends BaseMutator
 
         $trusted = $args['trusted'] == true ? 'true' : 'false';
         $id = intval($args['id']);
-        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' UPDATE trusted='.$trusted.' WHERE id='.$id.' AND member=\''.$applicant->email.'\'';
+        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' UPDATE trusted='.$trusted.' WHERE id='.$id.' AND provider='.ClientTypeEnum::APPLICANT->toString().'  AND email=\''.$applicant->email.'\'';
 
         DB::connection('clickhouse')->statement($rawSql);
 
         $device = DB::connection('clickhouse')
             ->table((new ActiveSession())->getTable())
             ->where('id', $args['id'])
-            ->where('member', $applicant->email)
+            ->where('email', $applicant->email)
+            ->where('provider', ClientTypeEnum::APPLICANT->toString())
             ->first();
 
         $emailTemplateSubject = 'You have added a new Trusted device';
@@ -109,11 +112,12 @@ class ApplicantDeviceMutator extends BaseMutator
         $device = DB::connection('clickhouse')
             ->table((new ActiveSession())->getTable())
             ->where('id', $args['id'])
-            ->where('member', $applicant->email)
+            ->where('email', $applicant->email)
+            ->where('provider', ClientTypeEnum::APPLICANT->toString())
             ->first();
 
         $id = intval($args['id']);
-        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' DELETE WHERE id='.$id.' AND member=\''.$applicant->email.'\'';
+        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' DELETE WHERE id='.$id.' AND provider='.ClientTypeEnum::APPLICANT->toString().' AND email=\''.$applicant->email.'\'';
 
         DB::connection('clickhouse')->statement($rawSql);
 
