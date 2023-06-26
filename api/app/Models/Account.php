@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
@@ -53,6 +54,7 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
     use MorphToOne;
     use BelongsToOne;
     use BaseObServerTrait;
+    use SoftDeletes;
 
     protected $table = 'accounts';
 
@@ -103,6 +105,7 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'activated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'last_charge_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     protected $appends = [

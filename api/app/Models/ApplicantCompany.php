@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class ApplicantCompany
@@ -27,6 +28,7 @@ class ApplicantCompany extends BaseModel
     use MorphToOne;
     use BelongsToOne;
     use BaseObServerTrait;
+    use SoftDeletes;
 
     protected $table = 'applicant_companies';
 
@@ -93,6 +95,7 @@ class ApplicantCompany extends BaseModel
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'incorporate_date' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     public const ID_PREFIX = 'AC-';
