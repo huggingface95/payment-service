@@ -9,6 +9,8 @@ type QuoteProvider {
     quote_type: QuoteType!
     "Статус активности"
     status: ActivityStatusType!
+    "rates"
+    rates: [CurrencyExchangeRate] @hasMany(relation: "currencyExchangeRates")
     "Дата создания"
     created_at: DateTimeUtc!
     "Комиссия"
@@ -91,5 +93,5 @@ extend type Mutation @guard {
         company_id: ID!
         file: Upload!
     ): QuoteProvider
-    @field(resolver: "QuoteProviderMutator@attachFIleData")
+    @field(resolver: "CurrencyExchangeRateMutator@attachFIleData")
 }
