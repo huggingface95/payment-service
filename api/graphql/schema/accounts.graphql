@@ -105,6 +105,7 @@ extend type Query @guard(with: ["api", "api_client"]) {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     accountList(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryAccountListFilterStatic),
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id", "created_at"])
@@ -126,6 +127,7 @@ extend type Query @guard {
     Получить список активных аккаунтов
     """
     accountActiveList(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryAccountActiveListFilterStatic),
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id", "created_at"])
@@ -137,8 +139,6 @@ extend type Query @guard {
     accountStates(
         orderBy: _ @orderBy(columns: ["id", "name"])
     ): [AccountState!]!   @all @orderBy(column: "id", direction: ASC)
-
-
 
 
     clientListActive(

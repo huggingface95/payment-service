@@ -15,6 +15,7 @@ extend type Query @guard {
     Получить список регионов
     """
     regions(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryRegionsFilterStatic)
     ): [Region!]!   @paginate(defaultCount: 10) @orderBy(column: "name", direction: ASC)
 }
