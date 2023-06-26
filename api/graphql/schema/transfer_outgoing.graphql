@@ -215,7 +215,7 @@ extend type Mutation @guard {
         "ID шаблона комиссии"
         price_list_id: ID!
         "ID комисии"
-        price_list_fee_id: ID
+        price_list_fee_id: ID!
         "ID срочности операции"
         urgency_id: ID!
         "Исполнить в"
@@ -277,6 +277,10 @@ extend type Mutation @guard {
         amount: Decimal
         "ID аккаунта"
         account_id: ID
+        "ID шаблона комиссии"
+        price_list_id: ID
+        "ID комисии"
+        price_list_fee_id: ID
         "ID платежного провайдера"
         payment_provider_id: ID
         "ID платежной системы"

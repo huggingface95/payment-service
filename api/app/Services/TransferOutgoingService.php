@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
 use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingRefundDTO;
+use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingFeeDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingScheduledFeeDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingStandardDTO;
 use App\DTO\TransformerDTO;
@@ -363,6 +364,20 @@ class TransferOutgoingService extends AbstractService
 
             $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
             $this->commissionService->makeFee($transfer, $transactionDTO);
+
+            $this->createTransferHistory($transfer, TransferHistoryActionEnum::INIT->value)->createPPHistory($transfer);
+
+            return $this->transferRepository->findById($transfer->id);
+        });
+    }
+
+    public function createFeeTransfer(array $args, int $operationType): Builder|Model
+    {
+        $createTransferDto = TransformerDTO::transform(CreateTransferOutgoingFeeDTO::class, $args, $operationType);
+
+        return DB::transaction(function () use ($createTransferDto) {
+            /** @var TransferOutgoing $transfer */
+            $transfer = $this->transferRepository->create($createTransferDto->toArray());
 
             $this->createTransferHistory($transfer, TransferHistoryActionEnum::INIT->value)->createPPHistory($transfer);
 

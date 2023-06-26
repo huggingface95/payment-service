@@ -2,7 +2,6 @@
 
 namespace App\GraphQL\Mutations\Applicant;
 
-use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\BaseMutator;

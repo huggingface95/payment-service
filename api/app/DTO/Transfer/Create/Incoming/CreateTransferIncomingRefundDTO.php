@@ -5,6 +5,7 @@ namespace App\DTO\Transfer\Create\Incoming;
 use App\Enums\BeneficiaryTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
+use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\PaymentBank;
 use Carbon\Carbon;
