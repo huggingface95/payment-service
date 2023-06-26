@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
@@ -29,6 +30,7 @@ use Illuminate\Support\Carbon;
 class PriceListFee extends BaseModel
 {
     use BaseObServerTrait;
+    use SoftDeletes;
     public const RANGE = 'range';
 
     public const FIX = 'fix';
@@ -49,6 +51,7 @@ class PriceListFee extends BaseModel
     protected $casts = [
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     public function getFeeRangesAttribute(): array
