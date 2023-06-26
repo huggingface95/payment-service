@@ -122,6 +122,7 @@ extend type Query @guard{
     where:{column: EMAIL, operator: LIKE, value: ""} фильтр по имени, фамилии, Email
     """
     applicantCompanies(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryApplicantCompaniesFilterStatic),
         where: _ @whereConditions(columns: ["id","account_manager_member_id","applicant_state_id","applicant_state_reason_id","name","url" ,"email","created_at","group_id","company_id"]),
         hasGroupRole: _ @whereHasConditions(columns: ["name", "id"]),

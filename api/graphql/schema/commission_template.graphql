@@ -40,6 +40,7 @@ extend type Query @guard {
     filter:{column: NAME, operator: LIKE, value: ""} фильтр по name
     """
     commissionTemplates(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryCommissionTemplatesFilterStatic),
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
         orderBy: _ @orderBy(columns: ["id","name","is_active","description"]),
