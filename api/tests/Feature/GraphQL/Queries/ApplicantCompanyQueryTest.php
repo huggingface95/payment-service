@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use App\Models\ApplicantCompany;
+use App\Models\ApplicantCompanyModules;
 use App\Models\ApplicantIndividual;
 use Illuminate\Support\Facades\DB;
 
@@ -32,8 +34,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompany(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->orderBy('id', 'ASC')
             ->get();
@@ -65,8 +66,7 @@ class ApplicantCompanyQueryTest extends TestCase
     {
         $this->login();
 
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->orderBy('id', 'ASC')
             ->get();
@@ -94,8 +94,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyWhere(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->first();
 
@@ -228,8 +227,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterById(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->first();
 
@@ -264,8 +262,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByCompanyId(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->first();
 
@@ -300,8 +297,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByAccountManagerId(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->first();
 
@@ -336,8 +332,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByProjectId(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->orderBy('id', 'DESC')
             ->whereNotNull('project_id')
@@ -374,8 +369,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByRiskLevel(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->whereNotNull('applicant_risk_level_id')
             ->first();
@@ -411,8 +405,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByStatus(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->orderBy('id', 'DESC')
             ->first();
@@ -448,8 +441,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByBusinessType(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->orderBy('id', 'DESC')
             ->first();
@@ -485,8 +477,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByKycLevel(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->orderBy('id', 'DESC')
             ->first();
@@ -522,13 +513,11 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByModules(): void
     {
-        $modules = DB::connection('pgsql_test')
-            ->table('applicant_company_modules')
-            ->orderBy('applicant_company_id', 'DESC')
+        $modules = ApplicantCompanyModules::query()
+            ->orderBy('applicant_company_id', 'ASC')
             ->first();
 
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->where('id', $modules->applicant_company_id)
             ->orderBy('id', 'DESC')
@@ -565,8 +554,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByStateReasonId(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->first();
 
@@ -601,8 +589,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByOwnerId(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->first();
 
@@ -637,8 +624,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByName(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->first();
 
@@ -673,8 +659,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByUrl(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->first();
 
@@ -709,8 +694,7 @@ class ApplicantCompanyQueryTest extends TestCase
 
     public function testQueryApplicantCompanyFilterByEmail(): void
     {
-        $applicant = DB::connection('pgsql_test')
-            ->table('applicant_companies')
+        $applicant = ApplicantCompany::query()
             ->prefixes()
             ->first();
 

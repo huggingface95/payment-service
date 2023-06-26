@@ -3,6 +3,7 @@
 namespace Tests;
 
 use App\Repositories\JWTRepository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -37,6 +38,35 @@ abstract class TestCase extends BaseTestCase
 
             static::$setUpHasRunOnce = true;
         }
+        $this->applyNotDeletedScopeToSoftDeleteModels();
+    }
+
+    protected function applyNotDeletedScopeToSoftDeleteModels(): void
+    {
+        $softDeleteModels = $this->getSoftDeleteModels();
+
+        foreach ($softDeleteModels as $modelClass) {
+            $modelClass::addGlobalScope('notDeleted', function (Builder $builder) {
+                $builder->whereNull('deleted_at');
+            });
+        }
+    }
+
+    protected function getSoftDeleteModels(): array
+    {
+        $modelsPath = app_path('Models');
+        $softDeleteModels = [];
+
+        foreach (glob($modelsPath . '/*.php') as $modelFile) {
+            $modelClass = 'App\Models\\' . basename($modelFile, '.php');
+            $modelInstance = new $modelClass();
+
+            if (method_exists($modelInstance, 'bootSoftDeletes')) {
+                $softDeleteModels[] = $modelClass;
+            }
+        }
+
+        return $softDeleteModels;
     }
 
     /**

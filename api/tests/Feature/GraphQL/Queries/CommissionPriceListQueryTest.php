@@ -30,8 +30,7 @@ class CommissionPriceListQueryTest extends TestCase
 
     public function testQueryCommissionPriceLists(): void
     {
-        $commissionPriceList = DB::connection('pgsql_test')
-            ->table('commission_price_list')
+        $commissionPriceList = CommissionPriceList::query()
             ->orderBy('id', 'ASC')
             ->get();
 
@@ -79,8 +78,7 @@ class CommissionPriceListQueryTest extends TestCase
 
     public function testQueryCommissionPriceListsOrderBy(): void
     {
-        $commissionPriceList = DB::connection('pgsql_test')
-            ->table('commission_price_list')
+        $commissionPriceList = CommissionPriceList::query()
             ->orderBy('id', 'ASC')
             ->first();
 
@@ -128,8 +126,7 @@ class CommissionPriceListQueryTest extends TestCase
 
     public function testQueryCommissionPriceList(): void
     {
-        $commissionPriceList = DB::connection('pgsql_test')
-            ->table('commission_price_list')
+        $commissionPriceList = CommissionPriceList::query()
             ->orderBy('id', 'ASC')
             ->get();
 
@@ -176,8 +173,7 @@ class CommissionPriceListQueryTest extends TestCase
 
     public function testQueryCommissionPriceListByCompanyID(): void
     {
-        $commissionPriceList = DB::connection('pgsql_test')
-            ->table('commission_price_list')
+        $commissionPriceList = CommissionPriceList::query()
             ->orderBy('id', 'ASC')
             ->get();
 
@@ -224,9 +220,7 @@ class CommissionPriceListQueryTest extends TestCase
 
     public function testQueryCommissionPriceListByPaymentProvider(): void
     {
-        $commissionPriceList = DB::connection('pgsql_test')
-            ->table('commission_price_list')
-            ->first();
+        $commissionPriceList = CommissionPriceList::query()->first();
 
         $this->postGraphQL(
             [
@@ -256,9 +250,7 @@ class CommissionPriceListQueryTest extends TestCase
 
     public function testQueryCommissionPriceListByCommissionTemplate(): void
     {
-        $commissionPriceList = DB::connection('pgsql_test')
-            ->table('commission_price_list')
-            ->first();
+        $commissionPriceList = CommissionPriceList::query()->first();
 
         $this->postGraphQL(
             [
@@ -288,9 +280,7 @@ class CommissionPriceListQueryTest extends TestCase
 
     public function testQueryCommissionPriceListByPaymentSystem(): void
     {
-        $commissionPriceList = DB::connection('pgsql_test')
-            ->table('commission_price_list')
-            ->first();
+        $commissionPriceList = CommissionPriceList::query()->first();
 
         $this->postGraphQL(
             [
@@ -320,9 +310,7 @@ class CommissionPriceListQueryTest extends TestCase
 
     public function testQueryCommissionPriceListById(): void
     {
-        $commissionPriceList = DB::connection('pgsql_test')
-            ->table('commission_price_list')
-            ->first();
+        $commissionPriceList = CommissionPriceList::query()->first();
 
         $this->postGraphQL(
             [
@@ -352,9 +340,7 @@ class CommissionPriceListQueryTest extends TestCase
 
     public function testQueryCommissionPriceListByRegionId(): void
     {
-        $commissionPriceList = DB::connection('pgsql_test')
-            ->table('commission_price_list')
-            ->first();
+        $commissionPriceList = CommissionPriceList::query()->first();
 
         $this->postGraphQL(
             [
