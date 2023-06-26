@@ -13,7 +13,6 @@ use App\Models\PaymentBank;
 use App\Models\PriceListFee;
 use App\Repositories\TransferOutgoingRepository;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
@@ -61,10 +60,7 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
         $args['urgency_id'] ??= PaymentUrgencyEnum::STANDART->value;
         $args['created_at'] = $date;
         $args['recipient_bank_country_id'] ??= Company::findOrFail($args['company_id'])->country_id;
-
-        if (Auth::guard('api_client')->check()) {
-            $args['project_id'] = $account->project_id;
-        }
+        $args['project_id'] = $account->project_id;
 
         if (!empty($args['execution_at'])) {
             if (Carbon::parse($args['execution_at'])->lt($date)) {

@@ -16,6 +16,8 @@ class CreateTransferOutgoingScheduledFeeDTO extends CreateTransferOutgoingDTO
 {
     public static function transform(array $args): CreateTransferOutgoingDTO
     {
+        /** @var Account $account */
+        $account = Account::findOrFail($args['account_id']);
         /** @var PaymentSystem $psInternal */
         $psInternal = PaymentSystem::query()->where('name', 'Internal')->first();
         /** @var PaymentProvider $ppInternal */
@@ -42,7 +44,8 @@ class CreateTransferOutgoingScheduledFeeDTO extends CreateTransferOutgoingDTO
         $args['respondent_fees_id'] = 1;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $args['created_at'];
+        $args['project_id'] = $account->project_id;
 
-        return new parent($args, Account::findOrFail($args['account_id']));
+        return new parent($args, $account);
     }
 }

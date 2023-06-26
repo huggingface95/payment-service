@@ -57,6 +57,7 @@ class CreateTransferIncomingStandardDTO extends CreateTransferIncomingDTO
         $args['respondent_fees_id'] ??= RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $args['created_at'];
+        $args['project_id'] = $account->project_id;
 
         return new parent($args, $account);
     }

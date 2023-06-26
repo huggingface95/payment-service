@@ -9,8 +9,6 @@ extend type Mutation @guard {
         group_id: ID!
         "ID типа группы"
         group_type_id: ID!
-        "ID проекта"
-        project_id: ID!
         "Сумма"
         amount: Decimal!
         "ID валюты"
@@ -66,8 +64,6 @@ extend type Mutation @guard {
         group_id: ID
         "ID типа группы"
         group_type_id: ID
-        "ID проекта"
-        project_id: ID
         "Сумма"
         amount: Decimal
         "ID валюты"

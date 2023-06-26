@@ -35,8 +35,6 @@ extend type Mutation @guard {
         price_list_id: ID!
         "ID прайс-листа фии"
         price_list_fee_id: ID!
-        "ID проекта"
-        project_id: ID!
     ): TransferBetweenWithFees
         @field(resolver: "TransferBetweenAccountsMutator@create")
 
@@ -56,8 +54,6 @@ extend type Mutation @guard {
         price_list_id: ID
         "ID прайс-листа фии"
         price_list_fee_id: ID
-        "ID проекта"
-        project_id: ID
     ): TransferBetween
         @field(resolver: "TransferBetweenAccountsMutator@update")
 

@@ -17,8 +17,6 @@ extend type Mutation @guard {
         respondent_fee_id: ID!
         "Причина перевода"
         reason: String
-        "ID проекта"
-        project_id: ID!
     ): TransferBetweenWithFees
         @field(resolver: "TransferBetweenUsersMutator@create")
 
@@ -42,8 +40,6 @@ extend type Mutation @guard {
         respondent_fee_id: ID
         "Причина перевода"
         reason: String
-        "ID проекта"
-        project_id: ID
     ): TransferBetween
         @field(resolver: "TransferBetweenUsersMutator@update")
     
