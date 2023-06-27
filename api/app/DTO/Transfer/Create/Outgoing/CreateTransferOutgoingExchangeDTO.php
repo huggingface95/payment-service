@@ -53,6 +53,8 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
             CommissionPriceList::query()
                 ->where('id', $args['price_list_id'])
                 ->where('company_id', $args['company_id'])
+                ->where('provider_id', $args['payment_provider_id'])
+                ->where('payment_system_id', $args['payment_system_id'])
                 ->first() ?? throw new GraphqlException('Commission price list not found', 'use');
         }
 
