@@ -21,10 +21,14 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
     public static function transform(Account $fromAccount, Account $toAccount, int $operationType, array $args): CreateTransferOutgoingDTO
     {
         $date = Carbon::now();
+        $args['payment_provider_id'] = $fromAccount->company->paymentProviderInternal?->id ?? throw new GraphqlException('Internal Payment provider not found');
+        $args['payment_system_id'] = $fromAccount->company->paymentProviderInternal->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');
 
         CommissionPriceList::query()
             ->where('id', $args['price_list_id'])
             ->where('company_id', $fromAccount->company_id)
+            ->where('provider_id', $args['payment_provider_id'])
+            ->where('payment_system_id', $args['payment_system_id'])
             ->first() ?? throw new GraphqlException('Commission price list not found', 'use');
         
         PriceListFee::query()
@@ -42,8 +46,6 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
         $args['urgency_id'] = PaymentUrgencyEnum::STANDART->value;
         $args['operation_type_id'] = $operationType;
         $args['payment_number'] = Str::uuid();
-        $args['payment_provider_id'] = $fromAccount->company->paymentProviderInternal?->id ?? throw new GraphqlException('Internal Payment provider not found');
-        $args['payment_system_id'] = $fromAccount->company->paymentProviderInternal->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');
         $args['payment_bank_id'] = null;
         $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
