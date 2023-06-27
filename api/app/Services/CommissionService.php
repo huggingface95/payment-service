@@ -138,14 +138,25 @@ class CommissionService extends AbstractService
      */
     private function calculatePaymentFee($priceListFees, TransferOutgoing|TransferIncoming $transfer, FeeModeEnum $feeMode, TransactionDTO $transactionDTO = null): float
     {
-        $paymentFee = 0;
+        $paymentFee = 0.0;
+        $fees = null;
+
         foreach ($priceListFees as $listFee) {
             if (! $this->isAllowToApplyCommission($transfer, $listFee, $transactionDTO)) {
                 continue;
             }
 
-            $paymentFee += $this->getFee($listFee->fee, $transfer->amount, $transfer->urgency_id, $feeMode, $transactionDTO);
+            $fee = $this->getFee($listFee->fee, $transfer->amount, $transfer->urgency_id);
+            if ($fee !== null) {
+                $fees += $fee;
+            }
         }
+
+        if ($fees === null && $feeMode == FeeModeEnum::BASE) {
+            throw new GraphqlException('Fee not found. Please set the fee range equals to 0 to create a fee free transfer');       
+        }
+
+        $paymentFee += $fees;
 
         return (float) $paymentFee;
     }
@@ -201,12 +212,12 @@ class CommissionService extends AbstractService
         }
     }
 
-    public function getFee(Collection $list, float $amount, int $urgency, FeeModeEnum $feeMode, TransactionDTO $transactionDTO = null): ?float
+    public function getFee(Collection $list, float $amount, int $urgency): ?float
     {
         $fee = $list->toArray();
         $modeKey = array_search(FeeModeEnum::RANGE->toString(), array_column($fee, 'mode'));
         if ($modeKey !== null && $modeKey !== false) {
-            return self::getFeeByRangeMode($fee, $modeKey, $amount, $urgency, $feeMode);
+            return self::getFeeByRangeMode($fee, $modeKey, $amount, $urgency);
         } else {
             return self::getFeeByFixMode($fee, $amount, $urgency);
         }
@@ -219,18 +230,14 @@ class CommissionService extends AbstractService
         })->sum();
     }
 
-    private static function getFeeByRangeMode(array $data, int $modeKey, float $amount, int $urgency, FeeModeEnum $feeMode): float
+    private static function getFeeByRangeMode(array $data, int $modeKey, float $amount, int $urgency): ?float
     {
-        $fees = 0.0;
+        $fees = null;
         if ((float) $data[$modeKey]['amount_from'] <= $amount && $amount <= (float) $data[$modeKey]['amount_to']) {
             unset($data[$modeKey]);
 
             foreach ($data as $fee) {
                 $fees += self::getConstantFee($fee, $amount, $urgency);
-            }
-        } else {
-            if ($feeMode == FeeModeEnum::BASE) {
-                throw new GraphqlException('Fee not found. Please set the fee range equals to 0 to create a fee free transfer');
             }
         }
 
