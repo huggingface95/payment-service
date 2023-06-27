@@ -66,6 +66,7 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         } else {
             PriceListFee::query()
                 ->where('id', $args['price_list_fee_id'])
+                ->where('price_list_id', $args['price_list_id'])
                 ->where('operation_type_id', $args['operation_type_id'])
                 ->where('company_id', $args['company_id'])
                 ->first() ?? throw new GraphqlException('Price list fee not found', 'use');

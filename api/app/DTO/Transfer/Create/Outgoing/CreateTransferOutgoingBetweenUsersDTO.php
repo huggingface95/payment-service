@@ -30,9 +30,10 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
             ->where('provider_id', $args['payment_provider_id'])
             ->where('payment_system_id', $args['payment_system_id'])
             ->first() ?? throw new GraphqlException('Commission price list not found', 'use');
-        
+
         PriceListFee::query()
             ->where('id', $args['price_list_fee_id'])
+            ->where('price_list_id', $args['price_list_id'])
             ->where('operation_type_id', $operationType)
             ->where('company_id', $fromAccount->company_id)
             ->first() ?? throw new GraphqlException('Price list fee not found', 'use');
