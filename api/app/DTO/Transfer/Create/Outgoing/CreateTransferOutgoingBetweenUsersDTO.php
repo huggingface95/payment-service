@@ -10,6 +10,7 @@ use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\CommissionPriceList;
 use App\Models\PriceListFee;
+use App\Repositories\TransferOutgoingRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -23,21 +24,6 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
         $date = Carbon::now();
         $args['payment_provider_id'] = $fromAccount->company->paymentProviderInternal?->id ?? throw new GraphqlException('Internal Payment provider not found');
         $args['payment_system_id'] = $fromAccount->company->paymentProviderInternal->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');
-
-        CommissionPriceList::query()
-            ->where('id', $args['price_list_id'])
-            ->where('company_id', $fromAccount->company_id)
-            ->where('provider_id', $args['payment_provider_id'])
-            ->where('payment_system_id', $args['payment_system_id'])
-            ->first() ?? throw new GraphqlException('Commission price list not found', 'use');
-
-        PriceListFee::query()
-            ->where('id', $args['price_list_fee_id'])
-            ->where('price_list_id', $args['price_list_id'])
-            ->where('operation_type_id', $operationType)
-            ->where('company_id', $fromAccount->company_id)
-            ->first() ?? throw new GraphqlException('Price list fee not found', 'use');
-        
         $args['account_id'] = $fromAccount->id;
         $args['currency_id'] = $fromAccount->currencies?->id;
         $args['company_id'] = $fromAccount->company_id;
@@ -58,6 +44,33 @@ class CreateTransferOutgoingBetweenUsersDTO extends CreateTransferOutgoingDTO
         $args['execution_at'] = $args['created_at'];
         $args['recipient_bank_country_id'] = 1;
         $args['project_id'] = $fromAccount->project_id;
+
+        if (empty($args['price_list_id'])) {
+            $repository = new TransferOutgoingRepository();
+            $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('Region not found', 'use');
+            $args['price_list_id'] = $repository->getCommissionPriceListIdByArgs($args, $fromAccount->client_type) ?? throw new GraphqlException('Commission price list not found', 'use');
+        } else {
+            CommissionPriceList::query()
+                ->where('id', $args['price_list_id'])
+                ->where('company_id', $fromAccount->company_id)
+                ->where('provider_id', $args['payment_provider_id'])
+                ->where('payment_system_id', $args['payment_system_id'])
+                ->first() ?? throw new GraphqlException('Commission price list not found', 'use');
+        }
+
+        if (empty($args['price_list_fee_id'])) {
+            $args['price_list_fee_id'] = PriceListFee::query()
+                ->where('price_list_id', $args['price_list_id'])
+                ->where('operation_type_id', $args['operation_type_id'])
+                ->first()?->id ?? throw new GraphqlException('Price list fee not found', 'use');
+        } else {
+            PriceListFee::query()
+                ->where('id', $args['price_list_fee_id'])
+                ->where('price_list_id', $args['price_list_id'])
+                ->where('operation_type_id', $operationType)
+                ->where('company_id', $fromAccount->company_id)
+                ->first() ?? throw new GraphqlException('Price list fee not found', 'use');
+        }
 
         return new parent($args, $fromAccount);
     }
