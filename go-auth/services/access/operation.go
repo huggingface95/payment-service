@@ -104,6 +104,14 @@ func CheckAccess(jsonData []byte, user postgres.User, referer string) (bool, str
 				if ok == false {
 					return false, message
 				}
+			} else if user.ClientType() == constants.Member {
+				for _, verifiedPermission := range verifiedPermissions {
+					fmt.Println(verifiedPermission)
+					//permission := verifiedPermission.(postgres.Permission)
+					//if permission.Name {
+					//
+					//}
+				}
 			}
 		} else if ok && len(verifiedPermissions) == 0 {
 			return true, message
