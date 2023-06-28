@@ -22,6 +22,7 @@ type Member struct {
 	Google2FaSecret        string `gorm:"column:google2fa_secret"`
 	IsVerificationEmail    uint64 `gorm:"column:email_verification"`
 	IsNeedChangePassword   bool   `gorm:"column:is_need_change_password"`
+	IsSignTransaction      bool   `gorm:"column:is_sign_transaction"`
 	CreatedAt              time.Time
 	UpdatedAt              time.Time
 	BackupCodes            datatypes.JSON     `gorm:"column:backup_codes"`

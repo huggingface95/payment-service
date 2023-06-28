@@ -19,7 +19,7 @@ class PermissionsList extends BaseModel
     protected $table = 'permissions_list';
 
     protected $fillable = [
-        'name', 'type', 'permission_group_id', 'separator', 'order',
+        'name', 'type', 'permission_group_id', 'order',
     ];
 
     public $timestamps = false;
