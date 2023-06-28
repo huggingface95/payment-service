@@ -76,8 +76,8 @@ class ImportCurrenciesCommand extends Command
             $currency = CurrencyRateHistory::factory()->create($arr);
 
             CurrencyExchangeRate::updateOrCreate([
-                'currency_from_id' => $currency->currency_src_id,
-                'currency_to_id' => $currency->currency_dst_id,
+                'currency_src_id' => $currency->currency_src_id,
+                'currency_dst_id' => $currency->currency_dst_id,
                 'quote_provider_id' => $currency->quote_provider_id,
             ], [
                 'rate' => $currency->rate,
