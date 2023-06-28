@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
 use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingRefundDTO;
+use App\DTO\Transfer\Create\Outgoing\Applicant\CreateApplicantTransferOutgoingStandardDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingFeeDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingScheduledFeeDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingStandardDTO;
@@ -25,6 +26,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -356,7 +358,8 @@ class TransferOutgoingService extends AbstractService
 
     public function createTransfer(array $args, int $operationType): Builder|Model
     {
-        $createTransferDto = TransformerDTO::transform(CreateTransferOutgoingStandardDTO::class, $args, $operationType, $this->transferRepository);
+        $transferDto = Auth::guard('api')->check() ? CreateTransferOutgoingStandardDTO::class : CreateApplicantTransferOutgoingStandardDTO::class;
+        $createTransferDto = TransformerDTO::transform($transferDto, $args, $operationType, $this->transferRepository);
 
         return DB::transaction(function () use ($createTransferDto) {
             /** @var TransferOutgoing $transfer */
