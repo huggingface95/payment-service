@@ -55,7 +55,12 @@ input QueryPaymentSystemsFilterStatic @spread{
 
 input InputPaymentSystem {
     "Название платежной системы"
-    name: String!
+    name: String! @rules(
+        apply: [ "regex:/^(?=.*(?:sepa|swift)).*$/i"],  
+        messages: {
+            regex: "The name field must contain 'sepa' or 'swift'"
+        }
+    )
     "Активный не активный (true/false)"
     is_active: Boolean
     "массив ID стран"
