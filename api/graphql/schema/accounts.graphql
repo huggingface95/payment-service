@@ -220,7 +220,7 @@ input QueryAccountActiveListFilterStatic @spread{
     project_id: ID @eq
     hasCompanyMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
-    MixedAccountNumberOrAccountName: String @ilike
+    MixedAccountNumberOrAccountName: String @eq
     currency_id: ID @eq @neq
     hasGroupRoleMixedIdOrName: Mixed @eq
     group_type_id: ID @eq
