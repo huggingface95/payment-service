@@ -10,8 +10,8 @@ type CurrencyExchangeRate {
 
 input CurrencyExchangeRateInput {
     quote_provider_id: ID!
-    currency_from_id: ID!
-    currency_to_id: ID!
+    currency_src_id: ID!
+    currency_dst_id: ID!
     rate: Decimal!
 }
 

@@ -24,8 +24,8 @@ class CurrencyExchangeRate extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'currency_from_id',
-        'currency_to_id',
+        'currency_src_id',
+        'currency_dst_id',
         'rate',
         'quote_provider_id',
     ];
@@ -41,12 +41,12 @@ class CurrencyExchangeRate extends BaseModel
 
     public function currencyFrom(): BelongsTo
     {
-        return $this->belongsTo(Currencies::class, 'currency_from_id');
+        return $this->belongsTo(Currencies::class, 'currency_src_id');
     }
 
     public function currencyTo(): BelongsTo
     {
-        return $this->belongsTo(Currencies::class, 'currency_to_id');
+        return $this->belongsTo(Currencies::class, 'currency_dst_id');
     }
 
 }

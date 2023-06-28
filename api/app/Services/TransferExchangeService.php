@@ -138,8 +138,8 @@ class TransferExchangeService extends AbstractService
             throw new GraphqlException('Quote provider not found. Please setup quote provider');
 
         $exchageRate = $quoteProvider->currencyExchangeRates
-            ->where('currency_from_id', $fromAccount->currencies->id)
-            ->where('currency_to_id', $toAccount->currencies->id)
+            ->where('currency_src_id', $fromAccount->currencies->id)
+            ->where('currency_dst_id', $toAccount->currencies->id)
             ->first()?->rate;
 
         if ($exchageRate === null) {

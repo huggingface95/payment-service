@@ -36,14 +36,14 @@ class CurrencyExchangeRateMutator
 
             /** @var CurrencyExchangeRate $currencyExchangeRate */
             $currencyExchangeRate = $quoteProvider->currencyExchangeRates()->updateOrCreate([
-                'currency_from_id' => $args['currency_from_id'],
-                'currency_to_id' => $args['currency_to_id'],
+                'currency_src_id' => $args['currency_src_id'],
+                'currency_dst_id' => $args['currency_dst_id'],
             ], ['rate' => $args['rate']]);
 
 
             $quoteProvider->currencyRateHistories()->create([
-                'currency_src_id' => $args['currency_from_id'],
-                'currency_dst_id' => $args['currency_to_id'],
+                'currency_src_id' => $args['currency_src_id'],
+                'currency_dst_id' => $args['currency_dst_id'],
                 'rate' => $args['rate'],
                 'created_at' => Carbon::now()
             ]);
@@ -76,8 +76,8 @@ class CurrencyExchangeRateMutator
             $currencyExchangeRate->update(['rate' => $args['rate']]);
 
             $currencyExchangeRate->quoteProvider->currencyRateHistories()->create([
-                'currency_src_id' => $currencyExchangeRate->currency_from_id,
-                'currency_dst_id' => $currencyExchangeRate->currency_to_id,
+                'currency_src_id' => $currencyExchangeRate->currency_src_id,
+                'currency_dst_id' => $currencyExchangeRate->currency_dst_id,
                 'rate' => $args['rate'],
                 'created_at' => Carbon::now()
             ]);
@@ -131,8 +131,8 @@ class CurrencyExchangeRateMutator
             $groups->each(function ($v) use ($quoteProvider) {
                 $v = $v->last();
                 $quoteProvider->currencyExchangeRates()->updateOrCreate([
-                    'currency_from_id' => $v['currency_src_id'],
-                    'currency_to_id' => $v['currency_dst_id'],
+                    'currency_src_id' => $v['currency_src_id'],
+                    'currency_dst_id' => $v['currency_dst_id'],
                 ], ['rate' => $v['rate']]);
             });
         });

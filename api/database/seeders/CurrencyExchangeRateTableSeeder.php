@@ -22,8 +22,8 @@ class CurrencyExchangeRateTableSeeder extends Seeder
         foreach ($currencies as $currency) {
             CurrencyExchangeRate::updateOrCreate(
                 [
-                    'currency_from_id' => 1,
-                    'currency_to_id' => $currency,
+                    'currency_src_id' => 1,
+                    'currency_dst_id' => $currency,
                 ],
                 [
                     'rate' => $faker->randomFloat('2', 0, 2),
@@ -32,8 +32,8 @@ class CurrencyExchangeRateTableSeeder extends Seeder
             );
             CurrencyExchangeRate::updateOrCreate(
                 [
-                    'currency_from_id' => 2,
-                    'currency_to_id' => $currency,
+                    'currency_src_id' => 2,
+                    'currency_dst_id' => $currency,
                 ],
                 [
                     'rate' => $faker->randomFloat('2', 0, 2),
