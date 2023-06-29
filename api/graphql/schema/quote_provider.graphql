@@ -61,6 +61,12 @@ input QuoteProviderInput {
     status: ActivityStatusType!
     "Комиссия"
     margin_commission: Float @rules(apply: [ "numeric", "between:0,100.00"])
+    "from"
+    currency_src_id: ID
+    "to"
+    currency_dst_id: Mixed
+    "rate"
+    rate: Decimal
 }
 
 extend type Mutation @guard {
@@ -69,7 +75,7 @@ extend type Mutation @guard {
     """
     createQuoteProvider(
         input: QuoteProviderInput! @spread
-    ): QuoteProvider @create
+    ): QuoteProvider @field(resolver:"QuoteProviderMutator@create")
 
     """
     Обновить
@@ -78,7 +84,7 @@ extend type Mutation @guard {
         "ID"
         id: ID!
         input: QuoteProviderInput! @spread
-    ): QuoteProvider @update
+    ): QuoteProvider @field(resolver:"QuoteProviderMutator@update")
 
     """
     Удалить
