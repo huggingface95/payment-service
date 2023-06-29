@@ -1,8 +1,8 @@
 type CurrencyExchangeRate {
     id: ID!
     quote_provider: QuoteProvider @belongsTo(relation: "quoteProvider")
-    currency_from: Currencies @belongsTo(relation: "currencyFrom")
-    currency_to: Currencies @belongsTo(relation: "currencyTo")
+    currency_src: Currencies @belongsTo(relation: "currencyFrom")
+    currency_dst: Currencies @belongsTo(relation: "currencyTo")
     rate: Decimal!
     "Дата обновления"
     updated_at: DateTimeUtc
