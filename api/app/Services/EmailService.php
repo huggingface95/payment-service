@@ -200,6 +200,10 @@ class EmailService
 
             $config = TransformerDTO::transform(SmtpConfigDTO::class, $smtp);
 
+            if (empty($config->from)) {
+                $config->from = $dto->email;
+            }
+
             dispatch(new SendMailJob($config, $emailContentSubjectDto));
         } catch (\Throwable) {
             throw new EmailException('SMTP NOT FOUND', EmailExceptionCodeEnum::SMTP->toString());
