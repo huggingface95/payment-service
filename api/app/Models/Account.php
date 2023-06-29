@@ -115,6 +115,9 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
         'alias',
     ];
 
+    private Collection|null $cached_transferIncomings = null;
+    private Collection|null $cached_transferOutgoings = null;
+
     protected static function booted()
     {
         parent::booted();
@@ -153,12 +156,28 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
 
     public function getTotalTransactionsAttribute(): int
     {
-        return $this->transferIncomings()->count() + $this->transferOutgoings()->count();
+        if (!$this->cached_transferIncomings){
+            $this->cached_transferIncomings = $this->transferIncomings()->pluck('status_id');
+        }
+
+        if (!$this->cached_transferOutgoings){
+            $this->cached_transferOutgoings = $this->transferOutgoings()->pluck('status_id');
+        }
+
+        return $this->cached_transferIncomings->count() + $this->cached_transferOutgoings->count();
     }
 
     public function getTotalPendingTransactionsAttribute(): int
     {
-        return $this->transferIncomings()->where('status_id', PaymentStatusEnum::PENDING->value)->count() + $this->transferOutgoings()->where('status_id', PaymentStatusEnum::PENDING->value)->count();
+        if (!$this->cached_transferIncomings){
+            $this->cached_transferIncomings = $this->transferIncomings()->where('status_id', PaymentStatusEnum::PENDING->value)->pluck('status_id');
+        }
+
+        if (!$this->cached_transferOutgoings){
+            $this->cached_transferOutgoings = $this->transferOutgoings()->where('status_id', PaymentStatusEnum::PENDING->value)->pluck('status_id');
+        }
+
+        return $this->cached_transferIncomings->count() + $this->cached_transferOutgoings->count();
     }
 
     public function getLastTransactionAtAttribute(): ?string

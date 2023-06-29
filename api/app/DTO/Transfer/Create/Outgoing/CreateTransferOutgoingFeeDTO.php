@@ -34,6 +34,7 @@ class CreateTransferOutgoingFeeDTO extends CreateTransferOutgoingDTO
         $args['urgency_id'] ??= PaymentUrgencyEnum::STANDART->value;
         $args['created_at'] = $date;
         $args['recipient_bank_country_id'] ??= Company::findOrFail($args['company_id'])->country_id;
+        $args['recipient_country_id'] ??= Company::findOrFail($args['company_id'])->country_id;
         $args['project_id'] = $account->project_id;
 
         if (!empty($args['execution_at'])) {
