@@ -15,7 +15,6 @@ type AccountStatement {
 type AccountStatementTransaction {
     transaction_id: ID!
     created_at: DateTimeUtc!
-    execution_at: DateTimeUtc
     sender_recipient: String
     reason: String
     amount: Float!
@@ -24,6 +23,11 @@ type AccountStatementTransaction {
     status: String
     account_balance: Float
     transfer_type: String
+}
+
+type AccountStatementTransactions {
+    data: [AccountStatementTransaction!]
+    paginatorInfo: PaginatorInfo
 }
 
 extend type Query @guard {
@@ -35,6 +39,17 @@ extend type Query @guard {
         created_at: DateTimeRange @whereBetween,
     ): AccountStatement
         @field(resolver: "AccountStatementQuery@get")
+
+    """
+    Получить транзакции  по счету
+    """
+    transactions(
+        account_id: ID! @eq,
+        created_at: DateTimeRange @whereBetween,
+        page: Int = 1,
+        count: Int = 10,
+    ): AccountStatementTransactions
+    @field(resolver: "AccountStatementQuery@getTransactions")
 
     """
     Получить выписку по счету в формате PDF
