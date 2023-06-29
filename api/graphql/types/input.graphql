@@ -23,7 +23,7 @@ input ConnectImageableInput {
     id: ID!
 }
 
-input CurrenciesAndRegions{
-    currency_id: [ID!]
+input CurrenciesAndRegions @validator {
+    currency_id: [ID]
     regions: [ID]
 }
