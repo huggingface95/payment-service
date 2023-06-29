@@ -34,7 +34,10 @@ extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Qu
     """
     Получить реквизиты по Account_number
     """
-    applicantRequisite(account_number: String @eq): ApplicantDetailsRequisites
+    applicantRequisite(
+        account_number: String @eq,
+        account_id: ID @eq
+    ): ApplicantDetailsRequisites
         @field(resolver: "ApplicantRequisiteQuery@get")
 
     """
@@ -57,6 +60,6 @@ extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Qu
         account_id: ID!
         "Email"
         email: String! @rules(apply: ["email"])
-    ): StatusType 
+    ): StatusType
         @field(resolver: "ApplicantRequisiteQuery@sendEmail")
 }

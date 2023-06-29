@@ -4,19 +4,27 @@ namespace App\GraphQL\Queries\Applicant;
 
 use App\DTO\Email\Request\EmailMemberRequestDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\ApplicantTypeEnum;
 use App\Exceptions\GraphqlException;
+use App\GraphQL\Traits\CheckAccountExistForApplicant;
 use App\Models\Account;
 use App\Services\ApplicantService;
 use App\Services\EmailService;
 use App\Services\PdfService;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class ApplicantRequisiteQuery
 {
+    use  CheckAccountExistForApplicant;
+
     public function __construct(
-        protected EmailService $emailService,
-        protected PdfService $pdfService,
+        protected EmailService     $emailService,
+        protected PdfService       $pdfService,
         protected ApplicantService $applicantService
-    ) {
+    )
+    {
     }
 
     /**
@@ -28,43 +36,53 @@ class ApplicantRequisiteQuery
     {
         $applicant = auth()->user();
 
-        $account = Account::where('account_number', $args['account_number'])
-            ->where('owner_id', $applicant->id)
-            ->first();
-
-        if (! $account) {
-            throw new GraphqlException('Not found Account', 'not found', 404);
+        if (isset($args['account_number'])) {
+            $this->checkExistsAccountByAccountNumber($args['account_number']);
         }
 
-        $requsites = $this->applicantService->getApplicantRequisites($applicant, $account);
+        if (isset($args['account_id'])) {
+            $this->checkExistsAccountById($args['account_id']);
+        }
 
-        return $requsites;
-    }
-
-    /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
-     */
-    public function getList($_, array $args)
-    {
-        $applicant = auth()->user();
-
-        $accounts = Account::where('owner_id', $applicant->id)->get();
-
-        return $accounts;
-    }
-
-    /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
-     */
-    public function download($root, array $args)
-    {
-        $applicant = auth()->user();
-
-        $account = Account::where('id', $args['account_id'])
-            ->where('owner_id', $applicant->id)
+        $account = Account::query()
+            ->when(isset($args['account_number']), function ($q) use ($args) {
+                $q->where('account_number', $args['account_number']);
+            })
+            ->when(isset($args['account_id']), function ($q) use ($args) {
+                $q->where('id', $args['account_id']);
+            })
             ->first();
+
+        return $this->applicantService->getApplicantRequisites($applicant, $account);
+    }
+
+    /**
+     * @param null $_
+     * @param array<string, mixed> $args
+     */
+    public function getList($_, array $args): Collection|array
+    {
+        return Account::query()->where(function (Builder $q) {
+            $q->whereHasMorph('clientable', [ApplicantTypeEnum::INDIVIDUAL->toString()], function (Builder $q) {
+                return $q->where('client_id', Auth::user()->id);
+            })->orWhere('owner_id', '=', Auth::user()->id);
+        })->get();
+    }
+
+    /**
+     * @param null $_
+     * @param array<string, mixed> $args
+     * @throws GraphqlException
+     */
+    public function download($root, array $args): array
+    {
+        $applicant = auth()->user();
+
+        if (isset($args['account_id'])) {
+            $this->checkExistsAccountById($args['account_id']);
+        }
+
+        $account = Account::query()->where('id', $args['account_id'])->first();
 
         $data = $this->applicantService->getApplicantRequisites($applicant, $account);
 
@@ -76,19 +94,20 @@ class ApplicantRequisiteQuery
     }
 
     /**
-     * @param  null  $_
-     * @param  array<string, mixed>  $args
+     * @param array<string, mixed> $args
      *
      * @throws GraphqlException
      */
-    public function sendEmail($root, array $args)
+    public function sendEmail($root, array $args): array
     {
         $applicant = auth()->user();
 
+        if (isset($args['account_id'])) {
+            $this->checkExistsAccountById($args['account_id']);
+        }
         try {
-            $account = Account::where('id', $args['account_id'])
-                ->where('owner_id', $applicant->id)
-                ->firstOrFail();
+            $account = Account::query()->where('id', $args['account_id'])
+                ->first();
 
             $args = array_merge(
                 $args,
