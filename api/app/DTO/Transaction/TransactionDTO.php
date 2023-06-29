@@ -94,7 +94,7 @@ class TransactionDTO
                 break;
         }
 
-        $dto->company_id = $transfer->account->company_id;
+        $dto->company_id = $account->company_id;
         $dto->amount = $transfer->amount;
         $dto->created_at = Carbon::now();
         $dto->updated_at = Carbon::now();
