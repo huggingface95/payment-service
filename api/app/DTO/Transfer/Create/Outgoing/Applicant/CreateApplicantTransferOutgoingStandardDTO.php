@@ -33,7 +33,7 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
 
         $paymentSystem = $projectSettings?->paymentProvider?->paymentSystems?->where('is_active', true)->filter(function ($item) use ($psType) {
             return str_contains(strtolower($item['name']), strtolower($psType));
-        })->first()?->id ?? throw new GraphqlException('Payment system not found', 'use');
+        })->first()?->id ?? throw new GraphqlException('Payment system not found. Payment system name must contain \'' . $psType . '\'', 'use');
 
         $args['company_id'] = $account->company_id;
         $args['amount_debt'] = $args['amount'];
