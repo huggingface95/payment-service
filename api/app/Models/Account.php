@@ -115,8 +115,8 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
         'alias',
     ];
 
-    private Collection|null $cached_transferIncomings = null;
-    private Collection|null $cached_transferOutgoings = null;
+    private static array $cached_transferIncomings = [];
+    private static array $cached_transferOutgoings = [];
 
     protected static function booted()
     {
@@ -156,28 +156,33 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
 
     public function getTotalTransactionsAttribute(): int
     {
-        if (!$this->cached_transferIncomings){
-            $this->cached_transferIncomings = $this->transferIncomings()->pluck('status_id');
+        if (!isset(self::$cached_transferIncomings[$this->id])) {
+            self::$cached_transferIncomings[$this->id] = $this->transferIncomings()->pluck('status_id');
         }
 
-        if (!$this->cached_transferOutgoings){
-            $this->cached_transferOutgoings = $this->transferOutgoings()->pluck('status_id');
+        if (!isset(self::$cached_transferOutgoings[$this->id])) {
+            self::$cached_transferOutgoings[$this->id] = $this->transferOutgoings()->pluck('status_id');
         }
 
-        return $this->cached_transferIncomings->count() + $this->cached_transferOutgoings->count();
+        return self::$cached_transferIncomings[$this->id]->count() + self::$cached_transferOutgoings[$this->id]->count();
     }
 
     public function getTotalPendingTransactionsAttribute(): int
     {
-        if (!$this->cached_transferIncomings){
-            $this->cached_transferIncomings = $this->transferIncomings()->where('status_id', PaymentStatusEnum::PENDING->value)->pluck('status_id');
+        if (!isset(self::$cached_transferIncomings[$this->id])) {
+            self::$cached_transferIncomings[$this->id] = $this->transferIncomings()->pluck('status_id');
         }
 
-        if (!$this->cached_transferOutgoings){
-            $this->cached_transferOutgoings = $this->transferOutgoings()->where('status_id', PaymentStatusEnum::PENDING->value)->pluck('status_id');
+        if (!isset(self::$cached_transferOutgoings[$this->id])) {
+            self::$cached_transferOutgoings[$this->id] = $this->transferOutgoings()->pluck('status_id');
         }
 
-        return $this->cached_transferIncomings->count() + $this->cached_transferOutgoings->count();
+        return self::$cached_transferIncomings[$this->id]->filter(function ($v) {
+                return $v == PaymentStatusEnum::UNSIGNED->value;
+            })->count() +
+            self::$cached_transferOutgoings[$this->id]->filter(function ($v) {
+                return $v == PaymentStatusEnum::UNSIGNED->value;
+            })->count();
     }
 
     public function getLastTransactionAtAttribute(): ?string
