@@ -98,9 +98,13 @@ final class ApplicantAccountStatementQuery
      */
     private function checkExistsAccount(int $id): void
     {
-        if (!Account::query()->whereHasMorph('clientable', [ApplicantTypeEnum::INDIVIDUAL->toString()], function (Builder $q) {
-            return $q->where('client_id', Auth::user()->id);
-        })->where('id', $id)->exists()) {
+        if (!Account::query()
+            ->where(function (Builder $q) {
+                $q->whereHasMorph('clientable', [ApplicantTypeEnum::INDIVIDUAL->toString()], function (Builder $q) {
+                    return $q->where('client_id', Auth::user()->id);
+                })->orWhere('owner_id', '=', Auth::user()->id);
+            })
+            ->where('id', $id)->exists()) {
             throw new GraphqlException('Account not found', 'not found', 404);
         }
     }
