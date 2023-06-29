@@ -24,11 +24,10 @@ class TransferIncomingRepository extends Repository implements TransferIncomingR
     public function attachFileById(Model|Builder $model, array $data): Model|Builder|null
     {
         if (isset($data)) {
-            $model->files()->detach();
-            $model->files()->attach(
-                $data,
-                ['transfer_type' => class_basename(TransferIncoming::class)]
-            );
+            $files = $model->files()->pluck('files.id')->toArray();
+            $filesToAdd = array_diff($data, $files);
+
+            $model->files()->attach($filesToAdd, ['transfer_type' => class_basename(TransferIncoming::class)]);
         }
 
         return $model;

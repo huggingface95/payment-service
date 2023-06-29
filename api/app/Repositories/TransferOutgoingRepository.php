@@ -29,11 +29,10 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
     public function attachFileById(Model|Builder $model, array $data): Model|Builder|null
     {
         if (! empty($data)) {
-            $model->files()->detach();
-            $model->files()->attach(
-                $data,
-                ['transfer_type' => class_basename(TransferOutgoing::class)]
-            );
+            $files = $model->files()->pluck('files.id')->toArray();
+            $filesToAdd = array_diff($data, $files);
+
+            $model->files()->attach($filesToAdd, ['transfer_type' => class_basename(TransferOutgoing::class)]);
         }
 
         return $model;
