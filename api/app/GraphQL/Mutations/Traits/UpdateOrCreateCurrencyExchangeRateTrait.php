@@ -9,10 +9,10 @@ use Illuminate\Support\Collection;
 trait UpdateOrCreateCurrencyExchangeRateTrait
 {
 
-    public function updateOrCreateRate(Collection $srcDst, QuoteProvider $quoteProvider): void
+    public function updateOrCreateRate(Collection $srcDst, QuoteProvider $quoteProvider, array &$rates = []): void
     {
         $this->updateOrCreateHistory($srcDst, $quoteProvider);
-        $this->updateOrCreateExchangeRate($srcDst, $quoteProvider);
+        $this->updateOrCreateExchangeRate($srcDst, $quoteProvider, $rates);
     }
 
     protected function updateOrCreateHistory(Collection $srcDst, QuoteProvider $quoteProvider): void
@@ -26,10 +26,10 @@ trait UpdateOrCreateCurrencyExchangeRateTrait
         });
     }
 
-    protected function updateOrCreateExchangeRate(Collection $srcDst, QuoteProvider $quoteProvider): void
+    protected function updateOrCreateExchangeRate(Collection $srcDst, QuoteProvider $quoteProvider, array &$rates): void
     {
-        $srcDst->groupBy(['currency_src_id', 'currency_dst_id'])->map(function ($groups) use ($quoteProvider) {
-            $groups->each(function ($v) use ($quoteProvider) {
+        $srcDst->groupBy(['currency_src_id', 'currency_dst_id'])->map(function ($groups) use ($quoteProvider, &$rates) {
+            $groups->each(function ($v) use ($quoteProvider, &$rates) {
                 $v = $v->last();
                 /** @var CurrencyExchangeRate $exchangeRate */
                 $exchangeRate = $quoteProvider->currencyExchangeRates()->where([
@@ -38,7 +38,7 @@ trait UpdateOrCreateCurrencyExchangeRateTrait
                 ])->first();
 
                 if (!$exchangeRate) {
-                    $quoteProvider->currencyExchangeRates()->create([
+                    $rates[] = $quoteProvider->currencyExchangeRates()->create([
                         'currency_src_id' => $v['currency_src_id'],
                         'currency_dst_id' => $v['currency_dst_id'],
                         'rate' => $v['rate']
@@ -46,6 +46,7 @@ trait UpdateOrCreateCurrencyExchangeRateTrait
                 } else if ($exchangeRate->updated_at < $v['created_at']) {
                     $exchangeRate->rate = $v['rate'];
                     $exchangeRate->save();
+                    $rates[] = $exchangeRate;
                 }
             });
         });

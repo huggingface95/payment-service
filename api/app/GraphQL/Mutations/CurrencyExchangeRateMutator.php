@@ -3,9 +3,9 @@
 namespace App\GraphQL\Mutations;
 
 use App\Exceptions\GraphqlException;
+use App\GraphQL\Mutations\Traits\UpdateOrCreateCurrencyExchangeRateTrait;
 use App\Models\Currencies;
 use App\Models\CurrencyExchangeRate;
-use App\Models\CurrencyRateHistory;
 use App\Models\QuoteProvider;
 use App\Services\FileReaderService;
 use Illuminate\Support\Carbon;
@@ -15,6 +15,8 @@ use Laravel\Lumen\Http\Request;
 
 class CurrencyExchangeRateMutator
 {
+
+    use UpdateOrCreateCurrencyExchangeRateTrait;
 
     public function __construct(protected FileReaderService $fileReaderService)
     {
@@ -34,24 +36,20 @@ class CurrencyExchangeRateMutator
                 throw new GraphqlException('Quote Provider not found', 'not found', 404);
             }
 
-            /** @var CurrencyExchangeRate $currencyExchangeRate */
-            $currencyExchangeRate = $quoteProvider->currencyExchangeRates()->updateOrCreate([
-                'currency_src_id' => $args['currency_src_id'],
-                'currency_dst_id' => $args['currency_dst_id'],
-            ], ['rate' => $args['rate']]);
-
-
-            $quoteProvider->currencyRateHistories()->create([
-                'currency_src_id' => $args['currency_src_id'],
-                'currency_dst_id' => $args['currency_dst_id'],
-                'rate' => $args['rate'],
-                'created_at' => Carbon::now()
+            $srcDst = collect([
+                [
+                    'currency_src_id' => $args['currency_src_id'],
+                    'currency_dst_id' => $args['currency_dst_id'],
+                    'created_at' => Carbon::now(),
+                    'rate' => $args['rate']
+                ]
             ]);
+            $result = [];
+            $this->updateOrCreateRate($srcDst, $quoteProvider, $result);
 
             DB::commit();
 
-            return $currencyExchangeRate;
-
+            return $result[0];
         } catch (\Throwable $e) {
             DB::rollBack();
             throw new GraphqlException($e->getMessage(), $e->getCode());
@@ -73,18 +71,20 @@ class CurrencyExchangeRateMutator
                 throw new GraphqlException('Not found exchange rate', 'not found', 404);
             }
 
-            $currencyExchangeRate->update(['rate' => $args['rate']]);
-
-            $currencyExchangeRate->quoteProvider->currencyRateHistories()->create([
-                'currency_src_id' => $currencyExchangeRate->currency_src_id,
-                'currency_dst_id' => $currencyExchangeRate->currency_dst_id,
-                'rate' => $args['rate'],
-                'created_at' => Carbon::now()
+            $srcDst = collect([
+                [
+                    'currency_src_id' => $currencyExchangeRate->currency_src_id,
+                    'currency_dst_id' => $currencyExchangeRate->currency_dst_id,
+                    'created_at' => Carbon::now(),
+                    'rate' => $args['rate']
+                ]
             ]);
+            $result = [];
+            $this->updateOrCreateRate($srcDst, $currencyExchangeRate->quoteProvider, $result);
 
             DB::commit();
 
-            return $currencyExchangeRate;
+            return $result[0];
 
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -123,19 +123,7 @@ class CurrencyExchangeRateMutator
             'time' => 'created_at'
         ]))->sortBy('created_at');
 
-        $quoteProvider->currencyRateHistories()->saveMany($parsedContent->map(function ($item) {
-            return new CurrencyRateHistory($item);
-        }));
-
-        $parsedContent->groupBy(['currency_src_id', 'currency_dst_id'])->map(function ($groups) use ($quoteProvider) {
-            $groups->each(function ($v) use ($quoteProvider) {
-                $v = $v->last();
-                $quoteProvider->currencyExchangeRates()->updateOrCreate([
-                    'currency_src_id' => $v['currency_src_id'],
-                    'currency_dst_id' => $v['currency_dst_id'],
-                ], ['rate' => $v['rate']]);
-            });
-        });
+        $this->updateOrCreateRate($parsedContent, $quoteProvider);
 
         return $quoteProvider;
     }
