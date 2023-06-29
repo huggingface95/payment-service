@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\OperationTypeEnum;
 use App\Enums\RespondentFeesEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
@@ -32,7 +33,7 @@ class AccountService extends AbstractService
     public function withdrawFromBalance(TransferOutgoing $transfer)
     {
         $account = $transfer->account;
-        $amount = $this->getAccountAmountRealWithCommission($transfer, $transfer->fee->fee);
+        $amount = $this->getAccountAmountRealWithCommission($transfer, $transfer->fee?->fee);
 
         if ($account->available_balance < $amount) {
             throw new GraphqlException('Available balance less than payment amount', 'use');
@@ -56,7 +57,7 @@ class AccountService extends AbstractService
     public function withdrawFromReservedBalance(TransferOutgoing $transfer)
     {
         $account = $transfer->account;
-        $amount = $this->getAccountAmountRealWithCommission($transfer, $transfer->fee->fee);
+        $amount = $this->getAccountAmountRealWithCommission($transfer, $transfer->fee?->fee);
 
         if ($account->reserved_balance < $amount) {
             throw new GraphqlException('Reserved balance less than payment amount', 'use');
@@ -71,8 +72,12 @@ class AccountService extends AbstractService
     /**
      * @throws GraphqlException
      */
-    public function getAccountAmountRealWithCommission(TransferOutgoing $transfer, float $paymentFee): ?float
+    public function getAccountAmountRealWithCommission(TransferOutgoing $transfer, ?float $paymentFee): ?float
     {
+        if (in_array($transfer->operation_type_id, [OperationTypeEnum::SCHEDULED_FEE->value, OperationTypeEnum::DEBIT->value, OperationTypeEnum::CREDIT->value])) {
+            return $transfer->amount;
+        }
+
         return match ((int) $transfer->respondent_fees_id) {
             RespondentFeesEnum::CHARGED_TO_CUSTOMER->value => $transfer->amount + $paymentFee,
             RespondentFeesEnum::CHARGED_TO_BENEFICIARY->value => $transfer->amount,
@@ -81,7 +86,6 @@ class AccountService extends AbstractService
             default => throw new GraphqlException('Unknown respondent fee', 'use'),
         };
     }
-
 
     public function setAmmountReserveOnAccountBalance(TransferOutgoing $transfer): Account
     {

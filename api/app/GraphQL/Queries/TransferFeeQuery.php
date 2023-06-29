@@ -53,6 +53,7 @@ final class TransferFeeQuery
         $fromAccount = new Account([
             'currency_id' => $args['currency_src_id'],
             'current_balance' => $amount,
+            'company_id' => 1,
         ]);
 
         $toAccount = new Account([
