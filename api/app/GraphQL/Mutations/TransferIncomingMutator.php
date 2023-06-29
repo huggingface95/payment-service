@@ -10,7 +10,6 @@ use App\GraphQL\Mutations\Traits\DetachFileTrait;
 use App\Models\TransferIncoming;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Services\TransferIncomingService;
-use Illuminate\Support\Carbon;
 
 class TransferIncomingMutator extends BaseMutator
 {
