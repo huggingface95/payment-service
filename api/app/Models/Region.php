@@ -5,10 +5,12 @@ namespace App\Models;
 use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Region extends BaseModel
 {
     use BaseObServerTrait;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -17,6 +19,10 @@ class Region extends BaseModel
      */
     protected $fillable = [
         'name', 'company_id',
+    ];
+
+    protected $casts = [
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     public $timestamps = false;

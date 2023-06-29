@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
+use App\Enums\GuardEnum;
 use App\Models\Files;
-use App\Models\Members;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class FileService extends AbstractService
@@ -29,7 +30,8 @@ class FileService extends AbstractService
             'storage_path' => '/'.$filepath.'/',
             'storage_name' => $filename[2],
             'link' => self::S3_URL.$filepath.'/'.$filename[2],
-            'member_id' => $this->getMemberId(),
+            'user_id' => $this->getUserId(),
+            'user_type' => $this->getUserType(),
         ];
 
         $fileDb = Files::create($data);
@@ -49,13 +51,21 @@ class FileService extends AbstractService
         return ! empty($resolution) ? $resolution[0].'x'.$resolution[1] : null;
     }
 
-    public function getMemberId(): int|null
+    public function getUserType(): string|null
     {
-        $authUser = auth()->user();
-        if ($authUser && ($authUser instanceof Members)) {
-            return $authUser->id;
+        if (Auth::guard('api')->check()){
+            return GuardEnum::GUARD_MEMBER->toString();
+        } elseif (Auth::guard('api_client')->check()){
+            return GuardEnum::GUARD_INDIVIDUAL->toString();
+        } elseif (Auth::guard('api_corporate')->check()){
+            return GuardEnum::GUARD_CORPORATE->toString();
         }
 
         return null;
+    }
+
+    public function getUserId(): int|null
+    {
+        return Auth::user()?->id;
     }
 }

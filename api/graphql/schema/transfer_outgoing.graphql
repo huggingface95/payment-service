@@ -79,6 +79,8 @@ type TransferOutgoing {
     transfer_history: [TransferOutgoingHistory] @hasMany(relation: "transferHistory")
     "SWIFT field 56A (Intermediary Bank)"
     transfer_swift: [TransferSwift] @hasMany(relation: "transferSwift")
+    "exchange"
+    exchange: TransferExchange @hasOne(relation: "exchange")
     "Дата и время выполнения транзакции"
     execution_at: DateTimeUtc
     "Дата и время создания"
@@ -134,6 +136,7 @@ extend type Query @guard {
         company_id: ID
         payment_provider_id: ID
         account_id: ID
+        id: ID
     ): [TransferOutgoingStatistic]
         @field(resolver: "TransferOutgoingQuery@statistic")
 
@@ -199,8 +202,6 @@ extend type Mutation @guard {
         group_id: ID!
         "ID типа группы"
         group_type_id: ID!
-        "ID проекта"
-        project_id: ID!
         "Сумма"
         amount: Decimal!
         "ID аккаунта"
@@ -209,10 +210,10 @@ extend type Mutation @guard {
         payment_provider_id: ID!
         "ID платежной системы"
         payment_system_id: ID!
-        "ID прайс листа"
-        price_list_id: ID
+        "ID шаблона комиссии"
+        price_list_id: ID!
         "ID комисии"
-        price_list_fee_id: ID
+        price_list_fee_id: ID!
         "ID срочности операции"
         urgency_id: ID!
         "Исполнить в"
@@ -268,12 +269,14 @@ extend type Mutation @guard {
         group_id: ID
         "ID типа группы"
         group_type_id: ID
-        "ID проекта"
-        project_id: ID
         "Сумма"
         amount: Decimal
         "ID аккаунта"
         account_id: ID
+        "ID шаблона комиссии"
+        price_list_id: ID
+        "ID комисии"
+        price_list_fee_id: ID
         "ID платежного провайдера"
         payment_provider_id: ID
         "ID платежной системы"
@@ -350,7 +353,7 @@ extend type Mutation @guard {
         id: ID!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingMutator@cancel")
-    
+
     """
     Отменить (Refund) исходящий перевод
     """

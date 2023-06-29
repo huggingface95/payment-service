@@ -46,14 +46,14 @@ class TransferIncomingMutator extends BaseMutator
      */
     public function sign($_, array $args): TransferIncoming
     {
-        if (! isset($args['code']) || empty($args['code'])) {
+        if (empty($args['code'])) {
             throw new GraphqlException('The "code" field is required and must not be empty.', 'bad request', 400);
         }
 
         $transfer = $this->transferRepository->findById($args['id']);
         $statusId = PaymentStatusEnum::PENDING->value;
-
-        if ($transfer->execution_at != $transfer->created_at) {
+        
+        if ($transfer->execution_at > $transfer->created_at) {
             $statusId = PaymentStatusEnum::WAITING_EXECUTION_DATE->value;
         }
 

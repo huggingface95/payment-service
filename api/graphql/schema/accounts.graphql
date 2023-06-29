@@ -99,35 +99,17 @@ enum AccountClientsType {
     COMPANY @enum(value: "ApplicantCompany")
 }
 
-extend type Query @guard {
-    "Получить аккаунт по ID"
-    account(id: ID! @eq): Account @find
-
+extend type Query @guard(with: ["api", "api_client"]) {
     """
     Получить список аккаунтов
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     accountList(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryAccountListFilterStatic),
         created_at: DateTimeRange @whereBetween,
         orderBy: _ @orderBy(columns: ["id", "created_at"])
     ): [Account!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: DESC)
-
-    """
-    Получить список активных аккаунтов
-    """
-    accountActiveList(
-        filter: _ @filterConditions(static: QueryAccountActiveListFilterStatic),
-        created_at: DateTimeRange @whereBetween,
-        orderBy: _ @orderBy(columns: ["id", "created_at"])
-    ): [Account] @all(scopes: ["active"]) @orderBy(column: "id", direction: ASC)
-
-    """
-    Получить список account states
-    """
-    accountStates(
-        orderBy: _ @orderBy(columns: ["id", "name"])
-    ): [AccountState!]!   @all @orderBy(column: "id", direction: ASC)
 
     """
     Получить список клиентов
@@ -135,6 +117,28 @@ extend type Query @guard {
     clientList(
         filter: _ @filterConditions(static: QueryClientListFilterStatic)
     ): [Client!]! @field(resolver:"AccountsQuery@clientList") @orderBy(column: "id", direction: ASC)
+
+    """
+    Получить список активных аккаунтов
+    """
+    accountActiveList(
+        trashed: Trashed @trashed
+        filter: _ @filterConditions(static: QueryAccountActiveListFilterStatic),
+        created_at: DateTimeRange @whereBetween,
+        orderBy: _ @orderBy(columns: ["id", "created_at"])
+    ): [Account] @all(scopes: ["active"]) @orderBy(column: "id", direction: ASC)
+}
+
+extend type Query @guard {
+    "Получить аккаунт по ID"
+    account(id: ID! @eq): Account @find
+
+    """
+    Получить список account states
+    """
+    accountStates(
+        orderBy: _ @orderBy(columns: ["id", "name"])
+    ): [AccountState!]!   @all @orderBy(column: "id", direction: ASC)
 
 
     clientListActive(
@@ -216,7 +220,7 @@ input QueryAccountActiveListFilterStatic @spread{
     project_id: ID @eq
     hasCompanyMixedIdOrName: Mixed @eq
     hasOwnerMixedIdOrFullname: Mixed @eq
-    MixedAccountNumberOrAccountName: String @ilike
+    MixedAccountNumberOrAccountName: String @eq
     currency_id: ID @eq @neq
     hasGroupRoleMixedIdOrName: Mixed @eq
     group_type_id: ID @eq
@@ -273,7 +277,7 @@ input InputAccount{
     "ID валюты"
     currency_id: ID!
     "ID владельца"
-    owner_id: ID!
+    owner_id: ID
     "Номер аккаунта"
     account_number: String
     "ID провайдера"
@@ -297,7 +301,7 @@ input InputAccount{
     "ID родительского аккаунта"
     parent_id: ID
     "ID Individual or Company"
-    client_id: ID
+    client_id: ID!
     "лимит максимального баланса"
     min_limit_balance: Decimal
     "лимит минимального баланса"

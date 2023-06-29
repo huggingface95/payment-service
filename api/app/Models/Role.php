@@ -7,6 +7,7 @@ use App\Models\Scopes\OrderByLowerScope;
 use App\Models\Scopes\RoleFilterSuperAdminScope;
 use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Spatie\Permission\Models\Role as SpatieRole;
 use Spatie\Permission\PermissionRegistrar;
@@ -20,6 +21,7 @@ use Spatie\Permission\PermissionRegistrar;
 class Role extends SpatieRole
 {
     use BaseObServerTrait;
+    use SoftDeletes;
 
     public const SUPER_ADMIN_ID = 2;
 
@@ -30,9 +32,10 @@ class Role extends SpatieRole
     protected $casts = [
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
-    protected $guard_name = GuardEnum::GUARD_NAME;
+    protected $guard_name = GuardEnum::GUARD_MEMBER->value;
 
     protected static function booted()
     {

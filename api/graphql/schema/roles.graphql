@@ -35,6 +35,7 @@ extend type Query @guard {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID или по названию
     """
     roles(groups_sort: Sort @scope(name:"GroupsSort"),
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryRolesFilterStatic),
         orderBy: _ @orderBy(columns: ["id","name","description"])
     ): [Role!]!   @paginate(defaultCount: 10) @orderBy(column: "id", direction: ASC)

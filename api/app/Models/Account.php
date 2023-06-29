@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
@@ -53,6 +54,7 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
     use MorphToOne;
     use BelongsToOne;
     use BaseObServerTrait;
+    use SoftDeletes;
 
     protected $table = 'accounts';
 
@@ -103,6 +105,7 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'activated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'last_charge_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     protected $appends = [
@@ -111,6 +114,9 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
         'last_transaction_at',
         'alias',
     ];
+
+    private static array $cached_transferIncomings = [];
+    private static array $cached_transferOutgoings = [];
 
     protected static function booted()
     {
@@ -150,12 +156,33 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
 
     public function getTotalTransactionsAttribute(): int
     {
-        return $this->transferIncomings()->count() + $this->transferOutgoings()->count();
+        if (!isset(self::$cached_transferIncomings[$this->id])) {
+            self::$cached_transferIncomings[$this->id] = $this->transferIncomings()->pluck('status_id');
+        }
+
+        if (!isset(self::$cached_transferOutgoings[$this->id])) {
+            self::$cached_transferOutgoings[$this->id] = $this->transferOutgoings()->pluck('status_id');
+        }
+
+        return self::$cached_transferIncomings[$this->id]->count() + self::$cached_transferOutgoings[$this->id]->count();
     }
 
     public function getTotalPendingTransactionsAttribute(): int
     {
-        return $this->transferIncomings()->where('status_id', PaymentStatusEnum::PENDING->value)->count() + $this->transferOutgoings()->where('status_id', PaymentStatusEnum::PENDING->value)->count();
+        if (!isset(self::$cached_transferIncomings[$this->id])) {
+            self::$cached_transferIncomings[$this->id] = $this->transferIncomings()->pluck('status_id');
+        }
+
+        if (!isset(self::$cached_transferOutgoings[$this->id])) {
+            self::$cached_transferOutgoings[$this->id] = $this->transferOutgoings()->pluck('status_id');
+        }
+
+        return self::$cached_transferIncomings[$this->id]->filter(function ($v) {
+                return $v == PaymentStatusEnum::UNSIGNED->value;
+            })->count() +
+            self::$cached_transferOutgoings[$this->id]->filter(function ($v) {
+                return $v == PaymentStatusEnum::UNSIGNED->value;
+            })->count();
     }
 
     public function getLastTransactionAtAttribute(): ?string

@@ -1,0 +1,33 @@
+type CurrencyExchangeRate {
+    id: ID!
+    quote_provider: QuoteProvider @belongsTo(relation: "quoteProvider")
+    currency_src: Currencies @belongsTo(relation: "currencyFrom")
+    currency_dst: Currencies @belongsTo(relation: "currencyTo")
+    rate: Decimal!
+    "Дата обновления"
+    updated_at: DateTimeUtc
+}
+
+input CurrencyExchangeRateInput {
+    quote_provider_id: ID!
+    currency_src_id: ID!
+    currency_dst_id: ID!
+    rate: Decimal!
+}
+
+extend type Mutation @guard {
+    """
+    Создать
+    """
+    createCurrencyExchangeRate(
+        input: CurrencyExchangeRateInput! @spread
+    ): CurrencyExchangeRate @field(resolver: "CurrencyExchangeRateMutator@create")
+
+    """
+    Обновить
+    """
+    updateCurrencyExchangeRate(
+        id: ID!
+        rate: Decimal!
+    ): CurrencyExchangeRate @field(resolver: "CurrencyExchangeRateMutator@update")
+}

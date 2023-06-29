@@ -138,8 +138,8 @@ class TransferExchangeService extends AbstractService
             throw new GraphqlException('Quote provider not found. Please setup quote provider');
 
         $exchageRate = $quoteProvider->currencyExchangeRates
-            ->where('currency_from_id', $fromAccount->currencies->id)
-            ->where('currency_to_id', $toAccount->currencies->id)
+            ->where('currency_src_id', $fromAccount->currencies->id)
+            ->where('currency_dst_id', $toAccount->currencies->id)
             ->first()?->rate;
 
         if ($exchageRate === null) {
@@ -168,10 +168,9 @@ class TransferExchangeService extends AbstractService
      */
     private function populateTransferData(array $args, Account $fromAccount, Account $toAccount): array
     {
+        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingExchangeDTO::class, $fromAccount, $args['amount'], $args);
         $toAmount = (string) $this->getExchangeAmount($args, $fromAccount, $toAccount);
-
-        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingExchangeDTO::class, $fromAccount, $args['amount'], $args['price_list_fee_id']);
-        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingExchangeDTO::class, $toAccount, $toAmount, $outgoingDTO->payment_number, $outgoingDTO->created_at, $args['price_list_fee_id']);
+        $incomingDTO = TransformerDTO::transform(CreateTransferIncomingExchangeDTO::class, $toAccount, $toAmount, $outgoingDTO, $args);
 
         return [
             'outgoing' => $outgoingDTO->toArray(),

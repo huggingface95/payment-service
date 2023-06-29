@@ -6,8 +6,9 @@ use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Scopes\ApplicantIndividualCompanyIdScope;
 use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ApplicantCompanyModules extends BaseModel
+class ApplicantCompanyModules extends Pivot
 {
     use BaseObServerTrait;
 

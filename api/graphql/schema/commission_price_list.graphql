@@ -32,6 +32,7 @@ extend type Query @guard {
     orderBy: [{ column: ID, order: DESC }] сортировка по ID
     """
     commissionPriceLists(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryCommissionPriceListsFilterStatic),
         paymentProviderName: Sort @scope(name:"PaymentProviderName"),
         orderBy: _ @orderBy(columns: ["id", "name"])

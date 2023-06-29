@@ -9,8 +9,6 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         from_account_id: ID!
         "ID аккаунта получателя"
         to_account_id: ID!
-        "ID прайс-лист фии"
-        price_list_fee_id: ID!
     ): TransferExchange
         @field(resolver: "ApplicantTransferExchangeMutator@create")
 
@@ -21,13 +19,11 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         "ID"
         id: ID!
         "Сумма"
-        amount: Decimal!
+        amount: Decimal
         "ID аккаунта отправителя"
-        from_account_id: ID!
+        from_account_id: ID
         "ID аккаунта получателя"
-        to_account_id: ID!
-        "ID прайс-лист фии"
-        price_list_fee_id: ID!
+        to_account_id: ID
     ): TransferExchange
         @field(resolver: "ApplicantTransferExchangeMutator@update")
     

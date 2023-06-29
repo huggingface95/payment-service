@@ -74,6 +74,8 @@ type TransferIncoming {
     transfer_history: [TransferIncomingHistory] @hasMany(relation: "transferHistory")
     "SWIFT field 56A (Intermediary Bank)"
     transfer_swift: TransferSwift @hasOne(relation: "transferSwift")
+    "exchange"
+    exchange: TransferExchange @hasOne(relation: "exchange")
     "Дата и время выполнения транзакции"
     execution_at: DateTimeUtc
     "Дата и время создания"
@@ -112,6 +114,7 @@ extend type Query @guard {
         company_id: ID
         payment_provider_id: ID
         account_id: ID
+        id: ID
     ): [TransferIncomingStatistic]
         @field(resolver: "TransferIncomingQuery@statistic")
 
@@ -176,8 +179,6 @@ extend type Mutation @guard {
         group_id: ID!
         "ID типа группы"
         group_type_id: ID!
-        "ID проекта"
-        project_id: ID!
         "Сумма"
         amount: Decimal!
         "ID валюты"
@@ -190,9 +191,10 @@ extend type Mutation @guard {
         payment_system_id: ID!
         "ID платежного банка"
         payment_bank_id: ID!
-    " requested_by_id: ID! ?? "
-        price_list_id: ID
-        price_list_fee_id: ID
+        "ID шаблона комиссии"
+        price_list_id: ID!
+        "ID прайс листа"
+        price_list_fee_id: ID!
         "Тип бенефициара"
         beneficiary_type: BeneficiaryTypeEnum!
         "Имя бенефициара"
@@ -240,8 +242,6 @@ extend type Mutation @guard {
         group_id: ID
         "ID типа группы"
         group_type_id: ID
-        "ID проекта"
-        project_id: ID
         "Сумма"
         amount: Decimal
         "ID валюты"
@@ -303,7 +303,7 @@ extend type Mutation @guard {
         code: String!
     ): TransferIncoming
         @field(resolver: "TransferIncomingMutator@sign")
-    
+
     """
     Исполнить входящий перевод
     """
@@ -321,7 +321,7 @@ extend type Mutation @guard {
         id: ID!
     ): TransferIncoming
         @field(resolver: "TransferIncomingMutator@cancel")
-    
+
     """
     Привязать файлы
     """

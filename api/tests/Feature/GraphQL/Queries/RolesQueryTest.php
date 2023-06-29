@@ -33,7 +33,7 @@ class RolesQueryTest extends TestCase
     {
         $role = DB::connection('pgsql_test')
             ->table('roles')
-            ->orderBy('id', 'DESC')
+            ->orderBy('id', 'ASC')
             ->where('id', '!=', Role::SUPER_ADMIN_ID)
             ->get();
 
@@ -68,6 +68,7 @@ class RolesQueryTest extends TestCase
         $roles = DB::connection('pgsql_test')
             ->table('roles')
             ->where('group_type_id', 1)
+            ->whereNull('deleted_at')
             ->get();
         $data = [];
 

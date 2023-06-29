@@ -57,11 +57,7 @@ class AppServiceProvider extends ServiceProvider
 
         \Illuminate\Database\Query\Builder::macro('toRawSql', function () {
             $bindings = $this->getBindings();
-            return [array_reduce($bindings, function ($sql, $binding) {
-                return preg_replace('/\?/', is_numeric($binding) ? $binding : sprintf('"%s"', $binding), $sql, 1);
-            }, $this->toSql()),
-                $bindings
-            ];
+            return [$this->toSql(),$bindings];
         });
 
         \Illuminate\Database\Eloquent\Builder::macro('toRawSql', function () {

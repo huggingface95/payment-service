@@ -74,7 +74,7 @@ class CommissionService extends AbstractService
             ->where('currency_id', $transfer->currency_id)
             ->get();
 
-        return $this->calculatePaymentFee($priceListFees, $transfer, $transactionDTO);
+        return $this->calculatePaymentFee($priceListFees, $transfer, FeeModeEnum::BASE, $transactionDTO);
     }
 
     /**
@@ -90,7 +90,7 @@ class CommissionService extends AbstractService
             })
             ->get();
 
-        return $this->calculatePaymentFee($priceListFees, $transfer, $transactionDTO);
+        return $this->calculatePaymentFee($priceListFees, $transfer, FeeModeEnum::PROVIDER, $transactionDTO);
     }
 
     /**
@@ -114,7 +114,7 @@ class CommissionService extends AbstractService
             })
             ->get();
 
-        return $this->calculatePaymentFee($priceListFees, $transfer, $transactionDTO);
+        return $this->calculatePaymentFee($priceListFees, $transfer, FeeModeEnum::QUOTEPROVIDER, $transactionDTO);
     }
 
     /**
@@ -136,16 +136,27 @@ class CommissionService extends AbstractService
     /**
      * @throws GraphqlException
      */
-    private function calculatePaymentFee($priceListFees, TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
+    private function calculatePaymentFee($priceListFees, TransferOutgoing|TransferIncoming $transfer, FeeModeEnum $feeMode, TransactionDTO $transactionDTO = null): float
     {
-        $paymentFee = 0;
+        $paymentFee = 0.0;
+        $fees = null;
+
         foreach ($priceListFees as $listFee) {
             if (! $this->isAllowToApplyCommission($transfer, $listFee, $transactionDTO)) {
                 continue;
             }
 
-            $paymentFee += $this->getFee($listFee->fee, $transfer->amount, $transfer->urgency_id);
+            $fee = $this->getFee($listFee->fee, $transfer->amount, $transfer->urgency_id);
+            if ($fee !== null) {
+                $fees += $fee;
+            }
         }
+
+        if ($fees === null && $feeMode == FeeModeEnum::BASE) {
+            throw new GraphqlException('Fee not found. Please set the fee range equals to 0 to create a fee free transfer');       
+        }
+
+        $paymentFee += $fees;
 
         return (float) $paymentFee;
     }
@@ -303,20 +314,6 @@ class CommissionService extends AbstractService
         );
 
         return $this;
-    }
-
-    public function deleteFee(TransferOutgoing|TransferIncoming $transfer): void
-    {
-        Fee::query()
-            ->where('transfer_id', $transfer->id)
-            ->where('transfer_type', $transfer instanceof TransferOutgoing ? FeeTransferTypeEnum::OUTGOING->toString() : FeeTransferTypeEnum::INCOMING->toString())
-            ->whereIn('fee_type_mode_id', [
-                FeeModeEnum::BASE->value,
-                FeeModeEnum::PROVIDER->value,
-                FeeModeEnum::QUOTEPROVIDER->value,
-                FeeModeEnum::MARGIN->value
-            ])
-            ->delete();
     }
 
     private function getReasonDescription(TransferOutgoing|TransferIncoming $transfer, int $mode): string

@@ -9,6 +9,8 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         from_account_id: ID!
         "ID аккаунта получателя"
         to_account_id: ID!
+        "Причина перевода"
+        reason: String
     ): TransferBetweenWithFees
         @field(resolver: "ApplicantTransferBetweenAccountsMutator@create")
     
@@ -24,6 +26,8 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         from_account_id: ID
         "ID аккаунта получателя"
         to_account_id: ID
+        "Причина перевода"
+        reason: String
     ): TransferBetween
         @field(resolver: "ApplicantTransferBetweenAccountsMutator@update")
     

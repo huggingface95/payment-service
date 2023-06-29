@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\CommissionTemplate;
 use Illuminate\Support\Facades\DB;
 
 class CommissionTemplateQueryTest extends TestCase
@@ -29,8 +30,7 @@ class CommissionTemplateQueryTest extends TestCase
 
     public function testQueryCommissionTemplatesFirst(): void
     {
-        $commissionTemplate = DB::connection('pgsql_test')
-            ->table('commission_template')
+        $commissionTemplate = CommissionTemplate::query()
             ->orderBy('id', 'ASC')
             ->first();
 
@@ -68,8 +68,7 @@ class CommissionTemplateQueryTest extends TestCase
 
     public function testQueryCommissionTemplate(): void
     {
-        $commissionTemplate = DB::connection('pgsql_test')
-            ->table('commission_template')
+        $commissionTemplate = CommissionTemplate::query()
             ->orderBy('id', 'DESC')
             ->get();
 
@@ -106,8 +105,7 @@ class CommissionTemplateQueryTest extends TestCase
 
     public function testQueryOrderByCommissionTemplate(): void
     {
-        $commissionTemplate = DB::connection('pgsql_test')
-            ->table('commission_template')
+        $commissionTemplate = CommissionTemplate::query()
             ->orderBy('id', 'DESC')
             ->get();
 
@@ -142,9 +140,7 @@ class CommissionTemplateQueryTest extends TestCase
 
     public function testQueryCommissionTemplateById(): void
     {
-        $commissionTemplate = DB::connection('pgsql_test')
-            ->table('commission_template')
-            ->first();
+        $commissionTemplate = CommissionTemplate::query()->first();
 
         $this->postGraphQL(
             [
@@ -174,9 +170,7 @@ class CommissionTemplateQueryTest extends TestCase
 
     public function testQueryCommissionTemplateByName(): void
     {
-        $commissionTemplate = DB::connection('pgsql_test')
-            ->table('commission_template')
-            ->first();
+        $commissionTemplate = CommissionTemplate::query()->first();
 
         $this->postGraphQL(
             [
@@ -206,9 +200,7 @@ class CommissionTemplateQueryTest extends TestCase
 
     public function testQueryCommissionTemplateByPaymentProvider(): void
     {
-        $commissionTemplate = DB::connection('pgsql_test')
-            ->table('commission_template')
-            ->first();
+        $commissionTemplate = CommissionTemplate::query()->first();
 
         $this->postGraphQL(
             [
@@ -240,9 +232,7 @@ class CommissionTemplateQueryTest extends TestCase
 
     public function testQueryCommissionTemplateByBusinessActivity(): void
     {
-        $commissionTemplate = DB::connection('pgsql_test')
-            ->table('commission_template')
-            ->first();
+        $commissionTemplate = CommissionTemplate::query()->first();
 
         $activity = DB::connection('pgsql_test')
             ->table('commission_template_business_activity')
@@ -278,9 +268,7 @@ class CommissionTemplateQueryTest extends TestCase
 
     public function testQueryCommissionTemplateByIsActive(): void
     {
-        $commissionTemplate = DB::connection('pgsql_test')
-            ->table('commission_template')
-            ->first();
+        $commissionTemplate = CommissionTemplate::query()->first();
 
         $this->postGraphQL(
             [

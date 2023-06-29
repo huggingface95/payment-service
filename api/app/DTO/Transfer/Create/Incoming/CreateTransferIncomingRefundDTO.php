@@ -5,7 +5,9 @@ namespace App\DTO\Transfer\Create\Incoming;
 use App\Enums\BeneficiaryTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
+use App\Exceptions\GraphqlException;
 use App\Models\Account;
+use App\Models\PaymentBank;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -25,7 +27,7 @@ class CreateTransferIncomingRefundDTO extends CreateTransferIncomingDTO
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['urgency_id'] = 1;
         $args['operation_type_id'] = $operationType;
-        $args['payment_bank_id'] = 2;
+        $args['payment_bank_id'] = PaymentBank::query()->where('payment_provider_id', $args['payment_provider_id'])->where('payment_system_id', $args['payment_system_id'])->first()?->id ?? throw new GraphqlException('Payment bank not found', 'use');
         $args['payment_number'] = Str::uuid();
         $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
@@ -33,6 +35,7 @@ class CreateTransferIncomingRefundDTO extends CreateTransferIncomingDTO
         $args['respondent_fees_id'] = 2;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
         $args['execution_at'] = $args['created_at'];
+        $args['project_id'] = $account->project_id;
 
         return new parent($args, $account);
     }

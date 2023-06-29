@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\DB;
 class CommissionTemplate extends BaseModel
 {
     use BaseObServerTrait;
+    use SoftDeletes;
 
     public $timestamps = false;
 
@@ -32,6 +34,10 @@ class CommissionTemplate extends BaseModel
      */
     protected $fillable = [
         'name', 'is_active', 'description', 'payment_provider_id', 'country_id', 'currency_id', 'commission_template_limit_id', 'member_id', 'company_id',
+    ];
+
+    protected $casts = [
+        'deleted_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
 
     protected static function booted()

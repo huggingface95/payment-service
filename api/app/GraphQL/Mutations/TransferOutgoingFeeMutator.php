@@ -49,7 +49,7 @@ class TransferOutgoingFeeMutator extends BaseMutator
             throw new GraphqlException('Revenue Account not found in this company');
         }
 
-        $transfer = $this->transferService->createTransfer($args, $args['operation_type_id']);
+        $transfer = $this->transferService->createFeeTransfer($args, $args['operation_type_id']);
 
         return $transfer;
     }

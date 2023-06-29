@@ -7,13 +7,15 @@ use App\Models\AccountState;
 use App\Models\ApplicantIndividual;
 use App\Observers\Traits\AmountValidationTrait;
 use App\Models\BaseModel;
+use App\Models\Members;
 use App\Models\TransferOutgoing;
+use App\Observers\Traits\AccessTransfersTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class TransferOutgoingObserver extends BaseObserver
 {
-    use AmountValidationTrait;
+    use AmountValidationTrait, AccessTransfersTrait;
 
     public function creating(TransferOutgoing|BaseModel|Model $model, bool $callHistory = false): bool
     {
@@ -23,15 +25,28 @@ class TransferOutgoingObserver extends BaseObserver
 
         /** @var ApplicantIndividual $applicant */
         if ($applicant = Auth::guard('api_client')->user()) {
-            if ($applicant->id != $model->requested_by_id) {
-                throw new GraphqlException('requested_by_id must match id applicant', 'use');
-            }
+            $this->checkApplicantAccess($model, $applicant);
+        }
+
+        /** @var Members $member */
+        if ($member = Auth::guard('api')->user()) {
+            $this->checkMemberAccess($model, $member);
         }
 
         if ($model->account?->account_state_id != AccountState::ACTIVE) {
             throw new GraphqlException('Account must be active', 'use');
         }
 
+        $checkRecipientCountry = $model->paymentSystem->regions()
+            ->whereHas('countries', function ($query) use ($model) {
+                $query->where('id', $model->recipient_country_id);
+            })
+            ->exists();
+        
+        if (!$checkRecipientCountry) {
+            throw new GraphqlException('The payment system is not available for the recipient country', 'use');
+        }
+        
         $this->checkAmountPositive($model);
         $this->checkAndCreateHistory($model, 'creating');
 
@@ -46,13 +61,26 @@ class TransferOutgoingObserver extends BaseObserver
 
         /** @var ApplicantIndividual $applicant */
         if ($applicant = Auth::guard('api_client')->user()) {
-            if ($applicant->id != $model->requested_by_id) {
-                throw new GraphqlException('requested_by_id must match id applicant', 'use');
-            }
+            $this->checkApplicantAccess($model, $applicant);
+        }
+
+        /** @var Members $member */
+        if ($member = Auth::guard('api')->user()) {
+            $this->checkMemberAccess($model, $member);
         }
 
         if ($model->account?->account_state_id != AccountState::ACTIVE) {
             throw new GraphqlException('Account must be active', 'use');
+        }
+
+        $checkRecipientCountry = $model->paymentSystem->regions()
+            ->whereHas('countries', function ($query) use ($model) {
+                $query->where('id', $model->recipient_country_id);
+            })
+            ->exists();
+        
+        if (!$checkRecipientCountry) {
+            throw new GraphqlException('The payment system is not available for the recipient country', 'use');
         }
 
         $this->checkAmountPositive($model);

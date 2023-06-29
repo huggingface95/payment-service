@@ -75,6 +75,8 @@ extend type Mutation @guard(with: "api") {
         country_id: ID
         "ID языка"
         language_id: ID
+        "Должность"
+        job_title: String
         "Email"
         email: EMAIL @rules(apply: ["email", "unique:members"])
         "ID фото"

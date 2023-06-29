@@ -9,7 +9,7 @@ type Currencies{
     minor_unit: Int
 }
 
-extend type Query @guard {
+extend type Query @guard(with: ["api", "api_client"]) {
     "Получить валюту по ID"
     currency(id: ID @eq): Currencies   @find
     """

@@ -3,25 +3,12 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
     Создать исходящий перевод
     """
     createApplicantTransferOutgoing(
-        "ID группы"
-        group_id: ID!
-        "ID типа группы"
-        group_type_id: ID!
-        "ID проекта"
-        project_id: ID!
         "Сумма"
         amount: Decimal!
         "ID аккаунта"
         account_id: ID!
-        "ID платежного провайдера"
-        payment_provider_id: ID!
-        "ID платежной системы"
-        payment_system_id: ID!
         "ID страны банка получателя"
         recipient_bank_country_id: ID!
-        price_list_id: ID!
-        "ID коммиссии"
-        price_list_fee_id: ID!
         "ID срочности операции"
         urgency_id: ID!
         "Исполнить в"
@@ -65,8 +52,6 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         group_id: ID
         "ID типа группы"
         group_type_id: ID
-        "ID проекта"
-        project_id: ID
         "Сумма"
         amount: Decimal
         "ID аккаунта"

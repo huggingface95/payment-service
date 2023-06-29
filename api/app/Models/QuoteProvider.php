@@ -37,4 +37,9 @@ class QuoteProvider extends BaseModel
     {
         return $this->hasMany(CurrencyExchangeRate::class, 'quote_provider_id');
     }
+
+    public function currencyRateHistories(): HasMany
+    {
+        return $this->hasMany(CurrencyRateHistory::class, 'quote_provider_id');
+    }
 }

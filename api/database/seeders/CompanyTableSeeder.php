@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Company;
+use App\Models\Employee;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 
@@ -16,6 +17,8 @@ class CompanyTableSeeder extends Seeder
     public function run()
     {
         $faker = Factory::create();
+
+        $employeeIds = Employee::query()->pluck('id');
 
         for ($i = 1; $i <= 10; $i++) {
             Company::firstOrCreate(
@@ -33,7 +36,7 @@ class CompanyTableSeeder extends Seeder
                     'url' => 'https://'.$faker->domainName(),
                     'entity_type' => 'Test',
                     'reg_number' => $faker->randomNumber('9'),
-                    'employees_id' => $i,
+                    'employees_id' => $employeeIds->random(),
                     'type_of_industry_id' => $i,
                 ]
             );

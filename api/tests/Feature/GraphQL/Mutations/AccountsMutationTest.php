@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\GraphQL\Mutations;
 
+use App\Models\Account;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -30,7 +31,7 @@ class AccountsMutationTest extends TestCase
                   input:{
                     company_id: $company_id
                     currency_id: $currency_id
-                    owner_id: $owner_id
+                    client_id: $owner_id
                     account_number: $account_number
                     commission_template_id: $commission_template_id
                     account_name: $account_name
@@ -79,7 +80,7 @@ class AccountsMutationTest extends TestCase
                       input:{
                         company_id: $company_id
                         currency_id: $currency_id
-                        owner_id: $owner_id
+                        client_id: $owner_id
                         account_number: $account_number
                         commission_template_id: $commission_template_id
                         account_name: $account_name
@@ -121,8 +122,7 @@ class AccountsMutationTest extends TestCase
 
     public function testUpdateAccount(): void
     {
-        $account = DB::connection('pgsql_test')
-            ->table('accounts')
+        $account = Account::query()
             ->orderBy('id', 'DESC')
             ->first();
 
@@ -171,8 +171,7 @@ class AccountsMutationTest extends TestCase
 
     public function testDeleteAccount(): void
     {
-        $account = DB::connection('pgsql_test')
-            ->table('accounts')
+        $account = Account::query()
             ->orderBy('id', 'DESC')
             ->first();
 
@@ -212,8 +211,7 @@ class AccountsMutationTest extends TestCase
 
     public function testGenerateIban(): void
     {
-        $account = DB::connection('pgsql_test')
-            ->table('accounts')
+        $account = Account::query()
             ->orderBy('id', 'DESC')
             ->first();
 

@@ -9,8 +9,6 @@ extend type Mutation @guard {
         group_id: ID!
         "ID типа группы"
         group_type_id: ID!
-        "ID проекта"
-        project_id: ID!
         "Сумма"
         amount: Decimal!
         "ID валюты"
@@ -23,10 +21,6 @@ extend type Mutation @guard {
         payment_provider_id: ID!
         "ID платежной системы"
         payment_system_id: ID!
-        "ID прайс листа"
-        price_list_id: ID
-        "ID комисии"
-        price_list_fee_id: ID
         "Исполнить в"
         execution_at: DateTimeUtc
         "Номер счета или IBAN получателя"
@@ -40,7 +34,7 @@ extend type Mutation @guard {
         "Имя получателя"
         recipient_name: String
         "Страна получателя"
-        recipient_country_id: ID!
+        recipient_country_id: ID
         "Город получателя"
         recipient_city: String
         "Адрес получателя"
@@ -70,8 +64,6 @@ extend type Mutation @guard {
         group_id: ID
         "ID типа группы"
         group_type_id: ID
-        "ID проекта"
-        project_id: ID
         "Сумма"
         amount: Decimal
         "ID валюты"
@@ -84,10 +76,6 @@ extend type Mutation @guard {
         payment_provider_id: ID
         "ID платежной системы"
         payment_system_id: ID
-        "ID прайс листа"
-        price_list_id: ID
-        "ID комисии"
-        price_list_fee_id: ID
         "Исполнить в"
         execution_at: DateTimeUtc
         "Номер счета или IBAN получателя"
@@ -153,7 +141,7 @@ extend type Mutation @guard {
         id: ID!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingFeeMutator@execute")
-    
+
     """
     Привязать файлы
     """

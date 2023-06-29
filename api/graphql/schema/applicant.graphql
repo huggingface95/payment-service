@@ -128,6 +128,7 @@ extend type Query @guard {
     where:{column: EMAIL, operator: LIKE, value: ""} фильтр по имени, фамилии, Email
     """
     applicantIndividuals(
+        trashed: Trashed @trashed
         filter: _ @filterConditions(static: QueryApplicantIndividualsFilterStatic),
         group: Int @scope(name:"GetGroup"),
         created_at: DateTimeRange @whereBetween,
@@ -138,6 +139,7 @@ extend type Query @guard {
 
     "Вывод списка овнеров для компаний"
     owners(
+        trashed: Trashed @trashed
         orderBy: _ @orderBy(columns: ["id","email","created_at","fullname"])
     ): [ApplicantIndividual!]!  @field(resolver:"ApplicantIndividualQuery@owners") @orderBy(column: "id", direction: ASC)
 
