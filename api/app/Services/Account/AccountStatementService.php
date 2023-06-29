@@ -40,4 +40,33 @@ class AccountStatementService
             'transactions' => $transactionsList,
         ];
     }
+
+    public function getAccountStatementTransactions(int $accountId, $dateFrom, $dateTo): array
+    {
+        $account = $this->accountRepository->findById($accountId);
+        if (! $account) {
+            throw new GraphqlException('Not found', 'not found', 404);
+        }
+
+        $transactions = $this->accountRepository->getTransfersForPeriodByAccountId($accountId, $dateFrom, $dateTo);
+        $transactionsList = TransactionResource::collection($transactions)->sortByDesc('created_at')->jsonSerialize();
+
+        $data = [];
+        foreach ($transactionsList as $transaction) {
+            $data[] = [
+                'transaction_id' => $transaction['transaction_id'],
+                'created_at' => $transaction['created_at'],
+                'sender_recipient' => $transaction['sender_recipient'],
+                'reason' => $transaction['reason'],
+                'amount' => $transaction['amount'],
+                'account_number' => $transaction['account_number'],
+                'account_client' => $transaction['account_client'],
+                'status' => $transaction['status'],
+                'account_balance' => $transaction['account_balance'],
+                'transfer_type' => $transaction['transfer_type'],
+            ];
+        }
+
+        return $data;
+    }
 }
