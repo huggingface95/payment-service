@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use App\Models\Traits\BaseObServerTrait;
+use Decimal\Decimal;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Class CurrencyExchangeRate
  *
+ * @property Carbon $updated_at
+ * @property Decimal $rate
  * @property QuoteProvider $quoteProvider
  */
 class CurrencyExchangeRate extends BaseModel
