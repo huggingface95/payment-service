@@ -17,12 +17,12 @@ type ApplicantRequisites {
 type ApplicantDetailsRequisites {
     currency: String!
     beneficiary: String!
-    address: String!
+    address: String
     country: String!
     iban: String!
     bank_name: String!
     swift_code: String!
-    bank_address: String!
+    bank_address: String
     bank_country: String!
 }
 
