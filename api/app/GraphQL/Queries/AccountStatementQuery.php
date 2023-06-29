@@ -7,9 +7,7 @@ use App\Repositories\Interfaces\AccountRepositoryInterface;
 use App\Services\Account\AccountStatementService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
-use Tinderbox\ClickhouseBuilder\Integrations\Laravel\Builder;
 
 final class AccountStatementQuery
 {
