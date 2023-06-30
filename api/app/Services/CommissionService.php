@@ -186,6 +186,9 @@ class CommissionService extends AbstractService
                     if ($listFee instanceof PriceListQpFeeCurrency) {
                         return true;
                     }
+                    if ($listFee instanceof PriceListFeeCurrency) {
+                        return true;
+                    }
 
                     $dstCurrencies = $listFee->feeDestinationCurrency;
                     if ($dstCurrencies->count() > 0) {
