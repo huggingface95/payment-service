@@ -1,6 +1,9 @@
 package db
 
-import "time"
+import (
+	"github.com/jackc/pgtype"
+	"time"
+)
 
 // IBAN представляет сгенерированный IBAN.
 type IBAN struct {
@@ -13,42 +16,42 @@ type IBAN struct {
 
 // Payment представляет платеж в системе.
 type Payment struct {
-	ID                     int
-	Amount                 float64
-	AmountReal             float64
-	Fee                    float64
-	FeeTypeID              int
-	CurrencyID             CurrencyEnum
-	StatusID               StatusEnum
-	SenderName             string
-	PaymentDetails         string
-	SenderBankAccount      string
-	SenderSWIFT            string
-	SenderBankName         string
-	SenderBankCountry      int
-	SenderBankAddress      string
-	SenderCountryID        int
-	SenderAddress          string
-	UrgencyID              int
-	TypeID                 int
-	PaymentProviderID      int
-	AccountID              int
-	CompanyID              int
-	MemberID               int
-	PaymentNumber          string
-	OperationTypeId        OperationTypeEnum
-	Error                  string
-	ReceivedAt             time.Time
-	SenderAdditionalFields []byte
-	CreatedAt              time.Time
-	UpdatedAt              time.Time
+	ID                     int           `json:"id"`
+	Amount                 *float64      `json:"amount"`
+	AmountReal             *float64      `json:"amount_real"`
+	Fee                    *float64      `json:"fee"`
+	FeeTypeID              *int          `json:"fee_type_id"`
+	CurrencyID             *int          `json:"currency_id"`
+	StatusID               *int          `json:"status_id"`
+	SenderName             *string       `json:"sender_name"`
+	PaymentDetails         *string       `json:"payment_details"`
+	SenderBankAccount      *string       `json:"sender_bank_account"`
+	SenderSwift            *string       `json:"sender_swift"`
+	SenderBankName         *string       `json:"sender_bank_name"`
+	SenderBankCountry      *int64        `json:"sender_bank_country"`
+	SenderBankAddress      *string       `json:"sender_bank_address"`
+	SenderCountryID        *int64        `json:"sender_country_id"`
+	SenderAddress          *string       `json:"sender_address"`
+	UrgencyID              *int64        `json:"urgency_id"`
+	TypeID                 *int64        `json:"type_id"`
+	PaymentProviderID      *int64        `json:"payment_provider_id"`
+	AccountID              *int64        `json:"account_id"`
+	CompanyID              *int64        `json:"company_id"`
+	MemberID               *int64        `json:"member_id"`
+	PaymentNumber          *string       `json:"payment_number"`
+	OperationTypeID        *int64        `json:"operation_type_id"`
+	Error                  *string       `json:"error"`
+	SenderAdditionalFields *pgtype.JSONB `json:"sender_additional_fields"`
+	ReceivedAt             *time.Time    `json:"received_at"`
+	CreatedAt              time.Time     `json:"created_at"`
+	UpdatedAt              time.Time     `json:"updated_at"`
 
-	Account       *Account
-	Status        *PaymentStatus
-	Provider      *Provider
-	OperationType *PaymentOperationType
-	Transaction   *Transaction
-	Currency      *Currency
+	Account       *Account              `json:"account"`
+	Status        *PaymentStatus        `json:"status"`
+	Provider      *Provider             `json:"provider"`
+	OperationType *PaymentOperationType `json:"operationType"`
+	Transaction   *Transaction          `json:"transaction"`
+	Currency      *Currency             `json:"currency"`
 }
 
 // Account представляет аккаунт в системе.
@@ -109,13 +112,21 @@ type PaymentOperationType struct {
 
 // Transaction представляет транзакцию в системе.
 type Transaction struct {
-	ID              int64   `json:"id"`
-	ProviderID      int64   `json:"provider_id"`
-	ClientOrder     string  `json:"client_order"`
-	Status          string  `json:"status"`
-	TransactionType string  `json:"transaction_type"`
-	Amount          float64 `json:"amount"`
-	Currency        string  `json:"currency"`
+	ID               int64     `db:"id"`
+	CompanyID        int       `db:"company_id"`
+	CurrencySrcID    int       `db:"currency_src_id"`
+	CurrencyDstID    int       `db:"currency_dst_id"`
+	AccountSrcID     *int      `db:"account_src_id"`
+	AccountDstID     *int      `db:"account_dst_id"`
+	BalancePrev      float64   `db:"balance_prev"`
+	BalanceNext      float64   `db:"balance_next"`
+	Amount           float64   `db:"amount"`
+	TxType           string    `db:"txtype"`
+	CreatedAt        time.Time `db:"created_at"`
+	UpdatedAt        time.Time `db:"updated_at"`
+	TransferID       *int      `db:"transfer_id"`
+	TransferType     *string   `db:"transfer_type"`
+	RevenueAccountID *int      `db:"revenue_account_id"`
 }
 
 type Currency struct {

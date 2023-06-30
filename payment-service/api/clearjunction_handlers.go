@@ -29,7 +29,7 @@ func ClearJunctionCheckStatus(c *fiber.Ctx, provider providers.PaymentProvider) 
 
 // ClearJunctionIBANPostback Реализация обработчика postback для создания IBAN
 func ClearJunctionIBANPostback(c *fiber.Ctx, provider providers.PaymentProvider) error {
-	request := &clearjunction.IbanPostbackRequest{}
+	request := &clearjunction.IBANPostbackRequest{}
 	err := c.BodyParser(request)
 	if err != nil {
 		fmt.Printf("error: %v\n", err.Error())
@@ -45,9 +45,27 @@ func ClearJunctionIBANPostback(c *fiber.Ctx, provider providers.PaymentProvider)
 	return c.JSON(responder)
 }
 
-// ClearJunctionPayPostback Реализация обработчика postback для PayOut и PayIn
-func ClearJunctionPayPostback(c *fiber.Ctx, provider providers.PaymentProvider) error {
-	request := &clearjunction.PostbackRequest{}
+// ClearJunctionPayInPostback Реализация обработчика postback для PayIn
+func ClearJunctionPayInPostback(c *fiber.Ctx, provider providers.PaymentProvider) error {
+	request := &clearjunction.PayInPostbackRequest{}
+	err := c.BodyParser(request)
+	if err != nil {
+		fmt.Printf("error: %v\n", err.Error())
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	responder, err := provider.PostBack(request)
+	if err != nil {
+		fmt.Printf("error: %v\n", err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.JSON(responder)
+}
+
+// ClearJunctionPayOutPostback Реализация обработчика postback для PayOut
+func ClearJunctionPayOutPostback(c *fiber.Ctx, provider providers.PaymentProvider) error {
+	request := &clearjunction.PayOutPostbackRequest{}
 	err := c.BodyParser(request)
 	if err != nil {
 		fmt.Printf("error: %v\n", err.Error())
@@ -87,41 +105,19 @@ func ClearJunctionIBANQueue(c *fiber.Ctx, provider providers.PaymentProvider) (e
 	return c.JSON(fiber.Map{"message": "Task added to IBAN queue"})
 }
 
-// ClearJunctionPayInQueue реализует обработчик добавления задачи в очередь для PayIn.
-func ClearJunctionPayInQueue(c *fiber.Ctx, provider providers.PaymentProvider) error {
-	var request clearjunction.PayInRequest
-	if err := json.Unmarshal(c.Body(), &request); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	request.PostbackURL = provider.(*clearjunction.ClearJunction).PublicURL + "clearjunction/postback"
-
-	task := queue.Task{
-		Type:     "PayIn",
-		Provider: "clearjunction",
-		Payload:  json.RawMessage(c.Body()),
-	}
-
-	if err := queue.PublishMessage(provider.(*clearjunction.ClearJunction).Services.Queue, &task); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	return c.JSON(fiber.Map{"message": "Task added to PayIn queue"})
-}
-
 // ClearJunctionPayOutQueue реализует обработчик добавления задачи в очередь для PayOut.
-func ClearJunctionPayOutQueue(c *fiber.Ctx, provider providers.PaymentProvider) error {
-	var request clearjunction.PayOutRequest
-	if err := json.Unmarshal(c.Body(), &request); err != nil {
+func ClearJunctionPayOutQueue(c *fiber.Ctx, provider providers.PaymentProvider) (err error) {
+	var req queue.PayOutPayload
+	if err = json.Unmarshal(c.Body(), &req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
-
-	request.PostbackURL = provider.(*clearjunction.ClearJunction).PublicURL + "clearjunction/postback"
 
 	task := queue.Task{
 		Type:     "PayOut",
 		Provider: "clearjunction",
-		Payload:  json.RawMessage(c.Body()),
+	}
+	if task.Payload, err = json.Marshal(req); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	if err := queue.PublishMessage(provider.(*clearjunction.ClearJunction).Services.Queue, &task); err != nil {

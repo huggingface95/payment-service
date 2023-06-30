@@ -11,17 +11,27 @@ type Task struct {
 }
 
 type EmailPayload struct {
-	ID      int64       `json:"id"`
+	ID      int         `json:"id"`
 	Status  string      `json:"status"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data"`
 }
 
 type IBANPayload struct {
-	AccountID           int                  `json:"account_id"`
-	AccountType         AccountTypeEnum      `json:"account_type"`
-	AccountNumber       *string              `json:"account_number,omitempty"`
-	OrderReference      *string              `json:"order_reference,omitempty"`
-	ApplicantIndividual *ApplicantIndividual `json:"applicant_individual,omitempty"`
-	ApplicantCompany    *ApplicantCompany    `json:"applicant_company,omitempty"`
+	AccountID      int       `json:"account_id"`
+	AccountNumber  *string   `json:"account_number,omitempty"`
+	OrderReference *string   `json:"order_reference,omitempty"`
+	Applicant      Applicant `json:"applicant"`
+}
+
+type PayOutPayload struct {
+	Currency       string     `json:"currency"`
+	Amount         float64    `json:"amount"`
+	Reason         string     `json:"reason"`
+	Payer          *Applicant `json:"payer,omitempty"`
+	PayerAccountID *int       `json:"payer_account_id,omitempty"`
+	PayerSortCode  *string    `json:"payer_sort_code,omitempty"`
+	Payee          Applicant  `json:"payee"`
+	PayeeAccountID int        `json:"payee_account_id"`
+	PayeeSortCode  *string    `json:"payee_sort_code,omitempty"`
 }

@@ -1,6 +1,8 @@
 package clearjunction
 
-import "payment-service/utils"
+import (
+	"payment-service/utils"
+)
 
 // ResponseMessage представляет сообщение ответа с кодом, сообщением и деталями.
 type ResponseMessage struct {
@@ -9,21 +11,27 @@ type ResponseMessage struct {
 	Details string `json:"details"`
 }
 
-// RequestCustomInfo содержит информацию о пользовательских данных запроса.
-type RequestCustomInfo struct {
-	PaymentId uint64 `json:"payment_id"`
-}
-
-// PostbackSubStatuses представляет дополнительные статусы для postback.
-type PostbackSubStatuses struct {
+// SubStatuses представляет дополнительные статусы для postback.
+type SubStatuses struct {
 	OperStatus       string `json:"operStatus"`
 	ComplianceStatus string `json:"complianceStatus"`
 }
 
-// PostbackPayeePayer представляет информацию о получателе и отправителе платежа для postback.
-type PostbackPayeePayer struct {
-	WalletUuid       string `json:"walletUuid"`
-	ClientCustomerId string `json:"clientCustomerId"`
+// PayInPostbackPayee представляет информацию об отправителе платежа для PayIn postback запроса.
+type PayInPostbackPayee struct {
+	WalletUuid       *string `json:"walletUuid,omitempty"`
+	ClientCustomerId *string `json:"clientCustomerId,omitempty"`
+}
+
+// PayInPostbackPayer представляет информацию о получателе платежа для PayIn postback запроса.
+type PayInPostbackPayer struct {
+	Address *PayInPostbackPayerAddress `json:"address,omitempty"`
+}
+
+// PayInPostbackPayerAddress представляет информацию об адресе отправителя для PayIn postback запроса.
+type PayInPostbackPayerAddress struct {
+	AddressOneString *string `json:"addressOneString,omitempty"`
+	Country          *string `json:"country,omitempty"`
 }
 
 // Message представляет сообщение с кодом, сообщением и деталями.
@@ -31,30 +39,6 @@ type Message struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
 	Details string `json:"details"`
-}
-
-// PayRequestMessage представляет модель данных для сообщений в PayIn и PayOut postback.
-type PayRequestMessage struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
-	Details string `json:"details"`
-}
-
-// PayRequestCustomInfo представляет модель данных для пользовательской информации в PayIn и PayOut postback.
-type PayRequestCustomInfo struct {
-	PaymentId uint64 `json:"payment_id"`
-}
-
-// PayPostbackSubStatuses представляет модель данных для под-статусов в PayIn и PayOut postback.
-type PayPostbackSubStatuses struct {
-	OperStatus       string `json:"operStatus"`
-	ComplianceStatus string `json:"complianceStatus"`
-}
-
-// PayPostbackPayeePayer представляет модель данных для получателя и плательщика в PayIn и PayOut postback.
-type PayPostbackPayeePayer struct {
-	WalletUuid       string `json:"walletUuid"`
-	ClientCustomerId string `json:"clientCustomerId"`
 }
 
 // Registrant представляет информацию о заявителе IBAN.
@@ -68,7 +52,7 @@ type Registrant struct {
 type IndividualData struct {
 	Phone      *string               `json:"phone,omitempty"`
 	Email      *string               `json:"email,omitempty"`
-	BirthDate  utils.ISOExtendedDate `json:"birthDate,omitempty"`
+	BirthDate  utils.ISOExtendedDate `json:"birthDate"`
 	BirthPlace *string               `json:"birthPlace,omitempty"`
 	Address    AddressData           `json:"address"`
 	Document   DocumentData          `json:"document"`
@@ -77,7 +61,7 @@ type IndividualData struct {
 	MiddleName *string               `json:"middleName,omitempty"`
 }
 
-// CorporateData представляет данные о корпоративном клиенте.
+// CorporateData представляет модель данных о корпоративном клиенте.
 type CorporateData struct {
 	Email                   *string                   `json:"email,omitempty"`
 	Name                    string                    `json:"name"`
@@ -94,6 +78,16 @@ type CorporateData struct {
 	FundFlows               FundFlows                 `json:"fundFlows"`
 	ComplianceEvaluation    ComplianceEvaluation      `json:"complianceEvaluation"`
 	CustomOptions           *CustomInfo               `json:"customOptions,omitempty"`
+}
+
+// CorporateDataLight представляет облегчённую модель данных о корпоративном клиенте.
+type CorporateDataLight struct {
+	Email                *string                `json:"email,omitempty"`
+	Name                 string                 `json:"name"`
+	RegistrationNumber   *string                `json:"registrationNumber,omitempty"`
+	IncorporationCountry *string                `json:"incorporationCountry,omitempty"`
+	Address              Address                `json:"address"`
+	IncorporationDate    *utils.ISOExtendedDate `json:"incorporationDate,omitempty"`
 }
 
 type UltimateBeneficialOwner struct {
@@ -157,50 +151,20 @@ type DocumentData struct {
 	ExpirationDate    *utils.ISOExtendedDate `json:"expirationDate,omitempty"`
 }
 
-// ContactPerson представляет информацию о контактном лице для корпоративного клиента.
-type ContactPerson struct {
-	LastName   string `json:"lastName"`
-	FirstName  string `json:"firstName"`
-	MiddleName string `json:"middleName"`
-	Phone      string `json:"phone"`
-	Email      string `json:"email"`
-}
-
-type Payer struct {
-	ClientCustomerID string             `json:"clientCustomerId"`
-	WalletUUID       string             `json:"walletUuid"`
-	Individual       IndividualRuEntity `json:"individual"`
-}
-
-type IndividualRuPayee struct {
-	ClientCustomerID string             `json:"clientCustomerId"`
-	WalletUUID       string             `json:"walletUuid"`
-	Individual       IndividualRuEntity `json:"individual"`
-}
-
-type IndividualPayee struct {
-	ClientCustomerId string          `json:"clientCustomerId"`
-	WalletUUID       string          `json:"walletUuid"`
-	Individual       IndividualEntry `json:"individual"`
+type Client struct {
+	ClientCustomerID *string             `json:"clientCustomerId,omitempty"`
+	WalletUUID       *string             `json:"walletUuid,omitempty"`
+	Individual       *IndividualData     `json:"individual,omitempty"`
+	Corporate        *CorporateDataLight `json:"corporate,omitempty"`
 }
 
 type CustomInfo map[string]interface{}
 
+type CustomFormat map[string]interface{}
+
 type MyExampleObject struct {
 	MyExampleParam2 *string `json:"MyExampleParam2,omitempty"`
 	MyExampleParam3 *string `json:"MyExampleParam3,omitempty"`
-}
-
-type IndividualRuEntity struct {
-	Phone      string   `json:"phone"`
-	Email      string   `json:"email"`
-	BirthDate  string   `json:"birthDate"`
-	BirthPlace string   `json:"birthPlace"`
-	Address    Address  `json:"address"`
-	Document   Document `json:"document"`
-	LastName   string   `json:"lastName"`
-	FirstName  string   `json:"firstName"`
-	MiddleName string   `json:"middleName"`
 }
 
 type IndividualEntry struct {
@@ -216,10 +180,11 @@ type IndividualEntry struct {
 }
 
 type Address struct {
-	Country string `json:"country"`
-	Zip     string `json:"zip"`
-	City    string `json:"city"`
-	Street  string `json:"street"`
+	Country string  `json:"country"`
+	State   *string `json:"state,omitempty"`
+	Zip     string  `json:"zip"`
+	City    string  `json:"city"`
+	Street  string  `json:"street"`
 }
 
 type Document struct {
@@ -229,4 +194,19 @@ type Document struct {
 	IssuedBy          string                `json:"issuedBy"`
 	IssuedDate        utils.ISOExtendedDate `json:"issuedDate"`
 	ExpirationDate    utils.ISOExtendedDate `json:"expirationDate"`
+}
+
+type PaymentDetails struct {
+	Description    string            `json:"description"`
+	PaymentMethod  PaymentMethodEnum `json:"paymentMethod"`
+	PayeeRequisite Requisites        `json:"payeeRequisite"`
+	PayerRequisite Requisites        `json:"payerRequisite"`
+}
+
+type Requisites struct {
+	SortCode      *string `json:"sortCode,omitempty"`
+	AccountNumber *string `json:"accountNumber,omitempty"`
+	IBAN          *string `json:"iban,omitempty"`
+	BankSwiftCode *string `json:"bankSwiftCode,omitempty"`
+	Name          *string `json:"name,omitempty"`
 }

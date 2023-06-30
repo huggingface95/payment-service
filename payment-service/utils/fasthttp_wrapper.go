@@ -79,7 +79,7 @@ func (c *FastHTTP) Request(method string, endpoint string, params interface{}, m
 	}
 
 	// Проверка статусного кода ответа
-	if res.StatusCode() != fasthttp.StatusOK {
+	if res.StatusCode() >= fasthttp.StatusMultipleChoices {
 		return nil, c.handleResponseError(res)
 	}
 

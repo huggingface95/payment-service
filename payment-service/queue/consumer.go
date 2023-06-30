@@ -33,7 +33,7 @@ func StartConsumer(service *Service, providersService *providers.Service) error 
 			json.Unmarshal(task.Payload, &payload)
 			HandlePayIn(provider, payload)
 		case "PayOut":
-			var payload providers.PayOutRequester
+			var payload PayOutPayload
 			json.Unmarshal(task.Payload, &payload)
 			HandlePayOut(provider, payload)
 		default:

@@ -22,22 +22,22 @@ func SetupRoutes(services Services) {
 		if err != nil {
 			panic(err)
 		}
-		group.Get("/iban-company/check", func(c *fiber.Ctx) error {
+		group.Get("/iban/status", func(c *fiber.Ctx) error {
 			return ClearJunctionCheckStatus(c, provider)
 		})
 		group.Post("/iban/postback", func(c *fiber.Ctx) error {
 			return ClearJunctionIBANPostback(c, provider)
 		})
-		group.Post("/postback", func(c *fiber.Ctx) error {
-			return ClearJunctionPayPostback(c, provider)
+		group.Post("/payin/postback", func(c *fiber.Ctx) error {
+			return ClearJunctionPayInPostback(c, provider)
 		})
-		group.Post("/iban-queue", func(c *fiber.Ctx) error {
+		group.Post("/payout/postback", func(c *fiber.Ctx) error {
+			return ClearJunctionPayOutPostback(c, provider)
+		})
+		group.Post("/iban/queue", func(c *fiber.Ctx) error {
 			return ClearJunctionIBANQueue(c, provider)
 		})
-		group.Post("/payin-queue", func(c *fiber.Ctx) error {
-			return ClearJunctionPayInQueue(c, provider)
-		})
-		group.Post("/payout-queue", func(c *fiber.Ctx) error {
+		group.Post("/payout/queue", func(c *fiber.Ctx) error {
 			return ClearJunctionPayOutQueue(c, provider)
 		})
 	}
