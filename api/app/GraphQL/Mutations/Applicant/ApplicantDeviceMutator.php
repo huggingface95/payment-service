@@ -29,7 +29,7 @@ class ApplicantDeviceMutator extends BaseMutator
      * @return array
      * @throws GraphqlException
      */
-    public function update($_, array $args)
+    public function update($_, array $args): array
     {
         $applicant = auth()->user();
 
@@ -61,7 +61,7 @@ class ApplicantDeviceMutator extends BaseMutator
      * @param  array  $args
      * @return array
      */
-    public function updateWithOtp($_, array $args)
+    public function updateWithOtp($_, array $args): array
     {
         $applicant = auth()->user();
 
@@ -71,8 +71,8 @@ class ApplicantDeviceMutator extends BaseMutator
         }
 
         $trusted = $args['trusted'] == true ? 'true' : 'false';
-        $id = intval($args['id']);
-        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' UPDATE trusted='.$trusted.' WHERE id='.$id.' AND provider='.ClientTypeEnum::APPLICANT->toString().'  AND email=\''.$applicant->email.'\'';
+
+        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' UPDATE trusted='.$trusted.' WHERE id=\''.$args['id'].'\' AND provider=\''.ClientTypeEnum::APPLICANT->toString().'\'  AND email=\''.$applicant->email.'\'';
 
         DB::connection('clickhouse')->statement($rawSql);
 
@@ -89,7 +89,7 @@ class ApplicantDeviceMutator extends BaseMutator
             'created_at' => $device['created_at'],
             'ip' => $device['ip'],
             'device_details' => $device['platform'].' '.$device['browser'],
-            'login_page_url' => $applicant->company->companySettings->client_url,
+            'login_page_url' => $applicant->company->backoffice_login_url,
         ];
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $applicant->company, $emailTemplateSubject, $emailData);
 
@@ -102,10 +102,11 @@ class ApplicantDeviceMutator extends BaseMutator
 
     /**
      * @param    $_
-     * @param  array  $args
+     * @param array $args
      * @return array
+     * @throws GraphqlException
      */
-    public function delete($_, array $args)
+    public function delete($_, array $args): array
     {
         $applicant = auth()->user();
 
@@ -116,8 +117,11 @@ class ApplicantDeviceMutator extends BaseMutator
             ->where('provider', ClientTypeEnum::APPLICANT->toString())
             ->first();
 
-        $id = intval($args['id']);
-        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' DELETE WHERE id='.$id.' AND provider='.ClientTypeEnum::APPLICANT->toString().' AND email=\''.$applicant->email.'\'';
+        if (!$device){
+            throw new GraphqlException('Device not found', 'Internal', 400);
+        }
+
+        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' DELETE WHERE id=\''.$args['id'].'\' AND provider=\''.ClientTypeEnum::APPLICANT->toString().'\' AND email=\''.$applicant->email.'\'';
 
         DB::connection('clickhouse')->statement($rawSql);
 
@@ -129,7 +133,7 @@ class ApplicantDeviceMutator extends BaseMutator
             'time_and_timezone' => $date->format('H:s:i e'),
             'ip' => $device['ip'],
             'client_device' => $device['platform'].' '.$device['browser'],
-            'login_page_url' => $applicant->company->companySettings->client_url,
+            'login_page_url' => $applicant->company->backoffice_login_url,
         ];
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $applicant->company, $emailTemplateSubject, $emailData);
 
