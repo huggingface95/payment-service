@@ -390,6 +390,21 @@ class ExtensionErrorHandler implements ErrorHandler
                 ]
             ));
         }
+        if (strpos($error->getMessage(), 'commission_template_company_id_name_unique')) {
+            return $next(new Error(
+                'Commission Template with this name already exists.',
+                // @phpstan-ignore-next-line graphql-php and phpstan disagree with themselves
+                $error->getNodes(),
+                $error->getSource(),
+                $error->getPositions(),
+                $error->getPath(),
+                new GraphqlException($error->getMessage()),
+                [
+                    'code' => 409,
+                    'systemMessage' => $error->getMessage(), 'Commission Template with this name already exists.',
+                ]
+            ));
+        }
         if ($error->getMessage() == 'Company not found for this corporate or has been deleted.') {
             return $next(new Error(
                 'Company not found for this corporate or has been deleted.',
