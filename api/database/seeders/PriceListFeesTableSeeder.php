@@ -29,6 +29,7 @@ class PriceListFeesTableSeeder extends Seeder
                 'operation_type_id' => $faker->randomElement([1, 2]),
                 'period_id' => 1,
                 'quote_provider_id' => 1,
+                'company_id' => 1,
                 'created_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
                 'updated_at' => $faker->dateTime()->format('Y-m-d H:i:s'),
             ]);

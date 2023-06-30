@@ -27,12 +27,12 @@ class CommissionPriceListMutator
                 }
             }
             if ($paymentSystem->name == PaymentSystem::NAME_INTERNAL && $commissionTemplate->paymentProvider->name != PaymentProvider::NAME_INTERNAL) {
-                throw new GraphqlException('Only one Commission Price List with Internal Payment Provider is allowed for External Commission Template', 'use');
+                throw new GraphqlException('Only one Internal PriceList is allowed for External Commission Template', 'use');
             }
         }
 
-        if (array_key_exists('region_id', $args) && $args['commission_template_id'] && !$this->isUniqueProviderRegionCombination($args['commission_template_id'], $args['provider_id'], $args['region_id'])) {
-            throw new GraphqlException('Commission Template with the same Provider and Region already exists', 'use');
+        if (array_key_exists('region_id', $args) && $args['commission_template_id'] && !$this->isUniqueProviderRegionCombination($args['commission_template_id'], $args['payment_system_id'], $args['region_id'])) {
+            throw new GraphqlException('Commission Template with the same PaymentSystem and Region already exists', 'use');
         }
 
         $commissionPriceList = CommissionPriceList::create($args);
@@ -54,13 +54,12 @@ class CommissionPriceListMutator
                     throw new GraphqlException('Only one Commission Price List with Internal Payment Provider is allowed', 'use');
                 }
             }
-            if ($paymentSystem->name == PaymentSystem::NAME_INTERNAL && $commissionTemplate->paymentProvider->name != PaymentProvider::NAME_INTERNAL) {
+            if ($commissionPriceList->paymenSystem?->name == PaymentSystem::NAME_INTERNAL && $commissionTemplate->paymentProvider?->name != PaymentProvider::NAME_INTERNAL) {
                 throw new GraphqlException('Only one Commission Price List with Internal Payment Provider is allowed for External Commission Template', 'use');
             }
-        }
-
-        if (array_key_exists('region_id', $args) && $args['commission_template_id'] && !$this->isUniqueProviderRegionCombination($args['commission_template_id'], $args['provider_id'], $args['region_id'])) {
-            throw new GraphqlException('Commission Template with the same Provider and Region already exists', 'use');
+            if (array_key_exists('region_id', $args) && $args['commission_template_id'] && !$this->isUniqueProviderRegionCombination($args['commission_template_id'], $args['payment_system_id'], $args['region_id'])) {
+                throw new GraphqlException('Commission Template with the same PaymentSystem and Region already exists', 'use');
+            }
         }
 
         $commissionPriceList->update($args);
@@ -68,10 +67,10 @@ class CommissionPriceListMutator
         return $commissionPriceList;
     }
 
-    private function isUniqueProviderRegionCombination($commissionTemplateId, $providerId, $regionId)
+    private function isUniqueProviderRegionCombination($commissionTemplateId, $paymentSystemId, $regionId)
     {
         return CommissionPriceList::where('commission_template_id', $commissionTemplateId)
-            ->where('provider_id', $providerId)
+            ->where('payment_system_id', $paymentSystemId)
             ->where('region_id', $regionId)
             ->doesntExist();
     }
