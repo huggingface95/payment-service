@@ -291,7 +291,11 @@ class CommissionService extends AbstractService
     private function getTransferAmountDebt(TransferOutgoing|TransferIncoming $transfer, float $paymentFee): ?float
     {
         if ($transfer->operation_type_id == OperationTypeEnum::EXCHANGE->value) {
-            return $transfer->amount - $paymentFee;
+            return $transfer->amount + $paymentFee;
+        }
+
+        if (in_array($transfer->operation_type_id, [OperationTypeEnum::SCHEDULED_FEE->value, OperationTypeEnum::DEBIT->value, OperationTypeEnum::CREDIT->value])) {
+            return $transfer->amount;
         }
 
         return match ((int) $transfer->respondent_fees_id) {
