@@ -115,7 +115,7 @@ class AccountsMutationTest extends TestCase
 
         $this->seeJsonContains([
             [
-                'id' => $id['data']['createAccount'][0]['id'],
+                'id' => $id['data']['createAccount']['id'],
             ],
         ]);
     }

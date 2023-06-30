@@ -314,7 +314,7 @@ extend type Mutation @guard {
     "Создать аккаунт"
     createAccount(
         input: InputAccount! @spread
-    ):[Account!]! @field(resolver:"AccountMutator@create")
+    ):Account @field(resolver:"AccountMutator@create")
 
     "Редактирование аккаунта"
     updateAccount(
