@@ -81,7 +81,10 @@ class CommissionService extends AbstractService
         }
     
         $priceListFees = $query->get();
-    
+        if ($priceListFees->isEmpty()) {
+            throw new GraphqlException('Commission price list fee not found', 'use');
+        }
+        
         return $this->calculatePaymentFee($priceListFees, $transfer, FeeModeEnum::BASE, $transactionDTO);
     }
 
