@@ -27,17 +27,17 @@ type PermissionList {
     id: ID
     name: String
     type: PermissionListType
-    separator: PermissionSeparatorType
     permissions: [Permissions] @hasMany(relation: "permissions")
 }
 enum PermissionListType {
     Member @enum(value: "member")
     Individual @enum(value: "applicant")
+    Corporate @enum(value: "corporate")
 }
-enum PermissionSeparatorType {
-    Private @enum(value: "private")
-    Business @enum(value: "business")
-}
+#enum PermissionSeparatorType {
+#    Private @enum(value: "private")
+#    Business @enum(value: "business")
+#}
 
 extend type Query @guard {
     "Получить разрешение по ID"
