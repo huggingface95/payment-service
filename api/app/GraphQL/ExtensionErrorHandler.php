@@ -401,7 +401,7 @@ class ExtensionErrorHandler implements ErrorHandler
                 new GraphqlException($error->getMessage()),
                 [
                     'code' => 409,
-                    'systemMessage' => $error->getMessage(), 'Commission Template with this name already exists.',
+                    'systemMessage' => 'Commission Template with this name already exists.',
                 ]
             ));
         }
