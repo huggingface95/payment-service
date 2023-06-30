@@ -43,7 +43,7 @@ trait UpdateOrCreateCurrencyExchangeRateTrait
                         'currency_dst_id' => $v['currency_dst_id'],
                         'rate' => $v['rate']
                     ]);
-                } else if ($exchangeRate->updated_at < $v['created_at']) {
+                } else if (!$exchangeRate->updated_at || ($exchangeRate->updated_at->timestamp < $v['created_at']->timestamp)) {
                     $exchangeRate->rate = $v['rate'];
                     $exchangeRate->save();
                     $rates[] = $exchangeRate;

@@ -120,7 +120,7 @@ class CurrencyExchangeRateMutator
             'src' => 'currency_src_id:' . Currencies::class . ':code',
             'dst' => 'currency_dst_id:' . Currencies::class . ':code',
             'rate' => 'rate',
-            'time' => 'created_at'
+            'time' => 'created_at:Time'
         ]))->sortBy('created_at');
 
         $this->updateOrCreateRate($parsedContent, $quoteProvider);
