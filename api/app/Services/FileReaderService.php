@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
 use Shuchkin\SimpleXLS;
 
 
@@ -83,6 +84,8 @@ class FileReaderService extends AbstractService
                         $explode = explode(':', $v);
                         if (count($explode) == 3) {
                             $manipulatedData[$explode[0]] = (new $explode[1]())->query()->where($explode[2], '=', $value[$k])->first()?->id;
+                        } elseif (count($explode) == 2 && $explode[1] == 'Time'){
+                            $manipulatedData[$explode[0]] = Carbon::parse($value[$k]);
                         } else {
                             $manipulatedData[$explode[0]] = $value[$k];
                         }
