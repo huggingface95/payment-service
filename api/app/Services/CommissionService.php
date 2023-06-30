@@ -70,10 +70,18 @@ class CommissionService extends AbstractService
      */
     private function commissionCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
     {
-        $priceListFees = PriceListFeeCurrency::where('price_list_fee_id', $transfer->price_list_fee_id)
-            ->where('currency_id', $transfer->currency_id)
-            ->get();
-
+        $query = PriceListFeeCurrency::query()->where('price_list_fee_id', $transfer->price_list_fee_id);
+    
+        if ($transfer->operation_type_id == OperationTypeEnum::EXCHANGE->value) {
+            $query->join('price_list_fee_destination_currencies', 'price_list_fee_destination_currencies.price_list_fee_currency_id', '=', 'price_list_fee_currency.id')
+                ->where('price_list_fee_currency.currency_id', $transactionDTO->currency_src_id)
+                ->where('price_list_fee_destination_currencies.currency_id', $transactionDTO->currency_dst_id);
+        } else {
+            $query->where('currency_id', $transfer->currency_id);
+        }
+    
+        $priceListFees = $query->get();
+    
         return $this->calculatePaymentFee($priceListFees, $transfer, FeeModeEnum::BASE, $transactionDTO);
     }
 
@@ -111,6 +119,9 @@ class CommissionService extends AbstractService
         $priceListFees = PriceListQpFeeCurrency::where('currency_id', $transactionDTO->currency_src_id)
             ->whereHas('PriceListQpFee', function ($query) use ($quoteProviderId) {
                 $query->where('quote_provider_id', $quoteProviderId);
+            })
+            ->whereHas('feeDestinationCurrency', function ($query) use ($transactionDTO) {
+                $query->where('currency_id', $transactionDTO->currency_dst_id);
             })
             ->get();
 

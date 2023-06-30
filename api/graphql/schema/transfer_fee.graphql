@@ -36,7 +36,7 @@ extend type Query @guard {
     """
     getTransferFeeExchange(
         price_list_id: ID! @eq
-        operation_type_id: ID! @eq
+        operation_type_id: ID @eq
         currency_src_id: ID! @eq
         currency_id_dst: ID! @eq
         amount: Decimal @eq @rules(apply: ["required_without:amount_dst"])
