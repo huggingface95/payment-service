@@ -113,8 +113,6 @@ class AccountsMutationTest extends TestCase
 
         $id = json_decode($this->response->getContent(), true);
 
-        dump($id);
-
         $this->seeJsonContains([
             [
                 'id' => $id['data']['createAccount']['id'],
