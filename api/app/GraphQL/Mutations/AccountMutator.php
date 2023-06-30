@@ -38,7 +38,7 @@ class AccountMutator
      * @throws EmailException
      * @throws GraphqlException
      */
-    public function create($root, array $args): LengthAwarePaginator
+    public function create($root, array $args)
     {
         try {
             DB::beginTransaction();
@@ -96,11 +96,7 @@ class AccountMutator
 
             DB::commit();
 
-            if (isset($args['query'])) {
-                return Account::getAccountFilter($args['query'])->paginate(env('PAGINATE_DEFAULT_COUNT'));
-            } else {
-                return Account::paginate(env('PAGINATE_DEFAULT_COUNT'));
-            }
+            return $account;
         } catch (EmailException $e) {
             DB::rollBack();
             throw new GraphqlException($e->getMessage(), $e->getCode());
