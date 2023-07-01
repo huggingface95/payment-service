@@ -2948,26 +2948,26 @@ class PermissionsSeeder extends Seeder
                             ],
                         ],
                         'applicant' => [
-                            'Settings Contact Details' => [
+                            'Settings:Contact Details' => [
                                 'data' => [
-                                    'name' => 'Settings Contact Details',
+                                    'name' => 'Settings:Contact Details',
                                     'type' => 'applicant',
 
                                     'order' => 1,
                                 ],
                                 'list' => [
-                                    'Settings Contact Details.Enabled' => [
+                                    'Settings:Contact Details.Enabled' => [
                                         'data' => [
-                                            'name' => 'Settings Contact Details.Enabled',
+                                            'name' => 'Settings:Contact Details.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Settings Contact Details.Edit' => [
+                                    'Settings:Contact Details.Edit' => [
                                         'data' => [
-                                            'name' => 'Settings Contact Details.Edit',
+                                            'name' => 'Settings:Contact Details.Edit',
                                             'display_name' => 'Edit',
                                             'guard_name' => 'api',
                                             'order' => 2,
@@ -2976,53 +2976,53 @@ class PermissionsSeeder extends Seeder
                                     ],
                                 ],
                             ],
-                            'Settings Log in Details' => [
+                            'Settings:Log in Details' => [
                                 'data' => [
-                                    'name' => 'Settings Log in Details',
+                                    'name' => 'Settings:Log in Details',
                                     'type' => 'applicant',
 
                                     'order' => 2,
                                 ],
                                 'list' => [
-                                    'Settings Log in Details.Enabled' => [
+                                    'Settings:Log in Details.Enabled' => [
                                         'data' => [
-                                            'name' => 'Settings Log in Details.Enabled',
+                                            'name' => 'Settings:Log in Details.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Settings Log in Details.Edit' => [
+                                    'Settings:Log in Details.Edit' => [
                                         'data' => [
-                                            'name' => 'Settings Log in Details.Edit',
+                                            'name' => 'Settings:Log in Details.Edit',
                                             'display_name' => 'Edit',
                                             'guard_name' => 'api',
                                             'order' => 2,
                                             'type' => 'edit',
                                         ],
                                     ],
-                                    'Settings Log in Details.My Device' => [
+                                    'Settings:Log in Details.My Device' => [
                                         'data' => [
-                                            'name' => 'Settings Log in Details.My Device',
+                                            'name' => 'Settings:Log in Details.My Device',
                                             'display_name' => 'My Device',
                                             'guard_name' => 'api',
                                             'order' => 3,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Settings Log in Details.Two Factor Authentication' => [
+                                    'Settings:Log in Details.Two Factor Authentication' => [
                                         'data' => [
-                                            'name' => 'Settings Log in Details.Two Factor Authentication',
+                                            'name' => 'Settings:Log in Details.Two Factor Authentication',
                                             'display_name' => 'Two Factor Authentication',
                                             'guard_name' => 'api',
                                             'order' => 4,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Settings Log in Details.Secure PIN' => [
+                                    'Settings:Log in Details.Secure PIN' => [
                                         'data' => [
-                                            'name' => 'Settings Log in Details.Secure PIN',
+                                            'name' => 'Settings:Log in Details.Secure PIN',
                                             'display_name' => 'Secure PIN',
                                             'guard_name' => 'api',
                                             'order' => 5,
@@ -3031,26 +3031,26 @@ class PermissionsSeeder extends Seeder
                                     ],
                                 ],
                             ],
-                            'Settings Accounts' => [
+                            'Settings:Accounts' => [
                                 'data' => [
-                                    'name' => 'Settings Accounts',
+                                    'name' => 'Settings:Accounts',
                                     'type' => 'applicant',
 
                                     'order' => 4,
                                 ],
                                 'list' => [
-                                    'Settings Accounts.Enabled' => [
+                                    'Settings:Accounts.Enabled' => [
                                         'data' => [
-                                            'name' => 'Settings Accounts.Enabled',
+                                            'name' => 'Settings:Accounts.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Settings Accounts.Edit' => [
+                                    'Settings:Accounts.Edit' => [
                                         'data' => [
-                                            'name' => 'Settings Accounts.Edit',
+                                            'name' => 'Settings:Accounts.Edit',
                                             'display_name' => 'Edit',
                                             'guard_name' => 'api',
                                             'order' => 2,
@@ -3061,26 +3061,26 @@ class PermissionsSeeder extends Seeder
                             ],
                         ],
                         'corporate' => [
-                            'Settings Contact Details' => [
+                            'Settings:Contact Details' => [
                                 'data' => [
-                                    'name' => 'Settings Contact Details',
+                                    'name' => 'Settings:Contact Details',
                                     'type' => 'corporate',
 
                                     'order' => 1,
                                 ],
                                 'list' => [
-                                    'Settings Contact Details.Enabled' => [
+                                    'Settings:Contact Details.Enabled' => [
                                         'data' => [
-                                            'name' => 'Settings Contact Details.Enabled',
+                                            'name' => 'Settings:Contact Details.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Settings Contact Details.Edit' => [
+                                    'Settings:Contact Details.Edit' => [
                                         'data' => [
-                                            'name' => 'Settings Contact Details.Edit',
+                                            'name' => 'Settings:Contact Details.Edit',
                                             'display_name' => 'Edit',
                                             'guard_name' => 'api',
                                             'order' => 2,
@@ -3089,53 +3089,53 @@ class PermissionsSeeder extends Seeder
                                     ],
                                 ],
                             ],
-                            'Settings Log in Details' => [
+                            'Settings:Log in Details' => [
                                 'data' => [
-                                    'name' => 'Settings Log in Details',
+                                    'name' => 'Settings:Log in Details',
                                     'type' => 'corporate',
 
                                     'order' => 2,
                                 ],
                                 'list' => [
-                                    'Settings Log in Details.Enabled' => [
+                                    'Settings:Log in Details.Enabled' => [
                                         'data' => [
-                                            'name' => 'Settings Log in Details.Enabled',
+                                            'name' => 'Settings:Log in Details.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Settings Log in Details.Edit' => [
+                                    'Settings:Log in Details.Edit' => [
                                         'data' => [
-                                            'name' => 'Settings Log in Details.Edit',
+                                            'name' => 'Settings:Log in Details.Edit',
                                             'display_name' => 'Edit',
                                             'guard_name' => 'api',
                                             'order' => 2,
                                             'type' => 'edit',
                                         ],
                                     ],
-                                    'Settings Log in Details.My Device' => [
+                                    'Settings:Log in Details.My Device' => [
                                         'data' => [
-                                            'name' => 'Settings Log in Details.My Device',
+                                            'name' => 'Settings:Log in Details.My Device',
                                             'display_name' => 'My Device',
                                             'guard_name' => 'api',
                                             'order' => 3,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Settings Log in Details.Two Factor Authentication' => [
+                                    'Settings:Log in Details.Two Factor Authentication' => [
                                         'data' => [
-                                            'name' => 'Settings Log in Details.Two Factor Authentication',
+                                            'name' => 'Settings:Log in Details.Two Factor Authentication',
                                             'display_name' => 'Two Factor Authentication',
                                             'guard_name' => 'api',
                                             'order' => 4,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Settings Log in Details.Secure PIN' => [
+                                    'Settings:Log in Details.Secure PIN' => [
                                         'data' => [
-                                            'name' => 'Settings Log in Details.Secure PIN',
+                                            'name' => 'Settings:Log in Details.Secure PIN',
                                             'display_name' => 'Secure PIN',
                                             'guard_name' => 'api',
                                             'order' => 5,
@@ -3144,26 +3144,26 @@ class PermissionsSeeder extends Seeder
                                     ],
                                 ],
                             ],
-                            'Settings Security Level' => [
+                            'Settings:Security Level' => [
                                 'data' => [
-                                    'name' => 'Settings Security Level',
+                                    'name' => 'Settings:Security Level',
                                     'type' => 'corporate',
 
                                     'order' => 3,
                                 ],
                                 'list' => [
-                                    'Settings Security Level.Enabled' => [
+                                    'Settings:Security Level.Enabled' => [
                                         'data' => [
-                                            'name' => 'Settings Security Level.Enabled',
+                                            'name' => 'Settings:Security Level.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Settings Security Level.Edit' => [
+                                    'Settings:Security Level.Edit' => [
                                         'data' => [
-                                            'name' => 'Settings Security Level.Edit',
+                                            'name' => 'Settings:Security Level.Edit',
                                             'display_name' => 'Edit',
                                             'guard_name' => 'api',
                                             'order' => 2,
@@ -3172,26 +3172,26 @@ class PermissionsSeeder extends Seeder
                                     ],
                                 ],
                             ],
-                            'Settings Accounts' => [
+                            'Settings:Accounts' => [
                                 'data' => [
-                                    'name' => 'Settings Accounts',
+                                    'name' => 'Settings:Accounts',
                                     'type' => 'corporate',
 
                                     'order' => 4,
                                 ],
                                 'list' => [
-                                    'Settings Accounts.Enabled' => [
+                                    'Settings:Accounts.Enabled' => [
                                         'data' => [
-                                            'name' => 'Settings Accounts.Enabled',
+                                            'name' => 'Settings:Accounts.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Settings Accounts.Edit' => [
+                                    'Settings:Accounts.Edit' => [
                                         'data' => [
-                                            'name' => 'Settings Accounts.Edit',
+                                            'name' => 'Settings:Accounts.Edit',
                                             'display_name' => 'Edit',
                                             'guard_name' => 'api',
                                             'order' => 2,
@@ -5797,16 +5797,16 @@ class PermissionsSeeder extends Seeder
                             ],
                         ],
                         'applicant' => [
-                            'Dashboard Welcome' => [
+                            'Dashboard:Welcome' => [
                                 'data' => [
-                                    'name' => 'Dashboard Welcome',
+                                    'name' => 'Dashboard:Welcome',
                                     'type' => 'applicant',
                                     'order' => 1,
                                 ],
                                 'list' => [
-                                    'Dashboard Welcome.Enabled' => [
+                                    'Dashboard:Welcome.Enabled' => [
                                         'data' => [
-                                            'name' => 'Dashboard Welcome.Enabled',
+                                            'name' => 'Dashboard:Welcome.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
@@ -5875,27 +5875,27 @@ class PermissionsSeeder extends Seeder
                                             ],
                                         ]
                                     ],
-                                    'Dashboard Welcome.Feedback' => [
+                                    'Dashboard:Welcome.Feedback' => [
                                         'data' => [
-                                            'name' => 'Dashboard Welcome.Feedback',
+                                            'name' => 'Dashboard:Welcome.Feedback',
                                             'display_name' => 'Feedback',
                                             'guard_name' => 'api',
                                             'order' => 2,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Dashboard Welcome.Invite Friends' => [
+                                    'Dashboard:Welcome.Invite Friends' => [
                                         'data' => [
-                                            'name' => 'Dashboard Welcome.Invite Friends',
+                                            'name' => 'Dashboard:Welcome.Invite Friends',
                                             'display_name' => 'Invite Friends',
                                             'guard_name' => 'api',
                                             'order' => 3,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Dashboard Welcome.Last Transfers' => [
+                                    'Dashboard:Welcome.Last Transfers' => [
                                         'data' => [
-                                            'name' => 'Dashboard Welcome.Last Transfers',
+                                            'name' => 'Dashboard:Welcome.Last Transfers',
                                             'display_name' => 'Last Transfers',
                                             'guard_name' => 'api',
                                             'order' => 4,
@@ -5904,44 +5904,44 @@ class PermissionsSeeder extends Seeder
                                     ],
                                 ],
                             ],
-                            'Dashboard My Net Worth' => [
+                            'Dashboard:My Net Worth' => [
                                 'data' => [
-                                    'name' => 'Dashboard My Net Worth',
+                                    'name' => 'Dashboard:My Net Worth',
                                     'type' => 'applicant',
 
                                     'order' => 2,
                                 ],
                                 'list' => [
-                                    'Dashboard My Net Worth.Enabled' => [
+                                    'Dashboard:My Net Worth.Enabled' => [
                                         'data' => [
-                                            'name' => 'Dashboard My Net Worth.Enabled',
+                                            'name' => 'Dashboard:My Net Worth.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Dashboard My Net Worth.Summary' => [
+                                    'Dashboard:My Net Worth.Summary' => [
                                         'data' => [
-                                            'name' => 'Dashboard My Net Worth.Summary',
+                                            'name' => 'Dashboard:My Net Worth.Summary',
                                             'display_name' => 'Summary',
                                             'guard_name' => 'api',
                                             'order' => 2,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Dashboard My Net Worth.Assets' => [
+                                    'Dashboard:My Net Worth.Assets' => [
                                         'data' => [
-                                            'name' => 'Dashboard My Net Worth.Assets',
+                                            'name' => 'Dashboard:My Net Worth.Assets',
                                             'display_name' => 'Assets',
                                             'guard_name' => 'api',
                                             'order' => 3,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Dashboard My Net Worth.Liabilities' => [
+                                    'Dashboard:My Net Worth.Liabilities' => [
                                         'data' => [
-                                            'name' => 'Dashboard My Net Worth.Liabilities',
+                                            'name' => 'Dashboard:My Net Worth.Liabilities',
                                             'display_name' => 'Liabilities',
                                             'guard_name' => 'api',
                                             'order' => 4,
@@ -6127,44 +6127,44 @@ class PermissionsSeeder extends Seeder
                             ],
                         ],
                         'corporate' => [
-                            'Dashboard Welcome' => [
+                            'Dashboard:Welcome' => [
                                 'data' => [
-                                    'name' => 'Dashboard Welcome',
+                                    'name' => 'Dashboard:Welcome',
                                     'type' => 'corporate',
 
                                     'order' => 1,
                                 ],
                                 'list' => [
-                                    'Dashboard Welcome.Enabled' => [
+                                    'Dashboard:Welcome.Enabled' => [
                                         'data' => [
-                                            'name' => 'Dashboard Welcome.Enabled',
+                                            'name' => 'Dashboard:Welcome.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Dashboard Welcome.Feedback' => [
+                                    'Dashboard:Welcome.Feedback' => [
                                         'data' => [
-                                            'name' => 'Dashboard Welcome.Feedback',
+                                            'name' => 'Dashboard:Welcome.Feedback',
                                             'display_name' => 'Feedback',
                                             'guard_name' => 'api',
                                             'order' => 2,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Dashboard Welcome.Invite Friends' => [
+                                    'Dashboard:Welcome.Invite Friends' => [
                                         'data' => [
-                                            'name' => 'Dashboard Welcome.Invite Friends',
+                                            'name' => 'Dashboard:Welcome.Invite Friends',
                                             'display_name' => 'Invite Friends',
                                             'guard_name' => 'api',
                                             'order' => 3,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Dashboard Welcome.Last Transfers' => [
+                                    'Dashboard:Welcome.Last Transfers' => [
                                         'data' => [
-                                            'name' => 'Dashboard Welcome.Last Transfers',
+                                            'name' => 'Dashboard:Welcome.Last Transfers',
                                             'display_name' => 'Last Transfers',
                                             'guard_name' => 'api',
                                             'order' => 4,
@@ -6173,44 +6173,44 @@ class PermissionsSeeder extends Seeder
                                     ],
                                 ],
                             ],
-                            'Dashboard My Net Worth' => [
+                            'Dashboard:My Net Worth' => [
                                 'data' => [
-                                    'name' => 'Dashboard My Net Worth',
+                                    'name' => 'Dashboard:My Net Worth',
                                     'type' => 'corporate',
 
                                     'order' => 2,
                                 ],
                                 'list' => [
-                                    'Dashboard My Net Worth.Enabled' => [
+                                    'Dashboard:My Net Worth.Enabled' => [
                                         'data' => [
-                                            'name' => 'Dashboard My Net Worth.Enabled',
+                                            'name' => 'Dashboard:My Net Worth.Enabled',
                                             'display_name' => 'Enabled',
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
                                     ],
-                                    'Dashboard My Net Worth.Summary' => [
+                                    'Dashboard:My Net Worth.Summary' => [
                                         'data' => [
-                                            'name' => 'Dashboard My Net Worth.Summary',
+                                            'name' => 'Dashboard:My Net Worth.Summary',
                                             'display_name' => 'Summary',
                                             'guard_name' => 'api',
                                             'order' => 2,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Dashboard My Net Worth.Assets' => [
+                                    'Dashboard:My Net Worth.Assets' => [
                                         'data' => [
-                                            'name' => 'Dashboard My Net Worth.Assets',
+                                            'name' => 'Dashboard:My Net Worth.Assets',
                                             'display_name' => 'Assets',
                                             'guard_name' => 'api',
                                             'order' => 3,
                                             'type' => 'info',
                                         ],
                                     ],
-                                    'Dashboard My Net Worth.Liabilities' => [
+                                    'Dashboard:My Net Worth.Liabilities' => [
                                         'data' => [
-                                            'name' => 'Dashboard My Net Worth.Liabilities',
+                                            'name' => 'Dashboard:My Net Worth.Liabilities',
                                             'display_name' => 'Liabilities',
                                             'guard_name' => 'api',
                                             'order' => 4,
