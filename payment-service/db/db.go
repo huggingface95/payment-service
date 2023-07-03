@@ -252,6 +252,56 @@ func (pg *Pg) InsertTransaction(transaction Transaction) (int, error) {
 	return pg.Insert("transactions", params)
 }
 
+// Методы для работы с входящими платежами
+
+// InsertTransferIncoming вставляет новую запись о входящем переводе в базу данных и возвращает ее ID.
+func (pg *Pg) InsertTransferIncoming(t *TransferIncoming) (int, error) {
+	params := map[string]interface{}{
+		"amount":                 t.Amount,
+		"amount_debt":            t.AmountDebt,
+		"currency_id":            t.CurrencyID,
+		"status_id":              t.StatusID,
+		"urgency_id":             t.UrgencyID,
+		"operation_type_id":      t.OperationTypeID,
+		"payment_provider_id":    t.PaymentProviderID,
+		"payment_system_id":      t.PaymentSystemID,
+		"payment_bank_id":        t.PaymentBankID,
+		"payment_number":         t.PaymentNumber,
+		"account_id":             t.AccountID,
+		"recipient_id":           t.RecipientID,
+		"recipient_type":         t.RecipientType,
+		"company_id":             t.CompanyID,
+		"system_message":         t.SystemMessage,
+		"reason":                 t.Reason,
+		"channel":                t.Channel,
+		"bank_message":           t.BankMessage,
+		"sender_account":         t.SenderAccount,
+		"sender_bank_name":       t.SenderBankName,
+		"sender_bank_address":    t.SenderBankAddress,
+		"sender_bank_swift":      t.SenderBankSwift,
+		"sender_bank_country_id": t.SenderBankCountryID,
+		"sender_name":            t.SenderName,
+		"sender_country_id":      t.SenderCountryID,
+		"sender_city":            t.SenderCity,
+		"sender_address":         t.SenderAddress,
+		"sender_state":           t.SenderState,
+		"sender_zip":             t.SenderZip,
+		"respondent_fees_id":     t.RespondentFeesID,
+		"execution_at":           t.ExecutionAt,
+		"created_at":             t.CreatedAt,
+		"updated_at":             t.UpdatedAt,
+		"group_id":               t.GroupID,
+		"group_type_id":          t.GroupTypeID,
+		"project_id":             t.ProjectID,
+		"price_list_id":          t.PriceListID,
+		"price_list_fee_id":      t.PriceListFeeID,
+		"beneficiary_type_id":    t.BeneficiaryTypeID,
+		"beneficiary_name":       t.BeneficiaryName,
+	}
+
+	return pg.Insert("transfer_incomings", params)
+}
+
 // Методы для работы с платежами
 
 // GetPaymentIDStatusNameAndAccountCurrentBalanceByPaymentNumber возвращает ID платежа, имя статуса и баланс аккаунта по PaymentNumber.

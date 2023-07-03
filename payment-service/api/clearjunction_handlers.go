@@ -9,8 +9,8 @@ import (
 	"payment-service/queue"
 )
 
-// ClearJunctionCheckStatus Реализация обработчика проверки статуса аккаунта
-func ClearJunctionCheckStatus(c *fiber.Ctx, provider providers.PaymentProvider) error {
+// ClearJunctionStatus Реализация обработчика проверки статуса генерации IBAN
+func ClearJunctionStatus(c *fiber.Ctx, provider providers.PaymentProvider) error {
 	// Получаем данные запроса из JSON-тела
 	var request clearjunction.StatusRequest
 	if err := c.QueryParser(&request); err != nil {
@@ -27,48 +27,22 @@ func ClearJunctionCheckStatus(c *fiber.Ctx, provider providers.PaymentProvider) 
 	return c.JSON(fiber.Map{"status": "success"})
 }
 
-// ClearJunctionIBANPostback Реализация обработчика postback для создания IBAN
-func ClearJunctionIBANPostback(c *fiber.Ctx, provider providers.PaymentProvider) error {
-	request := &clearjunction.IBANPostbackRequest{}
-	err := c.BodyParser(request)
-	if err != nil {
-		fmt.Printf("error: %v\n", err.Error())
+// ClearJunctionPostback Реализация обработчика postback
+func ClearJunctionPostback(c *fiber.Ctx, provider providers.PaymentProvider) error {
+	postbackRequest := providers.PostBackRequest{}
+	if err := c.BodyParser(&postbackRequest); err != nil {
+		fmt.Printf("postbackRequest parse error: %v\n", err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	responder, err := provider.PostBack(request)
-	if err != nil {
-		fmt.Printf("error: %v\n", err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	}
+	request := map[providers.PostbackTypeEnum]providers.PostBackRequester{
+		providers.PostbackTypeIBAN:   &clearjunction.IBANPostbackRequest{},
+		providers.PostbackTypePayIn:  &clearjunction.PayInPostbackRequest{},
+		providers.PostbackTypePayOut: &clearjunction.PayOutPostbackRequest{},
+	}[postbackRequest.Type]
 
-	return c.JSON(responder)
-}
-
-// ClearJunctionPayInPostback Реализация обработчика postback для PayIn
-func ClearJunctionPayInPostback(c *fiber.Ctx, provider providers.PaymentProvider) error {
-	request := &clearjunction.PayInPostbackRequest{}
-	err := c.BodyParser(request)
-	if err != nil {
-		fmt.Printf("error: %v\n", err.Error())
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	responder, err := provider.PostBack(request)
-	if err != nil {
-		fmt.Printf("error: %v\n", err.Error())
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
-	}
-
-	return c.JSON(responder)
-}
-
-// ClearJunctionPayOutPostback Реализация обработчика postback для PayOut
-func ClearJunctionPayOutPostback(c *fiber.Ctx, provider providers.PaymentProvider) error {
-	request := &clearjunction.PayOutPostbackRequest{}
-	err := c.BodyParser(request)
-	if err != nil {
-		fmt.Printf("error: %v\n", err.Error())
+	if err := c.BodyParser(request); err != nil {
+		fmt.Printf("postback request parse error: %v\n", err.Error())
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 

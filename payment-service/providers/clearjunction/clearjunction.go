@@ -139,7 +139,7 @@ func (cj *ClearJunction) PayOut(req providers.PayOutRequester) (providers.PayOut
 		return nil, fmt.Errorf("invalid request type")
 	}
 
-	postbackURL := cj.PublicURL + "clearjunction/payout/postback"
+	postbackURL := cj.PublicURL + "clearjunction/postback"
 	payeeAccountID := fmt.Sprintf("%d", payload.PayeeAccountID)
 	payerAccountID := fmt.Sprintf("%d", *payload.PayerAccountID)
 
@@ -364,14 +364,20 @@ func (cj *ClearJunction) handleIbanPostback(req *IBANPostbackRequest) (providers
 }
 
 func (cj *ClearJunction) handlePayInPostback(req *PayInPostbackRequest) (providers.PostBackResponder, error) {
-	return cj.handlePostback(req, PayInStatusSettled.name(), func(balance, amount float64) float64 { return balance + amount })
+	return cj.handlePostback(req, PayInStatusSettled.name(), db.TransferTypeIncoming, func(balance, amount float64) float64 {
+		return balance + amount
+	})
 }
 
 func (cj *ClearJunction) handlePayOutPostback(req *PayOutPostbackRequest) (providers.PostBackResponder, error) {
-	return cj.handlePostback(req, PayOutStatusSettled.name(), func(balance, amount float64) float64 { return balance - amount })
+	return cj.handlePostback(req, PayOutStatusSettled.name(), db.TransferTypeOutgoing, func(balance, amount float64) float64 {
+		return balance - amount
+	})
 }
 
-func (cj *ClearJunction) handlePostback(req PostbackRequest, settledStatus string, adjustAmount func(float64, float64) float64) (providers.PostBackResponder, error) {
+func (cj *ClearJunction) handlePostback(
+	req PostbackRequest, settledStatus string, transferType db.TransferTypeEnum, adjustAmount func(float64, float64) float64,
+) (providers.PostBackResponder, error) {
 	payment, err := cj.Services.DB.Pg.GetPaymentIDStatusNameAndAccountCurrentBalanceByPaymentNumber(req.GetOrderReference())
 	if err != nil {
 		return nil, fmt.Errorf("failed to get payment: %w", err)
@@ -400,10 +406,11 @@ func (cj *ClearJunction) handlePostback(req PostbackRequest, settledStatus strin
 		nextBalance := adjustAmount(payment.Account.CurrentBalance, req.GetAmount())
 
 		if _, err = cj.Services.DB.Pg.InsertTransaction(db.Transaction{
-			TransferID:  &payment.ID,
-			Amount:      req.GetAmount(),
-			BalancePrev: payment.Account.CurrentBalance,
-			BalanceNext: nextBalance,
+			TransferID:   &payment.ID,
+			Amount:       req.GetAmount(),
+			BalancePrev:  payment.Account.CurrentBalance,
+			BalanceNext:  nextBalance,
+			TransferType: &transferType,
 		}); err != nil {
 			return nil, err
 		}
@@ -457,7 +464,7 @@ func (cj *ClearJunction) transactionApprove(req *TransactionApproveRequest) (res
 }
 
 func (cj *ClearJunction) generatePrivateAccountIBAN(req *queue.IBANPayload) (*IBANResponse, error) {
-	postbackURL := cj.PublicURL + "clearjunction/iban/postback"
+	postbackURL := cj.PublicURL + "clearjunction/postback"
 
 	request := IBANRequest{
 		ClientOrder: GenerateClientOrder(),

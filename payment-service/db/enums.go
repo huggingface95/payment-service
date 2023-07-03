@@ -34,11 +34,17 @@ const (
 	GBP
 )
 
+const (
+	TransferTypeIncoming TransferTypeEnum = "TransferIncoming"
+	TransferTypeOutgoing TransferTypeEnum = "TransferOutgoing"
+)
+
 type (
 	AccountStateEnum  uint8
 	StatusEnum        uint8
 	OperationTypeEnum uint8
 	CurrencyEnum      uint8
+	TransferTypeEnum  string
 )
 
 func GetStatus(name string) StatusEnum {
