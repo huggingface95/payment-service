@@ -70,6 +70,8 @@ class CommissionService extends AbstractService
      */
     private function commissionCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
     {
+        PriceListFee::query()->find($transfer->price_list_fee_id) ?? throw new GraphqlException('Commission price list not found', 'use');
+
         $query = PriceListFeeCurrency::query()->where('price_list_fee_id', $transfer->price_list_fee_id);
     
         if ($transfer->operation_type_id == OperationTypeEnum::EXCHANGE->value) {
