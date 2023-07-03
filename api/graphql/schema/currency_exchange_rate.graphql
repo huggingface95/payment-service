@@ -8,11 +8,41 @@ type CurrencyExchangeRate {
     updated_at: DateTimeUtc
 }
 
+type CurrencyRateHistory {
+    id: ID
+    quote_provider: QuoteProvider @belongsTo(relation: "quoteProvider")
+    currency_src: Currencies @belongsTo(relation: "currencyFrom")
+    currency_dst: Currencies @belongsTo(relation: "currencyTo")
+    rate: Decimal!
+    "Дата создания"
+    created_at: DateTimeUtc
+}
+
 input CurrencyExchangeRateInput {
     quote_provider_id: ID!
     currency_src_id: ID!
     currency_dst_id: ID!
     rate: Decimal!
+}
+
+extend type Query @guard {
+    """
+    Получить список Rates квот провайдера
+    """
+    rates(
+        quote_provider_id: ID! @eq
+    ): [CurrencyExchangeRate!]!
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: DESC)
+
+    """
+    Получить список Rates History квот провайдера
+    """
+    historyRates(
+        quote_provider_id: ID! @eq
+    ): [CurrencyRateHistory!]!
+    @paginate(defaultCount: 10)
+    @orderBy(column: "id", direction: DESC)
 }
 
 extend type Mutation @guard {
