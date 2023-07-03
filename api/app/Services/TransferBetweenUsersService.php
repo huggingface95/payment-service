@@ -4,10 +4,10 @@ namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
 use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingBetweenUsersDTO;
+use App\DTO\Transfer\Create\Outgoing\Applicant\CreateApplicantTransferOutgoingBetweenUsersDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingBetweenUsersDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingRefundDTO;
 use App\DTO\TransformerDTO;
-use App\Enums\FeeTransferTypeEnum;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferHistoryActionEnum;
@@ -21,6 +21,7 @@ use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Traits\TransferHistoryTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TransferBetweenUsersService extends AbstractService
@@ -44,7 +45,8 @@ class TransferBetweenUsersService extends AbstractService
 
         $this->validateCreateTransfer($fromAccount, $toAccount, $operationType);
 
-        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingBetweenUsersDTO::class, $fromAccount, $toAccount, $operationType, $args);
+        $transferOutDto = Auth::guard('api')->check() ? CreateTransferOutgoingBetweenUsersDTO::class : CreateApplicantTransferOutgoingBetweenUsersDTO::class;
+        $outgoingDTO = TransformerDTO::transform($transferOutDto, $fromAccount, $toAccount, $operationType, $args);
         $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $fromAccount, $operationType, $args, $outgoingDTO);
 
         $transfers = DB::transaction(function () use ($outgoingDTO, $incomingDTO) {
@@ -86,7 +88,8 @@ class TransferBetweenUsersService extends AbstractService
 
         $this->validateCreateTransfer($fromAccount, $toAccount, $operationType);
 
-        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingBetweenUsersDTO::class, $fromAccount, $toAccount, $operationType, $args);
+        $transferOutDto = Auth::guard('api')->check() ? CreateTransferOutgoingBetweenUsersDTO::class : CreateApplicantTransferOutgoingBetweenUsersDTO::class;
+        $outgoingDTO = TransformerDTO::transform($transferOutDto, $fromAccount, $toAccount, $operationType, $args);
         $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $fromAccount, $operationType, $args, $outgoingDTO);
 
         $transfers = DB::transaction(function () use ($transfer, $outgoingDTO, $incomingDTO) {

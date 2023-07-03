@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\DTO\Transaction\TransactionDTO;
 use App\DTO\Transfer\Create\Incoming\CreateTransferIncomingExchangeDTO;
+use App\DTO\Transfer\Create\Outgoing\Applicant\CreateApplicantTransferOutgoingExchangeDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingExchangeDTO;
 use App\DTO\TransformerDTO;
 use App\Enums\FeeModeEnum;
@@ -168,7 +169,8 @@ class TransferExchangeService extends AbstractService
      */
     private function populateTransferData(array $args, Account $fromAccount, Account $toAccount): array
     {
-        $outgoingDTO = TransformerDTO::transform(CreateTransferOutgoingExchangeDTO::class, $fromAccount, $args['amount'], $args);
+        $transferOutDto = Auth::guard('api')->check() ? CreateTransferOutgoingExchangeDTO::class : CreateApplicantTransferOutgoingExchangeDTO::class;
+        $outgoingDTO = TransformerDTO::transform($transferOutDto, $fromAccount, $args['amount'], $args);
         $toAmount = (string) $this->getExchangeAmount($args, $fromAccount, $toAccount);
         $incomingDTO = TransformerDTO::transform(CreateTransferIncomingExchangeDTO::class, $toAccount, $toAmount, $outgoingDTO, $args);
 
