@@ -57,9 +57,6 @@ class CommissionPriceListMutator
             if ($commissionPriceList->paymenSystem?->name == PaymentSystem::NAME_INTERNAL && $commissionTemplate->paymentProvider?->name != PaymentProvider::NAME_INTERNAL) {
                 throw new GraphqlException('Only one Commission Price List with Internal Payment Provider is allowed for External Commission Template', 'use');
             }
-            if (array_key_exists('region_id', $args) && $args['commission_template_id'] && !$this->isUniqueProviderRegionCombination($args['commission_template_id'], $args['payment_system_id'], $args['region_id'])) {
-                throw new GraphqlException('Commission Template with the same PaymentSystem and Region already exists', 'use');
-            }
         }
 
         $commissionPriceList->update($args);
