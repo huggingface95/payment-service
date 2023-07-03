@@ -57,6 +57,8 @@ type TransferIncoming {
     sender_bank_swift: String
     "Страна банка отправителя"
     sender_bank_country: Country @belongsTo(relation: "senderBankCountry")
+    "Location банка отправителя"
+    sender_bank_location: String
     "Имя отправителя"
     sender_name: String
     "Страна отправителя"
@@ -209,6 +211,8 @@ extend type Mutation @guard {
         sender_bank_swift: String
         "ID страны банка отправителя"
         sender_bank_country_id: ID
+        "Location банка отправителя"
+        sender_bank_location: String
         "Имя отправителя"
         sender_name: String
         "ID страна отправителя"
@@ -270,6 +274,8 @@ extend type Mutation @guard {
         sender_bank_swift: String
         "ID страны банка отправителя"
         sender_bank_country_id: ID
+        "Location банка отправителя"
+        sender_bank_location: String
         "Имя отправителя"
         sender_name: String
         "ID страны отправителя"
