@@ -115,8 +115,8 @@ class ApplicantRequisiteQuery
             );
 
             $emailTemplateSubject = 'Account Requisites';
-            $args['account_details_link'] = $account->company->companySettings->client_url;
-            $args['customer_support'] = $account->company->companySettings->support_email;
+            $args['account_details_link'] = config('app.url') . "/dashboard/banking/account/details/$account->id";
+            $args['customer_support'] = $account->company->backoffice_support_email;
 
             $emailDTO = TransformerDTO::transform(EmailMemberRequestDTO::class, $account, $args, $emailTemplateSubject);
 
