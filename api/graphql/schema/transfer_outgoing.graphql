@@ -50,8 +50,6 @@ type TransferOutgoing {
     reason: String
     channel: String
     bank_message: String
-    "Кто платит комиссиию"
-    respondent_fees: RespondentFee
     "Номер счета или IBAN получателя"
     recipient_account: String
     "Название банка получателя"
@@ -76,6 +74,7 @@ type TransferOutgoing {
     recipient_state: String!
     "Индекс получателя"
     recipient_zip: String!
+    "Кто платит комиссиию"
     respondent_fee: RespondentFee @belongsTo(relation: "respondentFee")
     "История трансфера"
     transfer_history: [TransferOutgoingHistory] @hasMany(relation: "transferHistory")
