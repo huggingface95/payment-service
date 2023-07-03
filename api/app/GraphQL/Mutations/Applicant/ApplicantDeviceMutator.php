@@ -13,14 +13,17 @@ use App\Models\Clickhouse\ActiveSession;
 use App\Services\AuthService;
 use App\Services\EmailService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Nuwave\Lighthouse\Schema\Context;
 use PragmaRX\Google2FALaravel\Facade as Google2FA;
 
 class ApplicantDeviceMutator extends BaseMutator
 {
     public function __construct(
-        protected AuthService $authService,
+        protected AuthService  $authService,
         protected EmailService $emailService
-    ) {
+    )
+    {
     }
 
     /**
@@ -29,7 +32,7 @@ class ApplicantDeviceMutator extends BaseMutator
      * @return array
      * @throws GraphqlException
      */
-    public function update($_, array $args): array
+    public function update($_, array $args, Context $context): array
     {
         $applicant = auth()->user();
 
@@ -38,27 +41,43 @@ class ApplicantDeviceMutator extends BaseMutator
             ->where('id', $args['id'])
             ->where('email', $applicant->email)
             ->where('provider', ClientTypeEnum::APPLICANT->toString())
-            ->get();
+            ->first();
 
-        if (! $device) {
+        if (!$device) {
             throw new GraphqlException('Device not found', 'use');
         }
 
-        if ($applicant->two_factor_auth_setting_id == 2 && $applicant->google2fa_secret) {
-            $authToken = $this->authService->getTwoFactorAuthToken($applicant, ClientTypeEnum::APPLICANT->value);
+        if ($applicant->two_factor_auth_setting_id == 2) {
+            if ($applicant->google2fa_secret) {
+                return [
+                    'two_factor' => true
+                ];
+            } else {
+                $response = Http::withHeaders([
+                    'Authorization' => $context->request->header('Authorization')
+                ])->post('go-auth:2491/api/generate-2fa-token');
+                if ($response->successful()) {
+                    return ['two_factor' => true, 'auth_token' => $response->json('2fa_token')];
+                } else {
+                    return ['message' => $response->json('error')];
+                }
+            }
+        } else {
+            $trusted = $args['trusted'] == true ? 'true' : 'false';
+
+            $rawSql = 'ALTER TABLE ' . (new ActiveSession())->getTable() . ' UPDATE trusted=' . $trusted . ' WHERE id=\'' . $args['id'] . '\' AND provider=\'' . ClientTypeEnum::APPLICANT->toString() . '\'  AND email=\'' . $applicant->email . '\'';
+
+            DB::connection('clickhouse')->statement($rawSql);
 
             return [
-                'two_factor' => 'true',
-                'auth_token' => $authToken,
+                'message' => 'Device trusted updated'
             ];
         }
-
-        throw new GraphqlException('Two factor auth is disabled', 'use');
     }
 
     /**
      * @param    $_
-     * @param  array  $args
+     * @param array $args
      * @return array
      */
     public function updateWithOtp($_, array $args): array
@@ -66,13 +85,13 @@ class ApplicantDeviceMutator extends BaseMutator
         $applicant = auth()->user();
 
         $valid = Google2FA::verifyGoogle2FA($applicant->google2fa_secret, $args['code']);
-        if (! $valid) {
+        if (!$valid) {
             throw new GraphqlException('Unable to verify your code', 'use');
         }
 
         $trusted = $args['trusted'] == true ? 'true' : 'false';
 
-        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' UPDATE trusted='.$trusted.' WHERE id=\''.$args['id'].'\' AND provider=\''.ClientTypeEnum::APPLICANT->toString().'\'  AND email=\''.$applicant->email.'\'';
+        $rawSql = 'ALTER TABLE ' . (new ActiveSession())->getTable() . ' UPDATE trusted=' . $trusted . ' WHERE id=\'' . $args['id'] . '\' AND provider=\'' . ClientTypeEnum::APPLICANT->toString() . '\'  AND email=\'' . $applicant->email . '\'';
 
         DB::connection('clickhouse')->statement($rawSql);
 
@@ -88,7 +107,7 @@ class ApplicantDeviceMutator extends BaseMutator
             'client_name' => $applicant->first_name,
             'created_at' => $device['created_at'],
             'ip' => $device['ip'],
-            'device_details' => $device['platform'].' '.$device['browser'],
+            'device_details' => $device['platform'] . ' ' . $device['browser'],
             'login_page_url' => $applicant->company->backoffice_login_url,
         ];
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $applicant->company, $emailTemplateSubject, $emailData);
@@ -117,11 +136,11 @@ class ApplicantDeviceMutator extends BaseMutator
             ->where('provider', ClientTypeEnum::APPLICANT->toString())
             ->first();
 
-        if (!$device){
+        if (!$device) {
             throw new GraphqlException('Device not found', 'Internal', 400);
         }
 
-        $rawSql = 'ALTER TABLE '.(new ActiveSession())->getTable().' DELETE WHERE id=\''.$args['id'].'\' AND provider=\''.ClientTypeEnum::APPLICANT->toString().'\' AND email=\''.$applicant->email.'\'';
+        $rawSql = 'ALTER TABLE ' . (new ActiveSession())->getTable() . ' DELETE WHERE id=\'' . $args['id'] . '\' AND provider=\'' . ClientTypeEnum::APPLICANT->toString() . '\' AND email=\'' . $applicant->email . '\'';
 
         DB::connection('clickhouse')->statement($rawSql);
 
@@ -132,7 +151,7 @@ class ApplicantDeviceMutator extends BaseMutator
             'date' => $date->format('Y-m-d'),
             'time_and_timezone' => $date->format('H:s:i e'),
             'ip' => $device['ip'],
-            'client_device' => $device['platform'].' '.$device['browser'],
+            'client_device' => $device['platform'] . ' ' . $device['browser'],
             'login_page_url' => $applicant->company->backoffice_login_url,
         ];
         $emailDTO = TransformerDTO::transform(EmailApplicantRequestDTO::class, $applicant, $applicant->company, $emailTemplateSubject, $emailData);

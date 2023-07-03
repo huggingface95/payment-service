@@ -105,6 +105,7 @@ func initRouter() *gin.Engine {
 			redirectPost.POST("/email", controllers.RedirectEmailRequest)
 			redirectPost.POST("/sms", controllers.RedirectSmsRequest)
 			redirectPost.GET("/pdf", controllers.RedirectPdfRequest)
+			redirectPost.POST("/generate-2fa-token", controllers.Generate2faToken)
 		}
 	}
 	return router

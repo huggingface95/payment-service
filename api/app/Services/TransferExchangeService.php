@@ -171,13 +171,13 @@ class TransferExchangeService extends AbstractService
     {
         $transferOutDto = Auth::guard('api')->check() ? CreateTransferOutgoingExchangeDTO::class : CreateApplicantTransferOutgoingExchangeDTO::class;
         $outgoingDTO = TransformerDTO::transform($transferOutDto, $fromAccount, $args['amount'], $args);
-        $toAmount = (string) $this->getExchangeAmount($args, $fromAccount, $toAccount);
+        $toAmount = (string) $this->getExchangeAmount($outgoingDTO->toArray(), $fromAccount, $toAccount);
         $incomingDTO = TransformerDTO::transform(CreateTransferIncomingExchangeDTO::class, $toAccount, $toAmount, $outgoingDTO, $args);
 
         return [
             'outgoing' => $outgoingDTO->toArray(),
             'incoming' => $incomingDTO->toArray(),
-            'exchange_rate' => $this->getExchangeRate($args, $fromAccount, $toAccount),
+            'exchange_rate' => $this->getExchangeRate($outgoingDTO->toArray(), $fromAccount, $toAccount),
         ];
     }
 
