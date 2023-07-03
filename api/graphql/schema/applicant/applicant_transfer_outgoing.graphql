@@ -37,6 +37,8 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         respondent_fees_id: ID!
         "Сообщение банка"
         bank_message: String
+        "Основание перевода"
+        reason: String
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: TransferSwiftInput
     ): TransferOutgoing
@@ -90,6 +92,8 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         reason: String
         "Сообщение банка"
         bank_message: String
+        "Основание перевода"
+        reason: String
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: [TransferSwiftInput]
     ): TransferOutgoing
