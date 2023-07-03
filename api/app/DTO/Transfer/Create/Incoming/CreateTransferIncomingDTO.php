@@ -69,6 +69,8 @@ class CreateTransferIncomingDTO
 
     public int $sender_bank_country_id;
 
+    public string $sender_bank_location;
+
     public string $sender_name;
 
     public int $sender_country_id;
