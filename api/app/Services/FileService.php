@@ -66,6 +66,6 @@ class FileService extends AbstractService
 
     public function getUserId(): int|null
     {
-        return Auth::user()?->id;
+        return Auth::guard('api')->id() ?? Auth::guard('api_client')->id() ?? Auth::guard('api_corporate')->id();
     }
 }
