@@ -7,7 +7,6 @@ use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
 use App\Enums\RespondentFeesEnum;
-use App\Enums\TransferChannelEnum;
 use App\Models\Account;
 
 class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
@@ -27,7 +26,7 @@ class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
         $args['payment_system_id'] = $outgoingDTO->payment_system_id;
         $args['payment_bank_id'] = $outgoingDTO->payment_bank_id;
         $args['system_message'] = '';
-        $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
+        $args['channel'] = $outgoingDTO->channel;
         $args['sender_country_id'] = $outgoingDTO->recipient_country_id;
         $args['respondent_fees_id'] = RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
         $args['group_id'] = $outgoingDTO->group_id;
