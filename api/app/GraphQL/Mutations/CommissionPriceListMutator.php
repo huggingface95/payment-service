@@ -7,6 +7,7 @@ use App\Models\CommissionPriceList;
 use App\Models\CommissionTemplate;
 use App\Models\PaymentProvider;
 use App\Models\PaymentSystem;
+use App\Models\PriceListFee;
 
 class CommissionPriceListMutator
 {
@@ -63,6 +64,21 @@ class CommissionPriceListMutator
         }
 
         $commissionPriceList->update($args);
+
+        return $commissionPriceList;
+    }
+
+    public function delete($root, array $args)
+    {
+        $commissionPriceList = CommissionPriceList::findOrFail($args['id']);
+
+        $hasFees = PriceListFee::where('price_list_id', $args['id'])->exists();
+
+        if ($hasFees) {
+            throw new GraphqlException('Unable to delete a price list that contains fees', 'use');
+        }
+
+        $commissionPriceList->delete();
 
         return $commissionPriceList;
     }
