@@ -41,8 +41,8 @@ extend type Query @guard {
     historyRates(
         quote_provider_id: ID! @eq
     ): [CurrencyRateHistory!]!
-    @paginate(defaultCount: 10)
-    @orderBy(column: "id", direction: DESC)
+        @paginate(defaultCount: 10)
+        @orderBy(column: "id", direction: DESC)
 }
 
 extend type Mutation @guard {
