@@ -50,6 +50,8 @@ type TransferOutgoing {
     reason: String
     channel: String
     bank_message: String
+    "Кто платит комиссиию"
+    respondent_fees: RespondentFee
     "Номер счета или IBAN получателя"
     recipient_account: String
     "Название банка получателя"
