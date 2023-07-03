@@ -62,6 +62,8 @@ type TransferOutgoing {
     recipient_bank_rtn: String
     "Страна банка получателя"
     recipient_bank_country: Country @belongsTo(relation: "recipientBankCountry")
+    "Bank location"
+    recipient_bank_location: String
     "Имя получателя"
     recipient_name: String
     "Страна получателя"
@@ -223,14 +225,6 @@ extend type Mutation @guard {
         beneficiary_type_id: BeneficiaryTypeEnum
         "Номер счета или IBAN получателя"
         recipient_account: String
-        "Имя банка получателя"
-        recipient_bank_name: String
-        "Адрес банка получателя"
-        recipient_bank_address: String
-        "SWIFT банка получателя"
-        recipient_bank_swift: String
-        "RTN банка получателя"
-        recipient_bank_rtn: String
         "Имя получателя"
         recipient_name: String
         "Страна получателя"
@@ -243,11 +237,19 @@ extend type Mutation @guard {
         recipient_state: String
         "Индекс получателя"
         recipient_zip: String
+        "Имя банка получателя"
+        recipient_bank_name: String
         "ID страны банка получателя"
         recipient_bank_country_id: ID
+        "Адрес банка получателя"
+        recipient_bank_address: String
+        "SWIFT банка получателя"
+        recipient_bank_swift: String
+        "RTN банка получателя"
+        recipient_bank_rtn: String
         "ncs number"
         recipient_bank_ncs_number: String
-        "location"
+        "Bank location"
         recipient_bank_location: String
         "Кто платит коммиссию"
         respondent_fees_id: ID!
@@ -290,10 +292,18 @@ extend type Mutation @guard {
         recipient_account: String
         "Имя банка получателя"
         recipient_bank_name: String
+        "ID страны банка получателя"
+        recipient_bank_country_id: ID
         "Адрес банка получателя"
         recipient_bank_address: String
         "SWIFT банка получателя"
         recipient_bank_swift: String
+        "RTN банка получателя"
+        recipient_bank_rtn: String
+        "ncs number"
+        recipient_bank_ncs_number: String
+        "Bank location"
+        recipient_bank_location: String
         "Имя получателя"
         recipient_name: String
         "Страна получателя"
