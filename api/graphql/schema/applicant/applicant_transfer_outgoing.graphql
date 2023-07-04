@@ -40,7 +40,7 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         "Основание перевода"
         reason: String
         "SWIFT field 56A (Intermediary Bank)"
-        transfer_swift: TransferSwiftInput
+        transfer_swift: [TransferSwiftInput]
     ): TransferOutgoing
         @field(resolver: "ApplicantTransferOutgoingMutator@create")
 
