@@ -190,8 +190,8 @@ class TransferExchangeService extends AbstractService
             throw new GraphqlException('Transfer status is not Unsigned');
         }
 
-        $fromAccount = Account::findOrFail($args['from_account_id']);
-        $toAccount = Account::findOrFail($args['to_account_id']);
+        $fromAccount = empty($args['from_account_id']) ? $transfer->transferOutgoing->account : Account::findOrFail($args['from_account_id']);
+        $toAccount = empty($args['to_account_id']) ? $transfer->transferIncoming->account : Account::findOrFail($args['to_account_id']);
 
         $this->isAllowedOperation($transfer);
         $this->validateCreateTransfer($fromAccount, $toAccount);
@@ -229,6 +229,13 @@ class TransferExchangeService extends AbstractService
         });
 
         return $transfers['exchange'];
+    }
+
+    public function refreshTransfer(TransferExchange $transfer, array $args): Builder|Model
+    {
+        $args['amount'] = $transfer->transferOutgoing->amount;
+
+        return $this->updateTransfer($transfer, $args);
     }
 
     /**

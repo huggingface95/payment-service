@@ -28,6 +28,12 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         @field(resolver: "ApplicantTransferExchangeMutator@update")
     
     """
+    Обновить курс exchange перевода
+    """
+    refreshApplicantTransferExchange(id: ID!): TransferExchange
+        @field(resolver: "ApplicantTransferExchangeMutator@refresh")
+
+    """
     Подписать exchange перевод
     """
     signApplicantTransferExchange(

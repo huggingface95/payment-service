@@ -135,6 +135,12 @@ extend type Mutation @guard {
         @field(resolver: "TransferExchangeMutator@update")
 
     """
+    Обновить курс exchange перевода
+    """
+    refreshTransferExchange(id: ID!): TransferExchange
+        @field(resolver: "TransferExchangeMutator@refresh")
+
+    """
     Подписать exchange перевод
     """
     signTransferExchange(
