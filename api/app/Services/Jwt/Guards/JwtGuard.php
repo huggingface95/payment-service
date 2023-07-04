@@ -39,9 +39,9 @@ class JwtGuard implements GuardCustomActions
         return $this->credentials->type;
     }
 
-    public function guest()
+    public function guest(): bool
     {
-        // TODO: Implement guest() method.
+        return $this->provider->getModel() != get_class($this->credentials->model);
     }
 
     public function id()

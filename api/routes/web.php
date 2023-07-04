@@ -44,7 +44,7 @@ $router->get('/', function () use ($router) {
 
 $router->group([
     'prefix' => 'api',
-    'middleware' => 'auth',
+    'middleware' => ['auth:api,api_client,api_corporate']
 ], function () use ($router) {
     $router->post('files', ['uses' => 'FilesController@upload']);
     $router->get('pdf', ['uses' => 'FilesController@createpdf']);
