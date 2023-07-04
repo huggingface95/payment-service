@@ -26,5 +26,7 @@ interface TransferOutgoingRepositoryInterface
 
     public function getCommissionPriceListIdByArgs(array $args, string $clientType): int|null;
 
+    public function getCommissionPriceListIdByGroup(array $args): int|null;
+
     public function getRegionIdByArgs(array $args): int|null;
 }
