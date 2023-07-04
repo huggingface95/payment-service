@@ -130,6 +130,22 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
             ->first()?->id;
     }
 
+    public function getCommissionPriceListIdByGroup(array $args): int|null
+    {
+        return CommissionPriceList::query()
+            ->where('company_id', '=', $args['company_id'])
+            ->where('commission_template_id', '=', function ($query) use ($args) {
+                $query->select('group_role_providers.commission_template_id')
+                    ->from('group_role_providers')
+                    ->where('group_role_providers.group_role_id', $args['group_id'])
+                    ->where('group_role_providers.payment_provider_id', $args['payment_provider_id']);
+            })
+            ->where('provider_id', '=', $args['payment_provider_id'])
+            ->where('payment_system_id', '=', $args['payment_system_id'])
+            ->where('region_id', '=', $args['region_id'])
+            ->first()?->id;
+    }
+
     public function getRegionIdByArgs(array $args): int|null
     {
         return Region::query()
