@@ -52,6 +52,7 @@ class CommissionPriceListMutator
             if (isset($args['provider_id']) && $paymentSystem->name == PaymentSystem::NAME_INTERNAL) {
                 $existingInternalPaymentSystem = $commissionPriceList
                     ->where('provider_id', $args['provider_id'])
+                    ->where('id', '!=', $args['id'])
                     ->whereHas('paymentSystem', function ($query) {
                         $query->where('name', PaymentSystem::NAME_INTERNAL);
                     })
