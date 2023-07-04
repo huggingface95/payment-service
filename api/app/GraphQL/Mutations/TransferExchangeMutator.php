@@ -56,8 +56,26 @@ class TransferExchangeMutator extends BaseMutator
     public function update($_, array $args): TransferExchange
     {
         $transfer = $this->transferRepository->findById($args['id']);
-
+        if (! $transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', 404);
+        }
+        
         $this->transferService->updateTransfer($transfer, $args);
+
+        return $transfer;
+    }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function refresh($_, array $args): TransferExchange
+    {
+        $transfer = $this->transferRepository->findById($args['id']);
+        if (! $transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', 404);
+        }
+
+        $this->transferService->refreshTransfer($transfer, $args);
 
         return $transfer;
     }
