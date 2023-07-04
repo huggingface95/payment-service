@@ -8,6 +8,7 @@ use App\Models\ApplicantIndividual;
 use App\Observers\Traits\AmountValidationTrait;
 use App\Models\BaseModel;
 use App\Models\Members;
+use App\Models\PaymentSystem;
 use App\Models\TransferOutgoing;
 use App\Observers\Traits\AccessTransfersTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -36,15 +37,17 @@ class TransferOutgoingObserver extends BaseObserver
         if ($model->account?->account_state_id != AccountState::ACTIVE) {
             throw new GraphqlException('Account must be active', 'use');
         }
-
-        $checkRecipientCountry = $model->paymentSystem->regions()
-            ->whereHas('countries', function ($query) use ($model) {
-                $query->where('id', $model->recipient_country_id);
-            })
-            ->exists();
         
-        if (!$checkRecipientCountry) {
-            throw new GraphqlException('The payment system is not available for the recipient country', 'use');
+        if ($model->paymentSystem->name != PaymentSystem::NAME_INTERNAL) {
+            $checkRecipientCountry = $model->paymentSystem->regions()
+                ->whereHas('countries', function ($query) use ($model) {
+                    $query->where('id', $model->recipient_country_id);
+                })
+                ->exists();
+            
+            if (!$checkRecipientCountry) {
+                throw new GraphqlException('The payment system is not available for the recipient country', 'use');
+            }
         }
         
         $this->checkAmountPositive($model);
@@ -73,14 +76,16 @@ class TransferOutgoingObserver extends BaseObserver
             throw new GraphqlException('Account must be active', 'use');
         }
 
-        $checkRecipientCountry = $model->paymentSystem->regions()
-            ->whereHas('countries', function ($query) use ($model) {
-                $query->where('id', $model->recipient_country_id);
-            })
-            ->exists();
-        
-        if (!$checkRecipientCountry) {
-            throw new GraphqlException('The payment system is not available for the recipient country', 'use');
+        if ($model->paymentSystem->name != PaymentSystem::NAME_INTERNAL) {
+            $checkRecipientCountry = $model->paymentSystem->regions()
+                ->whereHas('countries', function ($query) use ($model) {
+                    $query->where('id', $model->recipient_country_id);
+                })
+                ->exists();
+            
+            if (!$checkRecipientCountry) {
+                throw new GraphqlException('The payment system is not available for the recipient country', 'use');
+            }
         }
 
         $this->checkAmountPositive($model);
