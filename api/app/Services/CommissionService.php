@@ -6,6 +6,7 @@ use App\DTO\Transaction\TransactionDTO;
 use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\OperationTypeEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
 use App\Enums\RespondentFeesEnum;
 use App\Exceptions\GraphqlException;
@@ -70,7 +71,11 @@ class CommissionService extends AbstractService
      */
     private function commissionCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO = null): float
     {
-        PriceListFee::query()->find($transfer->price_list_fee_id) ?? throw new GraphqlException('Commission price list not found', 'use');
+        if ($transfer->status_id == PaymentStatusEnum::REFUND->value) {
+            return 0;
+        }
+
+        PriceListFee::query()->find($transfer->price_list_fee_id) ?? throw new GraphqlException('dCommission price list not found', 'use');
 
         $query = PriceListFeeCurrency::query()->where('price_list_fee_id', $transfer->price_list_fee_id);
     
