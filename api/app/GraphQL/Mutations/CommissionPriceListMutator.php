@@ -89,7 +89,7 @@ class CommissionPriceListMutator
         $hasFees = PriceListFee::where('price_list_id', $args['id'])->exists();
 
         if ($hasFees) {
-            throw new GraphqlException('This commission_price_list already in use', 'use');
+            throw new GraphqlException('This commission price list already in use', 'use');
         }
 
         $commissionPriceList->delete();
