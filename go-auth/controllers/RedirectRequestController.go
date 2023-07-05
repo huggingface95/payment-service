@@ -7,6 +7,7 @@ import (
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/models/postgres"
+	"jwt-authentication-golang/pkg"
 	"jwt-authentication-golang/requests"
 	"jwt-authentication-golang/services/access"
 	"jwt-authentication-golang/services/auth"
@@ -38,8 +39,13 @@ func RedirectRequest(context *gin.Context) {
 			if header.Referer != "" {
 				ok, message := access.CheckAccess(jsonData, user, header.Referer)
 				if ok == false {
-					context.JSON(http.StatusBadRequest, gin.H{"message": message})
-					return
+					pkg.Info().Msgf("pagereferer:%s , data:%s, message:%s",
+						context.GetHeader("pagereferer"),
+						string(jsonData),
+						message,
+					)
+					//context.JSON(http.StatusUnauthorized, gin.H{"message": message})
+					//return
 				}
 			} else {
 				context.JSON(http.StatusBadRequest, gin.H{"message": "header pagereferer parameter required"})
