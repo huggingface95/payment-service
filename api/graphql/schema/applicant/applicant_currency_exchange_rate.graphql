@@ -1,0 +1,12 @@
+extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Queries\\Applicant") {
+    """
+    Получить курс обмена
+    """
+    getApplicantCurrencyExchangeRate(
+        "ID валюты источника"
+        currency_src_id: ID!
+        "ID валюты назначения"
+        currency_dst_id: ID!
+    ): CurrencyExchangeRate
+        @field(resolver: "ApplicantCurrencyExchangeRateQuery@get")
+}
