@@ -20,35 +20,37 @@ class CreateTransferIncomingStandardDTO extends CreateTransferIncomingDTO
     {
         $account = Account::findOrFail($args['account_id']);
         $args['company_id'] = $account->company_id;
+        $args['status_id'] ??= PaymentStatusEnum::UNSIGNED->value;
 
-        if (empty($args['price_list_id'])) {
-            $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('inc Region not found', 'use');
-            $args['price_list_id'] = $repository->getCommissionPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found', 'use');
-        } else {
-            CommissionPriceList::query()
-                ->where('id', $args['price_list_id'])
-                ->where('company_id', $args['company_id'])
-                ->first() ?? throw new GraphqlException('Commission price list not found', 'use');
-        }
+        if ($args['status_id'] != PaymentStatusEnum::REFUND->value) {
+            if (empty($args['price_list_id'])) {
+                $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('inc Region not found', 'use');
+                $args['price_list_id'] = $repository->getCommissionPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found', 'use');
+            } else {
+                CommissionPriceList::query()
+                    ->where('id', $args['price_list_id'])
+                    ->where('company_id', $args['company_id'])
+                    ->first() ?? throw new GraphqlException('Commission price list not found', 'use');
+            }
 
-        if (empty($args['price_list_fee_id'])) {
-            $args['price_list_fee_id'] = PriceListFee::query()
-                ->where('price_list_id', '=', $args['price_list_id'])
-                ->where('operation_type_id', '=', $operationType)
-                ->first()?->id ?? throw new GraphqlException('Price list fee not found', 'use');
-        } else {
-            PriceListFee::query()
-                ->where('id', $args['price_list_fee_id'])
-                ->where('operation_type_id', $operationType)
-                ->where('company_id', $args['company_id'])
-                ->first() ?? throw new GraphqlException('Price list fee not found', 'use');
+            if (empty($args['price_list_fee_id'])) {
+                $args['price_list_fee_id'] = PriceListFee::query()
+                    ->where('price_list_id', '=', $args['price_list_id'])
+                    ->where('operation_type_id', '=', $operationType)
+                    ->first()?->id ?? throw new GraphqlException('Price list fee not found', 'use');
+            } else {
+                PriceListFee::query()
+                    ->where('id', $args['price_list_fee_id'])
+                    ->where('operation_type_id', $operationType)
+                    ->where('company_id', $args['company_id'])
+                    ->first() ?? throw new GraphqlException('Price list fee not found', 'use');
+            }
         }
 
         $date = Carbon::now();
 
         $args['amount_debt'] = $args['amount'];
         $args['beneficiary_type_id'] = $args['beneficiary_type'] ?? $args['beneficiary_type_id'];
-        $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
         $args['urgency_id'] ??= PaymentUrgencyEnum::STANDART->value;
         $args['operation_type_id'] = $operationType;
         $args['payment_number'] = Str::uuid();

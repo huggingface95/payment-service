@@ -38,7 +38,7 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
         $args['company_id'] = $account->company_id;
         $args['amount_debt'] = $args['amount'];
         $args['currency_id'] = $account->currency_id;
-        $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;
+        $args['status_id'] ??= PaymentStatusEnum::UNSIGNED->value;
         $args['operation_type_id'] = $operationType;
         $args['payment_provider_id'] = $projectSettings?->payment_provider_id ?? throw new GraphqlException('Payment provider not found', 'use');
         $args['payment_system_id'] = $paymentSystem;
