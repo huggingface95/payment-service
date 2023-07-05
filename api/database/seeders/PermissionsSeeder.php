@@ -8539,6 +8539,14 @@ class PermissionsSeeder extends Seeder
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'QuoteProviderDetails',
+                                                'referer' => 'banking/quotes-provider/list',
+                                                'type' => 'query',
+                                                'method' => 'quoteProvider',
+                                            ],
+                                        ],
                                     ],
                                     'Quotes Provider:Manual Quotes:Settings.Edit' => [
                                         'data' => [
@@ -8620,6 +8628,14 @@ class PermissionsSeeder extends Seeder
                                             'guard_name' => 'api',
                                             'order' => 1,
                                             'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'QuoteProviderDetails',
+                                                'referer' => 'banking/quotes-provider/list',
+                                                'type' => 'query',
+                                                'method' => 'quoteProvider',
+                                            ],
                                         ],
                                     ],
                                     'Quotes Provider:Api Quotes:Settings.Edit' => [
