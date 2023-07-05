@@ -3047,6 +3047,14 @@ class PermissionsSeeder extends Seeder
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetApplicantAccountsFilter',
+                                                'referer' => 'new-payment',
+                                                'type' => 'query',
+                                                'method' => 'applicantAccounts',
+                                            ],
+                                        ]
                                     ],
                                     'Settings:Accounts.Edit' => [
                                         'data' => [
@@ -3188,6 +3196,14 @@ class PermissionsSeeder extends Seeder
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetApplicantAccountsFilter',
+                                                'referer' => 'new-payment',
+                                                'type' => 'query',
+                                                'method' => 'applicantAccounts',
+                                            ],
+                                        ]
                                     ],
                                     'Settings:Accounts.Edit' => [
                                         'data' => [
@@ -3820,7 +3836,13 @@ class PermissionsSeeder extends Seeder
                                                 'parents' => ['Member Company Profile:Projects List.Enabled'],
                                                 'type' => 'mutation',
                                                 'method' => 'createProject',
-
+                                            ],
+                                            [
+                                                'name' => 'CreateProject',
+                                                'referer' => 'administration/member-info/full-profile/$id/projects/projects-list',
+                                                'parents' => ['Member Company Profile:Projects List.Enabled'],
+                                                'type' => 'mutation',
+                                                'method' => 'createProject',
                                             ],
                                         ],
                                     ],
