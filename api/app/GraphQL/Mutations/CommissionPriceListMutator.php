@@ -66,6 +66,17 @@ class CommissionPriceListMutator
             }
         }
 
+        if (array_key_exists('region_id', $args) && $args['commission_template_id'] && $args['payment_system_id']) {
+            $existingCommissionPriceList = CommissionPriceList::where('commission_template_id', $args['commission_template_id'])
+                ->where('payment_system_id', $args['payment_system_id'])
+                ->where('region_id', $args['region_id'])
+                ->where('id', '!=', $commissionPriceList->id)
+                ->exists();
+            if ($existingCommissionPriceList) {
+                throw new GraphqlException('Commission Template with the same PaymentSystem and Region already exists', 'use');
+            }
+        }
+
         $commissionPriceList->update($args);
 
         return $commissionPriceList;
