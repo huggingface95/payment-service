@@ -194,6 +194,11 @@ type RatesRequest struct {
 	ConversionDatePreference string `json:"conversion_date_preference,omitempty"`
 }
 
+// RatesImportRequest представляет модель данных для запроса на импорт rate-ов.
+type RatesImportRequest struct {
+	CurrencyPair string `json:"currency_pair"`
+}
+
 // RatesResponse представляет ответ на запрос на получение rate-ов.
 type RatesResponse struct {
 	SettlementCutOffTime time.Time `json:"settlement_cut_off_time"`
@@ -210,6 +215,12 @@ type RatesResponse struct {
 	DepositAmount        string    `json:"deposit_amount"`
 	DepositCurrency      string    `json:"deposit_currency"`
 	MidMarketRate        string    `json:"mid_market_rate"`
+}
+
+// RatesImportResponse представляет ответ на запрос на импорт rate-ов.
+type RatesImportResponse struct {
+	Rates       map[string][]string `json:"rates"`
+	Unavailable []string            `json:"unavailable"`
 }
 
 // ConvertRequest представляет модель данных для запроса на конвертацию валют.

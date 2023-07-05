@@ -13,6 +13,7 @@ import (
 	"payment-service/utils"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -27,7 +28,7 @@ func New(services Services, apiKey, password, baseURL, requestRate, ibanTimeout,
 		PublicURL: publicURL,
 
 		Services:  services,
-		transport: utils.FastHTTP{Client: &fasthttp.Client{}, ReqHeaders: map[string]string{}},
+		transport: utils.FastHTTP{Client: &fasthttp.Client{}, ReqHeaders: sync.Map{}},
 	}
 
 	var err error
@@ -65,10 +66,10 @@ func (cj *ClearJunction) Auth(req providers.AuthRequester) (providers.AuthRespon
 	authHeaderValue := fmt.Sprintf("Bearer %s", signature)
 
 	// Устанавливаем заголовки для последующих запросов
-	cj.transport.ReqHeaders["Authorization"] = authHeaderValue
-	cj.transport.ReqHeaders["X-API-KEY"] = cj.APIKey
-	cj.transport.ReqHeaders["Content-Type"] = "application/json"
-	cj.transport.ReqHeaders["Date"] = date
+	cj.transport.ReqHeaders.Store("Authorization", authHeaderValue)
+	cj.transport.ReqHeaders.Store("X-API-KEY", cj.APIKey)
+	cj.transport.ReqHeaders.Store("Content-Type", "application/json")
+	cj.transport.ReqHeaders.Store("Date", date)
 
 	return nil, nil
 }

@@ -129,6 +129,18 @@ func CurrencyCloudRates(c *fiber.Ctx, provider providers.PaymentProvider) error 
 	return c.JSON(responder)
 }
 
+// CurrencyCloudRatesImport реализует обработчик получения rate-ов.
+func CurrencyCloudRatesImport(c *fiber.Ctx, provider providers.PaymentProvider) error {
+	req := &currencycloud.RatesImportRequest{}
+
+	responder, err := provider.Custom(providers.CustomRequester(req))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.JSON(responder)
+}
+
 // CurrencyCloudConvert реализует обработчик конвертации валют.
 func CurrencyCloudConvert(c *fiber.Ctx, provider providers.PaymentProvider) error {
 	req := &currencycloud.ConvertRequest{}

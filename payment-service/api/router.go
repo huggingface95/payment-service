@@ -68,6 +68,9 @@ func SetupRoutes(services Services) {
 		group.Post("/rates", func(c *fiber.Ctx) error {
 			return CurrencyCloudRates(c, provider)
 		})
+		group.Post("/rates/import", func(c *fiber.Ctx) error {
+			return CurrencyCloudRatesImport(c, provider)
+		})
 		group.Post("/convert", func(c *fiber.Ctx) error {
 			return CurrencyCloudConvert(c, provider)
 		})
