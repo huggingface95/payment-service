@@ -7011,6 +7011,18 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'banking/payments/exchange/transfer-details/details',
                                             ],
                                             [
+                                                'name' => 'GetTransferIncomingStatistic',
+                                                'type' => 'query',
+                                                'method' => 'transferIncomingsStatistic',
+                                                'referer' => 'banking/payments/exchange/transfer-details/details',
+                                            ],
+                                            [
+                                                'name' => 'GetTransferIncomings',
+                                                'type' => 'query',
+                                                'method' => 'transferIncomings',
+                                                'referer' => 'banking/payments/exchange/transfer-details/details',
+                                            ],
+                                            [
                                                 'name' => 'GetExchangeTransfersCompaniesSelect',
                                                 'type' => 'query',
                                                 'method' => 'transferExchanges',
@@ -7121,6 +7133,12 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'banking/payments/make-payment',
                                                 'type' => 'query',
                                                 'method' => 'accountList',
+                                            ],
+                                            [
+                                                'name' => 'GetExchangeTransfer',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'query',
+                                                'method' => 'transferExchange',
                                             ],
                                             [
                                                 'name' => 'GetGroupTypeHasAccounts',
