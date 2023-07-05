@@ -86,7 +86,7 @@ extend type Mutation @guard {
     "Удалить прайс лист"
     deleteCommissionPriceList(
         id: ID!
-    ): CommissionPriceList   @field(resolver:"CommissionPriceListMutator@update")
+    ): CommissionPriceList   @field(resolver:"CommissionPriceListMutator@delete")
 
 }
 
