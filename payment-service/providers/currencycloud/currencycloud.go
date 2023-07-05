@@ -20,12 +20,14 @@ import (
 var _ providers.PaymentProvider = (*CurrencyCloud)(nil)
 var _ PaymentProvider = (*CurrencyCloud)(nil)
 
-func New(services Services, loginID, apiKey, baseURL, publicURL string) *CurrencyCloud {
+func New(services Services, loginID, apiKey, baseURL, publicURL string, rpmLimit float64) *CurrencyCloud {
 	provider := &CurrencyCloud{
 		LoginID:   loginID,
 		APIKey:    apiKey,
 		BaseURL:   baseURL,
 		PublicURL: publicURL,
+		RPMLimit:  RPMLimit{Convert: rpmLimit},
+
 		Services:  services,
 		transport: utils.FastHTTP{Client: &fasthttp.Client{}, ReqHeaders: sync.Map{}},
 	}
@@ -219,7 +221,7 @@ func (cc *CurrencyCloud) ratesImport(req providers.CustomRequester) (providers.C
 	}
 
 	// Определяем ограничение по скорости (60 запросов в минуту)
-	limiter := rate.NewLimiter(150, 1)
+	limiter := rate.NewLimiter(rate.Limit(cc.RPMLimit.Convert), 1)
 
 	// Создаем список для результатов
 	var currencyCodes []string

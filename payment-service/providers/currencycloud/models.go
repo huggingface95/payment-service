@@ -21,11 +21,17 @@ type PaymentProvider interface {
 type CurrencyCloud struct {
 	APIKey    string `json:"api_key"`
 	LoginID   string `json:"login_id"`
-	BaseURL   string `json:"BaseURL"`
-	PublicURL string `json:"PublicURL"`
+	BaseURL   string `json:"base_url"`
+	PublicURL string `json:"public_url"`
+
+	RPMLimit RPMLimit `json:"rpm_limit"`
 
 	Services  Services
 	transport utils.FastHTTP
+}
+
+type RPMLimit struct {
+	Convert float64 `json:"convert"`
 }
 
 // AuthRequest представляет запрос на авторизацию.

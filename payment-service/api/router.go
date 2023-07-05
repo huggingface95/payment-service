@@ -107,12 +107,14 @@ func getProvider(services Services, providerName string) (providers.PaymentProvi
 			Queue:     services.Queue,
 			DB:        services.DB,
 		}
+		rpmLimit := serverConfig["rpm_limit"].(map[string]interface{})
 		provider := currencycloud.New(
 			providerServices,
 			providerConfig["login_id"].(string),
 			providerConfig["api_key"].(string),
 			providerConfig["base_url"].(string),
 			serverConfig["public_url"].(string),
+			rpmLimit["convert"].(float64),
 		)
 		return provider, nil
 	default:
