@@ -63,6 +63,12 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'management/applicants/individual/list',
                                             ],
                                             [
+                                                'name' => 'GroupsFilter',
+                                                'type' => 'query',
+                                                'method' => 'groupList',
+                                                'referer' => 'management/applicants/individual/list',
+                                            ],
+                                            [
                                                 'name' => 'ApplicantIndividualItem',
                                                 'type' => 'query',
                                                 'method' => 'applicantIndividual',
@@ -2704,6 +2710,34 @@ class PermissionsSeeder extends Seeder
                                                 'parents' => ['Groups List.Enabled'],
                                                 'type' => 'mutation',
                                                 'method' => 'createGroupSettings',
+                                            ],
+                                            [
+                                                'name' => 'CompanyFilter',
+                                                'referer' => 'settings/manager-groups/new',
+                                                'parents' => ['Groups List.Enabled'],
+                                                'type' => 'query',
+                                                'method' => 'companies',
+                                            ],
+                                            [
+                                                'name' => 'GetGroupTypesList',
+                                                'referer' => 'settings/manager-groups/new',
+                                                'parents' => ['Groups List.Enabled'],
+                                                'type' => 'query',
+                                                'method' => 'groupTypeList',
+                                            ],
+                                            [
+                                                'name' => 'GetRolesFilterNames',
+                                                'referer' => 'settings/manager-groups/new',
+                                                'parents' => ['Groups List.Enabled'],
+                                                'type' => 'query',
+                                                'method' => 'roles',
+                                            ],
+                                            [
+                                                'name' => 'CommissionTemplateFilter',
+                                                'referer' => 'settings/manager-groups/new',
+                                                'parents' => ['Groups List.Enabled'],
+                                                'type' => 'query',
+                                                'method' => 'commissionTemplates',
                                             ],
                                             [
                                                 'name' => 'GetInternalProvideFilter',
@@ -7805,6 +7839,12 @@ class PermissionsSeeder extends Seeder
                                                 'method' => 'commissionPriceLists',
                                             ],
                                             [
+                                                'name' => 'UpdateCommissionPriceList',
+                                                'referer' => 'banking/commission-templates/price-lists',
+                                                'type' => 'mutation',
+                                                'method' => 'updateCommissionPriceList',
+                                            ],
+                                            [
                                                 'name' => 'CompanyFilter',
                                                 'referer' => 'banking/commission-templates/price-lists',
                                                 'type' => 'query',
@@ -7851,7 +7891,13 @@ class PermissionsSeeder extends Seeder
                                                 'parents' => ['Commission Template:Price Lists.Enabled'],
                                                 'type' => 'mutation',
                                                 'method' => 'createCommissionPriceList',
-
+                                            ],
+                                            [
+                                                'name' => 'CreateCommissionPriceList',
+                                                'referer' => 'banking/commission-templates/price-lists',
+                                                'parents' => ['Commission Template:Price Lists.Enabled'],
+                                                'type' => 'mutation',
+                                                'method' => 'createCommissionPriceList',
                                             ],
                                         ],
                                     ],
@@ -8380,6 +8426,14 @@ class PermissionsSeeder extends Seeder
                                             'order' => 3,
                                             'type' => 'info',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'PaymentSystemProfileData',
+                                                'referer' => 'banking/payment-system/detail/payment-system-settings/$id',
+                                                'type' => 'query',
+                                                'method' => 'paymentSystem',
+                                            ],
+                                        ]
                                     ],
                                 ],
                             ],
@@ -8403,6 +8457,12 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'PaymentSystemList',
                                                 'referer' => 'banking/payment-system/list',
+                                                'type' => 'query',
+                                                'method' => 'paymentSystems',
+                                            ],
+                                            [
+                                                'name' => 'PaymentSystemList',
+                                                'referer' => 'banking/payment-system/detail/payment-system-settings/$id',
                                                 'type' => 'query',
                                                 'method' => 'paymentSystems',
                                             ],
