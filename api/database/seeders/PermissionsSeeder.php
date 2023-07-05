@@ -7223,6 +7223,12 @@ class PermissionsSeeder extends Seeder
                                                 'type' => 'mutation',
                                                 'method' => 'createTransferExchange',
                                             ],
+                                            [
+                                                'name' => 'GetTransferFeeExchange',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'query',
+                                                'method' => 'getTransferFeeExchange',
+                                            ],
                                         ],
                                     ],
                                     'Make Transfer.Fee' => [
