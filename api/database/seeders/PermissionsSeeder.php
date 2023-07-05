@@ -8497,6 +8497,20 @@ class PermissionsSeeder extends Seeder
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'QuotesProvidersList',
+                                                'referer' => 'banking/quotes-provider/list',
+                                                'type' => 'query',
+                                                'method' => 'quoteProviders',
+                                            ],
+                                            [
+                                                'name' => 'GetQuotesProvidersSelector',
+                                                'referer' => 'banking/quotes-provider/list',
+                                                'type' => 'query',
+                                                'method' => 'quoteProviders',
+                                            ],
+                                        ],
                                     ],
                                     'Quotes Provider:List.Add New Quotes Provider (Manual)' => [
                                         'data' => [
