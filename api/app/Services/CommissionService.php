@@ -51,10 +51,10 @@ class CommissionService extends AbstractService
         $feeAmount = $this->commissionCalculation($transfer, $transactionDTO);
         $feePPAmount = $this->commissionPPCalculation($transfer, $transactionDTO);
         $feeQPAmount = $this->commissionQPCalculation($transfer, $transactionDTO);
-        $qpMarginAmount = $this->commissionQPMarginCalculation($transfer, $feeQPAmount);
         $feeTotal = $feeAmount + $feePPAmount + $feeQPAmount;
-
+        
         $amountDebt = $this->getTransferAmountDebt($transfer, $feeTotal);
+        $qpMarginAmount = $this->commissionQPMarginCalculation($transfer, $amountDebt, $feeQPAmount);
 
         return [
             'fee_amount' => $feeAmount,
@@ -141,18 +141,18 @@ class CommissionService extends AbstractService
     /**
      * @throws GraphqlException
      */
-    private function commissionQPMarginCalculation(TransferOutgoing|TransferIncoming $transfer, float $feeQPAmount): float
+    private function commissionQPMarginCalculation(TransferOutgoing|TransferIncoming $transfer, float $amountDebt, float $feeQPAmount): float
     {
         if ($transfer->operation_type_id != OperationTypeEnum::EXCHANGE->value) {
             return 0;
         }
-        if ($transfer->amount_debt < $feeQPAmount) {
+        if ($amountDebt < $feeQPAmount) {
             throw new GraphqlException('Amount debt less than fee QP amount');
         }
 
         $quoteProvider = PriceListFee::find($transfer->price_list_fee_id)?->quoteProvider;
 
-        $sum = ($transfer->amount_debt - $feeQPAmount) * ($quoteProvider->margin_commission / 100);
+        $sum = ($amountDebt - $feeQPAmount) * ($quoteProvider->margin_commission / 100);
 
         return $sum;
     }
