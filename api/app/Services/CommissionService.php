@@ -146,6 +146,9 @@ class CommissionService extends AbstractService
         if ($transfer->operation_type_id != OperationTypeEnum::EXCHANGE->value) {
             return 0;
         }
+        if ($transfer->amount_debt < $feeQPAmount) {
+            throw new GraphqlException('Amount debt less than fee QP amount');
+        }
 
         $quoteProvider = PriceListFee::find($transfer->price_list_fee_id)?->quoteProvider;
 
