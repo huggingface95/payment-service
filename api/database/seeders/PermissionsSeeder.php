@@ -2981,276 +2981,6 @@ class PermissionsSeeder extends Seeder
                                 ],
                             ],
                         ],
-                        'applicant' => [
-                            'Settings:Contact Details' => [
-                                'data' => [
-                                    'name' => 'Settings:Contact Details',
-                                    'type' => 'applicant',
-
-                                    'order' => 1,
-                                ],
-                                'list' => [
-                                    'Settings:Contact Details.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Settings:Contact Details.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Settings:Contact Details.Edit' => [
-                                        'data' => [
-                                            'name' => 'Settings:Contact Details.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Settings:Log in Details' => [
-                                'data' => [
-                                    'name' => 'Settings:Log in Details',
-                                    'type' => 'applicant',
-
-                                    'order' => 2,
-                                ],
-                                'list' => [
-                                    'Settings:Log in Details.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Settings:Log in Details.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Settings:Log in Details.Edit' => [
-                                        'data' => [
-                                            'name' => 'Settings:Log in Details.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                    'Settings:Log in Details.My Device' => [
-                                        'data' => [
-                                            'name' => 'Settings:Log in Details.My Device',
-                                            'display_name' => 'My Device',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Settings:Log in Details.Two Factor Authentication' => [
-                                        'data' => [
-                                            'name' => 'Settings:Log in Details.Two Factor Authentication',
-                                            'display_name' => 'Two Factor Authentication',
-                                            'guard_name' => 'api',
-                                            'order' => 4,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Settings:Log in Details.Secure PIN' => [
-                                        'data' => [
-                                            'name' => 'Settings:Log in Details.Secure PIN',
-                                            'display_name' => 'Secure PIN',
-                                            'guard_name' => 'api',
-                                            'order' => 5,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Settings:Accounts' => [
-                                'data' => [
-                                    'name' => 'Settings:Accounts',
-                                    'type' => 'applicant',
-
-                                    'order' => 4,
-                                ],
-                                'list' => [
-                                    'Settings:Accounts.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Settings:Accounts.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                        'operations' => [
-                                            [
-                                                'name' => 'GetApplicantAccountsFilter',
-                                                'referer' => 'new-payment',
-                                                'type' => 'query',
-                                                'method' => 'applicantAccounts',
-                                            ],
-                                        ]
-                                    ],
-                                    'Settings:Accounts.Edit' => [
-                                        'data' => [
-                                            'name' => 'Settings:Accounts.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                        'corporate' => [
-                            'Settings:Contact Details' => [
-                                'data' => [
-                                    'name' => 'Settings:Contact Details',
-                                    'type' => 'corporate',
-
-                                    'order' => 1,
-                                ],
-                                'list' => [
-                                    'Settings:Contact Details.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Settings:Contact Details.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Settings:Contact Details.Edit' => [
-                                        'data' => [
-                                            'name' => 'Settings:Contact Details.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Settings:Log in Details' => [
-                                'data' => [
-                                    'name' => 'Settings:Log in Details',
-                                    'type' => 'corporate',
-
-                                    'order' => 2,
-                                ],
-                                'list' => [
-                                    'Settings:Log in Details.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Settings:Log in Details.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Settings:Log in Details.Edit' => [
-                                        'data' => [
-                                            'name' => 'Settings:Log in Details.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                    'Settings:Log in Details.My Device' => [
-                                        'data' => [
-                                            'name' => 'Settings:Log in Details.My Device',
-                                            'display_name' => 'My Device',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Settings:Log in Details.Two Factor Authentication' => [
-                                        'data' => [
-                                            'name' => 'Settings:Log in Details.Two Factor Authentication',
-                                            'display_name' => 'Two Factor Authentication',
-                                            'guard_name' => 'api',
-                                            'order' => 4,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Settings:Log in Details.Secure PIN' => [
-                                        'data' => [
-                                            'name' => 'Settings:Log in Details.Secure PIN',
-                                            'display_name' => 'Secure PIN',
-                                            'guard_name' => 'api',
-                                            'order' => 5,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Settings:Security Level' => [
-                                'data' => [
-                                    'name' => 'Settings:Security Level',
-                                    'type' => 'corporate',
-
-                                    'order' => 3,
-                                ],
-                                'list' => [
-                                    'Settings:Security Level.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Settings:Security Level.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Settings:Security Level.Edit' => [
-                                        'data' => [
-                                            'name' => 'Settings:Security Level.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Settings:Accounts' => [
-                                'data' => [
-                                    'name' => 'Settings:Accounts',
-                                    'type' => 'corporate',
-
-                                    'order' => 4,
-                                ],
-                                'list' => [
-                                    'Settings:Accounts.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Settings:Accounts.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                        'operations' => [
-                                            [
-                                                'name' => 'GetApplicantAccountsFilter',
-                                                'referer' => 'new-payment',
-                                                'type' => 'query',
-                                                'method' => 'applicantAccounts',
-                                            ],
-                                        ]
-                                    ],
-                                    'Settings:Accounts.Edit' => [
-                                        'data' => [
-                                            'name' => 'Settings:Accounts.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ]
                     ],
                 ],
                 'Administration Module' => [
@@ -5203,102 +4933,6 @@ class PermissionsSeeder extends Seeder
                                 ],
                             ],
                         ],
-                        'applicant' => [
-                            'My Templates' => [
-                                'data' => [
-                                    'name' => 'My Templates',
-                                    'type' => 'applicant',
-
-                                    'order' => 1,
-                                ],
-                                'list' => [
-                                    'My Templates.Enabled' => [
-                                        'data' => [
-                                            'name' => 'My Templates.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'My Templates.Edit' => [
-                                        'data' => [
-                                            'name' => 'My Templates.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                    'My Templates.Delete' => [
-                                        'data' => [
-                                            'name' => 'My Templates.Delete',
-                                            'display_name' => 'Delete',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'important',
-                                        ],
-                                    ],
-                                    'My Templates.Add New' => [
-                                        'data' => [
-                                            'name' => 'My Templates.Add New',
-                                            'display_name' => 'Add New',
-                                            'guard_name' => 'api',
-                                            'order' => 4,
-                                            'type' => 'important',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                        'corporate' => [
-                            'My Templates' => [
-                                'data' => [
-                                    'name' => 'My Templates',
-                                    'type' => 'corporate',
-
-                                    'order' => 1,
-                                ],
-                                'list' => [
-                                    'My Templates.Enabled' => [
-                                        'data' => [
-                                            'name' => 'My Templates.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'My Templates.Edit' => [
-                                        'data' => [
-                                            'name' => 'My Templates.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                    'My Templates.Delete' => [
-                                        'data' => [
-                                            'name' => 'My Templates.Delete',
-                                            'display_name' => 'Delete',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'important',
-                                        ],
-                                    ],
-                                    'My Templates.Add New' => [
-                                        'data' => [
-                                            'name' => 'My Templates.Add New',
-                                            'display_name' => 'Add New',
-                                            'guard_name' => 'api',
-                                            'order' => 4,
-                                            'type' => 'important',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ]
                     ],
                 ],
                 'Banking Module - Accounts' => [
@@ -5852,605 +5486,6 @@ class PermissionsSeeder extends Seeder
                                 ],
                             ],
                         ],
-                        'applicant' => [
-                            'Dashboard:Welcome' => [
-                                'data' => [
-                                    'name' => 'Dashboard:Welcome',
-                                    'type' => 'applicant',
-                                    'order' => 1,
-                                ],
-                                'list' => [
-                                    'Dashboard:Welcome.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:Welcome.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                        'operations' => [
-                                            [
-                                                'name' => 'GetApplicantAccountsFilter',
-                                                'type' => 'query',
-                                                'method' => 'applicantAccounts',
-                                                'referer' => 'requisites',
-                                            ],
-                                            [
-                                                'name' => 'GetApplicantDetailsRequisite',
-                                                'type' => 'query',
-                                                'method' => 'applicantRequisite',
-                                                'referer' => 'requisites',
-                                            ],
-                                            [
-                                                'name' => 'DownloadApplicantRequisiteDetails',
-                                                'type' => 'query',
-                                                'method' => 'downloadApplicantRequisiteDetails',
-                                                'referer' => 'requisites',
-                                            ],
-                                            [
-                                                'name' => 'SendApplicantRequisiteDetails',
-                                                'type' => 'query',
-                                                'method' => 'sendApplicantRequisiteDetails',
-                                                'referer' => 'requisites',
-                                            ],
-                                            [
-                                                'name' => 'CreateNewPassword',
-                                                'type' => 'query',
-                                                'method' => 'setApplicantSettingsPassword',
-                                                'referer' => 'settings/login-details/create-new-password',
-                                            ],
-                                            [
-                                                'name' => 'GetNotifyDeviceStatus',
-                                                'type' => 'query',
-                                                'method' => 'applicantProfile',
-                                                'referer' => 'settings/login-details/my-devices',
-                                            ],
-                                            [
-                                                'name' => 'GetApplicantDevices',
-                                                'type' => 'query',
-                                                'method' => 'applicantDevices',
-                                                'referer' => 'settings/login-details/my-devices',
-                                            ],
-                                            [
-                                                'name' => 'Countries',
-                                                'type' => 'query',
-                                                'method' => 'countries',
-                                                'referer' => 'new-payment',
-                                            ],
-                                            [
-                                                'name' => 'AccountsList',
-                                                'referer' => 'new-payment',
-                                                'type' => 'query',
-                                                'method' => 'accountList',
-                                            ],
-                                            [
-                                                'name' => 'GetClientOrIdSelect',
-                                                'referer' => 'new-payment',
-                                                'type' => 'query',
-                                                'method' => 'clientList',
-                                            ],
-                                        ]
-                                    ],
-                                    'Dashboard:Welcome.Feedback' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:Welcome.Feedback',
-                                            'display_name' => 'Feedback',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Dashboard:Welcome.Invite Friends' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:Welcome.Invite Friends',
-                                            'display_name' => 'Invite Friends',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Dashboard:Welcome.Last Transfers' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:Welcome.Last Transfers',
-                                            'display_name' => 'Last Transfers',
-                                            'guard_name' => 'api',
-                                            'order' => 4,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Dashboard:My Net Worth' => [
-                                'data' => [
-                                    'name' => 'Dashboard:My Net Worth',
-                                    'type' => 'applicant',
-
-                                    'order' => 2,
-                                ],
-                                'list' => [
-                                    'Dashboard:My Net Worth.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:My Net Worth.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Dashboard:My Net Worth.Summary' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:My Net Worth.Summary',
-                                            'display_name' => 'Summary',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Dashboard:My Net Worth.Assets' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:My Net Worth.Assets',
-                                            'display_name' => 'Assets',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Dashboard:My Net Worth.Liabilities' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:My Net Worth.Liabilities',
-                                            'display_name' => 'Liabilities',
-                                            'guard_name' => 'api',
-                                            'order' => 4,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Account Details' => [
-                                'data' => [
-                                    'name' => 'Account Details',
-                                    'type' => 'applicant',
-
-                                    'order' => 3,
-                                ],
-                                'list' => [
-                                    'Account Details.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Account Details.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Account Details.Payments' => [
-                                        'data' => [
-                                            'name' => 'Account Details.Payments',
-                                            'display_name' => 'Payments',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Account Details.Statements' => [
-                                        'data' => [
-                                            'name' => 'Account Details.Statements',
-                                            'display_name' => 'Statements',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Statement' => [
-                                'data' => [
-                                    'name' => 'Statement',
-                                    'type' => 'applicant',
-
-                                    'order' => 4,
-                                ],
-                                'list' => [
-                                    'Statement.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Statement.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Statement.Export' => [
-                                        'data' => [
-                                            'name' => 'Statement.Export',
-                                            'display_name' => 'Export',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'export',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Requisites' => [
-                                'data' => [
-                                    'name' => 'Requisites',
-                                    'type' => 'applicant',
-
-                                    'order' => 5,
-                                ],
-                                'list' => [
-                                    'Requisites.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Requisites.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Requisites.Export' => [
-                                        'data' => [
-                                            'name' => 'Requisites.Export',
-                                            'display_name' => 'Export',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'export',
-                                        ],
-                                    ],
-                                    'Requisites.Sent Requisites' => [
-                                        'data' => [
-                                            'name' => 'Requisites.Sent Requisites',
-                                            'display_name' => 'Sent Requisites',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Tickets' => [
-                                'data' => [
-                                    'name' => 'Tickets',
-                                    'type' => 'applicant',
-
-                                    'order' => 6,
-                                ],
-                                'list' => [
-                                    'Tickets.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Tickets.Add New Ticket' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Add New Ticket',
-                                            'display_name' => 'Add New Ticket',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'add',
-                                        ],
-                                    ],
-                                    'Tickets.Close Ticket' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Close Ticket',
-                                            'display_name' => 'Close Ticket',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'important',
-                                        ],
-                                    ],
-                                    'Tickets.Status: Reply Required' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Status: Reply Required',
-                                            'display_name' => 'Status: Reply Required',
-                                            'guard_name' => 'api',
-                                            'order' => 4,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Tickets.Status: Opened' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Status: Opened',
-                                            'display_name' => 'Status: Opened',
-                                            'guard_name' => 'api',
-                                            'order' => 5,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Tickets.Status: Closed' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Status: Closed',
-                                            'display_name' => 'Status: Closed',
-                                            'guard_name' => 'api',
-                                            'order' => 6,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Tickets.Status: No Reply Required' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Status: No Reply Required',
-                                            'display_name' => 'Status: No Reply Required',
-                                            'guard_name' => 'api',
-                                            'order' => 7,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                        'corporate' => [
-                            'Dashboard:Welcome' => [
-                                'data' => [
-                                    'name' => 'Dashboard:Welcome',
-                                    'type' => 'corporate',
-
-                                    'order' => 1,
-                                ],
-                                'list' => [
-                                    'Dashboard:Welcome.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:Welcome.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Dashboard:Welcome.Feedback' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:Welcome.Feedback',
-                                            'display_name' => 'Feedback',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Dashboard:Welcome.Invite Friends' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:Welcome.Invite Friends',
-                                            'display_name' => 'Invite Friends',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Dashboard:Welcome.Last Transfers' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:Welcome.Last Transfers',
-                                            'display_name' => 'Last Transfers',
-                                            'guard_name' => 'api',
-                                            'order' => 4,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Dashboard:My Net Worth' => [
-                                'data' => [
-                                    'name' => 'Dashboard:My Net Worth',
-                                    'type' => 'corporate',
-
-                                    'order' => 2,
-                                ],
-                                'list' => [
-                                    'Dashboard:My Net Worth.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:My Net Worth.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Dashboard:My Net Worth.Summary' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:My Net Worth.Summary',
-                                            'display_name' => 'Summary',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Dashboard:My Net Worth.Assets' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:My Net Worth.Assets',
-                                            'display_name' => 'Assets',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Dashboard:My Net Worth.Liabilities' => [
-                                        'data' => [
-                                            'name' => 'Dashboard:My Net Worth.Liabilities',
-                                            'display_name' => 'Liabilities',
-                                            'guard_name' => 'api',
-                                            'order' => 4,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Account Details' => [
-                                'data' => [
-                                    'name' => 'Account Details',
-                                    'type' => 'corporate',
-
-                                    'order' => 3,
-                                ],
-                                'list' => [
-                                    'Account Details.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Account Details.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Account Details.Payments' => [
-                                        'data' => [
-                                            'name' => 'Account Details.Payments',
-                                            'display_name' => 'Payments',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Account Details.Statements' => [
-                                        'data' => [
-                                            'name' => 'Account Details.Statements',
-                                            'display_name' => 'Statements',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Statement' => [
-                                'data' => [
-                                    'name' => 'Statement',
-                                    'type' => 'corporate',
-
-                                    'order' => 4,
-                                ],
-                                'list' => [
-                                    'Statement.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Statement.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Statement.Export' => [
-                                        'data' => [
-                                            'name' => 'Statement.Export',
-                                            'display_name' => 'Export',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'export',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Requisites' => [
-                                'data' => [
-                                    'name' => 'Requisites',
-                                    'type' => 'corporate',
-
-                                    'order' => 5,
-                                ],
-                                'list' => [
-                                    'Requisites.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Requisites.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Requisites.Export' => [
-                                        'data' => [
-                                            'name' => 'Requisites.Export',
-                                            'display_name' => 'Export',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'export',
-                                        ],
-                                    ],
-                                    'Requisites.Sent Requisites' => [
-                                        'data' => [
-                                            'name' => 'Requisites.Sent Requisites',
-                                            'display_name' => 'Sent Requisites',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Tickets' => [
-                                'data' => [
-                                    'name' => 'Tickets',
-                                    'type' => 'corporate',
-
-                                    'order' => 6,
-                                ],
-                                'list' => [
-                                    'Tickets.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Tickets.Add New Ticket' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Add New Ticket',
-                                            'display_name' => 'Add New Ticket',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'add',
-                                        ],
-                                    ],
-                                    'Tickets.Close Ticket' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Close Ticket',
-                                            'display_name' => 'Close Ticket',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'important',
-                                        ],
-                                    ],
-                                    'Tickets.Status: Reply Required' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Status: Reply Required',
-                                            'display_name' => 'Status: Reply Required',
-                                            'guard_name' => 'api',
-                                            'order' => 4,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Tickets.Status: Opened' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Status: Opened',
-                                            'display_name' => 'Status: Opened',
-                                            'guard_name' => 'api',
-                                            'order' => 5,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Tickets.Status: Closed' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Status: Closed',
-                                            'display_name' => 'Status: Closed',
-                                            'guard_name' => 'api',
-                                            'order' => 6,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                    'Tickets.Status: No Reply Required' => [
-                                        'data' => [
-                                            'name' => 'Tickets.Status: No Reply Required',
-                                            'display_name' => 'Status: No Reply Required',
-                                            'guard_name' => 'api',
-                                            'order' => 7,
-                                            'type' => 'info',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ]
                     ],
                 ],
                 'Banking Module - Payments' => [
@@ -7390,214 +6425,6 @@ class PermissionsSeeder extends Seeder
                                 ],
                             ],
                         ],
-                        'applicant' => [
-                            'Payments List' => [
-                                'data' => [
-                                    'name' => 'Payments List',
-                                    'type' => 'applicant',
-
-                                    'order' => 1,
-                                ],
-                                'list' => [
-                                    'Payments List.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Payments List.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Payments List.Edit' => [
-                                        'data' => [
-                                            'name' => 'Payments List.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                    'Payments List.Cancel Payment' => [
-                                        'data' => [
-                                            'name' => 'Payments List.Cancel Payment',
-                                            'display_name' => 'Cancel Payment',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'important',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Payment Details' => [
-                                'data' => [
-                                    'name' => 'Payment Details',
-                                    'type' => 'applicant',
-
-                                    'order' => 2,
-                                ],
-                                'list' => [
-                                    'Payment Details.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Payment Details.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Payment Details.Export' => [
-                                        'data' => [
-                                            'name' => 'Payment Details.Export',
-                                            'display_name' => 'Export',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'export',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Make Payments' => [
-                                'data' => [
-                                    'name' => 'Make Payments',
-                                    'type' => 'applicant',
-
-                                    'order' => 3,
-                                ],
-                                'list' => [
-                                    'Make Payments.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Make Payments.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Make Payments.Create Payments' => [
-                                        'data' => [
-                                            'name' => 'Make Payments.Create Payments',
-                                            'display_name' => 'Create Payments',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Make Payments.Sign Payments' => [
-                                        'data' => [
-                                            'name' => 'Make Payments.Sign Payments',
-                                            'display_name' => 'Sign Payments',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                        'corporate' => [
-                            'Payments List' => [
-                                'data' => [
-                                    'name' => 'Payments List',
-                                    'type' => 'corporate',
-
-                                    'order' => 1,
-                                ],
-                                'list' => [
-                                    'Payments List.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Payments List.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Payments List.Edit' => [
-                                        'data' => [
-                                            'name' => 'Payments List.Edit',
-                                            'display_name' => 'Edit',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'edit',
-                                        ],
-                                    ],
-                                    'Payments List.Cancel Payment' => [
-                                        'data' => [
-                                            'name' => 'Payments List.Cancel Payment',
-                                            'display_name' => 'Cancel Payment',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'important',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Payment Details' => [
-                                'data' => [
-                                    'name' => 'Payment Details',
-                                    'type' => 'corporate',
-
-                                    'order' => 2,
-                                ],
-                                'list' => [
-                                    'Payment Details.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Payment Details.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Payment Details.Export' => [
-                                        'data' => [
-                                            'name' => 'Payment Details.Export',
-                                            'display_name' => 'Export',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'export',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                            'Make Payments' => [
-                                'data' => [
-                                    'name' => 'Make Payments',
-                                    'type' => 'corporate',
-
-                                    'order' => 3,
-                                ],
-                                'list' => [
-                                    'Make Payments.Enabled' => [
-                                        'data' => [
-                                            'name' => 'Make Payments.Enabled',
-                                            'display_name' => 'Enabled',
-                                            'guard_name' => 'api',
-                                            'order' => 1,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Make Payments.Create Payments' => [
-                                        'data' => [
-                                            'name' => 'Make Payments.Create Payments',
-                                            'display_name' => 'Create Payments',
-                                            'guard_name' => 'api',
-                                            'order' => 2,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                    'Make Payments.Sign Payments' => [
-                                        'data' => [
-                                            'name' => 'Make Payments.Sign Payments',
-                                            'display_name' => 'Sign Payments',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'read',
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ]
                     ],
                 ],
                 'Banking Module - Commissions' => [
@@ -8853,6 +7680,1150 @@ class PermissionsSeeder extends Seeder
                                             'guard_name' => 'api',
                                             'order' => 7,
                                             'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                'Banking Module' => [
+                    'data' => [
+                        'name' => 'Banking Module',
+                        'is_active' => true,
+                        'order' => 9,
+                    ],
+                    'list' => [
+                        'applicant' => [
+                            'Dashboard:Welcome' => [
+                                'data' => [
+                                    'name' => 'Dashboard:Welcome',
+                                    'type' => 'applicant',
+                                    'order' => 1,
+                                ],
+                                'list' => [
+                                    'Dashboard:Welcome.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:Welcome.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetApplicantAccountsFilter',
+                                                'type' => 'query',
+                                                'method' => 'applicantAccounts',
+                                                'referer' => 'requisites',
+                                            ],
+                                            [
+                                                'name' => 'GetApplicantDetailsRequisite',
+                                                'type' => 'query',
+                                                'method' => 'applicantRequisite',
+                                                'referer' => 'requisites',
+                                            ],
+                                            [
+                                                'name' => 'DownloadApplicantRequisiteDetails',
+                                                'type' => 'query',
+                                                'method' => 'downloadApplicantRequisiteDetails',
+                                                'referer' => 'requisites',
+                                            ],
+                                            [
+                                                'name' => 'SendApplicantRequisiteDetails',
+                                                'type' => 'query',
+                                                'method' => 'sendApplicantRequisiteDetails',
+                                                'referer' => 'requisites',
+                                            ],
+                                            [
+                                                'name' => 'CreateNewPassword',
+                                                'type' => 'query',
+                                                'method' => 'setApplicantSettingsPassword',
+                                                'referer' => 'settings/login-details/create-new-password',
+                                            ],
+                                            [
+                                                'name' => 'GetNotifyDeviceStatus',
+                                                'type' => 'query',
+                                                'method' => 'applicantProfile',
+                                                'referer' => 'settings/login-details/my-devices',
+                                            ],
+                                            [
+                                                'name' => 'GetApplicantDevices',
+                                                'type' => 'query',
+                                                'method' => 'applicantDevices',
+                                                'referer' => 'settings/login-details/my-devices',
+                                            ],
+                                            [
+                                                'name' => 'Countries',
+                                                'type' => 'query',
+                                                'method' => 'countries',
+                                                'referer' => 'new-payment',
+                                            ],
+                                            [
+                                                'name' => 'AccountsList',
+                                                'referer' => 'new-payment',
+                                                'type' => 'query',
+                                                'method' => 'accountList',
+                                            ],
+                                            [
+                                                'name' => 'GetClientOrIdSelect',
+                                                'referer' => 'new-payment',
+                                                'type' => 'query',
+                                                'method' => 'clientList',
+                                            ],
+                                        ]
+                                    ],
+                                    'Dashboard:Welcome.Feedback' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:Welcome.Feedback',
+                                            'display_name' => 'Feedback',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Dashboard:Welcome.Invite Friends' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:Welcome.Invite Friends',
+                                            'display_name' => 'Invite Friends',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Dashboard:Welcome.Last Transfers' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:Welcome.Last Transfers',
+                                            'display_name' => 'Last Transfers',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Dashboard:My Net Worth' => [
+                                'data' => [
+                                    'name' => 'Dashboard:My Net Worth',
+                                    'type' => 'applicant',
+                                    'order' => 2,
+                                ],
+                                'list' => [
+                                    'Dashboard:My Net Worth.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:My Net Worth.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Dashboard:My Net Worth.Summary' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:My Net Worth.Summary',
+                                            'display_name' => 'Summary',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Dashboard:My Net Worth.Assets' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:My Net Worth.Assets',
+                                            'display_name' => 'Assets',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Dashboard:My Net Worth.Liabilities' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:My Net Worth.Liabilities',
+                                            'display_name' => 'Liabilities',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Account Details' => [
+                                'data' => [
+                                    'name' => 'Account Details',
+                                    'type' => 'applicant',
+                                    'order' => 3,
+                                ],
+                                'list' => [
+                                    'Account Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Account Details.Payments' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Payments',
+                                            'display_name' => 'Payments',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Statements' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Statements',
+                                            'display_name' => 'Statements',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payments List' => [
+                                'data' => [
+                                    'name' => 'Payments List',
+                                    'type' => 'applicant',
+                                    'order' => 4,
+                                ],
+                                'list' => [
+                                    'Payments List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payments List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payments List.Edit' => [
+                                        'data' => [
+                                            'name' => 'Payments List.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Payments List.Cancel Payment' => [
+                                        'data' => [
+                                            'name' => 'Payments List.Cancel Payment',
+                                            'display_name' => 'Cancel Payment',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'important',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payment Details' => [
+                                'data' => [
+                                    'name' => 'Payment Details',
+                                    'type' => 'applicant',
+                                    'order' => 5,
+                                ],
+                                'list' => [
+                                    'Payment Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payment Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payment Details.Export' => [
+                                        'data' => [
+                                            'name' => 'Payment Details.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Make Payments' => [
+                                'data' => [
+                                    'name' => 'Make Payments',
+                                    'type' => 'applicant',
+                                    'order' => 6,
+                                ],
+                                'list' => [
+                                    'Make Payments.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Make Payments.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Make Payments.Create Payments' => [
+                                        'data' => [
+                                            'name' => 'Make Payments.Create Payments',
+                                            'display_name' => 'Create Payments',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Make Payments.Sign Payments' => [
+                                        'data' => [
+                                            'name' => 'Make Payments.Sign Payments',
+                                            'display_name' => 'Sign Payments',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Statement' => [
+                                'data' => [
+                                    'name' => 'Statement',
+                                    'type' => 'applicant',
+                                    'order' => 7,
+                                ],
+                                'list' => [
+                                    'Statement.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Statement.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Statement.Export' => [
+                                        'data' => [
+                                            'name' => 'Statement.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Requisites' => [
+                                'data' => [
+                                    'name' => 'Requisites',
+                                    'type' => 'applicant',
+                                    'order' => 8,
+                                ],
+                                'list' => [
+                                    'Requisites.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Requisites.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Requisites.Export' => [
+                                        'data' => [
+                                            'name' => 'Requisites.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                    'Requisites.Sent Requisites' => [
+                                        'data' => [
+                                            'name' => 'Requisites.Sent Requisites',
+                                            'display_name' => 'Sent Requisites',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'My Templates' => [
+                                'data' => [
+                                    'name' => 'My Templates',
+                                    'type' => 'applicant',
+                                    'order' => 9,
+                                ],
+                                'list' => [
+                                    'My Templates.Enabled' => [
+                                        'data' => [
+                                            'name' => 'My Templates.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'My Templates.Edit' => [
+                                        'data' => [
+                                            'name' => 'My Templates.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'My Templates.Delete' => [
+                                        'data' => [
+                                            'name' => 'My Templates.Delete',
+                                            'display_name' => 'Delete',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'important',
+                                        ],
+                                    ],
+                                    'My Templates.Add New' => [
+                                        'data' => [
+                                            'name' => 'My Templates.Add New',
+                                            'display_name' => 'Add New',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'important',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Tickets' => [
+                                'data' => [
+                                    'name' => 'Tickets',
+                                    'type' => 'applicant',
+                                    'order' => 10,
+                                ],
+                                'list' => [
+                                    'Tickets.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Tickets.Add New Ticket' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Add New Ticket',
+                                            'display_name' => 'Add New Ticket',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'add',
+                                        ],
+                                    ],
+                                    'Tickets.Close Ticket' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Close Ticket',
+                                            'display_name' => 'Close Ticket',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'important',
+                                        ],
+                                    ],
+                                    'Tickets.Status: Reply Required' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Status: Reply Required',
+                                            'display_name' => 'Status: Reply Required',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Tickets.Status: Opened' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Status: Opened',
+                                            'display_name' => 'Status: Opened',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Tickets.Status: Closed' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Status: Closed',
+                                            'display_name' => 'Status: Closed',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Tickets.Status: No Reply Required' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Status: No Reply Required',
+                                            'display_name' => 'Status: No Reply Required',
+                                            'guard_name' => 'api',
+                                            'order' => 7,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Settings:Contact Details' => [
+                                'data' => [
+                                    'name' => 'Settings:Contact Details',
+                                    'type' => 'applicant',
+                                    'order' => 11,
+                                ],
+                                'list' => [
+                                    'Settings:Contact Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Settings:Contact Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Settings:Contact Details.Edit' => [
+                                        'data' => [
+                                            'name' => 'Settings:Contact Details.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Settings:Log in Details' => [
+                                'data' => [
+                                    'name' => 'Settings:Log in Details',
+                                    'type' => 'applicant',
+                                    'order' => 12,
+                                ],
+                                'list' => [
+                                    'Settings:Log in Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Settings:Log in Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Settings:Log in Details.Edit' => [
+                                        'data' => [
+                                            'name' => 'Settings:Log in Details.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Settings:Log in Details.My Device' => [
+                                        'data' => [
+                                            'name' => 'Settings:Log in Details.My Device',
+                                            'display_name' => 'My Device',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Settings:Log in Details.Two Factor Authentication' => [
+                                        'data' => [
+                                            'name' => 'Settings:Log in Details.Two Factor Authentication',
+                                            'display_name' => 'Two Factor Authentication',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Settings:Log in Details.Secure PIN' => [
+                                        'data' => [
+                                            'name' => 'Settings:Log in Details.Secure PIN',
+                                            'display_name' => 'Secure PIN',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Settings:Accounts' => [
+                                'data' => [
+                                    'name' => 'Settings:Accounts',
+                                    'type' => 'applicant',
+                                    'order' => 13,
+                                ],
+                                'list' => [
+                                    'Settings:Accounts.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Settings:Accounts.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetApplicantAccountsFilter',
+                                                'referer' => 'new-payment',
+                                                'type' => 'query',
+                                                'method' => 'applicantAccounts',
+                                            ],
+                                        ]
+                                    ],
+                                    'Settings:Accounts.Edit' => [
+                                        'data' => [
+                                            'name' => 'Settings:Accounts.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'corporate' => [
+                            'Dashboard:Welcome' => [
+                                'data' => [
+                                    'name' => 'Dashboard:Welcome',
+                                    'type' => 'corporate',
+                                    'order' => 1,
+                                ],
+                                'list' => [
+                                    'Dashboard:Welcome.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:Welcome.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Dashboard:Welcome.Feedback' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:Welcome.Feedback',
+                                            'display_name' => 'Feedback',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Dashboard:Welcome.Invite Friends' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:Welcome.Invite Friends',
+                                            'display_name' => 'Invite Friends',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Dashboard:Welcome.Last Transfers' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:Welcome.Last Transfers',
+                                            'display_name' => 'Last Transfers',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Dashboard:My Net Worth' => [
+                                'data' => [
+                                    'name' => 'Dashboard:My Net Worth',
+                                    'type' => 'corporate',
+                                    'order' => 2,
+                                ],
+                                'list' => [
+                                    'Dashboard:My Net Worth.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:My Net Worth.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Dashboard:My Net Worth.Summary' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:My Net Worth.Summary',
+                                            'display_name' => 'Summary',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Dashboard:My Net Worth.Assets' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:My Net Worth.Assets',
+                                            'display_name' => 'Assets',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Dashboard:My Net Worth.Liabilities' => [
+                                        'data' => [
+                                            'name' => 'Dashboard:My Net Worth.Liabilities',
+                                            'display_name' => 'Liabilities',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Account Details' => [
+                                'data' => [
+                                    'name' => 'Account Details',
+                                    'type' => 'corporate',
+                                    'order' => 3,
+                                ],
+                                'list' => [
+                                    'Account Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Account Details.Payments' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Payments',
+                                            'display_name' => 'Payments',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Account Details.Statements' => [
+                                        'data' => [
+                                            'name' => 'Account Details.Statements',
+                                            'display_name' => 'Statements',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payments List' => [
+                                'data' => [
+                                    'name' => 'Payments List',
+                                    'type' => 'corporate',
+                                    'order' => 4,
+                                ],
+                                'list' => [
+                                    'Payments List.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payments List.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payments List.Edit' => [
+                                        'data' => [
+                                            'name' => 'Payments List.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Payments List.Cancel Payment' => [
+                                        'data' => [
+                                            'name' => 'Payments List.Cancel Payment',
+                                            'display_name' => 'Cancel Payment',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'important',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Payment Details' => [
+                                'data' => [
+                                    'name' => 'Payment Details',
+                                    'type' => 'corporate',
+                                    'order' => 5,
+                                ],
+                                'list' => [
+                                    'Payment Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Payment Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Payment Details.Export' => [
+                                        'data' => [
+                                            'name' => 'Payment Details.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Make Payments' => [
+                                'data' => [
+                                    'name' => 'Make Payments',
+                                    'type' => 'corporate',
+                                    'order' => 6,
+                                ],
+                                'list' => [
+                                    'Make Payments.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Make Payments.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Make Payments.Create Payments' => [
+                                        'data' => [
+                                            'name' => 'Make Payments.Create Payments',
+                                            'display_name' => 'Create Payments',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Make Payments.Sign Payments' => [
+                                        'data' => [
+                                            'name' => 'Make Payments.Sign Payments',
+                                            'display_name' => 'Sign Payments',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Statement' => [
+                                'data' => [
+                                    'name' => 'Statement',
+                                    'type' => 'corporate',
+                                    'order' => 7,
+                                ],
+                                'list' => [
+                                    'Statement.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Statement.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Statement.Export' => [
+                                        'data' => [
+                                            'name' => 'Statement.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Requisites' => [
+                                'data' => [
+                                    'name' => 'Requisites',
+                                    'type' => 'corporate',
+                                    'order' => 8,
+                                ],
+                                'list' => [
+                                    'Requisites.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Requisites.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Requisites.Export' => [
+                                        'data' => [
+                                            'name' => 'Requisites.Export',
+                                            'display_name' => 'Export',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'export',
+                                        ],
+                                    ],
+                                    'Requisites.Sent Requisites' => [
+                                        'data' => [
+                                            'name' => 'Requisites.Sent Requisites',
+                                            'display_name' => 'Sent Requisites',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'My Templates' => [
+                                'data' => [
+                                    'name' => 'My Templates',
+                                    'type' => 'corporate',
+                                    'order' => 9,
+                                ],
+                                'list' => [
+                                    'My Templates.Enabled' => [
+                                        'data' => [
+                                            'name' => 'My Templates.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'My Templates.Edit' => [
+                                        'data' => [
+                                            'name' => 'My Templates.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'My Templates.Delete' => [
+                                        'data' => [
+                                            'name' => 'My Templates.Delete',
+                                            'display_name' => 'Delete',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'important',
+                                        ],
+                                    ],
+                                    'My Templates.Add New' => [
+                                        'data' => [
+                                            'name' => 'My Templates.Add New',
+                                            'display_name' => 'Add New',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'important',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Tickets' => [
+                                'data' => [
+                                    'name' => 'Tickets',
+                                    'type' => 'corporate',
+                                    'order' => 10,
+                                ],
+                                'list' => [
+                                    'Tickets.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Tickets.Add New Ticket' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Add New Ticket',
+                                            'display_name' => 'Add New Ticket',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'add',
+                                        ],
+                                    ],
+                                    'Tickets.Close Ticket' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Close Ticket',
+                                            'display_name' => 'Close Ticket',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'important',
+                                        ],
+                                    ],
+                                    'Tickets.Status: Reply Required' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Status: Reply Required',
+                                            'display_name' => 'Status: Reply Required',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Tickets.Status: Opened' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Status: Opened',
+                                            'display_name' => 'Status: Opened',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Tickets.Status: Closed' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Status: Closed',
+                                            'display_name' => 'Status: Closed',
+                                            'guard_name' => 'api',
+                                            'order' => 6,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Tickets.Status: No Reply Required' => [
+                                        'data' => [
+                                            'name' => 'Tickets.Status: No Reply Required',
+                                            'display_name' => 'Status: No Reply Required',
+                                            'guard_name' => 'api',
+                                            'order' => 7,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Settings:Contact Details' => [
+                                'data' => [
+                                    'name' => 'Settings:Contact Details',
+                                    'type' => 'corporate',
+                                    'order' => 11,
+                                ],
+                                'list' => [
+                                    'Settings:Contact Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Settings:Contact Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Settings:Contact Details.Edit' => [
+                                        'data' => [
+                                            'name' => 'Settings:Contact Details.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Settings:Log in Details' => [
+                                'data' => [
+                                    'name' => 'Settings:Log in Details',
+                                    'type' => 'corporate',
+                                    'order' => 12,
+                                ],
+                                'list' => [
+                                    'Settings:Log in Details.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Settings:Log in Details.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Settings:Log in Details.Edit' => [
+                                        'data' => [
+                                            'name' => 'Settings:Log in Details.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                    'Settings:Log in Details.My Device' => [
+                                        'data' => [
+                                            'name' => 'Settings:Log in Details.My Device',
+                                            'display_name' => 'My Device',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Settings:Log in Details.Two Factor Authentication' => [
+                                        'data' => [
+                                            'name' => 'Settings:Log in Details.Two Factor Authentication',
+                                            'display_name' => 'Two Factor Authentication',
+                                            'guard_name' => 'api',
+                                            'order' => 4,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                    'Settings:Log in Details.Secure PIN' => [
+                                        'data' => [
+                                            'name' => 'Settings:Log in Details.Secure PIN',
+                                            'display_name' => 'Secure PIN',
+                                            'guard_name' => 'api',
+                                            'order' => 5,
+                                            'type' => 'info',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Settings:Security Level' => [
+                                'data' => [
+                                    'name' => 'Settings:Security Level',
+                                    'type' => 'corporate',
+                                    'order' => 13,
+                                ],
+                                'list' => [
+                                    'Settings:Security Level.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Settings:Security Level.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                    ],
+                                    'Settings:Security Level.Edit' => [
+                                        'data' => [
+                                            'name' => 'Settings:Security Level.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
+                                        ],
+                                    ],
+                                ],
+                            ],
+                            'Settings:Accounts' => [
+                                'data' => [
+                                    'name' => 'Settings:Accounts',
+                                    'type' => 'corporate',
+                                    'order' => 14,
+                                ],
+                                'list' => [
+                                    'Settings:Accounts.Enabled' => [
+                                        'data' => [
+                                            'name' => 'Settings:Accounts.Enabled',
+                                            'display_name' => 'Enabled',
+                                            'guard_name' => 'api',
+                                            'order' => 1,
+                                            'type' => 'read',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'GetApplicantAccountsFilter',
+                                                'referer' => 'new-payment',
+                                                'type' => 'query',
+                                                'method' => 'applicantAccounts',
+                                            ],
+                                        ]
+                                    ],
+                                    'Settings:Accounts.Edit' => [
+                                        'data' => [
+                                            'name' => 'Settings:Accounts.Edit',
+                                            'display_name' => 'Edit',
+                                            'guard_name' => 'api',
+                                            'order' => 2,
+                                            'type' => 'edit',
                                         ],
                                     ],
                                 ],
