@@ -234,6 +234,8 @@ class TransferExchangeService extends AbstractService
     public function refreshTransfer(TransferExchange $transfer, array $args): Builder|Model
     {
         $args['amount'] = $transfer->transferOutgoing->amount;
+        $args['price_list_fee_id'] = $transfer->transferOutgoing->price_list_fee_id;
+        $args['price_list_id'] = $transfer->transferOutgoing->price_list_id;
 
         return $this->updateTransfer($transfer, $args);
     }
