@@ -18,11 +18,11 @@ func GetAuthUserFromRequest(c *gin.Context) postgres.User {
 	var e error
 
 	if err := c.BindHeader(&bearerJWT); err == nil {
-		claims, e = services.GetClaims(bearerJWT.Bearer, constants.Personal, true, c.Request.Host)
+		claims, e = services.GetClaims(bearerJWT.Bearer, constants.Personal, true, c.Request.Host, c.GetHeader("test-mode"))
 	} else if err := c.BindJSON(&inputJWT); err == nil {
-		claims, e = services.GetClaims(inputJWT.Token, constants.Personal, false, c.Request.Host)
+		claims, e = services.GetClaims(inputJWT.Token, constants.Personal, false, c.Request.Host, c.GetHeader("test-mode"))
 	} else if err := c.BindUri(&routeJWT); err == nil {
-		claims, e = services.GetClaims(routeJWT.Token, constants.Personal, false, c.Request.Host)
+		claims, e = services.GetClaims(routeJWT.Token, constants.Personal, false, c.Request.Host, c.GetHeader("test-mode"))
 	} else {
 		return nil
 	}
@@ -33,27 +33,27 @@ func GetAuthUserFromRequest(c *gin.Context) postgres.User {
 	return userRepository.GetUserById(claims.GetId(), claims.Prv)
 }
 
-func GetAuthUserByToken(jwtType string, jwtAccessType string, token string, host string) postgres.User {
+func GetAuthUserByToken(jwtType string, jwtAccessType string, token string, host string, testMode string) postgres.User {
 	var err error
 	if jwtAccessType == constants.AccessToken {
-		err = services.ValidateAccessToken(token, jwtType, host)
+		err = services.ValidateAccessToken(token, jwtType, host, testMode)
 	} else if jwtAccessType == constants.ForTwoFactor {
-		err = services.ValidateForTwoFactorToken(token, jwtType, host)
+		err = services.ValidateForTwoFactorToken(token, jwtType, host, testMode)
 	}
 	if err != nil {
 		return nil
 	}
-	claims, err := services.GetClaims(token, jwtType, false, host)
+	claims, err := services.GetClaims(token, jwtType, false, host, testMode)
 
 	return userRepository.GetUserById(claims.GetId(), claims.Prv)
 }
 
-func CheckUserByToken(twaToken string, accessToken string, memberId uint64, clientType string, host string) (user postgres.User, errorMessage string) {
+func CheckUserByToken(twaToken string, accessToken string, memberId uint64, clientType string, host string, testMode string) (user postgres.User, errorMessage string) {
 	if twaToken != "" {
-		user = GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, twaToken, host)
+		user = GetAuthUserByToken(constants.Personal, constants.ForTwoFactor, twaToken, host, testMode)
 		errorMessage = "TwoFaToken not working"
 	} else if accessToken != "" {
-		user = GetAuthUserByToken(constants.Personal, constants.AccessToken, accessToken, host)
+		user = GetAuthUserByToken(constants.Personal, constants.AccessToken, accessToken, host, testMode)
 		errorMessage = "Auth token not working"
 	} else {
 		errorMessage = "two factor token or Access token required"

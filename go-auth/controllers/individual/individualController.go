@@ -151,14 +151,14 @@ func Authorize(context *gin.Context) {
 	}
 
 	if user.GetTwoFactorAuthSettingId() == 2 {
-		status, response := auth.GetLoginResponse(user, constants.Personal, constants.ForTwoFactor, deviceInfo)
+		status, response := auth.GetLoginResponse(user, constants.Personal, constants.ForTwoFactor, deviceInfo, context.GetHeader("test-mode"))
 		context.JSON(status, response)
 		return
 	} else {
 		cache.Caching.LoginAttempt.Del(key)
 	}
 
-	status, response := auth.GetLoginResponse(user, constants.Personal, constants.AccessToken, deviceInfo)
+	status, response := auth.GetLoginResponse(user, constants.Personal, constants.AccessToken, deviceInfo, context.GetHeader("test-mode"))
 	context.JSON(status, response)
 	return
 }

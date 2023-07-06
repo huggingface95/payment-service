@@ -35,7 +35,7 @@ func GenerateTwoFactorQr(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user, message := auth.CheckUserByToken(request.TwoFaToken, request.AccessToken, request.MemberId, clientType, context.Request.Host)
+	user, message := auth.CheckUserByToken(request.TwoFaToken, request.AccessToken, request.MemberId, clientType, context.Request.Host, context.GetHeader("test-mode"))
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
@@ -64,7 +64,7 @@ func ActivateTwoFactorQr(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user, message := auth.CheckUserByToken(request.TwoFaToken, request.AccessToken, request.MemberId, clientType, context.Request.Host)
+	user, message := auth.CheckUserByToken(request.TwoFaToken, request.AccessToken, request.MemberId, clientType, context.Request.Host, context.GetHeader("test-mode"))
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
@@ -109,7 +109,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 		clientType = request.Type
 	}
 
-	user, message := auth.CheckUserByToken(request.TwoFaToken, request.AccessToken, request.MemberId, clientType, context.Request.Host)
+	user, message := auth.CheckUserByToken(request.TwoFaToken, request.AccessToken, request.MemberId, clientType, context.Request.Host, context.GetHeader("test-mode"))
 	if user == nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
@@ -163,7 +163,7 @@ func VerifyTwoFactorQr(context *gin.Context) {
 
 	cache.Caching.TwoFactorAttempt.Del(key)
 
-	token, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken, context.Request.Host)
+	token, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken, context.Request.Host, context.GetHeader("test-mode"))
 
 	if err != nil {
 		context.JSON(http.StatusForbidden, gin.H{"error": "Generate Error"})
@@ -194,7 +194,7 @@ func DisableTwoFactorQr(context *gin.Context) {
 		return
 	}
 
-	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetString("bearer"), context.Request.Host)
+	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, context.GetString("bearer"), context.Request.Host, context.GetHeader("test-mode"))
 	if user == nil {
 		context.JSON(http.StatusOK, gin.H{"error": "User not found"})
 		context.Abort()

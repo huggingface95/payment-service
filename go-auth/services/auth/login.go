@@ -29,7 +29,7 @@ type LoginResponseDto struct {
 	TwoFactor           bool   `json:"two_factor,omitempty"`
 }
 
-func GetLoginResponse(user postgres.User, jwtType string, accessType string, deviceInfo *dto.DeviceDetectorInfo) (int, gin.H) {
+func GetLoginResponse(user postgres.User, jwtType string, accessType string, deviceInfo *dto.DeviceDetectorInfo, testMode string) (int, gin.H) {
 	if user.ClientType() == constants.Individual {
 		individual := user.(*postgres.Individual)
 		if individual.IsCorporate() {
@@ -38,7 +38,7 @@ func GetLoginResponse(user postgres.User, jwtType string, accessType string, dev
 		}
 	}
 
-	tokenJWT, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), user.ClientType(), jwtType, accessType, deviceInfo.Host)
+	tokenJWT, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), user.ClientType(), jwtType, accessType, deviceInfo.Host, testMode)
 	if err != nil {
 		oauthRepository.InsertAuthLog(user.ClientType(), user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, nil, deviceInfo)
 		return http.StatusInternalServerError, gin.H{"error": err.Error()}
