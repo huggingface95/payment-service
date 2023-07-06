@@ -62,6 +62,8 @@ class TransferOutgoing extends BaseModel implements CustomObServerInterface
         'reason',
         'channel',
         'bank_message',
+        'beneficiary_type_id',
+        'beneficiary_register_number',
         'recipient_account',
         'recipient_bank_name',
         'recipient_bank_address',

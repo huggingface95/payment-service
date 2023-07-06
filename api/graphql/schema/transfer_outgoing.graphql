@@ -50,6 +50,8 @@ type TransferOutgoing {
     reason: String
     channel: String
     bank_message: String
+    "Номер регистрации бенефициара"
+    beneficiary_register_number: String
     "Номер счета или IBAN получателя"
     recipient_account: String
     "Название банка получателя"
@@ -223,6 +225,8 @@ extend type Mutation @guard {
         execution_at: DateTimeUtc
         "Тип бенефициара"
         beneficiary_type_id: BeneficiaryTypeEnum
+        "Номер регистрации бенефициара"
+        beneficiary_register_number: String
         "Номер счета или IBAN получателя"
         recipient_account: String
         "Имя получателя"
@@ -288,6 +292,8 @@ extend type Mutation @guard {
         urgency_id: ID
         "Исполнить в"
         execution_at: DateTimeUtc
+        "Номер регистрации бенефициара"
+        beneficiary_register_number: String
         "Номер счета или IBAN получателя"
         recipient_account: String
         "Имя банка получателя"
