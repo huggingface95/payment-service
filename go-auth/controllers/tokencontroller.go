@@ -33,7 +33,7 @@ func Refresh(context *gin.Context) {
 
 	token := context.GetHeader("Authorization")
 
-	newToken, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), user.GetModelType(), constants.Personal, constants.AccessToken, context.Request.Host)
+	newToken, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), user.GetModelType(), constants.Personal, constants.AccessToken, context.Request.Host, context.GetHeader("test-mode"))
 
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err})
@@ -57,7 +57,7 @@ func Generate2faToken(context *gin.Context) {
 		return
 	}
 
-	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, bearerJWT.Bearer, context.Request.Host)
+	user = auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, bearerJWT.Bearer, context.Request.Host, context.GetHeader("test-mode"))
 
 	if user == nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": "User not found"})
@@ -66,7 +66,7 @@ func Generate2faToken(context *gin.Context) {
 
 	if user.GetTwoFactorAuthSettingId() == 2 {
 		if user.IsGoogle2FaSecret() == false {
-			tokenJWT, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), user.ClientType(), constants.Personal, constants.ForTwoFactor, deviceInfo.Host)
+			tokenJWT, _, err := services.GenerateJWT(user.GetId(), user.GetFullName(), user.ClientType(), constants.Personal, constants.ForTwoFactor, deviceInfo.Host, context.GetHeader("test-mode"))
 			if err != nil {
 				oauthRepository.InsertAuthLog(user.ClientType(), user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, nil, deviceInfo)
 				context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

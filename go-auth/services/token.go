@@ -46,10 +46,10 @@ func getJWTClaims(id uint64, name string, provider string, accessType string, ho
 	}
 }
 
-func GenerateJWT(id uint64, name string, provider string, jwtType string, accessType string, host string) (token string, expirationTime time.Time, err error) {
+func GenerateJWT(id uint64, name string, provider string, jwtType string, accessType string, host string, testMode string) (token string, expirationTime time.Time, err error) {
 	jwtObject := cache.Caching.Jwt.Get(fmt.Sprintf(constants.CacheJwt, host, accessType, provider, id))
 	if jwtObject != nil {
-		_, err = parseJWT(jwtObject.Token, jwtType, host)
+		_, err = parseJWT(jwtObject.Token, jwtType, host, testMode)
 		if err == nil {
 			expirationTime = jwtObject.ExpiredAt
 			token = jwtObject.Token
@@ -85,7 +85,7 @@ func GetToken(claims jwt.Claims, secret string) (tokenString string, err error) 
 	return
 }
 
-func parseJWT(signedToken string, jwtType string, host string) (claims *JWTClaim, err error) {
+func parseJWT(signedToken string, jwtType string, host string, testMode string) (claims *JWTClaim, err error) {
 	signedToken = strings.Replace(signedToken, "Bearer ", "", -1)
 
 	oauthClients := oauthRepository.GetOauthClients(jwtType)
@@ -94,6 +94,14 @@ func parseJWT(signedToken string, jwtType string, host string) (claims *JWTClaim
 		token, err := new(jwt.Parser).ParseWithClaims(signedToken, &JWTClaim{}, func(token *jwt.Token) (interface{}, error) {
 			return []byte(oauthClients[provider].Secret), nil
 		})
+		tMode, _ := strconv.ParseBool(testMode)
+		if tMode {
+			claims, ok := token.Claims.(*JWTClaim)
+			if ok {
+				return claims, nil
+			}
+		}
+
 		if err == nil && token.Valid {
 			claims, ok := token.Claims.(*JWTClaim)
 			if ok {
@@ -110,8 +118,8 @@ func parseJWT(signedToken string, jwtType string, host string) (claims *JWTClaim
 	return claims, err
 }
 
-func ValidateAccessToken(token string, jwtType string, host string) (err error) {
-	claims, err := parseJWT(token, jwtType, host)
+func ValidateAccessToken(token string, jwtType string, host string, testMode string) (err error) {
+	claims, err := parseJWT(token, jwtType, host, testMode)
 	if err == nil {
 		if claims.Type != constants.AccessToken {
 			err = errors.New("bad access token")
@@ -121,8 +129,8 @@ func ValidateAccessToken(token string, jwtType string, host string) (err error) 
 	return
 }
 
-func ValidateForTwoFactorToken(token string, jwtType string, host string) (err error) {
-	claims, err := parseJWT(token, jwtType, host)
+func ValidateForTwoFactorToken(token string, jwtType string, host string, testMode string) (err error) {
+	claims, err := parseJWT(token, jwtType, host, testMode)
 	if err == nil {
 		if claims.Type != constants.ForTwoFactor {
 			err = errors.New("bad two factor token")
@@ -132,6 +140,6 @@ func ValidateForTwoFactorToken(token string, jwtType string, host string) (err e
 	return
 }
 
-func GetClaims(token string, jwtType string, replaceBearer bool, host string) (claims *JWTClaim, err error) {
-	return parseJWT(token, jwtType, host)
+func GetClaims(token string, jwtType string, replaceBearer bool, host string, testMode string) (claims *JWTClaim, err error) {
+	return parseJWT(token, jwtType, host, testMode)
 }
