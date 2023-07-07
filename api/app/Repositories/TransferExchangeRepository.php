@@ -2,10 +2,13 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\GraphqlException;
+use App\Models\PriceListFee;
 use App\Models\TransferExchange;
 use App\Repositories\Interfaces\TransferExchangeRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Response;
 
 class TransferExchangeRepository extends Repository implements TransferExchangeRepositoryInterface
 {
@@ -30,4 +33,33 @@ class TransferExchangeRepository extends Repository implements TransferExchangeR
 
         return $model;
     }
+
+    /**
+     * @throws GraphqlException
+     */
+    public function getExchangeRate(int $priceListId, int $currencySrcId, string $currencyDstId): array
+    {
+        $quoteProvider = PriceListFee::find($priceListId)?->quoteProvider ??
+            throw new GraphqlException('Quote provider not found. Please setup quote provider');
+
+        $exchangeRate = $quoteProvider->currencyExchangeRates
+            ->where('currency_src_id', $currencySrcId)
+            ->where('currency_dst_id', $currencyDstId)
+            ->first()?->rate;
+
+        if ($exchangeRate === null) {
+            throw new GraphqlException('Exchange rate not found', Response::HTTP_BAD_REQUEST);
+        }
+
+        $finalExchangeRate = $exchangeRate;
+        if ($quoteProvider->margin_commission !== null) {
+            $finalExchangeRate = $exchangeRate * (1 - $quoteProvider->margin_commission / 100);
+        }
+
+        return [
+            'rate' => $exchangeRate,
+            'final_rate' => $finalExchangeRate,
+        ];
+    }
+
 }

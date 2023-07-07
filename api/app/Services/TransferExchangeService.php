@@ -135,23 +135,13 @@ class TransferExchangeService extends AbstractService
      */
     private function getExchangeRate(array $args, Account $fromAccount, Account $toAccount): float
     {
-        $quoteProvider = PriceListFee::find($args['price_list_fee_id'])?->quoteProvider ??
-            throw new GraphqlException('Quote provider not found. Please setup quote provider');
+        $rates = $this->transferExchangeRepository->getExchangeRate(
+            $args['price_list_fee_id'],
+            $fromAccount->currencies->id,
+            $toAccount->currencies->id
+        );
 
-        $exchageRate = $quoteProvider->currencyExchangeRates
-            ->where('currency_src_id', $fromAccount->currencies->id)
-            ->where('currency_dst_id', $toAccount->currencies->id)
-            ->first()?->rate;
-
-        if ($exchageRate === null) {
-            throw new GraphqlException('Exchange rate not found', Response::HTTP_BAD_REQUEST);
-        }
-
-        if (! empty($quoteProvider->margin_commission)) {
-            $exchageRate += $exchageRate * ($quoteProvider->margin_commission / 100);
-        }
-
-        return $exchageRate;
+        return $rates['final_rate'];
     }
 
     /**
