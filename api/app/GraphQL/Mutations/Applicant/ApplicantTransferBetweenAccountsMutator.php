@@ -7,16 +7,12 @@ use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\BaseMutator;
 use App\Models\TransferBetween;
-use App\Models\TransferIncoming;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Repositories\TransferBetweenRepository;
 use App\Services\CommissionService;
 use App\Services\TransferBetweenUsersService;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ApplicantTransferBetweenAccountsMutator extends BaseMutator
@@ -71,7 +67,7 @@ class ApplicantTransferBetweenAccountsMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
-    public function update($_, array $args): TransferBetween|Model|Builder|null
+    public function update($_, array $args): array
     {
         /** @var TransferBetween $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
@@ -80,8 +76,15 @@ class ApplicantTransferBetweenAccountsMutator extends BaseMutator
         }
 
         $this->transferService->updateTransfer($transfer, $args, OperationTypeEnum::BETWEEN_ACCOUNT->value);
+        $fees = $this->commissionService->getAllCommissions($transfer->transferOutgoing);
 
-        return $transfer;
+        return [
+            'id'                => $transfer->id,
+            'transfer_incoming' => $transfer->transferIncoming,
+            'transfer_outgoing' => $transfer->transferOutgoing,
+            'fee_amount'        => Str::decimal($fees['fee_total']),
+            'final_amount'      => Str::decimal($fees['amount_debt']),
+        ];
     }
 
     /**
