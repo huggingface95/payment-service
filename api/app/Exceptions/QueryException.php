@@ -13,9 +13,18 @@ class QueryException extends Exception
 {
     public array $codes = [
         '23503' => [
-            'code' => 401,
-            'message' => 'This {table} already in use',
-            'regexp' => "(?:SQLSTATE\[23503\].*?\")(.*?)(?:\".*)",
+            [
+                'code' => 401,
+                'message' => 'This {table} already in use',
+                'regexp' => "(?:SQLSTATE\[23503\].*?\")(.*?)(?:\".*)",
+            ]
+        ],
+        '23505' => [
+            [
+                'code' => 400,
+                'message' => 'Failed to add the same pair of region and currency',
+                'regexp' => "(?:SQLSTATE\[23505\].*?\")(.*?)(bank_correspondent_currencies_regions_bank)",
+            ]
         ],
     ];
 
@@ -28,17 +37,18 @@ class QueryException extends Exception
 
     protected function formatException($message, $code): array
     {
-        if (! array_key_exists($code, $this->codes)) {
-            return [$message, (int) $code];
+        if (array_key_exists($code, $this->codes)) {
+            $definitions = $this->codes[$code];
+
+            foreach ($definitions as $definition) {
+                if (array_key_exists('regexp', $definition)) {
+                    $definition['message'] = $this->replaceExceptionMessage($message, $definition['message'], $definition['regexp']);
+                    return [$definition['message'], $definition['code']];
+                }
+            }
         }
 
-        $definition = $this->codes[$code];
-
-        if (array_key_exists('regexp', $definition)) {
-            $definition['message'] = $this->replaceExceptionMessage($message, $definition['message'], $definition['regexp']);
-        }
-
-        return [$definition['message'], $definition['code']];
+        return [$message, (int)$code];
     }
 
     private function replaceExceptionMessage(string $message, string $replacement, string $regexp): string
