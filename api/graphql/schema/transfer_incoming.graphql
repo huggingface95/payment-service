@@ -198,7 +198,7 @@ extend type Mutation @guard {
         "ID прайс листа"
         price_list_fee_id: ID!
         "Тип бенефициара"
-        beneficiary_type: BeneficiaryTypeEnum!
+        beneficiary_type_id: BeneficiaryTypeEnum!
         "Имя бенефициара"
         beneficiary_name: String!
         "Номер счета или IBAN отправителя"
@@ -261,7 +261,7 @@ extend type Mutation @guard {
         price_list_id: ID
         price_list_fee_id: ID
         "Тип бенефициара"
-        beneficiary_type: BeneficiaryTypeEnum
+        beneficiary_type_id: BeneficiaryTypeEnum
         "Имя бенефициара"
         beneficiary_name: String
         "Номер счета или IBAN отправителя"
