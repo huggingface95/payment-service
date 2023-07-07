@@ -24,7 +24,7 @@ type Transfer {
 
 extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Queries\\Applicant") {
     """
-    Получить список аккаунтов
+    Получить список трансферов для апликанта
     """
     transfers(
         filter: _ @filterConditions(static: QueryTransfersFilterStatic)
