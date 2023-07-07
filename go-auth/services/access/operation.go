@@ -136,9 +136,11 @@ func optimizeReferer(link string) string {
 
 	m1 := regexp.MustCompile(`/(dashboard)?/?(.*)`)
 	m2 := regexp.MustCompile(`([a-zA-Z]+-)?[0-9]+`)
+	m3 := regexp.MustCompile(`/$`)
 
 	link = m1.ReplaceAllString(link, "$2")
 	link = m2.ReplaceAllLiteralString(link, "$id")
+	link = m3.ReplaceAllLiteralString(link, "")
 
 	return link
 }
