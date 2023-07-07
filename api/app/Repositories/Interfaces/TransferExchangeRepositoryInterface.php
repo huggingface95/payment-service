@@ -12,4 +12,6 @@ interface TransferExchangeRepositoryInterface
     public function create(array $data): Model|Builder;
 
     public function update(Model|Builder $model, array $data): Model|Builder;
+
+    public function getExchangeRate(int $priceListId, int $currencySrcId, string $currencyDstId): array;
 }
