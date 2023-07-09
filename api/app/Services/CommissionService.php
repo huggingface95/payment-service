@@ -59,14 +59,16 @@ class CommissionService extends AbstractService
         $feeTotal = $feeAmount + $feePPAmount + $feeQPAmount;
         
         $amountDebt = $this->getTransferAmountDebt($transfer, $feeTotal);
-        $qpMarginAmount = $this->commissionQPMarginCalculation($transfer, $transactionDTO);
+        if ($transfer->operation_type_id === OperationTypeEnum::EXCHANGE->value) {
+            $qpMarginAmount = $this->commissionQPMarginCalculation($transfer, $transactionDTO);
+        }
 
         return [
             'fee_amount' => $feeAmount,
             'fee_pp' => $feePPAmount,
             'fee_qp' => $feeQPAmount,
             'fee_total' => $feeTotal,
-            'qp_margin' => $qpMarginAmount,
+            'qp_margin' => $qpMarginAmount ?? 0,
             'amount_debt' => $amountDebt,
         ];
     }
@@ -148,10 +150,6 @@ class CommissionService extends AbstractService
      */
     private function commissionQPMarginCalculation(TransferOutgoing|TransferIncoming $transfer, TransactionDTO $transactionDTO): float
     {
-        if ($transfer->operation_type_id !== OperationTypeEnum::EXCHANGE->value) {
-            return 0;
-        }
-
         $rates = $this->transferExchangeRepository->getExchangeRate(
             $transfer->price_list_fee_id, 
             $transactionDTO->currency_src_id, 
