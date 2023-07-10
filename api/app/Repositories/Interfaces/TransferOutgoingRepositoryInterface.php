@@ -18,6 +18,8 @@ interface TransferOutgoingRepositoryInterface
 
     public function update(Model|Builder $model, array $data): Model|Builder;
 
+    public function updateWithSwift(Model|Builder $model, array $data): Model|Builder;
+
     public function getWaitingExecutionDateTransfers(): Collection;
 
     public function getSumOfDailySentTransfersByApplicantIndividualId(int $applicantId): float;

@@ -15,6 +15,7 @@ use App\Repositories\AccountRepository;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Services\CheckLimitService;
 use App\Services\TransferOutgoingService;
+use Illuminate\Http\Response;
 
 class TransferOutgoingMutator extends BaseMutator
 {
@@ -50,6 +51,9 @@ class TransferOutgoingMutator extends BaseMutator
     {
         /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
+        if (!$transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
 
         $this->transferService->updateTransfer($transfer, $args);
 
