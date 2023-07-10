@@ -62,8 +62,11 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
             ->first()?->id ?? throw new GraphqlException('Price list fee not found', 'use');
     
         if (!empty($args['execution_at'])) {
-            if (Carbon::parse($args['execution_at'])->lt($date)) {
-                throw new GraphqlException('execution_at cannot be earlier than current date and time', 'use');
+            $executionDate = Carbon::parse($args['execution_at'])->startOfDay();
+            $createDate = Carbon::parse($date)->startOfDay();
+            
+            if ($executionDate->lt($createDate)) {
+                throw new GraphqlException('execution_at cannot be earlier than current date', 'use');
             }
         } else {
             $args['execution_at'] = $args['created_at'];
