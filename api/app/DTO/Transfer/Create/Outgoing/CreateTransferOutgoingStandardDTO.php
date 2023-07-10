@@ -28,7 +28,7 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
 
         if ($args['status_id'] != PaymentStatusEnum::REFUND->value) {
             if (empty($args['price_list_id'])) {
-                $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('out Region not found', 'use');
+                $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('Region not found', 'use');
                 $args['price_list_id'] = $repository->getCommissionPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found', 'use');
             } else {
                 CommissionPriceList::query()

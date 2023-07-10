@@ -57,14 +57,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
         $transfer = $this->query()->create($data);
 
         if (isset($data['transfer_swift'])) {
-            foreach ($data['transfer_swift'] as $tSwift) {
-                $transfer->transferSwift()->create(
-                    array_merge(
-                        $tSwift,
-                        ['transfer_type' => class_basename(TransferOutgoing::class)]
-                    )
-                );
-            }
+            $this->createSwiftModels($transfer, $data['transfer_swift']);
         }
 
         return $transfer;
@@ -73,6 +66,18 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
     public function update(Model|Builder $model, array $data): Model|Builder
     {
         $model->update($data);
+
+        return $model;
+    }
+
+    public function updateWithSwift(Model|Builder $model, array $data): Model|Builder
+    {
+        $model->update($data);
+
+        if (isset($data['transfer_swift'])) {
+            $model->transferSwift()->delete();
+            $this->createSwiftModels($model, $data['transfer_swift']);
+        }
 
         return $model;
     }
@@ -153,5 +158,17 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
             ->where('region_countries.country_id', '=', $args['recipient_country_id'])
             ->where('regions.company_id', '=', $args['company_id'])
             ->first()?->id;
+    }
+
+    private function createSwiftModels(Model|Builder $model, array $swifts): void
+    {
+        foreach ($swifts as $swift) {
+            $model->transferSwift()->create(
+                array_merge(
+                    $swift,
+                    ['transfer_type' => class_basename(TransferOutgoing::class)]
+                )
+            );
+        }
     }
 }

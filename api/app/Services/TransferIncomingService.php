@@ -144,7 +144,7 @@ class TransferIncomingService extends AbstractService
                 $this->createPPHistory($transfer);
             }
 
-            $this->transferRepository->update($transfer, $args);
+            $this->transferRepository->updateWithSwift($transfer, $args);
 
             $this->createTransferHistory($transfer);
         });

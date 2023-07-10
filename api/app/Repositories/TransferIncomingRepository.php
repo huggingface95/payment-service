@@ -70,6 +70,22 @@ class TransferIncomingRepository extends Repository implements TransferIncomingR
         return $model;
     }
 
+    public function updateWithSwift(Model|Builder $model, array $data): Model|Builder
+    {
+        $model->update($data);
+
+        if (isset($data['transfer_swift'])) {
+            $model->transferSwift()->update(
+                array_merge(
+                    $data['transfer_swift'],
+                    ['transfer_type' => class_basename(TransferIncoming::class)]
+                )
+            );
+        }
+
+        return $model;
+    }
+
     public function getCommissionPriceListIdByArgs(array $args, string $clientType): int|null
     {
         return CommissionPriceList::query()
