@@ -94,25 +94,17 @@ class ApplicantTransferBetweenUsersMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
-    public function attachFile($_, array $args): TransferIncoming|Model|Builder|null
+    public function attachFile($_, array $args): TransferBetween
     {
-        try {
-            DB::beginTransaction();
-            /** @var TransferIncoming $transfer */
-            $transfer = TransferIncoming::query()
-                ->with('transferBetweenOutgoing')
-                ->where('operation_type_id', OperationTypeEnum::BETWEEN_USERS->value)
-                ->findOrFail($args['transfer_incoming_id']);
-
-            $this->transferIncomingRepository->attachFileById($transfer, $args['file_id']);
-            $this->transferOutgoingRepository->attachFileById($transfer->transferBetweenOutgoing, $args['file_id']);
-            DB::commit();
-
-            return $transfer;
-        } catch (\Throwable $exception) {
-            DB::rollBack();
-            throw new GraphqlException($exception->getMessage(), $exception->getCode());
+        /** @var TransferBetween $transfer */
+        $transfer = $this->transferRepository->findById($args['id']);
+        if (! $transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
         }
+
+        $this->transferService->attachFiles($transfer, $args['file_id']);
+
+        return $transfer;
     }
 
     /**

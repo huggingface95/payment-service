@@ -82,7 +82,7 @@ class CommissionService extends AbstractService
             return 0;
         }
 
-        PriceListFee::query()->find($transfer->price_list_fee_id) ?? throw new GraphqlException('dCommission price list not found', 'use');
+        PriceListFee::query()->find($transfer->price_list_fee_id) ?? throw new GraphqlException('Commission price list not found', 'use');
 
         $query = PriceListFeeCurrency::query()->where('price_list_fee_id', $transfer->price_list_fee_id);
     
