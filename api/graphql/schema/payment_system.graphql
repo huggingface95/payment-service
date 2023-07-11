@@ -18,7 +18,7 @@ type PaymentSystem {
     "Получить Платежные провайдеры"
     providers: PaymentProvider @belongsTo(relation:"providers")
     "Получить Реквизиты"
-    banks: [PaymentBank] @belongsToMany(relation:"banks")
+    banks: [PaymentBank] @hasMany(relation:"banks")
     "Получить банк корреспондент"
     bank_correspondent: BankCorrespondent @belongsTo(relation: "bankCorrespondent")
     "Получить типы операций"

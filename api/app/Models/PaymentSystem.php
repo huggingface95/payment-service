@@ -7,6 +7,7 @@ use App\Models\Traits\BaseObServerTrait;
 use App\Observers\PaymentSystemObserver;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
@@ -89,9 +90,9 @@ class PaymentSystem extends BaseModel implements CustomObServerInterface
         return $this->hasOneDeepFromRelations($this->providers(), (new PaymentProvider())->company());
     }
 
-    public function banks(): BelongsToMany
+    public function banks(): HasMany
     {
-        return $this->belongsToMany(PaymentBank::class, 'payment_system_banks', 'payment_system_id', 'payment_bank_id')->orderByDesc('id');
+        return $this->hasMany(PaymentBank::class, 'payment_system_id');
     }
 
     public function bankCorrespondent(): BelongsTo
