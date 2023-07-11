@@ -34,6 +34,10 @@ extend type Query @guard {
     paymentSystem(id: ID @eq): PaymentSystem   @find
     "Получить уникальный список платежных систем"
     paymentSystemsList: [PaymentSystem!]! @field(resolver:"PaymentSystemQuery@get")
+    "Получить список регионов для платежной системы"
+    paymentSystemRegions(id: ID! @eq): [Region] @field(resolver:"PaymentSystemQuery@getRegions")
+    "Получить список валют для платежной системы"
+    paymentSystemCurrencies(id: ID! @eq): [Currencies] @field(resolver:"PaymentSystemQuery@getCurrencies")
     "Получить список платежных систем"
     paymentSystems(
         filter: _ @filterConditions(static: QueryPaymentSystemsFilterStatic),
