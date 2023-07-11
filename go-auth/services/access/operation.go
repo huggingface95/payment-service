@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/graphql-go/graphql/language/ast"
 	"github.com/graphql-go/graphql/language/parser"
-	"github.com/juliangruber/go-intersect"
 	"jwt-authentication-golang/constants"
 	"jwt-authentication-golang/models/postgres"
 	"jwt-authentication-golang/repositories/permissionRepository"
@@ -14,17 +13,25 @@ import (
 	"regexp"
 )
 
-func checkOperation(permissions []postgres.Permission, name string, method string, t string, referer string) (bool, []interface{}) {
+func checkOperation(permissions []postgres.Permission, name string, method string, t string, referer string) (bool, []postgres.Permission) {
 	if permissionRepository.IsGlobalOperation(name, method, t) == true {
 		return true, nil
 	}
 	operation := permissionRepository.GetStandardOperation(name, method, t, referer)
-
 	if operation != nil {
 
-		bindPermissions := intersect.Simple(operation.BindPermissions, permissions)
+		permissionsLimitations := pluckPermissionLimitations(permissions)
 
-		parentPermissions := intersect.Simple(operation.ParentPermissions, permissions)
+		bindPermissions := Simple(operation.BindPermissions, permissions)
+
+		parentPermissions := Simple(operation.ParentPermissions, permissions)
+
+		bindLimitationPermissions := Simple(bindPermissions, permissionsLimitations)
+		parentLimitationPermissions := Simple(parentPermissions, permissionsLimitations)
+
+		if len(bindLimitationPermissions) > 0 || len(parentLimitationPermissions) > 0 {
+			return false, nil
+		}
 
 		if len(operation.BindPermissions) > 0 {
 			if len(bindPermissions) > 0 && len(operation.ParentPermissions) == 0 {
@@ -39,12 +46,11 @@ func checkOperation(permissions []postgres.Permission, name string, method strin
 	return false, nil
 }
 
-func checkModule(individual *postgres.Individual, verifiedPermissions []interface{}) (bool, string) {
+func checkModule(individual *postgres.Individual, verifiedPermissions []postgres.Permission) (bool, string) {
 	for _, m := range individual.ApplicantModuleActivity {
 		for _, verifiedPermission := range verifiedPermissions {
-			permission := verifiedPermission.(postgres.Permission)
-			if permission.PermissionList.PermissionCategory.CheckActivityModule(m.Module) {
-				return false, fmt.Sprintf("Permission %s not access in module %s", permission.DisplayName, m.Module.Name)
+			if verifiedPermission.PermissionList.PermissionCategory.CheckActivityModule(m.Module) {
+				return false, fmt.Sprintf("Permission %s not access in module %s", verifiedPermission.DisplayName, m.Module.Name)
 			}
 		}
 	}
@@ -104,14 +110,6 @@ func CheckAccess(jsonData []byte, user postgres.User, referer string) (bool, str
 				if ok == false {
 					return false, message
 				}
-			} else if user.ClientType() == constants.Member {
-				for _, verifiedPermission := range verifiedPermissions {
-					fmt.Println(verifiedPermission)
-					//permission := verifiedPermission.(postgres.Permission)
-					//if permission.Name {
-					//
-					//}
-				}
 			}
 		} else if ok && len(verifiedPermissions) == 0 {
 			return true, message
@@ -143,4 +141,34 @@ func optimizeReferer(link string) string {
 	link = m3.ReplaceAllLiteralString(link, "")
 
 	return link
+}
+
+func Simple(first []postgres.Permission, second []postgres.Permission) []postgres.Permission {
+	result := make([]postgres.Permission, 0)
+	for _, v := range second {
+		if contains(first, v) {
+			result = append(result, v)
+		}
+	}
+
+	return result
+}
+
+func pluckPermissionLimitations(list []postgres.Permission) []postgres.Permission {
+	result := make([]postgres.Permission, 0)
+	for _, p := range list {
+		for _, limitation := range p.Limitations {
+			result = append(result, limitation.Permission)
+		}
+	}
+	return result
+}
+
+func contains(list []postgres.Permission, v postgres.Permission) bool {
+	for _, i := range list {
+		if i.Id == v.Id {
+			return true
+		}
+	}
+	return false
 }
