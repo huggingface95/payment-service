@@ -9,16 +9,22 @@ import (
 func GetUserPermissions(user postgres.User) []postgres.Permission {
 	var permissions []postgres.Permission
 	var userType map[string]interface{}
+	var userLType map[string]interface{}
 
 	query := database.PostgresInstance
 
 	if user.StructName() == constants.StructMember {
 		userType = map[string]interface{}{"group_role_members_individuals.user_type": constants.ModelMember}
+		userLType = map[string]interface{}{"user_type": constants.ModelMember, "user_id": user.GetId()}
 	} else {
 		userType = map[string]interface{}{"group_role_members_individuals.user_type": constants.ModelIndividual}
+		userLType = map[string]interface{}{"user_type": constants.ModelIndividual, "user_id": user.GetId()}
 	}
 
-	err := query.Preload("PermissionList.PermissionCategory").
+	err := query.
+		Preload("PermissionList.PermissionCategory").
+		Preload("Limitations", userLType).
+		Preload("Limitations.Permission").
 		Joins("JOIN role_has_permissions on role_has_permissions.permission_id=permissions.id").
 		Joins("JOIN roles on roles.id=role_has_permissions.role_id").
 		Joins("JOIN group_role on group_role.role_id=roles.id").

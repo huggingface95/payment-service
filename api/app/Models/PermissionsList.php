@@ -15,6 +15,7 @@ class PermissionsList extends BaseModel
     public const PRIVATE = 'private';
 
     public const BUSINESS = 'business';
+    public const SIGN_PAYMENTS = 'Sign Payments';
 
     protected $table = 'permissions_list';
 

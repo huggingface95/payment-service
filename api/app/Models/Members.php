@@ -6,9 +6,11 @@ use Ankurk91\Eloquent\MorphToOne;
 use App\Enums\FileEntityTypeEnum;
 use App\Enums\MemberStatusEnum;
 use App\Models\Clickhouse\ActiveSession;
+use App\Models\Interfaces\CustomObServerInterface;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\BaseObServerTrait;
 use App\Models\Traits\UserPermission;
+use App\Observers\MemberObserver;
 use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -46,6 +48,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property int country_id
  * @property int language_id
  * @property int two_factor_auth_setting_id
+ * @property bool is_sign_transaction
  * @property string google2fa_secret
  * @property string email_verification
  * @property string backup_codes
@@ -59,7 +62,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  *
  * @method
  */
-class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract
+class Members extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject, CanResetPasswordContract,CustomObServerInterface
 {
     use SoftDeletes;
     use Authorizable;
@@ -314,6 +317,11 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
         return $this->belongsTo(Files::class, 'photo_id')->where('entity_type', FileEntityTypeEnum::MEMBER->toString());
     }
 
+    public function permissionLimitations(): MorphToMany
+    {
+        return $this->morphToMany(Permissions::class, "user", PermissionUserLimitation::class, "user_id", "permission_id");
+    }
+
     public function scopeCompanySort($query, $sort)
     {
         return $query->join('companies', 'companies.id', '=', 'members.company_id')->orderBy('companies.name', $sort)->select('members.*');
@@ -326,5 +334,10 @@ class Members extends BaseModel implements AuthenticatableContract, Authorizable
             ->where('group_role_members_individuals.user_type', '=', self::class)
             ->where('group_role.id', '=', $groupId)
             ->select('members.*');
+    }
+
+    public static function getObServer(): string
+    {
+        return MemberObserver::class;
     }
 }
