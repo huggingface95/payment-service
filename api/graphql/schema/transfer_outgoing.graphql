@@ -75,13 +75,13 @@ type TransferOutgoing {
     "Страна получателя"
     recipient_country: Country @belongsTo(relation: "recipientCountry")
     "Город получателя"
-    recipient_city: String!
+    recipient_city: String
     "Адрес получателя"
-    recipient_address: String!
+    recipient_address: String
     "Штат получателя"
-    recipient_state: String!
+    recipient_state: String
     "Индекс получателя"
-    recipient_zip: String!
+    recipient_zip: String
     "Кто платит комиссиию"
     respondent_fee: RespondentFee @belongsTo(relation: "respondentFee")
     "История трансфера"
