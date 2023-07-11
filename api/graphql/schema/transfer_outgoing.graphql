@@ -59,7 +59,7 @@ type TransferOutgoing {
     "Название банка получателя"
     recipient_bank_name: String
     "Адрес банка получателя"
-    recipient_bank_address: String!
+    recipient_bank_address: String
     "SWIFT код банка получателя"
     recipient_bank_swift: String
     "RTN банка получателя"
