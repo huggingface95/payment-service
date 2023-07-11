@@ -5,7 +5,6 @@ namespace App\GraphQL\Validators\Mutation;
 use App\Rules\CurrencyMode;
 use App\Rules\CurrencyRangeMatches;
 use App\Rules\FeeRanges;
-use App\Rules\FeeValueAsObject;
 use Nuwave\Lighthouse\Validation\Validator;
 
 final class CreatePriceListPPFeesValidator extends Validator
@@ -21,7 +20,7 @@ final class CreatePriceListPPFeesValidator extends Validator
             'input.operation_type_id' => ['required', 'int'],
             'input.fees.*.fee' => [new CurrencyMode()],
             'input.fees.*' => [new CurrencyRangeMatches()],
-            'input.fee_ranges' => [new FeeRanges(), new FeeValueAsObject()],
+            'input.fee_ranges' => [new FeeRanges()],
         ];
     }
 }

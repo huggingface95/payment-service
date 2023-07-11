@@ -7,7 +7,6 @@ use App\Rules\CurrenciesDestination;
 use App\Rules\CurrencyMode;
 use App\Rules\CurrencyRangeMatches;
 use App\Rules\FeeRanges;
-use App\Rules\FeeValueAsObject;
 use App\Rules\RequiredCurrenciesDestination;
 use Nuwave\Lighthouse\Validation\Validator;
 
@@ -25,7 +24,6 @@ final class UpdatePriceListQpFeesValidator extends Validator
             'input.fees.*' => [new CurrencyRangeMatches()],
             'input.fee_ranges' => [
                 new FeeRanges(),
-                new FeeValueAsObject(),
                 new CurrenciesDestination(OperationTypeEnum::EXCHANGE->value),
                 new RequiredCurrenciesDestination(OperationTypeEnum::EXCHANGE->value),
             ],
