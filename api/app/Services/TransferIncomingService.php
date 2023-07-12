@@ -42,6 +42,9 @@ class TransferIncomingService extends AbstractService
 
             $this->createTransferHistory($transfer, TransferHistoryActionEnum::INIT->value)->createPPHistory($transfer);
 
+            $account = $transfer->account;
+            $this->accountService->updateLastCharge($account);
+
             return $transfer;
         });
     }
