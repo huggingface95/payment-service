@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/valyala/fasthttp"
+	"sync"
 )
 
 type FastHTTP struct {
 	*fasthttp.Client
-	ReqHeaders map[string]string
+	ReqHeaders sync.Map
 }
 
 // Request - выполняет HTTP запрос с заданным методом, endpoint-ом и параметрами
@@ -18,9 +19,11 @@ func (c *FastHTTP) Request(method string, endpoint string, params interface{}, m
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 
-	for k, v := range c.ReqHeaders {
-		req.Header.Set(k, v)
-	}
+	// Получение заголовков из sync.Map
+	c.ReqHeaders.Range(func(key, value interface{}) bool {
+		req.Header.Set(key.(string), value.(string))
+		return true
+	})
 
 	req.Header.SetContentType("application/json")
 	req.SetRequestURI(endpoint)
@@ -69,17 +72,13 @@ func (c *FastHTTP) Request(method string, endpoint string, params interface{}, m
 
 	req.Header.SetContentType(fiber.MIMEApplicationJSON)
 
-	for k, v := range c.ReqHeaders {
-		req.Header.Set(k, v)
-	}
-
 	// Отправка запроса с использованием клиента fasthttp
 	if err := c.Do(req, res); err != nil {
 		return nil, fmt.Errorf("ошибка отправки GET запроса: %w", err)
 	}
 
 	// Проверка статусного кода ответа
-	if res.StatusCode() != fasthttp.StatusOK {
+	if res.StatusCode() >= fasthttp.StatusMultipleChoices {
 		return nil, c.handleResponseError(res)
 	}
 

@@ -2,6 +2,7 @@ package providers
 
 import (
 	"fmt"
+	"github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
 )
 
@@ -9,6 +10,7 @@ import (
 type Service struct {
 	Config        map[string]interface{}
 	ProvidersList map[string]PaymentProvider
+	Validator     *validator.Validate
 }
 
 // NewService - создает новый экземпляр Service
@@ -16,6 +18,7 @@ func NewService() *Service {
 	service := &Service{
 		Config:        viper.Get("providers").(map[string]interface{}),
 		ProvidersList: map[string]PaymentProvider{},
+		Validator:     validator.New(),
 	}
 
 	return service

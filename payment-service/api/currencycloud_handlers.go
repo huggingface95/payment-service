@@ -8,22 +8,24 @@ import (
 	"payment-service/providers/currencycloud"
 )
 
+// CurrencyCloudAuth - Реализация обработчика авторизации аккаунта
 func CurrencyCloudAuth(c *fiber.Ctx, provider providers.PaymentProvider) error {
-	// Получение данных формы из запроса
+	// Создаем объект authRequest типа currencycloud.AuthRequest и инициализируем его значениями login_id и api_key
 	authRequest := currencycloud.AuthRequest{LoginID: c.FormValue("login_id"), ApiKey: c.FormValue("api_key")}
 
-	// Выполнение запроса на аутентификацию в CurrencyCloud API
+	// Вызываем метод Auth объекта provider и передаем ему объект authRequest. Результат сохраняем в переменную authResponse
 	authResponse, err := provider.Auth(authRequest)
 	if err != nil {
+		// Если произошла ошибка, возвращаем статус BadRequest и объект с ключом error и значением err.Error()
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	// Формирование ответа с аутентификационным токеном
+	// Создаем объект response типа currencycloud.AuthResponse и инициализируем его значением поля AuthToken из объекта authResponse
 	response := currencycloud.AuthResponse{
 		AuthToken: authResponse.(currencycloud.AuthResponse).AuthToken,
 	}
 
-	// Возвращение ответа в формате JSON
+	// Возвращаем объект response в формате JSON
 	return c.JSON(response)
 }
 
@@ -118,6 +120,18 @@ func CurrencyCloudRates(c *fiber.Ctx, provider providers.PaymentProvider) error 
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
+
+	responder, err := provider.Custom(providers.CustomRequester(req))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.JSON(responder)
+}
+
+// CurrencyCloudRatesImport реализует обработчик получения rate-ов.
+func CurrencyCloudRatesImport(c *fiber.Ctx, provider providers.PaymentProvider) error {
+	req := &currencycloud.RatesImportRequest{}
 
 	responder, err := provider.Custom(providers.CustomRequester(req))
 	if err != nil {

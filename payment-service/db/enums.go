@@ -14,11 +14,13 @@ const (
 const (
 	StatusUnknown StatusEnum = iota
 	StatusPending
-	StatusCompleted
+	StatusSent
 	StatusError
 	StatusCanceled
 	StatusUnsigned
-	StatusCreated
+	StatusWaitingExecutionDate
+	StatusExecuted
+	StatusRefund
 )
 
 const (
@@ -32,28 +34,38 @@ const (
 	GBP
 )
 
+const (
+	TransferTypeIncoming TransferTypeEnum = "TransferIncoming"
+	TransferTypeOutgoing TransferTypeEnum = "TransferOutgoing"
+)
+
 type (
 	AccountStateEnum  uint8
 	StatusEnum        uint8
 	OperationTypeEnum uint8
 	CurrencyEnum      uint8
+	TransferTypeEnum  string
 )
 
 func GetStatus(name string) StatusEnum {
 	switch name {
-	case "pending":
+	case "Pending":
 		return StatusPending
-	case "completed":
-		return StatusCompleted
-	case "error":
+	case "Sent":
+		return StatusSent
+	case "Error":
 		return StatusError
-	case "canceled":
+	case "Canceled":
 		return StatusCanceled
-	case "unsigned":
+	case "Unsigned":
 		return StatusUnsigned
-	case "created":
-		return StatusCompleted
+	case "Waiting execution date":
+		return StatusWaitingExecutionDate
+	case "Executed":
+		return StatusExecuted
+	case "Refund":
+		return StatusRefund
+	default:
+		return StatusUnknown
 	}
-
-	return StatusError
 }

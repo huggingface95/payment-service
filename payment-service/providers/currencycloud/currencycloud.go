@@ -1,26 +1,35 @@
 package currencycloud
 
 import (
+	"context"
+	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"github.com/fatih/structs"
 	"github.com/gofiber/fiber/v2"
 	"github.com/valyala/fasthttp"
+	"golang.org/x/time/rate"
+	"os"
+	"path/filepath"
 	"payment-service/providers"
 	"payment-service/utils"
+	"runtime"
+	"sync"
 )
 
 var _ providers.PaymentProvider = (*CurrencyCloud)(nil)
 var _ PaymentProvider = (*CurrencyCloud)(nil)
 
-func New(services Services, loginID, apiKey, baseURL, publicURL string) *CurrencyCloud {
+func New(services Services, loginID, apiKey, baseURL, publicURL string, rpmLimit float64) *CurrencyCloud {
 	provider := &CurrencyCloud{
 		LoginID:   loginID,
 		APIKey:    apiKey,
 		BaseURL:   baseURL,
 		PublicURL: publicURL,
+		RPMLimit:  RPMLimit{Convert: rpmLimit},
+
 		Services:  services,
-		transport: utils.FastHTTP{Client: &fasthttp.Client{}, ReqHeaders: map[string]string{}},
+		transport: utils.FastHTTP{Client: &fasthttp.Client{}, ReqHeaders: sync.Map{}},
 	}
 
 	fmt.Println(provider.BaseURL)
@@ -29,25 +38,22 @@ func New(services Services, loginID, apiKey, baseURL, publicURL string) *Currenc
 	return provider
 }
 
-func (cc *CurrencyCloud) Auth(request providers.AuthRequester) (providers.AuthResponder, error) {
-	reqURL := fmt.Sprintf("%sv2/authenticate/api", cc.BaseURL)
+func (cc *CurrencyCloud) Auth(req providers.AuthRequester) (providers.AuthResponder, error) {
+	token, ok := cc.transport.ReqHeaders.Load("X-Auth-Token")
+	if ok && token != nil && token != "" {
+		return AuthResponse{AuthToken: token.(string)}, nil
+	}
 
 	// Создание запроса на авторизацию
-	assertedReq, ok := request.(AuthRequest)
+	assertedReq, ok := req.(AuthRequest)
 	if !ok {
 		return nil, fmt.Errorf("invalid request type")
 	}
 
+	reqURL := fmt.Sprintf("%sv2/authenticate/api", cc.BaseURL)
+
 	// Отправка запроса на авторизацию
-	var params map[string]interface{}
-	paramsData, err := json.Marshal(assertedReq)
-	if err != nil {
-		return "", fmt.Errorf("ошибка парсинга параметров запроса на авторизацию: %w", err)
-	}
-	if err := json.Unmarshal(paramsData, &params); err != nil {
-		return "", fmt.Errorf("ошибка парсинга параметров запроса на авторизацию: %w", err)
-	}
-	responseBody, err := cc.transport.Request(fiber.MethodPost, reqURL, params, nil)
+	responseBody, err := cc.transport.Request(fiber.MethodPost, reqURL, assertedReq, nil)
 	if err != nil {
 		return "", fmt.Errorf("ошибка выполнения запроса на авторизацию: %w", err)
 	}
@@ -59,7 +65,8 @@ func (cc *CurrencyCloud) Auth(request providers.AuthRequester) (providers.AuthRe
 		return "", fmt.Errorf("ошибка распаковки данных ответа на авторизацию: %w", err)
 	}
 
-	cc.transport.ReqHeaders["X-Auth-Token"] = authResponse.AuthToken
+	// Обновление аутентификационного токена в ReqHeaders с использованием sync.Map
+	cc.transport.ReqHeaders.Store("X-Auth-Token", authResponse.AuthToken)
 
 	// Возвращение аутентификационного токена
 	return authResponse, nil
@@ -154,28 +161,30 @@ func (cc *CurrencyCloud) PayOut(req providers.PayOutRequester) (providers.PayOut
 	return res, nil
 }
 
-func (cc *CurrencyCloud) PostBack(request providers.PostBackRequester) (providers.PostBackResponder, error) {
-	fmt.Printf("postback received: %v", request.(*PostbackRequest))
+func (cc *CurrencyCloud) PostBack(req providers.PostBackRequester) (providers.PostBackResponder, error) {
+	fmt.Printf("postback received: %v", req.(*PostbackRequest))
 
 	return &PostbackResponse{Status: "success"}, nil
 }
 
-func (cc *CurrencyCloud) Custom(request providers.CustomRequester) (providers.CustomResponder, error) {
-	switch req := request.(type) {
+func (cc *CurrencyCloud) Custom(req providers.CustomRequester) (providers.CustomResponder, error) {
+	switch assertedReq := req.(type) {
 	case *RatesRequest:
-		return cc.rates(req)
+		return cc.rates(assertedReq)
+	case *RatesImportRequest:
+		return cc.ratesImport(assertedReq)
 	case *ConvertRequest:
-		return cc.convert(req)
+		return cc.convert(assertedReq)
 	default:
-		return nil, fmt.Errorf("unsupported custom request type: %v", req)
+		return nil, fmt.Errorf("unsupported custom request type: %v", assertedReq)
 	}
 }
 
-func (cc *CurrencyCloud) rates(request *RatesRequest) (providers.CustomResponder, error) {
+func (cc *CurrencyCloud) rates(req *RatesRequest) (providers.CustomResponder, error) {
 	reqURL := fmt.Sprintf("%sv2/rates/detailed", cc.BaseURL)
 
 	// Выполнение GET запроса с помощью HTTP клиента из API сервиса
-	responseBody, err := cc.transport.Request(fasthttp.MethodGet, reqURL, request, cc.authMiddleware)
+	responseBody, err := cc.transport.Request(fasthttp.MethodGet, reqURL, req, cc.authMiddleware)
 	if err != nil {
 		return nil, fmt.Errorf("failed to send Rates request: %w", err)
 	}
@@ -187,6 +196,77 @@ func (cc *CurrencyCloud) rates(request *RatesRequest) (providers.CustomResponder
 		return nil, fmt.Errorf("failed to unmarshal Rates response: %w", err)
 	}
 
+	return &res, nil
+}
+
+func (cc *CurrencyCloud) ratesImport(req providers.CustomRequester) (providers.CustomResponder, error) {
+	reqURL := fmt.Sprintf("%sv2/rates/find", cc.BaseURL)
+
+	// Открываем CSV файл для чтения
+	file, err := os.Open("../api/data/currency_codes.csv")
+	if err != nil {
+		fmt.Printf("Ошибка при открытии файла: %v\n", err)
+		return nil, err
+	}
+	defer file.Close()
+
+	// Создаем новый CSV Reader
+	reader := csv.NewReader(file)
+
+	// Читаем все строки из файла
+	rows, err := reader.ReadAll()
+	if err != nil {
+		fmt.Printf("Ошибка при чтении файла: %v\n", err)
+		return nil, err
+	}
+
+	// Определяем ограничение по скорости (60 запросов в минуту)
+	limiter := rate.NewLimiter(rate.Limit(cc.RPMLimit.Convert), 1)
+
+	// Создаем список для результатов
+	var currencyCodes []string
+
+	// Выполняем запросы последовательно
+	for _, row := range rows {
+		if len(row) == 3 {
+			// Извлекаем код валюты из второго столбца
+			currencyPair := fmt.Sprintf("USD%s", row[1])
+
+			// Ожидаем до получения разрешения на выполнение запроса
+			err := limiter.Wait(context.Background())
+			if err != nil {
+				fmt.Printf("failed to wait for rate limit: %v\n", err)
+				continue
+			}
+
+			// Выполняем GET запрос с помощью HTTP клиента API сервиса
+			responseBody, err := cc.transport.Request(fasthttp.MethodGet, reqURL, RatesImportRequest{CurrencyPair: currencyPair}, cc.authMiddleware)
+
+			if err != nil {
+				fmt.Printf("failed to send Rates request: %v\n", err)
+				continue
+			}
+
+			var res RatesImportResponse
+			err = json.Unmarshal(responseBody, &res)
+			if err != nil {
+				fmt.Printf("failed to decode Rates response: %v\n", err)
+				continue
+			}
+
+			if _, ok := res.Rates[currencyPair]; !ok {
+				fmt.Printf("no results for currency pair: %s, unavailable list: %v\n", currencyPair, res.Unavailable)
+				continue
+			}
+
+			currencyCodes = append(currencyCodes, row[1])
+		}
+	}
+
+	// Создаем и возвращаем результат
+	res := struct{ List []string }{
+		List: currencyCodes,
+	}
 	return &res, nil
 }
 
@@ -209,11 +289,6 @@ func (cc *CurrencyCloud) convert(request *ConvertRequest) (providers.CustomRespo
 	return &res, nil
 }
 
-func (cc *CurrencyCloud) authMiddleware(requestBody []byte) (err error) {
-	_, err = cc.Auth(AuthRequest{cc.LoginID, cc.APIKey})
-	return
-}
-
 func (cc *CurrencyCloud) account(req *AccountRequest) (*AccountResponse, error) {
 	reqURL := fmt.Sprintf("%sv2/accounts/create", cc.BaseURL)
 
@@ -231,4 +306,14 @@ func (cc *CurrencyCloud) account(req *AccountRequest) (*AccountResponse, error) 
 	}
 
 	return &res, nil
+}
+
+func (cc *CurrencyCloud) authMiddleware(requestBody []byte) (err error) {
+	_, err = cc.Auth(AuthRequest{cc.LoginID, cc.APIKey})
+	return
+}
+
+func GetName() string {
+	_, fullPath, _, _ := runtime.Caller(0)
+	return filepath.Base(filepath.Dir(fullPath))
 }

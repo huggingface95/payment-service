@@ -65,3 +65,7 @@ type CustomRequester interface {
 
 type CustomResponder interface {
 }
+
+type PostBackRequest struct {
+	Type PostbackTypeEnum `json:"type"`
+}

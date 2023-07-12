@@ -3,9 +3,11 @@ package db
 import (
 	"context"
 	"fmt"
+	"github.com/georgysavva/scany/pgxscan"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"strings"
+	"time"
 )
 
 type Pg struct {
@@ -24,7 +26,41 @@ func (pg *Pg) Close() {
 	pg.pool.Close()
 }
 
-// Универсальные функции для работы с таблицами
+// Универсальные Методы для работы с таблицами
+
+// Select заполняет переданный объект данными из таблицы table, которые соответствуют условиям wheres.
+func (pg *Pg) Select(table string, columns []string, wheres map[string]interface{}, result ...interface{}) error {
+	ctx := context.Background()
+
+	columnList := "*"
+	if len(columns) > 0 {
+		columnList = strings.Join(columns, ", ")
+	}
+
+	// Формируем SQL-запрос для выбора записей
+	sql := fmt.Sprintf("SELECT %s FROM %s WHERE ", columnList, table)
+	var values []interface{}
+	i := 1
+	for where, value := range wheres {
+		sql += where + "=$" + fmt.Sprint(i) + " AND "
+		values = append(values, value)
+		i++
+	}
+	sql = sql[:len(sql)-5] // Удаляем последний " AND "
+
+	// Выполняем SQL-запрос
+	row := pg.pool.QueryRow(ctx, sql, values...)
+
+	// Заполняем переданный объект
+	if err := row.Scan(result...); err != nil {
+		if err == pgx.ErrNoRows {
+			return fmt.Errorf("no rows were returned")
+		}
+		return fmt.Errorf("unable to select records: %v", err)
+	}
+
+	return nil
+}
 
 // Insert создает новую запись в таблице table с параметрами params и возвращает ее ID.
 func (pg *Pg) Insert(table string, params map[string]interface{}) (int, error) {
@@ -91,160 +127,231 @@ func (pg *Pg) Update(table string, updates map[string]interface{}, wheres map[st
 	return nil
 }
 
-// Функции для работы с транзакциями
+// Методы для работы с аккаунтами
 
-// UpdateTransactionStatus обновляет статус транзакции.
-func (pg *Pg) UpdateTransactionStatus(transactionID int, status string) error {
-	ctx := context.Background()
-	sql := "UPDATE transactions SET status=$1, updated_at=NOW() WHERE id=$2"
-	tag, err := pg.pool.Exec(ctx, sql, status, transactionID)
+// GetAccountOrderReferenceOrNil получает OrderReference аккаунта или nil по ID
+func (pg *Pg) GetAccountOrderReferenceOrNil(accountID int) (*string, error) {
+	var orderReference *string
+
+	err := pg.Select("accounts", []string{"order_reference"}, map[string]interface{}{"id": accountID}, &orderReference)
+
 	if err != nil {
-		return fmt.Errorf("unable to update transaction status: %v", err)
+		return nil, fmt.Errorf("unable to get OrderReference: %v", err)
 	}
-	if tag.RowsAffected() != 1 {
-		return fmt.Errorf("expected one row to be affected, got %d", tag.RowsAffected())
-	}
-	return nil
+
+	return orderReference, nil
 }
 
-// GetTransaction возвращает транзакцию по ее ID.
-func (pg *Pg) GetTransaction(transactionID int) (Transaction, error) {
-	ctx := context.Background()
-	sql := `SELECT id, provider_id, client_order, status, transaction_type, amount, currency, created_at, updated_at
-			FROM transactions WHERE id=$1`
-	var transaction Transaction
-	err := pg.pool.QueryRow(ctx, sql, transactionID).Scan(&transaction.ID, &transaction.ProviderID, &transaction.ClientOrder, &transaction.Status, &transaction.TransactionType, &transaction.Amount, &transaction.Currency)
-	if err != nil {
-		if err == pgx.ErrNoRows {
-			return Transaction{}, fmt.Errorf("transaction not found")
-		}
-		return Transaction{}, fmt.Errorf("unable to get transaction: %v", err)
-	}
-	return transaction, nil
-}
+// GetAccountIBAN получает AccountNumber и IBAN по ID
+func (pg *Pg) GetAccountIBAN(accountID int) (string, error) {
+	columns := []string{"iban"}
+	wheres := map[string]interface{}{"id": accountID}
 
-// Функции для работы с IBAN
+	var iban string
 
-// InsertIBAN создает новый IBAN и возвращает его ID.
-func (pg *Pg) InsertIBAN(transactionID int, ibanNumber, ibanCountry string) (int, error) {
-	ctx := context.Background()
-	sql := "INSERT INTO ibans (transaction_id, iban_number, iban_country, created_at) VALUES ($1, $2, $3, NOW()) RETURNING id"
-	var id int
-	err := pg.pool.QueryRow(ctx, sql, transactionID, ibanNumber, ibanCountry).Scan(&id)
-	if err != nil {
-		return 0, fmt.Errorf("unable to insert IBAN: %v", err)
+	if err := pg.Select("accounts", columns, wheres, &iban); err != nil {
+		return "", fmt.Errorf("unable to get account details: %v", err)
 	}
-	return id, nil
-}
 
-// GetIBAN возвращает IBAN по его ID.
-func (pg *Pg) GetIBAN(ibanID int) (IBAN, error) {
-	ctx := context.Background()
-	sql := "SELECT id, transaction_id, iban_number, iban_country, created_at FROM ibans WHERE id=$1"
-	var iban IBAN
-	err := pg.pool.QueryRow(ctx, sql, ibanID).Scan(&iban.ID, &iban.TransactionID, &iban.IBANNumber, &iban.IBANCountry, &iban.CreatedAt)
-	if err != nil {
-		if err == pgx.ErrNoRows {
-			return IBAN{}, fmt.Errorf("IBAN not found")
-		}
-		return IBAN{}, fmt.Errorf("unable to get IBAN: %v", err)
-	}
 	return iban, nil
 }
 
-// Функции для работы с провайдерами
+// SetAccountCurrentBalance обновляет текущий баланс счета для указанного id счета.
+func (pg *Pg) SetAccountCurrentBalance(accountId int, balance float64) error {
+	updates := map[string]interface{}{"current_balance": balance}
+	wheres := map[string]interface{}{"id": accountId}
 
-// GetProvider возвращает провайдера по его ID.
-func (pg *Pg) GetProvider(providerID int) (Provider, error) {
-	ctx := context.Background()
-	sql := "SELECT id, name, api_key, api_url FROM providers WHERE id=$1"
-	var provider Provider
-	err := pg.pool.QueryRow(ctx, sql, providerID).Scan(&provider.ID, &provider.Name, &provider.APIKey, &provider.APIURL)
+	err := pg.Update("accounts", updates, wheres)
 	if err != nil {
-		if err == pgx.ErrNoRows {
-			return Provider{}, fmt.Errorf("provider not found")
-		}
-		return Provider{}, fmt.Errorf("unable to get provider: %v", err)
+		return fmt.Errorf("unable to update account balance: %v", err)
 	}
-	return provider, nil
+
+	return nil
 }
 
-// GetAllProviders возвращает список всех провайдеров.
-func (pg *Pg) GetAllProviders() ([]Provider, error) {
-	ctx := context.Background()
-	sql := "SELECT id, name, api_key, api_url FROM providers"
-	rows, err := pg.pool.Query(ctx, sql)
+// SetAccountStateToWaitingForAccountIbanGeneration устанавливает поле AccountStateID для заданного аккаунта.
+func (pg *Pg) SetAccountStateToWaitingForAccountIbanGeneration(accountID int) error {
+	updates := map[string]interface{}{
+		"account_state_id": AccountStateWaitingForAccountIbanGeneration, // устанавливаем статус аккаунта
+		"updated_at":       time.Now(),                                  // обновляем поле updated_at
+	}
+
+	wheres := map[string]interface{}{
+		"id": accountID,
+	}
+
+	return pg.Update("accounts", updates, wheres)
+}
+
+// SetAccountOrderReferenceAndStateToWaitingForApproval обновляет OrderReference и State для заданного аккаунта.
+func (pg *Pg) SetAccountOrderReferenceAndStateToWaitingForApproval(accountID int, orderReference string) error {
+	updates := map[string]interface{}{
+		"order_reference":  orderReference,
+		"account_state_id": AccountStateWaitingForApproval, // устанавливаем статус аккаунта
+		"updated_at":       time.Now(),                     // обновляем поле updated_at
+	}
+
+	wheres := map[string]interface{}{
+		"id": accountID,
+	}
+
+	return pg.Update("accounts", updates, wheres)
+}
+
+// SetAccountIBANAndStateToActiveByOrderReference обновляет IBAN и State для заданного аккаунта на основе OrderReference.
+func (pg *Pg) SetAccountIBANAndStateToActiveByOrderReference(orderReference string, iban string) error {
+	updates := map[string]interface{}{
+		"account_number":   iban, // записываем IBAN в качестве account_number
+		"iban":             iban,
+		"account_state_id": AccountStateActive,
+		"updated_at":       time.Now(), // обновляем поле updated_at
+	}
+
+	wheres := map[string]interface{}{
+		"order_reference": orderReference,
+	}
+
+	return pg.Update("accounts", updates, wheres)
+}
+
+// SetAccountStateToRejectedByOrderReference обновляет поле State для заданного аккаунта на основе OrderReference.
+func (pg *Pg) SetAccountStateToRejectedByOrderReference(orderReference string) error {
+	updates := map[string]interface{}{
+		"account_state_id": AccountStateRejected,
+		"updated_at":       time.Now(), // обновляем поле updated_at
+	}
+
+	wheres := map[string]interface{}{
+		"order_reference": orderReference,
+	}
+
+	return pg.Update("accounts", updates, wheres)
+}
+
+// Методы для работы с транзакциями
+
+// InsertTransaction создаёт новую запись в таблице transactions, используя общий метод Insert и возвращает её ID.
+func (pg *Pg) InsertTransaction(transaction Transaction) (int, error) {
+	params := map[string]interface{}{
+		"company_id":         transaction.CompanyID,
+		"currency_src_id":    transaction.CurrencySrcID,
+		"currency_dst_id":    transaction.CurrencyDstID,
+		"account_src_id":     transaction.AccountSrcID,
+		"account_dst_id":     transaction.AccountDstID,
+		"balance_prev":       transaction.BalancePrev,
+		"balance_next":       transaction.BalanceNext,
+		"amount":             transaction.Amount,
+		"txtype":             transaction.TxType,
+		"created_at":         transaction.CreatedAt,
+		"updated_at":         transaction.UpdatedAt,
+		"transfer_id":        transaction.TransferID,
+		"transfer_type":      transaction.TransferType,
+		"revenue_account_id": transaction.RevenueAccountID,
+	}
+
+	return pg.Insert("transactions", params)
+}
+
+// Методы для работы с входящими платежами
+
+// InsertTransferIncoming вставляет новую запись о входящем переводе в базу данных и возвращает ее ID.
+func (pg *Pg) InsertTransferIncoming(t *TransferIncoming) (int, error) {
+	params := map[string]interface{}{
+		"amount":                 t.Amount,
+		"amount_debt":            t.AmountDebt,
+		"currency_id":            t.CurrencyID,
+		"status_id":              t.StatusID,
+		"urgency_id":             t.UrgencyID,
+		"operation_type_id":      t.OperationTypeID,
+		"payment_provider_id":    t.PaymentProviderID,
+		"payment_system_id":      t.PaymentSystemID,
+		"payment_bank_id":        t.PaymentBankID,
+		"payment_number":         t.PaymentNumber,
+		"account_id":             t.AccountID,
+		"recipient_id":           t.RecipientID,
+		"recipient_type":         t.RecipientType,
+		"company_id":             t.CompanyID,
+		"system_message":         t.SystemMessage,
+		"reason":                 t.Reason,
+		"channel":                t.Channel,
+		"bank_message":           t.BankMessage,
+		"sender_account":         t.SenderAccount,
+		"sender_bank_name":       t.SenderBankName,
+		"sender_bank_address":    t.SenderBankAddress,
+		"sender_bank_swift":      t.SenderBankSwift,
+		"sender_bank_country_id": t.SenderBankCountryID,
+		"sender_name":            t.SenderName,
+		"sender_country_id":      t.SenderCountryID,
+		"sender_city":            t.SenderCity,
+		"sender_address":         t.SenderAddress,
+		"sender_state":           t.SenderState,
+		"sender_zip":             t.SenderZip,
+		"respondent_fees_id":     t.RespondentFeesID,
+		"execution_at":           t.ExecutionAt,
+		"created_at":             t.CreatedAt,
+		"updated_at":             t.UpdatedAt,
+		"group_id":               t.GroupID,
+		"group_type_id":          t.GroupTypeID,
+		"project_id":             t.ProjectID,
+		"price_list_id":          t.PriceListID,
+		"price_list_fee_id":      t.PriceListFeeID,
+		"beneficiary_type_id":    t.BeneficiaryTypeID,
+		"beneficiary_name":       t.BeneficiaryName,
+	}
+
+	return pg.Insert("transfer_incomings", params)
+}
+
+// Методы для работы с платежами
+
+// GetPaymentIDStatusNameAndAccountCurrentBalanceByPaymentNumber возвращает ID платежа, имя статуса и баланс аккаунта по PaymentNumber.
+func (pg *Pg) GetPaymentIDStatusNameAndAccountCurrentBalanceByPaymentNumber(paymentNumber string) (*Payment, error) {
+	query := `
+		SELECT
+			p.id, p.payment_number,
+			s.id as "status.id", s.name as "status.name",
+			a.id as "account.id", a.current_balance as "account.current_balance"
+		FROM payments p
+		JOIN payment_status s ON p.status_id = s.id
+		JOIN accounts a ON p.account_id = a.id
+		WHERE p.payment_number = $1
+		LIMIT 1
+	`
+
+	rows, err := pg.pool.Query(context.Background(), query, paymentNumber)
 	if err != nil {
-		return nil, fmt.Errorf("unable to get providers: %v", err)
+		return nil, err
 	}
 	defer rows.Close()
 
-	providers := make([]Provider, 0)
-	for rows.Next() {
-		var provider Provider
-		err := rows.Scan(&provider.ID, &provider.Name, &provider.APIKey, &provider.APIURL)
+	payment := &Payment{}
+	if rows.Next() {
+		err = pgxscan.ScanRow(payment, rows)
 		if err != nil {
-			return nil, fmt.Errorf("unable to scan provider: %v", err)
-		}
-		providers = append(providers, provider)
-	}
-	return providers, nil
-}
-
-// Функции для работы с платежами
-
-// GetPaymentWithRelations возвращает платеж со связанными сущностями на основе указанных отношений и условий.
-func (pg *Pg) GetPaymentWithRelations(relations []string, wheres map[string]interface{}) (payment *Payment, err error) {
-	query := `SELECT p.* FROM payments p %s WHERE %s LIMIT 1`
-
-	// Собираем фрагменты SQL-запроса для связанных сущностей
-	joins := ""
-	for _, relation := range relations {
-		switch relation {
-		case "Account.Payee":
-			joins += `
-				LEFT JOIN accounts a ON p.account_id = a.id
-				LEFT JOIN payees py ON a.payee_id = py.id
-			`
-		case "Status":
-			joins += `
-				LEFT JOIN payment_status s ON p.status_id = s.id
-			`
-		case "Provider":
-			joins += `
-				LEFT JOIN payment_provider pr ON p.payment_provider_id = pr.id
-			`
-		case "OperationType":
-			joins += `
-				LEFT JOIN payment_types t ON p.type_id = t.id
-			`
+			return nil, err
 		}
 	}
 
-	// Формируем фрагмент SQL-запроса для условий
-	conditions := ""
-	values := make([]interface{}, 0)
-	i := 1
-	for field, value := range wheres {
-		conditions += fmt.Sprintf("%s=$%d AND ", field, i)
-		values = append(values, value)
-		i++
-	}
-	conditions = conditions[:len(conditions)-5] // Удаляем последний " AND "
-
-	// Формируем окончательный SQL-запрос
-	sql := fmt.Sprintf(query, joins, conditions)
-
-	row := pg.pool.QueryRow(context.Background(), sql, values...)
-
-	// Используем pgx.Row.ScanStruct для прямого сканирования результатов в структуру
-	err = row.Scan(payment)
-	if err != nil {
-		if err == pgx.ErrNoRows {
-			return nil, fmt.Errorf("ничего не найдено: %v", err)
-		}
+	if err := rows.Err(); err != nil {
 		return nil, err
 	}
 
 	return payment, nil
+}
+
+// SetPaymentAmountAndStatusByPaymentNumber обновляет сумму платежа и статус для заданного номера платежа.
+func (pg *Pg) SetPaymentAmountAndStatusByPaymentNumber(paymentNumber string, amount float64, status string) error {
+	updates := map[string]interface{}{
+		"amount":    amount,
+		"status_id": GetStatus(status),
+	}
+
+	wheres := map[string]interface{}{"payment_number": paymentNumber}
+
+	err := pg.Update("payments", updates, wheres)
+	if err != nil {
+		return fmt.Errorf("unable to update payment amount and status: %v", err)
+	}
+
+	return nil
 }
