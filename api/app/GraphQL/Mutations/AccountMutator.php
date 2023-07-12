@@ -14,14 +14,12 @@ use App\Models\Account;
 use App\Models\AccountState;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
-use App\Models\Company;
 use App\Models\EmailNotification;
 use App\Models\GroupRole;
 use App\Models\Groups;
 use App\Models\Members;
 use App\Models\PaymentProvider;
 use App\Services\EmailService;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -54,7 +52,7 @@ class AccountMutator
                 ->get();
 
             $args['account_type'] = $this->setAccountType($args['group_type_id']);
-            if (! isset($args['account_number'])) {
+            if (empty($args['account_number'])) {
                 $args['account_state_id'] = AccountState::WAITING_FOR_ACCOUNT_GENERATION;
             } else {
                 $args['account_state_id'] = AccountState::WAITING_FOR_APPROVAL;

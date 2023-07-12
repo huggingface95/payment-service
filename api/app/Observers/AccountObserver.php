@@ -9,6 +9,7 @@ use App\Models\Currencies;
 use App\Services\EmailService;
 use App\Services\AccountService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Response;
 
 class AccountObserver extends BaseObserver
 {
@@ -32,6 +33,19 @@ class AccountObserver extends BaseObserver
                 : sprintf('%s-%s', $parent->account_number, $currency->code);
 
             $this->accountService->cloneParentAccountColumns($model, $parent->id);
+        }
+
+        if ($model->is_primary) {
+            /** @var Account $existAccount */
+            $existAccount = Account::query()->where('payment_provider_id', $model->payment_provider_id)
+                ->where('iban_provider_id', $model->iban_provider_id)
+                ->where('client_id', $model->client_id)
+                ->where('is_primary', true)
+                ->exists();
+
+            if ($existAccount) {
+                throw new GraphqlException('This client already has a primary account with the same IBAN and PP', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
         }
 
         return true;
