@@ -61,10 +61,14 @@ class CompanyMutator extends BaseMutator
                 ]);
             }
 
-            $company->paymentProviders()->create(['name' => PaymentProvider::NAME_INTERNAL]);
+            $company->paymentProviders()->create([
+                'name' => PaymentProvider::NAME_INTERNAL,
+                'is_active' => true,
+            ]);
             $company->paymentSystem()->create([
                 'name' => PaymentSystem::NAME_INTERNAL,
                 'payment_provider_id' => $company->paymentProviders()->first()->id,
+                'is_active' => true,
             ]);
 
             $templateSubjects = [
