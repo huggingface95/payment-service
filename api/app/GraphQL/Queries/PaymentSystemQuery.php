@@ -52,10 +52,17 @@ final class PaymentSystemQuery
                 ->pluck('id')
                 ->unique();
 
-            $paymentSystemRegions = PaymentSystem::whereIn('id', $paymentSystems)->with('regions')->get()->flatMap(function ($paymentSystem) {
-                return $paymentSystem->regions;
-            })->unique();
+            $paymentSystemRegions = PaymentSystem::whereIn('id', $paymentSystems)
+                ->get()
+                ->flatMap(function ($paymentSystem) {
+                    $paymentBankRegions = $paymentSystem->banks->pluck('regions')->flatten()->unique();
+                    $bankCorrespondentRegions = $paymentSystem->bankCorrespondent->regions()->get()->unique();
+                    return $paymentBankRegions->merge($bankCorrespondentRegions);
+                })
+                ->unique('id')
+                ->sortBy('id');
         }
+
 
         return $paymentSystemRegions;
     }
@@ -93,9 +100,15 @@ final class PaymentSystemQuery
                 ->pluck('id')
                 ->unique();
 
-            $paymentSystemCurrencies = PaymentSystem::whereIn('id', $paymentSystems)->with('currencies')->get()->flatMap(function ($paymentSystem) {
-                return $paymentSystem->currencies;
-            })->unique();
+            $paymentSystemCurrencies = PaymentSystem::whereIn('id', $paymentSystems)
+                ->get()
+                ->flatMap(function ($paymentSystem) {
+                    $paymentBankCurrencies = $paymentSystem->banks->pluck('currencies')->flatten()->unique();
+                    $bankCorrespondentCurrencies = $paymentSystem->bankCorrespondent->currencies()->get()->unique();
+                    return $paymentBankCurrencies->merge($bankCorrespondentCurrencies);
+                })
+                ->unique('id')
+                ->sortBy('id');
         }
 
         return $paymentSystemCurrencies;
