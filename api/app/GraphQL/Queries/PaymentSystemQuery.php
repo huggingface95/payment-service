@@ -30,12 +30,21 @@ final class PaymentSystemQuery
         $paymentSystem = PaymentSystem::findOrFail($args['id']);
 
         if ($paymentSystem->name != PaymentSystem::NAME_INTERNAL) {
-            $paymentSystemRegions = $paymentSystem->banks()
+            $paymentBankRegions = $paymentSystem->banks()
                 ->with('regions')
                 ->get()
                 ->pluck('regions')
                 ->flatten()
                 ->unique();
+
+            $bankCorrespondentRegions = $paymentSystem->bankCorrespondent()
+                ->with('regions')
+                ->get()
+                ->pluck('regions')
+                ->flatten()
+                ->unique();
+
+            $paymentSystemRegions = $paymentBankRegions->merge($bankCorrespondentRegions)->unique('id')->sortBy('id');
         } else {
             $paymentProvider = $paymentSystem->providers()->first();
             $paymentSystems = PaymentSystem::where('payment_provider_id', $paymentProvider->id)
@@ -62,12 +71,21 @@ final class PaymentSystemQuery
         $paymentSystem = PaymentSystem::findOrFail($args['id']);
 
         if ($paymentSystem->name != PaymentSystem::NAME_INTERNAL) {
-            $paymentSystemCurrencies = $paymentSystem->banks()
+            $paymentBankCurrencies = $paymentSystem->banks()
                 ->with('currencies')
                 ->get()
                 ->pluck('currencies')
                 ->flatten()
                 ->unique();
+
+            $bankCorrespondentCurrencies = $paymentSystem->bankCorrespondent()
+                ->with('currencies')
+                ->get()
+                ->pluck('currencies')
+                ->flatten()
+                ->unique();
+
+            $paymentSystemCurrencies = $paymentBankCurrencies->merge($bankCorrespondentCurrencies)->unique('id')->sortBy('id');
         } else {
             $paymentProvider = $paymentSystem->providers()->first();
             $paymentSystems = PaymentSystem::where('payment_provider_id', $paymentProvider->id)
