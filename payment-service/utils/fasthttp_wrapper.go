@@ -13,7 +13,7 @@ type FastHTTP struct {
 }
 
 // Request - выполняет HTTP запрос с заданным методом, endpoint-ом и параметрами
-func (c *FastHTTP) Request(method string, endpoint string, params map[string]interface{}, middleware func(requestBody []byte)) ([]byte, error) {
+func (c *FastHTTP) Request(method string, endpoint string, params interface{}, middleware func(requestBody []byte) error) ([]byte, error) {
 	// Создание объекта запроса fasthttp
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
@@ -29,28 +29,40 @@ func (c *FastHTTP) Request(method string, endpoint string, params map[string]int
 	res := fasthttp.AcquireResponse()
 	defer fasthttp.ReleaseResponse(res)
 
+	// Преобразование параметров запроса в JSON
+	paramsBytes, err := json.Marshal(params)
+	if err != nil {
+		return nil, fmt.Errorf("ошибка преобразования параметров запроса в JSON: %w", err)
+	}
+
 	switch method {
 	case fiber.MethodPost:
 		req.Header.SetMethod(fiber.MethodPost)
 
-		// Преобразование параметров запроса в JSON
-		body, err := json.Marshal(params)
-		if err != nil {
-			return nil, fmt.Errorf("ошибка преобразования параметров запроса в JSON: %w", err)
+		req.SetBody(paramsBytes)
+
+		if middleware != nil {
+			if err := middleware(paramsBytes); err != nil {
+				return nil, err
+			}
 		}
-
-		req.SetBody(body)
-
-		middleware(body)
 	case fiber.MethodGet:
 		req.Header.SetMethod(fiber.MethodGet)
 
 		// Добавление параметров запроса в виде query параметров
-		for key, value := range params {
+		paramsMap := map[string]interface{}{}
+		if err := json.Unmarshal(paramsBytes, &paramsMap); err != nil {
+			return nil, err
+		}
+		for key, value := range paramsMap {
 			req.URI().QueryArgs().Add(key, fmt.Sprintf("%v", value))
 		}
 
-		middleware(nil)
+		if middleware != nil {
+			if err := middleware(nil); err != nil {
+				return nil, err
+			}
+		}
 	default:
 		return nil, fmt.Errorf("неподдерживаемый HTTP метод: %s", method)
 	}
