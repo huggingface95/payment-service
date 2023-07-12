@@ -6,6 +6,7 @@ use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\AccountRepositoryInterface;
+use Illuminate\Support\Carbon;
 
 class AccountService extends AbstractService
 {
@@ -114,5 +115,11 @@ class AccountService extends AbstractService
         foreach ($morphRecords as $action => $record) {
             $account->{$action}()->attach($record);
         }
+    }
+
+    public function updateLastCharge(Account $account): void
+    {
+        $account->last_charge_at = Carbon::now();
+        $account->save();
     }
 }
