@@ -105,9 +105,6 @@ class PaymentSystemMutator
         if (isset($args['regions'])) {
             $paymentSystem->regions()->sync($args['regions']['sync']);
         }
-        if (isset($args['banks'])) {
-            $paymentSystem->banks()->sync($args['banks']['sync']);
-        }
         if (isset($args['operations'])) {
             $paymentSystem->operations()->sync($args['operations']['sync']);
         }

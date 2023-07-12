@@ -68,8 +68,6 @@ input InputPaymentSystem {
     currencies: PivotTable
     "массив ID провайдеров"
     payment_provider_id: ID
-    "массив ID Реквизитов"
-    banks: PivotTable
     "массив типов операций"
     operations: PivotTable
     "Описание"
