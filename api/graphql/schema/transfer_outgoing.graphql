@@ -248,7 +248,7 @@ extend type Mutation @guard {
         "Имя банка получателя"
         recipient_bank_name: String
         "ID страны банка получателя"
-        recipient_bank_country_id: ID
+        recipient_bank_country_id: ID!
         "Адрес банка получателя"
         recipient_bank_address: String
         "SWIFT банка получателя"
@@ -305,7 +305,7 @@ extend type Mutation @guard {
         "Имя банка получателя"
         recipient_bank_name: String
         "ID страны банка получателя"
-        recipient_bank_country_id: ID
+        recipient_bank_country_id: ID!
         "Адрес банка получателя"
         recipient_bank_address: String
         "SWIFT банка получателя"
