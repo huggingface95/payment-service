@@ -23,28 +23,16 @@ class CreateTransferIncomingStandardDTO extends CreateTransferIncomingDTO
         $args['status_id'] ??= PaymentStatusEnum::UNSIGNED->value;
 
         if ($args['status_id'] != PaymentStatusEnum::REFUND->value) {
-            if (empty($args['price_list_id'])) {
-                $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('Region not found', 'use');
-                $args['price_list_id'] = $repository->getCommissionPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found', 'use');
-            } else {
-                CommissionPriceList::query()
-                    ->where('id', $args['price_list_id'])
-                    ->where('company_id', $args['company_id'])
-                    ->first() ?? throw new GraphqlException('Commission price list not found', 'use');
-            }
+            CommissionPriceList::query()
+                ->where('id', $args['price_list_id'])
+                ->where('company_id', $args['company_id'])
+                ->first() ?? throw new GraphqlException('Commission price list not found', 'use');
 
-            if (empty($args['price_list_fee_id'])) {
-                $args['price_list_fee_id'] = PriceListFee::query()
-                    ->where('price_list_id', '=', $args['price_list_id'])
-                    ->where('operation_type_id', '=', $operationType)
-                    ->first()?->id ?? throw new GraphqlException('Price list fee not found', 'use');
-            } else {
-                PriceListFee::query()
-                    ->where('id', $args['price_list_fee_id'])
-                    ->where('operation_type_id', $operationType)
-                    ->where('company_id', $args['company_id'])
-                    ->first() ?? throw new GraphqlException('Price list fee not found', 'use');
-            }
+            PriceListFee::query()
+                ->where('id', $args['price_list_fee_id'])
+                ->where('operation_type_id', $operationType)
+                ->where('company_id', $args['company_id'])
+                ->first() ?? throw new GraphqlException('Price list fee not found', 'use');
         }
 
         $date = Carbon::now();

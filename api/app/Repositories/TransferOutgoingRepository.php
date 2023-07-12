@@ -155,7 +155,7 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
     {
         return Region::query()
             ->join('region_countries', 'regions.id', '=', 'region_countries.region_id')
-            ->where('region_countries.country_id', '=', $args['recipient_country_id'])
+            ->where('region_countries.country_id', '=', $args['recipient_bank_country_id'])
             ->where('regions.company_id', '=', $args['company_id'])
             ->first()?->id;
     }

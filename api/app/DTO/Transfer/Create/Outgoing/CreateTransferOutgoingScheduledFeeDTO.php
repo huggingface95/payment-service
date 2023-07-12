@@ -7,6 +7,7 @@ use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
 use App\Models\Account;
+use App\Models\Company;
 use App\Models\PaymentProvider;
 use App\Models\PaymentSystem;
 use Carbon\Carbon;
@@ -25,10 +26,10 @@ class CreateTransferOutgoingScheduledFeeDTO extends CreateTransferOutgoingDTO
         $date = Carbon::now();
 
         $args['amount_debt'] = $args['amount'];
-        $args['company_id'] = 1;
-        $args['recipient_bank_country_id'] = 1;
-        $args['group_id'] = 1;
-        $args['group_type_id'] = 1;
+        $args['company_id'] = $account->company_id;
+        $args['recipient_bank_country_id'] ??= Company::findOrFail($args['company_id'])->country_id;
+        $args['group_id'] = $account->group_role_id;
+        $args['group_type_id'] = $account->group_type_id;
         $args['price_list_id'] = 1;
         $args['price_list_fee_id'] = 1;
         $args['status_id'] = PaymentStatusEnum::UNSIGNED->value;

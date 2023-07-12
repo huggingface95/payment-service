@@ -47,7 +47,7 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
 
         if (empty($args['price_list_id'])) {
             $repository = new TransferOutgoingRepository();
-            $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('Region not found', 'use');
+            $args['region_id'] = null;
             $args['price_list_id'] = $repository->getCommissionPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found', 'use');
         } else {
             CommissionPriceList::query()
