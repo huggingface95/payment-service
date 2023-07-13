@@ -34,6 +34,8 @@ class CreateTransferIncomingBetweenUsersDTO extends CreateTransferIncomingDTO
         $args['created_at'] = $outgoingDTO->created_at;
         $args['execution_at'] = $outgoingDTO->created_at;
         $args['project_id'] = $toAccount->project_id;
+        $args['price_list_id'] = $outgoingDTO->price_list_id;
+        $args['price_list_fee_id'] = $outgoingDTO->price_list_fee_id;
 
         return new parent($args, $toAccount);
     }
