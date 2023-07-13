@@ -41,7 +41,7 @@ class TransferOutgoingObserver extends BaseObserver
         if ($model->paymentSystem->name != PaymentSystem::NAME_INTERNAL) {
             $checkRecipientCountry = $model->paymentSystem->regions()
                 ->whereHas('countries', function ($query) use ($model) {
-                    $query->where('id', $model->recipient_country_id);
+                    $query->where('id', $model->recipient_bank_country_id);
                 })
                 ->exists();
             
@@ -79,7 +79,7 @@ class TransferOutgoingObserver extends BaseObserver
         if ($model->paymentSystem->name != PaymentSystem::NAME_INTERNAL) {
             $checkRecipientCountry = $model->paymentSystem->regions()
                 ->whereHas('countries', function ($query) use ($model) {
-                    $query->where('id', $model->recipient_country_id);
+                    $query->where('id', $model->recipient_bank_country_id);
                 })
                 ->exists();
             
