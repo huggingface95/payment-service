@@ -2,7 +2,9 @@
 
 namespace App\Models\Traits;
 
+use App\Enums\GuardEnum;
 use App\Exceptions\GraphqlException;
+use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use App\Models\BaseModel;
 use App\Models\Members;
@@ -10,6 +12,7 @@ use App\Models\PermissionFilter;
 use App\Models\RoleAction;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 trait CheckForEvents
@@ -94,6 +97,39 @@ trait CheckForEvents
         'roles' => [],
     ];
 
+    private static array $FILTER_BY_USER_TABLES = [
+        'transfer_outgoings' => [
+            'type' => 'user_type',
+            'id' => 'requested_by_id',
+            'guards' => [
+                GuardEnum::GUARD_MEMBER->value,
+                GuardEnum::GUARD_INDIVIDUAL->value,
+            ],
+        ],
+        'transfer_incomings' => [
+            'type' => 'user_type',
+            'id' => 'requested_by_id',
+            'guards' => [
+                GuardEnum::GUARD_MEMBER->value,
+                GuardEnum::GUARD_INDIVIDUAL->value,
+            ],
+        ],
+        'transfer_exchanges' => [
+            'type' => 'user_type',
+            'id' => 'requested_by_id',
+            'guards' => [
+                GuardEnum::GUARD_MEMBER->value,
+                GuardEnum::GUARD_INDIVIDUAL->value,
+            ],
+        ],
+    ];
+
+    private static array $FILTER_BY_USER_SKIP_ACTIONS = [
+        'transfer_outgoings' => [],
+        'transfer_incomings' => [],
+        'transfer_exchanges' => [],
+    ];
+
     // 'company_id' => 'companies:id,test:test_id',
     private static array $CHECK_SOFT_DELETED_RECORDS = [
         'creating' => [
@@ -163,6 +199,43 @@ trait CheckForEvents
         return true;
     }
 
+    protected static function filterByCreator(?Model $user, string $action, Model $model): bool
+    {
+        if ($user) {
+            /** @var Members|ApplicantIndividual|ApplicantCompany $user */
+            if ($user->is_super_admin) {
+                return true;
+            }
+
+            $table = $model->getTable();
+            if (array_key_exists($table, self::$FILTER_BY_USER_TABLES)) {
+                if (in_array($action, self::$FILTER_BY_USER_SKIP_ACTIONS[$table])) {
+                    return true;
+                }
+
+                $userTypeColumn = self::$FILTER_BY_USER_TABLES[$table]['type'];
+                $userIdColumn = self::$FILTER_BY_USER_TABLES[$table]['id'];
+                $guards = self::$FILTER_BY_USER_TABLES[$table]['guards'];
+
+                if (
+                    ($userTypeValue = $model->getAttribute($userTypeColumn))
+                    &&
+                    ($userIdValue = $model->getAttribute($userIdColumn))
+                ) {
+                    $conditions = self::getUserIdConditions($guards, $userTypeColumn, $userIdColumn);
+                    foreach ($conditions as $condition) {
+                        if ($userTypeValue == $condition[$userTypeColumn] && in_array($userIdValue, $condition[$userIdColumn])) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        //TODO may be changed to false in the future
+        return true;
+    }
+
     /**
      * @throws GraphqlException
      */
@@ -202,5 +275,47 @@ trait CheckForEvents
                     });
                 }
             })->get();
+    }
+
+    private static function getUserIdConditions(array $guards, string $userTypeColumn, string $userIdColumn): array
+    {
+        $condition = [];
+        if (in_array('api', $guards) && Auth::guard('api')->check()) {
+            $accessIds = self::getApplicantIdsByAuthMember(Auth::guard('api')->user());
+            if (is_array($accessIds)) {
+                foreach (array_filter($accessIds, function ($v) {
+                    return count($v);
+                }) as $t => $ids) {
+                    if ($t == (new Members())->getTable()) {
+                        $condition[] = [
+                            $userTypeColumn => GuardEnum::GUARD_MEMBER->toString(),
+                            $userIdColumn => $ids
+                        ];
+                    } elseif ($t == (new ApplicantIndividual())->getTable()) {
+                        $condition[] = [
+                            $userTypeColumn => GuardEnum::GUARD_INDIVIDUAL->toString(),
+                            $userIdColumn => $ids
+                        ];
+                    } elseif ($t == (new ApplicantCompany())->getTable()) {
+                        $condition[] = [
+                            $userTypeColumn => GuardEnum::GUARD_CORPORATE->toString(),
+                            $userIdColumn => $ids
+                        ];
+                    }
+                }
+            }
+        } elseif (in_array('api_client', $guards) && Auth::guard('api_client')->check()) {
+            $condition[] = [
+                $userTypeColumn => GuardEnum::GUARD_INDIVIDUAL->toString(),
+                $userIdColumn => [Auth::guard('api_client')->user()->id]
+            ];
+        } elseif (in_array('api_corporate', $guards) && Auth::guard('api_corporate')->check()) {
+            $condition[] = [
+                $userTypeColumn => GuardEnum::GUARD_CORPORATE->toString(),
+                $userIdColumn => [Auth::guard('api_corporate')->user()->id]
+            ];
+        }
+
+        return $condition;
     }
 }

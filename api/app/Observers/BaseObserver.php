@@ -7,6 +7,7 @@ use App\Models\ApplicantIndividual;
 use App\Models\History;
 use App\Models\Members;
 use App\Models\Traits\ApplicantIdPrefix;
+use App\Models\Traits\ApplicantIdsForAuthMemberTrait;
 use App\Models\Traits\CheckForEvents;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,7 @@ class BaseObserver
 {
     use CheckForEvents;
     use ApplicantIdPrefix;
+    use ApplicantIdsForAuthMemberTrait;
 
 
     public function created(Model $model, bool $callHistory = true): bool
@@ -59,6 +61,7 @@ class BaseObserver
         $success = self::filterByPermissionFilters($user, 'creating', $model)
             && self::filterByRoleActions($user, 'creating', $model)
             && self::filterByCompany($user, 'creating', $model)
+            && self::filterByCreator($user, 'creating', $model)
             && self::checkSoftDeletedRecord('creating', $model);
 
         if ($success and $callHistory) {
@@ -81,6 +84,7 @@ class BaseObserver
         $success = self::filterByPermissionFilters($user, 'saving', $model)
             && self::filterByRoleActions($user, 'saving', $model)
             && self::filterByCompany($user, 'saving', $model)
+            && self::filterByCreator($user, 'saving', $model)
             && self::checkSoftDeletedRecord('saving', $model);
 
         if ($success and $callHistory) {
@@ -103,6 +107,7 @@ class BaseObserver
         $success = self::filterByPermissionFilters($user, 'updating', $model)
             && self::filterByRoleActions($user, 'updating', $model)
             && self::filterByCompany($user, 'updating', $model)
+            && self::filterByCreator($user, 'updating', $model)
             && self::checkSoftDeletedRecord('updating', $model);
 
         if ($success && $callHistory) {
@@ -122,7 +127,8 @@ class BaseObserver
 
         $success = self::filterByPermissionFilters($user, 'deleting', $model)
             && self::filterByRoleActions($user, 'deleting', $model)
-            && self::filterByCompany($user, 'deleting', $model);
+            && self::filterByCompany($user, 'deleting', $model)
+            && self::filterByCreator($user, 'deleting', $model);
 
         if ($success && $callHistory) {
             $this->checkAndCreateHistory($model, 'deleting');

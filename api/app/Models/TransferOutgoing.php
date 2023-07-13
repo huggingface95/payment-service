@@ -6,6 +6,7 @@ use App\Enums\FeeModeEnum;
 use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
 use App\Models\Interfaces\CustomObServerInterface;
+use App\Models\Scopes\FilterByCreatorScope;
 use App\Models\Scopes\TransferFeeAmountScope;
 use App\Models\Traits\BaseObServerTrait;
 use App\Observers\TransferOutgoingObserver;
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property Account $account
  * @property Currencies $currency
  * @property int requested_by_id
+ * @property string user_type
  * @property int sender_id
  * @property int status_id
  * @property int account_id
@@ -99,6 +101,7 @@ class TransferOutgoing extends BaseModel implements CustomObServerInterface
     {
         parent::booted();
         static::addGlobalScope(new TransferFeeAmountScope());
+        static::addGlobalScope(new FilterByCreatorScope());
     }
 
     public function account(): BelongsTo
