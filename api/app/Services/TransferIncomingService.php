@@ -42,9 +42,6 @@ class TransferIncomingService extends AbstractService
 
             $this->createTransferHistory($transfer, TransferHistoryActionEnum::INIT->value)->createPPHistory($transfer);
 
-            $account = $transfer->account;
-            $this->accountService->updateLastCharge($account);
-
             return $transfer;
         });
     }
@@ -182,6 +179,8 @@ class TransferIncomingService extends AbstractService
             }
 
             $this->accountService->addToBalance($transfer->account, $transfer->amount_debt);
+
+            $this->accountService->updateLastCharge($transfer->account);
 
             $this->createTransferHistory($transfer);
 
