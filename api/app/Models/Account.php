@@ -113,6 +113,7 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
         'total_pending_transactions',
         'last_transaction_at',
         'alias',
+        'is_active',
     ];
 
     private static array $cached_transferIncomings = [];
@@ -136,6 +137,11 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
         if ($value == AccountState::ACTIVE) {
             $this->attributes['activated_at'] = Carbon::now();
         }
+    }
+
+    public function getIsActiveAttribute()
+    {
+        return $this->account_state_id == AccountState::ACTIVE;
     }
 
     public function getAliasAttribute(): bool

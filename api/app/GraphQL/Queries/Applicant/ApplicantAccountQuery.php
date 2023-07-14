@@ -34,12 +34,6 @@ class ApplicantAccountQuery
             $accounts->orderBy('id', 'DESC');
         }
 
-        $accounts = $accounts->get()->map(function ($account) {
-            $account->is_active = $account->account_state_id == AccountState::ACTIVE;
-
-            return $account;
-        });
-
-        return $accounts;
+        return $accounts->get();
     }
 }
