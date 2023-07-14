@@ -201,37 +201,37 @@ trait CheckForEvents
 
     protected static function filterByCreator(?Model $user, string $action, Model $model): bool
     {
-        if ($user) {
-            /** @var Members|ApplicantIndividual|ApplicantCompany $user */
-            if ($user->is_super_admin) {
-                return true;
-            }
-
-            $table = $model->getTable();
-            if (array_key_exists($table, self::$FILTER_BY_USER_TABLES)) {
-                if (in_array($action, self::$FILTER_BY_USER_SKIP_ACTIONS[$table])) {
-                    return true;
-                }
-
-                $userTypeColumn = self::$FILTER_BY_USER_TABLES[$table]['type'];
-                $userIdColumn = self::$FILTER_BY_USER_TABLES[$table]['id'];
-                $guards = self::$FILTER_BY_USER_TABLES[$table]['guards'];
-
-                if (
-                    ($userTypeValue = $model->getAttribute($userTypeColumn))
-                    &&
-                    ($userIdValue = $model->getAttribute($userIdColumn))
-                ) {
-                    $conditions = self::getUserIdConditions($guards, $userTypeColumn, $userIdColumn);
-                    foreach ($conditions as $condition) {
-                        if ($userTypeValue == $condition[$userTypeColumn] && in_array($userIdValue, $condition[$userIdColumn])) {
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            }
-        }
+//        if ($user) {
+//            /** @var Members|ApplicantIndividual|ApplicantCompany $user */
+//            if ($user->is_super_admin) {
+//                return true;
+//            }
+//
+//            $table = $model->getTable();
+//            if (array_key_exists($table, self::$FILTER_BY_USER_TABLES)) {
+//                if (in_array($action, self::$FILTER_BY_USER_SKIP_ACTIONS[$table])) {
+//                    return true;
+//                }
+//
+//                $userTypeColumn = self::$FILTER_BY_USER_TABLES[$table]['type'];
+//                $userIdColumn = self::$FILTER_BY_USER_TABLES[$table]['id'];
+//                $guards = self::$FILTER_BY_USER_TABLES[$table]['guards'];
+//
+//                if (
+//                    ($userTypeValue = $model->getAttribute($userTypeColumn))
+//                    &&
+//                    ($userIdValue = $model->getAttribute($userIdColumn))
+//                ) {
+//                    $conditions = self::getUserIdConditions($guards, $userTypeColumn, $userIdColumn);
+//                    foreach ($conditions as $condition) {
+//                        if ($userTypeValue == $condition[$userTypeColumn] && in_array($userIdValue, $condition[$userIdColumn])) {
+//                            return true;
+//                        }
+//                    }
+//                    return false;
+//                }
+//            }
+//        }
         //TODO may be changed to false in the future
         return true;
     }
