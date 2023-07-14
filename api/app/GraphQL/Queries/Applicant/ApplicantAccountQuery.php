@@ -3,7 +3,6 @@
 namespace App\GraphQL\Queries\Applicant;
 
 use App\Models\Account;
-use App\Models\AccountState;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
