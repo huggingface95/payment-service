@@ -7,6 +7,7 @@ use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividual;
 use App\Models\Members;
+use App\Models\TransferIncoming;
 use App\Models\TransferOutgoing;
 
 trait AccessTransfersTrait
@@ -26,7 +27,7 @@ trait AccessTransfersTrait
         }
     }
 
-    public function checkMemberAccess(TransferOutgoing $model, Members $member): void
+    public function checkMemberAccess(TransferOutgoing|TransferIncoming $model, Members $member): void
     {
         $originalData = $model->getOriginal();
 

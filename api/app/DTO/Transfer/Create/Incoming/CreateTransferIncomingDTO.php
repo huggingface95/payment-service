@@ -91,6 +91,10 @@ class CreateTransferIncomingDTO
 
     public string $execution_at;
 
+    public int $requested_by_id;
+
+    public string $user_type;
+
     protected function __construct(array $args, Account $account)
     {
         $properties = collect((new \ReflectionObject($this))->getProperties(\ReflectionProperty::IS_PUBLIC))->pluck('name')->toArray();
