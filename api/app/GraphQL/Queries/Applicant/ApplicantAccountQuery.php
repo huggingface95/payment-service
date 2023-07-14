@@ -3,6 +3,7 @@
 namespace App\GraphQL\Queries\Applicant;
 
 use App\Models\Account;
+use App\Models\AccountState;
 use GraphQL\Type\Definition\ResolveInfo;
 use Illuminate\Support\Str;
 use Nuwave\Lighthouse\Support\Contracts\GraphQLContext;
@@ -33,6 +34,12 @@ class ApplicantAccountQuery
             $accounts->orderBy('id', 'DESC');
         }
 
-        return $accounts->get();
+        $accounts = $accounts->get()->map(function ($account) {
+            $account->is_active = $account->account_state_id == AccountState::ACTIVE;
+
+            return $account;
+        });
+
+        return $accounts;
     }
 }
