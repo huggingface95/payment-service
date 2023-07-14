@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exports\Account\AccountsExport;
 use App\Exports\Applicant\ApplicantCompaniesExport;
 use App\Exports\Applicant\ApplicantIndividualsExport;
+use App\Exports\ApplicantCabinet\Transfer\ApplicantCabinetTransfersExport;
 use App\Exports\Transfer\TransferDetailsExport;
 use App\Exports\Transfer\TransferExchangesExport;
 use App\Exports\Transfer\TransferIncomingsExport;
@@ -12,6 +13,7 @@ use App\Exports\Transfer\TransferOutgoingsExport;
 use App\Http\Resources\Account\AccountsListResource;
 use App\Http\Resources\Applicant\ApplicantCompaniesListResource;
 use App\Http\Resources\Applicant\ApplicantIndividualsListResource;
+use App\Http\Resources\ApplicantCabinet\Transfer\ApplicantCabinetTransfersListResource;
 use App\Http\Resources\Transfer\TransferOutgoingDetailsResource;
 use App\Http\Resources\Transfer\TransfersListResource;
 use App\Models\TransferExchange;
@@ -94,6 +96,13 @@ class ExportService extends AbstractService
         $transfersList = TransfersListResource::collection($transfersList ?? [])->sortByDesc('created_at')->jsonSerialize();
 
         return new TransferExchangesExport(['transfers' => $transfersList]);
+    }
+
+    private function exportTransfer(Collection $data): ApplicantCabinetTransfersExport
+    {
+        $transfersList = ApplicantCabinetTransfersListResource::collection($data ?? [])->sortByDesc('created_at')->jsonSerialize();
+
+        return new ApplicantCabinetTransfersExport(['transfers' => $transfersList]);
     }
 
     private function collectTransfers(Collection $transfers): Collection

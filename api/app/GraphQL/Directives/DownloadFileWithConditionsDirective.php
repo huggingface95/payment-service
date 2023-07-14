@@ -28,6 +28,11 @@ directive @downloadFileWithConditions(
     This is only needed when the default model detection does not work.
     """
     model: String
+
+    """
+    Apply scopes to the underlying query.
+    """
+    scopes: [String!]
 ) on FIELD_DEFINITION
 GRAPHQL;
     }
@@ -43,7 +48,7 @@ GRAPHQL;
 
             $results = $resolveInfo->enhanceBuilder(
                 $model::query(),
-                $this->directiveArgValue('scopes', [])
+                $this->directiveArgValue('scopes', $this->directiveArgValue('scopes') ?? [])
             )->get();
 
             $raw = $this->exportService->exportListByModelName($this->directiveArgValue('model'), $results, $args['type']);
