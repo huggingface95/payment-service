@@ -183,7 +183,6 @@ class TransferExchangeService extends AbstractService
         $fromAccount = empty($args['from_account_id']) ? $transfer->transferOutgoing->account : Account::findOrFail($args['from_account_id']);
         $toAccount = empty($args['to_account_id']) ? $transfer->transferIncoming->account : Account::findOrFail($args['to_account_id']);
 
-        $this->isAllowedOperation($transfer);
         $this->validateCreateTransfer($fromAccount, $toAccount);
 
         $data = $this->populateTransferData($args, $fromAccount, $toAccount);
@@ -290,8 +289,6 @@ class TransferExchangeService extends AbstractService
      */
     public function updateTransferStatusToExecuted(array $transfers): void
     {
-        $this->isAllowedOperation($transfers['exchange']);
-
         DB::beginTransaction();
 
         try {
@@ -385,17 +382,6 @@ class TransferExchangeService extends AbstractService
 
         if ($fromAccount->currencies->id == $toAccount->currencies->id) {
             throw new GraphqlException('Account currencies are the same', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-    }
-
-    /**
-     * @throws GraphqlException
-     */
-    private function isAllowedOperation(TransferExchange $transfer): void
-    {
-        $clientType = Auth::guard('api')->check() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class);
-        if ($transfer->user_type != $clientType) {
-            throw new GraphqlException('This operation is not allowed', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
     }
 
