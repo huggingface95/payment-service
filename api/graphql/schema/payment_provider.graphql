@@ -46,6 +46,7 @@ input QueryPaymentProvidersFilterStatic @spread{
     hasCountriesFilterById: ID @eq
     hasCurrenciesFilterById: ID @eq
     is_active: Boolean @eq
+    hasAccountPivotClientableMixedId: Mixed @eq
 }
 
 input InputPaymentProvider {
