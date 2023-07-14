@@ -32,9 +32,27 @@ extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Qu
     ): [Transfer!]
     @paginate(defaultCount: 10, scopes: ["filterByAuthUser"])
     @orderBy(column: "created_at", direction: DESC)
+
+    """
+    Скачать список трансферов для апликанта
+    """
+    downloadApplicantTransferList(
+        type: ExportFileType!
+        filter: _ @filterConditions(static: QueryDownloadApplicantTransferListFilterStatic)
+        created_at: DateTimeRange @whereBetween
+    ): RawFile
+        @downloadFileWithConditions(model: "Transfer", scopes: ["filterByAuthUser"])
+        @orderBy(column: "created_at", direction: DESC)
 }
 
 input QueryTransfersFilterStatic @spread {
+    to_account: String @eq
+    from_account: String @eq
+    payment_status_id: ID @eq
+    operation_type_id: ID @eq
+}
+
+input QueryDownloadApplicantTransferListFilterStatic @spread {
     to_account: String @eq
     from_account: String @eq
     payment_status_id: ID @eq
