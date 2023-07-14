@@ -241,8 +241,11 @@ class FilterConditionsHandler
      * @param array<string, mixed> $condition
      * @return array<string, mixed>
      */
-    protected function prefixConditionWithTableName(array $condition, Model $model): array
+    protected function prefixConditionWithTableName(array|null $condition, Model $model): array
     {
+        if (!is_array($condition)){
+            return [];
+        }
         if (isset($condition['column'])) {
             if (!str_contains($condition['column'], '.')) {
                 $condition['column'] = $model->getTable() . '.' . $condition['column'];
