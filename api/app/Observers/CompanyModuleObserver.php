@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\AccountState;
+use App\Jobs\UpdateOrRestoreAccountStateJob;
 use App\Models\CompanyModule;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,15 +28,7 @@ class CompanyModuleObserver extends BaseObserver
 //        //enable updating event
 //        $dispatcher->push('eloquent.updating: ' . Account::class, $payload);
 
-        if ($model->is_active === false) {
-            foreach ($accounts as $account) {
-                $account->update(['account_state_id' => AccountState::SUSPENDED]);
-            }
-        } else {
-            foreach ($accounts as $account) {
-                $account->restoreLast();
-            }
-        }
+        dispatch(new UpdateOrRestoreAccountStateJob($model, $accounts));
 
         return true;
     }
