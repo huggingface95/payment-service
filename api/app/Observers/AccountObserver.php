@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Exceptions\EmailException;
 use App\Exceptions\GraphqlException;
+use App\Jobs\UpdateOrRestoreAccountStateJob;
 use App\Models\Account;
 use App\Models\Currencies;
 use App\Services\EmailService;
@@ -64,7 +65,7 @@ class AccountObserver extends BaseObserver
 
     public function saving(Account|Model $model, bool $callHistory = true): bool
     {
-        if (!$this->hasCalledClass(CompanyModuleObserver::class, 'updated') && !$model->isActiveBankingModule()) {
+        if (!$this->hasCalledClass(UpdateOrRestoreAccountStateJob::class, 'handle') && !$model->isActiveBankingModule()) {
             throw new GraphqlException('Create or Enable Company Banking module in this account', 'use', 401);
         }
 
