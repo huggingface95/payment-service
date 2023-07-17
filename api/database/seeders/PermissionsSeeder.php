@@ -1251,6 +1251,12 @@ class PermissionsSeeder extends Seeder
 
                                             ],
                                             [
+                                                'name' => 'ApplicantStatuses',
+                                                'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                'type' => 'query',
+                                                'method' => 'applicantStatuses',
+                                            ],
+                                            [
                                                 'name' => 'ApplicantCompanyBasicInfo',
                                                 'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
                                                 'type' => 'query',
@@ -1314,8 +1320,6 @@ class PermissionsSeeder extends Seeder
                                                 'type' => 'query',
                                                 'method' => 'owners',
                                             ],
-
-
                                             [
                                                 'name' => 'ApplicantCorporateItem',
                                                 'referer' => 'management/applicants/corporate/full-profile/new/profile/general',
@@ -1514,7 +1518,12 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
                                                 'type' => 'query',
                                                 'method' => 'modules',
-
+                                            ],
+                                            [
+                                                'name' => 'GetApplicantModules',
+                                                'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules',
+                                                'type' => 'query',
+                                                'method' => 'modules',
                                             ],
                                             [
                                                 'name' => 'GetCorporateModules',
@@ -1926,6 +1935,12 @@ class PermissionsSeeder extends Seeder
                                                 'method' => 'applicantCompany',
                                             ],
                                             [
+                                                'name' => 'GetApplicantCompanyAuthenticationLogs',
+                                                'referer' => 'management/applicants/corporate/full-profile/$id/profile/authentication-log',
+                                                'type' => 'query',
+                                                'method' => 'authenticationCompanyLogs',
+                                            ],
+                                            [
                                                 'name' => 'CompanyFilter',
                                                 'referer' => 'management/applicants/corporate/full-profile/$id/profile/authentication-log',
                                                 'type' => 'query',
@@ -2265,7 +2280,12 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'management/applicants/corporate/full-profile/$id/kyc/documents',
                                                 'type' => 'query',
                                                 'method' => 'applicantDocuments',
-
+                                            ],
+                                            [
+                                                'name' => 'GetApplicantKycDocuments',
+                                                'referer' => 'management/applicants/corporate/full-profile/$id/profile/general',
+                                                'type' => 'query',
+                                                'method' => 'applicantDocuments',
                                             ],
                                             [
                                                 'name' => 'ApplicantCorporateItem',
@@ -3123,7 +3143,6 @@ class PermissionsSeeder extends Seeder
                                                 'method' => 'company',
 
                                             ],
-
                                             [
                                                 'name' => 'GetMemberCompanyById',
                                                 'referer' => 'administration/member-info/full-profile/$id/profile/general',
@@ -3304,6 +3323,18 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'administration/member-info/full-profile/$id/profile/departments',
                                                 'type' => 'query',
                                                 'method' => 'departments',
+                                            ],
+                                            [
+                                                'name' => 'GetMemberCompanyById',
+                                                'referer' => 'administration/member-info/full-profile/new/profile/departments',
+                                                'type' => 'query',
+                                                'method' => 'company',
+                                            ],
+                                            [
+                                                'name' => 'GetMemberCompanyById',
+                                                'referer' => 'administration/member-info/full-profile/$id/profile/departments',
+                                                'type' => 'query',
+                                                'method' => 'company',
                                             ],
                                             [
                                                 'name' => 'GetSettingsCompanyById',
@@ -5293,7 +5324,12 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'banking/accounts/details/$id',
                                                 'type' => 'query',
                                                 'method' => 'account',
-
+                                            ],
+                                            [
+                                                'name' => 'GetAccountTransactions',
+                                                'referer' => 'banking/accounts/details/$id',
+                                                'type' => 'query',
+                                                'method' => 'transactions',
                                             ],
                                             [
                                                 'name' => 'GetAccountCommissionLimits',
@@ -6634,6 +6670,15 @@ class PermissionsSeeder extends Seeder
                                             'order' => 6,
                                             'type' => 'info',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'SignTransferExchange',
+                                                'type' => 'mutation',
+                                                'method' => 'signTransferExchange',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'parents' => ['Sign Payments.Enabled'],
+                                            ],
+                                        ]
                                     ],
                                     'Sign Payments.Fee' => [
                                         'data' => [
@@ -7493,18 +7538,8 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'banking/payment-provider/full-profile/payment-provider-settings/$id',
                                                 'type' => 'mutation',
                                                 'method' => 'updatePaymentProvider',
+                                                'parents' => ['Payment Provider:Settings.Enabled'],
                                             ],
-                                        ]
-                                    ],
-                                    'Payment Provider:Settings.Payment System Details' => [
-                                        'data' => [
-                                            'name' => 'Payment Provider:Settings.Payment System Details',
-                                            'display_name' => 'Payment System Details',
-                                            'guard_name' => 'api',
-                                            'order' => 3,
-                                            'type' => 'info',
-                                        ],
-                                        'operations' => [
                                             [
                                                 'name' => 'UpdateCorrespondentBank',
                                                 'referer' => 'banking/payment-system/detail/payment-system-settings',
@@ -7520,10 +7555,49 @@ class PermissionsSeeder extends Seeder
                                                 'parents' => ['Payment Provider:Settings.Enabled'],
                                             ],
                                             [
+                                                'name' => 'UpdatePaymentBank',
+                                                'referer' => 'banking/payment-system/detail/payment-system-settings',
+                                                'type' => 'mutation',
+                                                'method' => 'updatePaymentBank',
+                                                'parents' => ['Payment Provider:Settings.Enabled'],
+                                            ],
+                                            [
+                                                'name' => 'UpdatePaymentBank',
+                                                'referer' => 'banking/payment-system/detail/payment-system-settings/$id',
+                                                'type' => 'mutation',
+                                                'method' => 'updatePaymentBank',
+                                                'parents' => ['Payment Provider:Settings.Enabled'],
+                                            ],
+                                        ]
+                                    ],
+                                    'Payment Provider:Settings.Payment System Details' => [
+                                        'data' => [
+                                            'name' => 'Payment Provider:Settings.Payment System Details',
+                                            'display_name' => 'Payment System Details',
+                                            'guard_name' => 'api',
+                                            'order' => 3,
+                                            'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
                                                 'name' => 'CreateCorrespondentBank',
                                                 'referer' => 'banking/payment-system/detail/payment-system-settings/$id',
                                                 'type' => 'mutation',
                                                 'method' => 'createBankCorrespondent',
+                                                'parents' => ['Payment Provider:Settings.Enabled'],
+                                            ],
+                                            [
+                                                'name' => 'CreatePaymentBank',
+                                                'referer' => 'banking/payment-system/detail/payment-system-settings',
+                                                'type' => 'mutation',
+                                                'method' => 'createPaymentBank',
+                                                'parents' => ['Payment Provider:Settings.Enabled'],
+                                            ],
+                                            [
+                                                'name' => 'CreatePaymentBank',
+                                                'referer' => 'banking/payment-system/detail/payment-system-settings/$id',
+                                                'type' => 'mutation',
+                                                'method' => 'createPaymentBank',
                                                 'parents' => ['Payment Provider:Settings.Enabled'],
                                             ],
                                             [
@@ -7557,6 +7631,13 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'CountriesFilter',
                                                 'referer' => 'banking/payment-system/detail/payment-system-settings/$id',
+                                                'type' => 'query',
+                                                'method' => 'countries',
+                                                'parents' => ['Payment Provider:Settings.Enabled'],
+                                            ],
+                                            [
+                                                'name' => 'CountriesFilter',
+                                                'referer' => 'banking/payment-system/detail/payment-system-settings',
                                                 'type' => 'query',
                                                 'method' => 'countries',
                                                 'parents' => ['Payment Provider:Settings.Enabled'],
