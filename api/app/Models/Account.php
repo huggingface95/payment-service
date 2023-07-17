@@ -132,11 +132,11 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
 
     public function setAccountStateIdAttribute($value)
     {
-        $this->attributes['account_state_id'] = $value;
-
-        if ($value == AccountState::ACTIVE) {
+        if ($value != $this->attributes['account_state_id'] && $value == AccountState::ACTIVE) {
             $this->attributes['activated_at'] = Carbon::now();
         }
+
+        $this->attributes['account_state_id'] = $value;
     }
 
     public function getIsActiveAttribute()
