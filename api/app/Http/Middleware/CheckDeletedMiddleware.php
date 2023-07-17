@@ -16,9 +16,11 @@ class CheckDeletedMiddleware
         if ($response->status() === 200 && $request->path() === 'api') {
             $responseData = json_decode($response->getContent(), true);
 
-            foreach ($responseData['data'] as $mutationName => $mutationResult) {
-                if ($mutationResult === null && Str::startsWith($mutationName, 'delete')) {
-                    throw new GraphqlException('An entry not found', 'internal', 404);
+            if (isset($responseData['data'])) {
+                foreach ($responseData['data'] as $mutationName => $mutationResult) {
+                    if ($mutationResult === null && Str::startsWith($mutationName, 'delete')) {
+                        throw new GraphqlException('An entry not found', 'internal', 404);
+                    }
                 }
             }
         }
