@@ -3,12 +3,15 @@
 namespace App\Repositories;
 
 use App\Enums\PaymentStatusEnum;
+use App\Exceptions\GraphqlException;
 use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use App\Models\CommissionPriceList;
+use App\Models\Files;
 use App\Models\Region;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
+use App\Services\FileService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +19,15 @@ use Illuminate\Support\Carbon;
 
 class TransferOutgoingRepository extends Repository implements TransferOutgoingRepositoryInterface
 {
+    protected $fileService;
+
+    public function __construct(FileService $fileService)
+    {
+        parent::__construct();
+
+        $this->fileService = $fileService;
+    }
+
     protected function model(): string
     {
         return TransferOutgoing::class;
@@ -40,7 +52,17 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
 
     public function detachFileById(Model|Builder $model, array $data): Model|Builder|null
     {
-        if (! empty($data)) {
+        if (isset($data)) {
+            foreach ($data as $fileId) {
+                $file = Files::find($fileId);
+                if ($file) {
+                    $deleted = $this->fileService->deleteFile($file);
+                    if (!$deleted) {
+                        throw new GraphqlException('Error deleting file from storage');
+                    }
+                }
+            }
+
             $model->files()->detach($data);
         }
 

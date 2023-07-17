@@ -44,6 +44,19 @@ class FileService extends AbstractService
         return $fileDb;
     }
 
+    public function deleteFile(Files $file): bool
+    {
+        $filepath = $file->author_id.'/'.$file->entity_type.'/'.$file->storage_name;
+        $deleted = Storage::disk('s3')->delete($filepath);
+
+        if ($deleted) {
+            $file->delete();
+            return true;
+        }
+
+        return false;
+    }
+
     public function getImageResolution($file): string|null
     {
         $resolution = getimagesize($file);
