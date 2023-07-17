@@ -10,6 +10,9 @@ type TransferOutgoing {
     "Сумма"
     amount: Decimal!
     amount_debt: Decimal!
+    "Сумма фактически отправленная"
+    amount_sent: Decimal!
+    "Сумма коммиссий"
     fee_amount: Decimal!
     "Коммиссия"
     fee: Fee @hasOne(realtion: "fee")

@@ -7,6 +7,7 @@ use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
 use App\Models\Interfaces\CustomObServerInterface;
 use App\Models\Scopes\FilterByCreatorScope;
+use App\Models\Scopes\TransferAmountSentScope;
 use App\Models\Scopes\TransferFeeAmountScope;
 use App\Models\Traits\BaseObServerTrait;
 use App\Observers\TransferOutgoingObserver;
@@ -87,6 +88,7 @@ class TransferOutgoing extends BaseModel implements CustomObServerInterface
         'price_list_id',
         'price_list_fee_id',
         'fee_amount',
+        'amount_sent',
     ];
 
     protected $casts = [
@@ -102,6 +104,7 @@ class TransferOutgoing extends BaseModel implements CustomObServerInterface
         parent::booted();
         static::addGlobalScope(new TransferFeeAmountScope());
         static::addGlobalScope(new FilterByCreatorScope());
+        static::addGlobalScope(new TransferAmountSentScope());
     }
 
     public function account(): BelongsTo
