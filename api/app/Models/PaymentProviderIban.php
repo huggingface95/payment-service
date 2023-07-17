@@ -21,6 +21,7 @@ class PaymentProviderIban extends BaseModel
         'currency_id',
         'logo_id',
         'is_active',
+        'bank_country_id',
     ];
 
     protected $casts = [
@@ -41,6 +42,11 @@ class PaymentProviderIban extends BaseModel
     public function logo(): BelongsTo
     {
         return $this->belongsTo(Files::class, 'logo_id');
+    }
+
+    public function country(): HasOne
+    {
+        return $this->hasOne(Country::class, 'id', 'bank_country_id');
     }
 
     public function projectApiSettings(): MorphMany
