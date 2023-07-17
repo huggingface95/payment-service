@@ -36,7 +36,7 @@ class CreateTransferIncomingExchangeDTO extends CreateTransferIncomingDTO
         $args['requested_by_id'] = $outgoingDTO->requested_by_id;
         $args['created_at'] = $outgoingDTO->created_at;
         $args['execution_at'] = $outgoingDTO->created_at;
-        $args['reason'] = 'Exchange: Sell';
+        $args['reason'] = 'Exchange: Buy';
         $args['project_id'] = $account->project_id;
 
         return new parent($args, $account);
