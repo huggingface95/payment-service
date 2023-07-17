@@ -20,6 +20,7 @@ use App\Models\PriceListQpFeeCurrency;
 use App\Models\TransferIncoming;
 use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferExchangeRepositoryInterface;
+use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 
 class CommissionService extends AbstractService
@@ -179,7 +180,7 @@ class CommissionService extends AbstractService
         }
 
         if ($fees === null && $feeMode == FeeModeEnum::BASE) {
-            throw new GraphqlException('Fee not found. Please set the fee range equals to 0 to create a fee free transfer');       
+            throw new GraphqlException('Fee not found. Please set the fee range equals to 0 to create a fee free transfer', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);       
         }
 
         $paymentFee += $fees;
