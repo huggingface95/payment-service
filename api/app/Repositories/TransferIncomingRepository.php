@@ -2,15 +2,27 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\GraphqlException;
 use App\Models\CommissionPriceList;
+use App\Models\Files;
 use App\Models\Region;
 use App\Models\TransferIncoming;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use App\Services\FileService;
 
 class TransferIncomingRepository extends Repository implements TransferIncomingRepositoryInterface
 {
+    protected $fileService;
+
+    public function __construct(FileService $fileService)
+    {
+        parent::__construct();
+
+        $this->fileService = $fileService;
+    }
+
     protected function model(): string
     {
         return TransferIncoming::class;
@@ -36,6 +48,16 @@ class TransferIncomingRepository extends Repository implements TransferIncomingR
     public function detachFileById(Model|Builder $model, array $data): Model|Builder|null
     {
         if (isset($data)) {
+            foreach ($data as $fileId) {
+                $file = Files::find($fileId);
+                if ($file) {
+                    $deleted = $this->fileService->deleteFile($file);
+                    if (!$deleted) {
+                        throw new GraphqlException('Error deleting file from storage');
+                    }
+                }
+            }
+
             $model->files()->detach($data);
         }
 
