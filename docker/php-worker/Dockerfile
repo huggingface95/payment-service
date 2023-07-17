@@ -27,7 +27,7 @@ RUN apk --update add wget \
   freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev \
   supervisor
 
-RUN docker-php-ext-install dom exif gd intl opcache pdo pdo_pgsql soap xsl zip
+RUN docker-php-ext-install dom exif gd intl opcache pdo pdo_pgsql soap xsl zip bcmath
 
 # Install Redis package:
 ARG INSTALL_REDIS=false
