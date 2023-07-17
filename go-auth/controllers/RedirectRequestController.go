@@ -39,11 +39,12 @@ func RedirectRequest(context *gin.Context) {
 			if header.Referer != "" {
 				ok, message := access.CheckAccess(jsonData, user, header.Referer)
 				if ok == false {
-					pkg.Info().Msgf("pagereferer:%s , data:%s, message:%s, type:%s",
+					pkg.Info().Msgf("pagereferer:%s , data:%s, message:%s, type:%s id:%d",
 						context.GetHeader("pagereferer"),
 						string(jsonData),
 						message,
 						user.ClientType(),
+						user.GetId(),
 					)
 					//context.JSON(http.StatusUnauthorized, gin.H{"message": message})
 					//return
