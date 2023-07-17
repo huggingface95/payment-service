@@ -36,6 +36,7 @@ class PriceListFeesMutator
         if ($internalPriceListExists && $args['price_list_id'] && $args['operation_type_id']) {
             $priceListFeeExists = PriceListFee::where('price_list_id', $args['price_list_id'])
                 ->where('operation_type_id', $args['operation_type_id'])
+                ->where('operation_type_id', '!=', OperationTypeEnum::SCHEDULED_FEE->value)
                 ->exists();
             if ($priceListFeeExists) {
                 throw new GraphqlException('Only one PriceListFee is allowed for the PriceList with Internal provider and operation type ' . OperationTypeEnum::tryFrom($args['operation_type_id'])->toString(), 'use');
@@ -59,6 +60,15 @@ class PriceListFeesMutator
                 }
                 if (! empty($args['scheduled']['end_date']) && Carbon::parse($args['scheduled']['end_date'])->lt($args['scheduled']['starting_date'])) {
                     throw new GraphqlException('end_date cannot be earlier than starting_date', 'use');
+                }
+
+                $existingScheduled = $priceListFee->feeScheduled()
+                    ->where('recurrent_interval', $args['recurrent_interval'])
+                    ->where('price_list_fee_id', $args['price_list_fee_id'])
+                    ->first();
+
+                if ($existingScheduled) {
+                    throw new GraphqlException('Scheduled already exists for the given parameters', 'use');
                 }
 
                 $priceListFee->feeScheduled()->create($args['scheduled']);
