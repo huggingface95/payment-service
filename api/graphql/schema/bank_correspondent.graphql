@@ -53,6 +53,7 @@ input QueryBankCorrespondentsFilterStatic @spread {
     hasCurrenciesRegionsFilterByRegionId: ID @eq
     hasPaymentProviderFilterById: ID @eq
     hasCompanyFilterById: ID @eq
+    hasCountryRegionFilterByCountryId: ID @eq
 }
 
 input InputBankCorrespondent {

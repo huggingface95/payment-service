@@ -107,4 +107,16 @@ class BankCorrespondent extends BaseModel
         return $this->hasOneDeepFromRelations($this->paymentProvider(), (new PaymentProvider())->company());
     }
 
+    public function countryRegion(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            RegionCountry::class,
+            BankCorrespondentCurrencyRegion::class,
+            'bank_correspondent_id',
+            'region_id',
+            'id',
+            'region_id'
+        );
+    }
+
 }
