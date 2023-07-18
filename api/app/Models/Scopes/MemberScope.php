@@ -14,8 +14,9 @@ class MemberScope implements Scope
     {
         $companyId = Members::where('id', '=', BaseModel::$memberId)->value('company_id');
         if ($companyId != BaseModel::SUPER_COMPANY_ID) {
-            $result = Members::query()->where('company_id', '=', $companyId)->get()->pluck('id')->toArray();
-            $builder->whereIn('member_id', $result);
+            $companyMemberIds = Members::query()->where('company_id', '=', $companyId)->get()->pluck('id')->toArray();
+            $superCompanyMemberIds = Members::query()->withoutGlobalScope(FilterByCompanyScope::class)->where('company_id', '=', BaseModel::SUPER_COMPANY_ID)->get()->pluck('id')->toArray();
+            $builder->whereIn('member_id', array_merge($companyMemberIds, $superCompanyMemberIds));
         }
     }
 }
