@@ -7,7 +7,6 @@ use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferChannelEnum;
 use App\Models\Account;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class CreateTransferIncomingRefundDTO extends CreateTransferIncomingDTO

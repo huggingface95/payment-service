@@ -7,6 +7,8 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         amount: Decimal!
         "ID аккаунта"
         account_id: ID!
+        "Тип платежной системы"
+        payment_system_type: PaymentSystemTypeEnum!
         "ID страны банка получателя"
         recipient_bank_country_id: ID!
         "ID срочности операции"
@@ -56,6 +58,8 @@ extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQ
         amount: Decimal
         "ID аккаунта"
         account_id: ID
+        "Тип платежной системы"
+        payment_system_type: PaymentSystemTypeEnum
         "ID страны банка получателя"
         recipient_bank_country_id: ID!
         "ID срочности операции"

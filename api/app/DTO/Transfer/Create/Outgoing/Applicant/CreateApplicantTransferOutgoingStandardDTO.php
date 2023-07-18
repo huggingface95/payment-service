@@ -4,6 +4,7 @@ namespace App\DTO\Transfer\Create\Outgoing\Applicant;
 
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingDTO;
 use App\Enums\PaymentStatusEnum;
+use App\Enums\PaymentSystemTypeEnum;
 use App\Enums\PaymentUrgencyEnum;
 use App\Enums\TransferChannelEnum;
 use App\Exceptions\GraphqlException;
@@ -26,11 +27,8 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
         $account = Account::where('id', $args['account_id'])->first() ?? throw new GraphqlException('Account not found', 'use');
         
         $projectSettings = $account->project?->projectSettings->where('applicant_type', $account->client_type)->first();
-        $psType = 'sepa';
-        if (isset($data['transfer_swift'])) {
-            $psType = 'swift';
-        }
 
+        $psType = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value ? PaymentSystemTypeEnum::SEPA->value : PaymentSystemTypeEnum::SWIFT->value;
         $paymentSystem = $projectSettings?->paymentProvider?->paymentSystems?->where('is_active', true)->filter(function ($item) use ($psType) {
             return str_contains(strtolower($item['name']), strtolower($psType));
         })->first()?->id ?? throw new GraphqlException('Payment system not found. Payment system name must contain \'' . $psType . '\'', 'use');
