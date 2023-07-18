@@ -234,6 +234,11 @@ class TransferIncoming extends BaseModel implements CustomObServerInterface
         return $this->hasOne(TransferExchange::class, 'transfer_incoming_id');
     }
 
+    public function between(): HasOne
+    {
+        return $this->hasOne(TransferBetween::class, 'transfer_incoming_id');
+    }
+
     public static function getObServer(): string
     {
         return TransferIncomingObserver::class;
