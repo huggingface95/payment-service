@@ -16,6 +16,11 @@ enum FeePeriodEnum {
     OTHER_SCHEDULE @enum(value: 5)
 }
 
+enum PaymentSystemTypeEnum {
+    SEPA @enum(value: "SEPA")
+    SWIFT @enum(value: "SWIFT")
+}
+
 enum ProviderTypeEnum {
     PaymentProvider @enum(value: "PaymentProvider")
     PaymentProviderIban @enum(value: "PaymentProviderIban")
