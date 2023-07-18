@@ -32,7 +32,7 @@ class FilesMutationTest extends TestCase
         );
 
         $this->seeJsonContains([
-            'message' => 'Unauthenticated.',
+            'message' => 'An entry not found',
         ]);
     }
 
