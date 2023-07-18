@@ -53,14 +53,16 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
         $args['group_id'] = $account->group_role_id;
         $args['group_type_id'] = $account->group_type_id;
 
-        $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('Region not found', 'use');
-        $args['price_list_id'] = $repository->getCommissionPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found', 'use');
+        if ($args['status_id'] != PaymentStatusEnum::REFUND->value) {
+            $args['region_id'] = $repository->getRegionIdByArgs($args) ?? throw new GraphqlException('Region not found', 'use');
+            $args['price_list_id'] = $repository->getCommissionPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found', 'use');
 
-        $args['price_list_fee_id'] = PriceListFee::query()
-            ->where('price_list_id', $args['price_list_id'])
-            ->where('operation_type_id', $operationType)
-            ->first()?->id ?? throw new GraphqlException('Price list fee not found', 'use');
-    
+            $args['price_list_fee_id'] = PriceListFee::query()
+                ->where('price_list_id', $args['price_list_id'])
+                ->where('operation_type_id', $operationType)
+                ->first()?->id ?? throw new GraphqlException('Price list fee not found', 'use');
+        }
+
         if (!empty($args['execution_at'])) {
             $executionDate = Carbon::parse($args['execution_at'])->startOfDay();
             $createDate = Carbon::parse($date)->startOfDay();

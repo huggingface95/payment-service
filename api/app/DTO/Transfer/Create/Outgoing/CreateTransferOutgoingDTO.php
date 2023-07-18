@@ -116,7 +116,7 @@ class CreateTransferOutgoingDTO
             'user_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class),
             'recipient_id' => $id,
             'recipient_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(ApplicantCompany::class) : class_basename(ApplicantIndividual::class),
-            'requested_by_id' => auth()->user()?->id,
+            'requested_by_id' => $id,
             'sender_id' => $id,
             'sender_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(ApplicantCompany::class) : class_basename(ApplicantIndividual::class),
         ];

@@ -15,6 +15,12 @@ trait AccessTransfersTrait
 
     public function checkApplicantAccess(TransferOutgoing $model, ApplicantIndividual $applicant): void
     {
+        $applicantType = $applicant instanceof ApplicantIndividual ? ApplicantTypeEnum::INDIVIDUAL->toString() : ApplicantTypeEnum::COMPANY->toString();
+        $isApplicantOwner = $applicant->id == $model->requested_by_id && $model->user_type == $applicantType;
+        if ($isApplicantOwner) {
+            return;
+        }
+
         $isAllowToAccess = ($model->account?->owner_id == $applicant->id) ||
             ($model->account?->client_id == $applicant->id && $model->account?->client_type == ApplicantTypeEnum::INDIVIDUAL->toString());
 
