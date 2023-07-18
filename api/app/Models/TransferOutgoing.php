@@ -102,9 +102,8 @@ class TransferOutgoing extends BaseModel implements CustomObServerInterface
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new TransferFeeAmountScope());
+        static::addGlobalScope(new TransferFeeAmountScope(true));
         static::addGlobalScope(new FilterByCreatorScope());
-        static::addGlobalScope(new TransferAmountSentScope());
     }
 
     public function account(): BelongsTo
