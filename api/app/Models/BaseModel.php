@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model
 {
-    public const DEFAULT_MEMBER_ID = 2;
-
     public const SUPER_COMPANY_ID = 1;
 
     //Access limitation applicant ids
     public static ?array $applicantIds = null;
 
     public static ?int $currentCompanyId = null;
+
+    public static ?int $memberId = null;
 
     protected static function booted()
     {

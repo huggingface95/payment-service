@@ -26,6 +26,9 @@ class SetBaseModelVariablesMiddleware
             $user = Auth::guard('api')->user() ?? Auth::guard('api_client')->user();
             if ($user instanceof Members) {
                 BaseModel::$applicantIds = $this->getApplicantIdsByAuthMember($user);
+                BaseModel::$memberId = $user->id;
+            } else{
+                BaseModel::$memberId = $user->account_manager_member_id;
             }
             BaseModel::$currentCompanyId = $user->company_id == BaseModel::SUPER_COMPANY_ID ? null : $user->company_id;
         }

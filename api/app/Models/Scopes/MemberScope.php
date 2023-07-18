@@ -12,10 +12,10 @@ class MemberScope implements Scope
 {
     public function apply(Builder $builder, Model $model)
     {
-        $memberId = BaseModel::DEFAULT_MEMBER_ID;
-        $companyId = Members::where('id', '=', $memberId)->value('company_id');
-        $companyMembers = Members::where('company_id', '=', $companyId)->get('id');
-        $result = collect($companyMembers)->pluck('id')->toArray();
-        $builder->whereIn('member_id', $result);
+        $companyId = Members::where('id', '=', BaseModel::$memberId)->value('company_id');
+        if ($companyId != BaseModel::SUPER_COMPANY_ID) {
+            $result = Members::query()->where('company_id', '=', $companyId)->get()->pluck('id')->toArray();
+            $builder->whereIn('member_id', $result);
+        }
     }
 }

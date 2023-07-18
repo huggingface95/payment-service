@@ -39,6 +39,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string email
  * @property string fullname
  * @property int company_id
+ * @property int account_manager_member_id
  * @property ApplicantBankingAccess $applicantBankingAccess
  * @property Company company
  * @property Account $account

@@ -17,7 +17,7 @@ class ApplicantHistoryRiskLevelMutator extends BaseMutator
      */
     public function create($root, array $args)
     {
-        $args['member_id'] = BaseModel::DEFAULT_MEMBER_ID;
+        $args['member_id'] = BaseModel::$memberId;
         $applicantRiskLevelHistory = ApplicantRiskLevelHistory::create($args);
         if (isset($args['risk_level_id'])) {
             ApplicantIndividual::where('id', '=', $args['applicant_id'])
