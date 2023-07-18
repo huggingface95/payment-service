@@ -93,6 +93,8 @@ type TransferOutgoing {
     transfer_swift: [TransferSwift] @hasMany(relation: "transferSwift")
     "exchange"
     exchange: TransferExchange @hasOne(relation: "exchange")
+    "relation between transfer"
+    between: TransferBetween @hasOne(relation: "between")
     "Дата и время выполнения транзакции"
     execution_at: DateTimeUtc
     "Дата и время создания"
