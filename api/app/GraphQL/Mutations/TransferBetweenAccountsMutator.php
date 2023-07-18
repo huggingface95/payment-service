@@ -70,7 +70,7 @@ class TransferBetweenAccountsMutator extends BaseMutator
     /**
      * @throws GraphqlException
      */
-    public function update($_, array $args): TransferBetween|Model|Builder|null
+    public function update($_, array $args): array|null
     {
         /** @var TransferBetween $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
@@ -80,7 +80,15 @@ class TransferBetweenAccountsMutator extends BaseMutator
 
         $this->transferService->updateTransfer($transfer, $args, OperationTypeEnum::BETWEEN_ACCOUNT->value);
 
-        return $transfer;
+        $fees = $this->commissionService->getAllCommissions($transfer->transferOutgoing);
+
+        return [
+            'id'                => $transfer->id,
+            'transfer_incoming' => $transfer->transferIncoming,
+            'transfer_outgoing' => $transfer->transferOutgoing,
+            'fee_amount'        => Str::decimal($fees['fee_total']),
+            'final_amount'      => Str::decimal($fees['amount_debt']),
+        ];
     }
 
     /**
