@@ -26,7 +26,7 @@ class GroupMutator extends BaseMutator
             throw new GraphqlException('Commission Template is not be used for this group', 'internal', 500);
         }
         if (! isset($args['company_id'])) {
-            $member = Members::find(BaseModel::DEFAULT_MEMBER_ID);
+            $member = Members::find(BaseModel::$memberId);
             $args['company_id'] = $member->company_id;
         }
         $group = GroupType::find($args['group_type_id']);
@@ -63,7 +63,7 @@ class GroupMutator extends BaseMutator
             throw new GraphqlException('Commission Template is not be used for this group', 'internal', 500);
         }
         if (! isset($args['company_id'])) {
-            $member = Members::find(BaseModel::DEFAULT_MEMBER_ID);
+            $member = Members::find(BaseModel::$memberId);
             $args['company_id'] = $member->company_id;
         }
         $group = GroupType::find($args['group_type_id']);
@@ -98,8 +98,8 @@ class GroupMutator extends BaseMutator
     {
         $group = GroupRole::find($args['id']);
         $relation = DB::table('group_role_members_individuals')
-                ->select('*')
-                ->where('group_role_id', '=', $args['id'])->get();
+            ->select('*')
+            ->where('group_role_id', '=', $args['id'])->get();
         if ($relation != '[]') {
             throw new GraphqlException('It is not possible to delete the group because it has active users', 'use');
         }
@@ -111,7 +111,7 @@ class GroupMutator extends BaseMutator
     public function setMemberGroup($root, array $args)
     {
         $groupRole = GroupRole::create($args);
-        $member = Members::where('id', '=', Members::DEFAULT_MEMBER_ID)->first();
+        $member = Members::where('id', '=', Members::$memberId)->first();
         $role_id = $groupRole->id;
         if ($role_id) {
             $member->groupRoles()->sync([$role_id], true);

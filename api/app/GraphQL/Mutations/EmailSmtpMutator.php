@@ -17,9 +17,9 @@ class EmailSmtpMutator extends BaseMutator
 {
     public function create($root, array $args)
     {
-        $args['member_id'] = BaseModel::DEFAULT_MEMBER_ID;
+        $args['member_id'] = BaseModel::$memberId;
         if (isset($args['is_sending_mail']) && $args['is_sending_mail'] === true) {
-            EmailSmtp::where('company_id', $args['company_id'])->update(['is_sending_mail'=>false]);
+            EmailSmtp::where('company_id', $args['company_id'])->update(['is_sending_mail' => false]);
         }
         if (isset($args['host_name']) && $args['host_name'] == 'mailhog') {
             $args['username'] = '';
@@ -33,11 +33,11 @@ class EmailSmtpMutator extends BaseMutator
     public function update($root, array $args)
     {
         $emailSmtp = EmailSmtp::find($args['id']);
-        if (! $emailSmtp) {
+        if (!$emailSmtp) {
             throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
         }
         if (isset($args['is_sending_mail']) && $args['is_sending_mail'] === true) {
-            EmailSmtp::where('company_id', $emailSmtp->company_id)->update(['is_sending_mail'=>false]);
+            EmailSmtp::where('company_id', $emailSmtp->company_id)->update(['is_sending_mail' => false]);
         }
         if (isset($args['host_name']) && $args['host_name'] == 'mailhog') {
             $args['username'] = '';
@@ -54,7 +54,7 @@ class EmailSmtpMutator extends BaseMutator
     public function delete($root, array $args)
     {
         $emailSmtp = EmailSmtp::find($args['id']);
-        if (! $emailSmtp) {
+        if (!$emailSmtp) {
             throw new GraphqlException('An entry with this id does not exist', 'not found', 404);
         }
         $emailSmtp->delete();
@@ -69,7 +69,7 @@ class EmailSmtpMutator extends BaseMutator
         }, explode(',', $args['email']));
 
         foreach ($emails as $email) {
-            if (! $this->validEmail($email)) {
+            if (!$this->validEmail($email)) {
                 throw new GraphqlException("Email {$email} not correct", 'Bad Request', 400);
             }
         }
@@ -105,25 +105,25 @@ class EmailSmtpMutator extends BaseMutator
 
         dispatch(new SendMailJob($config, $data));
 
-        return ['status'=>'OK', 'message'=>'Email sent for processing'];
+        return ['status' => 'OK', 'message' => 'Email sent for processing'];
     }
 
     public function checkSmtp(array $args)
     {
         try {
-                if (isset($args['security'])) {
-                    $args['security'] == 'auto' || empty($args['security']) ? $args['security'] = null : $args['security'];
-                } else {
-                    $args['security'] = null;
-                }
+            if (isset($args['security'])) {
+                $args['security'] == 'auto' || empty($args['security']) ? $args['security'] = null : $args['security'];
+            } else {
+                $args['security'] = null;
+            }
 
-                $transport = new Swift_SmtpTransport($args['host_name'], $args['port'], $args['security']);
-                $transport->setUsername($args['username']);
-                $transport->setPassword($args['password']);
-                $mailer = new \Swift_Mailer($transport);
-                $mailer->getTransport()->start();
+            $transport = new Swift_SmtpTransport($args['host_name'], $args['port'], $args['security']);
+            $transport->setUsername($args['username']);
+            $transport->setPassword($args['password']);
+            $mailer = new \Swift_Mailer($transport);
+            $mailer->getTransport()->start();
 
-                return true;
+            return true;
         } catch (Exception $e) {
             Log::error($e->getMessage());
             throw new GraphqlException('SMTP doesnt work correctly. Please check configuration', 'internal', 403);

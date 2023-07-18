@@ -15,7 +15,7 @@ class ApplicantCompanyLabelMutator
      */
     public function create($root, array $args)
     {
-        $memberId = ApplicantCompanyLabel::DEFAULT_MEMBER_ID;
+        $memberId = ApplicantCompanyLabel::$memberId;
         $args['member_id'] = $memberId;
         $label = ApplicantCompanyLabel::create($args);
 
@@ -30,7 +30,7 @@ class ApplicantCompanyLabelMutator
     public function update($root, array $args)
     {
         $label = ApplicantCompanyLabel::find($args['id']);
-        $memberId = ApplicantCompanyLabel::DEFAULT_MEMBER_ID;
+        $memberId = ApplicantCompanyLabel::$memberId;
         $args['member_id'] = $memberId;
         $label->update($args);
 
