@@ -4244,7 +4244,18 @@ class PermissionsSeeder extends Seeder
                                                 'type' => 'query',
                                                 'method' => 'groupList',
                                             ],
-
+                                            [
+                                                'name' => 'GetModules',
+                                                'referer' => 'administration/member-info/full-profile/$id/members/general-settings',
+                                                'type' => 'query',
+                                                'method' => 'modules',
+                                            ],
+                                            [
+                                                'name' => 'GetModules',
+                                                'referer' => 'administration/member-info/full-profile/new/members/general-settings',
+                                                'type' => 'query',
+                                                'method' => 'modules',
+                                            ],
                                             [
                                                 'name' => 'GetCompanyModules',
                                                 'referer' => 'administration/member-info/full-profile/new/members/general-settings',
@@ -5765,7 +5776,6 @@ class PermissionsSeeder extends Seeder
                                 'data' => [
                                     'name' => 'Payments:IWT:Details',
                                     'type' => 'member',
-
                                     'order' => 2,
                                 ],
                                 'list' => [
@@ -5782,6 +5792,12 @@ class PermissionsSeeder extends Seeder
                                                 'name' => 'GetIncomingTransfer',
                                                 'type' => 'query',
                                                 'method' => 'transferIncoming',
+                                                'referer' => 'banking/payments/incoming/transfer-details/details',
+                                            ],
+                                            [
+                                                'name' => 'GetTransferIncomingStatistic',
+                                                'type' => 'query',
+                                                'method' => 'transferIncomingsStatistic',
                                                 'referer' => 'banking/payments/incoming/transfer-details/details',
                                             ],
                                             [
@@ -6023,6 +6039,12 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'banking/payments/outgoing/transfer-details/details',
                                             ],
                                             [
+                                                'name' => 'ExecuteTransferOutgoing',
+                                                'type' => 'query',
+                                                'method' => 'executeTransferOutgoing',
+                                                'referer' => 'banking/payments/outgoing/transfer-details/details',
+                                            ],
+                                            [
                                                 'name' => 'GetOutgoingTransfersCompaniesSelect',
                                                 'type' => 'query',
                                                 'method' => 'transferOutgoings',
@@ -6061,6 +6083,15 @@ class PermissionsSeeder extends Seeder
                                             'guard_name' => 'api',
                                             'order' => 2,
                                             'type' => 'edit',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'SendTransferOutgoing',
+                                                'referer' => 'banking/payments/outgoing/transfer-details/details',
+                                                'parents' => ['Payments:OWT:Details.Enabled'],
+                                                'type' => 'mutation',
+                                                'method' => 'sendTransferOutgoing',
+                                            ],
                                         ],
                                     ],
                                     'Payments:OWT:Details.Upload Document' => [
@@ -7134,6 +7165,13 @@ class PermissionsSeeder extends Seeder
                                                 'type' => 'mutation',
                                                 'method' => 'updatePriceListFees',
                                             ],
+                                            [
+                                                'name' => 'CSUpdatePPFee',
+                                                'referer' => 'banking/payment-system/detail/commission-settings',
+                                                'parents' => ['Commission Template:Price Lists:Fees List.Enabled'],
+                                                'type' => 'mutation',
+                                                'method' => 'updatePriceListPPFees',
+                                            ],
                                         ],
                                     ],
                                     'Commission Template:Price Lists:Fees List.Delete' => [
@@ -7151,7 +7189,13 @@ class PermissionsSeeder extends Seeder
                                                 'parents' => ['Commission Template:Price Lists:Fees List.Enabled'],
                                                 'type' => 'mutation',
                                                 'method' => 'deletePriceListFees',
-
+                                            ],
+                                            [
+                                                'name' => 'CSDeletePPFee',
+                                                'referer' => 'banking/payment-system/detail/commission-settings',
+                                                'parents' => ['Commission Template:Price Lists:Fees List.Enabled'],
+                                                'type' => 'mutation',
+                                                'method' => 'deletePriceListPPFees',
                                             ],
                                         ],
                                     ],
@@ -7179,7 +7223,12 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'banking/commission-templates/full-profile/fees',
                                                 'type' => 'query',
                                                 'method' => 'paymentSystems',
-
+                                            ],
+                                            [
+                                                'name' => 'CSAddPPFee',
+                                                'referer' => 'banking/payment-system/detail/commission-settings',
+                                                'type' => 'mutation',
+                                                'method' => 'createPriceListPPFees',
                                             ],
                                             [
                                                 'name' => 'GetFeeTypes',
@@ -7790,6 +7839,12 @@ class PermissionsSeeder extends Seeder
                                                 'method' => 'operationTypes',
                                             ],
                                             [
+                                                'name' => 'PaymentSystemFilter',
+                                                'referer' => 'banking/payment-system/detail/commission-settings',
+                                                'type' => 'query',
+                                                'method' => 'paymentSystems',
+                                            ],
+                                            [
                                                 'name' => 'CSGetPPFees',
                                                 'referer' => 'banking/payment-system/detail/commission-settings',
                                                 'type' => 'query',
@@ -8210,24 +8265,6 @@ class PermissionsSeeder extends Seeder
                                                 'method' => 'applicantDevices',
                                                 'referer' => 'settings/login-details/my-devices',
                                             ],
-                                            [
-                                                'name' => 'Countries',
-                                                'type' => 'query',
-                                                'method' => 'countries',
-                                                'referer' => 'new-payment',
-                                            ],
-                                            [
-                                                'name' => 'AccountsList',
-                                                'referer' => 'new-payment',
-                                                'type' => 'query',
-                                                'method' => 'accountList',
-                                            ],
-                                            [
-                                                'name' => 'GetClientOrIdSelect',
-                                                'referer' => 'new-payment',
-                                                'type' => 'query',
-                                                'method' => 'clientList',
-                                            ],
                                         ]
                                     ],
                                     'Dashboard:Welcome.Feedback' => [
@@ -8418,6 +8455,32 @@ class PermissionsSeeder extends Seeder
                                             'order' => 1,
                                             'type' => 'read',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'Countries',
+                                                'type' => 'query',
+                                                'method' => 'countries',
+                                                'referer' => 'new-payment',
+                                            ],
+                                            [
+                                                'name' => 'AccountsList',
+                                                'referer' => 'new-payment',
+                                                'type' => 'query',
+                                                'method' => 'accountList',
+                                            ],
+                                            [
+                                                'name' => 'GetClientOrIdSelect',
+                                                'referer' => 'new-payment',
+                                                'type' => 'query',
+                                                'method' => 'clientList',
+                                            ],
+                                            [
+                                                'name' => 'GetApplicantAccountsFilter',
+                                                'referer' => 'new-payment',
+                                                'type' => 'query',
+                                                'method' => 'applicantAccounts',
+                                            ],
+                                        ]
                                     ],
                                     'Make Payments.Create Payments' => [
                                         'data' => [
