@@ -40,9 +40,9 @@ extend type Mutation @guard {
         respondent_fee_id: ID
         "Причина перевода"
         reason: String
-    ): TransferBetween
+    ): TransferBetweenWithFees
         @field(resolver: "TransferBetweenUsersMutator@update")
-    
+
     """
     Подписать перевод между пользователями
     """
@@ -80,7 +80,7 @@ extend type Mutation @guard {
         id: ID!
     ): TransferBetween
         @field(resolver: "TransferBetweenUsersMutator@refund")
-    
+
     """
     Привязать файлы
     """

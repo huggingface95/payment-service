@@ -54,7 +54,7 @@ extend type Mutation @guard {
         price_list_id: ID
         "ID прайс-листа фии"
         price_list_fee_id: ID
-    ): TransferBetween
+    ): TransferBetweenWithFees
         @field(resolver: "TransferBetweenAccountsMutator@update")
 
     """
@@ -94,7 +94,7 @@ extend type Mutation @guard {
         id: ID!
     ): TransferBetween
         @field(resolver: "TransferBetweenAccountsMutator@refund")
-    
+
     """
     Привязать файлы
     """
