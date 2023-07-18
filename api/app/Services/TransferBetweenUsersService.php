@@ -19,7 +19,6 @@ use App\Models\TransferOutgoing;
 use App\Repositories\Interfaces\TransferIncomingRepositoryInterface;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Traits\TransferHistoryTrait;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
