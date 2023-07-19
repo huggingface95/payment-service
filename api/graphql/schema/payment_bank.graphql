@@ -64,6 +64,7 @@ input QueryPaymentBanksFilterStatic @spread{
     hasCurrenciesRegionsFilterByCurrencyId: ID @eq
     hasCurrenciesRegionsFilterByRegionId: ID @eq
     hasCompanyFilterById: ID @eq
+    hasCountryRegionFilterByCountryId: ID @eq
 }
 
 input InputPaymentBank {

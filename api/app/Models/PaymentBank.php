@@ -7,6 +7,7 @@ use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
@@ -99,6 +100,18 @@ class PaymentBank extends BaseModel
     public function company(): HasOneDeep
     {
         return $this->hasOneDeepFromRelations($this->paymentProvider(), (new PaymentProvider())->company());
+    }
+
+    public function countryRegion(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            RegionCountry::class,
+            PaymentBankCurrencyRegion::class,
+            'payment_bank_id',
+            'region_id',
+            'id',
+            'region_id'
+        );
     }
 
 }
