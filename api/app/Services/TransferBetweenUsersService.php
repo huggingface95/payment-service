@@ -76,10 +76,10 @@ class TransferBetweenUsersService extends AbstractService
     public function updateTransfer(TransferBetween $transfer, array $args, int $operationType): TransferBetween
     {
         if ($transfer->transferOutgoing->status_id !== PaymentStatusEnum::UNSIGNED->value) {
-            throw new GraphqlException('Transfer status is not Unsigned');
+            throw new GraphqlException('Transfer status is not Unsigned', 'use');
         }
         if ($transfer->transferIncoming->status_id !== PaymentStatusEnum::UNSIGNED->value) {
-            throw new GraphqlException('Transfer status is not Unsigned');
+            throw new GraphqlException('Transfer status is not Unsigned', 'use');
         }
 
         $fromAccount = Account::findOrFail($args['from_account_id']);

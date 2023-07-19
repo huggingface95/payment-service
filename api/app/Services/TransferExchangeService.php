@@ -174,10 +174,10 @@ class TransferExchangeService extends AbstractService
     public function updateTransfer(TransferExchange $transfer, array $args): Builder|Model
     {
         if ($transfer->transferOutgoing->status_id !== PaymentStatusEnum::UNSIGNED->value) {
-            throw new GraphqlException('Transfer status is not Unsigned');
+            throw new GraphqlException('Transfer status is not Unsigned', 'use');
         }
         if ($transfer->transferIncoming->status_id !== PaymentStatusEnum::UNSIGNED->value) {
-            throw new GraphqlException('Transfer status is not Unsigned');
+            throw new GraphqlException('Transfer status is not Unsigned', 'use');
         }
 
         $fromAccount = empty($args['from_account_id']) ? $transfer->transferOutgoing->account : Account::findOrFail($args['from_account_id']);
