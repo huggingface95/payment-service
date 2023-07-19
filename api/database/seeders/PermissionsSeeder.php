@@ -1553,6 +1553,12 @@ class PermissionsSeeder extends Seeder
                                                 'method' => 'applicantBankingAccesses',
                                             ],
                                             [
+                                                'name' => 'GetCorporateBankingAccess',
+                                                'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
+                                                'type' => 'query',
+                                                'method' => 'applicantBankingAccess',
+                                            ],
+                                            [
                                                 'name' => 'CompanyFilter',
                                                 'referer' => 'management/applicants/corporate/full-profile/$id/profile/modules/banking-module',
                                                 'type' => 'query',
@@ -4468,13 +4474,11 @@ class PermissionsSeeder extends Seeder
                                                 'type' => 'query',
                                                 'method' => 'members',
                                             ],
-
                                             [
                                                 'name' => 'GetMemberTfaStatus',
                                                 'referer' => 'administration/member-info/full-profile/new/members/security/password',
                                                 'type' => 'query',
                                                 'method' => 'member',
-
                                             ],
                                             [
                                                 'name' => 'GetMemberTransaction',
@@ -4635,7 +4639,13 @@ class PermissionsSeeder extends Seeder
                                                 'parents' => ['Member:Security.Enabled', 'Member:Security.Edit'],
                                                 'type' => 'mutation',
                                                 'method' => 'updateMember',
-
+                                            ],
+                                            [
+                                                'name' => 'UpdateMemberSecuritySettings',
+                                                'referer' => 'administration/member-info/full-profile/new/members/security/password',
+                                                'parents' => ['Member:Security.Enabled', 'Member:Security.Edit'],
+                                                'type' => 'mutation',
+                                                'method' => 'updateMember',
                                             ],
                                         ],
                                     ],
@@ -6409,6 +6419,36 @@ class PermissionsSeeder extends Seeder
                                                 'method' => 'accountList',
                                             ],
                                             [
+                                                'name' => 'PaymentCorrespondentsBanksFilter',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'query',
+                                                'method' => 'bankCorrespondents',
+                                            ],
+                                            [
+                                                'name' => 'FeeTypesFilter',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'query',
+                                                'method' => 'feeTypes',
+                                            ],
+                                            [
+                                                'name' => 'CheckExistClient',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'query',
+                                                'method' => 'clientListActive',
+                                            ],
+                                            [
+                                                'name' => 'GetOwnerAccountData',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'query',
+                                                'method' => 'account',
+                                            ],
+                                            [
+                                                'name' => 'FeeOperationTypesFilter',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'query',
+                                                'method' => 'operationTypes',
+                                            ],
+                                            [
                                                 'name' => 'GetExchangeTransfer',
                                                 'referer' => 'banking/payments/make-payment',
                                                 'type' => 'query',
@@ -6486,6 +6526,12 @@ class PermissionsSeeder extends Seeder
                                                 'type' => 'query',
                                                 'method' => 'respondentFees',
                                             ],
+                                            [
+                                                'name' => 'GetTransferFee',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'query',
+                                                'method' => 'getTransferFee',
+                                            ],
                                         ],
                                     ],
                                     'Make Transfer.IWT' => [
@@ -6558,6 +6604,34 @@ class PermissionsSeeder extends Seeder
                                                 'method' => 'createTransferBetweenUsers',
                                                 'parents' => ['Make Transfer.Enabled'],
                                             ],
+                                            [
+                                                'name' => 'AttachFIleToTransferBetweenUsers',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'mutation',
+                                                'method' => 'attachFIleToTransferBetweenUsers',
+                                                'parents' => ['Make Transfer.Enabled'],
+                                            ],
+                                            [
+                                                'name' => 'DetachFIleToTransferBetweenUsers',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'mutation',
+                                                'method' => 'detachFIleFromTransferBetweenUsers',
+                                                'parents' => ['Make Transfer.Enabled'],
+                                            ],
+                                            [
+                                                'name' => 'UpdateTransferBetweenUsers',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'mutation',
+                                                'method' => 'updateTransferBetweenUsers',
+                                                'parents' => ['Make Transfer.Enabled'],
+                                            ],
+                                            [
+                                                'name' => 'CancelTransferBetweenUsers',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'type' => 'mutation',
+                                                'method' => 'cancelTransferBetweenUsers',
+                                                'parents' => ['Make Transfer.Enabled'],
+                                            ],
                                         ],
                                     ],
                                     'Make Transfer.Exchange' => [
@@ -6628,15 +6702,7 @@ class PermissionsSeeder extends Seeder
                                             'order' => 7,
                                             'type' => 'info',
                                         ],
-                                        'operations' => [
-                                            [
-                                                'name' => 'GetTransferFee',
-                                                'referer' => 'banking/payments/make-payment',
-                                                'type' => 'query',
-                                                'method' => 'getTransferFee',
-                                                'parents' => ['Make Transfer.Enabled'],
-                                            ],
-                                        ]
+
                                     ],
                                 ],
                             ],
@@ -6644,7 +6710,6 @@ class PermissionsSeeder extends Seeder
                                 'data' => [
                                     'name' => 'Sign Payments',
                                     'type' => 'member',
-
                                     'order' => 8,
                                 ],
                                 'list' => [
@@ -6665,6 +6730,15 @@ class PermissionsSeeder extends Seeder
                                             'order' => 2,
                                             'type' => 'info',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'SignTransferIncoming',
+                                                'type' => 'mutation',
+                                                'method' => 'signTransferIncoming',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'parents' => ['Sign Payments.Enabled'],
+                                            ],
+                                        ],
                                     ],
                                     'Sign Payments.OWT' => [
                                         'data' => [
@@ -6673,6 +6747,15 @@ class PermissionsSeeder extends Seeder
                                             'guard_name' => 'api',
                                             'order' => 3,
                                             'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'SignTransferOutgoing',
+                                                'type' => 'mutation',
+                                                'method' => 'signTransferOutgoing',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'parents' => ['Sign Payments.Enabled'],
+                                            ],
                                         ],
                                     ],
                                     'Sign Payments.TBA' => [
@@ -6683,6 +6766,15 @@ class PermissionsSeeder extends Seeder
                                             'order' => 4,
                                             'type' => 'info',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'SignTransferBetweenAccounts',
+                                                'type' => 'mutation',
+                                                'method' => 'signTransferBetweenAccounts',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'parents' => ['Sign Payments.Enabled'],
+                                            ],
+                                        ],
                                     ],
                                     'Sign Payments.TBU' => [
                                         'data' => [
@@ -6691,6 +6783,15 @@ class PermissionsSeeder extends Seeder
                                             'guard_name' => 'api',
                                             'order' => 5,
                                             'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'SignTransferBetweenUsers',
+                                                'type' => 'mutation',
+                                                'method' => 'signTransferBetweenUsers',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'parents' => ['Sign Payments.Enabled'],
+                                            ],
                                         ],
                                     ],
                                     'Sign Payments.Exchange' => [
@@ -6719,6 +6820,15 @@ class PermissionsSeeder extends Seeder
                                             'order' => 7,
                                             'type' => 'info',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'SignTransferOutgoingFee',
+                                                'type' => 'mutation',
+                                                'method' => 'signTransferOutgoingFee',
+                                                'referer' => 'banking/payments/make-payment',
+                                                'parents' => ['Sign Payments.Enabled'],
+                                            ],
+                                        ]
                                     ],
                                 ],
                             ],
@@ -6827,6 +6937,36 @@ class PermissionsSeeder extends Seeder
                                                 'method' => 'commissionTemplates',
                                             ],
                                             [
+                                                'name' => 'CommissionTemplatesTypesList',
+                                                'referer' => 'banking/commission-templates/settings/edit/$id',
+                                                'type' => 'query',
+                                                'method' => 'commissionTemplateLimitTypes',
+                                            ],
+                                            [
+                                                'name' => 'CommissionTemplatesTransferDirectionsList',
+                                                'referer' => 'banking/commission-templates/settings/edit/$id',
+                                                'type' => 'query',
+                                                'method' => 'commissionTemplateLimitTransferDirections',
+                                            ],
+                                            [
+                                                'name' => 'CurrencyFilter',
+                                                'referer' => 'banking/commission-templates/settings/edit/$id',
+                                                'type' => 'query',
+                                                'method' => 'currencies',
+                                            ],
+                                            [
+                                                'name' => 'RegionFilter',
+                                                'referer' => 'banking/commission-templates/settings/edit/$id',
+                                                'type' => 'query',
+                                                'method' => 'regions',
+                                            ],
+                                            [
+                                                'name' => 'CommissionTemplatesActionTypesList',
+                                                'referer' => 'banking/commission-templates/settings/edit/$id',
+                                                'type' => 'query',
+                                                'method' => 'commissionTemplateLimitActionTypes',
+                                            ],
+                                            [
                                                 'name' => 'CommissionTemplateItem',
                                                 'referer' => 'banking/commission-templates/settings/edit/$id',
                                                 'type' => 'query',
@@ -6844,7 +6984,6 @@ class PermissionsSeeder extends Seeder
                                                 'type' => 'query',
                                                 'method' => 'businessActivities',
                                             ],
-
                                             [
                                                 'name' => 'CommissionTemplatesFilterList',
                                                 'referer' => 'banking/commission-templates/settings/create',
@@ -6874,7 +7013,8 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'banking/commission-templates/settings/create',
                                                 'type' => 'query',
                                                 'method' => 'companies',
-                                            ], [
+                                            ],
+                                            [
                                                 'name' => 'PaymentProviderFilter',
                                                 'referer' => 'banking/commission-templates/settings/create',
                                                 'type' => 'query',
@@ -6885,7 +7025,8 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'banking/commission-templates/settings/edit/$id',
                                                 'type' => 'query',
                                                 'method' => 'companies',
-                                            ], [
+                                            ],
+                                            [
                                                 'name' => 'PaymentProviderFilter',
                                                 'referer' => 'banking/commission-templates/settings/edit/$id',
                                                 'type' => 'query',
@@ -7636,6 +7777,13 @@ class PermissionsSeeder extends Seeder
                                                 'parents' => ['Payment Provider:Settings.Enabled'],
                                             ],
                                             [
+                                                'name' => 'CompanyFilter',
+                                                'referer' => 'banking/payment-system/detail/payment-system-settings/$id',
+                                                'type' => 'query',
+                                                'method' => 'companies',
+                                                'parents' => ['Payment Provider:Settings.Enabled'],
+                                            ],
+                                            [
                                                 'name' => 'CreatePaymentBank',
                                                 'referer' => 'banking/payment-system/detail/payment-system-settings',
                                                 'type' => 'mutation',
@@ -7882,6 +8030,13 @@ class PermissionsSeeder extends Seeder
                                             [
                                                 'name' => 'UpdatePaymentSystem',
                                                 'referer' => 'banking/payment-system/detail/payment-system-settings',
+                                                'type' => 'mutation',
+                                                'method' => 'updatePaymentSystem',
+                                                'parents' => ['Payment System:Full Profile.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'UpdatePaymentSystem',
+                                                'referer' => 'banking/payment-system/detail/payment-system-settings/$id',
                                                 'type' => 'mutation',
                                                 'method' => 'updatePaymentSystem',
                                                 'parents' => ['Payment System:Full Profile.Enabled']
@@ -8498,6 +8653,27 @@ class PermissionsSeeder extends Seeder
                                                 'referer' => 'new-payment',
                                                 'parents' => ['Make Payments.Enabled']
                                             ],
+                                            [
+                                                'name' => 'CreateApplicantTransferBetweenAccounts',
+                                                'type' => 'mutation',
+                                                'method' => 'createApplicantTransferBetweenAccounts',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'CreateApplicantTransferBetweenUsers',
+                                                'type' => 'mutation',
+                                                'method' => 'createApplicantTransferBetweenUsers',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'CreateApplicantTransferOutgoing',
+                                                'type' => 'mutation',
+                                                'method' => 'createApplicantTransferOutgoing',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
                                         ]
                                     ],
                                     'Make Payments.Sign Payments' => [
@@ -8513,6 +8689,27 @@ class PermissionsSeeder extends Seeder
                                                 'name' => 'SignApplicantTransferExchange',
                                                 'type' => 'mutation',
                                                 'method' => 'signApplicantTransferExchange',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'SignApplicantTransferBetweenAccounts',
+                                                'type' => 'mutation',
+                                                'method' => 'signApplicantTransferBetweenAccounts',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'SignApplicantTransferBetweenUsers',
+                                                'type' => 'mutation',
+                                                'method' => 'signApplicantTransferBetweenUsers',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'SignApplicantTransferOutgoing',
+                                                'type' => 'mutation',
+                                                'method' => 'signApplicantTransferOutgoing',
                                                 'referer' => 'new-payment',
                                                 'parents' => ['Make Payments.Enabled']
                                             ],
@@ -9037,6 +9234,36 @@ class PermissionsSeeder extends Seeder
                                             'order' => 2,
                                             'type' => 'read',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateApplicantTransferExchange',
+                                                'type' => 'mutation',
+                                                'method' => 'createApplicantTransferExchange',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'CreateApplicantTransferBetweenAccounts',
+                                                'type' => 'mutation',
+                                                'method' => 'createApplicantTransferBetweenAccounts',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'CreateApplicantTransferBetweenUsers',
+                                                'type' => 'mutation',
+                                                'method' => 'createApplicantTransferBetweenUsers',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'CreateApplicantTransferOutgoing',
+                                                'type' => 'mutation',
+                                                'method' => 'createApplicantTransferOutgoing',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
+                                        ]
                                     ],
                                     'Make Payments.Sign Payments' => [
                                         'data' => [
