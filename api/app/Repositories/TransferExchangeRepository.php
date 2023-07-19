@@ -40,7 +40,7 @@ class TransferExchangeRepository extends Repository implements TransferExchangeR
     public function getExchangeRate(int $priceListId, int $currencySrcId, string $currencyDstId): array
     {
         $quoteProvider = PriceListFee::find($priceListId)?->quoteProvider ??
-            throw new GraphqlException('Quote provider not found. Please setup quote provider');
+            throw new GraphqlException('Quote provider not found. Please setup quote provider', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $exchangeRate = $quoteProvider->currencyExchangeRates
             ->where('currency_src_id', $currencySrcId)
@@ -48,7 +48,7 @@ class TransferExchangeRepository extends Repository implements TransferExchangeR
             ->first()?->rate;
 
         if ($exchangeRate === null) {
-            throw new GraphqlException('Exchange rate not found', Response::HTTP_BAD_REQUEST);
+            throw new GraphqlException('Exchange rate not found', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $finalExchangeRate = $exchangeRate;

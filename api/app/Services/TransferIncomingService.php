@@ -131,7 +131,7 @@ class TransferIncomingService extends AbstractService
     public function updateTransfer(TransferIncoming $transfer, array $args): void
     {
         if ($transfer->status_id !== PaymentStatusEnum::UNSIGNED->value) {
-            throw new GraphqlException('Transfer status is not Unsigned');
+            throw new GraphqlException('Transfer status is not Unsigned', 'use');
         }
 
         DB::transaction(function () use ($transfer, $args) {
