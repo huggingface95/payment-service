@@ -269,11 +269,11 @@ class FilterConditionsHandler
 
     private function overwritePrefixIdColumns(array $condition, Model $model): ?array
     {
-        if ($condition['column'] == 'id' && is_string($condition['value']) && !is_numeric($condition['value'])) {
+        if (strtolower($condition['column']) == 'id' && is_string($condition['value']) && !is_numeric($condition['value'])) {
             if ($model instanceof ApplicantIndividual && !str_contains($condition['value'], ApplicantIndividual::ID_PREFIX)) {
-                return null;
+                $condition['value'] = 0;
             } elseif ($model instanceof ApplicantCompany && !str_contains($condition['value'], ApplicantCompany::ID_PREFIX)) {
-                return null;
+                $condition['value'] = 0;
             }
         }
 
@@ -293,7 +293,7 @@ class FilterConditionsHandler
         }
 
         foreach ($columns as $column) {
-            if ($column == 'Id' && is_string($whereConditions['value']) && !is_numeric($whereConditions['value'])) {
+            if (strtolower($column) == 'id' && is_string($whereConditions['value']) && !is_numeric($whereConditions['value'])) {
                 if ($model instanceof ApplicantIndividual && !str_contains($whereConditions['value'], ApplicantIndividual::ID_PREFIX)) {
                     continue;
                 } elseif ($model instanceof ApplicantCompany && !str_contains($whereConditions['value'], ApplicantCompany::ID_PREFIX)) {
