@@ -12,7 +12,7 @@ use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\Company;
 use App\Models\PriceListFee;
-use App\Repositories\TransferOutgoingRepository;
+use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -45,7 +45,7 @@ class CreateApplicantTransferOutgoingExchangeDTO extends CreateTransferOutgoingD
         $args['execution_at'] = $date->format('Y-m-d H:i:s');
         $args['project_id'] = $account->project_id;
 
-        $repository = new TransferOutgoingRepository();
+        $repository = app(TransferOutgoingRepositoryInterface::class);
         $args['region_id'] = null;
         $args['price_list_id'] = $repository->getCommissionPriceListIdByGroup($args) ?? throw new GraphqlException('Commission price list not found', 'use');
 
