@@ -49,13 +49,14 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
                     ->where('company_id', $args['company_id'])
                     ->first() ?? throw new GraphqlException('Price list fee not found', 'use');
             }
+
+            $args['payment_bank_id'] = PaymentBank::query()->where('payment_provider_id', $args['payment_provider_id'])->where('payment_system_id', $args['payment_system_id'])->first()?->id ?? throw new GraphqlException('Payment bank not found', 'use');
         }
 
         $date = Carbon::now()->format('Y-m-d H:i:s');
         $args['amount_debt'] = $args['amount'];
         $args['currency_id'] = $account->currency_id;
         $args['operation_type_id'] = $operationType;
-        $args['payment_bank_id'] = PaymentBank::query()->where('payment_provider_id', $args['payment_provider_id'])->where('payment_system_id', $args['payment_system_id'])->first()?->id ?? throw new GraphqlException('Payment bank not found', 'use');
         $args['payment_number'] = Str::uuid();
         $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();

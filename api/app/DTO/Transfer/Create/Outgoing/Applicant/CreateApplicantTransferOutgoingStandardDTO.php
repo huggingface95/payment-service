@@ -25,22 +25,24 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
     {
         $date = Carbon::now()->format('Y-m-d H:i:s');
         $account = Account::where('id', $args['account_id'])->first() ?? throw new GraphqlException('Account not found', 'use');
-        
+
         $projectSettings = $account->project?->projectSettings->where('applicant_type', $account->client_type)->first();
 
-        $psType = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value ? PaymentSystemTypeEnum::SEPA->value : PaymentSystemTypeEnum::SWIFT->value;
-        $paymentSystem = $projectSettings?->paymentProvider?->paymentSystems?->where('is_active', true)->filter(function ($item) use ($psType) {
-            return str_contains(strtolower($item['name']), strtolower($psType));
-        })->first()?->id ?? throw new GraphqlException('Payment system not found. Payment system name must contain \'' . $psType . '\'', 'use');
+        if ($args['status_id'] != PaymentStatusEnum::REFUND->value) {
+            $psType = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value ? PaymentSystemTypeEnum::SEPA->value : PaymentSystemTypeEnum::SWIFT->value;
+            $args['payment_system_id'] = $projectSettings?->paymentProvider?->paymentSystems?->where('is_active', true)->filter(function ($item) use ($psType) {
+                return str_contains(strtolower($item['name']), strtolower($psType));
+            })->first()?->id ?? throw new GraphqlException('Payment system not found. Payment system name must contain \'' . $psType . '\'', 'use');
+
+            $args['payment_provider_id'] = $projectSettings?->payment_provider_id ?? throw new GraphqlException('Payment provider not found', 'use');
+            $args['payment_bank_id'] = PaymentBank::query()->where('payment_provider_id', $args['payment_provider_id'])->where('payment_system_id', $args['payment_system_id'])->first()?->id ?? throw new GraphqlException('Payment bank not found', 'use');
+        }
 
         $args['company_id'] = $account->company_id;
         $args['amount_debt'] = $args['amount'];
         $args['currency_id'] = $account->currency_id;
         $args['status_id'] ??= PaymentStatusEnum::UNSIGNED->value;
         $args['operation_type_id'] = $operationType;
-        $args['payment_provider_id'] = $projectSettings?->payment_provider_id ?? throw new GraphqlException('Payment provider not found', 'use');
-        $args['payment_system_id'] = $paymentSystem;
-        $args['payment_bank_id'] = PaymentBank::query()->where('payment_provider_id', $args['payment_provider_id'])->where('payment_system_id', $args['payment_system_id'])->first()?->id ?? throw new GraphqlException('Payment bank not found', 'use');
         $args['payment_number'] = Str::uuid();
         $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::CLIENT_DASHBOARD->toString();
@@ -64,7 +66,7 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
         if (!empty($args['execution_at'])) {
             $executionDate = Carbon::parse($args['execution_at'])->startOfDay();
             $createDate = Carbon::parse($date)->startOfDay();
-            
+
             if ($executionDate->lt($createDate)) {
                 throw new GraphqlException('execution_at cannot be earlier than current date', 'use');
             }
