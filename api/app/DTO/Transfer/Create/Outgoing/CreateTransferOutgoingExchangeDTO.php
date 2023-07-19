@@ -12,7 +12,7 @@ use App\Models\Account;
 use App\Models\CommissionPriceList;
 use App\Models\Company;
 use App\Models\PriceListFee;
-use App\Repositories\TransferOutgoingRepository;
+use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -46,7 +46,7 @@ class CreateTransferOutgoingExchangeDTO extends CreateTransferOutgoingDTO
         $args['project_id'] = $account->project_id;
 
         if (empty($args['price_list_id'])) {
-            $repository = new TransferOutgoingRepository();
+            $repository = app(TransferOutgoingRepositoryInterface::class);
             $args['region_id'] = null;
             $args['price_list_id'] = $repository->getCommissionPriceListIdByArgs($args, $account->client_type) ?? throw new GraphqlException('Commission price list not found', 'use');
         } else {

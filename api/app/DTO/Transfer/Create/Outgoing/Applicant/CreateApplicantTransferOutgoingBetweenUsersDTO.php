@@ -10,7 +10,7 @@ use App\Enums\TransferChannelEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
 use App\Models\PriceListFee;
-use App\Repositories\TransferOutgoingRepository;
+use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 
@@ -45,7 +45,7 @@ class CreateApplicantTransferOutgoingBetweenUsersDTO extends CreateTransferOutgo
         $args['recipient_bank_country_id'] = 1;
         $args['project_id'] = $fromAccount->project_id;
 
-        $repository = new TransferOutgoingRepository();
+        $repository = app(TransferOutgoingRepositoryInterface::class);
         $args['region_id'] = null;
         $args['price_list_id'] = $repository->getCommissionPriceListIdByGroup($args) ?? throw new GraphqlException('Commission price list not found', 'use');
 
