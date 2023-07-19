@@ -8490,6 +8490,15 @@ class PermissionsSeeder extends Seeder
                                             'order' => 2,
                                             'type' => 'read',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateApplicantTransferExchange',
+                                                'type' => 'mutation',
+                                                'method' => 'createApplicantTransferExchange',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
+                                        ]
                                     ],
                                     'Make Payments.Sign Payments' => [
                                         'data' => [
@@ -8499,6 +8508,15 @@ class PermissionsSeeder extends Seeder
                                             'order' => 3,
                                             'type' => 'read',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'SignApplicantTransferExchange',
+                                                'type' => 'mutation',
+                                                'method' => 'signApplicantTransferExchange',
+                                                'referer' => 'new-payment',
+                                                'parents' => ['Make Payments.Enabled']
+                                            ],
+                                        ]
                                     ],
                                 ],
                             ],
