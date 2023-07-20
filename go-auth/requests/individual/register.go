@@ -10,6 +10,7 @@ type RegisterApplicantInterface interface {
 	GetPasswordRepeat() string
 	GetEmail() string
 	GetCompanyId() uint64
+	GetCountryId() *uint64
 	GetProjectId() uint64
 	GetCompanyName() string
 	GetUrl() string
@@ -31,12 +32,12 @@ type RegisterRequest struct {
 	LastName       string `json:"last_name" binding:"required"`
 	Phone          string `json:"phone" binding:"required,e164"`
 	Email          string `json:"email" binding:"required,email"`
-	CountryId      uint64 `json:"country_id" binding:"required"`
+	CountryId      uint64 `json:"country_id,omitempty"`
 	Password       string `json:"password" binding:"required"`
 	PasswordRepeat string `json:"password_confirmation" binding:"required"`
 	ClientType     string `json:"client_type" binding:"required,oneof=Corporate Private"`
-	CompanyName    string `json:"company_name"`
-	Url            string `json:"url"`
+	CompanyName    string `json:"company_name,omitempty"`
+	Url            string `json:"url,omitempty"`
 }
 
 type RegisterRequestPrivate struct {
@@ -104,6 +105,25 @@ func (r RegisterRequestCorporate) GetEmail() string {
 
 func (r RegisterRequest) GetEmail() string {
 	return r.PasswordRepeat
+}
+
+func (r RegisterRequestPrivate) GetCountryId() *uint64 {
+	if r.CountryId > 0 {
+		return &r.CountryId
+	}
+	return nil
+}
+func (r RegisterRequestCorporate) GetCountryId() *uint64 {
+	if r.CountryId > 0 {
+		return &r.CountryId
+	}
+	return nil
+}
+func (r RegisterRequest) GetCountryId() *uint64 {
+	if r.CountryId > 0 {
+		return &r.CountryId
+	}
+	return nil
 }
 
 func (r RegisterRequestPrivate) GetCompanyId() uint64 {
