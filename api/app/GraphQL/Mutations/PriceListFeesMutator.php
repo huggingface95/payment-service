@@ -2,10 +2,12 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\FeePeriodEnum;
 use App\Enums\OperationTypeEnum;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\Traits\PriceListFeeTrait;
 use App\Models\CommissionPriceList;
+use App\Models\FeePeriod;
 use App\Models\PaymentSystem;
 use App\Models\PriceListFee;
 use App\Services\PriceListFeeService;
@@ -40,6 +42,16 @@ class PriceListFeesMutator
                 ->exists();
             if ($priceListFeeExists) {
                 throw new GraphqlException('Only one PriceListFee is allowed for the PriceList with Internal provider and operation type ' . OperationTypeEnum::tryFrom($args['operation_type_id'])->toString(), 'use');
+            }
+        }
+
+        if ($args['price_list_id'] && $args['operation_type_id'] == OperationTypeEnum::SCHEDULED_FEE->value && $args['period_id']) {
+            $scheduledFeeWithPreiod = PriceListFee::where('price_list_id', $args['price_list_id'])
+                ->where('operation_type_id', OperationTypeEnum::SCHEDULED_FEE->value)
+                ->where('period_id', $args['period_id'])
+                ->exists();
+            if ($scheduledFeeWithPreiod) {
+                throw new GraphqlException('Only one ' . FeePeriodEnum::tryFrom($args['period_id'])->toString() . ' period is allowed for this Scheduled Fee.', 'use');
             }
         }
 
@@ -93,6 +105,17 @@ class PriceListFeesMutator
         $priceListFee = PriceListFee::find($args['id']);
         if (! $priceListFee) {
             throw new GraphqlException('PriceListFee not found', 'use', Response::HTTP_NOT_FOUND);
+        }
+
+        if ($args['price_list_id'] && $args['operation_type_id'] && $args['period_id']) {
+            $scheduledFeeWithPeriod = PriceListFee::where('price_list_id', $args['price_list_id'])
+                ->where('operation_type_id', $args['operation_type_id'])
+                ->where('period_id', $args['period_id'])
+                ->where('id', '!=', $priceListFee->id)
+                ->exists();
+            if ($scheduledFeeWithPeriod) {
+                throw new GraphqlException('Only one ' . FeePeriodEnum::tryFrom($args['period_id'])->toString() . ' period is allowed for this Scheduled Fee.', 'use');
+            }
         }
 
         DB::transaction(function () use ($priceListFee, $args) {
