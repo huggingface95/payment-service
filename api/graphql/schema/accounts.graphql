@@ -16,8 +16,6 @@ type Account {
     payment_provider: PaymentProvider @belongsTo(relation:"paymentProvider")
     "Получить связанного платежного провайдера iban"
     iban_provider: PaymentProviderIban @belongsTo(relation:"paymentProviderIban")
-    "Получить банк"
-    payment_bank: PaymentBank @belongsTo(relation:"paymentBank")
     "Получить связанный шаблон комиссии"
     commission_template: CommissionTemplate @belongsTo(relation:"commissionTemplate")
     "Получить групроле"
@@ -297,8 +295,6 @@ input InputAccount{
     group_role_id: ID
     "ID группы"
     group_type_id: ID!
-    "ID банка"
-    payment_bank_id: ID
     "ID Проекта"
     project_id: ID
     "ID родительского аккаунта"
