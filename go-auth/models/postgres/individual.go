@@ -17,7 +17,7 @@ type Individual struct {
 	Email                     string                       `gorm:"column:email"`
 	Url                       string                       `gorm:"column:url"`
 	Phone                     string                       `gorm:"column:phone"`
-	CountryId                 uint64                       `gorm:"column:country_id"`
+	CountryId                 *uint64                      `gorm:"column:country_id"`
 	CitizenshipCountryId      uint64                       `gorm:"column:citizenship_country_id"`
 	State                     string                       `gorm:"column:state"`
 	City                      string                       `gorm:"column:city"`
