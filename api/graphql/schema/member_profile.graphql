@@ -78,10 +78,10 @@ extend type Mutation @guard(with: "api") {
         "Должность"
         job_title: String
         "Email"
-        email: EMAIL @rules(apply: ["email", "unique:members"])
+        email: EMAIL
         "ID фото"
         photo_id: ID
-    ): MemberProfile
+    ): MemberProfile @validator
         @field(resolver: "MemberProfileMutator@update")
 
     """
