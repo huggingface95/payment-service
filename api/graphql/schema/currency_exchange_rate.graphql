@@ -31,6 +31,8 @@ extend type Query @guard {
     """
     rates(
         quote_provider_id: ID! @eq
+        currency_src_id: ID @eq
+        currency_dst_id: ID @eq
     ): [CurrencyExchangeRate!]!
         @paginate(defaultCount: 10)
         @orderBy(column: "id", direction: DESC)
@@ -40,6 +42,9 @@ extend type Query @guard {
     """
     historyRates(
         quote_provider_id: ID! @eq
+        currency_src_id: ID @eq
+        currency_dst_id: ID @eq
+        created_at: DateTimeRange @whereBetween
     ): [CurrencyRateHistory!]!
         @paginate(defaultCount: 10)
         @orderBy(column: "id", direction: DESC)
