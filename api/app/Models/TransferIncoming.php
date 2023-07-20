@@ -113,6 +113,11 @@ class TransferIncoming extends BaseModel implements CustomObServerInterface
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 
+    public function commissionPriceList(): BelongsTo
+    {
+        return $this->belongsTo(CommissionPriceList::class, 'price_list_id', 'id');
+    }
+
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currencies::class, 'currency_id', 'id');

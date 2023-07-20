@@ -95,6 +95,8 @@ type TransferOutgoing {
     exchange: TransferExchange @hasOne(relation: "exchange")
     "relation between transfer"
     between: TransferBetween @hasOne(relation: "between")
+    "Получить связанный прайс лист"
+    commission_price_list: CommissionPriceList @belongsTo(relation: "commissionPriceList")
     "Дата и время выполнения транзакции"
     execution_at: DateTimeUtc
     "Дата и время создания"
