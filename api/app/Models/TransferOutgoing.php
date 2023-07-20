@@ -116,9 +116,9 @@ class TransferOutgoing extends BaseModel implements CustomObServerInterface
         return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 
-    public function commissionPriceList(): HasOneThrough
+    public function commissionPriceList(): BelongsTo
     {
-        return $this->hasOneThrough(CommissionPriceList::class, PaymentProvider::class, 'id', 'provider_id', 'payment_provider_id', 'id');
+        return $this->belongsTo(CommissionPriceList::class, 'price_list_id', 'id');
     }
 
     public function sender(): MorphTo
