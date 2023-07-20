@@ -7,12 +7,20 @@ type Requisite {
     id: ID
     "Создатель"
     owner: ApplicantIndividual @belongsTo(relation:"owner")
+    "ApplicantIndividual/ApplicantCompany"
+    client: Client @morphTo(relation:"client")
+    "IBAN Provider"
+    iban_provider: PaymentProviderIban @belongsTo(relation:"paymentProviderIban")
+    "Account"
+    account: Account
     "Связанный банк"
     bank: PaymentBank @belongsTo(relation:"paymentBank")
     "IBAN"
     account_number: String
     "Currency"
     currency: Currencies @belongsTo(relation:"currencies")
+    "Банки корреспонденты"
+    bank_correspondents: [BankCorrespondent] @hasManyThrough(relation:"bankCorrespondents")
 }
 
 

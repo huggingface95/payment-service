@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -369,6 +370,25 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id');
+    }
+
+    public function client(): MorphTo
+    {
+        return $this->morphTo('client', 'client_type', 'client_id');
+    }
+
+    public function bankCorrespondents(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            BankCorrespondent::class,
+            PaymentSystem::class,
+            'payment_provider_id',
+            'payment_system_id',
+            'payment_provider_id',
+            'id'
+        )->whereHas('currenciesRegions', function ($query){
+            $query->where('currency_id', $this->currency_id);
+        });
     }
 
     public static function getAccountFilter($filter): Builder
