@@ -27,6 +27,7 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
         $account = Account::where('id', $args['account_id'])->first() ?? throw new GraphqlException('Account not found', 'use');
 
         $projectSettings = $account->project?->projectSettings->where('applicant_type', $account->client_type)->first();
+        $args['status_id'] ??= PaymentStatusEnum::UNSIGNED->value;
 
         if ($args['status_id'] != PaymentStatusEnum::REFUND->value) {
             $psType = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value ? PaymentSystemTypeEnum::SEPA->value : PaymentSystemTypeEnum::SWIFT->value;
@@ -41,7 +42,6 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
         $args['company_id'] = $account->company_id;
         $args['amount_debt'] = $args['amount'];
         $args['currency_id'] = $account->currency_id;
-        $args['status_id'] ??= PaymentStatusEnum::UNSIGNED->value;
         $args['operation_type_id'] = $operationType;
         $args['payment_number'] = Str::uuid();
         $args['system_message'] = '';
