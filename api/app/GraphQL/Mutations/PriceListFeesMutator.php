@@ -54,7 +54,7 @@ class PriceListFeesMutator
                 $this->createFeeModes($args, $priceListFee);
             }
 
-            if (isset($args['scheduled'])) {
+            if (isset($args['scheduled']) && !empty($args['scheduled'])) {
                 if (empty($args['scheduled']['starting_date'])) {
                     $args['scheduled']['starting_date'] = Carbon::now();
                 }

@@ -22,8 +22,8 @@ class CreateApplicantTransferOutgoingBetweenUsersDTO extends CreateTransferOutgo
     public static function transform(Account $fromAccount, Account $toAccount, int $operationType, array $args): CreateTransferOutgoingDTO
     {
         $date = Carbon::now();
-        $args['payment_provider_id'] = $fromAccount->company->paymentProviderInternal?->id ?? throw new GraphqlException('Internal Payment provider not found');
-        $args['payment_system_id'] = $fromAccount->company->paymentProviderInternal->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found');
+        $args['payment_provider_id'] = $fromAccount->company->paymentProviderInternal?->id ?? throw new GraphqlException('Internal Payment provider not found', 'use');
+        $args['payment_system_id'] = $fromAccount->company->paymentProviderInternal->paymentSystemInternal?->id ?? throw new GraphqlException('Internal Payment system not found', 'use');
         $args['account_id'] = $fromAccount->id;
         $args['currency_id'] = $fromAccount->currencies?->id;
         $args['company_id'] = $fromAccount->company_id;
@@ -36,7 +36,7 @@ class CreateApplicantTransferOutgoingBetweenUsersDTO extends CreateTransferOutgo
         $args['payment_bank_id'] = null;
         $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::CLIENT_DASHBOARD->toString();
-        $args['recipient_country_id'] = $toAccount->clientable?->country_id ?? throw new GraphqlException('Recipient country not found');
+        $args['recipient_country_id'] = $toAccount->clientable?->country_id ?? throw new GraphqlException('Recipient country not found', 'use');
         $args['respondent_fees_id'] = $args['respondent_fee_id'] ?? RespondentFeesEnum::CHARGED_TO_CUSTOMER->value;
         $args['group_id'] = $fromAccount->group_role_id;
         $args['group_type_id'] = $fromAccount->group_type_id;
