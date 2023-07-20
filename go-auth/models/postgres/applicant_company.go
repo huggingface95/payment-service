@@ -14,6 +14,7 @@ type ApplicantCompany struct {
 	IsActive            uint64       `gorm:"column:applicant_state_id"`
 	IsVerificationEmail uint64       `gorm:"column:email_verification_status_id"`
 	CompanyId           uint64       `gorm:"column:company_id"`
+	CountryId           *uint64      `gorm:"column:country_id"`
 	CreatedAt           time.Time    `gorm:"column:created_at"`
 	UpdatedAt           time.Time    `gorm:"column:updated_at"`
 	Company             *Company     `gorm:"foreignKey:CompanyId"`

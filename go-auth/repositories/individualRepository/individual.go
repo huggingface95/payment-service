@@ -16,7 +16,7 @@ func fillIndividual(request individual.RegisterApplicantInterface) (user postgre
 	user.TwoFactorAuthSettingId = 2
 	user.IsVerificationPhone = postgres.ApplicantVerificationNotVerifyed
 	user.IsVerificationEmail = postgres.ApplicantVerificationNotVerifyed
-
+	user.CountryId = request.GetCountryId()
 	return
 }
 
@@ -25,6 +25,7 @@ func fillCompany(request individual.RegisterApplicantInterface, company *postgre
 	applicantCompany.Name = request.GetCompanyName()
 	applicantCompany.Url = request.GetUrl()
 	applicantCompany.CompanyId = company.Id
+	applicantCompany.CountryId = request.GetCountryId()
 	applicantCompany.IsVerificationEmail = postgres.ApplicantVerificationNotVerifyed
 	applicantCompany.IsActive = postgres.ApplicantStateSuspended
 	return
