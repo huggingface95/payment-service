@@ -28,15 +28,6 @@ extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Qu
 }
 
 extend type Mutation @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Mutations\\Applicant") {
-    "Изменение устройства"
-    updateApplicantDevice(
-        "ID"
-        id: ID!
-        "Доверенное устройство"
-        trusted: Boolean!
-    ): TwoFactorAuthToken!
-        @field(resolver: "ApplicantDeviceMutator@update")
-
     """
     Подтверждение изменения устройства c OTP
     """
