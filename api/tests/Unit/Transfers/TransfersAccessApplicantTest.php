@@ -3,6 +3,7 @@
 namespace Unit\Transfers;
 
 use App\Enums\ApplicantTypeEnum;
+use App\Enums\PaymentStatusEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\ApplicantIndividual;
 use App\Models\TransferOutgoing;
@@ -36,6 +37,9 @@ class TransfersAccessApplicantTest extends TestCase
         $model->shouldReceive('getAttribute')
             ->with('requested_by_id')
             ->andReturn($modelData['requested_by_id']);
+        $model->shouldReceive('getAttribute')
+            ->with('status_id')
+            ->andReturn(PaymentStatusEnum::PENDING->value);
 
         $applicant = Mockery::mock(ApplicantIndividual::class);
 

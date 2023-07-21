@@ -1,7 +1,6 @@
 type TwoFactorAuthToken {
     two_factor: Boolean
     auth_token: String
-    message: String
 }
 
 extend type Mutation @guard(with: ["api_client"]) @namespace(field: "App\\GraphQL\\Mutations\\Applicant") {

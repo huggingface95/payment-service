@@ -173,7 +173,13 @@ func Register(c *gin.Context) {
 
 	if request.(*individual.RegisterRequest).ClientType == constants.RegisterClientTypeCorporate {
 		if request.(*individual.RegisterRequest).CompanyName == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Add required parameters"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Add required parameters CompanyName"})
+			c.Abort()
+			return
+		}
+	} else {
+		if request.(*individual.RegisterRequest).FirstName == "" || request.(*individual.RegisterRequest).LastName == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Add required parameters FirstName LatName"})
 			c.Abort()
 			return
 		}
