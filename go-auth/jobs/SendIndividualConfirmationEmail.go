@@ -30,7 +30,7 @@ func sendConfirmationEmailByData(e *cache.ConfirmationEmailLinksCache) {
 	if template != nil {
 		content := helpers.ReplaceData(template.Content,
 			"{client_name}", e.FullName,
-			"{email_confirm_url}", convertConfirmationLink("auth/verify-email", e.ConfirmationLink),
+			"{email_confirm_url}", convertConfirmationLink("auth/verify-email", e.ConfirmationLink, e.Type),
 		)
 		err := pkg.Mail(template.Subject, content, e.Email)
 		if err != nil {
