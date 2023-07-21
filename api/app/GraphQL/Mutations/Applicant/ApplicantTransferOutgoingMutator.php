@@ -15,6 +15,7 @@ use App\Repositories\AccountRepository;
 use App\Repositories\Interfaces\TransferOutgoingRepositoryInterface;
 use App\Services\CheckLimitService;
 use App\Services\TransferOutgoingService;
+use Illuminate\Http\Response;
 
 class ApplicantTransferOutgoingMutator extends BaseMutator
 {
@@ -49,7 +50,10 @@ class ApplicantTransferOutgoingMutator extends BaseMutator
     {
         /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
-
+        if (!$transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
+        
         $this->transferService->updateTransfer($transfer, $args);
 
         return $transfer;
@@ -66,6 +70,10 @@ class ApplicantTransferOutgoingMutator extends BaseMutator
         
         /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
+        if (!$transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
+
         $statusId = PaymentStatusEnum::PENDING->value;
 
         if ($transfer->execution_at != $transfer->created_at) {
@@ -86,6 +94,9 @@ class ApplicantTransferOutgoingMutator extends BaseMutator
     {
         /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
+        if (!$transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
 
         $this->transferService->updateTransferStatus($transfer, [
             'status_id' => PaymentStatusEnum::SENT->value,
@@ -101,6 +112,9 @@ class ApplicantTransferOutgoingMutator extends BaseMutator
     {
         /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
+        if (!$transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
 
         $this->transferService->updateTransferStatus($transfer, [
             'status_id' => PaymentStatusEnum::EXECUTED->value,
@@ -116,6 +130,9 @@ class ApplicantTransferOutgoingMutator extends BaseMutator
     {
         /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
+        if (!$transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
 
         $this->transferService->updateTransferStatus($transfer, [
             'status_id' => PaymentStatusEnum::REFUND->value,
@@ -131,6 +148,9 @@ class ApplicantTransferOutgoingMutator extends BaseMutator
     {
         /** @var TransferOutgoing $transfer */
         $transfer = $this->transferRepository->findById($args['id']);
+        if (!$transfer) {
+            throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
+        }
 
         $this->transferService->updateTransferStatus($transfer, [
             'status_id' => PaymentStatusEnum::CANCELED->value,
