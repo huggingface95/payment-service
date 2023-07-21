@@ -35,7 +35,7 @@ class MemberProfileMutationTest extends TestCase
             'country_id' => 1,
             'language_id' => 1,
         ])->seeJsonContains([
-            'message' => 'Unauthenticated.',
+            'message' => 'An entry with this id does not exist',
         ]);
     }
 
