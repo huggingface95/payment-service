@@ -13,6 +13,7 @@ type AppConfig struct {
 	AppDebug                   bool
 	AppUrl                     string
 	AppFrontUrl                string
+	AppFrontAccountUrl         string
 	RedirectUrl                string
 	CheckIp                    bool
 	SendEmail                  bool
@@ -45,6 +46,7 @@ func (a *AppConfig) Load() *AppConfig {
 	a.AppName = os.Getenv("APP_NAME")
 	a.AppUrl = os.Getenv("APP_URL")
 	a.AppFrontUrl = os.Getenv("APP_FRONT_URL")
+	a.AppFrontAccountUrl = os.Getenv("APP_FRONT_ACCOUNT_URL")
 	a.RedirectUrl = os.Getenv("REDIRECT_URL")
 	a.PasswordRequiredCharacters = os.Getenv("PASSWORD_REQUIRED_CHARACTERS")
 	a.AppEnv = os.Getenv("APP_ENV")
