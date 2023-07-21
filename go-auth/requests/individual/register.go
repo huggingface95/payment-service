@@ -28,8 +28,8 @@ type RegisterRequestApplicant struct {
 }
 
 type RegisterRequest struct {
-	FirstName      string `json:"first_name" binding:"required"`
-	LastName       string `json:"last_name" binding:"required"`
+	FirstName      string `json:"first_name"`
+	LastName       string `json:"last_name"`
 	Phone          string `json:"phone" binding:"required,e164"`
 	Email          string `json:"email" binding:"required,email"`
 	CountryId      uint64 `json:"country_id,omitempty"`
