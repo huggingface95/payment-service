@@ -52,18 +52,14 @@ class TransferOutgoingRepository extends Repository implements TransferOutgoingR
 
     public function detachFileById(Model|Builder $model, array $data): Model|Builder|null
     {
-        if (isset($data)) {
+        if (! empty($data)) {
             foreach ($data as $fileId) {
                 $file = Files::find($fileId);
                 if ($file) {
-                    $deleted = $this->fileService->deleteFile($file);
-                    if (!$deleted) {
-                        throw new GraphqlException('Error deleting file from storage');
-                    }
+                    $file->delete();
+                    $this->fileService->deleteFile($file);
                 }
             }
-
-            $model->files()->detach($data);
         }
 
         return $model;

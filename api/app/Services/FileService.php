@@ -50,7 +50,6 @@ class FileService extends AbstractService
         $deleted = Storage::disk('s3')->delete($filepath);
 
         if ($deleted) {
-            $file->delete();
             return true;
         }
 
