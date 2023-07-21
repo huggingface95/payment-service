@@ -23,10 +23,10 @@ trait AccessTransfersTrait
             if ($model->status_id == PaymentStatusEnum::REFUND->value && $model->sender_id == $applicant->id && $model->sender_type == $applicantType) {
                 return;
             }
-            throw new GraphqlException('The transfer must belong to the applicant', 'use');
+            throw new GraphqlException('The account must belong to the applicant', 'use');
         }
 
-        if ($applicant->id != $model->requested_by_id) {
+        if ($applicant->id != $model->requested_by_id && !$isAllowToAccess) {
             throw new GraphqlException('The transfer must belong to the applicant', 'use');
         }
     }
