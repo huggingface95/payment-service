@@ -53,7 +53,7 @@ func GetLoginResponse(user postgres.User, jwtType string, accessType string, dev
 	}
 
 	oauthRepository.InsertAuthLog(user.ClientType(), user.GetEmail(), user.GetCompany().Name, constants.StatusLogin, &expirationTime, deviceInfo)
-	oauthRepository.InsertActiveSessionLog(user.ClientType(), user.GetEmail(), user.GetCompany().Name, true, true, &expirationTime, deviceInfo)
+	oauthRepository.InsertActiveSessionLog(user.ClientType(), user.GetEmail(), user.GetCompany().Name, true, false, &expirationTime, deviceInfo)
 	return http.StatusOK, gin.H{"expires_in": expirationTime.Unix(), "access_token": tokenJWT, "token_type": "bearer"}
 }
 

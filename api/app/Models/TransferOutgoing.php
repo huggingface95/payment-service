@@ -7,7 +7,6 @@ use App\Enums\FeeTransferTypeEnum;
 use App\Enums\FeeTypeEnum;
 use App\Models\Interfaces\CustomObServerInterface;
 use App\Models\Scopes\FilterByCreatorScope;
-use App\Models\Scopes\TransferAmountSentScope;
 use App\Models\Scopes\TransferFeeAmountScope;
 use App\Models\Traits\BaseObServerTrait;
 use App\Observers\TransferOutgoingObserver;
