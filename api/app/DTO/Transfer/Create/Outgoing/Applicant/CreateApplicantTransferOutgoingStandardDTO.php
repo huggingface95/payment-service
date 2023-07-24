@@ -67,8 +67,8 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
             $executionDate = Carbon::parse($args['execution_at'])->startOfDay();
             $createDate = Carbon::parse($date)->startOfDay();
 
-            if ($executionDate->lt($createDate)) {
-                throw new GraphqlException('execution_at cannot be earlier than current date', 'use');
+            if ($executionDate->lte($createDate)) {
+                throw new GraphqlException('Execution date cannot be earlier than tomorrow', 'use');
             }
         } else {
             $args['execution_at'] = $args['created_at'];
