@@ -172,8 +172,14 @@ func Register(c *gin.Context) {
 	}
 
 	if request.(*individual.RegisterRequest).ClientType == constants.RegisterClientTypeCorporate {
-		if request.(*individual.RegisterRequest).CompanyName == "" || request.(*individual.RegisterRequest).Url == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Add required parameters"})
+		if request.(*individual.RegisterRequest).CompanyName == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Add required parameters CompanyName"})
+			c.Abort()
+			return
+		}
+	} else {
+		if request.(*individual.RegisterRequest).FirstName == "" || request.(*individual.RegisterRequest).LastName == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Add required parameters FirstName LatName"})
 			c.Abort()
 			return
 		}
@@ -189,7 +195,7 @@ func Register(c *gin.Context) {
 
 	randomToken := helpers.GenerateRandomString(20)
 	data := &cache.ConfirmationEmailLinksCache{
-		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id,
+		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id, Type: constants.Individual,
 	}
 	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 	if ok {
@@ -219,7 +225,7 @@ func RegisterPrivate(c *gin.Context) {
 
 	randomToken := helpers.GenerateRandomString(20)
 	data := &cache.ConfirmationEmailLinksCache{
-		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id,
+		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id, Type: constants.Individual,
 	}
 	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 	if ok {
@@ -249,7 +255,7 @@ func RegisterCorporate(c *gin.Context) {
 
 	randomToken := helpers.GenerateRandomString(20)
 	data := &cache.ConfirmationEmailLinksCache{
-		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id,
+		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id, Type: constants.Individual,
 	}
 	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 	if ok {

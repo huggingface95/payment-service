@@ -2,10 +2,13 @@
 
 namespace App\GraphQL\Queries\Applicant;
 
-use App\Enums\ApplicantTypeEnum;
+use App\DTO\Transfer\Create\Outgoing\Applicant\CreateApplicantTransferOutgoingExchangeDTO;
+use App\DTO\TransformerDTO;
 use App\Exceptions\GraphqlException;
-use App\Models\ApplicantIndividual;
+use App\Models\Account;
 use App\Models\CurrencyExchangeRate;
+use App\Models\PriceListFee;
+use Illuminate\Http\Response;
 
 class ApplicantCurrencyExchangeRateQuery
 {
@@ -16,18 +19,22 @@ class ApplicantCurrencyExchangeRateQuery
     public function get($_, array $args): CurrencyExchangeRate
     {
         $applicant = auth()->user();
+        $account = Account::query()
+            ->where('id', $args['account_src_id'])
+            ->where('currency_id', $args['currency_src_id'])
+            ->where('owner_id', $applicant->id)
+            ->orWhere('client_id', $applicant->id)
+            ->first() ?? throw new GraphqlException('Account not found', 'use');
 
-        $applicantType = $applicant instanceof ApplicantIndividual ? ApplicantTypeEnum::INDIVIDUAL->toString() : ApplicantTypeEnum::COMPANY->toString();
-
-        $quoteProviderId = $applicant->project->projectSettings->where('applicant_type', $applicantType)->first()->quote_provider_id;
-        if (!$quoteProviderId) {
-            throw new GraphqlException('Quote provider not found');
-        }
+        $outgoingDTO = TransformerDTO::transform(CreateApplicantTransferOutgoingExchangeDTO::class, $account, 1, $args);
+        $quoteProviderId = PriceListFee::query()
+            ->where('id', $outgoingDTO->price_list_fee_id)
+            ->first()?->quote_provider_id ?? throw new GraphqlException('Quote provider not found', 'use', Response::HTTP_NOT_FOUND);
 
         return CurrencyExchangeRate::query()
             ->where('quote_provider_id', $quoteProviderId)
             ->where('currency_src_id', $args['currency_src_id'])
             ->where('currency_dst_id', $args['currency_dst_id'])
-            ->first() ?? throw new GraphqlException('Currency exchange rate not found', 'use', 404);
+            ->first() ?? throw new GraphqlException('Currency exchange rate not found', 'use', Response::HTTP_NOT_FOUND);
     }
 }

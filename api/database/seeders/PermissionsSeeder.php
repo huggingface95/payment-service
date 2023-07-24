@@ -8123,6 +8123,15 @@ class PermissionsSeeder extends Seeder
                                             'order' => 2,
                                             'type' => 'add',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateQuoteProvider',
+                                                'referer' => 'banking/quotes-provider/list',
+                                                'type' => 'mutation',
+                                                'method' => 'createQuoteProvider',
+                                                'parents' => ['Quotes Provider:List.Enabled']
+                                            ],
+                                        ],
                                     ],
                                 ],
                             ],
@@ -8149,6 +8158,12 @@ class PermissionsSeeder extends Seeder
                                                 'type' => 'query',
                                                 'method' => 'quoteProvider',
                                             ],
+                                            [
+                                                'name' => 'QuoteProviderItem',
+                                                'referer' => 'banking/quotes-provider/full-profile/rates',
+                                                'type' => 'query',
+                                                'method' => 'quoteProvider',
+                                            ],
                                         ],
                                     ],
                                     'Quotes Provider:Manual Quotes:Settings.Edit' => [
@@ -8159,6 +8174,29 @@ class PermissionsSeeder extends Seeder
                                             'order' => 2,
                                             'type' => 'edit',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateQuoteProvider',
+                                                'referer' => 'banking/quotes-provider/full-profile',
+                                                'type' => 'mutation',
+                                                'method' => 'updateQuoteProvider',
+                                                'parents' => ['Quotes Provider:Manual Quotes:Settings.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'UpdateCurrencyExchangeRate',
+                                                'referer' => 'banking/quotes-provider/full-profile/rates',
+                                                'type' => 'mutation',
+                                                'method' => 'updateCurrencyExchangeRate',
+                                                'parents' => ['Quotes Provider:Manual Quotes:Settings.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'UpdateQuoteProvider',
+                                                'referer' => 'banking/quotes-provider/full-profile',
+                                                'type' => 'mutation',
+                                                'method' => 'updateQuoteProvider',
+                                                'parents' => ['Quotes Provider:Manual Quotes:Settings.Enabled']
+                                            ],
+                                        ],
                                     ],
                                     'Quotes Provider:Manual Quotes:Settings.Delete' => [
                                         'data' => [
@@ -8167,6 +8205,15 @@ class PermissionsSeeder extends Seeder
                                             'guard_name' => 'api',
                                             'order' => 3,
                                             'type' => 'important',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'DeleteQuotesProvider',
+                                                'referer' => 'banking/quotes-provider/list',
+                                                'type' => 'mutation',
+                                                'method' => 'deleteQuoteProvider',
+                                                'parents' => ['Quotes Provider:Manual Quotes:Settings.Enabled']
+                                            ],
                                         ],
                                     ],
                                     'Quotes Provider:Manual Quotes:Settings.Status' => [
@@ -8186,6 +8233,15 @@ class PermissionsSeeder extends Seeder
                                             'order' => 5,
                                             'type' => 'info',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'AttachFileToQuoteProvider',
+                                                'referer' => 'banking/quotes-provider/full-profile',
+                                                'type' => 'mutation',
+                                                'method' => 'attachFIleDataToQuoteProvider',
+                                                'parents' => ['Quotes Provider:Manual Quotes:Settings.Enabled']
+                                            ],
+                                        ],
                                     ],
                                     'Quotes Provider:Manual Quotes:Settings.Rates' => [
                                         'data' => [
@@ -8197,13 +8253,27 @@ class PermissionsSeeder extends Seeder
                                         ],
                                         'operations' => [
                                             [
-                                                'name' => 'QuoteProviderItem',
-                                                'referer' => 'banking/quotes-provider/full-profile/rates',
+                                                'name' => 'Rates',
+                                                'referer' => 'settings/manager-roles/new',
                                                 'type' => 'query',
-                                                'method' => 'quoteProvider',
+                                                'method' => 'rates',
                                                 'parents' => ['Quotes Provider:Manual Quotes:Settings.Enabled']
                                             ],
-                                        ]
+                                            [
+                                                'name' => 'QuoteProviderFilter',
+                                                'referer' => 'banking/quotes-provider/full-profile/rates',
+                                                'type' => 'query',
+                                                'method' => 'quoteProviders',
+                                                'parents' => ['Quotes Provider:Manual Quotes:Settings.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'CurrencyFilter',
+                                                'referer' => 'banking/quotes-provider/full-profile/rates',
+                                                'type' => 'query',
+                                                'method' => 'currencies',
+                                                'parents' => ['Quotes Provider:Manual Quotes:Settings.Enabled']
+                                            ],
+                                        ],
                                     ],
                                     'Quotes Provider:Manual Quotes:Settings.Add New Curr Pair' => [
                                         'data' => [
@@ -8213,6 +8283,15 @@ class PermissionsSeeder extends Seeder
                                             'order' => 7,
                                             'type' => 'add',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'CreateCurrencyExchangeRate',
+                                                'referer' => 'banking/quotes-provider/full-profile/rates',
+                                                'type' => 'mutation',
+                                                'method' => 'createCurrencyExchangeRate',
+                                                'parents' => ['Quotes Provider:Manual Quotes:Settings.Enabled']
+                                            ],
+                                        ],
                                     ],
                                     'Quotes Provider:Manual Quotes:Settings.History Rates' => [
                                         'data' => [
@@ -8221,6 +8300,22 @@ class PermissionsSeeder extends Seeder
                                             'guard_name' => 'api',
                                             'order' => 8,
                                             'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'HistoryRates',
+                                                'referer' => 'banking/quotes-provider/full-profile/history-rates',
+                                                'type' => 'query',
+                                                'method' => 'historyRates',
+                                                'parents' => ['Quotes Provider:Manual Quotes:Settings.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'HistoryCurrencyPairFilter',
+                                                'referer' => 'banking/quotes-provider/full-profile/history-rates',
+                                                'type' => 'query',
+                                                'method' => 'historyRates',
+                                                'parents' => ['Quotes Provider:Manual Quotes:Settings.Enabled']
+                                            ],
                                         ],
                                     ],
                                 ],
@@ -8247,6 +8342,12 @@ class PermissionsSeeder extends Seeder
                                                 'type' => 'query',
                                                 'method' => 'quoteProvider',
                                             ],
+                                            [
+                                                'name' => 'QuoteProviderItem',
+                                                'referer' => 'banking/quotes-provider/full-profile/rates',
+                                                'type' => 'query',
+                                                'method' => 'quoteProvider',
+                                            ],
                                         ],
                                     ],
                                     'Quotes Provider:Api Quotes:Settings.Edit' => [
@@ -8257,6 +8358,22 @@ class PermissionsSeeder extends Seeder
                                             'order' => 2,
                                             'type' => 'edit',
                                         ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateQuoteProvider',
+                                                'referer' => 'banking/quotes-provider/full-profile',
+                                                'type' => 'mutation',
+                                                'method' => 'updateQuoteProvider',
+                                                'parents' => ['Quotes Provider:Api Quotes:Settings.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'UpdateCurrencyExchangeRate',
+                                                'referer' => 'banking/quotes-provider/full-profile/rates',
+                                                'type' => 'mutation',
+                                                'method' => 'updateCurrencyExchangeRate',
+                                                'parents' => ['Quotes Provider:Api Quotes:Settings.Enabled']
+                                            ],
+                                        ],
                                     ],
                                     'Quotes Provider:Api Quotes:Settings.Default Settings for Quotes' => [
                                         'data' => [
@@ -8265,6 +8382,15 @@ class PermissionsSeeder extends Seeder
                                             'guard_name' => 'api',
                                             'order' => 3,
                                             'type' => 'info',
+                                        ],
+                                        'operations' => [
+                                            [
+                                                'name' => 'UpdateQuoteProvider',
+                                                'referer' => 'banking/quotes-provider/full-profile',
+                                                'type' => 'mutation',
+                                                'method' => 'updateQuoteProvider',
+                                                'parents' => ['Quotes Provider:Api Quotes:Settings.Enabled']
+                                            ],
                                         ],
                                     ],
                                     'Quotes Provider:Api Quotes:Settings.Status' => [
@@ -8286,10 +8412,24 @@ class PermissionsSeeder extends Seeder
                                         ],
                                         'operations' => [
                                             [
-                                                'name' => 'QuoteProviderItem',
+                                                'name' => 'Rates',
+                                                'referer' => 'settings/manager-roles/new',
+                                                'type' => 'query',
+                                                'method' => 'rates',
+                                                'parents' => ['Quotes Provider:Api Quotes:Settings.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'QuoteProviderFilter',
                                                 'referer' => 'banking/quotes-provider/full-profile/rates',
                                                 'type' => 'query',
-                                                'method' => 'quoteProvider',
+                                                'method' => 'quoteProviders',
+                                                'parents' => ['Quotes Provider:Api Quotes:Settings.Enabled']
+                                            ],
+                                            [
+                                                'name' => 'CurrencyFilter',
+                                                'referer' => 'banking/quotes-provider/full-profile/rates',
+                                                'type' => 'query',
+                                                'method' => 'currencies',
                                                 'parents' => ['Quotes Provider:Api Quotes:Settings.Enabled']
                                             ],
                                         ]

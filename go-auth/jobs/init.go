@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/go-co-op/gocron"
 	"jwt-authentication-golang/config"
+	"jwt-authentication-golang/constants"
 	"time"
 )
 
@@ -53,7 +54,10 @@ func Init() {
 	s.StartAsync()
 }
 
-func convertConfirmationLink(path string, token string) string {
+func convertConfirmationLink(path string, token string, t string) string {
+	if t == constants.Individual {
+		return fmt.Sprintf("%s/%s?token=%s", config.Conf.App.AppFrontAccountUrl, path, token)
+	}
 	return fmt.Sprintf("%s/%s?token=%s", config.Conf.App.AppFrontUrl, path, token)
 }
 

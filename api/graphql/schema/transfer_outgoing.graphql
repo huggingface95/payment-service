@@ -54,7 +54,7 @@ type TransferOutgoing {
     channel: String
     bank_message: String
     "Тип бенефициара"
-    beneficiary_type: BeneficiaryTypeEnum
+    beneficiary_type_id: BeneficiaryTypeEnum
     "Номер регистрации бенефициара"
     beneficiary_register_number: String
     "Номер счета или IBAN получателя"

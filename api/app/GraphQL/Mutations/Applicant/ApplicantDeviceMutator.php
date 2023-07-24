@@ -13,8 +13,6 @@ use App\Models\Clickhouse\ActiveSession;
 use App\Services\AuthService;
 use App\Services\EmailService;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
-use Nuwave\Lighthouse\Schema\Context;
 use PragmaRX\Google2FALaravel\Facade as Google2FA;
 
 class ApplicantDeviceMutator extends BaseMutator
@@ -24,55 +22,6 @@ class ApplicantDeviceMutator extends BaseMutator
         protected EmailService $emailService
     )
     {
-    }
-
-    /**
-     * @param    $_
-     * @param array $args
-     * @return array
-     * @throws GraphqlException
-     */
-    public function update($_, array $args, Context $context): array
-    {
-        $applicant = auth()->user();
-
-        $device = DB::connection('clickhouse')
-            ->table((new ActiveSession())->getTable())
-            ->where('id', $args['id'])
-            ->where('email', $applicant->email)
-            ->where('provider', ClientTypeEnum::APPLICANT->toString())
-            ->first();
-
-        if (!$device) {
-            throw new GraphqlException('Device not found', 'use');
-        }
-
-        if ($applicant->two_factor_auth_setting_id == 2) {
-            if ($applicant->google2fa_secret) {
-                return [
-                    'two_factor' => true
-                ];
-            } else {
-                $response = Http::withHeaders([
-                    'Authorization' => $context->request->header('Authorization')
-                ])->post('go-auth:2491/api/generate-2fa-token');
-                if ($response->successful()) {
-                    return ['two_factor' => true, 'auth_token' => $response->json('2fa_token')];
-                } else {
-                    return ['message' => $response->json('error')];
-                }
-            }
-        } else {
-            $trusted = $args['trusted'] == true ? 'true' : 'false';
-
-            $rawSql = 'ALTER TABLE ' . (new ActiveSession())->getTable() . ' UPDATE trusted=' . $trusted . ' WHERE id=\'' . $args['id'] . '\' AND provider=\'' . ClientTypeEnum::APPLICANT->toString() . '\'  AND email=\'' . $applicant->email . '\'';
-
-            DB::connection('clickhouse')->statement($rawSql);
-
-            return [
-                'message' => 'Device trusted updated'
-            ];
-        }
     }
 
     /**

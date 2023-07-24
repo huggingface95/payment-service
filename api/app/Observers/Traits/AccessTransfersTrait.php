@@ -15,10 +15,14 @@ trait AccessTransfersTrait
 
     public function checkApplicantAccess(TransferOutgoing $model, ApplicantIndividual $applicant): void
     {
+        $applicantType = $applicant instanceof ApplicantIndividual ? ApplicantTypeEnum::INDIVIDUAL->toString() : ApplicantTypeEnum::COMPANY->toString();
         $isAllowToAccess = ($model->account?->owner_id == $applicant->id) ||
-            ($model->account?->client_id == $applicant->id && $model->account?->client_type == ApplicantTypeEnum::INDIVIDUAL->toString());
+            ($model->account?->client_id == $applicant->id && $model->account?->client_type == $applicantType);
 
         if (!$isAllowToAccess) {
+            if ($model->status_id == PaymentStatusEnum::REFUND->value && $model->sender_id == $applicant->id && $model->sender_type == $applicantType) {
+                return;
+            }
             throw new GraphqlException('The account must belong to the applicant', 'use');
         }
 
