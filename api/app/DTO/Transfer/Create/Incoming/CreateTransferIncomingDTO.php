@@ -115,8 +115,8 @@ class CreateTransferIncomingDTO
         return [
             'user_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class),
             'requested_by_id' => $id,
-            'recipient_id' => $id,
-            'recipient_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(ApplicantCompany::class) : class_basename(ApplicantIndividual::class),
+            'recipient_id' => $account->client_id,
+            'recipient_type' => $account->client_type,
         ];
     }
 

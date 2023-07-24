@@ -4,7 +4,6 @@ namespace App\DTO\Transfer\Create\Outgoing;
 
 use App\Enums\ClientTypeEnum;
 use App\Models\Account;
-use App\Models\ApplicantCompany;
 use App\Models\ApplicantIndividual;
 use App\Models\Members;
 use Illuminate\Support\Facades\Auth;
@@ -114,11 +113,9 @@ class CreateTransferOutgoingDTO
 
         return [
             'user_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(Members::class) : class_basename(ApplicantIndividual::class),
-            'recipient_id' => $id,
-            'recipient_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(ApplicantCompany::class) : class_basename(ApplicantIndividual::class),
             'requested_by_id' => $id,
-            'sender_id' => $id,
-            'sender_type' => $clientType == ClientTypeEnum::MEMBER->toString() ? class_basename(ApplicantCompany::class) : class_basename(ApplicantIndividual::class),
+            'sender_id' => $account->client_id,
+            'sender_type' => $account->client_type,
         ];
     }
 
