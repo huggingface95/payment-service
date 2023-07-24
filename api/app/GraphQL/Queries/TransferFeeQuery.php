@@ -23,9 +23,8 @@ final class TransferFeeQuery
     public function get($_, array $args): array
     {
         $transfer = new TransferOutgoing();
-        $transfer->price_list_fee_id = $args['price_list_id'];
+        $transfer->price_list_fee_id = $args['price_list_fee_id'];
         $transfer->operation_type_id = $args['operation_type_id'];
-        $transfer->period_id = $args['period_id'];
         $transfer->currency_id = $args['currency_id'];
         $transfer->respondent_fees_id = $args['respondent_fees_id'];
         $transfer->urgency_id = !empty($args['urgency_id']) ? $args['urgency_id'] : PaymentUrgencyEnum::STANDART->value;
