@@ -11,7 +11,7 @@ class TransferFeeAmountScope implements Scope
 {
     protected $calculateAmountSent;
 
-    public function __construct($calculateAmountSent = false)
+    public function __construct(bool $calculateAmountSent = false)
     {
         $this->calculateAmountSent = $calculateAmountSent;
     }
