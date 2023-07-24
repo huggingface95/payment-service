@@ -45,6 +45,24 @@ class PriceListFeesMutator
             }
         }
 
+        if (!$internalPriceListExists && $args['price_list_id'] && $args['operation_type_id']) {
+            $priceListFeeExists = PriceListFee::where('price_list_id', $args['price_list_id'])
+                ->where('operation_type_id', $args['operation_type_id'])
+                ->exists();
+            if ($priceListFeeExists) {
+                throw new GraphqlException('Only one PriceListFee with operation type ' . OperationTypeEnum::tryFrom($args['operation_type_id'])->toString() . ' is allowed for this PriceList', 'use');
+            }
+        }
+
+        if ($args['price_list_id'] && $args['name']) {
+            $priceListFeeExists = PriceListFee::where('price_list_id', $args['price_list_id'])
+                ->where('name', $args['name'])
+                ->exists();
+            if ($priceListFeeExists) {
+                throw new GraphqlException('An entry with this name already exists for this PriceList', 'use');
+            }
+        }
+
         if ($args['price_list_id'] && $args['operation_type_id'] == OperationTypeEnum::SCHEDULED_FEE->value && $args['period_id']) {
             $scheduledFeeWithPreiod = PriceListFee::where('price_list_id', $args['price_list_id'])
                 ->where('operation_type_id', OperationTypeEnum::SCHEDULED_FEE->value)
@@ -107,7 +125,7 @@ class PriceListFeesMutator
             throw new GraphqlException('PriceListFee not found', 'use', Response::HTTP_NOT_FOUND);
         }
 
-        if ($args['price_list_id'] && $args['operation_type_id'] && $args['period_id']) {
+        if ($args['price_list_id'] && $args['operation_type_id'] && isset($args['period_id'])) {
             $scheduledFeeWithPeriod = PriceListFee::where('price_list_id', $args['price_list_id'])
                 ->where('operation_type_id', $args['operation_type_id'])
                 ->where('period_id', $args['period_id'])
@@ -115,6 +133,26 @@ class PriceListFeesMutator
                 ->exists();
             if ($scheduledFeeWithPeriod) {
                 throw new GraphqlException('Only one ' . FeePeriodEnum::tryFrom($args['period_id'])->toString() . ' period is allowed for this Scheduled Fee.', 'use');
+            }
+        }
+
+        if ($args['price_list_id'] && $args['operation_type_id']) {
+            $priceListFeeExists = PriceListFee::where('price_list_id', $args['price_list_id'])
+                ->where('operation_type_id', $args['operation_type_id'])
+                ->where('id', '!=', $priceListFee->id)
+                ->exists();
+            if ($priceListFeeExists) {
+                throw new GraphqlException('Only one PriceListFee with operation type ' . OperationTypeEnum::tryFrom($args['operation_type_id'])->toString() . ' is allowed for this PriceList', 'use');
+            }
+        }
+
+        if ($args['price_list_id'] && $args['name']) {
+            $priceListFeeExists = PriceListFee::where('price_list_id', $args['price_list_id'])
+                ->where('name', $args['name'])
+                ->where('id', '!=', $priceListFee->id)
+                ->exists();
+            if ($priceListFeeExists) {
+                throw new GraphqlException('An entry with this name already exists for this PriceList', 'use');
             }
         }
 
