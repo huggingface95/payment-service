@@ -54,11 +54,11 @@ func Init() {
 	s.StartAsync()
 }
 
-func convertConfirmationLink(path string, token string, t string) string {
+func convertConfirmationLink(path string, token string, email string, t string) string {
 	if t == constants.Individual {
-		return fmt.Sprintf("%s/%s?token=%s", config.Conf.App.AppFrontAccountUrl, path, token)
+		return fmt.Sprintf("%s/%s?registration_token=%s&email=%s", config.Conf.App.AppFrontAccountUrl, path, token, email)
 	}
-	return fmt.Sprintf("%s/%s?token=%s", config.Conf.App.AppFrontUrl, path, token)
+	return fmt.Sprintf("%s/%s?registration_token=%s&email=%s", config.Conf.App.AppFrontUrl, path, token, email)
 }
 
 func convertConfirmationIp(path string, token string, email string) string {
