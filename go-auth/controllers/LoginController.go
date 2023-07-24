@@ -155,8 +155,13 @@ func Login(context *gin.Context) {
 	}
 
 	if user.GetTwoFactorAuthSettingId() == 2 {
-		status, response := auth.GetLoginResponse(user, constants.Personal, constants.ForTwoFactor, deviceInfo, context.GetHeader("test-mode"))
-		context.JSON(status, response)
+		if activeSession != nil && activeSession.Trusted == true {
+			status, response := auth.GetLoginResponse(user, constants.Personal, constants.AccessToken, deviceInfo, context.GetHeader("test-mode"))
+			context.JSON(status, response)
+		} else {
+			status, response := auth.GetLoginResponse(user, constants.Personal, constants.ForTwoFactor, deviceInfo, context.GetHeader("test-mode"))
+			context.JSON(status, response)
+		}
 		return
 	} else {
 		cache.Caching.LoginAttempt.Del(key)
