@@ -19,9 +19,8 @@ extend type Query @guard {
     Получить расчет комиссий для трансфера
     """
     getTransferFee(
-        price_list_id: ID! @eq
+        price_list_fee_id: ID! @eq
         operation_type_id: ID! @eq
-        period_id: ID! @eq
         currency_id: ID! @eq
         respondent_fees_id: ID! @eq
         payment_system_id: ID! @eq
