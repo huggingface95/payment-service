@@ -29,7 +29,7 @@ class CreateTransferOutgoingRefundDTO extends CreateTransferOutgoingDTO
         $args['recipient_country_id'] = $args['sender_country_id'];
         $args['respondent_fees_id'] = 2;
         $args['created_at'] = $date->format('Y-m-d H:i:s');
-        $args['execution_at'] = $args['created_at'];
+        $args['execution_at'] = null;
         $args['project_id'] = $account->project_id;
         $args['price_list_id'] = null;
         $args['price_list_fee_id'] = null;
