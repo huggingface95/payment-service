@@ -66,7 +66,7 @@ class CreateTransferOutgoingDTO
 
     public int $urgency_id;
 
-    public string $execution_at;
+    public ?string $execution_at;
 
     public string $recipient_account;
 
