@@ -239,6 +239,8 @@ extend type Mutation @guard {
         sender_zip: String
         "Сообщение банка"
         bank_message: String
+        "Основание перевода"
+        reason: String
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: TransferSwiftInput
         "Важность платежа Normal/Express"
@@ -308,6 +310,8 @@ extend type Mutation @guard {
         sender_zip: String
         "Сообщение банка"
         bank_message: String
+        "Основание перевода"
+        reason: String
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: TransferSwiftInput
         "Важность платежа Normal/Express"

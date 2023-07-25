@@ -71,11 +71,17 @@ class CreateTransferIncomingDTO
 
     public string $sender_bank_location;
 
+    public string $sender_bank_rtn;
+
+    public string $sender_bank_ncs_number;
+
     public string $sender_name;
 
     public int $sender_country_id;
 
     public string $sender_city;
+
+    public string $sender_state;
 
     public string $sender_address;
 
