@@ -28,9 +28,10 @@ class MemberProfileMutator extends BaseMutator
      */
     public function update($root, array $args)
     {
+        /** @var Members $member */
         $member = auth()->user();
 
-        if (isset($args['email'])) {
+        if (isset($args['email']) && $member->email != $args['email']) {
             $this->sendConfirmChangeEmail(null, $args);
             $member->email_verification = EmailVerificationStatusEnum::REQUESTED->value;
         }
