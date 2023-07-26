@@ -87,6 +87,10 @@ class TransferBetweenUsersService extends AbstractService
 
         $this->validateCreateTransfer($fromAccount, $toAccount, $operationType);
 
+        $args = array_merge(
+            array_filter($transfer->transferOutgoing->getAttributes(), fn($value) => $value !== null),
+            $args
+        );
         $transferOutDto = Auth::guard('api')->check() ? CreateTransferOutgoingBetweenUsersDTO::class : CreateApplicantTransferOutgoingBetweenUsersDTO::class;
         $outgoingDTO = TransformerDTO::transform($transferOutDto, $fromAccount, $toAccount, $operationType, $args);
         $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $fromAccount, $operationType, $args, $outgoingDTO);
