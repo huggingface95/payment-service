@@ -192,14 +192,22 @@ class TransferOutgoingService extends AbstractService
         }
     }
 
-    public function updateTransfer(TransferOutgoing $transfer, array $args): void
+    public function updateTransfer(TransferOutgoing $transfer, array $args, int $operationType): void
     {
         if ($transfer->status_id !== PaymentStatusEnum::UNSIGNED->value) {
             throw new GraphqlException('Transfer status is not Unsigned', 'use');
         }
 
+        $args = array_merge(
+            array_filter($transfer->getAttributes(), fn($value) => $value !== null),
+            $args
+        );
+        $transferDto = Auth::guard('api')->check() ? CreateTransferOutgoingStandardDTO::class : CreateApplicantTransferOutgoingStandardDTO::class;
+        $createTransferDto = TransformerDTO::transform($transferDto, $args, $operationType, $this->transferRepository);
+        $args = $createTransferDto->toArray();
+        
         DB::transaction(function () use ($transfer, $args) {
-            if ($transfer->transfer_type_id !== TransferTypeEnum::FEE->value && isset($args['amount']) && $args['amount'] != $transfer->amount) {
+            if ($transfer->paymentOperation->transfer_type_id !== TransferTypeEnum::FEE->value && isset($args['amount']) && $args['amount'] != $transfer->amount) {
                 $transfer->amount = $args['amount'];
 
                 $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
