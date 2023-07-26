@@ -6,6 +6,7 @@ use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingDTO;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentSystemTypeEnum;
 use App\Enums\PaymentUrgencyEnum;
+use App\Enums\RespondentFeesEnum;
 use App\Enums\TransferChannelEnum;
 use App\Exceptions\GraphqlException;
 use App\Models\Account;
@@ -46,9 +47,14 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
         $args['payment_number'] = Str::uuid();
         $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::CLIENT_DASHBOARD->toString();
-        $args['urgency_id'] ??= PaymentUrgencyEnum::STANDART->value;
+        $args['urgency_id'] = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value
+            ? PaymentUrgencyEnum::STANDART->value
+            : ($args['urgency_id'] ?? PaymentUrgencyEnum::STANDART->value);
         $args['created_at'] = $date;
         $args['recipient_bank_country_id'] ??= Company::findOrFail($args['company_id'])->country_id;
+        $args['respondent_fees_id'] = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value
+            ? RespondentFeesEnum::CHARGED_TO_CUSTOMER->value
+            : $args['respondent_fees_id'];
         $args['project_id'] = $account->project_id;
         $args['group_id'] = $account->group_role_id;
         $args['group_type_id'] = $account->group_type_id;
