@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferTypeEnum;
 use App\Exceptions\GraphqlException;
@@ -64,7 +65,7 @@ class TransferOutgoingFeeMutator extends BaseMutator
             throw new GraphqlException('Transfer not found');
         }
 
-        $this->transferService->updateTransfer($transfer, $args);
+        $this->transferService->updateTransfer($transfer, $args, OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value);
 
         return $transfer;
     }
