@@ -34,7 +34,7 @@ type Individual struct {
 	ProfileAdditionalFields   datatypes.JSON               `gorm:"column:profile_additional_fields"`
 	PersonalAdditionalFields  datatypes.JSON               `gorm:"column:personal_additional_fields"`
 	ContactsAdditionalFields  datatypes.JSON               `gorm:"column:contacts_additional_fields"`
-	ApplicantStatusId         uint64                       `gorm:"column:applicant_status_id"`
+	StatusId                  *uint64                      `gorm:"column:applicant_status_id"`
 	IsVerificationPhone       uint64                       `gorm:"column:phone_verification_status_id"`
 	FullName                  string                       `gorm:"column:fullname"`
 	CompanyId                 uint64                       `gorm:"column:company_id"`
@@ -45,7 +45,7 @@ type Individual struct {
 	LanguageId                uint64                       `gorm:"column:language_id"`
 	IsVerificationEmail       uint64                       `gorm:"column:email_verification_status_id"`
 	Google2FaSecret           string                       `gorm:"column:google2fa_secret"`
-	IsActive                  uint64                       `gorm:"column:applicant_state_id"`
+	IsActive                  *uint64                      `gorm:"column:applicant_state_id"`
 	TwoFactorAuthSettingId    uint64                       `gorm:"column:two_factor_auth_setting_id"`
 	IsNeedChangePassword      bool                         `gorm:"column:is_need_change_password"`
 	CreatedAt                 time.Time                    `gorm:"column:created_at"`
@@ -75,8 +75,7 @@ func (*Individual) TableName() string {
 func (*Individual) Omit() []string {
 	return []string{
 		"fullname", "language_id", "citizenship_country_id",
-		"birth_country_id", "applicant_status_id", "applicant_state_reason_id", "applicant_state_id",
-		"applicant_risk_level_id", "account_manager_member_id"}
+		"birth_country_id", "applicant_state_reason_id", "applicant_risk_level_id", "account_manager_member_id"}
 }
 
 func (user *Individual) MergeOmit(omits []string) []string {
@@ -149,7 +148,7 @@ func (user *Individual) GetCreatedAt() time.Time {
 }
 
 func (user *Individual) IsActivated() bool {
-	return user.IsActive == ApplicantStateActive
+	return *user.IsActive == ApplicantStateActive
 }
 
 func (user *Individual) IsEmailVerify() bool {
@@ -184,7 +183,11 @@ func (user *Individual) GetModelType() string {
 }
 
 func (user *Individual) SetIsActivated(v uint64) {
-	user.IsActive = v
+	user.IsActive = &v
+}
+
+func (user *Individual) SetIsStatus(v uint64) {
+	user.StatusId = &v
 }
 
 func (user *Individual) SetCompanyId(v uint64) {
@@ -218,6 +221,16 @@ func (user *Individual) SetTwoFactorAuthSettingId(v uint64) {
 func (user *Individual) IsCorporate() bool {
 	for _, entry := range user.ApplicantModuleActivity {
 		if entry.Corporate {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (user *Individual) HasApplicantModuleActivity() bool {
+	for _, entry := range user.ApplicantModuleActivity {
+		if entry.Corporate || entry.Individual {
 			return true
 		}
 	}
