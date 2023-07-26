@@ -222,6 +222,26 @@ class TransferOutgoingService extends AbstractService
         });
     }
 
+    public function updateFeeTransfer(TransferOutgoing $transfer, array $args, int $operationType): void
+    {
+        if ($transfer->status_id !== PaymentStatusEnum::UNSIGNED->value) {
+            throw new GraphqlException('Transfer status is not Unsigned', 'use');
+        }
+
+        $args = array_merge(
+            array_filter($transfer->getAttributes(), fn($value) => $value !== null),
+            $args
+        );
+        $createTransferDto = TransformerDTO::transform(CreateTransferOutgoingFeeDTO::class, $args, $operationType);
+        $args = $createTransferDto->toArray();
+
+        DB::transaction(function () use ($transfer, $args) {
+            $this->transferRepository->update($transfer, $args);
+
+            $this->createTransferHistory($transfer);
+        });
+    }
+
     private function updateTransferStatusToWaitingExecutionDate(TransferOutgoing $transfer): void
     {
         DB::transaction(function () use ($transfer) {
