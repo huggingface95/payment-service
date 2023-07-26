@@ -65,7 +65,7 @@ class TransferOutgoingFeeMutator extends BaseMutator
             throw new GraphqlException('Transfer not found');
         }
 
-        $this->transferService->updateTransfer($transfer, $args, OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value);
+        $this->transferService->updateFeeTransfer($transfer, $args, OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value);
 
         return $transfer;
     }
