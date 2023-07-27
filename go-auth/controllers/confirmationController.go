@@ -71,7 +71,6 @@ func ConfirmationIndividualEmail(context *gin.Context) {
 		} else {
 			user.SetIsEmailVerify(postgres.ApplicantVerificationVerifyed)
 			user.SetIsActivated(postgres.ApplicantStateActive)
-			user.SetIsStatus(postgres.ApplicantStatusPending)
 		}
 		res := userRepository.SaveUser(user)
 		if res.Error == nil {
