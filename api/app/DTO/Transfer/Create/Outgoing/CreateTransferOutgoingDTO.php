@@ -76,6 +76,12 @@ class CreateTransferOutgoingDTO
 
     public string $recipient_bank_swift;
 
+    public string $recipient_bank_rtn;
+
+    public string $recipient_bank_location;
+
+    public string $recipient_bank_ncs_number;
+
     public string $recipient_name;
 
     public string $recipient_city;
