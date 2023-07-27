@@ -25,7 +25,6 @@ type User interface {
 	GetGoogle2FaSecret() string
 	GetModelType() string
 	SetIsActivated(v uint64)
-	SetIsStatus(v uint64)
 	SetIsEmailVerify(v uint64)
 	GetCompany() *Company
 	SetBackupCodeData(v []BackupCodes)

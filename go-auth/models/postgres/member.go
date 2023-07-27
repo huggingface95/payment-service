@@ -169,10 +169,6 @@ func (user *Member) SetIsActivated(v uint64) {
 	user.IsActive = v
 }
 
-func (user *Member) SetIsStatus(v uint64) {
-	user.IsActive = v
-}
-
 func (user *Member) SetIsEmailVerify(v uint64) {
 	user.IsVerificationEmail = v
 }
