@@ -7,6 +7,7 @@ use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferTypeEnum;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\Traits\AttachFileTrait;
+use App\GraphQL\Mutations\Traits\DetachFileTrait;
 use App\Models\OperationType;
 use App\Models\TransferOutgoing;
 use App\Repositories\AccountRepository;
@@ -16,7 +17,7 @@ use App\Services\TransferOutgoingService;
 
 class TransferOutgoingFeeMutator extends BaseMutator
 {
-    use AttachFileTrait;
+    use AttachFileTrait, DetachFileTrait;
 
     public function __construct(
         protected TransferOutgoingService $transferService,
