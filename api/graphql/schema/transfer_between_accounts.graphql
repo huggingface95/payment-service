@@ -18,6 +18,10 @@ type TransferBetweenWithFees {
     fee_amount: Decimal
     "Общаяя сумма"
     final_amount: Decimal
+    "Комиссия ПП"
+    fee_pp: Decimal
+    "Комиссия МК"
+    fee_mc: Decimal
 }
 
 extend type Mutation @guard {
