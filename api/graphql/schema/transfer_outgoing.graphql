@@ -222,6 +222,8 @@ extend type Mutation @guard {
         amount: Decimal!
         "ID аккаунта"
         account_id: ID!
+        "Тип платежной системы"
+        payment_system_type: PaymentSystemTypeEnum!
         "ID платежного провайдера"
         payment_provider_id: ID!
         "ID платежной системы"
@@ -291,6 +293,8 @@ extend type Mutation @guard {
         amount: Decimal
         "ID аккаунта"
         account_id: ID
+        "Тип платежной системы"
+        payment_system_type: PaymentSystemTypeEnum!
         "ID шаблона комиссии"
         price_list_id: ID
         "ID комисии"
