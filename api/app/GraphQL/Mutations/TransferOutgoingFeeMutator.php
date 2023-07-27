@@ -65,6 +65,10 @@ class TransferOutgoingFeeMutator extends BaseMutator
             throw new GraphqlException('Transfer not found');
         }
 
+        if (! $this->companyRevenueAccountService->exist($args['company_id'], $args['currency_id'])) {
+            throw new GraphqlException('Revenue Account not found in this company');
+        }
+
         $this->transferService->updateFeeTransfer($transfer, $args, OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value);
 
         return $transfer;
