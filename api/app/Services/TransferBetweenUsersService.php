@@ -82,11 +82,15 @@ class TransferBetweenUsersService extends AbstractService
             throw new GraphqlException('Transfer status is not Unsigned', 'use');
         }
 
-        $fromAccount = Account::findOrFail($args['from_account_id']);
-        $toAccount = Account::findOrFail($args['to_account_id']);
+        $fromAccount = empty($args['from_account_id']) ? $transfer->transferOutgoing->account : Account::findOrFail($args['from_account_id']);
+        $toAccount = empty($args['to_account_id']) ? $transfer->transferIncoming->account : Account::findOrFail($args['to_account_id']);
 
         $this->validateCreateTransfer($fromAccount, $toAccount, $operationType);
 
+        $args = array_merge(
+            array_filter($transfer->transferOutgoing->getAttributes(), fn($value) => $value !== null),
+            $args
+        );
         $transferOutDto = Auth::guard('api')->check() ? CreateTransferOutgoingBetweenUsersDTO::class : CreateApplicantTransferOutgoingBetweenUsersDTO::class;
         $outgoingDTO = TransformerDTO::transform($transferOutDto, $fromAccount, $toAccount, $operationType, $args);
         $incomingDTO = TransformerDTO::transform(CreateTransferIncomingBetweenUsersDTO::class, $toAccount, $fromAccount, $operationType, $args, $outgoingDTO);

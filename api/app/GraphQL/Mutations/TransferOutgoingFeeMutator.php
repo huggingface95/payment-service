@@ -2,10 +2,12 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransferTypeEnum;
 use App\Exceptions\GraphqlException;
 use App\GraphQL\Mutations\Traits\AttachFileTrait;
+use App\GraphQL\Mutations\Traits\DetachFileTrait;
 use App\Models\OperationType;
 use App\Models\TransferOutgoing;
 use App\Repositories\AccountRepository;
@@ -15,7 +17,7 @@ use App\Services\TransferOutgoingService;
 
 class TransferOutgoingFeeMutator extends BaseMutator
 {
-    use AttachFileTrait;
+    use AttachFileTrait, DetachFileTrait;
 
     public function __construct(
         protected TransferOutgoingService $transferService,
@@ -64,7 +66,11 @@ class TransferOutgoingFeeMutator extends BaseMutator
             throw new GraphqlException('Transfer not found');
         }
 
-        $this->transferService->updateTransfer($transfer, $args);
+        if (! $this->companyRevenueAccountService->exist($args['company_id'], $args['currency_id'])) {
+            throw new GraphqlException('Revenue Account not found in this company');
+        }
+
+        $this->transferService->updateFeeTransfer($transfer, $args, OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value);
 
         return $transfer;
     }

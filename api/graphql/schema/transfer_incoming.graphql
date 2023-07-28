@@ -59,6 +59,10 @@ type TransferIncoming {
     sender_bank_country: Country @belongsTo(relation: "senderBankCountry")
     "Location банка отправителя"
     sender_bank_location: String
+    "RTN банка отправителя"
+    sender_bank_rtn: String
+    "ncs number"
+    sender_bank_ncs_number: String
     "Имя отправителя"
     sender_name: String
     "Страна отправителя"
@@ -217,6 +221,10 @@ extend type Mutation @guard {
         sender_bank_country_id: ID
         "Location банка отправителя"
         sender_bank_location: String
+        "RTN банка отправителя"
+        sender_bank_rtn: String
+        "ncs number"
+        sender_bank_ncs_number: String
         "Имя отправителя"
         sender_name: String
         "ID страна отправителя"
@@ -231,6 +239,8 @@ extend type Mutation @guard {
         sender_zip: String
         "Сообщение банка"
         bank_message: String
+        "Основание перевода"
+        reason: String
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: TransferSwiftInput
         "Важность платежа Normal/Express"
@@ -282,6 +292,10 @@ extend type Mutation @guard {
         sender_bank_country_id: ID
         "Location банка отправителя"
         sender_bank_location: String
+        "RTN банка отправителя"
+        sender_bank_rtn: String
+        "ncs number"
+        sender_bank_ncs_number: String
         "Имя отправителя"
         sender_name: String
         "ID страны отправителя"
@@ -296,6 +310,8 @@ extend type Mutation @guard {
         sender_zip: String
         "Сообщение банка"
         bank_message: String
+        "Основание перевода"
+        reason: String
         "SWIFT field 56A (Intermediary Bank)"
         transfer_swift: TransferSwiftInput
         "Важность платежа Normal/Express"

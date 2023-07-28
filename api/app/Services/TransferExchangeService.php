@@ -185,6 +185,10 @@ class TransferExchangeService extends AbstractService
 
         $this->validateCreateTransfer($fromAccount, $toAccount);
 
+        $args = array_merge(
+            array_filter($transfer->transferOutgoing->getAttributes(), fn($value) => $value !== null),
+            $args
+        );
         $data = $this->populateTransferData($args, $fromAccount, $toAccount);
 
         $transfers = DB::transaction(function () use ($data, $transfer, $fromAccount, $toAccount) {

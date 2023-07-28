@@ -66,7 +66,7 @@ class CreateTransferOutgoingDTO
 
     public int $urgency_id;
 
-    public string $execution_at;
+    public ?string $execution_at;
 
     public string $recipient_account;
 
@@ -75,6 +75,12 @@ class CreateTransferOutgoingDTO
     public string $recipient_bank_address;
 
     public string $recipient_bank_swift;
+
+    public string $recipient_bank_rtn;
+
+    public string $recipient_bank_location;
+
+    public string $recipient_bank_ncs_number;
 
     public string $recipient_name;
 

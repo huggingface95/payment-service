@@ -15,6 +15,7 @@ use App\Traits\UpdateTransferStatusTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class TransferIncomingService extends AbstractService
@@ -128,11 +129,18 @@ class TransferIncomingService extends AbstractService
         }
     }
 
-    public function updateTransfer(TransferIncoming $transfer, array $args): void
+    public function updateTransfer(TransferIncoming $transfer, array $args, int $operationType): void
     {
         if ($transfer->status_id !== PaymentStatusEnum::UNSIGNED->value) {
             throw new GraphqlException('Transfer status is not Unsigned', 'use');
         }
+
+        $args = array_merge(
+            array_filter($transfer->getAttributes(), fn($value) => $value !== null),
+            $args
+        );
+        $createTransferDto = TransformerDTO::transform(CreateTransferIncomingStandardDTO::class, $args, $operationType, $this->transferRepository);
+        $args = $createTransferDto->toArray();
 
         DB::transaction(function () use ($transfer, $args) {
             if (isset($args['amount']) && $args['amount'] != $transfer->amount) {

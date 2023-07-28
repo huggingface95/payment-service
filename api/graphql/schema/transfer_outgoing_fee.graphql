@@ -33,8 +33,6 @@ extend type Mutation @guard {
         recipient_bank_swift: String
         "Имя получателя"
         recipient_name: String
-        "Страна получателя"
-        recipient_country_id: ID
         "Город получателя"
         recipient_city: String
         "Адрес получателя"
@@ -45,8 +43,6 @@ extend type Mutation @guard {
         recipient_zip: String
         "Причина перевода"
         reason: String
-        "ID коммиисии респондента"
-        respondent_fees_id: ID!
         "Сообщение банка"
         bank_message: String
     ): TransferOutgoing
@@ -59,7 +55,7 @@ extend type Mutation @guard {
         "ID"
         id: ID!
         "ID компании"
-        company_id: ID
+        company_id: ID!
         "ID группы"
         group_id: ID
         "ID типа группы"
@@ -67,7 +63,7 @@ extend type Mutation @guard {
         "Сумма"
         amount: Decimal
         "ID валюты"
-        currency_id: ID
+        currency_id: ID!
         "ID аккаунта"
         account_id: ID
         "ID типа операции"
@@ -88,8 +84,6 @@ extend type Mutation @guard {
         recipient_bank_swift: String
         "Имя получателя"
         recipient_name: String
-        "Страна получателя"
-        recipient_country_id: ID
         "Город получателя"
         recipient_city: String
         "Адрес получателя"
@@ -100,8 +94,6 @@ extend type Mutation @guard {
         recipient_zip: String
         "Причина перевода"
         reason: String
-        "ID коммиисии респондента"
-        respondent_fees_id: ID
         "Сообщение банка"
         bank_message: String
     ): TransferOutgoing
@@ -150,4 +142,13 @@ extend type Mutation @guard {
         file_id: [ID!]!
     ): TransferOutgoing
         @field(resolver: "TransferOutgoingFeeMutator@attachFile")
+
+    """
+    Отвязать файлы
+    """
+    detachFIleFromTransferOutgoingFee(
+        id: ID!
+        file_id: [ID!]!
+    ): TransferOutgoing
+        @field(resolver: "TransferOutgoingFeeMutator@detachFile")
 }

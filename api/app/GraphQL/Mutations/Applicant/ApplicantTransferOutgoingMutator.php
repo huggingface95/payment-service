@@ -54,7 +54,7 @@ class ApplicantTransferOutgoingMutator extends BaseMutator
             throw new GraphqlException('Transfer not found', 'not found', Response::HTTP_NOT_FOUND);
         }
         
-        $this->transferService->updateTransfer($transfer, $args);
+        $this->transferService->updateTransfer($transfer, $args, OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value);
 
         return $transfer;
     }

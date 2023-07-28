@@ -62,6 +62,8 @@ class TransferBetweenUsersMutator extends BaseMutator
             'id'                => $transfer->id,
             'transfer_incoming' => $transfer->transferIncoming,
             'transfer_outgoing' => $transfer->transferOutgoing,
+            'fee_mc'            => Str::decimal($fees['fee_amount']),
+            'fee_pp'            => Str::decimal($fees['fee_pp']),
             'fee_amount'        => Str::decimal($fees['fee_total']),
             'final_amount'      => Str::decimal($fees['amount_debt']),
         ];
@@ -86,6 +88,8 @@ class TransferBetweenUsersMutator extends BaseMutator
             'id'                => $transfer->id,
             'transfer_incoming' => $transfer->transferIncoming,
             'transfer_outgoing' => $transfer->transferOutgoing,
+            'fee_mc'            => Str::decimal($fees['fee_amount']),
+            'fee_pp'            => Str::decimal($fees['fee_pp']),
             'fee_amount'        => Str::decimal($fees['fee_total']),
             'final_amount'      => Str::decimal($fees['amount_debt']),
         ];

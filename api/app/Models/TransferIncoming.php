@@ -68,6 +68,8 @@ class TransferIncoming extends BaseModel implements CustomObServerInterface
         'sender_bank_swift',
         'sender_bank_country_id',
         'sender_bank_location',
+        'sender_bank_rtn',
+        'sender_bank_ncs_number',
         'sender_name',
         'sender_country_id',
         'sender_city',
