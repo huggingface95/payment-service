@@ -4,6 +4,8 @@ Banking -> Account -> Account List
 """
 type Account {
     id: ID!
+    "ID родительского аккаунта"
+    parent_id: ID
     "Получить связанный код валюты"
     currency: Currencies @belongsTo(relation:"currencies")
     "Получить связанного владельца"
