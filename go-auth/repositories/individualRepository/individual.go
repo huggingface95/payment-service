@@ -1,7 +1,10 @@
 package individualRepository
 
 import (
+	"crypto/sha1"
+	"encoding/base64"
 	"errors"
+	"fmt"
 	"github.com/eneoti/merge-struct"
 	"gorm.io/gorm"
 	"jwt-authentication-golang/constants"
@@ -55,8 +58,12 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterApplica
 	err = instance.Where("id = ?", request.GetCompanyId()).
 		Limit(1).
 		Preload("CompanyModules.Module").
-		Preload("Project.Settings", "applicant_type = ?", constants.ModelIndividual, func(db *gorm.DB) *gorm.DB {
-			return db.Preload("GroupRole")
+		Preload("Project", func(db *gorm.DB) *gorm.DB {
+			return db.
+				Order("projects.created_at").
+				Preload("Settings", "applicant_type = ?", constants.ModelIndividual, func(db *gorm.DB) *gorm.DB {
+					return db.Preload("GroupRole")
+				})
 		}).
 		First(&company).Error
 
@@ -147,4 +154,33 @@ func CreateIndividual(request individual.RegisterApplicantInterface) (err error,
 	}
 
 	return
+}
+
+func UpdateProjectHash(setting *postgres.ProjectSettings) *gorm.DB {
+	return database.PostgresInstance.Save(setting)
+}
+
+func GenerateSignHash(secret string, cId uint64, pId uint64) string {
+	stringHash := fmt.Sprintf("%s%d%d", secret, cId, pId)
+	hasher := sha1.New()
+	hasher.Write([]byte(stringHash))
+	return base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+}
+
+func CheckAndParseInternalIndividualSign(hash string) (bool, uint64, uint64) {
+	var setting postgres.ProjectSettings
+	exists := database.PostgresInstance.
+		Preload("Project").
+		Where("hash = ?", hash).
+		Limit(1).Find(&setting)
+
+	if exists.RowsAffected > 0 {
+		fmt.Println(setting.SecretKey)
+		if hash == GenerateSignHash(setting.SecretKey, setting.Project.CompanyId, setting.Project.Id) {
+			return true, setting.Project.CompanyId, setting.Project.Id
+		}
+
+	}
+
+	return false, 0, 0
 }
