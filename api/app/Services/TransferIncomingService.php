@@ -143,16 +143,18 @@ class TransferIncomingService extends AbstractService
         $args = $createTransferDto->toArray();
 
         DB::transaction(function () use ($transfer, $args) {
-            if (isset($args['amount']) && $args['amount'] != $transfer->amount) {
+            if (isset($args['amount']) && $args['amount'] != $transfer->amount || $transfer->respendent_fees_id != $args['respondent_fees_id']) {
                 $transfer->amount = $args['amount'];
+
+                $this->transferRepository->updateWithSwift($transfer, $args);
 
                 $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
                 $this->commissionService->makeFee($transfer, $transactionDTO);
 
                 $this->createPPHistory($transfer);
+            } else {
+                $this->transferRepository->updateWithSwift($transfer, $args);
             }
-
-            $this->transferRepository->updateWithSwift($transfer, $args);
 
             $this->createTransferHistory($transfer);
         });
