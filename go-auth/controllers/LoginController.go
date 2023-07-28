@@ -154,6 +154,14 @@ func Login(context *gin.Context) {
 		}
 	}
 
+	if clientType == constants.Individual {
+		individual := user.(*postgres.Individual)
+		if individual.HasApplicantModuleActivity() == false {
+			context.JSON(http.StatusUnauthorized, gin.H{"error": "you need to enable the module activity"})
+			return
+		}
+	}
+
 	if user.GetTwoFactorAuthSettingId() == 2 {
 		if activeSession != nil && activeSession.Trusted == true {
 			status, response := auth.GetLoginResponse(user, constants.Personal, constants.AccessToken, deviceInfo, context.GetHeader("test-mode"))
