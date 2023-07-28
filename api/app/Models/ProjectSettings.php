@@ -2,10 +2,19 @@
 
 namespace App\Models;
 
+use App\Models\Interfaces\CustomObServerInterface;
 use App\Models\Traits\BaseObServerTrait;
+use App\Observers\ProjectSettingsObserver;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProjectSettings extends BaseModel
+
+/**
+ * Class ProjectSettings
+ *
+ * @property string secret_key
+ * @property string hash
+ */
+class ProjectSettings extends BaseModel implements CustomObServerInterface
 {
 
     use BaseObServerTrait;
@@ -23,6 +32,8 @@ class ProjectSettings extends BaseModel
         'iban_provider_id',
         'quote_provider_id',
         'applicant_type',
+        'secret_key',
+        'hash',
     ];
 
     public $timestamps = false;
@@ -60,5 +71,10 @@ class ProjectSettings extends BaseModel
     public function quoteProvider(): BelongsTo
     {
         return $this->belongsTo(QuoteProvider::class, 'quote_provider_id');
+    }
+
+    public static function getObServer(): string
+    {
+        return ProjectSettingsObserver::class;
     }
 }
