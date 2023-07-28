@@ -13,6 +13,7 @@ use App\Models\Interfaces\HistoryInterface;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\BaseObServerTrait;
 use App\Observers\AccountObserver;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -377,18 +378,23 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
         return $this->morphTo('client', 'client_type', 'client_id');
     }
 
-    public function bankCorrespondents(): HasManyThrough
+    public function getAccountAttribute()
     {
-        return $this->hasManyThrough(
-            BankCorrespondent::class,
-            PaymentSystem::class,
-            'payment_provider_id',
-            'payment_system_id',
-            'payment_provider_id',
-            'id'
-        )->whereHas('currenciesRegions', function ($query){
-            $query->where('currency_id', $this->currency_id);
-        });
+        return $this;
+    }
+
+    public function getBankCorrespondentsAttribute()
+    {
+        return $this->bankCorrespondentWithCurrency();
+    }
+
+    public function bankCorrespondentWithCurrency()
+    {
+        return BankCorrespondent::whereHas('countryRegion', function ($query) {
+                $query->where('currency_id', $this->currency_id);
+            })->whereHas('paymentProvider', function ($query) {
+                $query->where('payment_provider_id', $this->payment_provider_id);
+            })->get();
     }
 
     public static function getAccountFilter($filter): Builder

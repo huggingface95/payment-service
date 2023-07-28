@@ -13,14 +13,12 @@ type Requisite {
     iban_provider: PaymentProviderIban @belongsTo(relation:"paymentProviderIban")
     "Account"
     account: Account
-    "Связанный банк"
-    bank: PaymentBank @belongsTo(relation:"paymentBank")
     "IBAN"
     account_number: String
     "Currency"
     currency: Currencies @belongsTo(relation:"currencies")
     "Банки корреспонденты"
-    bank_correspondents: [BankCorrespondent] @hasManyThrough(relation:"bankCorrespondents")
+    bank_correspondents: [BankCorrespondent]
 }
 
 
@@ -61,6 +59,5 @@ input QueryRequisitesFilterStatic @spread{
     company_id: ID @eq
     payment_provider_id: ID @eq
     payment_system_id: ID @eq
-    payment_bank_id: ID @eq
     account_number: String @eq
 }
