@@ -11,6 +11,8 @@ extend type Mutation @guard {
         group_type_id: ID!
         "Сумма"
         amount: Decimal!
+        "Сумма комиссии Payment Provider"
+        payment_provider_fee_amount: Decimal
         "ID валюты"
         currency_id: ID!
         "ID аккаунта"
@@ -62,6 +64,8 @@ extend type Mutation @guard {
         group_type_id: ID
         "Сумма"
         amount: Decimal
+        "Сумма комиссии Payment Provider"
+        payment_provider_fee_amount: Decimal
         "ID валюты"
         currency_id: ID!
         "ID аккаунта"
