@@ -38,7 +38,7 @@ class TransferIncomingMutator extends BaseMutator
 
         $this->transferService->updateTransfer($transfer, $args, OperationTypeEnum::INCOMING_WIRE_TRANSFER->value);
 
-        return $transfer;
+        return $this->transferRepository->findById($args['id']);
     }
 
     /**
