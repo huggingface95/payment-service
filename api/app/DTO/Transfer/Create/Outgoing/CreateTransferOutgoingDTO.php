@@ -52,6 +52,8 @@ class CreateTransferOutgoingDTO
 
     public int $account_id;
 
+    public string $payment_provider_fee_amount;
+
     public int $payment_provider_id;
 
     public int $payment_system_id;
