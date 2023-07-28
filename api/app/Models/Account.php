@@ -13,10 +13,12 @@ use App\Models\Interfaces\HistoryInterface;
 use App\Models\Scopes\ApplicantFilterByMemberScope;
 use App\Models\Traits\BaseObServerTrait;
 use App\Observers\AccountObserver;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -369,6 +371,30 @@ class Account extends BaseModel implements BaseModelInterface, CustomObServerInt
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id');
+    }
+
+    public function client(): MorphTo
+    {
+        return $this->morphTo('client', 'client_type', 'client_id');
+    }
+
+    public function getAccountAttribute()
+    {
+        return $this;
+    }
+
+    public function getBankCorrespondentsAttribute()
+    {
+        return $this->bankCorrespondentWithCurrency();
+    }
+
+    public function bankCorrespondentWithCurrency()
+    {
+        return BankCorrespondent::whereHas('countryRegion', function ($query) {
+                $query->where('currency_id', $this->currency_id);
+            })->whereHas('paymentProvider', function ($query) {
+                $query->where('payment_provider_id', $this->payment_provider_id);
+            })->get();
     }
 
     public static function getAccountFilter($filter): Builder
