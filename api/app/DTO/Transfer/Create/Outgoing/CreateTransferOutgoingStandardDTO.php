@@ -55,6 +55,11 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
             $args['payment_bank_id'] = PaymentBank::query()->where('payment_provider_id', $args['payment_provider_id'])->where('payment_system_id', $args['payment_system_id'])->first()?->id ?? throw new GraphqlException('Payment bank not found', 'use');
         }
 
+        $psType = null;
+        if ($args['status_id'] != PaymentStatusEnum::REFUND->value) {
+            $psType = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value ? PaymentSystemTypeEnum::SEPA->value : PaymentSystemTypeEnum::SWIFT->value;
+        }
+
         $date = Carbon::now()->format('Y-m-d H:i:s');
         $args['amount_debt'] = $args['amount'];
         $args['currency_id'] = $account->currency_id;
@@ -62,12 +67,12 @@ class CreateTransferOutgoingStandardDTO extends CreateTransferOutgoingDTO
         $args['payment_number'] = Str::uuid();
         $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::BACK_OFFICE->toString();
-        $args['urgency_id'] = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value
+        $args['urgency_id'] = $psType == PaymentSystemTypeEnum::SEPA->value
             ? PaymentUrgencyEnum::STANDART->value
             : ($args['urgency_id'] ?? PaymentUrgencyEnum::STANDART->value);
         $args['created_at'] = $date;
         $args['recipient_bank_country_id'] ??= Company::findOrFail($args['company_id'])->country_id;
-        $args['respondent_fees_id'] = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value
+        $args['respondent_fees_id'] = $psType == PaymentSystemTypeEnum::SEPA->value
             ? RespondentFeesEnum::CHARGED_TO_CUSTOMER->value
             : $args['respondent_fees_id'];
         $args['project_id'] = $account->project_id;

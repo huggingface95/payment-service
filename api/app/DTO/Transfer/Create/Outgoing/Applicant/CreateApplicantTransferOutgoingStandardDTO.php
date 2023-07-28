@@ -30,6 +30,7 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
         $projectSettings = $account->project?->projectSettings->where('applicant_type', $account->client_type)->first();
         $args['status_id'] ??= PaymentStatusEnum::UNSIGNED->value;
 
+        $psType = null;
         if ($args['status_id'] != PaymentStatusEnum::REFUND->value) {
             $psType = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value ? PaymentSystemTypeEnum::SEPA->value : PaymentSystemTypeEnum::SWIFT->value;
             $args['payment_system_id'] = $projectSettings?->paymentProvider?->paymentSystems?->where('is_active', true)->filter(function ($item) use ($psType) {
@@ -47,12 +48,12 @@ class CreateApplicantTransferOutgoingStandardDTO extends CreateTransferOutgoingD
         $args['payment_number'] = Str::uuid();
         $args['system_message'] = '';
         $args['channel'] = TransferChannelEnum::CLIENT_DASHBOARD->toString();
-        $args['urgency_id'] = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value
+        $args['urgency_id'] = $psType == PaymentSystemTypeEnum::SEPA->value
             ? PaymentUrgencyEnum::STANDART->value
             : ($args['urgency_id'] ?? PaymentUrgencyEnum::STANDART->value);
         $args['created_at'] = $date;
         $args['recipient_bank_country_id'] ??= Company::findOrFail($args['company_id'])->country_id;
-        $args['respondent_fees_id'] = $args['payment_system_type'] == PaymentSystemTypeEnum::SEPA->value
+        $args['respondent_fees_id'] = $psType == PaymentSystemTypeEnum::SEPA->value
             ? RespondentFeesEnum::CHARGED_TO_CUSTOMER->value
             : $args['respondent_fees_id'];
         $args['project_id'] = $account->project_id;
