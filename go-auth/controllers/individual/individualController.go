@@ -1,11 +1,8 @@
 package individual
 
 import (
-	"bytes"
-	"encoding/base64"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"io/ioutil"
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
@@ -218,9 +215,9 @@ func RegisterPrivate(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	byteData, err := base64.URLEncoding.DecodeString(r.Data)
+	//byteData, err := base64.URLEncoding.DecodeString(r.Data)
 
-	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(byteData))
+	//c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(byteData))
 
 	request, res, status := fillRegisterRequest(c, func() interface{} { return new(individual.RegisterRequestPrivate) })
 	if status != 200 {
@@ -268,9 +265,9 @@ func RegisterCorporate(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	byteData, err := base64.URLEncoding.DecodeString(r.Data)
+	//byteData, err := base64.URLEncoding.DecodeString(r.Data)
 
-	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(byteData))
+	//c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(byteData))
 
 	request, res, status := fillRegisterRequest(c, func() interface{} { return new(individual.RegisterRequestCorporate) })
 	if status != 200 {
@@ -287,7 +284,7 @@ func RegisterCorporate(c *gin.Context) {
 	}
 	request.SetCompanyId(cId)
 	request.SetProjectId(pId)
-	
+
 	err, user, company := individualRepository.CreateIndividual(request)
 
 	if err != nil {
@@ -324,7 +321,7 @@ func GenerateUrl(c *gin.Context) {
 					setting.Hash = individualRepository.GenerateSignHash(setting.SecretKey, company.Id, company.Project.Id)
 					res := individualRepository.UpdateProjectHash(setting)
 					if res.Error == nil {
-						c.JSON(http.StatusOK, gin.H{"url": fmt.Sprintf("%s/frame.js?hash=%s&type=%s", company.BackofficeLoginUrl, setting.Hash, c.PostForm("type"))})
+						c.JSON(http.StatusOK, gin.H{"url": fmt.Sprintf("%s/frame.js?hash=%s", company.BackofficeLoginUrl, setting.Hash)})
 					} else {
 						c.JSON(http.StatusInternalServerError, gin.H{"error": "Problem update hash"})
 					}
@@ -357,10 +354,6 @@ func fillRegisterRequest(c *gin.Context, f func() interface{}) (request individu
 
 	if ok, msg := auth.PasswordValidation(request.GetPassword()); ok == false {
 		return request, gin.H{"error": msg}, http.StatusBadRequest
-	}
-
-	if request.GetPassword() != request.GetPasswordRepeat() {
-		return request, gin.H{"error": "Password and Confirm Password do not match"}, http.StatusBadRequest
 	}
 
 	ok, _ := userRepository.HasWithConditions(map[string]interface{}{
