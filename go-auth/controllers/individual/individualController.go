@@ -261,6 +261,17 @@ func RegisterPrivate(c *gin.Context) {
 }
 
 func RegisterCorporate(c *gin.Context) {
+	var r individual.RegisterInternalApplicant
+
+	if err := c.BindJSON(&r); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.Abort()
+		return
+	}
+	byteData, err := base64.URLEncoding.DecodeString(r.Data)
+
+	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(byteData))
+
 	request, res, status := fillRegisterRequest(c, func() interface{} { return new(individual.RegisterRequestCorporate) })
 	if status != 200 {
 		c.JSON(status, res)
@@ -268,6 +279,15 @@ func RegisterCorporate(c *gin.Context) {
 		return
 	}
 
+	ok, cId, pId := individualRepository.CheckAndParseInternalIndividualSign(r.Sign)
+
+	if ok == false {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Hash don't working"})
+		return
+	}
+	request.SetCompanyId(cId)
+	request.SetProjectId(pId)
+	
 	err, user, company := individualRepository.CreateIndividual(request)
 
 	if err != nil {
@@ -278,9 +298,9 @@ func RegisterCorporate(c *gin.Context) {
 
 	randomToken := helpers.GenerateRandomString(20)
 	data := &cache.ConfirmationEmailLinksCache{
-		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id, Type: constants.Individual,
+		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id, Type: constants.Corporate,
 	}
-	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
+	ok = redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 	if ok {
 		data.Set(randomToken)
 		c.JSON(http.StatusCreated, gin.H{"data": "An email has been sent to your email to confirm the email"})

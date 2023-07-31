@@ -61,7 +61,7 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterApplica
 		Preload("Project", func(db *gorm.DB) *gorm.DB {
 			return db.
 				Order("projects.created_at").
-				Preload("Settings", "applicant_type = ?", constants.ModelIndividual, func(db *gorm.DB) *gorm.DB {
+				Preload("Settings", "applicant_type = ?", request.GetApplicantModel(), func(db *gorm.DB) *gorm.DB {
 					return db.Preload("GroupRole")
 				})
 		}).
