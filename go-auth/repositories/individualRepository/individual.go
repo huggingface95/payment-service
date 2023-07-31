@@ -102,6 +102,7 @@ func createWithTransaction(instance *gorm.DB, request individual.RegisterApplica
 	}
 
 	user.SetCompanyId(company.Id)
+	user.SetProjectId(company.Project.Id)
 	err = instance.Omit(user.Omit()...).
 		Create(&user).Error
 

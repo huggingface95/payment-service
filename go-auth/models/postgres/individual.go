@@ -38,6 +38,7 @@ type Individual struct {
 	IsVerificationPhone       uint64                       `gorm:"column:phone_verification_status_id"`
 	FullName                  string                       `gorm:"column:fullname"`
 	CompanyId                 uint64                       `gorm:"column:company_id"`
+	ProjectId                 uint64                       `gorm:"column:project_id"`
 	MemberGroupRoleId         uint64                       `gorm:"column:member_group_role_id"`
 	ApplicantStateReasonId    uint64                       `gorm:"column:applicant_state_reason_id"`
 	ApplicantRiskLevelId      uint64                       `gorm:"column:applicant_risk_level_id"`
@@ -192,6 +193,10 @@ func (user *Individual) SetIsStatus(v uint64) {
 
 func (user *Individual) SetCompanyId(v uint64) {
 	user.CompanyId = v
+}
+
+func (user *Individual) SetProjectId(v uint64) {
+	user.ProjectId = v
 }
 
 func (user *Individual) SetNeedChangePassword(v bool) {
