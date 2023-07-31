@@ -1,8 +1,11 @@
 package individual
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
@@ -215,9 +218,12 @@ func RegisterPrivate(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	//byteData, err := base64.URLEncoding.DecodeString(r.Data)
 
-	//c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(byteData))
+	b, err := json.Marshal(r.Data)
+	if err != nil {
+		panic(err)
+	}
+	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 
 	request, res, status := fillRegisterRequest(c, func() interface{} { return new(individual.RegisterRequestPrivate) })
 	if status != 200 {
@@ -265,9 +271,12 @@ func RegisterCorporate(c *gin.Context) {
 		c.Abort()
 		return
 	}
-	//byteData, err := base64.URLEncoding.DecodeString(r.Data)
 
-	//c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(byteData))
+	b, err := json.Marshal(r.Data)
+	if err != nil {
+		panic(err)
+	}
+	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(b))
 
 	request, res, status := fillRegisterRequest(c, func() interface{} { return new(individual.RegisterRequestCorporate) })
 	if status != 200 {

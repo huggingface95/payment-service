@@ -21,8 +21,8 @@ type RegisterApplicantInterface interface {
 }
 
 type RegisterInternalApplicant struct {
-	Sign string `json:"sign" binding:"required"`
-	Data string `json:"data" binding:"required"`
+	Sign string                 `json:"sign" binding:"required"`
+	Data map[string]interface{} `json:"data" binding:"required"`
 }
 
 type RegisterRequestApplicant struct {
