@@ -31,7 +31,7 @@ type RegisterRequestApplicant struct {
 	Url       string `json:"url"`
 	Email     string `json:"email" binding:"required,email"`
 	Phone     string `json:"phone" binding:"required,e164"`
-	CountryId uint64 `json:"country_id,omitempty"`
+	CountryId uint64 `json:"country,omitempty"`
 	Address   string `json:"address,omitempty"`
 }
 
