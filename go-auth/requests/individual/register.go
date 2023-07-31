@@ -1,11 +1,14 @@
 package individual
 
+import "jwt-authentication-golang/constants"
+
 const RegisterStandard = "RegisterRequest"
 const RegisterPrivate = "RegisterRequestPrivate"
 const RegisterCorporate = "RegisterRequestCorporate"
 
 type RegisterApplicantInterface interface {
 	GetType() string
+	GetApplicantModel() string
 	GetPassword() string
 	GetPasswordRepeat() string
 	GetEmail() string
@@ -75,6 +78,21 @@ func (r RegisterRequestCorporate) GetType() string {
 
 func (r RegisterRequest) GetType() string {
 	return RegisterStandard
+}
+
+func (r RegisterRequest) GetApplicantModel() string {
+	if r.ClientType == constants.RegisterClientTypeCorporate {
+		return constants.ModelCorporate
+	}
+	return constants.ModelIndividual
+}
+
+func (r RegisterRequestPrivate) GetApplicantModel() string {
+	return constants.ModelIndividual
+}
+
+func (r RegisterRequestCorporate) GetApplicantModel() string {
+	return constants.ModelCorporate
 }
 
 func (r RegisterRequestPrivate) GetPassword() string {
