@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	"github.com/eneoti/merge-struct"
+	merp "github.com/eneoti/merge-struct"
 	"gorm.io/gorm"
 	"jwt-authentication-golang/constants"
 	postgres2 "jwt-authentication-golang/constants/postgres"
@@ -15,6 +15,12 @@ import (
 )
 
 func fillIndividual(request individual.RegisterApplicantInterface) (user postgres.Individual, err error) {
+
+	if request.GetType() == individual.RegisterPrivate {
+		err = merp.MergeOverwrite(user, request.(*individual.RegisterRequestPrivate).RegisterRequestApplicant, &user)
+	} else if request.GetType() == individual.RegisterCorporate {
+		err = merp.MergeOverwrite(user, request.(*individual.RegisterRequestCorporate).RegisterRequestApplicant, &user)
+	}
 	err = merp.MergeOverwrite(user, request, &user)
 	user.TwoFactorAuthSettingId = 2
 	user.IsVerificationPhone = postgres.ApplicantVerificationNotVerifyed

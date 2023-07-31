@@ -85,62 +85,62 @@ func (r RegisterRequest) GetApplicantModel() string {
 	return constants.ModelIndividual
 }
 
-func (r RegisterRequestPrivate) GetApplicantModel() string {
+func (r *RegisterRequestPrivate) GetApplicantModel() string {
 	return constants.ModelIndividual
 }
 
-func (r RegisterRequestCorporate) GetApplicantModel() string {
+func (r *RegisterRequestCorporate) GetApplicantModel() string {
 	return constants.ModelCorporate
 }
 
-func (r RegisterRequestPrivate) GetPassword() string {
+func (r *RegisterRequestPrivate) GetPassword() string {
 	return r.Password
 }
 
-func (r RegisterRequestCorporate) GetPassword() string {
+func (r *RegisterRequestCorporate) GetPassword() string {
 	return ""
 }
 
-func (r RegisterRequest) GetPassword() string {
+func (r *RegisterRequest) GetPassword() string {
 	return r.Password
 }
 
-func (r RegisterRequestPrivate) GetEmail() string {
+func (r *RegisterRequestPrivate) GetEmail() string {
 	return r.Email
 }
 
-func (r RegisterRequestCorporate) GetEmail() string {
+func (r *RegisterRequestCorporate) GetEmail() string {
 	return ""
 }
 
-func (r RegisterRequest) GetEmail() string {
+func (r *RegisterRequest) GetEmail() string {
 	return r.PasswordRepeat
 }
 
-func (r RegisterRequestPrivate) GetCountryId() *uint64 {
+func (r *RegisterRequestPrivate) GetCountryId() *uint64 {
 	if r.CountryId > 0 {
 		return &r.CountryId
 	}
 	return nil
 }
-func (r RegisterRequestCorporate) GetCountryId() *uint64 {
+func (r *RegisterRequestCorporate) GetCountryId() *uint64 {
 	if r.CountryId > 0 {
 		return &r.CountryId
 	}
 	return nil
 }
-func (r RegisterRequest) GetCountryId() *uint64 {
+func (r *RegisterRequest) GetCountryId() *uint64 {
 	if r.CountryId > 0 {
 		return &r.CountryId
 	}
 	return nil
 }
 
-func (r RegisterRequestPrivate) GetCompanyId() uint64 {
+func (r *RegisterRequestPrivate) GetCompanyId() uint64 {
 	return r.CompanyId
 }
 
-func (r RegisterRequestCorporate) GetCompanyId() uint64 {
+func (r *RegisterRequestCorporate) GetCompanyId() uint64 {
 	return r.CompanyId
 }
 
@@ -168,42 +168,42 @@ func (r *RegisterRequest) SetProjectId(pId uint64) {
 
 }
 
-func (r RegisterRequest) GetCompanyId() uint64 {
+func (r *RegisterRequest) GetCompanyId() uint64 {
 	return 1
 }
 
-func (r RegisterRequestPrivate) GetProjectId() uint64 {
+func (r *RegisterRequestPrivate) GetProjectId() uint64 {
 	return r.ProjectId
 }
 
-func (r RegisterRequestCorporate) GetProjectId() uint64 {
+func (r *RegisterRequestCorporate) GetProjectId() uint64 {
 	return r.CompanyId
 }
 
-func (r RegisterRequest) GetProjectId() uint64 {
+func (r *RegisterRequest) GetProjectId() uint64 {
 	return 1
 }
 
-func (r RegisterRequestPrivate) GetCompanyName() string {
+func (r *RegisterRequestPrivate) GetCompanyName() string {
 	return ""
 }
 
-func (r RegisterRequestCorporate) GetCompanyName() string {
+func (r *RegisterRequestCorporate) GetCompanyName() string {
 	return ""
 }
 
-func (r RegisterRequest) GetCompanyName() string {
+func (r *RegisterRequest) GetCompanyName() string {
 	return r.CompanyName
 }
 
-func (r RegisterRequestPrivate) GetUrl() string {
+func (r *RegisterRequestPrivate) GetUrl() string {
 	return r.Url
 }
 
-func (r RegisterRequestCorporate) GetUrl() string {
+func (r *RegisterRequestCorporate) GetUrl() string {
 	return r.Url
 }
 
-func (r RegisterRequest) GetUrl() string {
+func (r *RegisterRequest) GetUrl() string {
 	return r.Url
 }
