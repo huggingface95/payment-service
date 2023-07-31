@@ -1,11 +1,14 @@
 package individual
 
+import "jwt-authentication-golang/constants"
+
 const RegisterStandard = "RegisterRequest"
 const RegisterPrivate = "RegisterRequestPrivate"
 const RegisterCorporate = "RegisterRequestCorporate"
 
 type RegisterApplicantInterface interface {
 	GetType() string
+	GetApplicantModel() string
 	GetPassword() string
 	GetPasswordRepeat() string
 	GetEmail() string
@@ -14,13 +17,19 @@ type RegisterApplicantInterface interface {
 	GetProjectId() uint64
 	GetCompanyName() string
 	GetUrl() string
+	SetCompanyId(cId uint64)
+	SetProjectId(pId uint64)
+}
+
+type RegisterInternalApplicant struct {
+	Sign string `json:"sign" binding:"required"`
+	Data string `json:"data" binding:"required"`
 }
 
 type RegisterRequestApplicant struct {
-	CompanyId uint64 `json:"company_id" binding:"required"`
-	ProjectId uint64 `json:"project_id" binding:"required"`
+	CompanyId uint64 `json:"company_id,omitempty"`
+	ProjectId uint64 `json:"project_id,omitempty"`
 	Url       string `json:"url" binding:"required"`
-	FormType  string `json:"form_type" binding:"required,oneof=Form Button"`
 	Email     string `json:"email" binding:"required,email"`
 	Phone     string `json:"phone" binding:"required,e164"`
 	CountryId uint64 `json:"country_id,omitempty"`
@@ -69,6 +78,21 @@ func (r RegisterRequestCorporate) GetType() string {
 
 func (r RegisterRequest) GetType() string {
 	return RegisterStandard
+}
+
+func (r RegisterRequest) GetApplicantModel() string {
+	if r.ClientType == constants.RegisterClientTypeCorporate {
+		return constants.ModelCorporate
+	}
+	return constants.ModelIndividual
+}
+
+func (r RegisterRequestPrivate) GetApplicantModel() string {
+	return constants.ModelIndividual
+}
+
+func (r RegisterRequestCorporate) GetApplicantModel() string {
+	return constants.ModelCorporate
 }
 
 func (r RegisterRequestPrivate) GetPassword() string {
@@ -132,6 +156,30 @@ func (r RegisterRequestPrivate) GetCompanyId() uint64 {
 
 func (r RegisterRequestCorporate) GetCompanyId() uint64 {
 	return r.CompanyId
+}
+
+func (r RegisterRequestCorporate) SetCompanyId(cId uint64) {
+	r.CompanyId = cId
+}
+
+func (r RegisterRequestPrivate) SetCompanyId(cId uint64) {
+	r.CompanyId = cId
+}
+
+func (r RegisterRequest) SetCompanyId(cId uint64) {
+
+}
+
+func (r RegisterRequestCorporate) SetProjectId(pId uint64) {
+	r.ProjectId = pId
+}
+
+func (r RegisterRequestPrivate) SetProjectId(pId uint64) {
+	r.ProjectId = pId
+}
+
+func (r RegisterRequest) SetProjectId(pId uint64) {
+
 }
 
 func (r RegisterRequest) GetCompanyId() uint64 {

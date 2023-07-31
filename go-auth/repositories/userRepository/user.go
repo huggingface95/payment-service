@@ -72,7 +72,9 @@ func GetWithConditions(columns map[string]interface{}, mc func() interface{}) po
 
 	rModel := reflect.TypeOf(model)
 
-	rec := query.Preload("Company")
+	rec := query.Preload("Company.Project", func(db *gorm.DB) *gorm.DB {
+		return db.Order("projects.created_at").Preload("Settings")
+	})
 	if rModel.Elem().Name() == constants.StructMember {
 		rec.Preload("ClientIpAddresses", "client_type = ?", constants.ModelMember)
 	} else if rModel.Elem().Name() == constants.StructIndividual {

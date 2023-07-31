@@ -113,5 +113,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TransferFileRelationsTableSeeder::class);
         $this->call(PaymentSystemCurrenciesTableSeeder::class);
         $this->call(CompanyRevenueAccountTableSeeder::class);
+        $this->call(ProjectSettingsSecretKeyTableSeeder::class);
     }
 }

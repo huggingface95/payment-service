@@ -56,8 +56,8 @@ class TransferOutgoingMutator extends BaseMutator
         }
 
         $this->transferService->updateTransfer($transfer, $args, OperationTypeEnum::OUTGOING_WIRE_TRANSFER->value);
-
-        return $transfer;
+        
+        return $this->transferRepository->findById($args['id']);
     }
 
     /**

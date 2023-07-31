@@ -1,8 +1,11 @@
 package individual
 
 import (
+	"bytes"
+	"encoding/base64"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"io/ioutil"
 	"jwt-authentication-golang/cache"
 	"jwt-authentication-golang/config"
 	"jwt-authentication-golang/constants"
@@ -208,12 +211,32 @@ func Register(c *gin.Context) {
 }
 
 func RegisterPrivate(c *gin.Context) {
+	var r individual.RegisterInternalApplicant
+
+	if err := c.BindJSON(&r); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.Abort()
+		return
+	}
+	byteData, err := base64.URLEncoding.DecodeString(r.Data)
+
+	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(byteData))
+
 	request, res, status := fillRegisterRequest(c, func() interface{} { return new(individual.RegisterRequestPrivate) })
 	if status != 200 {
 		c.JSON(status, res)
 		c.Abort()
 		return
 	}
+
+	ok, cId, pId := individualRepository.CheckAndParseInternalIndividualSign(r.Sign)
+
+	if ok == false {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Hash don't working"})
+		return
+	}
+	request.SetCompanyId(cId)
+	request.SetProjectId(pId)
 
 	err, user, company := individualRepository.CreateIndividual(request)
 
@@ -227,7 +250,7 @@ func RegisterPrivate(c *gin.Context) {
 	data := &cache.ConfirmationEmailLinksCache{
 		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id, Type: constants.Individual,
 	}
-	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
+	ok = redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 	if ok {
 		data.Set(randomToken)
 		c.JSON(http.StatusCreated, gin.H{"data": "An email has been sent to your email to confirm the email"})
@@ -238,6 +261,17 @@ func RegisterPrivate(c *gin.Context) {
 }
 
 func RegisterCorporate(c *gin.Context) {
+	var r individual.RegisterInternalApplicant
+
+	if err := c.BindJSON(&r); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.Abort()
+		return
+	}
+	byteData, err := base64.URLEncoding.DecodeString(r.Data)
+
+	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(byteData))
+
 	request, res, status := fillRegisterRequest(c, func() interface{} { return new(individual.RegisterRequestCorporate) })
 	if status != 200 {
 		c.JSON(status, res)
@@ -245,6 +279,15 @@ func RegisterCorporate(c *gin.Context) {
 		return
 	}
 
+	ok, cId, pId := individualRepository.CheckAndParseInternalIndividualSign(r.Sign)
+
+	if ok == false {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Hash don't working"})
+		return
+	}
+	request.SetCompanyId(cId)
+	request.SetProjectId(pId)
+	
 	err, user, company := individualRepository.CreateIndividual(request)
 
 	if err != nil {
@@ -255,9 +298,9 @@ func RegisterCorporate(c *gin.Context) {
 
 	randomToken := helpers.GenerateRandomString(20)
 	data := &cache.ConfirmationEmailLinksCache{
-		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id, Type: constants.Individual,
+		Id: user.Id, FullName: user.FullName, ConfirmationLink: randomToken, Email: user.Email, CompanyId: company.Id, Type: constants.Corporate,
 	}
-	ok := redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
+	ok = redisRepository.SetRedisDataByBlPop(constants.QueueSendIndividualConfirmEmail, data)
 	if ok {
 		data.Set(randomToken)
 		c.JSON(http.StatusCreated, gin.H{"data": "An email has been sent to your email to confirm the email"})
@@ -265,6 +308,34 @@ func RegisterCorporate(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusForbidden, gin.H{"error": "Registration error"})
+}
+
+func GenerateUrl(c *gin.Context) {
+	user := auth.GetAuthUserByToken(constants.Personal, constants.AccessToken, c.GetHeader("Authorization"), c.Request.Host, c.GetHeader("test-mode"))
+
+	if user != nil && user.ClientType() == constants.Member {
+		if company := user.GetCompany(); company != nil {
+			t := constants.ModelCorporate
+			if c.PostForm("type") == constants.RegisterClientTypePrivate {
+				t = constants.ModelIndividual
+			}
+			for _, setting := range company.Project.Settings {
+				if setting.ApplicantType == t && setting.SecretKey != "" {
+					setting.Hash = individualRepository.GenerateSignHash(setting.SecretKey, company.Id, company.Project.Id)
+					res := individualRepository.UpdateProjectHash(setting)
+					if res.Error == nil {
+						c.JSON(http.StatusOK, gin.H{"url": fmt.Sprintf("%s/frame.js?hash=%s&type=%s", company.BackofficeLoginUrl, setting.Hash, c.PostForm("type"))})
+					} else {
+						c.JSON(http.StatusInternalServerError, gin.H{"error": "Problem update hash"})
+					}
+					return
+				}
+			}
+		}
+	}
+
+	c.JSON(http.StatusUnauthorized, gin.H{"error": "Token don't working"})
+	return
 }
 
 func fillRegisterRequest(c *gin.Context, f func() interface{}) (request individual.RegisterApplicantInterface, res gin.H, status int) {

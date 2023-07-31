@@ -28,6 +28,11 @@ class CommissionService extends AbstractService
     public function __construct(protected TransferExchangeRepositoryInterface $transferExchangeRepository)
     {
     }
+
+    public function addFee(TransferOutgoing|TransferIncoming $transfer, string $amount, string $feeType): void
+    {
+        $this->createFee($transfer, $amount, $feeType);
+    }
     
     /**
      * @throws GraphqlException

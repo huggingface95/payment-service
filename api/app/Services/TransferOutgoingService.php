@@ -9,6 +9,7 @@ use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingFeeDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingScheduledFeeDTO;
 use App\DTO\Transfer\Create\Outgoing\CreateTransferOutgoingStandardDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\FeeModeEnum;
 use App\Enums\OperationTypeEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentUrgencyEnum;
@@ -207,16 +208,20 @@ class TransferOutgoingService extends AbstractService
         $args = $createTransferDto->toArray();
         
         DB::transaction(function () use ($transfer, $args) {
-            if ($transfer->paymentOperation->transfer_type_id !== TransferTypeEnum::FEE->value && isset($args['amount']) && $args['amount'] != $transfer->amount) {
+            if ($transfer->paymentOperation->transfer_type_id !== TransferTypeEnum::FEE->value 
+                && isset($args['amount']) && $args['amount'] != $transfer->amount
+                || $transfer->respendent_fees_id != $args['respondent_fees_id']) {
                 $transfer->amount = $args['amount'];
+
+                $this->transferRepository->updateWithSwift($transfer, $args);
 
                 $transactionDTO = TransformerDTO::transform(TransactionDTO::class, $transfer, $transfer->account);
                 $this->commissionService->makeFee($transfer, $transactionDTO);
 
                 $this->createPPHistory($transfer);
+            } else {
+                $this->transferRepository->updateWithSwift($transfer, $args);
             }
-
-            $this->transferRepository->updateWithSwift($transfer, $args);
 
             $this->createTransferHistory($transfer);
         });
@@ -237,6 +242,10 @@ class TransferOutgoingService extends AbstractService
 
         DB::transaction(function () use ($transfer, $args) {
             $this->transferRepository->update($transfer, $args);
+
+            if (!empty($args['payment_provider_fee_amount'])) {
+                $this->commissionService->addFee($transfer, $args['payment_provider_fee_amount'], FeeModeEnum::PROVIDER->value);
+            }
 
             $this->createTransferHistory($transfer);
         });
@@ -407,8 +416,13 @@ class TransferOutgoingService extends AbstractService
         $createTransferDto = TransformerDTO::transform(CreateTransferOutgoingFeeDTO::class, $args, $operationType);
 
         return DB::transaction(function () use ($createTransferDto) {
+            $fields = $createTransferDto->toArray();
             /** @var TransferOutgoing $transfer */
-            $transfer = $this->transferRepository->create($createTransferDto->toArray());
+            $transfer = $this->transferRepository->create($fields);
+
+            if (!empty($fields['payment_provider_fee_amount'])) {
+                $this->commissionService->addFee($transfer, $fields['payment_provider_fee_amount'], FeeModeEnum::PROVIDER->value);
+            }
 
             $this->createTransferHistory($transfer, TransferHistoryActionEnum::INIT->value)->createPPHistory($transfer);
 

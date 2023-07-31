@@ -14,7 +14,7 @@ func (c *PermissionCategory) CheckActivityModule(module *Module) bool {
 	switch c.Id {
 	case 1:
 		return module.Id == 1
-	case 6, 7, 8, 9:
+	case 9:
 		return module.Id == 2
 	default:
 		return true
