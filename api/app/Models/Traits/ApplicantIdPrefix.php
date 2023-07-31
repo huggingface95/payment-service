@@ -12,6 +12,7 @@ use App\Models\ApplicantDocument;
 use App\Models\ApplicantIndividual;
 use App\Models\ApplicantIndividualCompany;
 use App\Models\ApplicantIndividualModules;
+use App\Models\ApplicantIndividualNotes;
 use App\Models\ApplicantModuleActivity;
 use App\Models\ApplicantRiskLevelHistory;
 use App\Models\ClientIpAddress;
@@ -50,6 +51,11 @@ trait ApplicantIdPrefix
             ],
         ],
         ApplicantIndividualModules::class => [
+            '(' . ApplicantIndividual::ID_PREFIX . ')' => [
+                'applicant_individual_id' => true,
+            ],
+        ],
+        ApplicantIndividualNotes::class => [
             '(' . ApplicantIndividual::ID_PREFIX . ')' => [
                 'applicant_individual_id' => true,
             ],

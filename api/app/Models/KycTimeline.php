@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ApplicantIndividualCompanyIdScope;
 use App\Models\Traits\BaseObServerTrait;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -36,6 +37,12 @@ class KycTimeline extends BaseModel
         'action_new_value' => 'array',
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantIndividualCompanyIdScope());
+    }
 
     public function company(): BelongsTo
     {
