@@ -6,10 +6,16 @@ type ApplicantRequisites {
     id: ID!
     "IBAN"
     account_number: String!
+    "Account"
+    account: Account
     "Создатель"
     owner: ApplicantProfile @belongsTo(relation: "owner")
-    "Связанный банк"
-    bank: PaymentBank @belongsTo(relation: "paymentBank")
+    "IBAN Provider"
+    iban_provider: PaymentProviderIban @belongsTo(relation:"paymentProviderIban")
+    "Банки корреспонденты"
+    bank_correspondents: [BankCorrespondent]
+    "ApplicantIndividual/ApplicantCompany"
+    client: Client @morphTo(relation:"client")
     "Валюта"
     currency: Currencies @belongsTo(relation: "currencies")
 }
