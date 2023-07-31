@@ -33,6 +33,9 @@ class CreateTransferIncomingRefundDTO extends CreateTransferIncomingDTO
         $args['project_id'] = $account->project_id;
         $args['price_list_id'] = null;
         $args['price_list_fee_id'] = null;
+        
+        unset($args['requested_by_id']);
+        unset($args['user_type']);
 
         return new parent($args, $account);
     }
