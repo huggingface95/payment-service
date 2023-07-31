@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Events\Applicant\ApplicantIndividualNoteCreatedEvent;
+use App\Models\Scopes\ApplicantIndividualCompanyIdScope;
 use App\Models\Traits\BaseObServerTrait;
 
 class ApplicantIndividualNotes extends BaseModel
@@ -28,6 +29,12 @@ class ApplicantIndividualNotes extends BaseModel
         'created_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
         'updated_at' => 'datetime:YYYY-MM-DDTHH:mm:ss.SSSZ',
     ];
+
+    protected static function booted()
+    {
+        parent::booted();
+        static::addGlobalScope(new ApplicantIndividualCompanyIdScope());
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
