@@ -10,7 +10,6 @@ type RegisterApplicantInterface interface {
 	GetType() string
 	GetApplicantModel() string
 	GetPassword() string
-	GetPasswordRepeat() string
 	GetEmail() string
 	GetCompanyId() uint64
 	GetCountryId() *uint64
@@ -29,7 +28,7 @@ type RegisterInternalApplicant struct {
 type RegisterRequestApplicant struct {
 	CompanyId uint64 `json:"company_id,omitempty"`
 	ProjectId uint64 `json:"project_id,omitempty"`
-	Url       string `json:"url" binding:"required"`
+	Url       string `json:"url"`
 	Email     string `json:"email" binding:"required,email"`
 	Phone     string `json:"phone" binding:"required,e164"`
 	CountryId uint64 `json:"country_id,omitempty"`
@@ -51,10 +50,9 @@ type RegisterRequest struct {
 
 type RegisterRequestPrivate struct {
 	RegisterRequestApplicant
-	FirstName      string `json:"first_name" binding:"required"`
-	LastName       string `json:"last_name" binding:"required"`
-	Password       string `json:"password" binding:"required"`
-	PasswordRepeat string `json:"password_confirmation" binding:"required"`
+	FirstName string `json:"firstName" binding:"required"`
+	LastName  string `json:"lastName" binding:"required"`
+	Password  string `json:"password" binding:"required"`
 }
 
 type RegisterRequestCorporate struct {
@@ -107,20 +105,8 @@ func (r RegisterRequest) GetPassword() string {
 	return r.Password
 }
 
-func (r RegisterRequestPrivate) GetPasswordRepeat() string {
-	return r.PasswordRepeat
-}
-
-func (r RegisterRequestCorporate) GetPasswordRepeat() string {
-	return ""
-}
-
-func (r RegisterRequest) GetPasswordRepeat() string {
-	return r.PasswordRepeat
-}
-
 func (r RegisterRequestPrivate) GetEmail() string {
-	return r.PasswordRepeat
+	return r.Email
 }
 
 func (r RegisterRequestCorporate) GetEmail() string {
