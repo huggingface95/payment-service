@@ -144,27 +144,27 @@ func (r RegisterRequestCorporate) GetCompanyId() uint64 {
 	return r.CompanyId
 }
 
-func (r RegisterRequestCorporate) SetCompanyId(cId uint64) {
+func (r *RegisterRequestCorporate) SetCompanyId(cId uint64) {
 	r.CompanyId = cId
 }
 
-func (r RegisterRequestPrivate) SetCompanyId(cId uint64) {
+func (r *RegisterRequestPrivate) SetCompanyId(cId uint64) {
 	r.CompanyId = cId
 }
 
-func (r RegisterRequest) SetCompanyId(cId uint64) {
+func (r *RegisterRequest) SetCompanyId(cId uint64) {
 
 }
 
-func (r RegisterRequestCorporate) SetProjectId(pId uint64) {
+func (r *RegisterRequestCorporate) SetProjectId(pId uint64) {
 	r.ProjectId = pId
 }
 
-func (r RegisterRequestPrivate) SetProjectId(pId uint64) {
+func (r *RegisterRequestPrivate) SetProjectId(pId uint64) {
 	r.ProjectId = pId
 }
 
-func (r RegisterRequest) SetProjectId(pId uint64) {
+func (r *RegisterRequest) SetProjectId(pId uint64) {
 
 }
 
