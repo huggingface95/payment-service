@@ -48,11 +48,7 @@ func initRouter() *gin.Engine {
 	{
 		registration.POST("private", individual.RegisterPrivate)
 		registration.POST("corporate", individual.RegisterCorporate)
-	}
-
-	generate := router.Group("/generate")
-	{
-		generate.POST("url", individual.GenerateUrl).Use(middlewares.AccessAuth())
+		registration.POST("url", individual.GenerateUrl).Use(middlewares.AccessAuth())
 	}
 
 	authorization := router.Group("/authorization")
