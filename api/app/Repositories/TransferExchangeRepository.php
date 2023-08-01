@@ -9,6 +9,7 @@ use App\Repositories\Interfaces\TransferExchangeRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class TransferExchangeRepository extends Repository implements TransferExchangeRepositoryInterface
 {
@@ -46,7 +47,7 @@ class TransferExchangeRepository extends Repository implements TransferExchangeR
             ->where('currency_src_id', $currencySrcId)
             ->where('currency_dst_id', $currencyDstId)
             ->first()?->rate;
-
+        
         if ($exchangeRate === null) {
             throw new GraphqlException('Exchange rate not found', 'use', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -57,8 +58,8 @@ class TransferExchangeRepository extends Repository implements TransferExchangeR
         }
 
         return [
-            'rate' => $exchangeRate,
-            'final_rate' => $finalExchangeRate,
+            'rate' => Str::decimal($exchangeRate),
+            'final_rate' => Str::decimal($finalExchangeRate),
         ];
     }
 
