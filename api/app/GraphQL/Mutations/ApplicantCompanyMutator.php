@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\DTO\Email\Request\EmailApplicantCompanyRequestDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\ApplicantStateEnum;
 use App\Enums\ApplicantVerificationStatusEnum;
 use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantIndividualSentEmailVerificationEvent;
@@ -38,6 +39,7 @@ class ApplicantCompanyMutator extends BaseMutator
             DB::beginTransaction();
 
             $args['group_type_id'] = GroupRole::COMPANY;
+            $args['applicant_state_id'] = ApplicantStateEnum::ACTIVE->value;
             $applicantCompany = ApplicantCompany::create($args);
 
             if (isset($args['owner_id']) && isset($args['owner_relation_id']) && isset($args['owner_position_id'])) {

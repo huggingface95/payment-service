@@ -4,6 +4,7 @@ namespace App\GraphQL\Mutations;
 
 use App\DTO\Email\Request\EmailApplicantRequestDTO;
 use App\DTO\TransformerDTO;
+use App\Enums\ApplicantStateEnum;
 use App\Enums\ApplicantVerificationStatusEnum;
 use App\Enums\ModuleEnum;
 use App\Events\Applicant\ApplicantIndividualSentEmailVerificationEvent;
@@ -38,6 +39,7 @@ class ApplicantMutator extends BaseMutator
         $args['password_hash'] = $password;
         $args['password_salt'] = $password;
         $args['group_type_id'] = GroupRole::INDIVIDUAL;
+        $args['applicant_state_id'] = ApplicantStateEnum::ACTIVE->value;
 
         $applicant = ApplicantIndividual::create($args);
 
