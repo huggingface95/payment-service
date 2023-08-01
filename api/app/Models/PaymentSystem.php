@@ -8,6 +8,7 @@ use App\Observers\PaymentSystemObserver;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
 use Staudenmeir\EloquentHasManyDeep\HasOneDeep;
@@ -113,6 +114,11 @@ class PaymentSystem extends BaseModel implements CustomObServerInterface
     public function commissionTemplate(): HasOneThrough
     {
         return $this->hasOneThrough(CommissionTemplate::class, PaymentProvider::class, 'id', 'payment_provider_id', 'payment_provider_id', 'id');
+    }
+
+    public function commissionPriceList(): HasOne
+    {
+        return $this->hasOne(CommissionPriceList::class, 'payment_system_id', 'id');
     }
 
     public static function getObServer(): string

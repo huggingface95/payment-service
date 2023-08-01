@@ -54,6 +54,7 @@ input QueryPaymentSystemsFilterStatic @spread{
     hasRegionsFilterById: ID @eq
     hasCurrenciesFilterById: ID @eq
     hasCommissionTemplateFilterById: ID @eq
+    hasCommissionPriceListFilterById: ID @eq
     is_active: Boolean @eq
 }
 
