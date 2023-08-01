@@ -1,3 +1,10 @@
+type CurrencyExchangeRateRaw {
+    "Чистый рейт"
+    rate: Decimal!
+    "Рейт с учетом маргин комиссии QP"
+    final_rate: Decimal!
+}
+
 extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Queries\\Applicant") {
     """
     Получить курс обмена
@@ -9,6 +16,6 @@ extend type Query @guard(with: "api_client") @namespace(field: "App\\GraphQL\\Qu
         currency_src_id: ID!
         "ID валюты назначения"
         currency_dst_id: ID!
-    ): CurrencyExchangeRate
+    ): CurrencyExchangeRateRaw
         @field(resolver: "ApplicantCurrencyExchangeRateQuery@get")
 }
