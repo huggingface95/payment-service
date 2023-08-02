@@ -20,4 +20,4 @@ providers:
     login_id: "your_login_here"
     api_key: "2222222222222222222222222222222222222222222222222222222222222222"
     rpm_limit:
-      convert: 150
+      convert: 150.0

@@ -4,6 +4,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"payment-service/app"
+	"payment-service/utils"
 	"strings"
 )
 
@@ -25,7 +26,10 @@ func loadConfig() error {
 		return errors.Wrap(err, "cannot read the config.yaml")
 	}
 
-	viper.SetConfigName("config.local")
+	if utils.FileExists("config.local.yaml") {
+		viper.SetConfigName("config.local")
+	}
+
 	if err := viper.MergeInConfig(); err != nil {
 		return err
 	}
