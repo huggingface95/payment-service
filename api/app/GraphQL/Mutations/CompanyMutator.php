@@ -81,6 +81,8 @@ class CompanyMutator extends BaseMutator
                 'Account suspended',
                 'Minimum balance limit has been reached for client',
                 'Maximum balance limit has been reached for client',
+                'Minimum balance limit has been reached',
+                'Maximum balance limit has been reached',
                 'Forgot Password',
                 'Waiting for IBAN Generation'
             ];
