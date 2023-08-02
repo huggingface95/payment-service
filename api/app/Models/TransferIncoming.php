@@ -88,6 +88,7 @@ class TransferIncoming extends BaseModel implements CustomObServerInterface
         'fee_amount',
         'requested_by_id',
         'user_type',
+        'amount_sent',
     ];
 
     protected $casts = [
@@ -101,7 +102,7 @@ class TransferIncoming extends BaseModel implements CustomObServerInterface
     protected static function booted()
     {
         parent::booted();
-        static::addGlobalScope(new TransferFeeAmountScope());
+        static::addGlobalScope(new TransferFeeAmountScope(true));
         static::addGlobalScope(new FilterByCreatorScope());
     }
 
