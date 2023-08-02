@@ -68,11 +68,9 @@ func ActivateTwoFactorQr(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": message})
 	}
 
-	user.SetGoogle2FaSecret(request.Secret)
-	userRepository.SaveUser(user)
-
 	if services.Validate(user.GetId(), request.Code, config.Conf.App.AppName, clientType) == true {
 		user.SetTwoFactorAuthSettingId(2)
+		user.SetGoogle2FaSecret(request.Secret)
 		userRepository.SaveUser(user)
 		codes := make([]postgres.BackupCodes, 9)
 		for k := range codes {
