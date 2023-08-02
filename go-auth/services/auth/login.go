@@ -52,6 +52,13 @@ func GetLoginResponse(user postgres.User, jwtType string, accessType string, dev
 		}
 	}
 
+	if user.ClientType() == constants.Individual {
+		individual := user.(*postgres.Individual)
+		if individual.HasApplicantModuleActivity() == false {
+			return http.StatusOK, gin.H{"verification": map[string]interface{}{"banking": "pending", "success": false}}
+		}
+	}
+
 	oauthRepository.InsertAuthLog(user.ClientType(), user.GetEmail(), user.GetCompany().Name, constants.StatusLogin, &expirationTime, deviceInfo)
 	oauthRepository.InsertActiveSessionLog(user.ClientType(), user.GetEmail(), user.GetCompany().Name, true, false, &expirationTime, deviceInfo)
 	return http.StatusOK, gin.H{"expires_in": expirationTime.Unix(), "access_token": tokenJWT, "token_type": "bearer"}
