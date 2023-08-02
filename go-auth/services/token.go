@@ -47,7 +47,7 @@ func getJWTClaims(id uint64, name string, provider string, accessType string, ho
 }
 
 func GenerateJWT(id uint64, name string, provider string, jwtType string, accessType string, host string, testMode string) (token string, expirationTime time.Time, err error) {
-	jwtObject := cache.Caching.Jwt.Get(fmt.Sprintf(constants.CacheJwt, host, accessType, provider, id))
+	jwtObject := cache.Caching.Jwt.Get(fmt.Sprintf(constants.CacheJwt, host, jwtType, accessType, provider, id))
 	if jwtObject != nil {
 		_, err = parseJWT(jwtObject.Token, jwtType, host, testMode)
 		if err == nil {

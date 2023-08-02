@@ -10,7 +10,6 @@ import (
 	"jwt-authentication-golang/dto"
 	"jwt-authentication-golang/helpers"
 	"jwt-authentication-golang/models/postgres"
-	"jwt-authentication-golang/repositories/oauthRepository"
 	"jwt-authentication-golang/repositories/userRepository"
 	"jwt-authentication-golang/requests"
 	"jwt-authentication-golang/services"
@@ -163,19 +162,8 @@ func VerifyTwoFactorQr(context *gin.Context) {
 
 	cache.Caching.TwoFactorAttempt.Del(key)
 
-	token, expirationTime, err := services.GenerateJWT(user.GetId(), user.GetFullName(), clientType, constants.Personal, constants.AccessToken, context.Request.Host, context.GetHeader("test-mode"))
-
-	if err != nil {
-		context.JSON(http.StatusForbidden, gin.H{"error": "Generate Error"})
-		context.Abort()
-		return
-	}
-
-	oauthRepository.InsertAuthLog(clientType, user.GetEmail(), user.GetCompany().Name, constants.StatusFailed, nil, deviceInfo)
-	oauthRepository.InsertActiveSessionLog(clientType, user.GetEmail(), user.GetCompany().Name, true, false, &expirationTime, deviceInfo)
-
-	context.JSON(http.StatusOK, gin.H{"access_token": token, "token_type": "bearer", "expires_in": expirationTime.Unix()})
-	context.Abort()
+	status, response := auth.GetLoginResponse(user, constants.Personal, constants.AccessToken, deviceInfo, context.GetHeader("test-mode"))
+	context.JSON(status, response)
 	return
 }
 
